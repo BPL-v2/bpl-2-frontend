@@ -34,8 +34,7 @@ export async function fetchWrapper<T>(
   if (data !== undefined) {
     params["body"] = JSON.stringify(data);
   }
-  console.log("fetching", path, params);
-  return await fetch("http://localhost:8000" + path, params)
+  return await fetch(import.meta.env.VITE_BACKEND_URL + path, params)
     .then((response) => {
       if (response.status > 299) {
         throw new HttpError(response.status, response.statusText);

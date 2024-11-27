@@ -36,25 +36,27 @@ const columns: CrudColumn<BPLEvent>[] = [
 const EventPage: React.FC = () => {
   const token = "token";
   return (
-    <CrudTable<BPLEvent>
-      resourceName="Event"
-      columns={columns}
-      fetchFunction={fetchAllEvents}
-      createFunction={async (data) => {
-        return createEvent(data, token);
-      }}
-      editFunction={async (data) => {
-        return updateEvent(data, token);
-      }}
-      deleteFunction={async (data) => {
-        return deleteEvent(data, token);
-      }}
-      addtionalActions={{
-        Teams: async (data) => router.navigate(data.id + "/teams"),
-        "Scoring Categories": async (data) =>
-          router.navigate("/scoring-categories/" + data.scoring_category_id),
-      }}
-    />
+    <div className="">
+      <CrudTable<BPLEvent>
+        resourceName="Event"
+        columns={columns}
+        fetchFunction={fetchAllEvents}
+        createFunction={async (data) => {
+          return createEvent(data, token);
+        }}
+        editFunction={async (data) => {
+          return updateEvent(data, token);
+        }}
+        deleteFunction={async (data) => {
+          return deleteEvent(data, token);
+        }}
+        addtionalActions={{
+          Teams: async (data) => router.navigate(data.id + "/teams"),
+          "Scoring Categories": async (data) =>
+            router.navigate("/scoring-categories/" + data.scoring_category_id),
+        }}
+      />
+    </div>
   );
 };
 
