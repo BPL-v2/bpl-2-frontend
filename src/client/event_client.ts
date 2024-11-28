@@ -1,4 +1,3 @@
-import type { Team } from "../types/team";
 import type { BPLEvent, EventCreate, EventUpdate } from "../types/event";
 import { fetchWrapper } from "./base";
 
@@ -16,7 +15,7 @@ export async function fetchAllEvents(): Promise<BPLEvent[]> {
   return await fetchWrapper<BPLEvent[]>("/events", "GET");
 }
 
-export async function createEvent(data: Partial<BPLEvent>, token: string) {
+export async function createEvent(data: Partial<BPLEvent>) {
   if (data.name === undefined) {
     return;
   }
@@ -25,10 +24,10 @@ export async function createEvent(data: Partial<BPLEvent>, token: string) {
     is_current: data.is_current || false,
   };
 
-  return await fetchWrapper<BPLEvent>("/events", "POST", token, body);
+  return await fetchWrapper<BPLEvent>("/events", "POST", true, body);
 }
 
-export async function updateEvent(data: Partial<BPLEvent>, token: string) {
+export async function updateEvent(data: Partial<BPLEvent>) {
   if (data.id === undefined) {
     throw Error;
   }
@@ -45,14 +44,14 @@ export async function updateEvent(data: Partial<BPLEvent>, token: string) {
   return await fetchWrapper<BPLEvent>(
     "/events/" + data.id,
     "PATCH",
-    token,
+    true,
     body
   );
 }
 
-export async function deleteEvent(data: Partial<BPLEvent>, token: string) {
+export async function deleteEvent(data: Partial<BPLEvent>) {
   if (data.id === undefined) {
     throw Error;
   }
-  return await fetchWrapper<null>("/events/" + data.id, "DELETE", token);
+  return await fetchWrapper<null>("/events/" + data.id, "DELETE", true);
 }

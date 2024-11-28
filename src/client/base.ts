@@ -10,16 +10,13 @@ export class HttpError {
 export async function fetchWrapper<T>(
   path: string,
   method: string,
-  token?: string,
+  authenticated?: boolean,
   data?: { [key: string]: any },
   headers?: { [key: string]: string }
 ): Promise<T> {
   const params: { [key: string]: any } = {};
   if (headers === undefined) {
     headers = {};
-  }
-  if (token !== undefined) {
-    // headers["Authorization"] = "Bearer " + token;
   }
   if (method === "POST" || method === "PUT" || method === "PATCH") {
     // headers["Content-Type"] = "application/json";
@@ -33,6 +30,9 @@ export async function fetchWrapper<T>(
   params["method"] = method;
   if (data !== undefined) {
     params["body"] = JSON.stringify(data);
+  }
+  if (authenticated) {
+    params["credentials"] = "include";
   }
   return await fetch(import.meta.env.VITE_BACKEND_URL + path, params)
     .then((response) => {

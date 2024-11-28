@@ -5,11 +5,7 @@ export async function fetchTeamsForEvent(eventId: number): Promise<Team[]> {
   return await fetchWrapper<Team[]>("/events/" + eventId + "/teams", "GET");
 }
 
-export async function createTeam(
-  eventId: number,
-  data: Partial<Team>,
-  token: string
-) {
+export async function createTeam(eventId: number, data: Partial<Team>) {
   if (data.name === undefined) {
     return;
   }
@@ -24,16 +20,12 @@ export async function createTeam(
   return await fetchWrapper<Team>(
     "/events/" + eventId + "/teams",
     "POST",
-    token,
+    true,
     body
   );
 }
 
-export async function updateTeam(
-  eventId: number,
-  data: Partial<Team>,
-  token: string
-) {
+export async function updateTeam(eventId: number, data: Partial<Team>) {
   if (data.id === undefined) {
     throw Error;
   }
@@ -49,22 +41,18 @@ export async function updateTeam(
   return await fetchWrapper<Team>(
     "/events/" + eventId + "/teams/" + data.id,
     "PATCH",
-    token,
+    true,
     body
   );
 }
 
-export async function deleteTeam(
-  eventId: number,
-  data: Partial<Team>,
-  token: string
-) {
+export async function deleteTeam(eventId: number, data: Partial<Team>) {
   if (data.id === undefined) {
     throw Error;
   }
   return await fetchWrapper<null>(
     "/events/" + eventId + "/teams/" + data.id,
     "DELETE",
-    token
+    true
   );
 }

@@ -1,15 +1,13 @@
 import { ConfigProvider, Layout, Menu, theme } from "antd";
 import "./App.css";
-import EventPage from "./pages/event";
-import TeamPage from "./pages/teams";
 import { useEffect, useState } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import AuthButton from "./components/auth";
 import { ContextProvider } from "./utils/context-provider";
-import { jwtDecode } from "jwt-decode";
 import { User } from "./types/user";
-import ScoringCategoryPage from "./pages/scoring-categories";
+import { getUserInfo } from "./client/user-client";
+import { router } from "./router";
 
 const items = [
   {
@@ -19,43 +17,12 @@ const items = [
   },
 ];
 
-export const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <></>,
-  },
-  {
-    path: "/events",
-    element: <EventPage />,
-  },
-  {
-    path: "/events/:eventId/teams",
-    element: <TeamPage />,
-  },
-  {
-    path: "/scoring-categories/:categoryId",
-    element: <ScoringCategoryPage />,
-  },
-  {
-    path: "/landing-page",
-    element: <div> Landing Page </div>,
-  },
-]);
-
 function App() {
   const [currentNav, setCurrentNav] = useState("events");
-  let token = "";
-  if (typeof window !== "undefined") {
-    token = localStorage.getItem("token") || "";
-  }
-  const [jwtToken, setJwtToken] = useState(token);
   const [user, setUser] = useState<User>();
-
   useEffect(() => {
-    if (jwtToken) {
-      setUser(jwtDecode(jwtToken));
-    }
-  }, [jwtToken]);
+    getUserInfo().then((data) => setUser(data));
+  }, [setUser]);
 
   return (
     <>
@@ -66,8 +33,6 @@ function App() {
       >
         <ContextProvider
           value={{
-            jwtToken: jwtToken,
-            setJwtToken: setJwtToken,
             user: user,
             setUser: setUser,
           }}

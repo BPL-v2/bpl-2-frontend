@@ -1,7 +1,7 @@
 import React from "react";
 import CrudTable, { CrudColumn } from "../components/crudtable";
 
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ScoringCategory } from "../types/scoring-category";
 import {
   createScoringCategory,
@@ -10,7 +10,7 @@ import {
   updateCategory as updateScoringCategory,
 } from "../client/category-client";
 import { Typography } from "antd";
-import { TrashIcon } from "@heroicons/react/24/solid";
+import { router } from "../router";
 
 const columns: CrudColumn<ScoringCategory>[] = [
   {
@@ -34,22 +34,6 @@ const columns: CrudColumn<ScoringCategory>[] = [
     options: ["OVERWRITE", "INHERIT", "EXTEND"],
     editable: true,
   },
-  {
-    title: "Sub Categories",
-    dataIndex: "sub_categories",
-    key: "sub_categories",
-    render: (_, parentCategory) => {
-      console.log(parentCategory);
-      return parentCategory.sub_categories.map((cat) => {
-        return (
-          <div className="flex justify-between items-center">
-            <Link to={"/scoring-categories/" + cat.id}>{cat.name}</Link>
-            <TrashIcon style={{ width: "24px" }} />
-          </div>
-        );
-      });
-    },
-  },
 ];
 
 const ScoringCategoryPage: React.FC = () => {
@@ -67,8 +51,12 @@ const ScoringCategoryPage: React.FC = () => {
   if (!categoryId) {
     return <></>;
   }
+  const addtionalActions = {
+    "Go to Sub-Categories": async (data: Partial<ScoringCategory>) => {
+      router.navigate("/scoring-categories/" + data.id);
+    },
+  };
   const categoryIdNum = Number(categoryId);
-  const token = "token";
   return (
     <>
       <Typography.Title level={2}>
@@ -81,14 +69,11 @@ const ScoringCategoryPage: React.FC = () => {
           fetchCategoryById(categoryIdNum).then((data) => data.sub_categories)
         }
         createFunction={async (data) => {
-          return createScoringCategory(categoryIdNum, data, token);
+          return createScoringCategory(categoryIdNum, data);
         }}
-        editFunction={async (data) => {
-          return updateScoringCategory(categoryIdNum, data, token);
-        }}
-        deleteFunction={async (data) => {
-          return deleteScoringCategory(data, token);
-        }}
+        editFunction={updateScoringCategory}
+        deleteFunction={deleteScoringCategory}
+        addtionalActions={addtionalActions}
       />
     </>
   );

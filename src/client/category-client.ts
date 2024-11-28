@@ -25,8 +25,7 @@ export async function fetchCategoryById(
 
 export async function createScoringCategory(
   parentId: number,
-  data: Partial<ScoringCategory>,
-  token: string
+  data: Partial<ScoringCategory>
 ) {
   if (data.name === undefined) {
     return;
@@ -40,16 +39,12 @@ export async function createScoringCategory(
   return await fetchWrapper<ScoringCategory>(
     "/scoring-categories/" + parentId,
     "POST",
-    token,
+    true,
     body
   );
 }
 
-export async function updateCategory(
-  categoryId: number,
-  data: Partial<ScoringCategory>,
-  token: string
-) {
+export async function updateCategory(data: Partial<ScoringCategory>) {
   if (data.id === undefined) {
     throw Error;
   }
@@ -63,23 +58,20 @@ export async function updateCategory(
   }
 
   return await fetchWrapper<ScoringCategory>(
-    "/scoring-categories/" + categoryId,
+    "/scoring-categories/" + data.id,
     "PATCH",
-    token,
+    true,
     body
   );
 }
 
-export async function deleteCategory(
-  data: Partial<ScoringCategory>,
-  token: string
-) {
+export async function deleteCategory(data: Partial<ScoringCategory>) {
   if (data.id === undefined) {
     throw Error;
   }
   return await fetchWrapper<null>(
     "/scoring-categories/" + data.id,
     "DELETE",
-    token
+    true
   );
 }

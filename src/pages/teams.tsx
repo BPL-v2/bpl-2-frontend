@@ -40,20 +40,19 @@ const TeamPage: React.FC = () => {
     return <></>;
   }
   const eventIdNum = Number(eventId);
-  const token = "token";
   return (
     <CrudTable<Team>
       resourceName="Team"
       columns={columns}
       fetchFunction={() => fetchTeamsForEvent(eventIdNum)}
       createFunction={async (data) => {
-        return createTeam(eventIdNum, data, token);
+        return createTeam(eventIdNum, data);
       }}
       editFunction={async (data) => {
-        return updateTeam(eventIdNum, data, token);
+        return updateTeam(eventIdNum, data);
       }}
       deleteFunction={async (data) => {
-        return deleteTeam(eventIdNum, data, token);
+        return deleteTeam(eventIdNum, data);
       }}
     />
   );

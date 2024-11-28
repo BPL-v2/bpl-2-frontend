@@ -1,30 +1,23 @@
 import React, { useContext, useEffect } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
-import { jwtDecode } from "jwt-decode";
 import { Dropdown, MenuProps } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import { getUserInfo, logoutUser } from "../client/user-client";
 
 const AuthButton: React.FC = () => {
-  const { jwtToken, setJwtToken, user, setUser } =
-    useContext(GlobalStateContext);
+  const { user, setUser } = useContext(GlobalStateContext);
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       // Ensure the message is from the expected origin
       if (event.origin !== import.meta.env.VITE_BACKEND_URL) return;
-
-      const { token } = event.data;
-      if (token) {
-        localStorage.setItem("token", token);
-        setJwtToken(token);
-        setUser(jwtDecode(token));
-      }
+      getUserInfo().then((data) => setUser(data));
     };
     window.addEventListener("message", handleMessage);
     // Cleanup the event listener on component unmount
     return () => {
       window.removeEventListener("message", handleMessage);
     };
-  }, [setJwtToken, setUser]);
+  }, [setUser]);
 
   const handleOAuthClick = () => {
     window.open(import.meta.env.VITE_BACKEND_URL + "/oauth2/discord", "");
@@ -46,16 +39,14 @@ const AuthButton: React.FC = () => {
       onClick: () => console.log("PoE auth requested"),
     });
   }
-  if (jwtToken) {
+  if (user) {
     items.push({
       label: "Logout",
       key: "Logout",
       icon: <UserOutlined />,
       danger: true,
       onClick: () => {
-        setJwtToken("");
-        setUser(undefined);
-        localStorage.removeItem("token");
+        logoutUser().then(() => setUser(undefined));
       },
     });
   }

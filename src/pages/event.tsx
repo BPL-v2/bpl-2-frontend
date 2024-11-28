@@ -7,7 +7,7 @@ import {
   fetchAllEvents,
   updateEvent,
 } from "../client/event_client";
-import { router } from "../App";
+import { router } from "../router";
 
 const columns: CrudColumn<BPLEvent>[] = [
   {
@@ -34,22 +34,15 @@ const columns: CrudColumn<BPLEvent>[] = [
 ];
 
 const EventPage: React.FC = () => {
-  const token = "token";
   return (
     <div className="">
       <CrudTable<BPLEvent>
         resourceName="Event"
         columns={columns}
         fetchFunction={fetchAllEvents}
-        createFunction={async (data) => {
-          return createEvent(data, token);
-        }}
-        editFunction={async (data) => {
-          return updateEvent(data, token);
-        }}
-        deleteFunction={async (data) => {
-          return deleteEvent(data, token);
-        }}
+        createFunction={createEvent}
+        editFunction={updateEvent}
+        deleteFunction={deleteEvent}
         addtionalActions={{
           Teams: async (data) => router.navigate(data.id + "/teams"),
           "Scoring Categories": async (data) =>
