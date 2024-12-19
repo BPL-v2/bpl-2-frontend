@@ -8,6 +8,8 @@ import { ContextProvider } from "./utils/context-provider";
 import { User } from "./types/user";
 import { getUserInfo } from "./client/user-client";
 import { router } from "./router";
+import { fetchCurrentEvent } from "./client/event-client";
+import { BPLEvent } from "./types/event";
 
 const items = [
   {
@@ -20,9 +22,16 @@ const items = [
 function App() {
   const [currentNav, setCurrentNav] = useState("events");
   const [user, setUser] = useState<User>();
+  const [currentEvent, setCurrentEvent] = useState<BPLEvent>();
   useEffect(() => {
     getUserInfo().then((data) => setUser(data));
   }, [setUser]);
+
+  useEffect(() => {
+    fetchCurrentEvent().then((data) => {
+      setCurrentEvent(data);
+    });
+  }, [setCurrentEvent]);
 
   return (
     <>
@@ -35,6 +44,8 @@ function App() {
           value={{
             user: user,
             setUser: setUser,
+            currentEvent: currentEvent,
+            setCurrentEvent: setCurrentEvent,
           }}
         >
           {" "}

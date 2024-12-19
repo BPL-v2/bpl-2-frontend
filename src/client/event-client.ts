@@ -11,6 +11,10 @@ export class HttpError {
   }
 }
 
+export async function fetchCurrentEvent(): Promise<BPLEvent> {
+  return await fetchWrapper<BPLEvent>("/events/current", "GET");
+}
+
 export async function fetchAllEvents(): Promise<BPLEvent[]> {
   return await fetchWrapper<BPLEvent[]>("/events", "GET");
 }

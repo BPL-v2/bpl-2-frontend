@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Button,
   Checkbox,
@@ -10,10 +10,14 @@ import {
   Select,
   Space,
   Table,
-  Typography,
 } from "antd";
-import type { TableProps } from "antd";
+import type { FormInstance, TableProps } from "antd";
 import { ColumnType } from "antd/es/table";
+
+type Option = {
+  label: string;
+  value: any;
+};
 
 export interface CrudColumn<T> extends ColumnType<T> {
   editable?: boolean;
@@ -27,7 +31,12 @@ export interface CrudColumn<T> extends ColumnType<T> {
     | "multiselect"
     | "text[]"
     | "number[]";
-  options?: string[];
+  defaultValue?: string;
+  options?: string[] | Option[];
+  inputRenderer?: (
+    record: Partial<T>,
+    dataSetter: (data: Partial<T>) => void
+  ) => JSX.Element;
 }
 
 type funcOnData<T> = (data: Partial<T>) => Promise<any>;
@@ -51,6 +60,9 @@ const CrudTable = <T,>({
   deleteFunction,
   addtionalActions,
 }: CrudTableProps<T>) => {
+  const creationFormRef = useRef<FormInstance>(null);
+  const updateFormRef = useRef<FormInstance>(null);
+
   const antdColumns = columns as TableProps<T>["columns"];
 
   const actionColumns =
@@ -110,115 +122,108 @@ const CrudTable = <T,>({
       setData(data);
     });
   }, [fetchFunction, setData]);
-
-  function render(presets: Partial<T>) {
+  useEffect(() => {
+    if (updateFormRef.current) {
+      updateFormRef.current.setFieldsValue(currentData);
+    }
+  }, [currentData]);
+  useEffect(() => {
+    fetchFunction().then((data) => {
+      setData([...data]); // Ensure a new array reference
+    });
+  }, [fetchFunction, setData]);
+  function renderForm(presets: Partial<T>) {
     return columns
       .filter((column) => column.editable)
       .map((column, idx) => {
+        if (column.inputRenderer) {
+          return (
+            <div key={"inputRenderer" + idx}>
+              {column.inputRenderer(currentData, setCurrentData)}
+            </div>
+          );
+        }
+
         const key = column.dataIndex as keyof T;
         let input;
         if (column.type === "text") {
-          input = (
-            <Input
-              value={presets[key] as string}
-              onChange={(e) =>
-                setCurrentData({
-                  ...currentData,
-                  [key]: e.target.value,
-                })
-              }
-            />
-          );
+          input = <Input />;
         } else if (column.type === "number") {
-          input = (
-            <InputNumber
-              value={presets[key] as number}
-              onChange={(e) =>
-                setCurrentData({
-                  ...currentData,
-                  [key]: e,
-                })
-              }
-            />
-          );
+          input = <InputNumber />;
         } else if (column.type === "checkbox") {
-          input = (
-            <Checkbox
-              checked={presets[key] as boolean}
-              onChange={(e) => {
-                console.log(e.target.checked);
-                setCurrentData({
-                  ...currentData,
-                  [key]: e.target.checked,
-                });
-              }}
-            />
-          );
+          input = <Checkbox checked={presets[key] as boolean} />;
         } else if (column.type === "date") {
           input = <DatePicker></DatePicker>;
         } else if (column.type === "select") {
+          console.log(column.options);
           input = (
-            <Select
-              style={{ width: "100%" }}
-              onChange={(e) => {
-                setCurrentData({
-                  ...currentData,
-                  [key]: e,
-                });
-              }}
-            >
-              {column.options?.map((option) => (
-                <Select.Option key={option} value={option}>
-                  {option}
-                </Select.Option>
-              ))}
+            <Select style={{ width: "100%" }}>
+              <Select.Option value={""}>None</Select.Option>
+              {column.options?.map((option) => {
+                let label = typeof option === "string" ? option : option.label;
+                let value = typeof option === "string" ? option : option.value;
+                return (
+                  <Select.Option key={value} id={value} value={value}>
+                    {label}
+                  </Select.Option>
+                );
+              })}
             </Select>
           );
         } else if (column.type === "text[]") {
-          input = (
-            <Input
-              value={presets[key] as string}
-              onChange={(e) =>
-                setCurrentData({
-                  ...currentData,
-                  [key]: e.target.value.split(","),
-                })
-              }
-            />
-          );
+          input = <Input />;
         } else {
           return;
         }
-
         return (
-          <div key={"input" + idx}>
-            <Typography.Title level={5}>
-              {String(column.title)}
-            </Typography.Title>
+          <Form.Item
+            key={String(key)}
+            name={String(key)}
+            label={String(column.title)}
+            rules={[
+              {
+                required: column.required ?? false,
+                message: `Please input ${column.title}!`,
+              },
+            ]}
+            initialValue={presets[key]}
+          >
             {input}
-          </div>
+          </Form.Item>
         );
       })
       .filter((element) => element !== undefined);
   }
-
   return (
     <>
       {createFunction ? (
         <Modal
           title={`Create new ${resourceName}`}
           open={isCreateModalOpen}
-          onOk={() =>
-            createFunction(currentData).then(() => {
-              setIsCreateModalOpen(false);
-              fetchFunction().then((data) => {
-                setData(data);
-              });
-            })
-          }
+          onOk={() => {
+            console.log("Create", creationFormRef.current);
+            creationFormRef.current?.submit();
+          }}
           onCancel={() => setIsCreateModalOpen(false)}
         >
-          <Form>{render(currentData)}</Form>
+          <Form
+            ref={creationFormRef}
+            onFinish={() => {
+              createFunction(creationFormRef.current?.getFieldsValue()).then(
+                () => {
+                  setIsCreateModalOpen(false);
+                  setCurrentData({});
+                  setTimeout(() => {
+                    fetchFunction().then((data) => {
+                      setData(data);
+                    });
+                  }, 10);
+                }
+              );
+            }}
+          >
+            {renderForm(currentData)}
+          </Form>
         </Modal>
       ) : (
         ""
@@ -227,18 +232,32 @@ const CrudTable = <T,>({
         <Modal
           title={`Edit ${resourceName}`}
           open={isUpdateModalOpen}
-          onOk={() =>
-            editFunction(currentData).then(() => {
-              setIsUpdateModalOpen(false);
-              fetchFunction().then((data) => {
-                setData(data);
-              });
-            })
-          }
+          onOk={() => {
+            updateFormRef.current?.submit();
+          }}
           onCancel={() => setIsUpdateModalOpen(false)}
         >
           {" "}
-          <Form>{render(currentData)}</Form>
+          <Form
+            ref={updateFormRef}
+            onFinish={() => {
+              editFunction({
+                ...currentData,
+                ...updateFormRef.current?.getFieldsValue(),
+              }).then(() => {
+                setIsUpdateModalOpen(false);
+                setCurrentData({});
+
+                setTimeout(() => {
+                  fetchFunction().then((data) => {
+                    setData(data);
+                  });
+                }, 100);
+              });
+            }}
+          >
+            {renderForm(currentData)}
+          </Form>
         </Modal>
       ) : (
         ""
@@ -264,16 +283,18 @@ const CrudTable = <T,>({
       )}
       <Table<T>
         columns={[...antdColumns!, ...actionColumns]}
-        dataSource={data.map((entry, idx) => {
-          // @ts-ignore: T does not need to have a key property, but react wants all rows to have it
-          if (entry.key == undefined) entry.key = idx;
-          return entry;
-        })}
+        dataSource={data
+          // @ts-ignore lets just assume that T has an id (no, setting T extends {id: number} leads to other issues)
+          .sort((a, b) => a.id - b.id)
+          .map((entry, idx) => {
+            return { key: idx, ...entry };
+          })}
         footer={() => (
           <>
             {createFunction ? (
               <Button
                 onClick={() => {
+                  creationFormRef.current?.resetFields();
                   setCurrentData({});
                   setIsCreateModalOpen(true);
                 }}

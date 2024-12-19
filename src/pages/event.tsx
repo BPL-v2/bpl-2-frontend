@@ -6,7 +6,7 @@ import {
   deleteEvent,
   fetchAllEvents,
   updateEvent,
-} from "../client/event_client";
+} from "../client/event-client";
 import { router } from "../router";
 
 const columns: CrudColumn<BPLEvent>[] = [

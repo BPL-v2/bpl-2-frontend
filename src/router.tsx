@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import EventPage from "./pages/event";
 import TeamPage from "./pages/teams";
 import ScoringCategoryPage from "./pages/scoring-categories";
+import ConditionPage from "./pages/conditions";
 
 export const router = createBrowserRouter([
   {
@@ -19,5 +20,9 @@ export const router = createBrowserRouter([
   {
     path: "/scoring-categories/:categoryId",
     element: <ScoringCategoryPage />,
+  },
+  {
+    path: "/objectives/:objectiveId/conditions",
+    element: <ConditionPage />,
   },
 ]);

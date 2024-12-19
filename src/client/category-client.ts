@@ -1,8 +1,4 @@
-import {
-  CategoryCreate,
-  CategoryUpdate,
-  ScoringCategory,
-} from "../types/scoring-category";
+import { CategoryCreate, ScoringCategory } from "../types/scoring-category";
 import { fetchWrapper } from "./base";
 
 export async function fetchCategoryForEvent(
@@ -18,7 +14,7 @@ export async function fetchCategoryById(
   categoryId: number
 ): Promise<ScoringCategory> {
   return await fetchWrapper<ScoringCategory>(
-    "/scoring-categories/" + categoryId,
+    "/scoring/categories/" + categoryId,
     "GET"
   );
 }
@@ -27,39 +23,38 @@ export async function createScoringCategory(
   parentId: number,
   data: Partial<ScoringCategory>
 ) {
-  if (data.name === undefined) {
-    return;
-  }
-
-  const body: CategoryCreate = {
-    name: data.name,
-    inheritance: data.inheritance,
-  };
-
+  console.log(data);
+  data.parent_id = parentId;
   return await fetchWrapper<ScoringCategory>(
-    "/scoring-categories/" + parentId,
-    "POST",
+    "/scoring/categories",
+    "PUT",
     true,
-    body
+    data
   );
 }
 
 export async function updateCategory(data: Partial<ScoringCategory>) {
-  if (data.id === undefined) {
+  if (
+    data.id === undefined ||
+    data.name === undefined ||
+    data.parent_id === undefined
+  ) {
     throw Error;
   }
 
-  const body: CategoryUpdate = {};
-  if (data.name !== undefined) {
-    body.name = data.name;
+  const body: CategoryCreate = {
+    id: data.id,
+    name: data.name,
+    parent_id: data.parent_id,
+  };
+  if (data.scoring_preset) {
+    // @ts-ignore: this doesnt quite fit the model. we are only sending the id not the whole object
+    body.scoring_id = Number(data.scoring_preset);
   }
-  if (data.inheritance !== undefined) {
-    body.inheritance = data.inheritance;
-  }
-
+  console.log(body);
   return await fetchWrapper<ScoringCategory>(
-    "/scoring-categories/" + data.id,
-    "PATCH",
+    "/scoring/categories",
+    "PUT",
     true,
     body
   );
@@ -70,7 +65,7 @@ export async function deleteCategory(data: Partial<ScoringCategory>) {
     throw Error;
   }
   return await fetchWrapper<null>(
-    "/scoring-categories/" + data.id,
+    "/scoring/categories/" + data.id,
     "DELETE",
     true
   );

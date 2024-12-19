@@ -7,11 +7,13 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "serve": "serve -s dist"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
     "@heroicons/react": "^2.2.0",
+    "@types/node": "^22.10.1",
     "antd": "^5.22.2",
     "dotenv": "^16.4.5",
     "react": "^18.3.1",

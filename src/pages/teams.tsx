@@ -6,7 +6,7 @@ import {
   deleteTeam,
   fetchTeamsForEvent,
   updateTeam,
-} from "../client/team_client";
+} from "../client/team-client";
 import { useParams } from "react-router-dom";
 
 const columns: CrudColumn<Team>[] = [
