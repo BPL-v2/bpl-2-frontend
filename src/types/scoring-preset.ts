@@ -11,7 +11,7 @@ export enum ScoringMethod {
   RANKED_REVERSE = "RANKED_REVERSE",
   RELATIVE_PRESENCE = "RELATIVE_PRESENCE",
 
-  RANKED_COMPLETION = "RANKED_COMPLETION_TIME",
+  RANKED_COMPLETION_TIME = "RANKED_COMPLETION_TIME",
   BONUS_PER_COMPLETION = "BONUS_PER_COMPLETION",
 }
 
@@ -28,7 +28,7 @@ export function methodsForType(type: ScoringPresetType): ScoringMethod[] {
       ];
     case ScoringPresetType.CATEGORY:
       return [
-        ScoringMethod.RANKED_COMPLETION,
+        ScoringMethod.RANKED_COMPLETION_TIME,
         ScoringMethod.BONUS_PER_COMPLETION,
       ];
   }
@@ -38,9 +38,10 @@ export type ScoringPreset = {
   id: number;
   name: string;
   description: string;
-  points: number;
+  points: number[];
   scoring_method: ScoringMethod;
   type: ScoringPresetType;
+  event_id?: number;
 };
 
 export type ScoringPresetCreate = {

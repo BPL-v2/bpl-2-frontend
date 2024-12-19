@@ -47,6 +47,8 @@ const EventPage: React.FC = () => {
           Teams: async (data) => router.navigate(data.id + "/teams"),
           "Scoring Categories": async (data) =>
             router.navigate("/scoring-categories/" + data.scoring_category_id),
+          "Scoring Presets": async (data) =>
+            router.navigate("/scoring-presets/" + data.id),
         }}
       />
     </div>

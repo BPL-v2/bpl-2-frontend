@@ -13,6 +13,7 @@ import {
 } from "antd";
 import type { FormInstance, TableProps } from "antd";
 import { ColumnType } from "antd/es/table";
+import { sendWarning } from "../utils/notifications";
 
 type Option = {
   label: string;
@@ -49,6 +50,7 @@ type CrudTableProps<T> = {
   deleteFunction?: funcOnData<T>;
   createFunction?: funcOnData<T>;
   addtionalActions?: { [name: string]: funcOnData<T> };
+  formValidator?: (data: Partial<T>) => string | undefined;
 };
 
 const CrudTable = <T,>({
@@ -59,6 +61,7 @@ const CrudTable = <T,>({
   editFunction,
   deleteFunction,
   addtionalActions,
+  formValidator,
 }: CrudTableProps<T>) => {
   const creationFormRef = useRef<FormInstance>(null);
   const updateFormRef = useRef<FormInstance>(null);
@@ -149,7 +152,7 @@ const CrudTable = <T,>({
         if (column.type === "text") {
           input = <Input />;
         } else if (column.type === "number") {
-          input = <InputNumber />;
+          input = <InputNumber style={{ width: "100%" }} />;
         } else if (column.type === "checkbox") {
           input = <Checkbox />;
         } else if (column.type === "date") {
@@ -201,7 +204,6 @@ const CrudTable = <T,>({
           title={`Create new ${resourceName}`}
           open={isCreateModalOpen}
           onOk={() => {
-            console.log("Create", creationFormRef.current);
             creationFormRef.current?.submit();
           }}
           onCancel={() => setIsCreateModalOpen(false)}
@@ -209,6 +211,13 @@ const CrudTable = <T,>({
           <Form
             ref={creationFormRef}
             onFinish={() => {
+              const validationError = formValidator?.(
+                updateFormRef.current?.getFieldsValue()
+              );
+              if (validationError) {
+                sendWarning(validationError);
+                return;
+              }
               createFunction(creationFormRef.current?.getFieldsValue()).then(
                 () => {
                   setIsCreateModalOpen(false);
@@ -241,6 +250,28 @@ const CrudTable = <T,>({
           <Form
             ref={updateFormRef}
             onFinish={() => {
+              const validationError = formValidator?.(
+                updateFormRef.current?.getFieldsValue()
+              );
+              if (validationError) {
+                sendWarning(validationError);
+                return;
+              }
+
+              if (
+                formValidator !== undefined &&
+                creationFormRef.current?.getFieldsValue() !== undefined
+              ) {
+                console.log("validating");
+
+                const validationError = formValidator(
+                  updateFormRef.current?.getFieldsValue()
+                );
+                if (validationError) {
+                  sendWarning(validationError);
+                  return;
+                }
+              }
               editFunction({
                 ...currentData,
                 ...updateFormRef.current?.getFieldsValue(),

@@ -18,6 +18,7 @@ export async function fetchWrapper<T>(
   if (headers === undefined) {
     headers = {};
   }
+
   if (method === "POST" || method === "PUT" || method === "PATCH") {
     // headers["Content-Type"] = "application/json";
     // headers["Accept"] = "application/json";

@@ -3,6 +3,7 @@ import EventPage from "./pages/event";
 import TeamPage from "./pages/teams";
 import ScoringCategoryPage from "./pages/scoring-categories";
 import ConditionPage from "./pages/conditions";
+import ScoringPresetsPage from "./pages/scoring-presets";
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ export const router = createBrowserRouter([
   {
     path: "/scoring-categories/:categoryId",
     element: <ScoringCategoryPage />,
+  },
+  {
+    path: "/scoring-presets/:eventId",
+    element: <ScoringPresetsPage />,
   },
   {
     path: "/objectives/:objectiveId/conditions",
