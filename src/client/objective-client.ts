@@ -23,6 +23,9 @@ export async function createObjective(
   ) {
     return;
   }
+  if (!data.scoring_preset_id) {
+    delete data.scoring_preset_id;
+  }
   data.category_id = categoryId;
   return await fetchWrapper<Partial<ScoringObjective>>(
     "/scoring/objectives",

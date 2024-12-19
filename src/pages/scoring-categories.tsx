@@ -592,14 +592,6 @@ const ScoringCategoryPage: React.FC = () => {
               <Form.Item
                 name="conditions-basetype"
                 label="Item Base Type"
-                rules={[
-                  {
-                    required:
-                      currentObjective.conditions === undefined ||
-                      currentObjective.conditions.length === 0,
-                    message: "Please set either basetype or name condition!",
-                  },
-                ]}
                 initialValue={
                   currentObjective.conditions?.find(
                     (condition) =>
@@ -613,14 +605,6 @@ const ScoringCategoryPage: React.FC = () => {
               <Form.Item
                 name="conditions-name"
                 label="Item Name"
-                rules={[
-                  {
-                    required:
-                      currentObjective.conditions === undefined ||
-                      currentObjective.conditions.length === 0,
-                    message: "Please set either basetype or name condition!",
-                  },
-                ]}
                 initialValue={
                   currentObjective.conditions?.find(
                     (condition) =>
