@@ -151,11 +151,10 @@ const CrudTable = <T,>({
         } else if (column.type === "number") {
           input = <InputNumber />;
         } else if (column.type === "checkbox") {
-          input = <Checkbox checked={presets[key] as boolean} />;
+          input = <Checkbox />;
         } else if (column.type === "date") {
           input = <DatePicker></DatePicker>;
         } else if (column.type === "select") {
-          console.log(column.options);
           input = (
             <Select style={{ width: "100%" }}>
               <Select.Option value={""}>None</Select.Option>
@@ -180,6 +179,7 @@ const CrudTable = <T,>({
             key={String(key)}
             name={String(key)}
             label={String(column.title)}
+            valuePropName={column.type === "checkbox" ? "checked" : "value"}
             rules={[
               {
                 required: column.required ?? false,
