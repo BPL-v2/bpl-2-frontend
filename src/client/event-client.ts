@@ -28,7 +28,7 @@ export async function createEvent(data: Partial<BPLEvent>) {
     is_current: data.is_current || false,
   };
 
-  return await fetchWrapper<BPLEvent>("/events", "POST", true, body);
+  return await fetchWrapper<BPLEvent>("/events", "POST", body);
 }
 
 export async function updateEvent(data: Partial<BPLEvent>) {
@@ -45,17 +45,12 @@ export async function updateEvent(data: Partial<BPLEvent>) {
   }
   console.log(data);
   console.log(body);
-  return await fetchWrapper<BPLEvent>(
-    "/events/" + data.id,
-    "PATCH",
-    true,
-    body
-  );
+  return await fetchWrapper<BPLEvent>("/events/" + data.id, "PATCH", body);
 }
 
 export async function deleteEvent(data: Partial<BPLEvent>) {
   if (data.id === undefined) {
     throw Error;
   }
-  return await fetchWrapper<null>("/events/" + data.id, "DELETE", true);
+  return await fetchWrapper<null>("/events/" + data.id, "DELETE");
 }

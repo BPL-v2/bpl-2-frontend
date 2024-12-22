@@ -12,11 +12,18 @@ import {
   createScoringPreset,
   fetchScoringPresetsForEvent,
 } from "../client/scoring-preset-client";
+import { useContext } from "react";
+import { GlobalStateContext } from "../utils/context-provider";
+import { UserPermission } from "../types/user";
 
 const ScoringPresetsPage: React.FC = () => {
   let { eventId } = useParams();
   if (!eventId) {
     return <div>Event ID not found</div>;
+  }
+  const { user } = useContext(GlobalStateContext);
+  if (!user || !user.permissions.includes(UserPermission.ADMIN)) {
+    return <div>You do not have permission to view this page</div>;
   }
 
   const scoringPresetsColumns: CrudColumn<ScoringPreset>[] = [

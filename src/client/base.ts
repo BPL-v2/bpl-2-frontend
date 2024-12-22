@@ -10,7 +10,6 @@ export class HttpError {
 export async function fetchWrapper<T>(
   path: string,
   method: string,
-  authenticated?: boolean,
   data?: { [key: string]: any },
   headers?: { [key: string]: string }
 ): Promise<T> {
@@ -19,23 +18,12 @@ export async function fetchWrapper<T>(
     headers = {};
   }
 
-  if (method === "POST" || method === "PUT" || method === "PATCH") {
-    // headers["Content-Type"] = "application/json";
-    // headers["Accept"] = "application/json";
-  }
-  // if (method !== "GET") {
-  params["mode"] = "cors";
-  // }
-
   params["headers"] = headers;
   params["method"] = method;
   if (data !== undefined) {
     params["body"] = JSON.stringify(data);
   }
-  if (authenticated) {
-    params["credentials"] = "include";
-  }
-  return await fetch(import.meta.env.VITE_BACKEND_URL + path, params)
+  return fetch(import.meta.env.VITE_BACKEND_URL + path, params)
     .then((response) => {
       if (response.status > 299) {
         throw new HttpError(response.status, response.statusText);

@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import CrudTable, { CrudColumn } from "../components/crudtable";
 import { useParams } from "react-router-dom";
 import { Condition, ItemField, Operator } from "../types/scoring-objective";
 import { getObjectiveById } from "../client/objective-client";
 import { createCondition, deleteCondition } from "../client/condition-client";
+import { GlobalStateContext } from "../utils/context-provider";
+import { UserPermission } from "../types/user";
 
 const columns: CrudColumn<Condition>[] = [
   {
@@ -32,6 +34,10 @@ const columns: CrudColumn<Condition>[] = [
 ];
 
 const ConditionPage: React.FC = () => {
+  const { user } = useContext(GlobalStateContext);
+  if (!user || !user.permissions.includes(UserPermission.ADMIN)) {
+    return <div>You do not have permission to view this page</div>;
+  }
   let { objectiveId } = useParams();
   if (!objectiveId) {
     return <></>;

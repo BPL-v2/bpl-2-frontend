@@ -14,12 +14,7 @@ export async function createCondition(
   }
   data.objective_id = objectiveId;
 
-  return await fetchWrapper<Condition>(
-    "/scoring/conditions",
-    "PUT",
-    true,
-    data
-  );
+  return await fetchWrapper<Condition>("/scoring/conditions", "PUT", data);
 }
 
 export async function deleteCondition(data: Partial<Condition>) {

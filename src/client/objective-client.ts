@@ -6,8 +6,7 @@ export async function getObjectiveById(
 ): Promise<ScoringObjective> {
   return await fetchWrapper<ScoringObjective>(
     "/scoring/objectives/" + objectiveId,
-    "GET",
-    true
+    "GET"
   );
 }
 
@@ -30,7 +29,6 @@ export async function createObjective(
   return await fetchWrapper<Partial<ScoringObjective>>(
     "/scoring/objectives",
     "PUT",
-    true,
     data
   );
 }
@@ -43,7 +41,6 @@ export async function updateObjective(data: Partial<ScoringObjective>) {
   return await fetchWrapper<ScoringObjective>(
     "/scoring/objectives",
     "PUT",
-    true,
     data
   );
 }
@@ -52,9 +49,5 @@ export async function deleteObjective(data: Partial<ScoringObjective>) {
   if (data.id === undefined) {
     throw Error;
   }
-  return await fetchWrapper<null>(
-    "/scoring/objectives/" + data.id,
-    "DELETE",
-    true
-  );
+  return await fetchWrapper<null>("/scoring/objectives/" + data.id, "DELETE");
 }

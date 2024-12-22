@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
-import { Dropdown, MenuProps } from "antd";
+import { Button, Dropdown, MenuProps } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { getUserInfo, logoutUser } from "../client/user-client";
 
@@ -8,8 +8,12 @@ const AuthButton: React.FC = () => {
   const { user, setUser } = useContext(GlobalStateContext);
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      // Ensure the message is from the expected origin
-      if (event.origin !== import.meta.env.VITE_BACKEND_URL) return;
+      if (
+        new URL(event.origin).hostname !==
+          new URL(import.meta.env.VITE_BACKEND_URL).hostname ||
+        event.data["bpl-auth"] !== true
+      )
+        return;
       getUserInfo().then((data) => setUser(data));
     };
     window.addEventListener("message", handleMessage);
@@ -51,18 +55,12 @@ const AuthButton: React.FC = () => {
     });
   }
 
-  const menuProps = {
-    items,
-  };
-
   return (
-    <Dropdown.Button
-      menu={menuProps}
-      placement="bottom"
-      icon={<UserOutlined />}
-    >
-      {user ? user.discord_name : "Login"}
-    </Dropdown.Button>
+    <Dropdown menu={{ items }} trigger={["hover"]}>
+      <Button icon={<UserOutlined />}>
+        {user ? user.discord_name : "Login"}
+      </Button>
+    </Dropdown>
   );
 };
 

@@ -30,7 +30,6 @@ export async function createScoringCategory(
   return await fetchWrapper<ScoringCategory>(
     "/scoring/categories",
     "PUT",
-    true,
     data
   );
 }
@@ -39,9 +38,5 @@ export async function deleteCategory(data: Partial<ScoringCategory>) {
   if (data.id === undefined) {
     throw Error;
   }
-  return await fetchWrapper<null>(
-    "/scoring/categories/" + data.id,
-    "DELETE",
-    true
-  );
+  return await fetchWrapper<null>("/scoring/categories/" + data.id, "DELETE");
 }

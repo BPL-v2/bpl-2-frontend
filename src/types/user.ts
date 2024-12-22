@@ -1,7 +1,11 @@
 export type User = {
-  user_id: number;
-  permissions: string[];
+  id: number;
+  permissions: UserPermission[];
   discord_id: number;
   discord_name: string;
   account_name: string;
 };
+
+export enum UserPermission {
+  ADMIN = "admin",
+}

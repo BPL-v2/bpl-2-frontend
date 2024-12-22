@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import CrudTable, { CrudColumn } from "../components/crudtable";
 import { Team } from "../types/team";
 import {
@@ -8,6 +8,8 @@ import {
   updateTeam,
 } from "../client/team-client";
 import { useParams } from "react-router-dom";
+import { GlobalStateContext } from "../utils/context-provider";
+import { UserPermission } from "../types/user";
 
 const columns: CrudColumn<Team>[] = [
   {
@@ -39,6 +41,11 @@ const TeamPage: React.FC = () => {
   if (!eventId) {
     return <></>;
   }
+  const { user } = useContext(GlobalStateContext);
+  if (!user || !user.permissions.includes(UserPermission.ADMIN)) {
+    return <div>You do not have permission to view this page</div>;
+  }
+
   const eventIdNum = Number(eventId);
   return (
     <CrudTable<Team>

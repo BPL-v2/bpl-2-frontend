@@ -4,6 +4,7 @@ import TeamPage from "./pages/teams";
 import ScoringCategoryPage from "./pages/scoring-categories";
 import ConditionPage from "./pages/conditions";
 import ScoringPresetsPage from "./pages/scoring-presets";
+import UserPage from "./pages/users";
 
 export const router = createBrowserRouter([
   {
@@ -29,5 +30,9 @@ export const router = createBrowserRouter([
   {
     path: "/objectives/:objectiveId/conditions",
     element: <ConditionPage />,
+  },
+  {
+    path: "/users",
+    element: <UserPage />,
   },
 ]);

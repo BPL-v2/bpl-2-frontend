@@ -28,10 +28,5 @@ export async function createScoringPreset(
     data.points = data.points.split(",").map((x) => parseFloat(x));
   }
   data.event_id = eventId;
-  return await fetchWrapper<ScoringPreset>(
-    "/scoring/presets",
-    "PUT",
-    true,
-    data
-  );
+  return await fetchWrapper<ScoringPreset>("/scoring/presets", "PUT", data);
 }

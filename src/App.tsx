@@ -1,32 +1,74 @@
-import { Layout, Menu } from "antd";
+import { Layout, Menu, MenuProps } from "antd";
 import "./App.css";
 import { useEffect, useState } from "react";
 import { RouterProvider } from "react-router-dom";
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import AuthButton from "./components/auth";
 import { ContextProvider } from "./utils/context-provider";
-import { User } from "./types/user";
+import { User, UserPermission } from "./types/user";
 import { getUserInfo } from "./client/user-client";
 import { router } from "./router";
 import { fetchCurrentEvent } from "./client/event-client";
 import { BPLEvent } from "./types/event";
 import { useError } from "./components/errorcontext";
+import { SettingOutlined } from "@ant-design/icons";
+type MenuItem = Required<MenuProps>["items"][number] & {
+  roleRequired?: UserPermission[];
+};
 
-const items = [
+const items: MenuItem[] = [
   {
-    label: "Events",
-    key: "events",
-    path: "/events",
+    label: "Admin",
+    key: "Admin",
+    icon: <SettingOutlined />,
+    extra: "right",
+    roleRequired: [UserPermission.ADMIN],
+    children: [
+      {
+        label: "Events",
+        key: "/events",
+      },
+      {
+        type: "group",
+        label: "Users",
+        children: [
+          { label: "Manage users", key: "/users" },
+          { label: "Sort users", key: "setting:2" },
+        ],
+      },
+    ],
   },
 ];
+
+function filterMenuItems(items: MenuItem[], user: User | undefined) {
+  let userRoles = user?.permissions;
+  let authItems = [];
+  for (let item of items) {
+    if (item.roleRequired) {
+      if (
+        userRoles &&
+        item.roleRequired.some((role) => userRoles.includes(role))
+      ) {
+        authItems.push(item);
+      }
+    } else {
+      authItems.push(item);
+    }
+  }
+  return authItems;
+}
 
 function App() {
   const [currentNav, setCurrentNav] = useState("events");
   const [user, setUser] = useState<User>();
+  const [menuItems, setMenuItems] = useState<MenuItem[]>(items);
   const [currentEvent, setCurrentEvent] = useState<BPLEvent>();
   useEffect(() => {
     getUserInfo().then((data) => setUser(data));
-  }, [setUser]);
+  }, []);
+  useEffect(() => {
+    setMenuItems(filterMenuItems(items, user));
+  }, [user]);
 
   useEffect(() => {
     fetchCurrentEvent().then((data) => {
@@ -73,15 +115,11 @@ function App() {
               style={{ flex: 1, minWidth: "80%" }}
               onClick={(e) => {
                 setCurrentNav(e.key);
-                router.navigate(
-                  items
-                    .filter((route) => route.key === e.key)
-                    .map((route) => route.path)[0]
-                );
+                router.navigate(e.key);
               }}
               selectedKeys={[currentNav]}
               mode="horizontal"
-              items={items}
+              items={menuItems}
             />
             <AuthButton></AuthButton>
           </Header>

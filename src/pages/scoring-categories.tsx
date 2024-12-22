@@ -38,6 +38,7 @@ import { createCondition, deleteCondition } from "../client/condition-client";
 import { ScoringPreset, ScoringPresetType } from "../types/scoring-preset";
 import { fetchScoringPresetsForEvent } from "../client/scoring-preset-client";
 import { GlobalStateContext } from "../utils/context-provider";
+import { UserPermission } from "../types/user";
 
 function addCondition(
   data: Partial<ScoringObjective>,
@@ -181,7 +182,7 @@ function updateObjectiveWithFormObjective(
 }
 
 const ScoringCategoryPage: React.FC = () => {
-  let { currentEvent } = useContext(GlobalStateContext);
+  let { currentEvent, user } = useContext(GlobalStateContext);
   let { categoryId } = useParams();
   let [categoryName, setCategoryName] = React.useState("");
   const [isObjectiveModalOpen, setIsObjectiveModalOpen] = useState(false);
@@ -221,6 +222,9 @@ const ScoringCategoryPage: React.FC = () => {
 
   if (!categoryId) {
     return <></>;
+  }
+  if (!user || !user.permissions.includes(UserPermission.ADMIN)) {
+    return <div>You do not have permission to view this page</div>;
   }
 
   const categoryColumns: CrudColumn<ScoringCategory>[] = useMemo(

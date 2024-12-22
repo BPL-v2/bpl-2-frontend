@@ -121,18 +121,13 @@ const CrudTable = <T,>({
 
   const [data, setData] = useState<T[]>([]);
   useEffect(() => {
-    fetchFunction().then((data) => {
-      setData(data);
-    });
-  }, [fetchFunction, setData]);
-  useEffect(() => {
     if (updateFormRef.current) {
       updateFormRef.current.setFieldsValue(currentData);
     }
   }, [currentData]);
   useEffect(() => {
     fetchFunction().then((data) => {
-      setData([...data]); // Ensure a new array reference
+      setData([...data]);
     });
   }, [fetchFunction, setData]);
   function renderForm(presets: Partial<T>) {
@@ -174,6 +169,20 @@ const CrudTable = <T,>({
           );
         } else if (column.type === "text[]") {
           input = <Input />;
+        } else if (column.type === "multiselect") {
+          input = (
+            <Select mode="multiple" style={{ width: "100%" }}>
+              {column.options?.map((option) => {
+                let label = typeof option === "string" ? option : option.label;
+                let value = typeof option === "string" ? option : option.value;
+                return (
+                  <Select.Option key={value} id={value} value={value}>
+                    {label}
+                  </Select.Option>
+                );
+              })}
+            </Select>
+          );
         } else {
           return;
         }

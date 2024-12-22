@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { BPLEvent } from "../types/event";
 import CrudTable, { CrudColumn } from "../components/crudtable";
 import {
@@ -8,6 +8,8 @@ import {
   updateEvent,
 } from "../client/event-client";
 import { router } from "../router";
+import { GlobalStateContext } from "../utils/context-provider";
+import { UserPermission } from "../types/user";
 
 const columns: CrudColumn<BPLEvent>[] = [
   {
@@ -34,6 +36,11 @@ const columns: CrudColumn<BPLEvent>[] = [
 ];
 
 const EventPage: React.FC = () => {
+  const { user } = useContext(GlobalStateContext);
+  if (!user || !user.permissions.includes(UserPermission.ADMIN)) {
+    return <div>You do not have permission to view this page</div>;
+  }
+
   return (
     <div className="">
       <CrudTable<BPLEvent>

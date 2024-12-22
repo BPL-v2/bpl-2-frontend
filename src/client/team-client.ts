@@ -20,7 +20,6 @@ export async function createTeam(eventId: number, data: Partial<Team>) {
   return await fetchWrapper<Team>(
     "/events/" + eventId + "/teams",
     "POST",
-    true,
     body
   );
 }
@@ -41,7 +40,6 @@ export async function updateTeam(eventId: number, data: Partial<Team>) {
   return await fetchWrapper<Team>(
     "/events/" + eventId + "/teams/" + data.id,
     "PATCH",
-    true,
     body
   );
 }
@@ -52,7 +50,6 @@ export async function deleteTeam(eventId: number, data: Partial<Team>) {
   }
   return await fetchWrapper<null>(
     "/events/" + eventId + "/teams/" + data.id,
-    "DELETE",
-    true
+    "DELETE"
   );
 }
