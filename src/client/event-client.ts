@@ -20,32 +20,7 @@ export async function fetchAllEvents(): Promise<BPLEvent[]> {
 }
 
 export async function createEvent(data: Partial<BPLEvent>) {
-  if (data.name === undefined) {
-    return;
-  }
-  const body: EventCreate = {
-    name: data.name,
-    is_current: data.is_current || false,
-  };
-
-  return await fetchWrapper<BPLEvent>("/events", "POST", body);
-}
-
-export async function updateEvent(data: Partial<BPLEvent>) {
-  if (data.id === undefined) {
-    throw Error;
-  }
-
-  const body: EventUpdate = {};
-  if (data.name !== undefined) {
-    body.name = data.name;
-  }
-  if (data.is_current !== undefined) {
-    body.is_current = data.is_current;
-  }
-  console.log(data);
-  console.log(body);
-  return await fetchWrapper<BPLEvent>("/events/" + data.id, "PATCH", body);
+  return await fetchWrapper<BPLEvent>("/events", "PUT", data);
 }
 
 export async function deleteEvent(data: Partial<BPLEvent>) {

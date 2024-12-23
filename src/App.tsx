@@ -13,7 +13,7 @@ import { BPLEvent } from "./types/event";
 import { useError } from "./components/errorcontext";
 import { SettingOutlined } from "@ant-design/icons";
 type MenuItem = Required<MenuProps>["items"][number] & {
-  roleRequired?: UserPermission[];
+  rolerequired?: UserPermission[];
 };
 
 const items: MenuItem[] = [
@@ -22,7 +22,7 @@ const items: MenuItem[] = [
     key: "Admin",
     icon: <SettingOutlined />,
     extra: "right",
-    roleRequired: [UserPermission.ADMIN],
+    rolerequired: [UserPermission.ADMIN],
     children: [
       {
         label: "Events",
@@ -44,10 +44,10 @@ function filterMenuItems(items: MenuItem[], user: User | undefined) {
   let userRoles = user?.permissions;
   let authItems = [];
   for (let item of items) {
-    if (item.roleRequired) {
+    if (item.rolerequired) {
       if (
         userRoles &&
-        item.roleRequired.some((role) => userRoles.includes(role))
+        item.rolerequired.some((role) => userRoles.includes(role))
       ) {
         authItems.push(item);
       }

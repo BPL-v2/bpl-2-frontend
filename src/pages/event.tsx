@@ -48,7 +48,7 @@ const EventPage: React.FC = () => {
         columns={columns}
         fetchFunction={fetchAllEvents}
         createFunction={createEvent}
-        editFunction={updateEvent}
+        editFunction={createEvent}
         deleteFunction={deleteEvent}
         addtionalActions={{
           Teams: async (data) => router.navigate(data.id + "/teams"),

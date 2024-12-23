@@ -3,7 +3,6 @@
   "specifiers": {
     "npm:@ant-design/icons@^5.5.1": "5.5.1_react@18.3.1_react-dom@18.3.1__react@18.3.1",
     "npm:@eslint/js@^9.13.0": "9.15.0",
-    "npm:@heroicons/react@^2.2.0": "2.2.0_react@18.3.1",
     "npm:@types/node@^22.10.1": "22.10.1",
     "npm:@types/react-dom@^18.3.1": "18.3.1",
     "npm:@types/react@^18.3.12": "18.3.12",
@@ -18,6 +17,7 @@
     "npm:react-dom@^18.3.1": "18.3.1_react@18.3.1",
     "npm:react-router-dom@^7.0.1": "7.0.1_react@18.3.1_react-dom@18.3.1__react@18.3.1",
     "npm:react@^18.3.1": "18.3.1",
+    "npm:swr@^2.2.5": "2.2.5_react@18.3.1",
     "npm:tailwindcss@^3.4.15": "3.4.15_postcss@8.4.49",
     "npm:typescript-eslint@^8.11.0": "8.16.0_eslint@9.15.0_@typescript-eslint+parser@8.16.0__eslint@9.15.0__typescript@5.6.3_typescript@5.6.3",
     "npm:typescript@~5.6.2": "5.6.3",
@@ -358,12 +358,6 @@
       "integrity": "sha512-2b/g5hRmpbb1o4GnTZax9N9m0FXzz9OV42ZzI4rDDMDuHUqigAiQCEWChBWCY4ztAGVRjoWT19v0yMmc5/L5kA==",
       "dependencies": [
         "levn"
-      ]
-    },
-    "@heroicons/react@2.2.0_react@18.3.1": {
-      "integrity": "sha512-LMcepvRaS9LYHJGsF0zzmgKCUim/X3N/DQKc4jepAXJ7l8QxJ1PmxJzqplF2Z3FE4PqBAIGyJAQ/w4B5dsqbtQ==",
-      "dependencies": [
-        "react"
       ]
     },
     "@humanfs/core@0.19.1": {
@@ -899,6 +893,9 @@
     },
     "classnames@2.5.1": {
       "integrity": "sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow=="
+    },
+    "client-only@0.0.1": {
+      "integrity": "sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA=="
     },
     "color-convert@2.0.1": {
       "integrity": "sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==",
@@ -2097,6 +2094,14 @@
     "supports-preserve-symlinks-flag@1.0.0": {
       "integrity": "sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w=="
     },
+    "swr@2.2.5_react@18.3.1": {
+      "integrity": "sha512-QtxqyclFeAsxEUeZIYmsaQ0UjimSq1RZ9Un7I68/0ClKK/U3LoyQunwkQfJZr2fc22DfIXLNDc2wFyTEikCUpg==",
+      "dependencies": [
+        "client-only",
+        "react",
+        "use-sync-external-store"
+      ]
+    },
     "tailwindcss@3.4.15_postcss@8.4.49": {
       "integrity": "sha512-r4MeXnfBmSOuKUWmXe6h2CcyfzJCEk4F0pptO5jlnYSIViUkVmsawj80N5h2lO3gwcmSb4n3PuN+e+GC1Guylw==",
       "dependencies": [
@@ -2195,6 +2200,12 @@
         "punycode"
       ]
     },
+    "use-sync-external-store@1.4.0_react@18.3.1": {
+      "integrity": "sha512-9WXSPC5fMv61vaupRkCKCxsPxBocVnwakBEkMIHHpkTTg6icbJtg6jzgtLDm4bl3cSHAca52rYWih0k4K3PfHw==",
+      "dependencies": [
+        "react"
+      ]
+    },
     "util-deprecate@1.0.2": {
       "integrity": "sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw=="
     },
@@ -2247,7 +2258,6 @@
       "dependencies": [
         "npm:@ant-design/icons@^5.5.1",
         "npm:@eslint/js@^9.13.0",
-        "npm:@heroicons/react@^2.2.0",
         "npm:@types/node@^22.10.1",
         "npm:@types/react-dom@^18.3.1",
         "npm:@types/react@^18.3.12",
@@ -2261,6 +2271,7 @@
         "npm:react-dom@^18.3.1",
         "npm:react-router-dom@^7.0.1",
         "npm:react@^18.3.1",
+        "npm:swr@^2.2.5",
         "npm:tailwindcss@^3.4.15",
         "npm:typescript-eslint@^8.11.0",
         "npm:typescript@~5.6.2",

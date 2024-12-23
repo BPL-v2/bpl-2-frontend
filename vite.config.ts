@@ -18,4 +18,25 @@ export default defineConfig({
   define: {
     "process.env": process.env,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("react")) {
+              return "vendor_react";
+            }
+            if (id.includes("antd")) {
+              return "vendor_antd";
+            }
+            if (id.includes("rc")) {
+              return "vendor_rc";
+            }
+            // Add more specific chunking rules as needed
+            return "vendor";
+          }
+        },
+      },
+    },
+  },
 });

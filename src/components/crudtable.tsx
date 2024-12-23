@@ -129,7 +129,7 @@ const CrudTable = <T,>({
     fetchFunction().then((data) => {
       setData([...data]);
     });
-  }, [fetchFunction, setData]);
+  }, [fetchFunction]);
   function renderForm(presets: Partial<T>) {
     return columns
       .filter((column) => column.editable)
