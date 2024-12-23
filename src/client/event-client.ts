@@ -1,4 +1,4 @@
-import type { BPLEvent, EventCreate, EventUpdate } from "../types/event";
+import type { BPLEvent } from "../types/event";
 import { fetchWrapper } from "./base";
 
 export class HttpError {

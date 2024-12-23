@@ -5,7 +5,6 @@ import {
   createEvent,
   deleteEvent,
   fetchAllEvents,
-  updateEvent,
 } from "../client/event-client";
 import { router } from "../router";
 import { GlobalStateContext } from "../utils/context-provider";
