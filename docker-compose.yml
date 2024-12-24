@@ -1,9 +1,9 @@
 services:
   web:
     build:
+      context: .
       dockerfile: Dockerfile
+      args:
+        - VITE_BACKEND_URL=http://localhost
     ports:
       - "3000:3000"
-    environment:
-      - VITE_BACKEND_URL = http://localhost
-    network_mode: "host"

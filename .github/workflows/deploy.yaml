@@ -19,7 +19,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/bpl2-frontend:latest .
+          docker build --build-arg VITE_BACKEND_URL=${{ secrets.BACKEND_URL }} -t ${{ secrets.DOCKER_USERNAME }}/bpl2-frontend:latest .
 
       - name: Push Docker image
         run: |

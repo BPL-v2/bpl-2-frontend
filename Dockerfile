@@ -32,6 +32,8 @@ COPY --from=builder /app/node_modules /app/node_modules
 
 # Install serve globally
 RUN npm install -g serve
+ARG VITE_BACKEND_URL
+ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
 
 # Expose the port and start the server
 EXPOSE 3000
