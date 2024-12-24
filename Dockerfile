@@ -1,18 +1,39 @@
-FROM denoland/deno
+# Stage 1: Build the application
+FROM node:23-alpine3.20 AS builder
 
 WORKDIR /app
 
-COPY package.json .
+# Add `/app/node_modules/.bin` to $PATH
+ENV PATH /app/node_modules/.bin:$PATH
 
-RUN deno install
+# Copy package.json and package-lock.json to install dependencies
+COPY package*.json ./
 
-RUN deno install -g npm:serve
+# Install dependencies
+RUN npm install
 
+# Copy the rest of the application code
 COPY . .
 
-RUN deno run build
+# Build the application
+RUN npm run build
 
+# Remove the dev dependencies
+RUN npm prune --production
+
+# Stage 2: Serve the application
+FROM node:23-alpine3.20
+
+WORKDIR /app
+
+# Copy the built files from the builder stage
+COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/node_modules /app/node_modules
+
+# Install serve globally
+RUN npm install -g serve
+
+# Expose the port and start the server
 EXPOSE 3000
 
-
-CMD [ "deno", "run", "serve" ]
+CMD ["serve", "-s", "dist", "-l", "3000"]

@@ -1,4 +1,5 @@
 node_modules
 dist
-.gitignore
-docker-compose.yml
+.git
+Dockerfile
+.dockerignore

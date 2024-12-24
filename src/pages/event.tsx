@@ -23,6 +23,7 @@ const columns: CrudColumn<BPLEvent>[] = [
     key: "name",
     type: "text",
     editable: true,
+    required: true,
   },
   {
     title: "Current",
@@ -31,6 +32,14 @@ const columns: CrudColumn<BPLEvent>[] = [
     type: "checkbox",
     editable: true,
     render: (_, event) => (event.is_current ? "Yes" : "No"),
+  },
+  {
+    title: "Maximum Size",
+    dataIndex: "max_size",
+    key: "max_size",
+    type: "number",
+    editable: true,
+    required: true,
   },
 ];
 
