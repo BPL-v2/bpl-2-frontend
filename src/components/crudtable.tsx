@@ -14,6 +14,7 @@ import {
 import type { FormInstance, TableProps } from "antd";
 import { ColumnType } from "antd/es/table";
 import { sendWarning } from "../utils/notifications";
+import ArrayInput from "./arrayinput";
 
 type Option = {
   label: string;
@@ -168,7 +169,7 @@ const CrudTable = <T,>({
             </Select>
           );
         } else if (column.type === "text[]") {
-          input = <Input />;
+          input = <ArrayInput />;
         } else if (column.type === "multiselect") {
           input = (
             <Select mode="multiple" style={{ width: "100%" }}>

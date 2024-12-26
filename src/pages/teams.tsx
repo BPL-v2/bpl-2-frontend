@@ -5,7 +5,6 @@ import {
   createTeam,
   deleteTeam,
   fetchTeamsForEvent,
-  updateTeam,
 } from "../client/team-client";
 import { useParams } from "react-router-dom";
 import { GlobalStateContext } from "../utils/context-provider";
@@ -56,7 +55,7 @@ const TeamPage: React.FC = () => {
         return createTeam(eventIdNum, data);
       }}
       editFunction={async (data) => {
-        return updateTeam(eventIdNum, data);
+        return createTeam(eventIdNum, data);
       }}
       deleteFunction={async (data) => {
         return deleteTeam(eventIdNum, data);
