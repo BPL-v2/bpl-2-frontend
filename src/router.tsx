@@ -5,6 +5,9 @@ import ScoringCategoryPage from "./pages/scoring-categories";
 import ConditionPage from "./pages/conditions";
 import ScoringPresetsPage from "./pages/scoring-presets";
 import UserPage from "./pages/users";
+import SubmissionPage from "./pages/bounty-submissions";
+import UniquePage from "./pages/uniques";
+import ScoringTab from "./pages/scoring-tab";
 
 export const router = createBrowserRouter([
   {
@@ -34,5 +37,17 @@ export const router = createBrowserRouter([
   {
     path: "/users",
     element: <UserPage />,
+  },
+  {
+    path: "/submissions",
+    element: <SubmissionPage />,
+  },
+  {
+    path: "/scores?tab=uniques",
+    element: <UniquePage />,
+  },
+  {
+    path: "/scores",
+    element: <ScoringTab />,
   },
 ]);

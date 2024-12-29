@@ -1,4 +1,4 @@
-import type { BPLEvent } from "../types/event";
+import type { BPLEvent, EventStatus } from "../types/event";
 import { fetchWrapper } from "./base";
 
 export class HttpError {
@@ -28,4 +28,11 @@ export async function deleteEvent(data: Partial<BPLEvent>) {
     throw Error;
   }
   return await fetchWrapper<null>("/events/" + data.id, "DELETE");
+}
+
+export async function getEventStatus(eventId: number) {
+  return await fetchWrapper<EventStatus>(
+    "/events/" + eventId + "/status",
+    "GET"
+  );
 }

@@ -58,13 +58,24 @@ const EventPage: React.FC = () => {
         createFunction={createEvent}
         editFunction={createEvent}
         deleteFunction={deleteEvent}
-        addtionalActions={{
-          Teams: async (data) => router.navigate(data.id + "/teams"),
-          "Scoring Categories": async (data) =>
-            router.navigate("/scoring-categories/" + data.scoring_category_id),
-          "Scoring Presets": async (data) =>
-            router.navigate("/scoring-presets/" + data.id),
-        }}
+        addtionalActions={[
+          {
+            name: "Teams",
+            func: async (data) => router.navigate(data.id + "/teams"),
+          },
+          {
+            name: "Scoring Categories",
+            func: async (data) =>
+              router.navigate(
+                "/scoring-categories/" + data.scoring_category_id
+              ),
+          },
+          {
+            name: "Scoring Presets",
+            func: async (data) =>
+              router.navigate("/scoring-presets/" + data.id),
+          },
+        ]}
       />
     </div>
   );

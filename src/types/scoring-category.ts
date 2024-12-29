@@ -17,3 +17,11 @@ export type CategoryCreate = {
   parent_id: number;
   scoring_preset_id?: number;
 };
+
+export function getObjectives(category: ScoringCategory): ScoringObjective[] {
+  let objectives: ScoringObjective[] = [];
+  for (const sub_category of category.sub_categories) {
+    objectives = objectives.concat(getObjectives(sub_category));
+  }
+  return objectives.concat(category.objectives);
+}

@@ -218,3 +218,15 @@ export type ScoringObjectiveUpdate = {
   category_id: number;
   scoring_id?: number;
 };
+
+export function getImage(objective: ScoringObjective): string | null {
+  if (objective.objective_type !== ObjectiveType.ITEM) {
+    return null;
+  }
+  for (const condition of objective.conditions) {
+    if (condition.field === ItemField.NAME) {
+      return "/assets/uniques/" + condition.value.replaceAll(" ", "_") + ".png";
+    }
+  }
+  return null;
+}

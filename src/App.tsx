@@ -8,10 +8,12 @@ import { ContextProvider } from "./utils/context-provider";
 import { User, UserPermission } from "./types/user";
 import { getUserInfo } from "./client/user-client";
 import { router } from "./router";
-import { fetchCurrentEvent } from "./client/event-client";
-import { BPLEvent } from "./types/event";
+import { fetchCurrentEvent, getEventStatus } from "./client/event-client";
+import { BPLEvent, EventStatus } from "./types/event";
 import { useError } from "./components/errorcontext";
 import { SettingOutlined } from "@ant-design/icons";
+import { ScoringCategory } from "./types/scoring-category";
+import { fetchCategoryForEvent } from "./client/category-client";
 type MenuItem = Required<MenuProps>["items"][number] & {
   rolerequired?: UserPermission[];
 };
@@ -38,6 +40,10 @@ const items: MenuItem[] = [
       },
     ],
   },
+  {
+    label: "Scoring",
+    key: "/scores",
+  },
 ];
 
 function filterMenuItems(items: MenuItem[], user: User | undefined) {
@@ -63,6 +69,8 @@ function App() {
   const [user, setUser] = useState<User>();
   const [menuItems, setMenuItems] = useState<MenuItem[]>(items);
   const [currentEvent, setCurrentEvent] = useState<BPLEvent>();
+  const [eventStatus, setEventStatus] = useState<EventStatus>();
+  const [rules, setRules] = useState<ScoringCategory>();
   useEffect(() => {
     getUserInfo().then((data) => setUser(data));
   }, []);
@@ -73,14 +81,17 @@ function App() {
   useEffect(() => {
     fetchCurrentEvent().then((data) => {
       setCurrentEvent(data);
+      fetchCategoryForEvent(data.id).then((data) => setRules(data));
+      getEventStatus(data.id).then((data) => setEventStatus(data));
     });
-  }, [setCurrentEvent]);
+  }, []);
   const sendNotification = useError().sendNotification;
 
   useEffect(() => {
     window.addEventListener("error", handleError);
   }, []);
   const handleError = (a: ErrorEvent) => {
+    console.log("HANDLING ERROR");
     sendNotification(a.message, "error");
   };
 
@@ -106,6 +117,10 @@ function App() {
           setUser: setUser,
           currentEvent: currentEvent,
           setCurrentEvent: setCurrentEvent,
+          rules: rules,
+          setRules: setRules,
+          eventStatus: eventStatus,
+          setEventStatus: () => {},
         }}
       >
         {" "}

@@ -42,6 +42,11 @@ export interface CrudColumn<T> extends ColumnType<T> {
 }
 
 type funcOnData<T> = (data: Partial<T>) => Promise<any>;
+export type action<T> = {
+  name: string;
+  func: funcOnData<T>;
+  visible?: (data: Partial<T>) => boolean;
+};
 
 type CrudTableProps<T> = {
   columns: CrudColumn<T>[];
@@ -50,8 +55,9 @@ type CrudTableProps<T> = {
   editFunction?: funcOnData<T>;
   deleteFunction?: funcOnData<T>;
   createFunction?: funcOnData<T>;
-  addtionalActions?: { [name: string]: funcOnData<T> };
+  addtionalActions?: action<T>[];
   formValidator?: (data: Partial<T>) => string | undefined;
+  reload?: boolean;
 };
 
 const CrudTable = <T,>({
@@ -66,11 +72,10 @@ const CrudTable = <T,>({
 }: CrudTableProps<T>) => {
   const creationFormRef = useRef<FormInstance>(null);
   const updateFormRef = useRef<FormInstance>(null);
-
   const antdColumns = columns as TableProps<T>["columns"];
 
   const actionColumns =
-    editFunction || deleteFunction
+    editFunction || deleteFunction || addtionalActions
       ? [
           {
             title: "",
@@ -97,24 +102,27 @@ const CrudTable = <T,>({
                     Delete
                   </Button>
                 )}
-                {addtionalActions
-                  ? Object.entries(addtionalActions).map(([name, action]) => (
+                {addtionalActions &&
+                  addtionalActions.map((action) => {
+                    return !action.visible || action.visible(record) ? (
                       <Button
-                        key={"action-" + name}
                         onClick={() => {
                           setCurrentData(record);
-                          action(record);
+                          action.func(record);
                         }}
                       >
-                        {name}
+                        {action.name}
                       </Button>
-                    ))
-                  : ""}
+                    ) : null;
+                  })}
               </Space>
             ),
           },
         ]
       : [];
+  // if (addtionalActions) {
+  //   actionColumns.push(
+  // }
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -260,41 +268,23 @@ const CrudTable = <T,>({
           <Form
             ref={updateFormRef}
             onFinish={() => {
-              const validationError = formValidator?.(
-                updateFormRef.current?.getFieldsValue()
-              );
-              if (validationError) {
-                sendWarning(validationError);
-                return;
-              }
-
-              if (
-                formValidator !== undefined &&
-                creationFormRef.current?.getFieldsValue() !== undefined
-              ) {
-                console.log("validating");
-
-                const validationError = formValidator(
-                  updateFormRef.current?.getFieldsValue()
-                );
-                if (validationError) {
-                  sendWarning(validationError);
-                  return;
-                }
-              }
               editFunction({
                 ...currentData,
                 ...updateFormRef.current?.getFieldsValue(),
-              }).then(() => {
-                setIsUpdateModalOpen(false);
-                setCurrentData({});
+              })
+                .then(() => {
+                  setIsUpdateModalOpen(false);
+                  setCurrentData({});
 
-                setTimeout(() => {
-                  fetchFunction().then((data) => {
-                    setData(data);
-                  });
-                }, 100);
-              });
+                  setTimeout(() => {
+                    fetchFunction().then((data) => {
+                      setData(data);
+                    });
+                  }, 100);
+                })
+                .catch((e) => {
+                  sendWarning(e.message);
+                });
             }}
           >
             {renderForm(currentData)}

@@ -5,3 +5,7 @@
   padding: 2rem;
   text-align: center;
 }
+
+.ant-image-preview-operations-operation {
+  display: none;
+}

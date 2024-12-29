@@ -3,7 +3,6 @@ import CrudTable, { CrudColumn } from "../components/crudtable";
 import { useParams } from "react-router-dom";
 import { Typography } from "antd";
 import {
-  methodsForType,
   ScoringMethod,
   ScoringPreset,
   ScoringPresetType,
@@ -89,20 +88,10 @@ const ScoringPresetsPage: React.FC = () => {
         columns={scoringPresetsColumns}
         fetchFunction={() => fetchScoringPresetsForEvent(parseInt(eventId))}
         createFunction={async (data) => {
-          createScoringPreset(parseInt(eventId), data);
+          return createScoringPreset(parseInt(eventId), data);
         }}
         editFunction={async (data) => {
-          createScoringPreset(parseInt(eventId), data);
-        }}
-        formValidator={(data) => {
-          return data.type &&
-            data.scoring_method &&
-            methodsForType(data.type).includes(data.scoring_method)
-            ? undefined
-            : "Invalid method for type " +
-                data.type +
-                "! Valid methods are: " +
-                methodsForType(data.type!).join(", ");
+          return createScoringPreset(parseInt(eventId), data);
         }}
       ></CrudTable>
     </>

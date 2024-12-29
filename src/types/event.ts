@@ -17,3 +17,15 @@ export interface EventUpdate {
   name?: string;
   is_current?: boolean;
 }
+
+export interface EventStatus {
+  team_id?: number;
+  status: EventStatusEnum;
+}
+
+export enum EventStatusEnum {
+  Applied = "applied",
+  Accepted = "accepted",
+  Waitlisted = "waitlisted",
+  None = "none",
+}

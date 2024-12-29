@@ -18,6 +18,7 @@ import {
   Select,
   Tag,
   Typography,
+  Image,
 } from "antd";
 import { router } from "../router";
 import { createObjective, deleteObjective } from "../client/objective-client";
@@ -25,6 +26,7 @@ import {
   AggregationType,
   availableAggregationTypes,
   Condition,
+  getImage,
   ItemField,
   NumberField,
   ObjectiveType,
@@ -195,6 +197,7 @@ const ScoringCategoryPage: React.FC = () => {
   >({});
   const objectiveFormRef = useRef<FormInstance>(null);
   const conditionFormRef = useRef<FormInstance>(null);
+
   useEffect(() => {
     if (objectiveFormRef.current) {
       objectiveFormRef.current.setFieldsValue(
@@ -202,7 +205,8 @@ const ScoringCategoryPage: React.FC = () => {
       );
     }
   }, [currentObjective]);
-  React.useEffect(() => {
+
+  useEffect(() => {
     if (!currentEvent) {
       return;
     }
@@ -211,7 +215,7 @@ const ScoringCategoryPage: React.FC = () => {
     });
   }, [currentEvent, setScoringPresets]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!categoryId) {
       return;
     }
@@ -219,13 +223,6 @@ const ScoringCategoryPage: React.FC = () => {
       setCategoryName(data.name);
     });
   }, [categoryId]);
-
-  if (!categoryId) {
-    return <></>;
-  }
-  if (!user || !user.permissions.includes(UserPermission.ADMIN)) {
-    return <div>You do not have permission to view this page</div>;
-  }
 
   const categoryColumns: CrudColumn<ScoringCategory>[] = useMemo(
     () => [
@@ -299,10 +296,18 @@ const ScoringCategoryPage: React.FC = () => {
   const objectiveColumns: CrudColumn<ScoringObjective>[] = useMemo(
     () => [
       {
-        title: "ID",
-        dataIndex: "id",
+        title: "",
         key: "id",
-        type: "number",
+        render: (data: ScoringObjective) => {
+          let img_location = getImage(data);
+          return img_location ? (
+            <div style={{ width: "40px", height: "40px" }}>
+              <Image src={img_location} />
+            </div>
+          ) : (
+            ""
+          );
+        },
       },
       {
         title: "Name",
@@ -384,36 +389,32 @@ const ScoringCategoryPage: React.FC = () => {
     ],
     []
   );
-  const addtionalCategoryActions = {
-    // "Go to Sub-Categories": async (data: Partial<ScoringCategory>) => {
-    //   router.navigate("/scoring-categories/" + data.id);
-    // },
-  };
 
-  const addtionalObjectiveActions = {
-    Edit: async (data: Partial<ScoringObjective>) => {
-      setCurrentObjective({ ...data });
-      objectiveFormRef.current?.setFieldsValue(objectiveToFormObjective(data));
-      setIsObjectiveModalOpen(true);
+  const addtionalObjectiveActions = [
+    {
+      name: "Add Condition",
+      func: async (data: Partial<ScoringObjective>) => {
+        setCurrentObjective({ ...data });
+        setIsConditionModalOpen(true);
+      },
     },
-    "Add Condition": async (data: Partial<ScoringObjective>) => {
-      setCurrentObjective({ ...data });
-      setIsConditionModalOpen(true);
+    {
+      name: "Duplicate",
+      func: async (data: Partial<ScoringObjective>) => {
+        data.id = undefined;
+        data.conditions = data.conditions
+          ? data.conditions.map((condition) => {
+              condition.id = undefined;
+              return condition;
+            })
+          : [];
+        data.scoring_preset_id = data.scoring_preset?.id;
+        createObjective(Number(categoryId), data).then(() => {
+          setRefreshObjectives((prev) => !prev);
+        });
+      },
     },
-    Duplicate: async (data: Partial<ScoringObjective>) => {
-      data.id = undefined;
-      data.conditions = data.conditions
-        ? data.conditions.map((condition) => {
-            condition.id = undefined;
-            return condition;
-          })
-        : [];
-      data.scoring_preset_id = data.scoring_preset?.id;
-      createObjective(Number(categoryId), data).then(() => {
-        setRefreshObjectives((prev) => !prev);
-      });
-    },
-  };
+  ];
 
   let objectiveTable = useMemo(() => {
     return (
@@ -462,7 +463,6 @@ const ScoringCategoryPage: React.FC = () => {
             createScoringCategory(Number(categoryId), data)
           }
           deleteFunction={deleteScoringCategory}
-          addtionalActions={addtionalCategoryActions}
         />
       </>
     );
@@ -727,6 +727,13 @@ const ScoringCategoryPage: React.FC = () => {
     conditionField,
     setConditionField,
   ]);
+
+  if (!categoryId) {
+    return <></>;
+  }
+  if (!user || !user.permissions.includes(UserPermission.ADMIN)) {
+    return <div>You do not have permission to view this page</div>;
+  }
 
   return (
     <>

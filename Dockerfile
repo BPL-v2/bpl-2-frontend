@@ -17,6 +17,7 @@ COPY . .
 ARG VITE_BACKEND_URL
 ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
 RUN echo "VITE_BACKEND_URL=${VITE_BACKEND_URL}" > .env
+RUN ./generate_file_structure.sh
 
 # Build the application
 RUN npm run build
