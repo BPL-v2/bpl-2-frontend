@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Function to recursively list files and directories
 generate_json() {
@@ -6,9 +6,9 @@ generate_json() {
   local indent="$2"
   local json=""
 
-  json+="${indent}{\n"
-  json+="${indent}  \"path\": \"${dir_path}\",\n"
-  json+="${indent}  \"files\": [\n"
+  json="${indent}{\n"
+  json="${json}${indent}  \"path\": \"${dir_path}\",\n"
+  json="${json}${indent}  \"files\": [\n"
 
   local first=true
   for file in "$dir_path"/*; do
@@ -16,14 +16,14 @@ generate_json() {
       if [ "$first" = true ]; then
         first=false
       else
-        json+=",\n"
+        json="${json},\n"
       fi
-      json+="${indent}    \"$(basename "$file")\""
+      json="${json}${indent}    \"$(basename "$file")\""
     fi
   done
 
-  json+="\n${indent}  ],\n"
-  json+="${indent}  \"folders\": [\n"
+  json="${json}\n${indent}  ],\n"
+  json="${json}${indent}  \"folders\": [\n"
 
   first=true
   for folder in "$dir_path"/*; do
@@ -31,16 +31,16 @@ generate_json() {
       if [ "$first" = true ]; then
         first=false
       else
-        json+=",\n"
+        json="${json},\n"
       fi
-      json+=$(generate_json "$folder" "    $indent")
+      json="${json}$(generate_json "$folder" "    $indent")"
     fi
   done
 
-  json+="\n${indent}  ]\n"
-  json+="${indent}}"
+  json="${json}\n${indent}  ]\n"
+  json="${json}${indent}}"
 
-  echo -e "$json"
+  echo "$json"
 }
 
 # Main script
