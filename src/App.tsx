@@ -3,7 +3,7 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import { RouterProvider } from "react-router-dom";
 import { Content, Footer, Header } from "antd/es/layout/layout";
-import AuthButton from "./components/auth";
+import AuthButton from "./components/auth-button";
 import { ContextProvider } from "./utils/context-provider";
 import { User, UserPermission } from "./types/user";
 import { getUserInfo } from "./client/user-client";
@@ -14,6 +14,9 @@ import { useError } from "./components/errorcontext";
 import { SettingOutlined } from "@ant-design/icons";
 import { ScoringCategory } from "./types/scoring-category";
 import { fetchCategoryForEvent } from "./client/category-client";
+import { fetchScores } from "./client/score-client";
+import { ScoreCategory } from "./types/score";
+import { mergeScores } from "./utils/utils";
 type MenuItem = Required<MenuProps>["items"][number] & {
   rolerequired?: UserPermission[];
 };
@@ -71,12 +74,26 @@ function App() {
   const [currentEvent, setCurrentEvent] = useState<BPLEvent>();
   const [eventStatus, setEventStatus] = useState<EventStatus>();
   const [rules, setRules] = useState<ScoringCategory>();
+  const { scoreData } = fetchScores();
+  const [scores, setScores] = useState<ScoreCategory>();
   useEffect(() => {
     getUserInfo().then((data) => setUser(data));
   }, []);
   useEffect(() => {
     setMenuItems(filterMenuItems(items, user));
   }, [user]);
+
+  useEffect(() => {
+    if (rules && scoreData && currentEvent) {
+      setScores(
+        mergeScores(
+          rules,
+          scoreData,
+          currentEvent?.teams.map((team) => team.id)
+        )
+      );
+    }
+  }, [rules, scoreData, currentEvent]);
 
   useEffect(() => {
     fetchCurrentEvent().then((data) => {
@@ -121,13 +138,22 @@ function App() {
           setRules: setRules,
           eventStatus: eventStatus,
           setEventStatus: () => {},
+          scores: scores,
+          setScores: () => {},
         }}
       >
         {" "}
         <Layout>
-          <Header style={{ display: "flex", alignItems: "center" }}>
+          <Header
+            style={{
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: "#4096ff",
+              padding: "0",
+            }}
+          >
             <Menu
-              style={{ flex: 1, minWidth: "80%" }}
+              style={{ flex: 1 }}
               onClick={(e) => {
                 setCurrentNav(e.key);
                 router.navigate(e.key);
@@ -136,7 +162,7 @@ function App() {
               mode="horizontal"
               items={menuItems}
             />
-            <AuthButton></AuthButton>
+            <AuthButton style={{ height: "100%" }} />
           </Header>
           <Content style={{ height: "80vh" }}>
             <RouterProvider router={router} />

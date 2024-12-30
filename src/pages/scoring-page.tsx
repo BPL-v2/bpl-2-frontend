@@ -1,15 +1,16 @@
-import { Segmented } from "antd";
-import UniquePage from "./uniques";
+import { Menu } from "antd";
+import UniqueTab from "./unique-tab";
 import { useEffect, useState } from "react";
+import { SubmissionTab } from "../components/submission-tab";
 
 const tabs: { [tab: string]: JSX.Element } = {
   "For You": <> For You</>,
-  Uniques: <UniquePage />,
-  Races: <> Races</>,
-  Bounties: <>Bounties</>,
+  Uniques: <UniqueTab />,
+  Races: <SubmissionTab categoryName="Races" />,
+  Bounties: <SubmissionTab categoryName="Bounties" />,
 };
 
-const ScoringTab = () => {
+const ScoringPage = () => {
   const [selectedTab, setSelectedTab] = useState<string>("For You");
 
   useEffect(() => {
@@ -27,14 +28,19 @@ const ScoringTab = () => {
 
   return (
     <>
-      <Segmented<string>
-        options={Object.keys(tabs)}
-        value={selectedTab}
-        onChange={handleTabChange}
+      <Menu
+        onClick={(info) => handleTabChange(info.key)}
+        style={{ marginBottom: 20, marginTop: 5 }}
+        mode="horizontal"
+        items={Object.keys(tabs).map((tab) => ({
+          key: tab,
+          title: tab,
+          label: tab,
+        }))}
       />
       {tabs[selectedTab]}
     </>
   );
 };
 
-export default ScoringTab;
+export default ScoringPage;

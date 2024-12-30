@@ -1,3 +1,4 @@
+import { ScoreObjective } from "./score";
 import { ScoringPreset } from "./scoring-preset";
 
 export enum ObjectiveType {
@@ -219,7 +220,9 @@ export type ScoringObjectiveUpdate = {
   scoring_id?: number;
 };
 
-export function getImage(objective: ScoringObjective): string | null {
+export function getImage(
+  objective: ScoreObjective | ScoringObjective
+): string | null {
   if (objective.objective_type !== ObjectiveType.ITEM) {
     return null;
   }

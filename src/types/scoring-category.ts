@@ -1,3 +1,4 @@
+import { ScoreCategory } from "./score";
 import { ScoringObjective } from "./scoring-objective";
 import { ScoringPreset } from "./scoring-preset";
 
@@ -24,4 +25,23 @@ export function getObjectives(category: ScoringCategory): ScoringObjective[] {
     objectives = objectives.concat(getObjectives(sub_category));
   }
   return objectives.concat(category.objectives);
+}
+
+export function getSubCategory(
+  category: ScoreCategory | undefined,
+  subCategoryName: string
+): ScoreCategory | undefined {
+  if (!category) {
+    return undefined;
+  }
+  if (category.name === subCategoryName) {
+    return category;
+  }
+  for (const sub_category of category.sub_categories) {
+    const result = getSubCategory(sub_category, subCategoryName);
+    if (result) {
+      return result;
+    }
+  }
+  return undefined;
 }

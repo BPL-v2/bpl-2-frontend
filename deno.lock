@@ -1,6 +1,7 @@
 {
   "version": "4",
   "specifiers": {
+    "npm:@ant-design/colors@^7.1.0": "7.1.0",
     "npm:@ant-design/icons@^5.5.1": "5.5.1_react@18.3.1_react-dom@18.3.1__react@18.3.1",
     "npm:@eslint/js@^9.13.0": "9.15.0",
     "npm:@types/node@^22.10.1": "22.10.1",
@@ -18,6 +19,7 @@
     "npm:react-dom@^18.3.1": "18.3.1_react@18.3.1",
     "npm:react-router-dom@^7.0.1": "7.0.1_react@18.3.1_react-dom@18.3.1__react@18.3.1",
     "npm:react@^18.3.1": "18.3.1",
+    "npm:swr@^2.3.0": "2.3.0_react@18.3.1",
     "npm:tailwindcss@^3.4.15": "3.4.15_postcss@8.4.49",
     "npm:typescript-eslint@^8.11.0": "8.16.0_eslint@9.15.0_@typescript-eslint+parser@8.16.0__eslint@9.15.0__typescript@5.6.3_typescript@5.6.3",
     "npm:typescript@~5.6.2": "5.6.3",
@@ -949,6 +951,9 @@
     },
     "deep-is@0.1.4": {
       "integrity": "sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ=="
+    },
+    "dequal@2.0.3": {
+      "integrity": "sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA=="
     },
     "didyoumean@1.2.2": {
       "integrity": "sha512-gxtyfqMg7GKyhQmb056K7M3xszy/myH8w+B4RT+QXBQsvAOdc3XymqDDPHx1BgPgsdAA5SIifona89YtRATDzw=="
@@ -2091,6 +2096,14 @@
     "supports-preserve-symlinks-flag@1.0.0": {
       "integrity": "sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w=="
     },
+    "swr@2.3.0_react@18.3.1": {
+      "integrity": "sha512-NyZ76wA4yElZWBHzSgEJc28a0u6QZvhb6w0azeL2k7+Q1gAzVK+IqQYXhVOC/mzi+HZIozrZvBVeSeOZNR2bqA==",
+      "dependencies": [
+        "dequal",
+        "react",
+        "use-sync-external-store"
+      ]
+    },
     "tailwindcss@3.4.15_postcss@8.4.49": {
       "integrity": "sha512-r4MeXnfBmSOuKUWmXe6h2CcyfzJCEk4F0pptO5jlnYSIViUkVmsawj80N5h2lO3gwcmSb4n3PuN+e+GC1Guylw==",
       "dependencies": [
@@ -2189,6 +2202,12 @@
         "punycode"
       ]
     },
+    "use-sync-external-store@1.4.0_react@18.3.1": {
+      "integrity": "sha512-9WXSPC5fMv61vaupRkCKCxsPxBocVnwakBEkMIHHpkTTg6icbJtg6jzgtLDm4bl3cSHAca52rYWih0k4K3PfHw==",
+      "dependencies": [
+        "react"
+      ]
+    },
     "util-deprecate@1.0.2": {
       "integrity": "sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw=="
     },
@@ -2239,6 +2258,7 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
+        "npm:@ant-design/colors@^7.1.0",
         "npm:@ant-design/icons@^5.5.1",
         "npm:@eslint/js@^9.13.0",
         "npm:@types/node@^22.10.1",
@@ -2255,6 +2275,7 @@
         "npm:react-dom@^18.3.1",
         "npm:react-router-dom@^7.0.1",
         "npm:react@^18.3.1",
+        "npm:swr@^2.3.0",
         "npm:tailwindcss@^3.4.15",
         "npm:typescript-eslint@^8.11.0",
         "npm:typescript@~5.6.2",

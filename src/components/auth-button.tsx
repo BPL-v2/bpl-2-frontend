@@ -3,8 +3,12 @@ import { GlobalStateContext } from "../utils/context-provider";
 import { Button, Dropdown, MenuProps } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { getUserInfo, logoutUser } from "../client/user-client";
+import { greyDark } from "@ant-design/colors";
 
-const AuthButton: React.FC = () => {
+type AuthButtonProps = {
+  style?: React.CSSProperties;
+};
+const AuthButton = ({ style }: AuthButtonProps) => {
   const { user, setUser } = useContext(GlobalStateContext);
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -57,7 +61,15 @@ const AuthButton: React.FC = () => {
 
   return (
     <Dropdown menu={{ items }} trigger={["hover"]}>
-      <Button icon={<UserOutlined />}>
+      <Button
+        style={{
+          ...style,
+          border: "0px",
+          borderRadius: "0",
+          background: greyDark[2],
+        }}
+        icon={<UserOutlined />}
+      >
         {user ? user.discord_name : "Login"}
       </Button>
     </Dropdown>
