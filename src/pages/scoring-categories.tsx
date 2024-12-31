@@ -96,7 +96,7 @@ type FormObjective = {
   objective_type: ObjectiveType | undefined;
   aggregation: AggregationType | undefined;
   number_field: NumberField | undefined;
-  scoring_preset_id?: number | undefined;
+  scoring_preset_id?: number | null | undefined;
   "conditions-basetype"?: string | undefined;
   "conditions-name"?: string | undefined;
 };
@@ -112,7 +112,7 @@ function objectiveToFormObjective(
     number_field: objective.number_field,
     "conditions-basetype": undefined,
     "conditions-name": undefined,
-    scoring_preset_id: objective.scoring_preset?.id,
+    scoring_preset_id: objective.scoring_preset_id,
   };
   if (objective.conditions) {
     objective.conditions.forEach((condition) => {
@@ -407,6 +407,14 @@ const ScoringCategoryPage: React.FC = () => {
   );
 
   const addtionalObjectiveActions = [
+    {
+      name: "Edit",
+      func: async (data: Partial<ScoringObjective>) => {
+        setCurrentObjective({ ...data });
+        console.log(data);
+        setIsObjectiveModalOpen(true);
+      },
+    },
     {
       name: "Add Condition",
       func: async (data: Partial<ScoringObjective>) => {
