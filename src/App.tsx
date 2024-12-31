@@ -8,7 +8,10 @@ import { ContextProvider } from "./utils/context-provider";
 import { User, UserPermission } from "./types/user";
 import { getUserInfo } from "./client/user-client";
 import { router } from "./router";
-import { fetchCurrentEvent, getEventStatus } from "./client/event-client";
+import {
+  fetchCurrentEvent,
+  getEventStatus as fetchEventStatus,
+} from "./client/event-client";
 import { BPLEvent, EventStatus } from "./types/event";
 import { useError } from "./components/errorcontext";
 import { SettingOutlined } from "@ant-design/icons";
@@ -17,6 +20,8 @@ import { fetchCategoryForEvent } from "./client/category-client";
 import { fetchScores } from "./client/score-client";
 import { ScoreCategory } from "./types/score";
 import { mergeScores } from "./utils/utils";
+import { fetchScoringPresetsForEvent } from "./client/scoring-preset-client";
+import { ScoringPreset } from "./types/scoring-preset";
 type MenuItem = Required<MenuProps>["items"][number] & {
   rolerequired?: UserPermission[];
 };
@@ -76,6 +81,7 @@ function App() {
   const [rules, setRules] = useState<ScoringCategory>();
   const { scoreData } = fetchScores();
   const [scores, setScores] = useState<ScoreCategory>();
+  const [scoringPresets, setScoringPresets] = useState<ScoringPreset[]>();
   useEffect(() => {
     getUserInfo().then((data) => setUser(data));
   }, []);
@@ -84,22 +90,26 @@ function App() {
   }, [user]);
 
   useEffect(() => {
-    if (rules && scoreData && currentEvent) {
+    if (rules && scoreData && currentEvent && scoringPresets) {
       setScores(
         mergeScores(
           rules,
           scoreData,
-          currentEvent?.teams.map((team) => team.id)
+          currentEvent?.teams.map((team) => team.id),
+          scoringPresets
         )
       );
     }
-  }, [rules, scoreData, currentEvent]);
+  }, [rules, scoreData, currentEvent, scoringPresets]);
 
   useEffect(() => {
-    fetchCurrentEvent().then((data) => {
-      setCurrentEvent(data);
-      fetchCategoryForEvent(data.id).then((data) => setRules(data));
-      getEventStatus(data.id).then((data) => setEventStatus(data));
+    fetchCurrentEvent().then((event) => {
+      setCurrentEvent(event);
+      fetchCategoryForEvent(event.id).then((rules) => setRules(rules));
+      fetchEventStatus(event.id).then((status) => setEventStatus(status));
+      fetchScoringPresetsForEvent(event.id).then((presets) =>
+        setScoringPresets(presets)
+      );
     });
   }, []);
   const sendNotification = useError().sendNotification;
