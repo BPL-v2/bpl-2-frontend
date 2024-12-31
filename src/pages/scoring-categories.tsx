@@ -301,8 +301,24 @@ const ScoringCategoryPage: React.FC = () => {
         render: (data: ScoringObjective) => {
           let img_location = getImage(data);
           return img_location ? (
-            <div style={{ width: "40px", height: "40px" }}>
-              <Image src={img_location} />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
+                maxHeight: "60px",
+              }}
+            >
+              <Image
+                src={img_location}
+                style={{
+                  height: "100%",
+                  maxHeight: "60px",
+                  width: "auto",
+                  maxWidth: "120px",
+                }}
+              />
             </div>
           ) : (
             ""
