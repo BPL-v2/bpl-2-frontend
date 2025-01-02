@@ -27,16 +27,14 @@ const AuthButton = ({ style }: AuthButtonProps) => {
     };
   }, [setUser]);
 
-  const handleOAuthClick = () => {
-    window.open(import.meta.env.VITE_BACKEND_URL + "/oauth2/discord", "");
-  };
   const items: MenuProps["items"] = [];
   if (!user?.discord_id) {
     items.push({
       label: "Authenticate with Discord",
       key: "Discord",
       icon: <UserOutlined />,
-      onClick: handleOAuthClick,
+      onClick: () =>
+        window.open(import.meta.env.VITE_BACKEND_URL + "/oauth2/discord", ""),
     });
   }
   if (!user?.account_name) {
@@ -47,6 +45,16 @@ const AuthButton = ({ style }: AuthButtonProps) => {
       onClick: () => console.log("PoE auth requested"),
     });
   }
+  if (!user?.twitch_id) {
+    items.push({
+      label: "Authenticate with Twitch",
+      key: "Twitch",
+      icon: <UserOutlined />,
+      onClick: () =>
+        window.open(import.meta.env.VITE_BACKEND_URL + "/oauth2/twitch", ""),
+    });
+  }
+
   if (user) {
     items.push({
       label: "Logout",
@@ -70,7 +78,7 @@ const AuthButton = ({ style }: AuthButtonProps) => {
         }}
         icon={<UserOutlined />}
       >
-        {user ? user.discord_name : "Login"}
+        {user ? user.display_name : "Login"}
       </Button>
     </Dropdown>
   );
