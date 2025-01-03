@@ -2,11 +2,11 @@ import { Layout, Menu, MenuProps } from "antd";
 import "./App.css";
 import { useEffect, useState } from "react";
 import { RouterProvider } from "react-router-dom";
-import { Content, Footer, Header } from "antd/es/layout/layout";
+import { Content, Header } from "antd/es/layout/layout";
 import AuthButton from "./components/auth-button";
 import { ContextProvider } from "./utils/context-provider";
-import { User, UserPermission } from "./types/user";
-import { getUserInfo } from "./client/user-client";
+import { MinimalUser, User, UserPermission } from "./types/user";
+import { fetchUsersForEvent, getUserInfo } from "./client/user-client";
 import { router } from "./router";
 import {
   fetchCurrentEvent,
@@ -14,7 +14,11 @@ import {
 } from "./client/event-client";
 import { BPLEvent, EventStatus } from "./types/event";
 import { useError } from "./components/errorcontext";
-import { SettingOutlined } from "@ant-design/icons";
+import {
+  RiseOutlined,
+  SettingOutlined,
+  TwitchOutlined,
+} from "@ant-design/icons";
 import { ScoringCategory } from "./types/scoring-category";
 import { fetchCategoryForEvent } from "./client/category-client";
 import { fetchScores } from "./client/score-client";
@@ -51,6 +55,12 @@ const items: MenuItem[] = [
   {
     label: "Scoring",
     key: "/scores",
+    icon: <RiseOutlined />,
+  },
+  {
+    label: "Streams",
+    key: "/streams",
+    icon: <TwitchOutlined />,
   },
 ];
 
@@ -82,6 +92,7 @@ function App() {
   const { scoreData } = fetchScores();
   const [scores, setScores] = useState<ScoreCategory>();
   const [scoringPresets, setScoringPresets] = useState<ScoringPreset[]>();
+  const [users, setUsers] = useState<MinimalUser[]>([]);
   useEffect(() => {
     getUserInfo().then((data) => setUser(data));
   }, []);
@@ -110,6 +121,7 @@ function App() {
       fetchScoringPresetsForEvent(event.id).then((presets) =>
         setScoringPresets(presets)
       );
+      fetchUsersForEvent(event.id).then((users) => setUsers(users));
     });
   }, []);
   const sendNotification = useError().sendNotification;
@@ -150,6 +162,8 @@ function App() {
           setEventStatus: () => {},
           scores: scores,
           setScores: () => {},
+          users: users,
+          setUsers: setUsers,
         }}
       >
         {" "}
@@ -178,7 +192,7 @@ function App() {
             <RouterProvider router={router} />
           </Content>
 
-          <Footer style={{ height: "10vh" }}></Footer>
+          {/* <Footer style={{ height: "10vh" }}></Footer> */}
         </Layout>
       </ContextProvider>
     </>

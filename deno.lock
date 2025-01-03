@@ -18,6 +18,7 @@
     "npm:postcss@^8.4.49": "8.4.49",
     "npm:react-dom@^18.3.1": "18.3.1_react@18.3.1",
     "npm:react-router-dom@^7.0.1": "7.0.1_react@18.3.1_react-dom@18.3.1__react@18.3.1",
+    "npm:react-twitch-embed-video@^3.1.0": "3.1.0_react@18.3.1_react-dom@18.3.1__react@18.3.1",
     "npm:react@^18.3.1": "18.3.1",
     "npm:swr@^2.3.0": "2.3.0_react@18.3.1",
     "npm:tailwindcss@^3.4.15": "3.4.15_postcss@8.4.49",
@@ -1933,6 +1934,14 @@
         "turbo-stream"
       ]
     },
+    "react-twitch-embed-video@3.1.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-i7qJpdKZBVpj1d4WaYkMIEWYlLNNNJM/vylUG1vrgYwdsiDq3syoCYLAolL0TbEBZiTVnij7AVotpYOuO1rg2A==",
+      "dependencies": [
+        "react",
+        "react-dom",
+        "window-or-global"
+      ]
+    },
     "react@18.3.1": {
       "integrity": "sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==",
       "dependencies": [
@@ -2226,6 +2235,9 @@
         "isexe"
       ]
     },
+    "window-or-global@1.0.1": {
+      "integrity": "sha512-tE12J/NenOv4xdVobD+AD3fT06T4KNqnzRhkv5nBIu7K+pvOH2oLCEgYP+i+5mF2jtI6FEADheOdZkA8YWET9w=="
+    },
     "word-wrap@1.2.5": {
       "integrity": "sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA=="
     },
@@ -2274,6 +2286,7 @@
         "npm:globals@^15.11.0",
         "npm:react-dom@^18.3.1",
         "npm:react-router-dom@^7.0.1",
+        "npm:react-twitch-embed-video@^3.1.0",
         "npm:react@^18.3.1",
         "npm:swr@^2.3.0",
         "npm:tailwindcss@^3.4.15",

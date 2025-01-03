@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { User } from "../types/user";
+import { MinimalUser, User } from "../types/user";
 import { BPLEvent, EventStatus } from "../types/event";
 import { ScoringCategory } from "../types/scoring-category";
 import { ScoreCategory } from "../types/score";
@@ -14,6 +14,8 @@ export type GlobalState = {
   setEventStatus: (c: EventStatus | undefined) => void;
   scores: ScoreCategory | undefined;
   setScores: (c: ScoreCategory | undefined) => void;
+  users: MinimalUser[];
+  setUsers: (c: MinimalUser[]) => void;
 };
 
 export const GlobalStateContext = createContext<GlobalState>({
@@ -27,6 +29,8 @@ export const GlobalStateContext = createContext<GlobalState>({
   setEventStatus: () => {},
   scores: undefined,
   setScores: () => {},
+  users: [],
+  setUsers: () => {},
 });
 
 export const ContextProvider = GlobalStateContext.Provider;

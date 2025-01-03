@@ -9,3 +9,67 @@
 .ant-image-preview-operations-operation {
   display: none;
 }
+
+.twitch-viewer-count {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 0px 0.4rem;
+  font-size: 1rem;
+  border-radius: 4px;
+}
+
+.twitch-live-indicator {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: red;
+  color: white;
+  font-weight: bold;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  display: inline-block;
+  text-align: center;
+  font-size: 0.8em;
+  border-radius: 4px;
+}
+
+.twitch-stream-info {
+  display: flex;
+  margin-left: 0.5rem;
+  text-align: left;
+}
+
+.twitch-stream-username {
+  margin: 0;
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+.twitch-stream-title {
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 1rem;
+}
+.twitch-stream-title span {
+  display: inline-block;
+  transition: transform 1s ease;
+  margin-bottom: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+#marquee:hover span {
+  animation: marquee 10s linear infinite;
+}
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}

@@ -13,3 +13,13 @@ export type User = {
 export enum UserPermission {
   ADMIN = "admin",
 }
+
+export type UserMapResponse = {
+  [teamId: string]: { id: number; display_name: string }[];
+};
+
+export type MinimalUser = {
+  id: number;
+  team_id: number;
+  display_name: string;
+};
