@@ -303,3 +303,11 @@ function getPotentialPointsForObjective(objective: ScoreObjective) {
   }
   return points;
 }
+
+export function getAllObjectives(category: ScoreCategory): ScoreObjective[] {
+  const objectives = [...category.objectives];
+  for (const subCategory of category.sub_categories) {
+    objectives.push(...getAllObjectives(subCategory));
+  }
+  return objectives;
+}

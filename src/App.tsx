@@ -2,7 +2,7 @@ import { Layout, Menu, MenuProps } from "antd";
 import "./App.css";
 import { useEffect, useState } from "react";
 import { RouterProvider } from "react-router-dom";
-import { Content, Header } from "antd/es/layout/layout";
+import { Content, Footer, Header } from "antd/es/layout/layout";
 import AuthButton from "./components/auth-button";
 import { ContextProvider } from "./utils/context-provider";
 import { MinimalUser, User, UserPermission } from "./types/user";
@@ -64,6 +64,17 @@ const items: MenuItem[] = [
   },
 ];
 
+function getKeys(items: any[]): string[] {
+  let keys = [];
+  for (let item of items) {
+    keys.push(item.key);
+    if (item.children) {
+      keys.push(...getKeys(item.children));
+    }
+  }
+  return keys;
+}
+
 function filterMenuItems(items: MenuItem[], user: User | undefined) {
   let userRoles = user?.permissions;
   let authItems = [];
@@ -83,7 +94,7 @@ function filterMenuItems(items: MenuItem[], user: User | undefined) {
 }
 
 function App() {
-  const [currentNav, setCurrentNav] = useState("events");
+  const [currentNav, setCurrentNav] = useState<string>();
   const [user, setUser] = useState<User>();
   const [menuItems, setMenuItems] = useState<MenuItem[]>(items);
   const [currentEvent, setCurrentEvent] = useState<BPLEvent>();
@@ -94,7 +105,14 @@ function App() {
   const [scoringPresets, setScoringPresets] = useState<ScoringPreset[]>();
   const [users, setUsers] = useState<MinimalUser[]>([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
-
+  useEffect(() => {
+    for (let key of getKeys(items)) {
+      if (window.location.pathname.includes(key)) {
+        setCurrentNav(key);
+        return;
+      }
+    }
+  }, []);
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 900);
@@ -190,22 +208,25 @@ function App() {
             }}
           >
             <Menu
-              style={{ flex: 1 }}
+              style={{ flex: 1, userSelect: "none" }}
               onClick={(e) => {
                 setCurrentNav(e.key);
                 router.navigate(e.key);
               }}
-              selectedKeys={[currentNav]}
+              selectedKeys={currentNav ? [currentNav] : []}
               mode="horizontal"
               items={menuItems}
             />
             <AuthButton style={{ height: "100%" }} />
           </Header>
-          <Content style={{ height: "80vh" }}>
+          <Content style={{ minHeight: "90vh" }}>
             <RouterProvider router={router} />
           </Content>
 
-          {/* <Footer style={{ height: "10vh" }}></Footer> */}
+          <Footer>
+            This product isn't affiliated with or endorsed by Grinding Gear
+            Games in any way.
+          </Footer>
         </Layout>
       </ContextProvider>
     </>

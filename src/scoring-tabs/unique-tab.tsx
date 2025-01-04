@@ -1,17 +1,18 @@
 import { useContext, useEffect, useState } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
-import { Card, Typography, theme } from "antd";
+import { Card, Divider, Typography, theme } from "antd";
 import Meta from "antd/es/card/Meta";
 import TeamScore from "../components/team-score";
 import { getSubCategory } from "../types/scoring-category";
 import { getPotentialPoints, getTotalPoints } from "../utils/utils";
 import { ProgressAvatar } from "../components/progress-avatar";
 import { ItemTable } from "../components/item-table";
+import { ScoreCategory } from "../types/score";
 const { useToken } = theme;
 
 const UniqueTab: React.FC = () => {
   const { currentEvent, eventStatus, scores } = useContext(GlobalStateContext);
-  const [selectedCategory, setSelectedCategory] = useState<number>(0);
+  const [selectedCategory, setSelectedCategory] = useState<ScoreCategory>();
   const [selectedTeam, setSelectedTeam] = useState<number | undefined>();
   useEffect(() => {
     if (eventStatus) {
@@ -32,6 +33,10 @@ const UniqueTab: React.FC = () => {
         selectedTeam={selectedTeam}
         setSelectedTeam={setSelectedTeam}
       />
+      <Divider
+        style={{ borderColor: token.colorPrimary }}
+      >{`Categories`}</Divider>
+
       <div
         style={{
           display: "grid",
@@ -45,11 +50,11 @@ const UniqueTab: React.FC = () => {
           return (
             <Card
               key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
+              onClick={() => setSelectedCategory(category)}
               hoverable
               style={{
                 borderColor:
-                  selectedCategory === category.id
+                  selectedCategory?.id === category.id
                     ? token.colorPrimary
                     : "transparent",
                 borderWidth: 4,
@@ -110,10 +115,12 @@ const UniqueTab: React.FC = () => {
           );
         })}
       </div>
+      <Divider style={{ borderColor: token.colorPrimary }}>{`${
+        selectedCategory?.name || "Unique"
+      } Items`}</Divider>
+
       <ItemTable
-        category={uniqueCategory.sub_categories.find(
-          (category) => category.id === selectedCategory
-        )}
+        category={selectedCategory || uniqueCategory}
         selectedTeam={selectedTeam}
       />
     </>

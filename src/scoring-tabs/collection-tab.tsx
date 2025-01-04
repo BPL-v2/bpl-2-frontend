@@ -1,4 +1,4 @@
-import { Card, Progress, theme, Tooltip } from "antd";
+import { Card, Divider, Progress, theme, Tooltip } from "antd";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { getSubCategory } from "../types/scoring-category";
@@ -28,6 +28,9 @@ export function CollectionTab() {
   return (
     <>
       <TeamScore category={category}></TeamScore>
+      <Divider style={{ borderColor: token.colorPrimary }}>
+        {`Collection Goals`}
+      </Divider>
       <div
         style={{
           display: "grid",
@@ -81,6 +84,8 @@ export function CollectionTab() {
                     ([, scoreA], [, scoreB]) => scoreB.number - scoreA.number
                   )
                   .map(([teamId, score]) => {
+                    const percent =
+                      (100 * score.number) / objective.required_number;
                     return (
                       <tr
                         key={teamId}
@@ -107,10 +112,7 @@ export function CollectionTab() {
                           }}
                         >
                           <Progress
-                            percent={
-                              (100 * score.number) /
-                              (objective.required_number || 1)
-                            }
+                            percent={percent}
                             format={() => (
                               <>
                                 {score.number}/{objective.required_number}

@@ -3,6 +3,7 @@ import { MinimalUser, User } from "../types/user";
 import { BPLEvent, EventStatus } from "../types/event";
 import { ScoringCategory } from "../types/scoring-category";
 import { ScoreCategory } from "../types/score";
+import { GlobalToken, theme } from "antd";
 export type GlobalState = {
   user: User | undefined;
   setUser: (c: User | undefined) => void;

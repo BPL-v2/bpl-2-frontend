@@ -1,6 +1,7 @@
 import {
   Card,
   DatePicker,
+  Divider,
   Form,
   FormInstance,
   Input,
@@ -174,6 +175,9 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
       </Modal>
 
       <TeamScore category={category}></TeamScore>
+      <Divider style={{ borderColor: token.colorPrimary }}>
+        {category.name}
+      </Divider>
       <div
         style={{
           display: "grid",

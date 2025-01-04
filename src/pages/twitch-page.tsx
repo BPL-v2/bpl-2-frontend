@@ -18,7 +18,7 @@ export function TwitchPage() {
     fetchStreams().then((data) => setTwitchStreams(data));
   }, []);
   return (
-    <div>
+    <div style={{ userSelect: "none" }}>
       {selectedChannel ? (
         <ReactTwitchEmbedVideo channel={selectedChannel} width={"100%"} />
       ) : null}

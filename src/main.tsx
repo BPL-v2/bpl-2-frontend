@@ -23,7 +23,14 @@ createRoot(document.getElementById("root")!).render(
 
         colorBgContainer: greyDark[3],
         colorBgSpotlight: greyDark[4],
+
         // Alias Token
+      },
+      components: {
+        // disable changing the background color of a table column when sorting
+        Table: { bodySortBg: undefined },
+        // make background color of collapse content the same as the base background color
+        Collapse: { contentBg: greyDark[1] },
       },
     }}
   >

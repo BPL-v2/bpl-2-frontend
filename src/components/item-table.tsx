@@ -4,6 +4,9 @@ import { ScoreCategory } from "../types/score";
 import { getImage } from "../types/scoring-objective";
 import { GlobalStateContext } from "../utils/context-provider";
 import { useContext } from "react";
+import { getAllObjectives } from "../utils/utils";
+import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
+import { red, green } from "@ant-design/colors";
 
 export type ItemTableProps = {
   category?: ScoreCategory;
@@ -16,8 +19,7 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
   if (!currentEvent || !category) {
     return <></>;
   }
-
-  const tableRows = category.objectives.map((objective) => ({
+  const tableRows = getAllObjectives(category).map((objective) => ({
     key: objective.id,
     name: objective.name,
     img_location: getImage(objective),
@@ -26,7 +28,6 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
       return acc;
     }, {}),
   }));
-
   const tableColumns: ColumnsType = [
     {
       title: "",
@@ -45,9 +46,10 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
               src={img_location}
               style={{
                 height: "100%",
+                // height: "60px",
                 maxHeight: "60px",
                 width: "auto",
-                maxWidth: "120px",
+                // maxWidth: "60px",
               }}
             />
           </div>
@@ -63,6 +65,7 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     ...currentEvent.teams
       .slice()
@@ -73,8 +76,15 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
         title: team.name,
         dataIndex: team.id.toString(),
         key: team.id.toString(),
-        render: (finished: boolean) => (finished ? "✅" : "❌"),
-        // width: 10,
+        render: (finished: boolean) =>
+          finished ? (
+            <CheckCircleFilled style={{ color: green[4] }} />
+          ) : (
+            <CloseCircleFilled style={{ color: red[4] }} />
+          ),
+        sorter: (a: any, b: any) => {
+          return a[team.id] === b[team.id] ? 0 : a[team.id] ? -1 : 1;
+        },
       })),
   ];
 
@@ -84,6 +94,9 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
       dataSource={tableRows}
       pagination={false}
       style={{ ...style }}
+      showSorterTooltip={false}
+      size="small"
+      scroll={{ y: 600 }}
     />
   );
 }
