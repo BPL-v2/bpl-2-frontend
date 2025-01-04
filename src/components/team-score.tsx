@@ -1,20 +1,24 @@
-import { Avatar, Card, theme } from "antd";
+import { Avatar, Card, theme, Typography } from "antd";
 import Meta from "antd/es/card/Meta";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
+import { ScoreCategory } from "../types/score";
+import { getPotentialPoints, getTotalPoints } from "../utils/utils";
 
 export type TeamScoreProps = {
-  teamScores: { [teamId: number]: number };
   selectedTeam?: number;
   setSelectedTeam?: (teamId: number) => void;
+  category: ScoreCategory;
 };
 const { useToken } = theme;
 
 const TeamScore = ({
-  teamScores,
+  category,
   selectedTeam,
   setSelectedTeam,
 }: TeamScoreProps) => {
+  const teamScores = getTotalPoints(category);
+  const potentialScores = getPotentialPoints(category);
   const { currentEvent, isMobile, eventStatus } =
     useContext(GlobalStateContext);
   const token = useToken().token;
@@ -38,8 +42,9 @@ const TeamScore = ({
             hoverable
             onClick={() => (setSelectedTeam ? setSelectedTeam(team.id) : null)}
             style={{
-              borderColor: selectedTeam === team.id ? token.colorPrimary : "",
-              borderWidth: 2,
+              borderColor:
+                selectedTeam === team.id ? token.colorPrimary : "transparent",
+              borderWidth: 4,
               flex: "1 1 0",
               backgroundColor:
                 team.id === eventStatus?.team_id ? token.colorBgSpotlight : "",
@@ -58,7 +63,13 @@ const TeamScore = ({
                 ) : null
               }
               title={team.name}
-              description={"Score: " + teamScores[team.id]}
+              description={
+                <Typography.Text style={{ fontSize: 20 }}>
+                  {`Score: ${teamScores[team.id]} / ${
+                    potentialScores[team.id]
+                  }`}
+                </Typography.Text>
+              }
             />
           </Card>
         ))}

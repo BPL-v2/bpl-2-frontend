@@ -1,12 +1,14 @@
 import { Menu } from "antd";
-import UniqueTab from "./unique-tab";
+import UniqueTab from "../scoring-tabs/unique-tab";
 import { useEffect, useState } from "react";
-import { SubmissionTab } from "../components/submission-tab";
+import { SubmissionTab } from "../scoring-tabs/submission-tab";
+import { CollectionTab } from "../scoring-tabs/collection-tab";
 
 const tabs: { [tab: string]: JSX.Element } = {
   Uniques: <UniqueTab />,
   Races: <SubmissionTab categoryName="Races" />,
   Bounties: <SubmissionTab categoryName="Bounties" />,
+  Collections: <CollectionTab />,
 };
 
 const ScoringPage = () => {

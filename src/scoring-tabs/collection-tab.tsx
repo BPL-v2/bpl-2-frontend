@@ -1,22 +1,17 @@
-import { Card, theme, Tooltip } from "antd";
+import { Card, Progress, theme, Tooltip } from "antd";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { getSubCategory } from "../types/scoring-category";
 import { Team } from "../types/team";
-import { EllipsisOutlined } from "@ant-design/icons";
 import { ScoreLite } from "../types/score";
 import { red, green } from "@ant-design/colors";
-import TeamScore from "./team-score";
-import { getTotalPoints } from "../utils/utils";
+import TeamScore from "../components/team-score";
 
-export type SubmissionTabProps = {
-  categoryName: string;
-};
 const { useToken } = theme;
 
-export function SubmissionTab({ categoryName }: SubmissionTabProps) {
+export function CollectionTab() {
   const { eventStatus, scores, currentEvent } = useContext(GlobalStateContext);
-  const category = getSubCategory(scores, categoryName);
+  const category = getSubCategory(scores, "Collections");
   const token = useToken().token;
 
   if (!category || !currentEvent) {
@@ -32,11 +27,11 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
 
   return (
     <>
-      <TeamScore teamScores={getTotalPoints(category)}></TeamScore>
+      <TeamScore category={category}></TeamScore>
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(450px, 1fr))",
           gap: "8px",
           marginTop: "20px",
           marginBottom: "20px",
@@ -54,20 +49,17 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
                     overflowWrap: "break-word",
                   }}
                 >
-                  {objective.name}
+                  {`Collect ${objective.required_number} ${objective.name}`}
                   {objective.extra ? <a style={{ color: red[6] }}>*</a> : null}
                 </div>
               </Tooltip>
             }
-            extra={
-              <>
-                <EllipsisOutlined key="ellipsis" />
-              </>
-            }
             size="small"
             styles={{
               body: {
-                padding: "0px",
+                // so that the highlight color goes all the way to the edge
+                paddingLeft: "0px",
+                paddingRight: "0px",
               },
             }}
           >
@@ -77,6 +69,7 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
                 width: "100%",
                 borderCollapse: "collapse",
                 marginTop: ".5rem",
+                marginBottom: ".5rem",
               }}
             >
               <tbody>
@@ -85,18 +78,18 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
                     return [parseInt(teamId), score] as [number, ScoreLite];
                   })
                   .sort(
-                    ([, scoreA], [, scoreB]) => scoreB.points - scoreA.points
+                    ([, scoreA], [, scoreB]) => scoreB.number - scoreA.number
                   )
                   .map(([teamId, score]) => {
                     return (
                       <tr
                         key={teamId}
                         style={{
-                          padding: "4px 8px",
                           backgroundColor:
                             teamId === eventStatus?.team_id
                               ? token.colorBgSpotlight
                               : "transparent",
+                          width: "2000px",
                         }}
                       >
                         <td
@@ -106,9 +99,33 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
                             color: score.rank === 0 ? red[4] : green[4],
                           }}
                         >
-                          {score ? score.points : 0}
+                          {score.points}
                         </td>
-                        <td style={{}}>{teamMap[teamId]?.name}</td>
+                        <td
+                          style={{
+                            width: "50%",
+                          }}
+                        >
+                          <Progress
+                            percent={
+                              (100 * score.number) /
+                              (objective.required_number || 1)
+                            }
+                            format={() => (
+                              <>
+                                {score.number}/{objective.required_number}
+                              </>
+                            )}
+                          />
+                        </td>
+                        <td
+                          style={{
+                            padding: "4px 8px",
+                            alignItems: "center",
+                          }}
+                        >
+                          {teamMap[teamId]?.name}
+                        </td>
                       </tr>
                     );
                   })}
@@ -116,7 +133,6 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
             </table>
           </Card>
         ))}
-        {/* </Flex> */}
       </div>
     </>
   );

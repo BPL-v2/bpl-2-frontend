@@ -140,6 +140,8 @@ function updateObjectiveWithFormObjective(
   objective: Partial<ScoringObjective>,
   formObjective: FormObjective
 ): Partial<ScoringObjective> {
+  console.log(objective);
+  console.log(formObjective);
   objective.name = formObjective.name ?? objective.name;
   objective.extra = formObjective.extra ?? objective.extra;
   objective.required_number =
@@ -376,11 +378,14 @@ const ScoringCategoryPage: React.FC = () => {
       },
       {
         title: "Scoring Method",
-        dataIndex: "scoring_preset",
-        key: "scoring_preset",
-        type: "text",
-        render: (data: ScoringPreset) => {
-          return data?.name || "";
+        dataIndex: "scoring_preset_id",
+        key: "scoring_preset_id",
+        type: "select",
+        render: (data: number | null) => {
+          // console.log(x);
+          console.log(data);
+          console.log(scoringPresets);
+          return scoringPresets.find((preset) => preset.id === data)?.name;
         },
       },
       {
@@ -414,7 +419,7 @@ const ScoringCategoryPage: React.FC = () => {
         inputRenderer: renderConditionInput,
       },
     ],
-    []
+    [scoringPresets]
   );
 
   const addtionalObjectiveActions = [
@@ -444,7 +449,7 @@ const ScoringCategoryPage: React.FC = () => {
               return condition;
             })
           : [];
-        data.scoring_preset_id = data.scoring_preset?.id;
+        // data.scoring_preset_id = data.scoring_preset?.id;
         createObjective(Number(categoryId), data).then(() => {
           setRefreshObjectives((prev) => !prev);
         });

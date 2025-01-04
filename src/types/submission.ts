@@ -10,6 +10,7 @@ export type Submission = {
   approval_status: ApprovalStatus;
   comment: string;
   user_id: number;
+  team_id: number;
   user: User;
   review_comment: string;
   reviewerId: number;

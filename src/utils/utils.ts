@@ -6,7 +6,7 @@ import {
 } from "../types/score";
 import { ScoringCategory } from "../types/scoring-category";
 import { ScoringObjective } from "../types/scoring-objective";
-import { ScoringPreset } from "../types/scoring-preset";
+import { ScoringMethod, ScoringPreset } from "../types/scoring-preset";
 
 export function getObjectiveIDs(category: ScoringCategory): number[] {
   return category.objectives.map((objective) => objective.id);
@@ -200,6 +200,105 @@ export function getTotalPoints(category: ScoreCategory): {
   for (const objective of category.objectives) {
     for (const [teamId, teamScore] of Object.entries(objective.team_score)) {
       points[parseInt(teamId)] += teamScore.points;
+    }
+  }
+  return points;
+}
+
+export function getPotentialPoints(category: ScoreCategory) {
+  const points: { [teamId: number]: number } = {};
+  for (const entry of Object.entries(getPotentialPointsForCategory(category))) {
+    points[parseInt(entry[0])] = entry[1];
+  }
+  for (const subCategory of category.sub_categories) {
+    const subCategoryPoints = getPotentialPoints(subCategory);
+    for (const [teamId, teamPoints] of Object.entries(subCategoryPoints)) {
+      if (!points[parseInt(teamId)]) {
+        points[parseInt(teamId)] = 0;
+      }
+      points[parseInt(teamId)] += teamPoints;
+    }
+  }
+  for (const objective of category.objectives) {
+    for (const [teamId, teamScore] of Object.entries(
+      getPotentialPointsForObjective(objective)
+    )) {
+      if (!points[parseInt(teamId)]) {
+        points[parseInt(teamId)] = 0;
+      }
+      points[parseInt(teamId)] += teamScore;
+    }
+  }
+  return points;
+}
+
+function getPotentialPointsForCategory(category: ScoreCategory) {
+  const points: { [teamId: number]: number } = {};
+  for (const [teamId, teamScore] of Object.entries(category.team_score)) {
+    if (teamScore.points > 0) {
+      points[parseInt(teamId)] = teamScore.points;
+    } else {
+      if (!category.scoring_preset) {
+        continue;
+      }
+      var maximumReachablePoints = 0;
+      if (
+        category.scoring_preset.scoring_method ===
+        ScoringMethod.RANKED_COMPLETION_TIME
+      ) {
+        const maxRank = Object.values(category.team_score).reduce(
+          (acc, score) => Math.max(acc, score.rank),
+          0
+        );
+        maximumReachablePoints = Math.max(
+          ...category.scoring_preset.points.slice(
+            maxRank,
+            category.scoring_preset.points.length
+          )
+        );
+      } else if (
+        category.scoring_preset.scoring_method ===
+        ScoringMethod.BONUS_PER_COMPLETION
+      ) {
+        for (var i = teamScore.number; i < category.objectives.length; i++) {
+          maximumReachablePoints += getPoints(
+            category.scoring_preset.points,
+            i
+          );
+        }
+      }
+      points[parseInt(teamId)] = maximumReachablePoints;
+    }
+  }
+  return points;
+}
+
+function getPoints(numbers: number[], index: number): number {
+  if (index < numbers.length) {
+    return numbers[index];
+  }
+  return numbers[numbers.length - 1];
+}
+
+function getPotentialPointsForObjective(objective: ScoreObjective) {
+  const points: { [teamId: number]: number } = {};
+  for (const [teamId, teamScore] of Object.entries(objective.team_score)) {
+    if (teamScore.points > 0) {
+      points[parseInt(teamId)] = teamScore.points;
+    } else {
+      if (!objective.scoring_preset) {
+        continue;
+      }
+      var maxRank = Object.values(objective.team_score).reduce(
+        (acc, score) => Math.max(acc, score.rank),
+        0
+      );
+      points[parseInt(teamId)] = Math.max(
+        ...objective.scoring_preset.points.slice(
+          maxRank,
+          objective.scoring_preset.points.length
+        )
+      );
     }
   }
   return points;

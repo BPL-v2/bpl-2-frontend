@@ -14,6 +14,7 @@ export async function submitBounty(
   eventId: number,
   data: SubmissionCreate
 ): Promise<Submission> {
+  data.number = data.number || 1;
   return fetchWrapper<Submission>(
     "/events/" + eventId + "/submissions",
     "PUT",
