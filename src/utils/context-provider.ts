@@ -16,6 +16,8 @@ export type GlobalState = {
   setScores: (c: ScoreCategory | undefined) => void;
   users: MinimalUser[];
   setUsers: (c: MinimalUser[]) => void;
+  isMobile: boolean;
+  setIsMobile: (c: boolean) => void;
 };
 
 export const GlobalStateContext = createContext<GlobalState>({
@@ -31,6 +33,8 @@ export const GlobalStateContext = createContext<GlobalState>({
   setScores: () => {},
   users: [],
   setUsers: () => {},
+  isMobile: false,
+  setIsMobile: () => {},
 });
 
 export const ContextProvider = GlobalStateContext.Provider;

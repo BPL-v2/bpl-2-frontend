@@ -165,6 +165,7 @@ export function mergeScoringObjective(
   return {
     id: objective.id,
     name: objective.name,
+    extra: objective.extra,
     required_number: objective.required_number,
     conditions: objective.conditions,
     objective_type: objective.objective_type,

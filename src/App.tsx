@@ -93,6 +93,17 @@ function App() {
   const [scores, setScores] = useState<ScoreCategory>();
   const [scoringPresets, setScoringPresets] = useState<ScoringPreset[]>();
   const [users, setUsers] = useState<MinimalUser[]>([]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 900);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   useEffect(() => {
     getUserInfo().then((data) => setUser(data));
   }, []);
@@ -164,6 +175,8 @@ function App() {
           setScores: () => {},
           users: users,
           setUsers: setUsers,
+          isMobile: isMobile,
+          setIsMobile: setIsMobile,
         }}
       >
         {" "}

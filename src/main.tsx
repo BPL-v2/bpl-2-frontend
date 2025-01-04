@@ -1,6 +1,6 @@
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { greyDark } from "@ant-design/colors";
+import { greyDark, lime } from "@ant-design/colors";
 
 import App from "./App.tsx";
 import { NotificationProvider } from "./components/errorcontext.tsx";
@@ -12,7 +12,7 @@ createRoot(document.getElementById("root")!).render(
       // algorithm: [theme.darkAlgorithm, theme.compactAlgorithm],
       token: {
         // Seed Token
-        colorPrimary: "#a0d911",
+        colorPrimary: lime[5],
         borderRadius: 5,
         colorTextSecondary: "#d3adf7",
         fontSize: 16,

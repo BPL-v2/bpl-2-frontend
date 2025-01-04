@@ -41,6 +41,7 @@ import { ScoringPreset, ScoringPresetType } from "../types/scoring-preset";
 import { fetchScoringPresetsForEvent } from "../client/scoring-preset-client";
 import { GlobalStateContext } from "../utils/context-provider";
 import { UserPermission } from "../types/user";
+import { CopyOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 
 function addCondition(
   data: Partial<ScoringObjective>,
@@ -92,6 +93,7 @@ var renderConditionInput = (
 
 type FormObjective = {
   name: string | undefined;
+  extra: string | undefined;
   required_number: number | undefined;
   objective_type: ObjectiveType | undefined;
   aggregation: AggregationType | undefined;
@@ -106,6 +108,7 @@ function objectiveToFormObjective(
 ): FormObjective {
   let formObjective: FormObjective = {
     name: objective.name,
+    extra: objective.extra,
     required_number: objective.required_number,
     objective_type: objective.objective_type,
     aggregation: objective.aggregation,
@@ -138,6 +141,7 @@ function updateObjectiveWithFormObjective(
   formObjective: FormObjective
 ): Partial<ScoringObjective> {
   objective.name = formObjective.name ?? objective.name;
+  objective.extra = formObjective.extra ?? objective.extra;
   objective.required_number =
     formObjective.required_number ?? objective.required_number;
   objective.objective_type =
@@ -333,6 +337,13 @@ const ScoringCategoryPage: React.FC = () => {
         editable: true,
       },
       {
+        title: "Extra",
+        dataIndex: "extra",
+        key: "extra",
+        type: "text",
+        editable: true,
+      },
+      {
         title: "Required Number",
         dataIndex: "required_number",
         key: "required_number",
@@ -411,9 +422,9 @@ const ScoringCategoryPage: React.FC = () => {
       name: "Edit",
       func: async (data: Partial<ScoringObjective>) => {
         setCurrentObjective({ ...data });
-        console.log(data);
         setIsObjectiveModalOpen(true);
       },
+      icon: <EditOutlined />,
     },
     {
       name: "Add Condition",
@@ -421,6 +432,7 @@ const ScoringCategoryPage: React.FC = () => {
         setCurrentObjective({ ...data });
         setIsConditionModalOpen(true);
       },
+      icon: <PlusOutlined />,
     },
     {
       name: "Duplicate",
@@ -437,6 +449,7 @@ const ScoringCategoryPage: React.FC = () => {
           setRefreshObjectives((prev) => !prev);
         });
       },
+      icon: <CopyOutlined />,
     },
   ];
 
@@ -497,7 +510,7 @@ const ScoringCategoryPage: React.FC = () => {
       <Modal
         title={`Objective`}
         open={isObjectiveModalOpen}
-        onOk={objectiveFormRef.current?.submit}
+        onOk={() => objectiveFormRef.current?.submit()}
         onCancel={() => {
           setIsObjectiveModalOpen(false);
         }}
@@ -520,6 +533,13 @@ const ScoringCategoryPage: React.FC = () => {
             label="Name"
             rules={[{ required: true, message: "Name is required!" }]}
             initialValue={currentObjective.name}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="extra"
+            label="Extra"
+            initialValue={currentObjective.extra}
           >
             <Input />
           </Form.Item>

@@ -4,14 +4,13 @@ import { useEffect, useState } from "react";
 import { SubmissionTab } from "../components/submission-tab";
 
 const tabs: { [tab: string]: JSX.Element } = {
-  "For You": <> For You</>,
   Uniques: <UniqueTab />,
   Races: <SubmissionTab categoryName="Races" />,
   Bounties: <SubmissionTab categoryName="Bounties" />,
 };
 
 const ScoringPage = () => {
-  const [selectedTab, setSelectedTab] = useState<string>("For You");
+  const [selectedTab, setSelectedTab] = useState<string>("");
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);

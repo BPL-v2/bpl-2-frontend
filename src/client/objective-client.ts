@@ -33,18 +33,6 @@ export async function createObjective(
   );
 }
 
-export async function updateObjective(data: Partial<ScoringObjective>) {
-  if (data.id === undefined) {
-    throw Error;
-  }
-
-  return await fetchWrapper<ScoringObjective>(
-    "/scoring/objectives",
-    "PUT",
-    data
-  );
-}
-
 export async function deleteObjective(data: Partial<ScoringObjective>) {
   if (data.id === undefined) {
     throw Error;

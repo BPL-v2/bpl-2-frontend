@@ -34,6 +34,7 @@ export type TeamScore = { [teamId: number]: ScoreLite };
 export type ScoreObjective = {
   id: number;
   name: string;
+  extra: string;
   required_number: number;
   conditions: Condition[];
   objective_type: ObjectiveType;
@@ -109,6 +110,7 @@ function getScoreObjective(
   return {
     id: objective.id,
     name: objective.name,
+    extra: objective.extra,
     required_number: objective.required_number,
     conditions: objective.conditions,
     objective_type: objective.objective_type,

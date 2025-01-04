@@ -73,3 +73,43 @@
     transform: translateX(-100%);
   }
 }
+
+.challenge-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px;
+}
+
+.challenge-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  width: 300px;
+}
+
+.challenge-name {
+  font-size: 1.5em;
+  margin-bottom: 8px;
+}
+
+.team-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.team-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.team-name {
+  font-weight: bold;
+}
+
+.team-points {
+  color: #888;
+}

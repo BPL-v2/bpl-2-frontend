@@ -10,17 +10,10 @@ import { teamSort } from "../types/team";
 const { useToken } = theme;
 
 export function TwitchPage() {
-  let [twitchStreams, setTwitchStreams] = useState<TwitchStream[]>([]);
+  const [twitchStreams, setTwitchStreams] = useState<TwitchStream[]>([]);
   const [selectedChannel, setSelectedChannel] = useState<string | null>(null);
   const { eventStatus, users, currentEvent } = useContext(GlobalStateContext);
   const token = useToken().token;
-  twitchStreams = [
-    ...twitchStreams,
-    ...twitchStreams,
-    ...twitchStreams,
-    ...twitchStreams,
-    ...twitchStreams,
-  ];
   useEffect(() => {
     fetchStreams().then((data) => setTwitchStreams(data));
   }, []);

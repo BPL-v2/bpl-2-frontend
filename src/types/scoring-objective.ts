@@ -171,6 +171,7 @@ export type Condition = {
 export type ScoringObjective = {
   id: number;
   name: string;
+  extra: string;
   required_number: number;
   conditions: Condition[];
   category_id: number;

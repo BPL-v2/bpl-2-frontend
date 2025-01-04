@@ -10,11 +10,13 @@ import {
   Select,
   Space,
   Table,
+  Tooltip,
 } from "antd";
 import type { FormInstance, TableProps } from "antd";
 import { ColumnType } from "antd/es/table";
 import { sendWarning } from "../utils/notifications";
 import ArrayInput from "./arrayinput";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 type Option = {
   label: string;
@@ -46,6 +48,7 @@ export type action<T> = {
   name: string;
   func: funcOnData<T>;
   visible?: (data: Partial<T>) => boolean;
+  icon?: JSX.Element;
 };
 
 type CrudTableProps<T> = {
@@ -83,36 +86,44 @@ const CrudTable = <T,>({
             render: (record: T) => (
               <Space size={5}>
                 {editFunction && (
-                  <Button
-                    onClick={() => {
-                      setCurrentData(record);
-                      setIsUpdateModalOpen(true);
-                    }}
-                  >
-                    Edit
-                  </Button>
+                  <Tooltip title="Edit">
+                    <Button
+                      onClick={() => {
+                        setCurrentData(record);
+                        setIsUpdateModalOpen(true);
+                      }}
+                      icon={<EditOutlined />}
+                    ></Button>{" "}
+                  </Tooltip>
                 )}
                 {deleteFunction && (
-                  <Button
-                    onClick={() => {
-                      setCurrentData(record);
-                      setIsDeleteModalOpen(true);
-                    }}
-                  >
-                    Delete
-                  </Button>
+                  <Tooltip title="Delete">
+                    <Button
+                      onClick={() => {
+                        setCurrentData(record);
+                        setIsDeleteModalOpen(true);
+                      }}
+                      icon={<DeleteOutlined />}
+                    ></Button>{" "}
+                  </Tooltip>
                 )}
                 {addtionalActions &&
                   addtionalActions.map((action) => {
                     return !action.visible || action.visible(record) ? (
-                      <Button
-                        onClick={() => {
-                          setCurrentData(record);
-                          action.func(record);
-                        }}
+                      <Tooltip
+                        title={action.icon ? action.name : ""}
+                        key={action.name}
                       >
-                        {action.name}
-                      </Button>
+                        <Button
+                          onClick={() => {
+                            setCurrentData(record);
+                            action.func(record);
+                          }}
+                          icon={action.icon ? action.icon : null}
+                        >
+                          {action.icon ? "" : action.name}
+                        </Button>{" "}
+                      </Tooltip>
                     ) : null;
                   })}
               </Space>
