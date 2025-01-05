@@ -1,30 +1,52 @@
 import { Menu } from "antd";
 import UniqueTab from "../scoring-tabs/unique-tab";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SubmissionTab } from "../scoring-tabs/submission-tab";
 import { CollectionTab } from "../scoring-tabs/collection-tab";
 import { LadderTab } from "../scoring-tabs/ladder-tab";
 import { RuleTab } from "../scoring-tabs/rule-tab";
+import { GlobalStateContext } from "../utils/context-provider";
+import { useSearchParams } from "react-router-dom";
 
-const tabs: { [tab: string]: JSX.Element } = {
-  Ladder: <LadderTab />,
-  Uniques: <UniqueTab />,
-  Races: <SubmissionTab categoryName="Races" />,
-  Bounties: <SubmissionTab categoryName="Bounties" />,
-  Collections: <CollectionTab />,
-  Rules: <RuleTab />,
-};
+const tabs: { key: string; tab: JSX.Element }[] = [
+  {
+    key: "Ladder",
+    tab: <LadderTab />,
+  },
+  {
+    key: "Uniques",
+    tab: <UniqueTab />,
+  },
+  {
+    key: "Races",
+    tab: <SubmissionTab categoryName="Races" />,
+  },
+  {
+    key: "Bounties",
+    tab: <SubmissionTab categoryName="Bounties" />,
+  },
+  {
+    key: "Collections",
+    tab: <CollectionTab />,
+  },
+  {
+    key: "Rules",
+    tab: <RuleTab />,
+  },
+];
 
-const ScoringPage = () => {
-  const [selectedTab, setSelectedTab] = useState<string>("Uniques");
+type ScoringPageProps = { tab?: string };
 
+const ScoringPage = ({ tab }: ScoringPageProps) => {
+  const [searchParams] = useSearchParams();
+  const { isMobile } = useContext(GlobalStateContext);
+  const [selectedTab, setSelectedTab] = useState<string>(tab || "Ladder");
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const tab = urlParams.get("tab");
-    if (tab && tabs[tab]) {
+    const tab = searchParams.get("tab");
+    if (tab) {
       setSelectedTab(tab);
     }
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     window.history.pushState({}, "", `/scores?tab=${selectedTab}`);
@@ -32,18 +54,21 @@ const ScoringPage = () => {
 
   return (
     <>
-      <Menu
-        onClick={(info) => setSelectedTab(info.key)}
-        style={{ marginBottom: 20, marginTop: 5, userSelect: "none" }}
-        mode="horizontal"
-        items={Object.keys(tabs).map((tab) => ({
-          key: tab,
-          title: tab,
-          label: tab,
-        }))}
-        selectedKeys={[selectedTab]}
-      />
-      {tabs[selectedTab]}
+      {isMobile ? null : (
+        <Menu
+          onClick={(info) => setSelectedTab(info.key)}
+          style={{ marginBottom: 20, marginTop: 5, userSelect: "none" }}
+          mode="horizontal"
+          items={tabs.map((tab) => ({
+            key: tab.key,
+            title: tab.key,
+            label: tab.key,
+          }))}
+          selectedKeys={[selectedTab]}
+        />
+      )}
+
+      {tabs.find((tab) => tab.key === selectedTab)?.tab}
     </>
   );
 };

@@ -15,6 +15,7 @@ import {
 import { BPLEvent, EventStatus } from "./types/event";
 import { useError } from "./components/errorcontext";
 import {
+  MenuOutlined,
   RiseOutlined,
   SettingOutlined,
   TwitchOutlined,
@@ -29,40 +30,6 @@ import { ScoringPreset } from "./types/scoring-preset";
 type MenuItem = Required<MenuProps>["items"][number] & {
   rolerequired?: UserPermission[];
 };
-
-const items: MenuItem[] = [
-  {
-    label: "Admin",
-    key: "Admin",
-    icon: <SettingOutlined />,
-    extra: "right",
-    rolerequired: [UserPermission.ADMIN],
-    children: [
-      {
-        label: "Events",
-        key: "/events",
-      },
-      {
-        type: "group",
-        label: "Users",
-        children: [
-          { label: "Manage users", key: "/users" },
-          { label: "Sort users", key: "setting:2" },
-        ],
-      },
-    ],
-  },
-  {
-    label: "Scoring",
-    key: "/scores",
-    icon: <RiseOutlined />,
-  },
-  {
-    label: "Streams",
-    key: "/streams",
-    icon: <TwitchOutlined />,
-  },
-];
 
 function getKeys(items: any[]): string[] {
   let keys = [];
@@ -96,7 +63,6 @@ function filterMenuItems(items: MenuItem[], user: User | undefined) {
 function App() {
   const [currentNav, setCurrentNav] = useState<string>();
   const [user, setUser] = useState<User>();
-  const [menuItems, setMenuItems] = useState<MenuItem[]>(items);
   const [currentEvent, setCurrentEvent] = useState<BPLEvent>();
   const [eventStatus, setEventStatus] = useState<EventStatus>();
   const [rules, setRules] = useState<ScoringCategory>();
@@ -105,19 +71,64 @@ function App() {
   const [scoringPresets, setScoringPresets] = useState<ScoringPreset[]>();
   const [users, setUsers] = useState<MinimalUser[]>([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   useEffect(() => {
+    const items = [
+      {
+        label: "Admin",
+        key: "Admin",
+        icon: <SettingOutlined />,
+        extra: "right",
+        rolerequired: [UserPermission.ADMIN],
+        children: [
+          {
+            label: "Events",
+            key: "/events",
+          },
+          {
+            type: "group",
+            label: "Users",
+            children: [
+              { label: "Manage users", key: "/users" },
+              { label: "Sort users", key: "setting:2" },
+            ],
+          },
+        ],
+      },
+      {
+        label: "Scoring",
+        key: "/scores",
+        icon: <RiseOutlined />,
+        children: isMobile
+          ? [
+              { label: "Ladder", key: "/scores?tab=Ladder" },
+              { label: "Uniques", key: "/scores?tab=Uniques" },
+              { label: "Races", key: "/scores?tab=Races" },
+              { label: "Bounties", key: "/scores?tab=Bounties" },
+              { label: "Collections", key: "/scores?tab=Collections" },
+              { label: "Rules", key: "/scores?tab=Rules" },
+            ]
+          : undefined,
+      },
+      {
+        label: "Streams",
+        key: "/streams",
+        icon: <TwitchOutlined />,
+      },
+    ];
     for (let key of getKeys(items)) {
       if (window.location.pathname.includes(key)) {
         setCurrentNav(key);
-        return;
+        break;
       }
     }
-  }, []);
+    setMenuItems(filterMenuItems(items, user));
+  }, [isMobile, user]);
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 900);
     };
-
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -125,9 +136,6 @@ function App() {
   useEffect(() => {
     getUserInfo().then((data) => setUser(data));
   }, []);
-  useEffect(() => {
-    setMenuItems(filterMenuItems(items, user));
-  }, [user]);
 
   useEffect(() => {
     if (rules && scoreData && currentEvent && scoringPresets) {
@@ -215,7 +223,17 @@ function App() {
               }}
               selectedKeys={currentNav ? [currentNav] : []}
               mode="horizontal"
-              items={menuItems}
+              items={
+                isMobile
+                  ? [
+                      {
+                        key: "Menu",
+                        icon: <MenuOutlined />,
+                        children: menuItems,
+                      },
+                    ]
+                  : menuItems
+              }
             />
             <AuthButton style={{ height: "100%" }} />
           </Header>

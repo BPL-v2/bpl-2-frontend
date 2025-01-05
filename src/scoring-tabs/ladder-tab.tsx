@@ -1,10 +1,11 @@
-import { Divider, Table, theme } from "antd";
+import { Divider, Table, Tag, theme } from "antd";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { getSubCategory } from "../types/scoring-category";
 import { Team } from "../types/team";
 import { getTotalPoints } from "../utils/utils";
 import { ColumnsType } from "antd/es/table";
+import { orange, lime, volcano, blue } from "@ant-design/colors";
 
 type RowDef = {
   default: number;
@@ -18,7 +19,8 @@ type RowDef = {
 const { useToken } = theme;
 
 export function LadderTab() {
-  const { eventStatus, scores, currentEvent } = useContext(GlobalStateContext);
+  const { eventStatus, scores, currentEvent, isMobile } =
+    useContext(GlobalStateContext);
   const token = useToken().token;
   if (!scores || !currentEvent) {
     return <></>;
@@ -31,6 +33,12 @@ export function LadderTab() {
     {}
   );
   const categoryNames = ["Collections", "Uniques", "Bounties", "Races"];
+  const categoryColors = {
+    Collections: orange,
+    Uniques: lime,
+    Bounties: blue,
+    Races: volcano,
+  };
   const categories = categoryNames.map((categoryName) =>
     getSubCategory(scores, categoryName)
   );
@@ -72,14 +80,41 @@ export function LadderTab() {
       sorter: (a, b) => a.default - b.default,
       defaultSortOrder: "descend",
     },
-    ...categoryNames.map((categoryName) => ({
+    ...getCompletionColumns(isMobile),
+  ];
+  function getCompletionColumns(isMobile: boolean) {
+    if (isMobile) {
+      return [
+        {
+          title: "Categories",
+          render: (record: RowDef) => {
+            return (
+              <>
+                {categoryNames.map((categoryName) => (
+                  <Tag
+                    key={categoryName}
+                    // @ts-ignore
+                    color={categoryColors[categoryName][6]}
+                  >
+                    {`${categoryName} ${
+                      // @ts-ignore
+                      record[categoryName]
+                    }`}{" "}
+                  </Tag>
+                ))}
+              </>
+            );
+          },
+        },
+      ];
+    }
+    return categoryNames.map((categoryName) => ({
       title: categoryName,
       dataIndex: categoryName,
       key: categoryName,
       sorter: (a: any, b: any) => a[categoryName] - b[categoryName],
-    })),
-  ];
-
+    }));
+  }
   return (
     <>
       <Divider style={{ borderColor: token.colorPrimary }}>

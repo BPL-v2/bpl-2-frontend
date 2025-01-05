@@ -7,6 +7,7 @@ import { useContext } from "react";
 import { getAllObjectives } from "../utils/utils";
 import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
 import { red, green } from "@ant-design/colors";
+import { BPLEvent } from "../types/event";
 
 export type ItemTableProps = {
   category?: ScoreCategory;
@@ -15,7 +16,7 @@ export type ItemTableProps = {
 };
 
 export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
-  const { currentEvent } = useContext(GlobalStateContext);
+  const { currentEvent, isMobile } = useContext(GlobalStateContext);
   if (!currentEvent || !category) {
     return <></>;
   }
@@ -29,45 +30,90 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
     }, {}),
   }));
   const tableColumns: ColumnsType = [
-    {
-      title: "",
-      render: (img_location: string | null) => {
-        return img_location ? (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "100%",
-              maxHeight: "60px",
-            }}
-          >
-            <Image
-              src={img_location}
-              style={{
-                height: "100%",
-                // height: "60px",
-                maxHeight: "60px",
-                width: "auto",
-                // maxWidth: "60px",
-              }}
-            />
-          </div>
-        ) : (
-          ""
-        );
-      },
-      dataIndex: "img_location",
-      key: "img_location",
-      width: 120,
-    },
+    ...(isMobile
+      ? []
+      : [
+          {
+            title: "",
+            render: (img_location: string | null) => {
+              return img_location ? (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100%",
+                    maxHeight: "60px",
+                  }}
+                >
+                  <Image
+                    src={img_location}
+                    style={{
+                      height: "100%",
+                      maxHeight: "60px",
+                      width: "auto",
+                    }}
+                  />
+                </div>
+              ) : (
+                ""
+              );
+            },
+            dataIndex: "img_location",
+            key: "img_location",
+            width: 120,
+          },
+        ]),
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
-    ...currentEvent.teams
+    ...getCompletionColumns(currentEvent, selectedTeam || 0, isMobile),
+  ];
+
+  function getCompletionColumns(
+    event: BPLEvent,
+    selectedTeam: number,
+    isMobile: boolean
+  ) {
+    if (isMobile) {
+      return [
+        {
+          title: "Status",
+          key: "status",
+          render: (record: any) => {
+            return (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr",
+                  gap: "8px",
+                }}
+              >
+                {event.teams.slice().map((team) => {
+                  return (
+                    <div
+                      key={team.id + "_" + record.id}
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
+                      {record[team.id] ? (
+                        <CheckCircleFilled style={{ color: green[4] }} />
+                      ) : (
+                        <CloseCircleFilled style={{ color: red[4] }} />
+                      )}
+                      <span style={{ marginRight: "8px" }}>{team.name}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          },
+        },
+      ];
+    }
+    return event.teams
       .slice()
       .sort((a, b) =>
         a.id === selectedTeam ? -1 : b.id === selectedTeam ? 1 : 0
@@ -85,8 +131,8 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
         sorter: (a: any, b: any) => {
           return a[team.id] === b[team.id] ? 0 : a[team.id] ? -1 : 1;
         },
-      })),
-  ];
+      }));
+  }
 
   return (
     <Table
