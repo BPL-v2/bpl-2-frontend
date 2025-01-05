@@ -7,20 +7,15 @@ export interface BPLEvent {
   is_current: boolean;
   teams: Team[];
   scoring_category_id: number;
-}
-
-export interface EventCreate {
-  name: string;
-  is_current: boolean;
-}
-export interface EventUpdate {
-  name?: string;
-  is_current?: boolean;
+  max_size: number;
+  application_start_time: string;
+  event_start_time: string;
+  event_end_time: string;
 }
 
 export interface EventStatus {
   team_id?: number;
-  status: EventStatusEnum;
+  application_status: EventStatusEnum;
 }
 
 export enum EventStatusEnum {

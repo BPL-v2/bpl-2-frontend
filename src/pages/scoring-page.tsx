@@ -4,7 +4,6 @@ import { useContext, useEffect, useState } from "react";
 import { SubmissionTab } from "../scoring-tabs/submission-tab";
 import { CollectionTab } from "../scoring-tabs/collection-tab";
 import { LadderTab } from "../scoring-tabs/ladder-tab";
-import { RuleTab } from "../scoring-tabs/rule-tab";
 import { GlobalStateContext } from "../utils/context-provider";
 import { useSearchParams } from "react-router-dom";
 
@@ -28,10 +27,6 @@ const tabs: { key: string; tab: JSX.Element }[] = [
   {
     key: "Collections",
     tab: <CollectionTab />,
-  },
-  {
-    key: "Rules",
-    tab: <RuleTab />,
   },
 ];
 

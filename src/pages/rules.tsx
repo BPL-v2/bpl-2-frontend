@@ -10,7 +10,7 @@ import {
 
 const { useToken } = theme;
 
-export function RuleTab() {
+export function RulePage() {
   // const { eventStatus, scores, currentEvent } = useContext(GlobalStateContext);
   const token = useToken().token;
   const ruleCollapse: CollapseProps["items"] = [

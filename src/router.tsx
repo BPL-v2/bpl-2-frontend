@@ -8,6 +8,8 @@ import UserPage from "./pages/users";
 import SubmissionPage from "./pages/bounty-submissions";
 import ScoringPage from "./pages/scoring-page";
 import { TwitchPage } from "./pages/twitch-page";
+import { RulePage } from "./pages/rules";
+import { ProfilePage } from "./pages/profile";
 
 export const router = createBrowserRouter([
   {
@@ -49,5 +51,13 @@ export const router = createBrowserRouter([
   {
     path: "/streams",
     element: <TwitchPage />,
+  },
+  {
+    path: "/rules",
+    element: <RulePage />,
+  },
+  {
+    path: "/profile",
+    element: <ProfilePage />,
   },
 ]);

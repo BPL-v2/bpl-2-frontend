@@ -13,6 +13,7 @@ import { BPLEvent, EventStatus } from "./types/event";
 import { useError } from "./components/errorcontext";
 import {
   MenuOutlined,
+  ReadOutlined,
   RiseOutlined,
   SettingOutlined,
   TwitchOutlined,
@@ -24,6 +25,7 @@ import { ScoreCategory } from "./types/score";
 import { mergeScores } from "./utils/utils";
 import { fetchScoringPresetsForEvent } from "./client/scoring-preset-client";
 import { ScoringPreset } from "./types/scoring-preset";
+import ApplicationButton from "./components/application-button";
 type MenuItem = Required<MenuProps>["items"][number] & {
   rolerequired?: UserPermission[];
 };
@@ -112,6 +114,11 @@ function App() {
         key: "/streams",
         icon: <TwitchOutlined />,
       },
+      {
+        label: "Rules",
+        key: "/rules",
+        icon: <ReadOutlined />,
+      },
     ];
     for (let key of getKeys(items)) {
       if (window.location.pathname.includes(key)) {
@@ -198,9 +205,9 @@ function App() {
           rules: rules,
           setRules: setRules,
           eventStatus: eventStatus,
-          setEventStatus: () => {},
+          setEventStatus: setEventStatus,
           scores: scores,
-          setScores: () => {},
+          setScores: setScores,
           users: users,
           setUsers: setUsers,
           isMobile: isMobile,
@@ -218,7 +225,11 @@ function App() {
             }}
           >
             <Menu
-              style={{ flex: 1, userSelect: "none" }}
+              style={{
+                flex: 1,
+                userSelect: "none",
+                border: "1px solid transparent",
+              }}
               onClick={(e) => {
                 setCurrentNav(e.key);
                 router.navigate(e.key);
@@ -237,6 +248,7 @@ function App() {
                   : menuItems
               }
             />
+            <ApplicationButton style={{ height: "100%" }} />
             <AuthButton style={{ height: "100%" }} />
           </Header>
           <Content style={{ minHeight: "90vh" }}>

@@ -36,3 +36,10 @@ export async function fetchUsersForEvent(
     return users;
   });
 }
+
+export async function disconnectOauth(provider: string) {
+  return await fetchWrapper<User>(
+    "/users/remove-auth?provider=" + provider,
+    "POST"
+  );
+}

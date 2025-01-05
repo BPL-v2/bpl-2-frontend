@@ -17,6 +17,7 @@ import { ColumnType } from "antd/es/table";
 import { sendWarning } from "../utils/notifications";
 import ArrayInput from "./arrayinput";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
 
 type Option = {
   label: string;
@@ -131,9 +132,6 @@ const CrudTable = <T,>({
           },
         ]
       : [];
-  // if (addtionalActions) {
-  //   actionColumns.push(
-  // }
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -141,6 +139,8 @@ const CrudTable = <T,>({
 
   const [data, setData] = useState<T[]>([]);
   useEffect(() => {
+    console.log(currentData);
+
     if (updateFormRef.current) {
       updateFormRef.current.setFieldsValue(currentData);
     }
@@ -171,7 +171,7 @@ const CrudTable = <T,>({
         } else if (column.type === "checkbox") {
           input = <Checkbox />;
         } else if (column.type === "date") {
-          input = <DatePicker></DatePicker>;
+          input = <DatePicker showTime={{ format: "HH:mm" }}></DatePicker>;
         } else if (column.type === "select") {
           input = (
             <Select style={{ width: "100%" }}>
@@ -212,6 +212,15 @@ const CrudTable = <T,>({
             name={String(key)}
             label={String(column.title)}
             valuePropName={column.type === "checkbox" ? "checked" : "value"}
+            getValueProps={(value) => {
+              if (column.type === "date") {
+                return { value: value ? dayjs(value) : "" };
+              }
+              if (column.type === "checkbox") {
+                return { checked: value ? value : false };
+              }
+              return { value: value };
+            }}
             rules={[
               {
                 required: column.required ?? false,
