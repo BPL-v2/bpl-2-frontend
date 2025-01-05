@@ -92,10 +92,7 @@ export function ProfilePage() {
                   filter: user?.account_name ? "" : "grayscale(100%)",
                 }}
               >
-                <Image
-                  src={"public/assets/app-logos/poe2.png"}
-                  preview={false}
-                />
+                <Image src={"/assets/app-logos/poe2.png"} preview={false} />
               </div>
             }
             description="We need permission to request your Path of Exile character information on your behalf."
