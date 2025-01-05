@@ -1,6 +1,6 @@
-import { Table, Image } from "antd";
+import { Table, Image, theme } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { ScoreCategory } from "../types/score";
+import { ScoreCategory, ScoreObjective } from "../types/score";
 import { getImage } from "../types/scoring-objective";
 import { GlobalStateContext } from "../utils/context-provider";
 import { useContext } from "react";
@@ -14,21 +14,63 @@ export type ItemTableProps = {
   selectedTeam?: number;
   style?: React.CSSProperties;
 };
+const { useToken } = theme;
 
 export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
   const { currentEvent, isMobile } = useContext(GlobalStateContext);
+  const token = useToken().token;
   if (!currentEvent || !category) {
     return <></>;
   }
-  const tableRows = getAllObjectives(category).map((objective) => ({
-    key: objective.id,
-    name: objective.name,
-    img_location: getImage(objective),
-    ...currentEvent.teams.reduce((acc: { [teamId: number]: boolean }, team) => {
-      acc[team.id] = objective.team_score[team.id].finished;
+
+  const variantMap = getAllObjectives(category)
+    .filter((objective) => objective.extra)
+    .reduce((acc: { [name: string]: ScoreObjective[] }, variantObjective) => {
+      if (variantObjective.extra) {
+        if (acc[variantObjective.name]) {
+          acc[variantObjective.name].push(variantObjective);
+        } else {
+          acc[variantObjective.name] = [variantObjective];
+        }
+      }
       return acc;
-    }, {}),
-  }));
+    }, {});
+
+  const tableRows = getAllObjectives(category)
+    .filter((objective) => !objective.extra)
+    .map((objective) => {
+      const row = {
+        key: objective.id,
+        name: <>{objective.name}</>,
+        extra: objective.extra,
+        img_location: getImage(objective),
+        ...currentEvent.teams.reduce(
+          (acc: { [teamId: number]: boolean }, team) => {
+            acc[team.id] = objective.team_score[team.id].finished;
+            return acc;
+          },
+          {}
+        ),
+      };
+      if (variantMap[objective.name]) {
+        row.name = (
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <div>{objective.name}</div>
+            <span style={{ color: token.colorPrimary }}>
+              [Click to toggle Variants]
+            </span>
+          </div>
+        );
+        // @ts-ignore - too lazy to fix it just works okay?!?!?
+        row.children = variantMap[objective.name].map((variant) => {
+          return {
+            key: variant.id,
+            name: variant.extra,
+          };
+        });
+      }
+      return row;
+    });
   const tableColumns: ColumnsType = [
     ...(isMobile
       ? []
@@ -66,8 +108,23 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
         ]),
     {
       title: "Name",
-      dataIndex: "name",
       key: "name",
+      render: (record: any) => {
+        return (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr",
+              gap: "8px",
+            }}
+          >
+            <div>{record.name}</div>
+            {record.extra ? (
+              <div style={{ color: red[6] }}> {record.extra}</div>
+            ) : null}
+          </div>
+        );
+      },
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     ...getCompletionColumns(currentEvent, selectedTeam || 0, isMobile),
@@ -143,6 +200,13 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
       showSorterTooltip={false}
       size="small"
       scroll={{ y: 600 }}
+      expandable={{
+        indentSize: 200,
+        expandRowByClick: true,
+        expandIcon: () => null,
+        expandedRowClassName: () => "expanded-row",
+      }}
+      rowClassName={(record) => (record.children ? "clickable" : "")}
     />
   );
 }

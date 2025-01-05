@@ -77,3 +77,11 @@
 .table-row-light {
   background-color: #494949;
 }
+
+.clickable {
+  cursor: pointer;
+}
+
+.expanded-row {
+  background-color: #494949;
+}
