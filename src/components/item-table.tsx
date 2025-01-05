@@ -16,6 +16,44 @@ export type ItemTableProps = {
 };
 const { useToken } = theme;
 
+function imageOverlayedWithText(record: any) {
+  return (
+    <div
+      style={{
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100%",
+        maxHeight: "60px",
+      }}
+    >
+      <Image
+        src={record.img_location}
+        style={{
+          height: "100%",
+          maxHeight: "60px",
+          width: "auto",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          color: "white",
+          padding: "0px",
+          textAlign: "center",
+          textShadow: "2px 2px 4px rgba(0, 0, 0,1)", // Text shadow for better readability
+        }}
+      >
+        {record.name}
+      </div>
+    </div>
+  );
+}
+
 export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
   const { currentEvent, isMobile } = useContext(GlobalStateContext);
   const token = useToken().token;
@@ -110,20 +148,10 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
       title: "Name",
       key: "name",
       render: (record: any) => {
-        return (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr",
-              gap: "8px",
-            }}
-          >
-            <div>{record.name}</div>
-            {record.extra ? (
-              <div style={{ color: red[6] }}> {record.extra}</div>
-            ) : null}
-          </div>
-        );
+        if (isMobile && !record.extra) {
+          return imageOverlayedWithText(record);
+        }
+        return record.name;
       },
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
@@ -160,7 +188,7 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
                       ) : (
                         <CloseCircleFilled style={{ color: red[4] }} />
                       )}
-                      <span style={{ marginRight: "8px" }}>{team.name}</span>
+                      <span style={{ marginLeft: "8px" }}>{team.name}</span>
                     </div>
                   );
                 })}
@@ -201,7 +229,6 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
       size="small"
       scroll={{ y: 600 }}
       expandable={{
-        indentSize: 200,
         expandRowByClick: true,
         expandIcon: () => null,
         expandedRowClassName: () => "expanded-row",
