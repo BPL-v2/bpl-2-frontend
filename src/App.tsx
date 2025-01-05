@@ -8,10 +8,7 @@ import { ContextProvider } from "./utils/context-provider";
 import { MinimalUser, User, UserPermission } from "./types/user";
 import { fetchUsersForEvent, getUserInfo } from "./client/user-client";
 import { router } from "./router";
-import {
-  fetchCurrentEvent,
-  getEventStatus as fetchEventStatus,
-} from "./client/event-client";
+import { fetchCurrentEvent, fetchEventStatus } from "./client/event-client";
 import { BPLEvent, EventStatus } from "./types/event";
 import { useError } from "./components/errorcontext";
 import {
@@ -134,10 +131,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    getUserInfo().then((data) => setUser(data));
-  }, []);
-
-  useEffect(() => {
     if (rules && scoreData && currentEvent && scoringPresets) {
       setScores(
         mergeScores(
@@ -151,16 +144,25 @@ function App() {
   }, [rules, scoreData, currentEvent, scoringPresets]);
 
   useEffect(() => {
+    getUserInfo().then((data) => setUser(data));
     fetchCurrentEvent().then((event) => {
       setCurrentEvent(event);
       fetchCategoryForEvent(event.id).then((rules) => setRules(rules));
-      fetchEventStatus(event.id).then((status) => setEventStatus(status));
       fetchScoringPresetsForEvent(event.id).then((presets) =>
         setScoringPresets(presets)
       );
       fetchUsersForEvent(event.id).then((users) => setUsers(users));
     });
   }, []);
+
+  useEffect(() => {
+    if (currentEvent && user) {
+      fetchEventStatus(currentEvent.id).then((status) =>
+        setEventStatus(status)
+      );
+    }
+  }, [currentEvent, user]);
+
   const sendNotification = useError().sendNotification;
 
   useEffect(() => {

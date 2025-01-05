@@ -30,7 +30,7 @@ export async function deleteEvent(data: Partial<BPLEvent>) {
   return await fetchWrapper<null>("/events/" + data.id, "DELETE");
 }
 
-export async function getEventStatus(eventId: number) {
+export async function fetchEventStatus(eventId: number) {
   return await fetchWrapper<EventStatus>(
     "/events/" + eventId + "/status",
     "GET"
