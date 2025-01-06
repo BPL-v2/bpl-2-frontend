@@ -1,12 +1,6 @@
-import React, { useContext, useMemo } from "react";
-import CrudTable, { CrudColumn } from "../components/crudtable";
-import { User, UserPermission } from "../types/user";
-import {
-  editUserPermissions,
-  fetchUsersForEvent,
-  getAllUsers,
-} from "../client/user-client";
-import { CopyOutlined } from "@ant-design/icons";
+import React, { useContext } from "react";
+import { CrudColumn } from "../components/crudtable";
+import { UserPermission } from "../types/user";
 import { GlobalStateContext } from "../utils/context-provider";
 import { Button, Form, Input, Select, Table } from "antd";
 import { PlayTime, Signup } from "../types/signup";

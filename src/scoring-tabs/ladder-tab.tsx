@@ -1,4 +1,4 @@
-import { Divider, Table, Tag, theme } from "antd";
+import { Divider, Table, Tag } from "antd";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { getSubCategory } from "../types/scoring-category";
@@ -16,12 +16,10 @@ type RowDef = {
   Bounties: number;
   Races: number;
 };
-const { useToken } = theme;
 
 export function LadderTab() {
   const { eventStatus, scores, currentEvent, isMobile } =
     useContext(GlobalStateContext);
-  const token = useToken().token;
   if (!scores || !currentEvent) {
     return <></>;
   }

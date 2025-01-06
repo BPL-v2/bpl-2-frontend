@@ -7,7 +7,6 @@ import {
   FormInstance,
   Image,
   Input,
-  theme,
   Tooltip,
 } from "antd";
 import { useContext } from "react";
@@ -17,11 +16,8 @@ import { red, green, gray } from "@ant-design/colors";
 import { disconnectOauth, updateUser } from "../client/user-client";
 import React from "react";
 
-const { useToken } = theme;
-
 export function ProfilePage() {
   const { user, setUser } = useContext(GlobalStateContext);
-  const token = useToken().token;
   const formRef = React.useRef<FormInstance>(null);
   // const [searchParams] = useSearchParams();
   // const { isMobile } = useContext(GlobalStateContext);

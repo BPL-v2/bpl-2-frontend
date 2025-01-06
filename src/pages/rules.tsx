@@ -1,18 +1,7 @@
-import {
-  Anchor,
-  Col,
-  Collapse,
-  CollapseProps,
-  Divider,
-  Row,
-  theme,
-} from "antd";
-
-const { useToken } = theme;
+import { Anchor, Col, Collapse, CollapseProps, Divider, Row } from "antd";
 
 export function RulePage() {
   // const { eventStatus, scores, currentEvent } = useContext(GlobalStateContext);
-  const token = useToken().token;
   const ruleCollapse: CollapseProps["items"] = [
     {
       label:

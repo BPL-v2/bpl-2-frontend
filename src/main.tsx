@@ -1,36 +1,12 @@
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import {
-  greyDark,
-  blueDark,
-  greenDark,
-  yellowDark,
-  volcanoDark,
-  limeDark,
-  purpleDark,
-  redDark,
-  goldDark,
-  geekblueDark,
-  magentaDark,
-  orangeDark,
-  cyan,
-  cyanDark,
-  volcano,
-  lime,
-  purple,
-  red,
-  gold,
-  geekblue,
-  blue,
-  magenta,
-  orange,
-} from "@ant-design/colors";
+import { greyDark, cyanDark } from "@ant-design/colors";
 
 import App from "./App.tsx";
 import { NotificationProvider } from "./components/errorcontext.tsx";
 import { ConfigProvider, theme } from "antd";
 
-const colorPrimary = blue[4];
+const colorPrimary = cyanDark[5];
 // const colorPrimary = cyanDark[5];
 // const bgPallette = ["", ...greyDark];
 const bgPallette = greyDark;
