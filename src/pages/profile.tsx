@@ -1,8 +1,8 @@
-import { Button, Card, Divider, Image, theme } from "antd";
+import { Badge, Button, Card, Divider, Image, theme, Tooltip } from "antd";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { DiscordFilled, TwitchOutlined } from "@ant-design/icons";
-import { red, green, gray } from "@ant-design/colors";
+import { red, green, gray, grey } from "@ant-design/colors";
 import { disconnectOauth } from "../client/user-client";
 
 const { useToken } = theme;
@@ -71,56 +71,82 @@ export function ProfilePage() {
           marginBottom: "20px",
         }}
       >
-        <Card
-          title="Path of Exile"
-          extra={
-            <Button style={{ color: green[5], borderColor: green[5] }}>
-              {user?.account_name ? "Refresh Access" : "Connect"}
-            </Button>
+        <Tooltip
+          title={
+            user?.account_name
+              ? ""
+              : "Connect your Path of Exile account to participate in the event."
           }
+          color={red[5]}
         >
-          <Card.Meta
-            title={user?.account_name ?? ""}
-            avatar={
-              <div
-                style={{
-                  width: 100,
-                  height: 100,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  filter: user?.account_name ? "" : "grayscale(100%)",
-                }}
-              >
-                <Image src={"/assets/app-logos/poe2.png"} preview={false} />
-              </div>
-            }
-            description="We need permission to request your Path of Exile character information on your behalf."
-          ></Card.Meta>
-        </Card>
-        <Card title="Discord" extra={extra(!!user?.discord_name, "discord")}>
-          <Card.Meta
-            title={user?.discord_name ?? ""}
-            avatar={
-              <div
-                style={{
-                  width: 100,
-                  height: 100,
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <DiscordFilled
-                  style={{
-                    fontSize: "80px",
-                    color: user?.discord_name ? "#7289da" : gray[5],
-                  }}
-                />
-              </div>
-            }
-            description="You must connect your Discord account so that we can assign the required roles on the server."
-          ></Card.Meta>
-        </Card>
+          <Badge count={user?.account_name ? 0 : "!"}>
+            <Card
+              title="Path of Exile"
+              extra={
+                <Button style={{ color: green[5], borderColor: green[5] }}>
+                  {user?.account_name ? "Refresh Access" : "Connect"}
+                </Button>
+              }
+            >
+              <Card.Meta
+                title={user?.account_name ?? ""}
+                avatar={
+                  <div
+                    style={{
+                      width: 100,
+                      height: 100,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      filter: user?.account_name ? "" : "grayscale(100%)",
+                    }}
+                  >
+                    <Image src={"/assets/app-logos/poe2.png"} preview={false} />
+                  </div>
+                }
+                description="We need permission to request your Path of Exile character information on your behalf."
+              ></Card.Meta>
+            </Card>
+          </Badge>
+        </Tooltip>
+        <Tooltip
+          title={
+            user?.discord_name
+              ? ""
+              : "Connect your Discord account to participate in the event."
+          }
+          color={red[5]}
+        >
+          <Badge count={user?.discord_name ? 0 : "!"}>
+            <Card
+              title="Discord"
+              extra={extra(!!user?.discord_name, "discord")}
+            >
+              <Card.Meta
+                title={user?.discord_name ?? ""}
+                avatar={
+                  <div
+                    style={{
+                      width: 100,
+                      height: 100,
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <DiscordFilled
+                      style={{
+                        fontSize: "80px",
+                        color: user?.discord_name ? "#7289da" : gray[5],
+                      }}
+                    />
+                  </div>
+                }
+                description="You must connect your Discord account so that we can assign the required roles on the server."
+              ></Card.Meta>
+            </Card>
+          </Badge>
+        </Tooltip>
+
         <Card title="Twitch" extra={extra(!!user?.twitch_name, "twitch")}>
           <Card.Meta
             title={user?.twitch_name ?? ""}
