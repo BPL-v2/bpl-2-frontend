@@ -122,9 +122,7 @@ export function RulePage() {
     <Row>
       <Col span={20} style={{ textAlign: "left" }}>
         <div id={"rules"}>
-          <Divider style={{ borderColor: token.colorPrimary }}>
-            {`Gameplay Rules`}
-          </Divider>
+          <Divider>{`Gameplay Rules`}</Divider>
         </div>
         <p>
           Below are the major rules you should follow when playing in BPL. If
@@ -133,9 +131,7 @@ export function RulePage() {
         </p>
         <Collapse items={ruleCollapse} style={{ borderWidth: 0 }} />
         <div id={"points"}>
-          <Divider style={{ borderColor: token.colorPrimary }}>
-            {`Earning Points`}
-          </Divider>
+          <Divider>{`Earning Points`}</Divider>
         </div>
         <p>
           In BPL 15.5, One team that attempts to 100% complete BPL in 7 days.
@@ -149,9 +145,7 @@ export function RulePage() {
           effect"
         </p>
         <div id={"faq"}>
-          <Divider style={{ borderColor: token.colorPrimary }}>
-            {`Frequently Asked Questions`}
-          </Divider>
+          <Divider>{`Frequently Asked Questions`}</Divider>
         </div>
         <Collapse items={faqCollapse} style={{ borderWidth: 0 }} />
       </Col>

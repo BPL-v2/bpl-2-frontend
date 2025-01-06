@@ -153,7 +153,6 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
         }
         return record.name;
       },
-      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     ...getCompletionColumns(currentEvent, selectedTeam || 0, isMobile),
   ];

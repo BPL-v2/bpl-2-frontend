@@ -33,9 +33,7 @@ const UniqueTab: React.FC = () => {
         selectedTeam={selectedTeam}
         setSelectedTeam={setSelectedTeam}
       />
-      <Divider
-        style={{ borderColor: token.colorPrimary }}
-      >{`Categories`}</Divider>
+      <Divider>{`Categories`}</Divider>
 
       <div
         style={{
@@ -115,9 +113,7 @@ const UniqueTab: React.FC = () => {
           );
         })}
       </div>
-      <Divider style={{ borderColor: token.colorPrimary }}>{`${
-        selectedCategory?.name || "Unique"
-      } Items`}</Divider>
+      <Divider>{`${selectedCategory?.name || "Unique"} Items`}</Divider>
 
       <ItemTable
         category={selectedCategory || uniqueCategory}

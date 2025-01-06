@@ -28,9 +28,7 @@ export function CollectionTab() {
   return (
     <>
       <TeamScore category={category}></TeamScore>
-      <Divider style={{ borderColor: token.colorPrimary }}>
-        {`Collection Goals`}
-      </Divider>
+      <Divider>{`Collection Goals`}</Divider>
       <div
         style={{
           display: "grid",

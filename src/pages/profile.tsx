@@ -1,15 +1,28 @@
-import { Badge, Button, Card, Divider, Image, theme, Tooltip } from "antd";
+import {
+  Badge,
+  Button,
+  Card,
+  Divider,
+  Form,
+  FormInstance,
+  Image,
+  Input,
+  theme,
+  Tooltip,
+} from "antd";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { DiscordFilled, TwitchOutlined } from "@ant-design/icons";
 import { red, green, gray } from "@ant-design/colors";
-import { disconnectOauth } from "../client/user-client";
+import { disconnectOauth, updateUser } from "../client/user-client";
+import React from "react";
 
 const { useToken } = theme;
 
 export function ProfilePage() {
   const { user, setUser } = useContext(GlobalStateContext);
   const token = useToken().token;
+  const formRef = React.useRef<FormInstance>(null);
   // const [searchParams] = useSearchParams();
   // const { isMobile } = useContext(GlobalStateContext);
   // const [profileUserName, setProfileUserName] = useState<User | null>(null);
@@ -19,6 +32,9 @@ export function ProfilePage() {
   //     setSelectedTab(tab);
   //   }
   // }, [searchParams]);
+  if (!user) {
+    return <></>;
+  }
 
   function extra(isConnected: boolean, provider: string) {
     return (
@@ -47,9 +63,29 @@ export function ProfilePage() {
 
   return (
     <div>
-      <Divider style={{ borderColor: token.colorPrimary }}>
-        {`OAuth Accounts`}
-      </Divider>
+      <Divider>{`Profile settings`}</Divider>
+      <div style={{ textAlign: "left" }}>
+        <p>
+          You can change your username here. Your username will be used to
+          display your score on the leaderboard.
+        </p>
+        <Form
+          // layout="vertical"
+          onFinish={(value) => updateUser(value.display_name).then(setUser)}
+          ref={formRef}
+        >
+          <Form.Item
+            label="Username"
+            name="display_name"
+            rules={[{ required: true, message: "Please input a username!" }]}
+            initialValue={user?.display_name}
+            style={{ width: "400px" }}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </div>
+      <Divider>{`OAuth Accounts`}</Divider>
       <div style={{ textAlign: "left" }}>
         <p>
           At least one account needs to stay connected at all times. When

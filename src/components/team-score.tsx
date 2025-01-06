@@ -30,7 +30,7 @@ const TeamScore = ({
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
           gap: "8px",
           marginTop: "20px",
           marginBottom: "20px",

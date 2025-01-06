@@ -43,3 +43,9 @@ export async function disconnectOauth(provider: string) {
     "POST"
   );
 }
+
+export async function updateUser(displayName: string) {
+  return await fetchWrapper<User>("/users/self", "PATCH", {
+    display_name: displayName,
+  });
+}

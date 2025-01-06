@@ -25,9 +25,7 @@ export function TwitchPage() {
       <Typography.Title level={2}>Twitch Streams by Team</Typography.Title>
       {currentEvent?.teams.sort(teamSort(eventStatus)).map((team) => (
         <>
-          <Divider style={{ borderColor: token.colorPrimary }}>
-            {team.name}
-          </Divider>
+          <Divider>{team.name}</Divider>
           <Flex wrap gap="middle" justify="left">
             {twitchStreams
               .filter((stream) =>

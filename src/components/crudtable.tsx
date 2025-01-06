@@ -62,6 +62,7 @@ type CrudTableProps<T> = {
   addtionalActions?: action<T>[];
   formValidator?: (data: Partial<T>) => string | undefined;
   reload?: boolean;
+  filterFunction?: (data: T) => boolean;
 };
 
 const CrudTable = <T,>({
@@ -73,6 +74,7 @@ const CrudTable = <T,>({
   deleteFunction,
   addtionalActions,
   formValidator,
+  filterFunction,
 }: CrudTableProps<T>) => {
   const creationFormRef = useRef<FormInstance>(null);
   const updateFormRef = useRef<FormInstance>(null);
@@ -335,6 +337,7 @@ const CrudTable = <T,>({
       <Table<T>
         columns={[...antdColumns!, ...actionColumns]}
         dataSource={data
+          .filter((entry) => filterFunction?.(entry) ?? true)
           // @ts-ignore lets just assume that T has an id (no, setting T extends {id: number} leads to other issues)
           .sort((a, b) => a.id - b.id)
           .map((entry, idx) => {

@@ -6,6 +6,11 @@ export interface Team {
   allowed_classes: string[];
 }
 
+export interface TeamUser {
+  team_id: number;
+  user_id: number;
+}
+
 export interface TeamCreate {
   name: string;
   allowed_classes: string[];

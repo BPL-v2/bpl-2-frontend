@@ -117,9 +117,7 @@ export function LadderTab() {
   }
   return (
     <>
-      <Divider style={{ borderColor: token.colorPrimary }}>
-        {`Team Scores`}
-      </Divider>
+      <Divider>{`Team Scores`}</Divider>
       <Table
         dataSource={rows}
         columns={columns}
@@ -130,7 +128,7 @@ export function LadderTab() {
         size="small"
         showSorterTooltip={false}
       />
-      <Divider style={{ borderColor: token.colorPrimary }}>{`Ladder`}</Divider>
+      <Divider>{`Ladder`}</Divider>
     </>
   );
 }

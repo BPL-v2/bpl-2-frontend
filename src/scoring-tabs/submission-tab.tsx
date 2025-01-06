@@ -175,9 +175,7 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
       </Modal>
 
       <TeamScore category={category}></TeamScore>
-      <Divider style={{ borderColor: token.colorPrimary }}>
-        {category.name}
-      </Divider>
+      <Divider>{category.name}</Divider>
       <div
         style={{
           display: "grid",

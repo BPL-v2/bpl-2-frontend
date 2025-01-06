@@ -10,6 +10,7 @@ import ScoringPage from "./pages/scoring-page";
 import { TwitchPage } from "./pages/twitch-page";
 import { RulePage } from "./pages/rules";
 import { ProfilePage } from "./pages/profile";
+import UserSortPage from "./pages/user-sort";
 
 export const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ export const router = createBrowserRouter([
   {
     path: "/users",
     element: <UserPage />,
+  },
+  {
+    path: "/users/sort",
+    element: <UserSortPage />,
   },
   {
     path: "/submissions",

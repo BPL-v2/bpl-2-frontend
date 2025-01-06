@@ -89,12 +89,13 @@ function App() {
             label: "Users",
             children: [
               { label: "Manage users", key: "/users" },
-              { label: "Sort users", key: "setting:2" },
+              { label: "Sort users", key: "/users/sort" },
             ],
           },
         ],
       },
       {
+        // scoring subtabs are only shown in mobile view here
         label: "Scoring",
         key: "/scores",
         icon: <RiseOutlined />,
