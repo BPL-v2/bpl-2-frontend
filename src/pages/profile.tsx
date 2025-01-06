@@ -2,7 +2,7 @@ import { Badge, Button, Card, Divider, Image, theme, Tooltip } from "antd";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { DiscordFilled, TwitchOutlined } from "@ant-design/icons";
-import { red, green, gray, grey } from "@ant-design/colors";
+import { red, green, gray } from "@ant-design/colors";
 import { disconnectOauth } from "../client/user-client";
 
 const { useToken } = theme;
