@@ -70,6 +70,7 @@ export function getSortSuggestion(currentEvent: BPLEvent, signups: Signup[]) {
       .filter(
         (key) => buckets[signup.expected_playtime][parseInt(key)] === minval
       )
+      .sort(() => Math.random() - 0.5)
       .sort((a, b) => {
         return buckets["total"][parseInt(a)] - buckets["total"][parseInt(b)];
       })[0];
