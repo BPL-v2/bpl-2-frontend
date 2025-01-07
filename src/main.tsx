@@ -1,5 +1,4 @@
 import { createRoot } from "react-dom/client";
-import "./index.css";
 import { greyDark, cyanDark } from "@ant-design/colors";
 
 import App from "./App.tsx";

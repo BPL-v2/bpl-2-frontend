@@ -1,4 +1,4 @@
-import { Table, Image, theme } from "antd";
+import { Table, theme } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { ScoreCategory, ScoreObjective } from "../types/score";
 import { getImage } from "../types/scoring-objective";
@@ -28,7 +28,7 @@ function imageOverlayedWithText(record: any) {
         maxHeight: "60px",
       }}
     >
-      <Image
+      <img
         src={record.img_location}
         style={{
           height: "100%",
@@ -60,7 +60,6 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
   if (!currentEvent || !category) {
     return <></>;
   }
-
   const variantMap = getAllObjectives(category)
     .filter((objective) => objective.extra)
     .reduce((acc: { [name: string]: ScoreObjective[] }, variantObjective) => {
@@ -126,7 +125,7 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
                     maxHeight: "60px",
                   }}
                 >
-                  <Image
+                  <img
                     src={img_location}
                     style={{
                       height: "100%",
@@ -217,7 +216,6 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
         },
       }));
   }
-
   return (
     <Table
       columns={tableColumns}

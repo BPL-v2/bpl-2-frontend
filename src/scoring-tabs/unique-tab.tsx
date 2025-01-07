@@ -113,12 +113,12 @@ const UniqueTab: React.FC = () => {
           );
         })}
       </div>
-      <Divider>{`${selectedCategory?.name || "Unique"} Items`}</Divider>
-
-      <ItemTable
-        category={selectedCategory || uniqueCategory}
-        selectedTeam={selectedTeam}
-      />
+      {selectedCategory ? (
+        <>
+          <Divider>{`${selectedCategory.name} Items`}</Divider>
+          <ItemTable category={selectedCategory} selectedTeam={selectedTeam} />
+        </>
+      ) : null}
     </>
   );
 };

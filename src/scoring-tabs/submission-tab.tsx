@@ -37,9 +37,9 @@ export type SubmissionTabProps = {
 const { useToken } = theme;
 
 export function SubmissionTab({ categoryName }: SubmissionTabProps) {
+  const token = useToken().token;
   const { eventStatus, scores, currentEvent } = useContext(GlobalStateContext);
   const category = getSubCategory(scores, categoryName);
-  const token = useToken().token;
   const [showModal, setShowModal] = React.useState(false);
   const [selectedObjective, setSelectedObjective] =
     React.useState<ScoreObjective>();

@@ -12,9 +12,9 @@ import { fetchCurrentEvent, fetchEventStatus } from "./client/event-client";
 import { BPLEvent, EventStatus } from "./types/event";
 import { useError } from "./components/errorcontext";
 import {
+  LineChartOutlined,
   MenuOutlined,
   ReadOutlined,
-  RiseOutlined,
   SettingOutlined,
   TwitchOutlined,
 } from "@ant-design/icons";
@@ -98,7 +98,7 @@ function App() {
         // scoring subtabs are only shown in mobile view here
         label: "Scoring",
         key: "/scores",
-        icon: <RiseOutlined />,
+        icon: <LineChartOutlined />,
         children: isMobile
           ? [
               { label: "Ladder", key: "/scores?tab=Ladder" },
@@ -216,7 +216,13 @@ function App() {
         }}
       >
         {" "}
-        <Layout>
+        <Layout
+          style={{
+            maxWidth: "1440px",
+            margin: "auto",
+            textAlign: "center",
+          }}
+        >
           <Header
             style={{
               display: "flex",
@@ -252,7 +258,7 @@ function App() {
             <ApplicationButton style={{ height: "100%" }} />
             <AuthButton style={{ height: "100%" }} />
           </Header>
-          <Content style={{ minHeight: "90vh" }}>
+          <Content style={{ minHeight: "80vh" }}>
             <RouterProvider router={router} />
           </Content>
 

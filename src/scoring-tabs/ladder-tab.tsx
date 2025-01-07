@@ -1,11 +1,11 @@
-import { Divider, Table, Tag } from "antd";
+import { Divider, Flex, Table, Tag } from "antd";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { getSubCategory } from "../types/scoring-category";
 import { Team } from "../types/team";
 import { getTotalPoints } from "../utils/utils";
 import { ColumnsType } from "antd/es/table";
-import { orange, lime, volcano, blue } from "@ant-design/colors";
+import { cyanDark } from "@ant-design/colors";
 
 type RowDef = {
   default: number;
@@ -32,10 +32,10 @@ export function LadderTab() {
   );
   const categoryNames = ["Collections", "Uniques", "Bounties", "Races"];
   const categoryColors = {
-    Collections: orange,
-    Uniques: lime,
-    Bounties: blue,
-    Races: volcano,
+    Collections: cyanDark[1],
+    Uniques: cyanDark[2],
+    Bounties: cyanDark[3],
+    Races: cyanDark[4],
   };
   const categories = categoryNames.map((categoryName) =>
     getSubCategory(scores, categoryName)
@@ -88,18 +88,16 @@ export function LadderTab() {
           render: (record: RowDef) => {
             return (
               <>
-                {categoryNames.map((categoryName) => (
-                  <Tag
-                    key={categoryName}
-                    // @ts-ignore
-                    color={categoryColors[categoryName][6]}
-                  >
-                    {`${categoryName} ${
-                      // @ts-ignore
-                      record[categoryName]
-                    }`}{" "}
-                  </Tag>
-                ))}
+                <Flex wrap="wrap" gap="4px">
+                  {categoryNames.map((categoryName, idx) => {
+                    return (
+                      <Tag key={categoryName} color={cyanDark[1 + (idx % 4)]}>
+                        {/* @ts-ignore */}
+                        {`${categoryName} ${record[categoryName]}`}
+                      </Tag>
+                    );
+                  })}
+                </Flex>
               </>
             );
           },
