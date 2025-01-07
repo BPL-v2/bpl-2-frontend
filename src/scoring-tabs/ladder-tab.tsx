@@ -31,12 +31,6 @@ export function LadderTab() {
     {}
   );
   const categoryNames = ["Collections", "Uniques", "Bounties", "Races"];
-  const categoryColors = {
-    Collections: cyanDark[1],
-    Uniques: cyanDark[2],
-    Bounties: cyanDark[3],
-    Races: cyanDark[4],
-  };
   const categories = categoryNames.map((categoryName) =>
     getSubCategory(scores, categoryName)
   );
