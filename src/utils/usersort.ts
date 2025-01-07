@@ -10,7 +10,7 @@ export function sortUsers(currentEvent: BPLEvent, signups: Signup[]): Signup[] {
 function improveFairness(signups: Signup[], currentEvent: BPLEvent) {
   // tries to balance out team sizes
   for (let i = 0; i < 100; i++) {
-    const counts = getTeamCounts(signups);
+    const counts = getTeamCounts(signups, currentEvent);
     const minval = Math.min(...Object.values(counts));
     const maxval = Math.max(...Object.values(counts));
     if (maxval - minval <= 1) {
@@ -28,14 +28,20 @@ function improveFairness(signups: Signup[], currentEvent: BPLEvent) {
   return signups;
 }
 
-function getTeamCounts(signups: Signup[]): { [teamId: number]: number } {
-  return signups.reduce((acc, signup) => {
-    if (!acc[signup.team_id]) {
-      acc[signup.team_id] = 0;
-    }
-    acc[signup.team_id]++;
-    return acc;
-  }, {});
+function getTeamCounts(
+  signups: Signup[],
+  currentEvent: BPLEvent
+): { [teamId: number]: number } {
+  return signups.reduce(
+    (acc, signup) => {
+      acc[signup.team_id]++;
+      return acc;
+    },
+    currentEvent.teams.reduce((acc, team) => {
+      acc[team.id] = 0;
+      return acc;
+    }, {})
+  );
 }
 
 export function getSortSuggestion(currentEvent: BPLEvent, signups: Signup[]) {
