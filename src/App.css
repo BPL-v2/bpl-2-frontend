@@ -85,3 +85,53 @@
 .expanded-row {
   background-color: #494949;
 }
+
+.secondary-button {
+  height: 32px;
+
+  padding: 3px 15px;
+  font-size: 16px;
+  color: white;
+  background-color: rgb(57, 57, 57);
+  box-shadow: none;
+  border-color: rgb(97, 97, 97);
+  border-width: 0.666667px;
+  border-style: solid;
+  box-shadow: rgba(255, 255, 255, 0.04) 0px 2px 0px 0px;
+
+  cursor: pointer;
+  border-radius: 5px;
+  touch-action: manipulation;
+}
+
+.primary-button {
+  height: 32px;
+
+  padding: 3px 15px;
+  font-size: 16px;
+  color: white;
+  background-color: #139292;
+  box-shadow: none;
+  border-color: rgba(0, 0, 0, 0);
+  border-width: 0.666667px;
+  border-style: solid;
+
+  box-shadow: rgba(0, 18, 20, 0.7) 0px 2px 0px 0px;
+
+  cursor: pointer;
+  border-radius: 5px;
+  touch-action: manipulation;
+}
+
+.secondary-button:hover {
+  color: #2ea5a1;
+  border-color: #2ea5a1;
+}
+
+.primary-button:hover {
+  background-color: #2ea5a1;
+}
+
+.primary-button:active {
+  background-color: #137474;
+}

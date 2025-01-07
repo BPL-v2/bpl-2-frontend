@@ -30,6 +30,7 @@ export async function fetchAllSignups(eventId: number): Promise<Signup[]> {
       .map(([teamId, signups]) =>
         signups.map((signup) => {
           signup.team_id = parseInt(teamId);
+          signup.sorted = teamId != "0";
           return signup;
         })
       )
@@ -39,7 +40,11 @@ export async function fetchAllSignups(eventId: number): Promise<Signup[]> {
 
 export async function assignUsersToTeams(
   eventId: number,
-  teamUsers: TeamUser[]
+  signups: Signup[]
 ): Promise<void> {
+  const teamUsers: TeamUser[] = signups.map((signup) => ({
+    user_id: signup.user.id,
+    team_id: signup.team_id,
+  }));
   return fetchWrapper("/events/" + eventId + "/teams/users", "PUT", teamUsers);
 }

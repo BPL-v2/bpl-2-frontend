@@ -104,6 +104,7 @@ const UserPage: React.FC = () => {
         editFunction={editUserPermissions}
         filterFunction={(user) =>
           !!(
+            user.display_name?.toLowerCase().includes(nameFilter) ||
             user.account_name?.toLowerCase().includes(nameFilter) ||
             user.discord_name?.toLowerCase().includes(nameFilter) ||
             user.twitch_name?.toLowerCase().includes(nameFilter)

@@ -141,8 +141,6 @@ const CrudTable = <T,>({
 
   const [data, setData] = useState<T[]>([]);
   useEffect(() => {
-    console.log(currentData);
-
     if (updateFormRef.current) {
       updateFormRef.current.setFieldsValue(currentData);
     }

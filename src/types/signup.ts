@@ -15,5 +15,6 @@ export type Signup = {
   user: User;
   timestamp: string;
   expected_playtime: PlayTime;
-  team_id?: number;
+  team_id: number;
+  sorted: boolean;
 };
