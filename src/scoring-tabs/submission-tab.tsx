@@ -245,7 +245,6 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
                           <td
                             style={{
                               padding: "4px 8px",
-                              fontWeight: "bold",
                               color: score.rank === 0 ? red[4] : green[4],
                             }}
                           >

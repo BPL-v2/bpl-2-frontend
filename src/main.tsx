@@ -17,18 +17,15 @@ createRoot(document.getElementById("root")!).render(
       token: {
         // Seed Token
         // bluedark settings
-        // colorBgBase: "#20252E",
-        // colorBgContainer: "#2A303C",
-
         colorPrimary: colorPrimary,
-        // colorFillSecondary: orange[5],
+        colorLink: cyanDark[7],
         borderRadius: 5,
         fontSize: 16,
         colorBgBase: bgPallette[1],
 
         colorBgContainer: bgPallette[3],
         colorBgSpotlight: bgPallette[4],
-
+        borderRadiusLG: 0,
         // Alias Token
       },
       components: {

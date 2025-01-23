@@ -6,8 +6,9 @@ import { CollectionTab } from "../scoring-tabs/collection-tab";
 import { LadderTab } from "../scoring-tabs/ladder-tab";
 import { GlobalStateContext } from "../utils/context-provider";
 import { useSearchParams } from "react-router-dom";
+import { DailyTab } from "../scoring-tabs/daily-tab";
 
-const tabs: { key: string; tab: JSX.Element }[] = [
+export const scoringTabs: { key: string; tab: JSX.Element }[] = [
   {
     key: "Ladder",
     tab: <LadderTab />,
@@ -27,6 +28,10 @@ const tabs: { key: string; tab: JSX.Element }[] = [
   {
     key: "Collections",
     tab: <CollectionTab />,
+  },
+  {
+    key: "Dailies",
+    tab: <DailyTab />,
   },
 ];
 
@@ -54,7 +59,7 @@ const ScoringPage = ({ tab }: ScoringPageProps) => {
           onClick={(info) => setSelectedTab(info.key)}
           style={{ marginBottom: 20, marginTop: 5, userSelect: "none" }}
           mode="horizontal"
-          items={tabs.map((tab) => ({
+          items={scoringTabs.map((tab) => ({
             key: tab.key,
             title: tab.key,
             label: tab.key,
@@ -63,7 +68,7 @@ const ScoringPage = ({ tab }: ScoringPageProps) => {
         />
       )}
 
-      {tabs.find((tab) => tab.key === selectedTab)?.tab}
+      {scoringTabs.find((tab) => tab.key === selectedTab)?.tab}
     </>
   );
 };

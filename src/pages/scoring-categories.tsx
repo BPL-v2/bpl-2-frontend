@@ -19,6 +19,7 @@ import {
   Tag,
   Typography,
   Image,
+  DatePicker,
 } from "antd";
 import { router } from "../router";
 import { createObjective, deleteObjective } from "../client/objective-client";
@@ -42,6 +43,7 @@ import { fetchScoringPresetsForEvent } from "../client/scoring-preset-client";
 import { GlobalStateContext } from "../utils/context-provider";
 import { UserPermission } from "../types/user";
 import { CopyOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
 
 function addCondition(
   data: Partial<ScoringObjective>,
@@ -101,6 +103,8 @@ type FormObjective = {
   scoring_preset_id?: number | null | undefined;
   "conditions-basetype"?: string | undefined;
   "conditions-name"?: string | undefined;
+  valid_from?: string | null | undefined;
+  valid_to?: string | null | undefined;
 };
 
 function objectiveToFormObjective(
@@ -116,6 +120,8 @@ function objectiveToFormObjective(
     "conditions-basetype": undefined,
     "conditions-name": undefined,
     scoring_preset_id: objective.scoring_preset_id,
+    valid_from: objective.valid_from,
+    valid_to: objective.valid_to,
   };
   if (objective.conditions) {
     objective.conditions.forEach((condition) => {
@@ -152,6 +158,8 @@ function updateObjectiveWithFormObjective(
   objective.number_field = formObjective.number_field ?? objective.number_field;
   objective.scoring_preset_id =
     formObjective.scoring_preset_id ?? objective.scoring_preset_id;
+  objective.valid_from = formObjective.valid_from;
+  objective.valid_to = formObjective.valid_to;
   if (formObjective["conditions-basetype"]) {
     let id = objective.conditions?.find(
       (condition) =>
@@ -382,9 +390,6 @@ const ScoringCategoryPage: React.FC = () => {
         key: "scoring_preset_id",
         type: "select",
         render: (data: number | null) => {
-          // console.log(x);
-          console.log(data);
-          console.log(scoringPresets);
           return scoringPresets.find((preset) => preset.id === data)?.name;
         },
       },
@@ -557,7 +562,7 @@ const ScoringCategoryPage: React.FC = () => {
             initialValue={currentObjective.required_number}
             style={{ width: "100%" }}
           >
-            <InputNumber />
+            <InputNumber style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item
             name="objective_type"
@@ -698,6 +703,27 @@ const ScoringCategoryPage: React.FC = () => {
           ) : (
             ""
           )}
+
+          <Form.Item
+            name="valid_from"
+            label="Valid From"
+            getValueProps={(value) => ({ value: value ? dayjs(value) : "" })}
+          >
+            <DatePicker
+              showTime={{ format: "HH:mm" }}
+              style={{ width: "100%" }}
+            />
+          </Form.Item>
+          <Form.Item
+            name="valid_to"
+            label="Valid To"
+            getValueProps={(value) => ({ value: value ? dayjs(value) : "" })}
+          >
+            <DatePicker
+              showTime={{ format: "HH:mm" }}
+              style={{ width: "100%" }}
+            />
+          </Form.Item>
         </Form>
       </Modal>
     );

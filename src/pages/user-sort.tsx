@@ -84,31 +84,25 @@ const UserSortPage: React.FC = () => {
       title: "Assign Team",
       key: "assign_team",
       render: (signup) =>
-        currentEvent.teams.map((team) => {
+        currentEvent.teams.map((team) => (
           // we are not using antd buttons here since the render takes about 3x as long which is significant here
-          return (
-            <button
-              key={team.id + "-" + signup.user.id}
-              className={
-                signup.team_id !== team.id
-                  ? "secondary-button"
-                  : "primary-button"
-              }
-              style={{ marginRight: "5px" }}
-              onClick={() => {
-                setSuggestions(
-                  suggestions.map((s) =>
-                    s.user.id === signup.user.id
-                      ? { ...s, team_id: team.id }
-                      : s
-                  )
-                );
-              }}
-            >
-              {team.name.slice()}
-            </button>
-          );
-        }),
+          <button
+            key={team.id + "-" + signup.user.id}
+            className={
+              signup.team_id !== team.id ? "secondary-button" : "primary-button"
+            }
+            style={{ marginRight: "5px" }}
+            onClick={() => {
+              setSuggestions(
+                suggestions.map((s) =>
+                  s.user.id === signup.user.id ? { ...s, team_id: team.id } : s
+                )
+              );
+            }}
+          >
+            {team.name.slice()}
+          </button>
+        )),
     },
   ];
 
@@ -209,9 +203,7 @@ const UserSortPage: React.FC = () => {
         columns={userColumns}
         dataSource={suggestions
           .filter((s) => s.user.display_name.toLowerCase().includes(nameFilter))
-          .map((s, index) => {
-            return { ...s, key: `user-table-${index}` };
-          })}
+          .map((s, index) => ({ ...s, key: `user-table-${index}` }))}
         size="small"
       />
     </div>

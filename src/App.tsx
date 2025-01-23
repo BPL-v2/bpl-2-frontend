@@ -26,8 +26,9 @@ import { mergeScores } from "./utils/utils";
 import { fetchScoringPresetsForEvent } from "./client/scoring-preset-client";
 import { ScoringPreset } from "./types/scoring-preset";
 import ApplicationButton from "./components/application-button";
+import { scoringTabs } from "./pages/scoring-page";
 type MenuItem = Required<MenuProps>["items"][number] & {
-  rolerequired?: UserPermission[];
+  roleRequired?: UserPermission[];
 };
 
 function getKeys(items: any[]): string[] {
@@ -45,10 +46,10 @@ function filterMenuItems(items: MenuItem[], user: User | undefined) {
   let userRoles = user?.permissions;
   let authItems = [];
   for (let item of items) {
-    if (item.rolerequired) {
+    if (item.roleRequired) {
       if (
         userRoles &&
-        item.rolerequired.some((role) => userRoles.includes(role))
+        item.roleRequired.some((role) => userRoles.includes(role))
       ) {
         authItems.push(item);
       }
@@ -78,20 +79,11 @@ function App() {
         key: "Admin",
         icon: <SettingOutlined />,
         extra: "right",
-        rolerequired: [UserPermission.ADMIN],
+        roleRequired: [UserPermission.ADMIN],
         children: [
-          {
-            label: "Events",
-            key: "/events",
-          },
-          {
-            type: "group",
-            label: "Users",
-            children: [
-              { label: "Manage users", key: "/users" },
-              { label: "Sort users", key: "/users/sort" },
-            ],
-          },
+          { label: "Events", key: "/events" },
+          { label: "Manage users", key: "/users" },
+          { label: "Sort users", key: "/users/sort" },
         ],
       },
       {
@@ -100,14 +92,10 @@ function App() {
         key: "/scores",
         icon: <LineChartOutlined />,
         children: isMobile
-          ? [
-              { label: "Ladder", key: "/scores?tab=Ladder" },
-              { label: "Uniques", key: "/scores?tab=Uniques" },
-              { label: "Races", key: "/scores?tab=Races" },
-              { label: "Bounties", key: "/scores?tab=Bounties" },
-              { label: "Collections", key: "/scores?tab=Collections" },
-              { label: "Rules", key: "/scores?tab=Rules" },
-            ]
+          ? scoringTabs.map((tab) => ({
+              label: tab.key,
+              key: `/scores?tab=${tab.key}`,
+            }))
           : undefined,
       },
       {
@@ -194,7 +182,6 @@ function App() {
   const handleSuccess = (a: Event) => {
     sendNotification((a as CustomEvent).detail, "success");
   };
-
   return (
     <>
       <ContextProvider

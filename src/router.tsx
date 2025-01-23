@@ -11,6 +11,7 @@ import { TwitchPage } from "./pages/twitch-page";
 import { RulePage } from "./pages/rules";
 import { ProfilePage } from "./pages/profile";
 import UserSortPage from "./pages/user-sort";
+import { ScoringReadmePage } from "./pages/scoring_readme";
 
 export const router = createBrowserRouter([
   {
@@ -64,5 +65,9 @@ export const router = createBrowserRouter([
   {
     path: "/profile",
     element: <ProfilePage />,
+  },
+  {
+    path: "/scoring-readme",
+    element: <ScoringReadmePage />,
   },
 ]);

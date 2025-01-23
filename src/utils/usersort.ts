@@ -7,6 +7,8 @@ export function sortUsers(currentEvent: BPLEvent, signups: Signup[]): Signup[] {
   return improveFairness(suggestion, currentEvent);
 }
 
+const randSort = () => Math.random() - 0.5;
+
 function improveFairness(signups: Signup[], currentEvent: BPLEvent) {
   // tries to balance out team sizes
   for (let i = 0; i < 100; i++) {
@@ -14,11 +16,13 @@ function improveFairness(signups: Signup[], currentEvent: BPLEvent) {
     const minval = Math.min(...Object.values(counts));
     const maxval = Math.max(...Object.values(counts));
     if (maxval - minval <= 1) {
+      // a difference of 1 between min and max can not be improved upon
       return signups;
     }
     const minTeam = Object.keys(counts).find((key) => counts[key] === minval);
     const maxTeam = Object.keys(counts).find((key) => counts[key] === maxval);
-    for (const signup of signups) {
+    for (const signup of signups.sort(randSort)) {
+      // switch out a user from the max team to the min team
       if (signup.team_id === parseInt(maxTeam) && !signup.sorted) {
         signup.team_id = parseInt(minTeam);
         break;
@@ -66,7 +70,7 @@ export function getSortSuggestion(currentEvent: BPLEvent, signups: Signup[]) {
 
   const newSignups = [];
 
-  for (const signup of signups.slice().sort(() => Math.random() - 0.5)) {
+  for (const signup of signups.slice().sort(randSort)) {
     if (signup.team_id !== 0) {
       newSignups.push(signup);
       continue;
@@ -76,7 +80,7 @@ export function getSortSuggestion(currentEvent: BPLEvent, signups: Signup[]) {
       .filter(
         (key) => buckets[signup.expected_playtime][parseInt(key)] === minval
       )
-      .sort(() => Math.random() - 0.5)
+      .sort(randSort)
       .sort((a, b) => {
         return buckets["total"][parseInt(a)] - buckets["total"][parseInt(b)];
       })[0];
