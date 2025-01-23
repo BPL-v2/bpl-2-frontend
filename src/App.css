@@ -146,3 +146,7 @@
 .primary-button:active {
   background-color: #137474;
 }
+
+.ant-menu-submenu {
+  text-align: left !important;
+}
