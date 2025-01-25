@@ -4,7 +4,6 @@ import { ScoreCategory, ScoreObjective } from "../types/score";
 import { getImage } from "../types/scoring-objective";
 import { GlobalStateContext } from "../utils/context-provider";
 import { useContext } from "react";
-import { getAllObjectives } from "../utils/utils";
 import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
 import { red, green } from "@ant-design/colors";
 import { BPLEvent } from "../types/event";
