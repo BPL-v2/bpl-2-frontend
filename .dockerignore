@@ -3,3 +3,4 @@ dist
 .git
 Dockerfile
 .dockerignore
+icon-generation

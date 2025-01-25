@@ -221,6 +221,18 @@ export type ScoringObjectiveUpdate = {
   scoring_id?: number;
 };
 
+var anomalousUniques: { [key: string]: { [key: string]: string } } = {
+  "Grand Spectrum": {
+    Ruby: "GrandSpectrum_Ruby",
+    Emerald: "GrandSpectrum_Emerald",
+    Sapphire: "GrandSpectrum_Sapphire",
+  },
+  "Sekhema's Resolve": {
+    Cold: "RimeveilSeal",
+    Fire: "EmberheartSeal",
+    Lightning: "StormforgedSeal",
+  },
+};
 export function getImage(
   objective: ScoreObjective | ScoringObjective
 ): string | null {
@@ -229,7 +241,23 @@ export function getImage(
   }
   for (const condition of objective.conditions) {
     if (condition.field === ItemField.NAME) {
-      return "/assets/uniques/" + condition.value.replaceAll(" ", "_") + ".png";
+      const anomaly = anomalousUniques[condition.value];
+      if (anomaly) {
+        return "/assets/items/uniques/" + anomaly[objective.extra] + ".webp";
+      }
+
+      return (
+        "/assets/items/uniques/" +
+        condition.value.replaceAll(" ", "_") +
+        ".webp"
+      );
+    }
+    if (condition.field === ItemField.BASE_TYPE) {
+      return (
+        "/assets/items/basetypes/" +
+        condition.value.replaceAll(" ", "_") +
+        ".webp"
+      );
     }
   }
   return null;

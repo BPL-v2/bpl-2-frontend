@@ -146,8 +146,6 @@ function updateObjectiveWithFormObjective(
   objective: Partial<ScoringObjective>,
   formObjective: FormObjective
 ): Partial<ScoringObjective> {
-  console.log(objective);
-  console.log(formObjective);
   objective.name = formObjective.name ?? objective.name;
   objective.extra = formObjective.extra ?? objective.extra;
   objective.required_number =
@@ -784,7 +782,8 @@ const ScoringCategoryPage: React.FC = () => {
               </Select>
             </Form.Item>
           ) : (
-            conditionFormRef.current?.getFieldsValue()
+            ""
+            // conditionFormRef.current?.getFieldsValue()
           )}
           <Form.Item
             name="value"

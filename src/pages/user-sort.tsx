@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { UserPermission } from "../types/user";
 import { GlobalStateContext } from "../utils/context-provider";
-import { Button, Divider, Form, Input, Space, Table } from "antd";
+import { Button, Divider, Flex, Form, Input, Layout, Space, Table } from "antd";
 import { PlayTime, Signup } from "../types/signup";
 import { assignUsersToTeams, fetchAllSignups } from "../client/signup-client";
 import { ColumnType } from "antd/es/table";
@@ -161,7 +161,7 @@ const UserSortPage: React.FC = () => {
       </Table>
       <Divider>Users</Divider>
 
-      <Space style={{ marginBottom: "20px" }}>
+      <Space style={{ marginBottom: "20px" }} wrap>
         <Form layout="inline">
           <Form.Item label="Filter by name">
             <Input
@@ -198,6 +198,7 @@ const UserSortPage: React.FC = () => {
         >
           Submit Assignments
         </Button>
+        {/* </div> */}
       </Space>
       <Table
         columns={userColumns}

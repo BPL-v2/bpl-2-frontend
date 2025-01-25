@@ -60,54 +60,55 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
   if (!currentEvent || !category) {
     return <></>;
   }
-  const variantMap = getAllObjectives(category)
-    .filter((objective) => objective.extra)
-    .reduce((acc: { [name: string]: ScoreObjective[] }, variantObjective) => {
-      if (variantObjective.extra) {
-        if (acc[variantObjective.name]) {
-          acc[variantObjective.name].push(variantObjective);
-        } else {
-          acc[variantObjective.name] = [variantObjective];
-        }
-      }
+
+  const variantMap = category.sub_categories
+    .filter((subCategory) => subCategory.name.includes("Variants"))
+    .reduce((acc: { [name: string]: ScoreObjective[] }, subCategory) => {
+      const name = subCategory.name.split("Variants")[0].trim();
+      acc[name] = subCategory.objectives;
       return acc;
     }, {});
 
-  const tableRows = getAllObjectives(category)
-    .filter((objective) => !objective.extra)
-    .map((objective) => {
-      const row = {
-        key: objective.id,
-        name: <>{objective.name}</>,
-        extra: objective.extra,
-        img_location: getImage(objective),
-        ...currentEvent.teams.reduce(
-          (acc: { [teamId: number]: boolean }, team) => {
-            acc[team.id] = objective.team_score[team.id].finished;
-            return acc;
-          },
-          {}
-        ),
-      };
-      if (variantMap[objective.name]) {
-        row.name = (
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div>{objective.name}</div>
-            <span style={{ color: token.colorPrimary }}>
-              [Click to toggle Variants]
-            </span>
-          </div>
-        );
-        // @ts-ignore - too lazy to fix it just works okay?!?!?
-        row.children = variantMap[objective.name].map((variant) => {
-          return {
-            key: variant.id,
-            name: variant.extra,
-          };
-        });
-      }
-      return row;
-    });
+  const tableRows = category.objectives.map((objective) => {
+    const row = {
+      key: objective.id,
+      name: objective.extra ? (
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div>{objective.name}</div>
+          <span style={{ color: token.colorPrimary }}>[{objective.extra}]</span>
+        </div>
+      ) : (
+        objective.name
+      ),
+      extra: objective.extra,
+      img_location: getImage(objective),
+      ...currentEvent.teams.reduce(
+        (acc: { [teamId: number]: boolean }, team) => {
+          acc[team.id] = objective.team_score[team.id].finished;
+          return acc;
+        },
+        {}
+      ),
+    };
+    if (variantMap[objective.name]) {
+      row.name = (
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div>{objective.name}</div>
+          <span style={{ color: token.colorPrimary }}>
+            [Click to toggle Variants]
+          </span>
+        </div>
+      );
+      // @ts-ignore - too lazy to fix it just works okay?!?!?
+      row.children = variantMap[objective.name].map((variant) => {
+        return {
+          key: variant.id,
+          name: variant.extra,
+        };
+      });
+    }
+    return row;
+  });
   const tableColumns: ColumnsType = [
     ...(isMobile
       ? []
