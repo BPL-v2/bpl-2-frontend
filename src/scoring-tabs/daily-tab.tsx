@@ -4,9 +4,11 @@ import { GlobalStateContext } from "../utils/context-provider";
 import { getSubCategory } from "../types/scoring-category";
 import TeamScore from "../components/team-score";
 import { DailyCard } from "../components/daily-card";
-import { ScoreObjective } from "../types/score";
+import { Daily } from "../types/scoring-objective";
 
-function sortByReleasDate(a: ScoreObjective, b: ScoreObjective) {
+function sortByReleasDate(dailyA: Daily, dailyB: Daily) {
+  const a = dailyA.baseObjective!;
+  const b = dailyB.baseObjective!;
   const releaseA = a.valid_from ? new Date(a.valid_from) : new Date();
   const releaseB = b.valid_from ? new Date(b.valid_from) : new Date();
   return releaseA.getTime() - releaseB.getTime();
@@ -19,6 +21,18 @@ export function DailyTab() {
   if (!category || !currentEvent) {
     return <></>;
   }
+  const dailies: Record<string, Daily> = {};
+  for (const objective of category.objectives) {
+    if (!dailies[objective.name]) {
+      dailies[objective.name] = {};
+    }
+    if (objective.valid_to) {
+      dailies[objective.name].raceObjective = objective;
+    } else {
+      dailies[objective.name].baseObjective = objective;
+    }
+  }
+
   return (
     <>
       <TeamScore category={category}></TeamScore>
@@ -32,9 +46,11 @@ export function DailyTab() {
           marginBottom: "20px",
         }}
       >
-        {category.objectives.sort(sortByReleasDate).map((objective) => (
-          <DailyCard objective={objective} />
-        ))}
+        {Object.values(dailies)
+          .sort(sortByReleasDate)
+          .map((daily) => (
+            <DailyCard daily={daily} />
+          ))}
       </div>
     </>
   );

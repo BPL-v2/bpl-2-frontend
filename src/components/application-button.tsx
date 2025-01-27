@@ -9,6 +9,7 @@ import {
   MenuProps,
   Modal,
   Select,
+  Space,
   theme,
 } from "antd";
 import { greyDark } from "@ant-design/colors";
@@ -19,6 +20,7 @@ import {
   withdrawEventApplication,
 } from "../client/signup-client";
 import { PlayTime } from "../types/signup";
+import { DiscordFilled } from "@ant-design/icons";
 
 const { useToken } = theme;
 type ApplicationButtonProps = {
@@ -30,6 +32,7 @@ const ApplicationButton = ({ style }: ApplicationButtonProps) => {
   const [modalOpen, setModalOpen] = React.useState(false);
   const formRef = React.useRef<FormInstance>(null);
   const [userTeam, setUserTeam] = React.useState<Team | undefined>(undefined);
+  const [isServerMember, setIsServerMember] = React.useState(true);
   const token = useToken().token;
   const buttonStyle = {
     ...style,
@@ -88,18 +91,23 @@ const ApplicationButton = ({ style }: ApplicationButtonProps) => {
           onOk={() => formRef.current?.submit()}
         >
           <Form
+            layout="vertical"
             ref={formRef}
             onFinish={(values) => {
-              submitEventApplication(currentEvent.id, values).then(() => {
-                setEventStatus({
-                  ...eventStatus,
-                  application_status: EventStatusEnum.Applied,
+              submitEventApplication(currentEvent.id, values)
+                .then(() => {
+                  setEventStatus({
+                    ...eventStatus,
+                    application_status: EventStatusEnum.Applied,
+                  });
+                  setModalOpen(false);
+                  formRef.current?.resetFields();
+                })
+                .catch((error) => {
+                  console.error(error);
+                  setIsServerMember(false);
                 });
-              });
-              setModalOpen(false);
-              formRef.current?.resetFields();
             }}
-            layout="vertical"
           >
             <Form.Item
               label="How many hours will you be able to play per day?"
@@ -120,6 +128,7 @@ const ApplicationButton = ({ style }: ApplicationButtonProps) => {
               </Select>
             </Form.Item>
             <Form.Item
+              layout="horizontal"
               label={
                 <>
                   {"I've read the "}
@@ -137,9 +146,7 @@ const ApplicationButton = ({ style }: ApplicationButtonProps) => {
               rules={[
                 {
                   required: true,
-                  validator: (rule, value) => {
-                    console.log(value);
-                    console.log(rule);
+                  validator: (_, value) => {
                     if (!value) {
                       return Promise.reject(
                         "Please confirm that you've read the rules"
@@ -152,6 +159,26 @@ const ApplicationButton = ({ style }: ApplicationButtonProps) => {
             >
               <Checkbox />
             </Form.Item>
+            <Space>
+              {user.discord_id ? null : (
+                <Button type="primary" icon={<DiscordFilled></DiscordFilled>}>
+                  Link Discord Account
+                </Button>
+              )}
+              {isServerMember ? null : (
+                <div>
+                  <p>Join our discord server to apply for the event.</p>
+                  <Button
+                    type="primary"
+                    icon={<DiscordFilled></DiscordFilled>}
+                    href="https://discord.gg/7zBQXZqJpH"
+                    target="_blank"
+                  >
+                    Join
+                  </Button>
+                </div>
+              )}
+            </Space>
           </Form>
         </Modal>
         <Button

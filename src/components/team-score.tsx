@@ -56,9 +56,12 @@ const TeamScore = ({
                   <Avatar
                     size={96}
                     shape="square"
-                    src={`/assets/teams/${
-                      currentEvent.id
-                    }/${team.name.toLowerCase()}/logo-w-name.svg`}
+                    src={`/assets/teams/${currentEvent.name
+                      .toLowerCase()
+                      .replaceAll(
+                        " ",
+                        "_"
+                      )}/${team.name.toLowerCase()}/logo-w-name.svg`}
                   />
                 ) : null
               }
