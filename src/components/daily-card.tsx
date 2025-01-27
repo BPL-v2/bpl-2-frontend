@@ -5,7 +5,8 @@ import { GlobalStateContext } from "../utils/context-provider";
 import Countdown from "antd/es/statistic/Countdown";
 import { fetchCategoryForEvent } from "../client/category-client";
 import { CollectionCardTable } from "./collection-card-table";
-import { Daily } from "../types/scoring-objective";
+import { Daily, getImage } from "../types/scoring-objective";
+import Meta from "antd/es/card/Meta";
 
 export type DailyCardProps = {
   daily: Daily;
@@ -21,7 +22,7 @@ function bonusAvailableCounter(
     return null;
   }
   if (new Date(valid_to) < new Date()) {
-    return "Daily has expired";
+    return "Bonus points are no longer available";
   }
   return (
     <Countdown
@@ -91,26 +92,11 @@ export function DailyCard({ daily }: DailyCardProps) {
       </Card>
     );
   }
+  const img_location = getImage(daily.baseObjective);
 
   return (
     <Card
       key={daily.baseObjective.id}
-      title={
-        <Tooltip title={daily.baseObjective.extra}>
-          <div
-            style={{
-              whiteSpace: "normal",
-              wordWrap: "break-word",
-              overflowWrap: "break-word",
-            }}
-          >
-            {daily.baseObjective.name}
-            {daily.baseObjective.extra ? (
-              <a style={{ color: red[6] }}>*</a>
-            ) : null}
-          </div>
-        </Tooltip>
-      }
       size="small"
       styles={{
         body: {
@@ -120,6 +106,55 @@ export function DailyCard({ daily }: DailyCardProps) {
         },
       }}
     >
+      <Meta
+        avatar={
+          img_location ? (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
+                maxHeight: "60px",
+              }}
+            >
+              <img
+                src={img_location}
+                style={{
+                  height: "100%",
+                  maxHeight: "60px",
+                  width: "auto",
+                }}
+              />
+            </div>
+          ) : (
+            ""
+          )
+        }
+        style={{
+          height: "100%",
+          maxHeight: "60px",
+          width: "auto",
+          paddingLeft: "10px",
+          paddingRight: "10px",
+        }}
+        title={
+          <Tooltip title={daily.baseObjective.extra}>
+            <div
+              style={{
+                whiteSpace: "normal",
+                wordWrap: "break-word",
+                overflowWrap: "break-word",
+              }}
+            >
+              {daily.baseObjective.name}
+              {daily.baseObjective.extra ? (
+                <a style={{ color: red[6] }}>*</a>
+              ) : null}
+            </div>
+          </Tooltip>
+        }
+      />
       <CollectionCardTable objective={daily.baseObjective} />
       {bonusAvailableCounter(daily.raceObjective?.valid_to, () => {
         fetchCategoryForEvent(currentEvent.id).then(setRules);

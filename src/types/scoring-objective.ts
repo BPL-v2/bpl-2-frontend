@@ -264,6 +264,6 @@ export function getImage(
 }
 
 export type Daily = {
-  baseObjective?: ScoreObjective;
+  baseObjective: ScoreObjective;
   raceObjective?: ScoreObjective;
 };
