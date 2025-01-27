@@ -1,12 +1,13 @@
 import { Table, theme } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { ScoreCategory, ScoreObjective } from "../types/score";
-import { getImage } from "../types/scoring-objective";
+import { getImageLocation } from "../types/scoring-objective";
 import { GlobalStateContext } from "../utils/context-provider";
 import { useContext } from "react";
 import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
 import { red, green } from "@ant-design/colors";
 import { BPLEvent } from "../types/event";
+import { ObjectiveIcon } from "./objective-icon";
 
 export type ItemTableProps = {
   category?: ScoreCategory;
@@ -16,6 +17,10 @@ export type ItemTableProps = {
 const { useToken } = theme;
 
 function imageOverlayedWithText(record: any) {
+  const img_location = getImageLocation(record.objective);
+  if (!img_location) {
+    return <></>;
+  }
   return (
     <div
       style={{
@@ -28,12 +33,8 @@ function imageOverlayedWithText(record: any) {
       }}
     >
       <img
-        src={record.img_location}
-        style={{
-          height: "100%",
-          maxHeight: "60px",
-          width: "auto",
-        }}
+        src={img_location}
+        style={{ maxWidth: "3.5em", maxHeight: "3.5em" }}
       />
       <div
         style={{
@@ -80,7 +81,6 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
         objective.name
       ),
       extra: objective.extra,
-      img_location: getImage(objective),
       ...currentEvent.teams.reduce(
         (acc: { [teamId: number]: boolean }, team) => {
           acc[team.id] = objective.team_score[team.id].finished;
@@ -88,6 +88,7 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
         },
         {}
       ),
+      objective: objective,
     };
     if (variantMap[objective.name]) {
       row.name = (
@@ -114,32 +115,8 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
       : [
           {
             title: "",
-            render: (img_location: string | null) => {
-              return img_location ? (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: "100%",
-                    maxHeight: "60px",
-                  }}
-                >
-                  <img
-                    src={img_location}
-                    style={{
-                      height: "100%",
-                      maxHeight: "60px",
-                      width: "auto",
-                    }}
-                  />
-                </div>
-              ) : (
-                ""
-              );
-            },
-            dataIndex: "img_location",
-            key: "img_location",
+            render: (row: any) => <ObjectiveIcon objective={row.objective} />,
+            key: "image",
             width: 120,
           },
         ]),

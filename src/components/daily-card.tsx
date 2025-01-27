@@ -5,8 +5,9 @@ import { GlobalStateContext } from "../utils/context-provider";
 import Countdown from "antd/es/statistic/Countdown";
 import { fetchCategoryForEvent } from "../client/category-client";
 import { CollectionCardTable } from "./collection-card-table";
-import { Daily, getImage } from "../types/scoring-objective";
+import { Daily } from "../types/scoring-objective";
 import Meta from "antd/es/card/Meta";
+import { ObjectiveIcon } from "./objective-icon";
 
 export type DailyCardProps = {
   daily: Daily;
@@ -101,8 +102,6 @@ export function DailyCard({ daily }: DailyCardProps) {
       </Card>
     );
   }
-  const img_location = getImage(daily.baseObjective);
-
   return (
     <Card
       key={daily.baseObjective.id}
@@ -116,30 +115,7 @@ export function DailyCard({ daily }: DailyCardProps) {
       }}
     >
       <Meta
-        avatar={
-          img_location ? (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                height: "100%",
-                maxHeight: "60px",
-              }}
-            >
-              <img
-                src={img_location}
-                style={{
-                  height: "100%",
-                  maxHeight: "60px",
-                  width: "auto",
-                }}
-              />
-            </div>
-          ) : (
-            ""
-          )
-        }
+        avatar={<ObjectiveIcon objective={daily.baseObjective} />}
         style={{
           height: "100%",
           maxHeight: "60px",

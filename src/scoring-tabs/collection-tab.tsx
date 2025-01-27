@@ -6,7 +6,7 @@ import { red } from "@ant-design/colors";
 import TeamScore from "../components/team-score";
 import { CollectionCardTable } from "../components/collection-card-table";
 import Meta from "antd/es/card/Meta";
-import { getImage } from "../types/scoring-objective";
+import { ObjectiveIcon } from "../components/objective-icon";
 
 export function CollectionTab() {
   const { scores, currentEvent } = useContext(GlobalStateContext);
@@ -29,7 +29,6 @@ export function CollectionTab() {
         }}
       >
         {category.objectives.map((objective) => {
-          const img_location = getImage(objective);
           return (
             <Card
               key={objective.id}
@@ -43,30 +42,7 @@ export function CollectionTab() {
               }}
             >
               <Meta
-                avatar={
-                  img_location ? (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        height: "100%",
-                        maxHeight: "60px",
-                      }}
-                    >
-                      <img
-                        src={img_location}
-                        style={{
-                          height: "100%",
-                          maxHeight: "60px",
-                          width: "auto",
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    ""
-                  )
-                }
+                avatar={<ObjectiveIcon objective={objective} />}
                 style={{
                   height: "100%",
                   maxHeight: "60px",

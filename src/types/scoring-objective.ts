@@ -233,10 +233,14 @@ var anomalousUniques: { [key: string]: { [key: string]: string } } = {
     Lightning: "StormforgedSeal",
   },
 };
-export function getImage(
+export function getImageLocation(
   objective: ScoreObjective | ScoringObjective
 ): string | null {
-  if (objective.objective_type !== ObjectiveType.ITEM) {
+  if (
+    !objective ||
+    !objective.objective_type ||
+    objective.objective_type !== ObjectiveType.ITEM
+  ) {
     return null;
   }
   for (const condition of objective.conditions) {

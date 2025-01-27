@@ -18,7 +18,6 @@ import {
   Select,
   Tag,
   Typography,
-  Image,
   DatePicker,
 } from "antd";
 import { router } from "../router";
@@ -27,7 +26,6 @@ import {
   AggregationType,
   availableAggregationTypes,
   Condition,
-  getImage,
   ItemField,
   NumberField,
   ObjectiveType,
@@ -44,6 +42,7 @@ import { GlobalStateContext } from "../utils/context-provider";
 import { UserPermission } from "../types/user";
 import { CopyOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+import { ObjectiveIcon } from "../components/objective-icon";
 
 function addCondition(
   data: Partial<ScoringObjective>,
@@ -310,32 +309,7 @@ const ScoringCategoryPage: React.FC = () => {
       {
         title: "",
         key: "id",
-        render: (data: ScoringObjective) => {
-          let img_location = getImage(data);
-          return img_location ? (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                height: "100%",
-                maxHeight: "60px",
-              }}
-            >
-              <Image
-                src={img_location}
-                style={{
-                  height: "100%",
-                  maxHeight: "60px",
-                  width: "auto",
-                  maxWidth: "120px",
-                }}
-              />
-            </div>
-          ) : (
-            ""
-          );
-        },
+        render: (data: ScoringObjective) => <ObjectiveIcon objective={data} />,
       },
       {
         title: "Name",
