@@ -147,7 +147,7 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
       title: "Name",
       key: "name",
       render: (record: any) => {
-        if (isMobile && !record.extra) {
+        if (isMobile) {
           return imageOverlayedWithText(record);
         }
         return record.name;
