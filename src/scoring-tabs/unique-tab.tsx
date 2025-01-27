@@ -38,7 +38,7 @@ const UniqueTab: React.FC = () => {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
           gap: "8px",
           marginTop: "20px",
           marginBottom: "20px",
@@ -76,12 +76,12 @@ const UniqueTab: React.FC = () => {
                   <ProgressAvatar
                     category={category}
                     teamId={selectedTeam}
-                    size={64}
+                    size={70}
                   ></ProgressAvatar>
                 }
                 description={
-                  <>
-                    <div style={{ fontSize: 18 }}>
+                  <div style={{ color: "white" }}>
+                    <div style={{ fontSize: 28 }}>
                       {"Uniques: " +
                         (selectedTeam
                           ? category.team_score[selectedTeam].number
@@ -89,24 +89,26 @@ const UniqueTab: React.FC = () => {
                         " / " +
                         category.objectives.length}
                     </div>
-                    <div style={{ fontSize: 14 }}>
-                      {"Variants: " +
-                        (selectedTeam
-                          ? category.sub_categories.reduce(
-                              (acc, subCategory) =>
-                                acc +
-                                subCategory.team_score[selectedTeam].number,
-                              0
-                            )
-                          : 0) +
-                        " / " +
-                        category.sub_categories.reduce(
-                          (acc, subCategory) =>
-                            acc + subCategory.objectives.length,
-                          0
-                        )}
-                    </div>
-                  </>
+                    {category.sub_categories.length > 0 ? (
+                      <div style={{ fontSize: 20 }}>
+                        {"Variants: " +
+                          (selectedTeam
+                            ? category.sub_categories.reduce(
+                                (acc, subCategory) =>
+                                  acc +
+                                  subCategory.team_score[selectedTeam].number,
+                                0
+                              )
+                            : 0) +
+                          " / " +
+                          category.sub_categories.reduce(
+                            (acc, subCategory) =>
+                              acc + subCategory.objectives.length,
+                            0
+                          )}
+                      </div>
+                    ) : null}
+                  </div>
                 }
               />
             </Card>

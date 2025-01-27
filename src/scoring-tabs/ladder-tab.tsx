@@ -15,6 +15,7 @@ type RowDef = {
   Uniques: number;
   Bounties: number;
   Races: number;
+  Dailies: number;
 };
 
 export function LadderTab() {
@@ -30,7 +31,13 @@ export function LadderTab() {
     },
     {}
   );
-  const categoryNames = ["Collections", "Uniques", "Bounties", "Races"];
+  const categoryNames = [
+    "Uniques",
+    "Races",
+    "Bounties",
+    "Collections",
+    "Dailies",
+  ];
   const categories = categoryNames.map((categoryName) =>
     getSubCategory(scores, categoryName)
   );

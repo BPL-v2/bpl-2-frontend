@@ -241,8 +241,6 @@ function getPotentialPointsForCategory(category: ScoreCategory) {
       if (!category.scoring_preset) {
         continue;
       }
-      console.log(category.scoring_preset.points);
-
       var maximumReachablePoints = 0;
       if (
         category.scoring_preset.scoring_method ===
@@ -252,7 +250,6 @@ function getPotentialPointsForCategory(category: ScoreCategory) {
           (acc, score) => Math.max(acc, score.rank),
           0
         );
-        console.log(category.scoring_preset.points);
         maximumReachablePoints = Math.max(
           ...category.scoring_preset.points.slice(
             maxRank,
