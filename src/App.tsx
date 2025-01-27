@@ -66,7 +66,7 @@ function App() {
   const [currentEvent, setCurrentEvent] = useState<BPLEvent>();
   const [eventStatus, setEventStatus] = useState<EventStatus>();
   const [rules, setRules] = useState<ScoringCategory>();
-  const { scoreData } = fetchScores();
+  const { scoreData } = fetchScores(currentEvent?.id);
   const [scores, setScores] = useState<ScoreCategory>();
   const [scoringPresets, setScoringPresets] = useState<ScoringPreset[]>();
   const [users, setUsers] = useState<MinimalUser[]>([]);

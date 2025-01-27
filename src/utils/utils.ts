@@ -241,6 +241,8 @@ function getPotentialPointsForCategory(category: ScoreCategory) {
       if (!category.scoring_preset) {
         continue;
       }
+      console.log(category.scoring_preset.points);
+
       var maximumReachablePoints = 0;
       if (
         category.scoring_preset.scoring_method ===
@@ -250,11 +252,15 @@ function getPotentialPointsForCategory(category: ScoreCategory) {
           (acc, score) => Math.max(acc, score.rank),
           0
         );
+        console.log(category.scoring_preset.points);
         maximumReachablePoints = Math.max(
           ...category.scoring_preset.points.slice(
             maxRank,
             category.scoring_preset.points.length
-          )
+          ),
+          category.scoring_preset.points[
+            category.scoring_preset.points.length - 1
+          ]
         );
       } else if (
         category.scoring_preset.scoring_method ===
@@ -297,7 +303,10 @@ function getPotentialPointsForObjective(objective: ScoreObjective) {
         ...objective.scoring_preset.points.slice(
           maxRank,
           objective.scoring_preset.points.length
-        )
+        ),
+        objective.scoring_preset.points[
+          objective.scoring_preset.points.length - 1
+        ]
       );
     }
   }

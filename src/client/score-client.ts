@@ -2,10 +2,10 @@ import useSWR from "swr";
 import { Score } from "../types/score";
 import { fetchWrapper } from "./base";
 
-export const fetchScores = () => {
+export const fetchScores = (eventId?: number) => {
   const { data, ...restSWR } = useSWR(
-    "scores",
-    () => fetchWrapper<Score[]>(`/scores/latest`, "GET"),
+    eventId ? `scores/${eventId}` : null,
+    () => fetchWrapper<Score[]>(`/events/${eventId}/scores/latest`, "GET"),
     {
       refreshInterval: 60000,
       revalidateIfStale: false,
