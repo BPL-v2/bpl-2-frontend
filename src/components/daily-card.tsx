@@ -45,6 +45,15 @@ export function DailyCard({ daily }: DailyCardProps) {
     return <></>;
   }
 
+  const objective = { ...daily.baseObjective };
+  if (daily.raceObjective) {
+    Object.entries(daily.raceObjective.team_score).forEach(
+      ([teamId, score]) => {
+        // @ts-ignore
+        objective.team_score[teamId].points += score.points;
+      }
+    );
+  }
   if (
     daily.baseObjective.valid_from &&
     new Date(daily.baseObjective.valid_from) > new Date()
@@ -155,7 +164,7 @@ export function DailyCard({ daily }: DailyCardProps) {
           </Tooltip>
         }
       />
-      <CollectionCardTable objective={daily.baseObjective} />
+      <CollectionCardTable objective={objective} />
       {bonusAvailableCounter(daily.raceObjective?.valid_to, () => {
         fetchCategoryForEvent(currentEvent.id).then(setRules);
       })}
