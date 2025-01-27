@@ -18,6 +18,14 @@ export async function fetchScoringPresetById(
     "GET"
   );
 }
+export async function deleteScoringPresetById(
+  presetId: number
+): Promise<ScoringPreset> {
+  return await fetchWrapper<ScoringPreset>(
+    "/scoring/presets/" + presetId,
+    "DELETE"
+  );
+}
 
 export async function createScoringPreset(
   eventId: number,

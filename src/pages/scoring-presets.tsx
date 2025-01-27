@@ -9,6 +9,7 @@ import {
 } from "../types/scoring-preset";
 import {
   createScoringPreset,
+  deleteScoringPresetById,
   fetchScoringPresetsForEvent,
 } from "../client/scoring-preset-client";
 import { useContext } from "react";
@@ -92,6 +93,9 @@ const ScoringPresetsPage: React.FC = () => {
         }}
         editFunction={async (data) => {
           return createScoringPreset(parseInt(eventId), data);
+        }}
+        deleteFunction={async (data) => {
+          return deleteScoringPresetById(data.id!);
         }}
       ></CrudTable>
     </>
