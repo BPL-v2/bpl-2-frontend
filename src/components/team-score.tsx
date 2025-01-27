@@ -30,7 +30,7 @@ const TeamScore = ({
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
           gap: "8px",
           marginTop: "20px",
           marginBottom: "20px",
@@ -48,6 +48,12 @@ const TeamScore = ({
               flex: "1 1 0",
               backgroundColor:
                 team.id === eventStatus?.team_id ? token.colorBgSpotlight : "",
+            }}
+            styles={{
+              body: {
+                paddingLeft: "10px",
+                paddingRight: "10px",
+              },
             }}
           >
             <Meta

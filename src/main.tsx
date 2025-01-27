@@ -25,7 +25,7 @@ createRoot(document.getElementById("root")!).render(
 
         colorBgContainer: bgPallette[3],
         colorBgSpotlight: bgPallette[4],
-        borderRadiusLG: 0,
+        borderRadiusLG: 10,
         // Alias Token
       },
       components: {
