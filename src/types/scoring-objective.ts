@@ -233,7 +233,8 @@ var anomalousUniques: { [key: string]: { [key: string]: string } } = {
     Lightning: "StormforgedSeal",
   },
 };
-export function getImageLocation(
+
+export function getItemName(
   objective: ScoreObjective | ScoringObjective
 ): string | null {
   if (
@@ -244,25 +245,59 @@ export function getImageLocation(
     return null;
   }
   for (const condition of objective.conditions) {
-    if (condition.field === ItemField.NAME) {
-      const anomaly = anomalousUniques[condition.value];
-      if (anomaly) {
-        return "/assets/items/uniques/" + anomaly[objective.extra] + ".webp";
-      }
+    if (
+      condition.field === ItemField.NAME &&
+      condition.operator === Operator.EQ
+    ) {
+      return condition.value;
+    }
+  }
+  return null;
+}
 
-      return (
-        "/assets/items/uniques/" +
-        condition.value.replaceAll(" ", "_") +
-        ".webp"
-      );
+export function getImageLocation(
+  objective: ScoreObjective | ScoringObjective
+): string | null {
+  if (
+    !objective ||
+    !objective.objective_type ||
+    objective.objective_type !== ObjectiveType.ITEM
+  ) {
+    return null;
+  }
+  // has to be this complicated because we want to privilege the name over the base type
+  const attributes: { name?: string; base_type?: string } = {
+    name: undefined,
+    base_type: undefined,
+  };
+  for (const condition of objective.conditions) {
+    if (
+      condition.field === ItemField.NAME &&
+      condition.operator === Operator.EQ
+    ) {
+      attributes.name = condition.value;
+    } else if (
+      condition.field === ItemField.BASE_TYPE &&
+      condition.operator === Operator.EQ
+    ) {
+      attributes.base_type = condition.value;
     }
-    if (condition.field === ItemField.BASE_TYPE) {
-      return (
-        "/assets/items/basetypes/" +
-        condition.value.replaceAll(" ", "_") +
-        ".webp"
-      );
+  }
+  if (attributes.name) {
+    const anomaly = anomalousUniques[attributes.name];
+    if (anomaly) {
+      return "/assets/items/uniques/" + anomaly[objective.extra] + ".webp";
     }
+    return (
+      "/assets/items/uniques/" + attributes.name.replaceAll(" ", "_") + ".webp"
+    );
+  }
+  if (attributes.base_type) {
+    return (
+      "/assets/items/basetypes/" +
+      attributes.base_type.replaceAll(" ", "_") +
+      ".webp"
+    );
   }
   return null;
 }
