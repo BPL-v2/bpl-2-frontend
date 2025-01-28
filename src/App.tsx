@@ -1,4 +1,4 @@
-import { Layout, Menu, MenuProps } from "antd";
+import { Button, Layout, Menu, MenuProps } from "antd";
 import "./App.css";
 import { useEffect, useState } from "react";
 import { RouterProvider } from "react-router-dom";
@@ -12,6 +12,7 @@ import { fetchCurrentEvent, fetchEventStatus } from "./client/event-client";
 import { BPLEvent, EventStatus } from "./types/event";
 import { useError } from "./components/errorcontext";
 import {
+  HomeOutlined,
   LineChartOutlined,
   MenuOutlined,
   ReadOutlined,
@@ -27,6 +28,7 @@ import { fetchScoringPresetsForEvent } from "./client/scoring-preset-client";
 import { ScoringPreset } from "./types/scoring-preset";
 import ApplicationButton from "./components/application-button";
 import { scoringTabs } from "./pages/scoring-page";
+import { greyDark } from "@ant-design/colors";
 type MenuItem = Required<MenuProps>["items"][number] & {
   roleRequired?: UserPermission[];
 };
@@ -218,11 +220,40 @@ function App() {
               padding: "0",
             }}
           >
+            {isMobile ? null : (
+              <Button
+                type="text"
+                style={{
+                  height: "100%",
+                  borderRadius: "0",
+                  borderWidth: "20px",
+                  borderStyle: "solid",
+                  background: greyDark[2],
+                  fontSize: "2em",
+                  fontWeight: "bold",
+                  padding: "0px 40px 0px 20px",
+                }}
+                icon={
+                  <img
+                    src="assets/app-logos/bpl-logo.png"
+                    style={{ height: "40px" }}
+                  />
+                }
+                onClick={() => {
+                  setCurrentNav("/");
+                  router.navigate("/");
+                }}
+              >
+                BPL
+              </Button>
+            )}
             <Menu
               style={{
                 flex: 1,
                 userSelect: "none",
                 border: "1px solid transparent",
+                alignItems: "left",
+                display: "flex",
               }}
               onClick={(e) => {
                 setCurrentNav(e.key);
@@ -236,7 +267,14 @@ function App() {
                       {
                         key: "Menu",
                         icon: <MenuOutlined />,
-                        children: menuItems,
+                        children: [
+                          {
+                            key: "/",
+                            label: "Home",
+                            icon: <HomeOutlined />,
+                          },
+                          ...menuItems,
+                        ],
                       },
                     ]
                   : menuItems

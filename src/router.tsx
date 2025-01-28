@@ -12,11 +12,12 @@ import { RulePage } from "./pages/rules";
 import { ProfilePage } from "./pages/profile";
 import UserSortPage from "./pages/user-sort";
 import { ScoringReadmePage } from "./pages/scoring_readme";
+import { MainPage } from "./pages/main";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <></>,
+    element: <MainPage />,
   },
   {
     path: "/events",

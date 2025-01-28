@@ -2,14 +2,13 @@
   "version": "4",
   "specifiers": {
     "npm:@ant-design/colors@^7.1.0": "7.1.0",
-    "npm:@ant-design/icons@^5.5.1": "5.5.1_react@18.3.1_react-dom@18.3.1__react@18.3.1",
-    "npm:@ant-design/pro-card@^2.9.3": "2.9.3_antd@5.22.2__react@18.3.1__react-dom@18.3.1___react@18.3.1__dayjs@1.11.13_react@18.3.1_react-dom@18.3.1__react@18.3.1",
+    "npm:@ant-design/icons@^5.6.0": "5.6.0_react@18.3.1_react-dom@18.3.1__react@18.3.1",
     "npm:@eslint/js@^9.13.0": "9.15.0",
     "npm:@types/node@^22.10.1": "22.10.1",
-    "npm:@types/react-dom@^18.3.1": "18.3.1",
-    "npm:@types/react@^18.3.12": "18.3.12",
+    "npm:@types/react-dom@^18.3.1": "18.3.5_@types+react@18.3.18",
+    "npm:@types/react@^18.3.1": "18.3.18",
     "npm:@vitejs/plugin-react@^4.3.3": "4.3.3_vite@5.4.11_@babel+core@7.26.0",
-    "npm:antd@^5.22.2": "5.22.2_react@18.3.1_react-dom@18.3.1__react@18.3.1_dayjs@1.11.13",
+    "npm:antd@^5.23.3": "5.23.3_react@18.3.1_react-dom@18.3.1__react@18.3.1_dayjs@1.11.13",
     "npm:dayjs@^1.11.13": "1.11.13",
     "npm:dotenv@^16.4.5": "16.4.5",
     "npm:eslint-plugin-react-hooks@5": "5.0.0_eslint@9.15.0",
@@ -19,7 +18,7 @@
     "npm:postcss@^8.4.49": "8.4.49",
     "npm:react-dom@^18.3.1": "18.3.1_react@18.3.1",
     "npm:react-json-pretty@^2.2.0": "2.2.0_react@18.3.1_react-dom@18.3.1__react@18.3.1",
-    "npm:react-router-dom@^7.0.1": "7.0.1_react@18.3.1_react-dom@18.3.1__react@18.3.1",
+    "npm:react-router-dom@^7.0.1": "7.1.3_react@18.3.1_react-dom@18.3.1__react@18.3.1",
     "npm:react-twitch-embed-video@^3.1.0": "3.1.0_react@18.3.1_react-dom@18.3.1__react@18.3.1",
     "npm:react@^18.3.1": "18.3.1",
     "npm:swr@^2.3.0": "2.3.0_react@18.3.1",
@@ -46,8 +45,14 @@
         "@ctrl/tinycolor"
       ]
     },
-    "@ant-design/cssinjs-utils@1.1.1_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-2HAiyGGGnM0es40SxdszeQAU5iWp41wBIInq+ONTCKjlSKOrzQfnw4JDtB8IBmqE6tQaEKwmzTP2LGdt5DSwYQ==",
+    "@ant-design/colors@7.2.0": {
+      "integrity": "sha512-bjTObSnZ9C/O8MB/B4OUtd/q9COomuJAR2SYfhxLyHvCKn4EKwCN3e+fWGMo7H5InAyV0wL17jdE9ALrdOW/6A==",
+      "dependencies": [
+        "@ant-design/fast-color"
+      ]
+    },
+    "@ant-design/cssinjs-utils@1.1.3_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-nOoQMLW1l+xR1Co8NFVYiP8pZp3VjIIzqV6D6ShYF2ljtdwWJn5WSsH+7kvCktXL/yhEtWURKOfH5Xz/gzlwsg==",
       "dependencies": [
         "@ant-design/cssinjs",
         "@babel/runtime",
@@ -56,8 +61,8 @@
         "react-dom"
       ]
     },
-    "@ant-design/cssinjs@1.22.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-W9XSFeRPR0mAN3OuxfuS/xhENCYKf+8s+QyNNER0FSWoK9OpISTag6CCweg6lq0hASQ/2Vcza0Z8/kGivCP0Ng==",
+    "@ant-design/cssinjs@1.23.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-7GAg9bD/iC9ikWatU9ym+P9ugJhi/WbsTWzcKN6T4gU0aehsprtke1UAaaSxxkjjmkJb3llet/rbUSLPgwlY4w==",
       "dependencies": [
         "@babel/runtime",
         "@emotion/hash",
@@ -79,64 +84,16 @@
     "@ant-design/icons-svg@4.4.2": {
       "integrity": "sha512-vHbT+zJEVzllwP+CM+ul7reTEfBR0vgxFe7+lREAsAA7YGsYpboiq2sQNeQeRvh09GfQgs/GyFEvZpJ9cLXpXA=="
     },
-    "@ant-design/icons@5.5.1_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-0UrM02MA2iDIgvLatWrj6YTCYe0F/cwXvVE0E2SqGrL7PZireQwgEKTKBisWpZyal5eXZLvuM98kju6YtYne8w==",
+    "@ant-design/icons@5.6.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-Mb6QkQmPLZsmIHJ6oBsoyKrrT8/kAUdQ6+8q38e2bQSclROi69SiDlI4zZroaIPseae1w110RJH0zGrphAvlSQ==",
       "dependencies": [
-        "@ant-design/colors",
+        "@ant-design/colors@7.1.0",
         "@ant-design/icons-svg",
         "@babel/runtime",
         "classnames",
         "rc-util",
         "react",
         "react-dom"
-      ]
-    },
-    "@ant-design/pro-card@2.9.3_antd@5.22.2__react@18.3.1__react-dom@18.3.1___react@18.3.1__dayjs@1.11.13_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-JGakKs7gk0QwGnU0scmWEyUBpBU5KvfIjjnADwm9VOqCUDgLwTXGnqjSrEICw8F/YCbWnKDPxecJs2Y7kRpWoQ==",
-      "dependencies": [
-        "@ant-design/cssinjs",
-        "@ant-design/icons",
-        "@ant-design/pro-provider",
-        "@ant-design/pro-utils",
-        "@babel/runtime",
-        "antd",
-        "classnames",
-        "omit.js",
-        "rc-resize-observer",
-        "rc-util",
-        "react"
-      ]
-    },
-    "@ant-design/pro-provider@2.15.3_antd@5.22.2__react@18.3.1__react-dom@18.3.1___react@18.3.1__dayjs@1.11.13_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-jUBCuRrhAXNMumSZ++704/zEg/7U1k2N3jMVBgtirvVaCAk5O9iZQKK4W3O3LRFc+D8yO16sXjsxhawvdGL4cA==",
-      "dependencies": [
-        "@ant-design/cssinjs",
-        "@babel/runtime",
-        "@ctrl/tinycolor",
-        "antd",
-        "dayjs",
-        "rc-util",
-        "react",
-        "react-dom",
-        "swr"
-      ]
-    },
-    "@ant-design/pro-utils@2.16.3_antd@5.22.2__react@18.3.1__react-dom@18.3.1___react@18.3.1__dayjs@1.11.13_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-uNjKh51v/SUlCJbWfhg2lRQB/TB0MyNMCQkFZ8mZBQ2rk3Ew47Sly6VssVVWMjIWBLE+g9fOgPg0C1IVeilIXA==",
-      "dependencies": [
-        "@ant-design/icons",
-        "@ant-design/pro-provider",
-        "@babel/runtime",
-        "antd",
-        "classnames",
-        "dayjs",
-        "lodash",
-        "lodash-es",
-        "rc-util",
-        "react",
-        "react-dom",
-        "safe-stable-stringify",
-        "swr"
       ]
     },
     "@ant-design/react-slick@1.1.2_react@18.3.1": {
@@ -256,8 +213,8 @@
         "@babel/helper-plugin-utils"
       ]
     },
-    "@babel/runtime@7.26.0": {
-      "integrity": "sha512-FDSOghenHTiToteC/QRlv2q3DhPZ/oOXTBoirfWNx1Cx3TMVcGWQtMMmQcSvb/JjpNeGzx8Pq/b4fKEJuWm1sw==",
+    "@babel/runtime@7.26.7": {
+      "integrity": "sha512-AOPI3D+a8dXnja+iwsUqGRjr1BbZIe771sXdapOtYI531gSqpi92vXivKcq2asu/DFpdl1ceFAKZyRzK2PCVcQ==",
       "dependencies": [
         "regenerator-runtime"
       ]
@@ -562,8 +519,8 @@
         "react-dom"
       ]
     },
-    "@rc-component/trigger@2.2.5_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-F1EJ4KjFpGAHAjuKvOyZB/6IZDkVx0bHl0M4fQM5wXcmm7lgTgVSSnR3bXwdmS6jOJGHOqfDxIJW3WUvwMIXhQ==",
+    "@rc-component/trigger@2.2.6_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-/9zuTnWwhQ3S3WT1T8BubuFTT46kvnXgaERR9f4BTKyn61/wpf/BvbImzYBubzJibU707FxwbKszLlHjcLiv1Q==",
       "dependencies": [
         "@babel/runtime",
         "@rc-component/portal",
@@ -673,17 +630,17 @@
         "undici-types"
       ]
     },
-    "@types/prop-types@15.7.13": {
-      "integrity": "sha512-hCZTSvwbzWGvhqxp/RqVqwU999pBf2vp7hzIjiYOsl8wqOmUxkQ6ddw1cV3l8811+kdUFus/q4d1Y3E3SyEifA=="
+    "@types/prop-types@15.7.14": {
+      "integrity": "sha512-gNMvNH49DJ7OJYv+KAKn0Xp45p8PLl6zo2YnvDIbTd4J6MER2BmWN49TG7n9LvkyihINxeKW8+3bfS2yDC9dzQ=="
     },
-    "@types/react-dom@18.3.1": {
-      "integrity": "sha512-qW1Mfv8taImTthu4KoXgDfLuk4bydU6Q/TkADnDWWHwi4NX4BR+LWfTp2sVmTqRrsHvyDDTelgelxJ+SsejKKQ==",
+    "@types/react-dom@18.3.5_@types+react@18.3.18": {
+      "integrity": "sha512-P4t6saawp+b/dFrUr2cvkVsfvPguwsxtH6dNIYRllMsefqFzkZk5UIjzyDOv5g1dXIPdG4Sp1yCR4Z6RCUsG/Q==",
       "dependencies": [
         "@types/react"
       ]
     },
-    "@types/react@18.3.12": {
-      "integrity": "sha512-D2wOSq/d6Agt28q7rSI3jhU7G6aiuzljDGZ2hTZHIkrTLUI+AF3WMeKkEZ9nN2fkBAlcktT6vcZjDFiIhMYEQw==",
+    "@types/react@18.3.18": {
+      "integrity": "sha512-t4yC+vtgnkYjNSKlFx1jkAhH8LgTo2N/7Qvi83kdEaUtMDiwpbLAktKDaAMlRcJ5eSxZkH74eEGt1ky31d7kfQ==",
       "dependencies": [
         "@types/prop-types",
         "csstype"
@@ -810,16 +767,16 @@
     "ansi-styles@6.2.1": {
       "integrity": "sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug=="
     },
-    "antd@5.22.2_react@18.3.1_react-dom@18.3.1__react@18.3.1_dayjs@1.11.13": {
-      "integrity": "sha512-vihhiJbm9VG3d6boUeD1q2MXMax+qBrXhgqCEC+45v8iGUF6m4Ct+lFiCW4oWaN3EABOsbVA6Svy3Rj/QkQFKw==",
+    "antd@5.23.3_react@18.3.1_react-dom@18.3.1__react@18.3.1_dayjs@1.11.13": {
+      "integrity": "sha512-xDvwl7C43/NZ9rTOS1bkbuKoSxqZKf6FlaSW/BRsV8QST3Ce2jGx7dJzYahKIZwe3WNSgvEXAlTrckBHMKHcgQ==",
       "dependencies": [
-        "@ant-design/colors",
+        "@ant-design/colors@7.2.0",
         "@ant-design/cssinjs",
         "@ant-design/cssinjs-utils",
+        "@ant-design/fast-color",
         "@ant-design/icons",
         "@ant-design/react-slick",
         "@babel/runtime",
-        "@ctrl/tinycolor",
         "@rc-component/color-picker",
         "@rc-component/mutate-observer",
         "@rc-component/qrcode",
@@ -960,8 +917,8 @@
     "commander@4.1.1": {
       "integrity": "sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA=="
     },
-    "compute-scroll-into-view@3.1.0": {
-      "integrity": "sha512-rj8l8pD4bJ1nx+dAkMhV1xB5RuZEyVysfxJqB1pRchh1KVvwOv9b7CGB8ZfjTImVv2oF+sYMUkMZq6Na5Ftmbg=="
+    "compute-scroll-into-view@3.1.1": {
+      "integrity": "sha512-VRhuHOLoKYOy4UbilLbUzbYg93XLjv2PncJC50EuTWPA3gaja1UjBsUP/D/9/juV3vQFr6XBEzn9KCAHdUvOHw=="
     },
     "concat-map@0.0.1": {
       "integrity": "sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg=="
@@ -1380,14 +1337,8 @@
         "p-locate"
       ]
     },
-    "lodash-es@4.17.21": {
-      "integrity": "sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw=="
-    },
     "lodash.merge@4.6.2": {
       "integrity": "sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ=="
-    },
-    "lodash@4.17.21": {
-      "integrity": "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
     },
     "loose-envify@1.4.0": {
       "integrity": "sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==",
@@ -1457,9 +1408,6 @@
     },
     "object-hash@3.0.0": {
       "integrity": "sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw=="
-    },
-    "omit.js@2.0.2": {
-      "integrity": "sha512-hJmu9D+bNB40YpL9jYebQl4lsTW6yEHRTroJzNLqQJYHm7c+NQnJGfZmIWh8S3q3KoaxV1aLhV6B3+0N0/kyJg=="
     },
     "optionator@0.9.4": {
       "integrity": "sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==",
@@ -1587,8 +1535,8 @@
     "queue-microtask@1.2.3": {
       "integrity": "sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A=="
     },
-    "rc-cascader@3.30.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-rrzSbk1Bdqbu+pDwiLCLHu72+lwX9BZ28+JKzoi0DWZ4N29QYFeip8Gctl33QVd2Xg3Rf14D3yAOG76ElJw16w==",
+    "rc-cascader@3.33.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-JvZrMbKBXIbEDmpIORxqvedY/bck6hGbs3hxdWT8eS9wSQ1P7//lGxbyKjOSyQiVBbgzNWriSe6HoMcZO/+0rQ==",
       "dependencies": [
         "@babel/runtime",
         "classnames",
@@ -1599,8 +1547,8 @@
         "react-dom"
       ]
     },
-    "rc-checkbox@3.3.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-Ih3ZaAcoAiFKJjifzwsGiT/f/quIkxJoklW4yKGho14Olulwn8gN7hOBve0/WGDg5o/l/5mL0w7ff7/YGvefVw==",
+    "rc-checkbox@3.5.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-aOAQc3E98HteIIsSqm6Xk2FPKIER6+5vyEFMZfo73TqM+VVAIqOkHoPjgKLqSNtVLWScoaM7vY2ZrGEheI79yg==",
       "dependencies": [
         "@babel/runtime",
         "classnames",
@@ -1644,8 +1592,8 @@
         "react-dom"
       ]
     },
-    "rc-dropdown@4.2.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-odM8Ove+gSh0zU27DUj5cG1gNKg7mLWBYzB5E4nNLrLwBmYEgYP43vHKDGOVZcJSVElQBI0+jTQgjnq0NfLjng==",
+    "rc-dropdown@4.2.1_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-YDAlXsPv3I1n42dv1JpdM7wJ+gSUBfeyPK59ZpBD9jQhK9jVuxpjj3NmWQHOBceA1zEPVX84T2wbdb2SD0UjmA==",
       "dependencies": [
         "@babel/runtime",
         "@rc-component/trigger",
@@ -1655,8 +1603,8 @@
         "react-dom"
       ]
     },
-    "rc-field-form@2.5.1_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-33hunXwynQJyeae7LS3hMGTXNeRBjiPyPYgB0824EbmLHiXC1EBGyUwRh6xjLRy9c+en5WARYN0gJz5+JAqwig==",
+    "rc-field-form@2.7.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-hgKsCay2taxzVnBPZl+1n4ZondsV78G++XVsMIJCAoioMjlMQR9YwAp7JZDIECzIu2Z66R+f4SFIRrO2DjDNAA==",
       "dependencies": [
         "@babel/runtime",
         "@rc-component/async-validator",
@@ -1678,8 +1626,8 @@
         "react-dom"
       ]
     },
-    "rc-input-number@9.3.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-JQ363ywqRyxwgVxpg2z2kja3CehTpYdqR7emJ/6yJjRdbvo+RvfE83fcpBCIJRq3zLp8SakmEXq60qzWyZ7Usw==",
+    "rc-input-number@9.4.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-Tiy4DcXcFXAf9wDhN8aUAyMeCLHJUHA/VA/t7Hj8ZEx5ETvxG7MArDOSE6psbiSCo+vJPm4E3fGN710ITVn6GA==",
       "dependencies": [
         "@babel/runtime",
         "@rc-component/mini-decimal",
@@ -1690,8 +1638,8 @@
         "react-dom"
       ]
     },
-    "rc-input@1.6.3_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-wI4NzuqBS8vvKr8cljsvnTUqItMfG1QbJoxovCgL+DX4eVUcHIjVwharwevIxyy7H/jbLryh+K7ysnJr23aWIA==",
+    "rc-input@1.7.2_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-g3nYONnl4edWj2FfVoxsU3Ec4XTE+Hb39Kfh2MFxMZjp/0gGyPUgy/v7ZhS27ZxUFNkuIDYXm9PJsLyJbtg86A==",
       "dependencies": [
         "@babel/runtime",
         "classnames",
@@ -1700,8 +1648,8 @@
         "react-dom"
       ]
     },
-    "rc-mentions@2.17.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-sfHy+qLvc+p8jx8GUsujZWXDOIlIimp6YQz7N5ONQ6bHsa2kyG+BLa5k2wuxgebBbH97is33wxiyq5UkiXRpHA==",
+    "rc-mentions@2.19.1_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-KK3bAc/bPFI993J3necmaMXD2reZTzytZdlTvkeBbp50IGH1BDPDvxLdHDUrpQx2b2TGaVJsn+86BvYa03kGqA==",
       "dependencies": [
         "@babel/runtime",
         "@rc-component/trigger",
@@ -1727,8 +1675,8 @@
         "react-dom"
       ]
     },
-    "rc-motion@2.9.3_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-rkW47ABVkic7WEB0EKJqzySpvDqwl60/tdkY7hWP7dYnh5pm0SzJpo54oW3TDUGXV5wfxXFmMkxrzRRbotQ0+w==",
+    "rc-motion@2.9.5_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-w+XTUrfh7ArbYEd2582uDrEhmBHwK1ZENJiSJVb7uRxdE7qJSYjbO2eksRXmndqyKqKoYPc9ClpPh5242mV1vA==",
       "dependencies": [
         "@babel/runtime",
         "classnames",
@@ -1748,8 +1696,8 @@
         "react-dom"
       ]
     },
-    "rc-overflow@1.3.2_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-nsUm78jkYAoPygDAcGZeC2VwIg/IBGSodtOY3pMof4W3M9qRJgqaDYm03ZayHlde3I6ipliAxbN0RUcGf5KOzw==",
+    "rc-overflow@1.4.1_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-3MoPQQPV1uKyOMVNd6SZfONi+f3st0r8PksexIdBTeIYbMX0Jr+k7pHEDvsXtR4BpCv90/Pv2MovVNhktKrwvw==",
       "dependencies": [
         "@babel/runtime",
         "classnames",
@@ -1759,8 +1707,8 @@
         "react-dom"
       ]
     },
-    "rc-pagination@4.3.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-UubEWA0ShnroQ1tDa291Fzw6kj0iOeF26IsUObxYTpimgj4/qPCWVFl18RLZE+0Up1IZg0IK4pMn6nB3mjvB7g==",
+    "rc-pagination@5.0.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-QjrPvbAQwps93iluvFM62AEYglGYhWW2q/nliQqmvkTi4PXP4HHoh00iC1Sa5LLVmtWQHmG73fBi2x6H6vFHRg==",
       "dependencies": [
         "@babel/runtime",
         "classnames",
@@ -1769,8 +1717,8 @@
         "react-dom"
       ]
     },
-    "rc-picker@4.8.2_dayjs@1.11.13_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-I6Nn4ngkRskSD//rsXDvjlEQ8CzX9kPQrUIb7+qTY49erJaa3/oKJWmi6JIxo/A7gy59phNmPTdhKosAa/NrQQ==",
+    "rc-picker@4.9.2_dayjs@1.11.13_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-SLW4PRudODOomipKI0dvykxW4P8LOqtMr17MOaLU6NQJhkh9SZeh44a/8BMxwv5T6e3kiIeYc9k5jFg2Mv35Pg==",
       "dependencies": [
         "@babel/runtime",
         "@rc-component/trigger",
@@ -1803,8 +1751,8 @@
         "react-dom"
       ]
     },
-    "rc-resize-observer@1.4.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-PnMVyRid9JLxFavTjeDXEXo65HCRqbmLBw9xX9gfC4BZiSzbLXKzW3jPz+J0P71pLbD5tBMTT+mkstV5gD0c9Q==",
+    "rc-resize-observer@1.4.3_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-YZLjUbyIWox8E9i9C3Tm7ia+W7euPItNWSPX5sCcQTYbnwDb5uNpnLHQCG1f22oZWUhLw4Mv2tFmeWe68CDQRQ==",
       "dependencies": [
         "@babel/runtime",
         "classnames",
@@ -1814,8 +1762,8 @@
         "resize-observer-polyfill"
       ]
     },
-    "rc-segmented@2.5.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-B28Fe3J9iUFOhFJET3RoXAPFJ2u47QvLSYcZWC4tFYNGPEjug5LAxEasZlA/PpAxhdOPqGWsGbSj7ftneukJnw==",
+    "rc-segmented@2.7.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-liijAjXz+KnTRVnxxXG2sYDGd6iLL7VpGGdR8gwoxAXy2KglviKCxLWZdjKYJzYzGSUwKDSTdYk8brj54Bn5BA==",
       "dependencies": [
         "@babel/runtime",
         "classnames",
@@ -1825,8 +1773,8 @@
         "react-dom"
       ]
     },
-    "rc-select@14.16.3_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-51+j6s3fJJJXB7E+B6W1hM4Tjzv1B/Decooz9ilgegDBt3ZAth1b/xMwYCTrT5BbG2e53XACQsyDib2+3Ro1fg==",
+    "rc-select@14.16.6_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-YPMtRPqfZWOm2XGTbx5/YVr1HT0vn//8QS77At0Gjb3Lv+Lbut0IORJPKLWu1hQ3u4GsA0SrDzs7nI8JG7Zmyg==",
       "dependencies": [
         "@babel/runtime",
         "@rc-component/trigger",
@@ -1839,8 +1787,8 @@
         "react-dom"
       ]
     },
-    "rc-slider@11.1.7_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-ytYbZei81TX7otdC0QvoYD72XSlxvTihNth5OeZ6PMXyEDq/vHdWFulQmfDGyXK1NwKwSlKgpvINOa88uT5g2A==",
+    "rc-slider@11.1.8_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-2gg/72YFSpKP+Ja5AjC5DPL1YnV8DEITDQrcc1eASrUYjl0esptaBVJBh5nLTXCCp15eD8EuGjwezVGSHhs9tQ==",
       "dependencies": [
         "@babel/runtime",
         "classnames",
@@ -1869,8 +1817,8 @@
         "react-dom"
       ]
     },
-    "rc-table@7.48.1_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-Z4mDKjWg+xz/Ezdw6ivWcbqRpaJ0QfCORRoRrlrw65KSGZLK8OcTdacH22/fyGb8L4It/0/9qcMm8VrVAk/WBw==",
+    "rc-table@7.50.2_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-+nJbzxzstBriLb5sr9U7Vjs7+4dO8cWlouQbMwBVYghk2vr508bBdkHJeP/z9HVjAIKmAgMQKxmtbgDd3gc5wA==",
       "dependencies": [
         "@babel/runtime",
         "@rc-component/context",
@@ -1882,8 +1830,8 @@
         "react-dom"
       ]
     },
-    "rc-tabs@15.4.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-llKuyiAVqmXm2z7OrmhX5cNb2ueZaL8ZyA2P4R+6/72NYYcbEgOXibwHiQCFY2RiN3swXl53SIABi2CumUS02g==",
+    "rc-tabs@15.5.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-NrDcTaUJLh9UuDdMBkjKTn97U9iXG44s9D03V5NHkhEDWO5/nC6PwC3RhkCWFMKB9hh+ryqgZ+TIr1b9Jd/hnQ==",
       "dependencies": [
         "@babel/runtime",
         "classnames",
@@ -1896,8 +1844,8 @@
         "react-dom"
       ]
     },
-    "rc-textarea@1.8.2_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-UFAezAqltyR00a8Lf0IPAyTd29Jj9ee8wt8DqXyDMal7r/Cg/nDt3e1OOv3Th4W6mKaZijjgwuPXhAfVNTN8sw==",
+    "rc-textarea@1.9.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-dQW/Bc/MriPBTugj2Kx9PMS5eXCCGn2cxoIaichjbNvOiARlaHdI99j4DTxLl/V8+PIfW06uFy7kjfUIDDKyxQ==",
       "dependencies": [
         "@babel/runtime",
         "classnames",
@@ -1908,8 +1856,8 @@
         "react-dom"
       ]
     },
-    "rc-tooltip@6.2.1_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-rws0duD/3sHHsD905Nex7FvoUGy2UBQRhTkKxeEvr2FB+r21HsOxcDJI0TzyO8NHhnAA8ILr8pfbSBg5Jj5KBg==",
+    "rc-tooltip@6.3.2_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-oA4HZIiZJbUQ5ojigM0y4XtWxaH/aQlJSzknjICRWNpqyemy1sL3X3iEQV2eSPBWEq+bqU3+aSs81z+28j9luA==",
       "dependencies": [
         "@babel/runtime",
         "@rc-component/trigger",
@@ -1918,8 +1866,8 @@
         "react-dom"
       ]
     },
-    "rc-tree-select@5.24.5_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-PnyR8LZJWaiEFw0SHRqo4MNQWyyZsyMs8eNmo68uXZWjxc7QqeWcjPPoONN0rc90c3HZqGF9z+Roz+GLzY5GXA==",
+    "rc-tree-select@5.27.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-2qTBTzwIT7LRI1o7zLyrCzmo5tQanmyGbSaGTIf7sYimCklAToVVfpMC6OAldSKolcnjorBYPNSKQqJmN3TCww==",
       "dependencies": [
         "@babel/runtime",
         "classnames",
@@ -1930,8 +1878,8 @@
         "react-dom"
       ]
     },
-    "rc-tree@5.10.1_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-FPXb3tT/u39mgjr6JNlHaUTYfHkVGW56XaGDahDpEFLGsnPxGcVLNTjcqoQb/GNbSCycl7tD7EvIymwOTP0+Yw==",
+    "rc-tree@5.13.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-2+lFvoVRnvHQ1trlpXMOWtF8BUgF+3TiipG72uOfhpL5CUdXCk931kvDdUkTL/IZVtNEDQKwEEmJbAYJSA5NnA==",
       "dependencies": [
         "@babel/runtime",
         "classnames",
@@ -1952,8 +1900,8 @@
         "react-dom"
       ]
     },
-    "rc-util@5.43.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-AzC7KKOXFqAdIBqdGWepL9Xn7cm3vnAmjlHqUnoQaTMZYhM4VlXGLkkHHxj/BZ7Td0+SOPKB4RGPboBVKT9htw==",
+    "rc-util@5.44.3_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-q6KCcOFk3rv/zD3MckhJteZxb0VjAIFuf622B7ElK4vfrZdAzs16XR5p3VTdy3+U5jfJU5ACz4QnhLSuAGe5dA==",
       "dependencies": [
         "@babel/runtime",
         "react",
@@ -1961,8 +1909,8 @@
         "react-is@18.3.1"
       ]
     },
-    "rc-virtual-list@3.15.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-dF2YQztqrU3ijAeWOqscTshCEr7vpimzSqAVjO1AyAmaqcHulaXpnGR0ptK5PXfxTUy48VkJOiglMIxlkYGs0w==",
+    "rc-virtual-list@3.18.1_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-ARSsD/dey/I4yNQHFYYUaKLUkD1wnD4lRZIvb3rCLMbTMmoFQJRVrWuSfbNt5P5MzMNooEBDvqrUPM4QN7BMNA==",
       "dependencies": [
         "@babel/runtime",
         "classnames",
@@ -1997,16 +1945,16 @@
     "react-refresh@0.14.2": {
       "integrity": "sha512-jCvmsr+1IUSMUyzOkRcvnVbX3ZYC6g9TDrDbFuFmRDq7PD4yaGbLKNQL6k2jnArV8hjYxh7hVhAZB6s9HDGpZA=="
     },
-    "react-router-dom@7.0.1_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-duBzwAAiIabhFPZfDjcYpJ+f08TMbPMETgq254GWne2NW1ZwRHhZLj7tpSp8KGb7JvZzlLcjGUnqLxpZQVEPng==",
+    "react-router-dom@7.1.3_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-qQGTE+77hleBzv9SIUIkGRvuFBQGagW+TQKy53UTZAO/3+YFNBYvRsNIZ1GT17yHbc63FylMOdS+m3oUriF1GA==",
       "dependencies": [
         "react",
         "react-dom",
         "react-router"
       ]
     },
-    "react-router@7.0.1_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
-      "integrity": "sha512-WVAhv9oWCNsja5AkK6KLpXJDSJCQizOIyOd4vvB/+eHGbYx5vkhcmcmwWjQ9yqkRClogi+xjEg9fNEOd5EX/tw==",
+    "react-router@7.1.3_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-EezYymLY6Guk/zLQ2vRA8WvdUhWFEj5fcE3RfWihhxXBW7+cd1LsIiA3lmx+KCmneAGQuyBv820o44L2+TtkSA==",
       "dependencies": [
         "@types/cookie",
         "cookie",
@@ -2093,9 +2041,6 @@
         "queue-microtask"
       ]
     },
-    "safe-stable-stringify@2.5.0": {
-      "integrity": "sha512-b3rppTKm9T+PsVCBEOUR46GWI7fdOs00VKZ1+9c1EWDaDMvjQc6tUwuFyIprgGgTcWoVHSKrU8H31ZHA2e0RHA=="
-    },
     "scheduler@0.23.2": {
       "integrity": "sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==",
       "dependencies": [
@@ -2166,8 +2111,8 @@
     "strip-json-comments@3.1.1": {
       "integrity": "sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig=="
     },
-    "stylis@4.3.4": {
-      "integrity": "sha512-osIBl6BGUmSfDkyH2mB7EFvCJntXDrLhKjHTRj/rK6xLH0yuPrHULDRQzKokSOD4VoorhtKpfcfW1GAntu8now=="
+    "stylis@4.3.5": {
+      "integrity": "sha512-K7npNOKGRYuhAFFzkzMGfxFDpN6gDwf8hcMiE+uveTVbBgm93HrNP3ZDUpKqzZ4pG7TP6fmb+EMAQPjq9FqqvA=="
     },
     "sucrase@3.35.0": {
       "integrity": "sha512-8EbVDiu9iN/nESwxeSxDKe0dunta1GOlHufmSSXxMD2z2/tMZpDMpvXQGsc+ajGo8y2uYUmixaSRUc/QPoQ0GA==",
@@ -2362,14 +2307,13 @@
     "packageJson": {
       "dependencies": [
         "npm:@ant-design/colors@^7.1.0",
-        "npm:@ant-design/icons@^5.5.1",
-        "npm:@ant-design/pro-card@^2.9.3",
+        "npm:@ant-design/icons@^5.6.0",
         "npm:@eslint/js@^9.13.0",
         "npm:@types/node@^22.10.1",
         "npm:@types/react-dom@^18.3.1",
-        "npm:@types/react@^18.3.12",
+        "npm:@types/react@^18.3.1",
         "npm:@vitejs/plugin-react@^4.3.3",
-        "npm:antd@^5.22.2",
+        "npm:antd@^5.23.3",
         "npm:dayjs@^1.11.13",
         "npm:dotenv@^16.4.5",
         "npm:eslint-plugin-react-hooks@5",

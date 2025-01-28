@@ -34,6 +34,12 @@ createRoot(document.getElementById("root")!).render(
         // make background color of collapse content the same as the base background color
         Collapse: { contentBg: bgPallette[1] },
         Divider: { lineWidth: 2, colorSplit: colorPrimary },
+        Menu: {
+          iconSize: 20,
+          fontSize: 20,
+          iconMarginInlineEnd: 15,
+          darkItemBg: bgPallette[3],
+        },
       },
     }}
   >

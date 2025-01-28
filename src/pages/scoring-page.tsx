@@ -7,7 +7,6 @@ import { LadderTab } from "../scoring-tabs/ladder-tab";
 import { GlobalStateContext } from "../utils/context-provider";
 import { useSearchParams } from "react-router-dom";
 import { DailyTab } from "../scoring-tabs/daily-tab";
-
 export const scoringTabs: { key: string; tab: JSX.Element }[] = [
   {
     key: "Ladder",
@@ -57,8 +56,14 @@ const ScoringPage = ({ tab }: ScoringPageProps) => {
       {isMobile ? null : (
         <Menu
           onClick={(info) => setSelectedTab(info.key)}
-          style={{ marginBottom: 20, marginTop: 5, userSelect: "none" }}
+          style={{
+            marginBottom: 20,
+            marginTop: 5,
+            userSelect: "none",
+            display: "flex",
+          }}
           mode="horizontal"
+          theme="dark"
           items={scoringTabs.map((tab) => ({
             key: tab.key,
             title: tab.key,
