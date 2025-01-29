@@ -159,9 +159,9 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
                       style={{ display: "flex", alignItems: "center" }}
                     >
                       {record[team.id] ? (
-                        <CheckCircleFilled style={{ color: green[4] }} />
+                        <CheckOutlined style={{ color: green[4] }} />
                       ) : (
-                        <CloseCircleFilled style={{ color: red[4] }} />
+                        <CloseOutlined style={{ color: red[4] }} />
                       )}
                       <span style={{ marginLeft: "8px" }}>{team.name}</span>
                     </div>
