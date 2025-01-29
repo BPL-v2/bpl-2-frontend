@@ -4,7 +4,7 @@ import { ScoreCategory, ScoreObjective } from "../types/score";
 import { getImageLocation } from "../types/scoring-objective";
 import { GlobalStateContext } from "../utils/context-provider";
 import { useContext } from "react";
-import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { red, green } from "@ant-design/colors";
 import { BPLEvent } from "../types/event";
 import { ObjectiveIcon } from "./objective-icon";
@@ -184,9 +184,9 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
         key: team.id.toString(),
         render: (finished: boolean) =>
           finished ? (
-            <CheckCircleFilled style={{ color: green[4] }} />
+            <CheckOutlined style={{ color: green[4] }} />
           ) : (
-            <CloseCircleFilled style={{ color: red[4] }} />
+            <CloseOutlined style={{ color: red[4] }} />
           ),
         sorter: (a: any, b: any) => {
           return a[team.id] === b[team.id] ? 0 : a[team.id] ? -1 : 1;

@@ -228,9 +228,10 @@ function App() {
                   borderRadius: "0",
                   borderWidth: "20px",
                   borderStyle: "solid",
-                  background: greyDark[2],
+                  background: greyDark[3],
                   fontSize: "2em",
                   fontWeight: "bold",
+                  fontFamily: "fantasy",
                   padding: "0px 40px 0px 20px",
                 }}
                 icon={
