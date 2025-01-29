@@ -82,7 +82,7 @@ export function MainPage() {
                 style={{
                   fontSize: "1.5em",
                   height: "60px",
-                  backgroundColor: "#7289DA",
+                  backgroundColor: "#5865F2",
                 }}
                 color="purple"
                 variant="solid"
