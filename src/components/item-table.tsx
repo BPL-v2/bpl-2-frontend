@@ -1,11 +1,10 @@
-import { Table, theme } from "antd";
-import { ColumnsType } from "antd/es/table";
+import { Button, Input, Table, theme } from "antd";
+import { ColumnsType, TableProps } from "antd/es/table";
 import { ScoreCategory, ScoreObjective } from "../types/score";
 import { getImageLocation } from "../types/scoring-objective";
 import { GlobalStateContext } from "../utils/context-provider";
-import { useContext } from "react";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import { red, green } from "@ant-design/colors";
+import { useContext, useState } from "react";
+import { cyanDark } from "@ant-design/colors";
 import { BPLEvent } from "../types/event";
 import { ObjectiveIcon } from "./objective-icon";
 
@@ -13,11 +12,12 @@ export type ItemTableProps = {
   category?: ScoreCategory;
   selectedTeam?: number;
   style?: React.CSSProperties;
+  tableProps?: TableProps<any>;
 };
 const { useToken } = theme;
 
-function imageOverlayedWithText(record: any) {
-  const img_location = getImageLocation(record.objective);
+function imageOverlayedWithText(record: any, gameVersion: "poe1" | "poe2") {
+  const img_location = getImageLocation(record.objective, gameVersion);
   if (!img_location) {
     return <></>;
   }
@@ -54,12 +54,44 @@ function imageOverlayedWithText(record: any) {
   );
 }
 
-export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
-  const { currentEvent, isMobile } = useContext(GlobalStateContext);
-  const token = useToken().token;
+export function ItemTable({
+  category,
+  selectedTeam,
+  style,
+  tableProps,
+}: ItemTableProps) {
+  const { currentEvent, isMobile, gameVersion } =
+    useContext(GlobalStateContext);
+  const [nameFilter, setNameFilter] = useState<string | undefined>();
   if (!currentEvent || !category) {
     return <></>;
   }
+  const [completionFilter, setCompletionFilter] = useState<{
+    [teamId: number]: number;
+  }>(
+    currentEvent.teams.reduce((acc: { [teamId: number]: number }, team) => {
+      acc[team.id] = 0;
+      return acc;
+    }, {})
+  );
+
+  const applyFilter = (row: any) => {
+    if (
+      nameFilter &&
+      !row.key.toLowerCase().includes(nameFilter.toLowerCase())
+    ) {
+      return false;
+    }
+    for (const teamId in completionFilter) {
+      if (completionFilter[teamId] === 1 && !row[teamId]) {
+        return false;
+      }
+      if (completionFilter[teamId] === 2 && row[teamId]) {
+        return false;
+      }
+    }
+    return true;
+  };
 
   const variantMap = category.sub_categories
     .filter((subCategory) => subCategory.name.includes("Variants"))
@@ -71,11 +103,13 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
 
   const tableRows = category.objectives.map((objective) => {
     const row = {
-      key: objective.id,
+      key: objective.name,
       name: objective.extra ? (
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div>{objective.name}</div>
-          <span style={{ color: token.colorPrimary }}>[{objective.extra}]</span>
+          <span style={{ color: useToken().token.colorPrimary }}>
+            [{objective.extra}]
+          </span>
         </div>
       ) : (
         objective.name
@@ -94,15 +128,13 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
       row.name = (
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div>{objective.name}</div>
-          <span style={{ color: token.colorPrimary }}>
-            [Click to toggle Variants]
-          </span>
+          <span style={{ color: cyanDark[5] }}>[Click to toggle Variants]</span>
         </div>
       );
       // @ts-ignore - too lazy to fix it just works okay?!?!?
       row.children = variantMap[objective.name].map((variant) => {
         return {
-          key: variant.id,
+          key: variant.name,
           name: variant.extra,
         };
       });
@@ -121,11 +153,18 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
           },
         ]),
     {
-      title: "Name",
+      title: (
+        <Input
+          placeholder="Name"
+          allowClear
+          onChange={(e) => setNameFilter(e.target.value)}
+        ></Input>
+      ),
+
       key: "name",
       render: (record: any) => {
         if (isMobile) {
-          return imageOverlayedWithText(record);
+          return imageOverlayedWithText(record, gameVersion);
         }
         return record.name;
       },
@@ -158,11 +197,7 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
                       key={team.id + "_" + record.id}
                       style={{ display: "flex", alignItems: "center" }}
                     >
-                      {record[team.id] ? (
-                        <CheckOutlined style={{ color: green[4] }} />
-                      ) : (
-                        <CloseOutlined style={{ color: red[4] }} />
-                      )}
+                      {record[team.id] ? "✅" : "❌"}
                       <span style={{ marginLeft: "8px" }}>{team.name}</span>
                     </div>
                   );
@@ -179,35 +214,55 @@ export function ItemTable({ category, selectedTeam, style }: ItemTableProps) {
         a.id === selectedTeam ? -1 : b.id === selectedTeam ? 1 : 0
       )
       .map((team) => ({
-        title: team.name,
+        title: (
+          <>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <div>{team.name}</div>
+              <Button
+                style={{ marginLeft: 8 }}
+                icon={[null, "✅", "❌"][completionFilter[team.id]]}
+                onClick={(e) => {
+                  const newFilter = { ...completionFilter };
+                  newFilter[team.id] = (newFilter[team.id] + 1) % 3;
+                  setCompletionFilter(newFilter);
+                  e.stopPropagation();
+                }}
+              ></Button>
+            </div>
+          </>
+        ),
         dataIndex: team.id.toString(),
         key: team.id.toString(),
-        render: (finished: boolean) =>
-          finished ? (
-            <CheckOutlined style={{ color: green[4] }} />
-          ) : (
-            <CloseOutlined style={{ color: red[4] }} />
-          ),
+        render: (finished: boolean) => (finished ? "✅" : "❌"),
         sorter: (a: any, b: any) => {
           return a[team.id] === b[team.id] ? 0 : a[team.id] ? -1 : 1;
         },
       }));
   }
+
   return (
-    <Table
-      columns={tableColumns}
-      dataSource={tableRows}
-      pagination={false}
-      style={{ ...style }}
-      showSorterTooltip={false}
-      size="small"
-      scroll={{ y: 600 }}
-      expandable={{
-        expandRowByClick: true,
-        expandIcon: () => null,
-        expandedRowClassName: () => "expanded-row",
-      }}
-      rowClassName={(record) => (record.children ? "clickable" : "")}
-    />
+    <>
+      <Table
+        columns={tableColumns}
+        dataSource={tableRows.filter(applyFilter)}
+        style={{ ...style }}
+        showSorterTooltip={false}
+        size="small"
+        expandable={{
+          expandRowByClick: true,
+          expandIcon: () => null,
+          expandedRowClassName: () => "expanded-row",
+        }}
+        rowClassName={(record) => (record.children ? "clickable" : "")}
+        pagination={{ position: ["bottomRight"] }}
+        {...tableProps}
+      />
+    </>
   );
 }

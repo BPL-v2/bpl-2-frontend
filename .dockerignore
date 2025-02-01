@@ -4,3 +4,5 @@ dist
 Dockerfile
 .dockerignore
 icon-generation
+.github
+.env

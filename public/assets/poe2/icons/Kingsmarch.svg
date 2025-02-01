@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg version="1.1" id="svg1" width="266.66666" height="266.66666" viewBox="0 0 266.66666 266.66666" sodipodi:docname="Kingsmarch.svg" inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+   <defs id="defs1" />
+   <sodipodi:namedview id="namedview1" pagecolor="#ffffff" bordercolor="#000000" borderopacity="0.25" inkscape:showpageshadow="2" inkscape:pageopacity="0.0" inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1" inkscape:zoom="1.6135293" inkscape:cx="-36.875685" inkscape:cy="106.9085" inkscape:window-width="2560" inkscape:window-height="1494" inkscape:window-x="-11" inkscape:window-y="-11" inkscape:window-maximized="1" inkscape:current-layer="g1" />
+   <g inkscape:groupmode="layer" inkscape:label="Image" id="g1" transform="matrix(1.0916514,0,0,1.0916514,-13.565955,-9.7590948)">
+      <path id="path5" style="fill:#656565;fill-opacity:1;stroke:#e5e5e5;stroke-linejoin:round;stroke-dashoffset:2.26667;paint-order:markers fill stroke;stroke-width:1.83208669;stroke-dasharray:none" d="m 115.90682,92.454084 a 8.8742809,8.8742809 0 0 1 -8.52479,9.210056 8.8742809,8.8742809 0 0 1 -9.210519,-8.524289 8.8742809,8.8742809 0 0 1 8.523789,-9.210982 8.8742809,8.8742809 0 0 1 9.21144,8.523288 m 7.29248,-70.758798 V 45.466797 H 54.341797 V 215.83203 H 86.771484 L 72.144531,201.80859 V 100.57422 l 61.189449,115.25781 60.14649,-115.25781 v 104.51953 l -13.14649,10.73828 h 31.77149 V 45.466797 H 138.91992 V 21.693359 Z M 72.144531,65.736328 H 123.19922 V 167.89844 Z m 66.775389,0 H 194.4668 L 176.5,98.822266 h -37.58008 z m 27.3125,51.929692 -27.3125,50.23242 v -50.01367 z" />
+      <path id="path6" style="fill:#656565;fill-opacity:1;stroke:#e5e5e5;stroke-width:1.83208669;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:2.26667;paint-order:markers fill stroke" d="M 129.87695,15.195312 A 121.00594,114.49938 0 0 0 13.650391,134.03906 121.00594,114.49938 0 0 0 139.24219,244.02148 121.00594,114.49938 0 0 0 255.48242,125.19141 l -0.002,-0.0254 A 121.00594,114.49938 0 0 0 129.87695,15.195312 Z m -0.74804,13.335938 a 108.52351,102.68813 0 0 1 112.64648,98.62695 v 0.0215 A 108.52351,102.68813 0 0 1 137.52734,233.75391 108.52351,102.68813 0 0 1 24.890625,135.11523 108.52351,102.68813 0 0 1 129.12891,28.53125 Z" />
+   </g>
+</svg>

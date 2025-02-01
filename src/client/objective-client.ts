@@ -1,4 +1,10 @@
-import { ScoringObjective } from "../types/scoring-objective";
+import {
+  ItemField,
+  NumberField,
+  ObjectiveType,
+  Operator,
+  ScoringObjective,
+} from "../types/scoring-objective";
 import { fetchWrapper } from "./base";
 
 export async function getObjectiveById(
@@ -30,6 +36,41 @@ export async function createObjective(
     "/scoring/objectives",
     "PUT",
     data
+  );
+}
+export async function createBulkItemObjectives(
+  categoryId: number,
+  nameList: string,
+  scoring_preset_id: number,
+  aggregation_method: string,
+  field: ItemField
+) {
+  const objectives = nameList.split(",").map((name) => {
+    return {
+      name: name.trim(),
+      required_number: 1,
+      objective_type: ObjectiveType.ITEM,
+      aggregation: aggregation_method,
+      number_field: NumberField.STACK_SIZE,
+      scoring_preset_id: scoring_preset_id,
+      category_id: categoryId,
+      conditions: [
+        {
+          field: field,
+          operator: Operator.EQ,
+          value: name,
+        },
+      ],
+    };
+  });
+  await Promise.all(
+    objectives.map(async (objective) => {
+      return fetchWrapper<Partial<ScoringObjective>>(
+        "/scoring/objectives",
+        "PUT",
+        objective
+      );
+    })
   );
 }
 

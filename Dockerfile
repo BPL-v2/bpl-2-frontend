@@ -7,7 +7,9 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 
 # Copy package.json and package-lock.json to install dependencies
+COPY deno.lock ./
 COPY package*.json ./
+
 
 # Install dependencies
 RUN npm install
@@ -17,7 +19,8 @@ COPY . .
 ARG VITE_BACKEND_URL
 ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
 RUN echo "VITE_BACKEND_URL=${VITE_BACKEND_URL}" > .env
-RUN ./generate_file_structure.sh
+## used for enumerating public images - but not really needed
+# RUN ./generate_file_structure.sh
 
 # Build the application
 RUN npm run build

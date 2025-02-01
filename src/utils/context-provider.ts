@@ -18,6 +18,8 @@ export type GlobalState = {
   setUsers: (c: MinimalUser[]) => void;
   isMobile: boolean;
   setIsMobile: (c: boolean) => void;
+  gameVersion: "poe1" | "poe2";
+  setGameVersion: (c: "poe1" | "poe2") => void;
 };
 
 export const GlobalStateContext = createContext<GlobalState>({
@@ -35,6 +37,8 @@ export const GlobalStateContext = createContext<GlobalState>({
   setUsers: () => {},
   isMobile: false,
   setIsMobile: () => {},
+  gameVersion: "poe2",
+  setGameVersion: () => {},
 });
 
 export const ContextProvider = GlobalStateContext.Provider;

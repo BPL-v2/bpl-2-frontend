@@ -1,20 +1,38 @@
+import { useContext } from "react";
 import { ScoreObjective } from "../types/score";
 import {
   getImageLocation,
   getItemName,
   ScoringObjective,
 } from "../types/scoring-objective";
+import { GlobalStateContext } from "../utils/context-provider";
 
 export type ObjectiveIconProps = {
   objective: ScoreObjective | ScoringObjective;
 };
 
 export function ObjectiveIcon({ objective }: ObjectiveIconProps) {
-  const img_location = getImageLocation(objective);
+  const { gameVersion } = useContext(GlobalStateContext);
+  const img_location = getImageLocation(objective, gameVersion);
   const itemName = getItemName(objective);
   if (!img_location) {
     return <></>;
   }
+  let wikilink: string | undefined = undefined;
+  if (itemName) {
+    if (gameVersion === "poe1") {
+      wikilink = `https://www.poewiki.net/wiki/${itemName.replaceAll(
+        " ",
+        "_"
+      )}`;
+    } else {
+      wikilink = `https://www.poe2wiki.net/wiki/${itemName.replaceAll(
+        " ",
+        "_"
+      )}`;
+    }
+  }
+
   return (
     <a
       style={{
@@ -24,11 +42,7 @@ export function ObjectiveIcon({ objective }: ObjectiveIconProps) {
         height: "3.5em",
         cursor: itemName ? "pointer" : "default",
       }}
-      href={
-        itemName
-          ? `https://www.poe2wiki.net/wiki/${itemName.replaceAll(" ", "_")}`
-          : undefined
-      }
+      href={wikilink}
       target="_blank"
     >
       <img

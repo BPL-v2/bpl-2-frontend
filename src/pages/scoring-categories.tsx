@@ -21,7 +21,11 @@ import {
   DatePicker,
 } from "antd";
 import { router } from "../router";
-import { createObjective, deleteObjective } from "../client/objective-client";
+import {
+  createBulkItemObjectives,
+  createObjective,
+  deleteObjective,
+} from "../client/objective-client";
 import {
   AggregationType,
   availableAggregationTypes,
@@ -199,6 +203,8 @@ const ScoringCategoryPage: React.FC = () => {
   let { categoryId } = useParams();
   let [categoryName, setCategoryName] = React.useState("");
   const [isObjectiveModalOpen, setIsObjectiveModalOpen] = useState(false);
+  const [isBulkObjectiveModalOpen, setIsBulkObjectiveModalOpen] =
+    useState(false);
   const [isConditionModalOpen, setIsConditionModalOpen] = useState(false);
   const [scoringPresets, setScoringPresets] = useState<ScoringPreset[]>([]);
   const [refreshObjectives, setRefreshObjectives] = useState(false);
@@ -208,6 +214,7 @@ const ScoringCategoryPage: React.FC = () => {
   >({});
   const objectiveFormRef = useRef<FormInstance>(null);
   const conditionFormRef = useRef<FormInstance>(null);
+  const bulkObjectiveFormRef = useRef<FormInstance>(null);
 
   useEffect(() => {
     if (objectiveFormRef.current) {
@@ -272,6 +279,7 @@ const ScoringCategoryPage: React.FC = () => {
               {data.map((category) => {
                 return (
                   <Button
+                    style={{ margin: "2px" }}
                     key={category.id}
                     onClick={() => {
                       router.navigate("/scoring-categories/" + category.id);
@@ -296,8 +304,8 @@ const ScoringCategoryPage: React.FC = () => {
             return { label: preset.name, value: preset.id };
           }),
         editable: true,
-        render: (_, category) => {
-          return category.scoring_preset?.name || "";
+        render: (id) => {
+          return scoringPresets.find((preset) => preset.id === id)?.name;
         },
       },
     ],
@@ -459,6 +467,14 @@ const ScoringCategoryPage: React.FC = () => {
         >
           Create new Objective
         </Button>
+        <Button
+          onClick={() => {
+            setIsBulkObjectiveModalOpen(true);
+          }}
+          type="primary"
+        >
+          Create Bulk Objectives
+        </Button>
       </>
     );
   }, [objectiveColumns, categoryId, refreshObjectives]);
@@ -487,6 +503,72 @@ const ScoringCategoryPage: React.FC = () => {
     );
   }, [categoryColumns, categoryId]);
 
+  let bulkObjeciveModal = useMemo(() => {
+    return (
+      <Modal
+        title={`Bulk Objective Creation`}
+        open={isBulkObjectiveModalOpen}
+        onOk={() => bulkObjectiveFormRef.current?.submit()}
+        onCancel={() => {
+          setIsBulkObjectiveModalOpen(false);
+        }}
+      >
+        <Form
+          ref={bulkObjectiveFormRef}
+          onFinish={() => {
+            createBulkItemObjectives(
+              Number(categoryId),
+              bulkObjectiveFormRef.current?.getFieldValue("name_list"),
+              bulkObjectiveFormRef.current?.getFieldValue("scoring_method"),
+              bulkObjectiveFormRef.current?.getFieldValue("aggregation_method"),
+              bulkObjectiveFormRef.current?.getFieldValue("identifier")
+            ).then(() => {
+              setIsBulkObjectiveModalOpen(false);
+              setRefreshObjectives((prev) => !prev);
+            });
+          }}
+        >
+          <Form.Item name="name_list" label="Comma separated list of names">
+            <Input />
+          </Form.Item>
+          <Form.Item name="identifier" label="Identifier">
+            <Select>
+              <Select.Option key="NAME" value="NAME">
+                NAME
+              </Select.Option>
+              <Select.Option key="BASE_TYPE" value="BASE_TYPE">
+                BASE_TYPE
+              </Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item name="scoring_method" label="Scoring Method">
+            <Select>
+              {scoringPresets
+                .filter((preset) => preset.type == ScoringPresetType.OBJECTIVE)
+                .map((preset) => {
+                  return (
+                    <Select.Option key={preset.id} value={preset.id}>
+                      {preset.name}
+                    </Select.Option>
+                  );
+                })}
+            </Select>
+          </Form.Item>
+          <Form.Item name="aggregation_method" label="Aggregation Method">
+            <Select>
+              {Object.values(AggregationType).map((type) => {
+                return (
+                  <Select.Option key={type} value={type}>
+                    {type}
+                  </Select.Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+    );
+  }, [isBulkObjectiveModalOpen]);
   let objectiveModal = useMemo(() => {
     return (
       <Modal
@@ -786,6 +868,7 @@ const ScoringCategoryPage: React.FC = () => {
   return (
     <>
       {objectiveModal}
+      {bulkObjeciveModal}
       {conditionModal}
       <Typography.Title level={1}>
         {"Category " + categoryName}{" "}

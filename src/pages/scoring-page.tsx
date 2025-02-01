@@ -7,6 +7,8 @@ import { LadderTab } from "../scoring-tabs/ladder-tab";
 import { GlobalStateContext } from "../utils/context-provider";
 import { useSearchParams } from "react-router-dom";
 import { DailyTab } from "../scoring-tabs/daily-tab";
+import { HeistTab } from "../scoring-tabs/heist-tab";
+import { GemTab } from "../scoring-tabs/gem-tab";
 export const scoringTabs: { key: string; tab: JSX.Element }[] = [
   {
     key: "Ladder",
@@ -31,6 +33,14 @@ export const scoringTabs: { key: string; tab: JSX.Element }[] = [
   {
     key: "Dailies",
     tab: <DailyTab />,
+  },
+  {
+    key: "Heist",
+    tab: <HeistTab />,
+  },
+  {
+    key: "Gems",
+    tab: <GemTab />,
   },
 ];
 
