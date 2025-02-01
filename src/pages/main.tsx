@@ -51,7 +51,8 @@ function countDownFormat(timeString: string): string {
 }
 
 export function MainPage() {
-  const { currentEvent, isMobile } = useContext(GlobalStateContext);
+  const { currentEvent, isMobile, gameVersion } =
+    useContext(GlobalStateContext);
 
   const now = Date.now();
 
@@ -219,7 +220,7 @@ export function MainPage() {
                               size={80}
                               key={className}
                               shape="circle"
-                              src={`/assets/ascendancies/thumbnails/${className.replaceAll(
+                              src={`/assets/${gameVersion}/ascendancies/thumbnails/${className.replaceAll(
                                 " ",
                                 "_"
                               )}.png`}

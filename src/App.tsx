@@ -74,6 +74,7 @@ function App() {
   const [users, setUsers] = useState<MinimalUser[]>([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [gameVersion, setGameVersion] = useState<"poe1" | "poe2">("poe2");
   useEffect(() => {
     const items = [
       {
@@ -202,6 +203,8 @@ function App() {
           setUsers: setUsers,
           isMobile: isMobile,
           setIsMobile: setIsMobile,
+          gameVersion: gameVersion,
+          setGameVersion: setGameVersion,
         }}
       >
         {" "}

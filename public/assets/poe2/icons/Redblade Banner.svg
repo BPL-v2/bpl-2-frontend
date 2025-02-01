@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg version="1.1" id="svg1" width="200" height="200" viewBox="0 0 200 200" sodipodi:docname="Redblade Banner.svg" inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+   <defs id="defs1">
+      <linearGradient id="linearGradient1" inkscape:collect="always">
+         <stop style="stop-color:#2d1900;stop-opacity:1;" offset="0" id="stop1" />
+         <stop style="stop-color:#b25d01;stop-opacity:1;" offset="1" id="stop2" />
+      </linearGradient>
+      <linearGradient inkscape:collect="always" xlink:href="#linearGradient1" id="linearGradient2" x1="29.448724" y1="148.13633" x2="290.4726" y2="148.13633" gradientUnits="userSpaceOnUse" />
+   </defs>
+   <sodipodi:namedview id="namedview1" pagecolor="#ffffff" bordercolor="#000000" borderopacity="0.25" inkscape:showpageshadow="2" inkscape:pageopacity="0.0" inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1" inkscape:zoom="2.7581697" inkscape:cx="98.072283" inkscape:cy="185.44907" inkscape:window-width="2560" inkscape:window-height="1494" inkscape:window-x="-11" inkscape:window-y="-11" inkscape:window-maximized="1" inkscape:current-layer="g1" />
+   <g inkscape:groupmode="layer" inkscape:label="Image" id="g1" transform="matrix(0.76780126,0,0,0.76780126,-22.821683,-13.428674)">
+      <path style="fill:url(#linearGradient2);fill-opacity:1;stroke:#fffacc;stroke-width:2.60484074;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:2.26667;paint-order:markers fill stroke" d="m 41.582678,189.55821 c -4.489269,23.58909 -7.680662,48.15158 -10.831551,72.74445 l 88.866533,2.07816 1.22942,-6.3541 9.99435,-1.0788 1.04369,-9.84017 8.00696,-0.76911 0.39233,-21.658 61.7847,-59.22103 44.80033,-15.95892 19.41989,2.88414 -0.38455,-13.84387 23.26541,4.0378 -3.52507,-64.284308 -43.32621,-5.896467 -20.76582,-40.506168 -49.47904,15.894827 -0.0641,15.317994 -9.74198,2.563682 -2.37141,20.95809 -76.750234,76.87836 -24.643381,8.62038 -0.769104,6.92194 -7.946075,1.15876 -2.05228,7.30138 z" id="path1" inkscape:label="shieldbase" sodipodi:nodetypes="cccccccccccccccccccccccccc" />
+      <path id="path5" style="fill:#6f4329;fill-opacity:0;stroke:#fffacc;stroke-width:2.60484074;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:2.26667;paint-order:markers fill stroke" d="m 98.948982,200.561 -40.289389,4.21476 -5.846281,38.83916 44.45884,-0.2266 z M 245.06037,76.565741 l 36.61848,5.438389 2.35664,53.47749 -66.52963,-9.97038 -6.20748,31.70729 -52.16456,-0.88976 -2.58324,35.57614 -41.3473,6.28902 -2.06916,61.05636 -75.004454,-2.22067 9.33591,-63.44788 54.064754,-9.06076 5.89347,-41.74285 35.93869,-2.22069 5.43839,-37.70615 28.75875,-12.371949 0.29186,-38.426563 42.68869,-13.469674 9.83654,33.813207 z" inkscape:label="details" sodipodi:nodetypes="ccccccccccccccccccccccccc" />
+      <path style="fill:#910707;fill-opacity:1;stroke:#fffacc;stroke-width:2.60484074;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:2.26667;paint-order:markers fill stroke" d="m 267.26712,75.749984 -30.72689,16.768368 -49.67063,21.934828 -58.82523,28.18898 -50.758305,24.47276 3.806872,-9.24526 10.786143,-11.32998 10.15165,-9.60782 5.98223,-5.43839 16.04325,-16.76837 8.15758,-9.06398 7.43247,-12.327013 5.89159,-7.341828 88.1019,-42.781988 11.69254,10.604859 5.80095,0.906398 12.68957,11.601894 z" id="path2" inkscape:label="cloak2" />
+      <path style="fill:#910707;fill-opacity:1;stroke:#fffacc;stroke-width:2.60484074;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:2.26667;paint-order:markers fill stroke" d="m 221.67529,29.795596 -35.80272,153.997054 14.59301,-13.50534 6.61671,-0.99703 2.80983,3.53495 13.4147,-5.43839 24.29146,1.63152 -9.3359,-60.27548 -0.18128,-27.73579 3.17239,-34.171208 -2.71919,-8.882702 -5.52903,-4.803909 -6.07287,-2.809835 z" id="path3" inkscape:label="cloak1" />
+   </g>
+</svg>

@@ -1,4 +1,4 @@
-import { Progress, Statistic, theme, Tooltip } from "antd";
+import { Progress, theme, Tooltip } from "antd";
 import { ScoreLite, ScoreObjective } from "../types/score";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
@@ -78,14 +78,9 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
                   }}
                 >
                   <Tooltip title={finishTooltip(objective, score)}>
-                    <Statistic
-                      valueStyle={{
-                        fontSize: "1em",
-                        color: percent >= 100 ? green[4] : red[4],
-                      }}
-                      value={score.points}
-                      // suffix={"pt."}
-                    />
+                    <div style={{ color: percent >= 100 ? green[4] : red[4] }}>
+                      {score.points}
+                    </div>
                   </Tooltip>
                 </td>
                 <td

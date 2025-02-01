@@ -221,16 +221,64 @@ export type ScoringObjectiveUpdate = {
   scoring_id?: number;
 };
 
-var anomalousUniques: { [key: string]: { [key: string]: string } } = {
-  "Grand Spectrum": {
-    Ruby: "GrandSpectrum_Ruby",
-    Emerald: "GrandSpectrum_Emerald",
-    Sapphire: "GrandSpectrum_Sapphire",
+var anomalousUniques: {
+  [gameVersion: string]: { [key: string]: { [key: string]: string } };
+} = {
+  poe1: {
+    "Grand Spectrum": {
+      "Elemental Resistances": "RedGrandSpectrum",
+      "Minimum Endurance Charges": "GrandSpectrum3_Red",
+      "Minimum Frenzy Charges": "GrandSpectrum3_Green",
+      "Minimum Power Charges": "GrandSpectrum3_Blue",
+      Life: "GrandSpectrum2_red",
+      "Critical Strike Chance": "BlueGrandSpectrum",
+      "Minion Critical Strike Multiplier": "GrandSpectrum2_blue",
+      "Elemental Damage": "GreenGrandSpectrum",
+      "Avoid Elemental Ailments": "GrandSpectrum2_Green",
+    },
+    Impresence: {
+      Cold: "ElderCold",
+      Fire: "ElderFire",
+      Lightning: "ElderLightning",
+      Chaos: "ElderChaos",
+      Physical: "ElderPhysical",
+    },
+    "Doryani's Delusion": {
+      "Titan Greaves": "DoriyanisRed",
+      "Sorcerer Boots": "DoriyanisBlue",
+      "Slink Boots": "DoriyanisGreen",
+    },
+    "Precursor's Emblem": {
+      Strength: "CombinedRedRing",
+      Dexterity: "CombinedGreenRing",
+      Intelligence: "CombinedBlueRing",
+      "Strength and Intelligence": "CombinedRedBlueRing",
+      "Strength and Dexterity": "CombinedRedGreenRing",
+      "Dexterity and Intelligence": "CombinedGreenBlueRing",
+      "All Attributes": "CombinedPrismaticRing",
+    },
+    "Combat Focus": {
+      "Cobalt Jewel": "ElementalHitFire",
+      "Viridian Jewel": "ElementalHitLightening",
+      "Crimson Jewel": "ElementalHitCold",
+    },
+    "The Beachhead": {
+      T5: "HarbingerWhite",
+      T10: "HarbingerYellow",
+      T15: "HarbingerRed",
+    },
   },
-  "Sekhema's Resolve": {
-    Cold: "RimeveilSeal",
-    Fire: "EmberheartSeal",
-    Lightning: "StormforgedSeal",
+  poe2: {
+    "Grand Spectrum": {
+      Ruby: "GrandSpectrum_Ruby",
+      Emerald: "GrandSpectrum_Emerald",
+      Sapphire: "GrandSpectrum_Sapphire",
+    },
+    "Sekhema's Resolve": {
+      Cold: "RimeveilSeal",
+      Fire: "EmberheartSeal",
+      Lightning: "StormforgedSeal",
+    },
   },
 };
 
@@ -245,18 +293,26 @@ export function getItemName(
     return null;
   }
   for (const condition of objective.conditions) {
-    if (
-      condition.field === ItemField.NAME &&
-      condition.operator === Operator.EQ
-    ) {
-      return condition.value;
+    if (condition.field === ItemField.NAME) {
+      if (condition.operator === Operator.EQ) {
+        return condition.value;
+      } else if (condition.operator === Operator.IN) {
+        return condition.value.split(",")[0];
+      }
+    } else if (condition.field === ItemField.BASE_TYPE) {
+      if (condition.operator === Operator.EQ) {
+        return condition.value;
+      } else if (condition.operator === Operator.IN) {
+        return condition.value.split(",")[0];
+      }
     }
   }
   return null;
 }
 
 export function getImageLocation(
-  objective: ScoreObjective | ScoringObjective
+  objective: ScoreObjective | ScoringObjective,
+  gameVersion: "poe1" | "poe2"
 ): string | null {
   if (
     !objective ||
@@ -271,33 +327,37 @@ export function getImageLocation(
     base_type: undefined,
   };
   for (const condition of objective.conditions) {
-    if (
-      condition.field === ItemField.NAME &&
-      condition.operator === Operator.EQ
-    ) {
-      attributes.name = condition.value;
-    } else if (
-      condition.field === ItemField.BASE_TYPE &&
-      condition.operator === Operator.EQ
-    ) {
-      attributes.base_type = condition.value;
+    if (condition.field === ItemField.NAME) {
+      if (condition.operator === Operator.EQ) {
+        attributes.name = condition.value;
+      } else if (condition.operator === Operator.IN) {
+        attributes.name = condition.value.split(",")[0];
+      }
+    } else if (condition.field === ItemField.BASE_TYPE) {
+      if (condition.operator === Operator.EQ) {
+        attributes.base_type = condition.value;
+      } else if (condition.operator === Operator.IN) {
+        attributes.base_type = condition.value.split(",")[0];
+      }
     }
   }
   if (attributes.name) {
-    const anomaly = anomalousUniques[attributes.name];
+    const anomaly = anomalousUniques[gameVersion][attributes.name];
     if (anomaly) {
-      return "/assets/items/uniques/" + anomaly[objective.extra] + ".webp";
+      return `/assets/${gameVersion}/items/uniques/${
+        anomaly[objective.extra] || Object.values(anomaly)[0]
+      }.webp`;
     }
-    return (
-      "/assets/items/uniques/" + attributes.name.replaceAll(" ", "_") + ".webp"
-    );
+    return `/assets/${gameVersion}/items/uniques/${attributes.name.replaceAll(
+      " ",
+      "_"
+    )}.webp`;
   }
   if (attributes.base_type) {
-    return (
-      "/assets/items/basetypes/" +
-      attributes.base_type.replaceAll(" ", "_") +
-      ".webp"
-    );
+    return `/assets/${gameVersion}/items/basetypes/${attributes.base_type.replaceAll(
+      " ",
+      "_"
+    )}.webp`;
   }
   return null;
 }

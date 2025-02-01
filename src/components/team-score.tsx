@@ -1,4 +1,4 @@
-import { Avatar, Card, theme, Typography } from "antd";
+import { Card, theme, Typography } from "antd";
 import Meta from "antd/es/card/Meta";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
@@ -56,19 +56,54 @@ const TeamScore = ({
               },
             }}
           >
+            {/* <Space direction={"horizontal"}>
+              <img
+                style={{
+                  width: 120,
+                  height: 120,
+                }}
+                src={`/assets/teams/${currentEvent.name
+                  .toLowerCase()
+                  .replaceAll(
+                    " ",
+                    "_"
+                  )}/${team.name.toLowerCase()}/logo-w-name.svg`}
+              />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography.Text level={4}>{team.name}</Typography.Text>
+                <Typography.Text>
+                  {`Score: ${teamScores[team.id]} / ${
+                    potentialScores[team.id]
+                  }`}
+                </Typography.Text>
+              </div>
+            </Space> */}
+
             <Meta
               avatar={
                 !isMobile ? (
-                  <Avatar
-                    size={96}
-                    shape="square"
-                    src={`/assets/teams/${currentEvent.name
-                      .toLowerCase()
-                      .replaceAll(
-                        " ",
-                        "_"
-                      )}/${team.name.toLowerCase()}/logo-w-name.svg`}
-                  />
+                  <div
+                    style={{
+                      width: 96,
+                      height: 96,
+                      display: "inline-flex",
+                    }}
+                  >
+                    <img
+                      src={`/assets/teams/${currentEvent.name
+                        .toLowerCase()
+                        .replaceAll(
+                          " ",
+                          "_"
+                        )}/${team.name.toLowerCase()}/logo-w-name.svg`}
+                    />
+                  </div>
                 ) : null
               }
               title={team.name}
