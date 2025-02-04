@@ -45,3 +45,18 @@ export function getSubCategory(
   }
   return undefined;
 }
+
+export function getRootCategoryNames(gameVersion: "poe1" | "poe2"): string[] {
+  if (gameVersion === "poe1") {
+    return [
+      "Uniques",
+      "Races",
+      "Bounties",
+      "Collections",
+      "Dailies",
+      "Heist",
+      "Gems",
+    ];
+  }
+  return ["Uniques", "Races", "Bounties", "Collections", "Dailies"];
+}

@@ -1,7 +1,10 @@
 import { Divider, Flex, Table, Tag } from "antd";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
-import { getSubCategory } from "../types/scoring-category";
+import {
+  getRootCategoryNames,
+  getSubCategory,
+} from "../types/scoring-category";
 import { Team } from "../types/team";
 import { getTotalPoints } from "../utils/utils";
 import { ColumnsType } from "antd/es/table";
@@ -31,13 +34,7 @@ export function LadderTab() {
     },
     {}
   );
-  const categoryNames = [
-    "Uniques",
-    "Races",
-    "Bounties",
-    "Collections",
-    "Dailies",
-  ];
+  const categoryNames = getRootCategoryNames(currentEvent.game_version);
   const categories = categoryNames.map((categoryName) =>
     getSubCategory(scores, categoryName)
   );

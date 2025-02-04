@@ -34,6 +34,15 @@ const columns: CrudColumn<BPLEvent>[] = [
     render: (_, event) => (event.is_current ? "Yes" : "No"),
   },
   {
+    title: "Game Version",
+    dataIndex: "game_version",
+    key: "game_version",
+    type: "select",
+    editable: true,
+    options: ["poe1", "poe2"],
+    required: true,
+  },
+  {
     title: "Application Start",
     dataIndex: "application_start_time",
     key: "application_start_time",
@@ -71,20 +80,39 @@ const columns: CrudColumn<BPLEvent>[] = [
 ];
 
 const EventPage: React.FC = () => {
-  const { user } = useContext(GlobalStateContext);
+  const { user, events, setEvents } = useContext(GlobalStateContext);
   if (!user || !user.permissions.includes(UserPermission.ADMIN)) {
     return <div>You do not have permission to view this page</div>;
   }
 
+  const createEventWrapper = async (data: Partial<BPLEvent>) => {
+    const newEvent = await createEvent(data);
+    setEvents([...events, newEvent]);
+    return newEvent;
+  };
+
+  const deleteEventWrapper = async (data: Partial<BPLEvent>) => {
+    await deleteEvent(data);
+    setEvents(events.filter((event) => event.id !== data.id));
+  };
+
+  const editEventWrapper = async (data: Partial<BPLEvent>) => {
+    const newEvent = await createEvent(data);
+    setEvents(
+      events.map((event) => (event.id === newEvent.id ? newEvent : event))
+    );
+    return newEvent;
+  };
+
   return (
-    <div className="">
+    <div>
       <CrudTable<BPLEvent>
         resourceName="Event"
         columns={columns}
         fetchFunction={fetchAllEvents}
-        createFunction={createEvent}
-        editFunction={createEvent}
-        deleteFunction={deleteEvent}
+        createFunction={createEventWrapper}
+        editFunction={editEventWrapper}
+        deleteFunction={deleteEventWrapper}
         addtionalActions={[
           {
             name: "Teams",
@@ -94,13 +122,13 @@ const EventPage: React.FC = () => {
             name: "Scoring Categories",
             func: async (data) =>
               router.navigate(
-                "/scoring-categories/" + data.scoring_category_id
+                `/events/${data.id}/scoring-categories/${data.scoring_category_id}`
               ),
           },
           {
             name: "Scoring Presets",
             func: async (data) =>
-              router.navigate("/scoring-presets/" + data.id),
+              router.navigate(`/events/${data.id}/scoring-presets/`),
           },
         ]}
       />

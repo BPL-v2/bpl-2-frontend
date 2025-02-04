@@ -42,7 +42,12 @@ export function CollectionTab() {
               }}
             >
               <Meta
-                avatar={<ObjectiveIcon objective={objective} />}
+                avatar={
+                  <ObjectiveIcon
+                    objective={objective}
+                    gameVersion={currentEvent.game_version}
+                  />
+                }
                 style={{
                   height: "100%",
                   maxHeight: "60px",

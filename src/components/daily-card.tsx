@@ -115,7 +115,12 @@ export function DailyCard({ daily }: DailyCardProps) {
       }}
     >
       <Meta
-        avatar={<ObjectiveIcon objective={daily.baseObjective} />}
+        avatar={
+          <ObjectiveIcon
+            objective={daily.baseObjective}
+            gameVersion={currentEvent.game_version}
+          />
+        }
         style={{
           height: "100%",
           maxHeight: "60px",

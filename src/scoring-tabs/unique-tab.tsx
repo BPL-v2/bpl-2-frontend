@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { Card, Divider, Typography, theme } from "antd";
 import Meta from "antd/es/card/Meta";
@@ -21,6 +21,17 @@ const UniqueTab: React.FC = () => {
   }, [eventStatus]);
   const uniqueCategory = getSubCategory(scores, "Uniques");
   const token = useToken().token;
+  const table = useMemo(() => {
+    if (!selectedCategory) {
+      return <></>;
+    }
+    return (
+      <ItemTable
+        category={selectedCategory}
+        selectedTeam={selectedTeam}
+      ></ItemTable>
+    );
+  }, [selectedCategory, selectedTeam, uniqueCategory]);
 
   if (!uniqueCategory || !currentEvent || !scores) {
     return <></>;
@@ -115,12 +126,7 @@ const UniqueTab: React.FC = () => {
           );
         })}
       </div>
-      {selectedCategory ? (
-        <>
-          <Divider>{`${selectedCategory.name} Items`}</Divider>
-          <ItemTable category={selectedCategory} selectedTeam={selectedTeam} />
-        </>
-      ) : null}
+      {table}
     </>
   );
 };

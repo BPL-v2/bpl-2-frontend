@@ -56,6 +56,11 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
             return [parseInt(teamId), score] as [number, ScoreLite];
           })
           .sort(([, scoreA], [, scoreB]) => scoreB.number - scoreA.number)
+          .sort(([, scoreA], [, scoreB]) => {
+            if (scoreA.rank === 0) return 1;
+            if (scoreB.rank === 0) return -1;
+            return scoreA.rank - scoreB.rank;
+          })
           .map(([teamId, score]) => {
             const percent = (100 * score.number) / objective.required_number;
             return (

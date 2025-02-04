@@ -8,6 +8,8 @@ export type GlobalState = {
   setUser: (c: User | undefined) => void;
   currentEvent: BPLEvent | undefined;
   setCurrentEvent: (c: BPLEvent | undefined) => void;
+  events: BPLEvent[];
+  setEvents: (c: BPLEvent[]) => void;
   rules: ScoringCategory | undefined;
   setRules: (c: ScoringCategory | undefined) => void;
   eventStatus: EventStatus | undefined;
@@ -27,6 +29,8 @@ export const GlobalStateContext = createContext<GlobalState>({
   setUser: () => {},
   currentEvent: undefined,
   setCurrentEvent: () => {},
+  events: [],
+  setEvents: () => {},
   rules: undefined,
   setRules: () => {},
   eventStatus: undefined,

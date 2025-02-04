@@ -5,6 +5,7 @@ export interface BPLEvent {
   name: string;
   ladder_pages: number;
   is_current: boolean;
+  game_version: "poe1" | "poe2";
   teams: Team[];
   scoring_category_id: number;
   max_size: number;

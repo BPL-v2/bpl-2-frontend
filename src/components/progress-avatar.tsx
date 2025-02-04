@@ -2,6 +2,7 @@ import { Progress, theme } from "antd";
 import { ScoreCategory } from "../types/score";
 import { GlobalStateContext } from "../utils/context-provider";
 import { useContext } from "react";
+import { green } from "@ant-design/colors";
 
 export type ProgressAvatarProps = {
   category: ScoreCategory;
@@ -18,6 +19,10 @@ export function ProgressAvatar({
   const { useToken } = theme;
   const globalToken = useToken().token;
   size = size || 90;
+  const percent = teamId
+    ? (category.team_score[teamId].number / (category.objectives.length || 1)) *
+      100
+    : 0;
   return (
     <div
       style={{
@@ -31,15 +36,10 @@ export function ProgressAvatar({
     >
       <Progress
         type="dashboard"
-        percent={
-          teamId &&
-          (category.team_score[teamId].number /
-            (category.objectives.length || 1)) *
-            100
-        }
+        percent={percent}
         size={size * 1.3}
         steps={category.objectives.length}
-        strokeColor={globalToken.colorPrimary}
+        strokeColor={percent < 100 ? globalToken.colorPrimary : green.primary}
         trailColor="grey"
         strokeWidth={5}
         showInfo={false}

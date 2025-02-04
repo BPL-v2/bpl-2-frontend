@@ -3,7 +3,7 @@ import { ColumnsType, TableProps } from "antd/es/table";
 import { ScoreCategory, ScoreObjective } from "../types/score";
 import { getImageLocation } from "../types/scoring-objective";
 import { GlobalStateContext } from "../utils/context-provider";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { cyanDark } from "@ant-design/colors";
 import { BPLEvent } from "../types/event";
 import { ObjectiveIcon } from "./objective-icon";
@@ -63,35 +63,24 @@ export function ItemTable({
   const { currentEvent, isMobile, gameVersion } =
     useContext(GlobalStateContext);
   const [nameFilter, setNameFilter] = useState<string | undefined>();
+  const [completionFilter, setCompletionFilter] = useState<{
+    [teamId: number]: number;
+  }>({});
+  useEffect(() => {
+    if (currentEvent) {
+      setCompletionFilter(
+        currentEvent.teams.reduce((acc: { [teamId: number]: number }, team) => {
+          acc[team.id] = 0;
+          return acc;
+        }, {})
+      );
+    }
+  }, [currentEvent]);
+  const token = useToken().token;
+
   if (!currentEvent || !category) {
     return <></>;
   }
-  const [completionFilter, setCompletionFilter] = useState<{
-    [teamId: number]: number;
-  }>(
-    currentEvent.teams.reduce((acc: { [teamId: number]: number }, team) => {
-      acc[team.id] = 0;
-      return acc;
-    }, {})
-  );
-
-  const applyFilter = (row: any) => {
-    if (
-      nameFilter &&
-      !row.key.toLowerCase().includes(nameFilter.toLowerCase())
-    ) {
-      return false;
-    }
-    for (const teamId in completionFilter) {
-      if (completionFilter[teamId] === 1 && !row[teamId]) {
-        return false;
-      }
-      if (completionFilter[teamId] === 2 && row[teamId]) {
-        return false;
-      }
-    }
-    return true;
-  };
 
   const variantMap = category.sub_categories
     .filter((subCategory) => subCategory.name.includes("Variants"))
@@ -101,76 +90,118 @@ export function ItemTable({
       return acc;
     }, {});
 
-  const tableRows = category.objectives.map((objective) => {
-    const row = {
-      key: objective.name,
-      name: objective.extra ? (
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div>{objective.name}</div>
-          <span style={{ color: useToken().token.colorPrimary }}>
-            [{objective.extra}]
-          </span>
-        </div>
-      ) : (
-        objective.name
-      ),
-      extra: objective.extra,
-      ...currentEvent.teams.reduce(
-        (acc: { [teamId: number]: boolean }, team) => {
-          acc[team.id] = objective.team_score[team.id].finished;
-          return acc;
-        },
-        {}
-      ),
-      objective: objective,
-    };
-    if (variantMap[objective.name]) {
-      row.name = (
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div>{objective.name}</div>
-          <span style={{ color: cyanDark[5] }}>[Click to toggle Variants]</span>
-        </div>
-      );
-      // @ts-ignore - too lazy to fix it just works okay?!?!?
-      row.children = variantMap[objective.name].map((variant) => {
-        return {
-          key: variant.name,
-          name: variant.extra,
-        };
-      });
-    }
-    return row;
-  });
-  const tableColumns: ColumnsType = [
-    ...(isMobile
-      ? []
-      : [
-          {
-            title: "",
-            render: (row: any) => <ObjectiveIcon objective={row.objective} />,
-            key: "image",
-            width: 120,
-          },
-        ]),
-    {
-      title: (
-        <Input
-          placeholder="Name"
-          allowClear
-          onChange={(e) => setNameFilter(e.target.value)}
-        ></Input>
-      ),
+  const tableRows = useMemo(
+    () =>
+      category.objectives
+        .map((objective) => {
+          const row = {
+            nameId: objective.name,
+            key: objective.id,
+            name: objective.extra ? (
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <div>{objective.name}</div>
+                <span style={{ color: token.colorPrimary }}>
+                  [{objective.extra}]
+                </span>
+              </div>
+            ) : (
+              objective.name
+            ),
+            extra: objective.extra,
+            ...currentEvent.teams.reduce(
+              (acc: { [teamId: number]: boolean }, team) => {
+                acc[team.id] = objective.team_score[team.id].finished;
+                return acc;
+              },
+              {}
+            ),
+            objective: objective,
+          };
+          if (variantMap[objective.name]) {
+            row.name = (
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <div>{objective.name}</div>
+                <span style={{ color: cyanDark[5] }}>
+                  [Click to toggle Variants]
+                </span>
+              </div>
+            );
+            // @ts-ignore - too lazy to fix it just works okay?!?!?
+            row.children = variantMap[objective.name].map((variant) => {
+              return {
+                nameId: variant.name,
+                key: variant.id,
+                name: variant.extra,
+                ...currentEvent.teams.reduce(
+                  (acc: { [teamId: number]: boolean }, team) => {
+                    acc[team.id] = variant.team_score[team.id].finished;
+                    return acc;
+                  },
+                  {}
+                ),
+              };
+            });
+          }
+          return row;
+        })
+        .filter((row: any) => {
+          if (
+            nameFilter &&
+            !row.nameId.toLowerCase().includes(nameFilter.toLowerCase())
+          ) {
+            return false;
+          }
+          for (const teamId in completionFilter) {
+            if (completionFilter[teamId] === 1 && !row[teamId]) {
+              return false;
+            }
+            if (completionFilter[teamId] === 2 && row[teamId]) {
+              return false;
+            }
+          }
+          return true;
+        }),
+    [category, currentEvent, variantMap, nameFilter, completionFilter]
+  );
 
-      key: "name",
-      render: (record: any) => {
-        if (isMobile) {
-          return imageOverlayedWithText(record, gameVersion);
-        }
-        return record.name;
+  const tableColumns: ColumnsType = useMemo(
+    () => [
+      ...(isMobile
+        ? []
+        : [
+            {
+              title: "",
+              render: (row: any) => (
+                <ObjectiveIcon
+                  objective={row.objective}
+                  gameVersion={currentEvent.game_version}
+                />
+              ),
+              key: "image",
+              width: 120,
+            },
+          ]),
+      {
+        title: (
+          <Input
+            placeholder="Name"
+            allowClear
+            onChange={(e) => setNameFilter(e.target.value)}
+          ></Input>
+        ),
+
+        key: "name",
+        render: (record: any) => {
+          if (isMobile) {
+            return imageOverlayedWithText(record, gameVersion);
+          }
+          return record.name;
+        },
       },
-    },
-    ...getCompletionColumns(currentEvent, selectedTeam || 0, isMobile),
-  ];
+      ...getCompletionColumns(currentEvent, selectedTeam || 0, isMobile),
+    ],
+    [currentEvent, selectedTeam, isMobile, gameVersion, completionFilter]
+  );
 
   function getCompletionColumns(
     event: BPLEvent,
@@ -245,12 +276,11 @@ export function ItemTable({
         },
       }));
   }
-
   return (
     <>
       <Table
         columns={tableColumns}
-        dataSource={tableRows.filter(applyFilter)}
+        dataSource={tableRows}
         style={{ ...style }}
         showSorterTooltip={false}
         size="small"

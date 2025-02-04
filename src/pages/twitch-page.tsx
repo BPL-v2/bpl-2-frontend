@@ -18,15 +18,20 @@ export function TwitchPage() {
     fetchStreams().then((data) => setTwitchStreams(data));
   }, []);
   return (
-    <div>
+    <div key="twitch-page">
       {selectedChannel ? (
-        <ReactTwitchEmbedVideo channel={selectedChannel} width={"100%"} />
+        <ReactTwitchEmbedVideo
+          key="video"
+          channel={selectedChannel}
+          width={"100%"}
+        />
       ) : null}
       <Typography.Title level={2}>Twitch Streams by Team</Typography.Title>
       {currentEvent?.teams.sort(teamSort(eventStatus)).map((team) => (
-        <>
+        <div key={`team-video-thumbnails-${team.id}`}>
           <Divider>{team.name}</Divider>
           <Flex wrap gap="middle" justify="left">
+            <></>
             {twitchStreams
               .filter((stream) =>
                 users.some(
@@ -38,7 +43,7 @@ export function TwitchPage() {
               .sort((a, b) => b.viewer_count - a.viewer_count)
               .map((stream) => (
                 <div
-                  key={stream.id}
+                  key={`stream-${stream.id}`}
                   onClick={() => setSelectedChannel(stream.user_login)}
                   style={{
                     cursor: "pointer",
@@ -54,7 +59,7 @@ export function TwitchPage() {
                 </div>
               ))}
           </Flex>
-        </>
+        </div>
       ))}
     </div>
   );

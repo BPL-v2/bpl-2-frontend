@@ -199,8 +199,8 @@ function updateObjectiveWithFormObjective(
 }
 
 const ScoringCategoryPage: React.FC = () => {
-  let { currentEvent, user } = useContext(GlobalStateContext);
-  let { categoryId } = useParams();
+  let { user, events } = useContext(GlobalStateContext);
+  let { eventId, categoryId } = useParams();
   let [categoryName, setCategoryName] = React.useState("");
   const [isObjectiveModalOpen, setIsObjectiveModalOpen] = useState(false);
   const [isBulkObjectiveModalOpen, setIsBulkObjectiveModalOpen] =
@@ -215,7 +215,7 @@ const ScoringCategoryPage: React.FC = () => {
   const objectiveFormRef = useRef<FormInstance>(null);
   const conditionFormRef = useRef<FormInstance>(null);
   const bulkObjectiveFormRef = useRef<FormInstance>(null);
-
+  const event = events.find((event) => event.id === Number(eventId));
   useEffect(() => {
     if (objectiveFormRef.current) {
       objectiveFormRef.current.setFieldsValue(
@@ -225,13 +225,13 @@ const ScoringCategoryPage: React.FC = () => {
   }, [currentObjective]);
 
   useEffect(() => {
-    if (!currentEvent) {
+    if (!event) {
       return;
     }
-    fetchScoringPresetsForEvent(currentEvent?.id).then((data) => {
+    fetchScoringPresetsForEvent(event?.id).then((data) => {
       setScoringPresets(data);
     });
-  }, [currentEvent, setScoringPresets]);
+  }, [event, setScoringPresets]);
 
   useEffect(() => {
     if (!categoryId) {
@@ -261,7 +261,9 @@ const ScoringCategoryPage: React.FC = () => {
           return (
             <Button
               onClick={() => {
-                router.navigate("/scoring-categories/" + data.id);
+                router.navigate(
+                  `/events/${eventId}/scoring-categories/${data.id}`
+                );
               }}
             >
               {name}
@@ -282,7 +284,9 @@ const ScoringCategoryPage: React.FC = () => {
                     style={{ margin: "2px" }}
                     key={category.id}
                     onClick={() => {
-                      router.navigate("/scoring-categories/" + category.id);
+                      router.navigate(
+                        `/events/${eventId}/scoring-categories/${category.id}`
+                      );
                     }}
                   >
                     {category.name}
@@ -317,7 +321,12 @@ const ScoringCategoryPage: React.FC = () => {
       {
         title: "",
         key: "id",
-        render: (data: ScoringObjective) => <ObjectiveIcon objective={data} />,
+        render: (data: ScoringObjective) => (
+          <ObjectiveIcon
+            objective={data}
+            gameVersion={event?.game_version ?? "poe1"}
+          />
+        ),
       },
       {
         title: "Name",
@@ -404,7 +413,7 @@ const ScoringCategoryPage: React.FC = () => {
         inputRenderer: renderConditionInput,
       },
     ],
-    [scoringPresets]
+    [scoringPresets, event]
   );
 
   const addtionalObjectiveActions = [

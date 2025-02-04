@@ -28,15 +28,15 @@ export const router = createBrowserRouter([
     element: <TeamPage />,
   },
   {
-    path: "/scoring-categories/:categoryId",
+    path: "/events/:eventId/scoring-categories/:categoryId",
     element: <ScoringCategoryPage />,
   },
   {
-    path: "/scoring-presets/:eventId",
+    path: "/events/:eventId/scoring-presets",
     element: <ScoringPresetsPage />,
   },
   {
-    path: "/objectives/:objectiveId/conditions",
+    path: "/events/:eventId/objectives/:objectiveId/conditions",
     element: <ConditionPage />,
   },
   {
@@ -44,11 +44,11 @@ export const router = createBrowserRouter([
     element: <UserPage />,
   },
   {
-    path: "/users/sort",
+    path: "/events/:eventId/users/sort",
     element: <UserSortPage />,
   },
   {
-    path: "/submissions",
+    path: "/events/:eventId/submissions",
     element: <SubmissionPage />,
   },
   {

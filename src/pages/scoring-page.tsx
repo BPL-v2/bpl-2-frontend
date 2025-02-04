@@ -9,6 +9,7 @@ import { useSearchParams } from "react-router-dom";
 import { DailyTab } from "../scoring-tabs/daily-tab";
 import { HeistTab } from "../scoring-tabs/heist-tab";
 import { GemTab } from "../scoring-tabs/gem-tab";
+import { getRootCategoryNames } from "../types/scoring-category";
 export const scoringTabs: { key: string; tab: JSX.Element }[] = [
   {
     key: "Ladder",
@@ -47,8 +48,8 @@ export const scoringTabs: { key: string; tab: JSX.Element }[] = [
 type ScoringPageProps = { tab?: string };
 
 const ScoringPage = ({ tab }: ScoringPageProps) => {
+  const { isMobile, currentEvent } = useContext(GlobalStateContext);
   const [searchParams] = useSearchParams();
-  const { isMobile } = useContext(GlobalStateContext);
   const [selectedTab, setSelectedTab] = useState<string>(tab || "Ladder");
   useEffect(() => {
     const tab = searchParams.get("tab");
@@ -60,6 +61,15 @@ const ScoringPage = ({ tab }: ScoringPageProps) => {
   useEffect(() => {
     window.history.pushState({}, "", `/scores?tab=${selectedTab}`);
   }, [selectedTab]);
+
+  if (!currentEvent) {
+    return <div>Event not found</div>;
+  }
+
+  const tabNames = [
+    "Ladder",
+    ...getRootCategoryNames(currentEvent.game_version),
+  ];
 
   return (
     <>
@@ -74,11 +84,13 @@ const ScoringPage = ({ tab }: ScoringPageProps) => {
           }}
           mode="horizontal"
           theme="dark"
-          items={scoringTabs.map((tab) => ({
-            key: tab.key,
-            title: tab.key,
-            label: tab.key,
-          }))}
+          items={scoringTabs
+            .filter((tab) => tabNames.includes(tab.key))
+            .map((tab) => ({
+              key: tab.key,
+              title: tab.key,
+              label: tab.key,
+            }))}
           selectedKeys={[selectedTab]}
         />
       )}

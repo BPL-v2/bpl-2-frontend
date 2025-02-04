@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import { useContext, useMemo } from "react";
 import CrudTable, { CrudColumn } from "../components/crudtable";
 import { Team } from "../types/team";
 import {
@@ -10,12 +10,15 @@ import { useParams } from "react-router-dom";
 import { GlobalStateContext } from "../utils/context-provider";
 import { UserPermission } from "../types/user";
 
-const TeamPage: React.FC = () => {
+const TeamPage = () => {
   let { eventId } = useParams();
-  if (!eventId) {
+  const { events } = useContext(GlobalStateContext);
+  const event = events.find((event) => event.id === Number(eventId));
+  if (!event) {
     return <></>;
   }
-  const { user, gameVersion } = useContext(GlobalStateContext);
+
+  const { user } = useContext(GlobalStateContext);
   if (!user || !user.permissions.includes(UserPermission.ADMIN)) {
     return <div>You do not have permission to view this page</div>;
   }
@@ -40,9 +43,7 @@ const TeamPage: React.FC = () => {
         key: "allowed_classes",
         type: "multiselect",
         options:
-          // public/assets/poe1/ascendancies/thumbnails/Ascendant.png public/assets/poe1/ascendancies/thumbnails/Assassin.png public/assets/poe1/ascendancies/thumbnails/Berserker.png public/assets/poe1/ascendancies/thumbnails/Champion.png public/assets/poe1/ascendancies/thumbnails/Chieftain.png public/assets/poe1/ascendancies/thumbnails/Deadeye.png public/assets/poe1/ascendancies/thumbnails/Duelist.png public/assets/poe1/ascendancies/thumbnails/Elementalist.png public/assets/poe1/ascendancies/thumbnails/Gladiator.png public/assets/poe1/ascendancies/thumbnails/Guardian.png public/assets/poe1/ascendancies/thumbnails/Hierophant.png public/assets/poe1/ascendancies/thumbnails/Inquisitor.png public/assets/poe1/ascendancies/thumbnails/Juggernaut.png public/assets/poe1/ascendancies/thumbnails/Marauder.png public/assets/poe1/ascendancies/thumbnails/Necromancer.png public/assets/poe1/ascendancies/thumbnails/Occultist.png public/assets/poe1/ascendancies/thumbnails/Pathfinder.png public/assets/poe1/ascendancies/thumbnails/Ranger.png public/assets/poe1/ascendancies/thumbnails/Saboteur.png public/assets/poe1/ascendancies/thumbnails/Scion.png public/assets/poe1/ascendancies/thumbnails/Shadow.png public/assets/poe1/ascendancies/thumbnails/Slayer.png public/assets/poe1/ascendancies/thumbnails/Templar.png public/assets/poe1/ascendancies/thumbnails/Trickster.png public/assets/poe1/ascendancies/thumbnails/Warden.png public/assets/poe1/ascendancies/thumbnails/Witch.png
-
-          gameVersion === "poe2"
+          event.game_version === "poe2"
             ? [
                 "Warbringer",
                 "Titan",
@@ -83,7 +84,7 @@ const TeamPage: React.FC = () => {
         render: (_, team) => team.allowed_classes.join(", "),
       },
     ],
-    [gameVersion]
+    [event]
   );
 
   const eventIdNum = Number(eventId);

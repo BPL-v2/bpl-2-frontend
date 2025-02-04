@@ -175,7 +175,9 @@ const CrudTable = <T,>({
         } else if (column.type === "select") {
           input = (
             <Select style={{ width: "100%" }}>
-              <Select.Option value={""}>None</Select.Option>
+              {column.required ? null : (
+                <Select.Option value={""}>None</Select.Option>
+              )}
               {column.options?.map((option) => {
                 let label = typeof option === "string" ? option : option.label;
                 let value = typeof option === "string" ? option : option.value;

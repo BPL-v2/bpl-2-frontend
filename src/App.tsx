@@ -8,7 +8,7 @@ import { ContextProvider } from "./utils/context-provider";
 import { MinimalUser, User, UserPermission } from "./types/user";
 import { fetchUsersForEvent, getUserInfo } from "./client/user-client";
 import { router } from "./router";
-import { fetchCurrentEvent, fetchEventStatus } from "./client/event-client";
+import { fetchAllEvents, fetchEventStatus } from "./client/event-client";
 import { BPLEvent, EventStatus } from "./types/event";
 import { useError } from "./components/errorcontext";
 import {
@@ -30,7 +30,7 @@ import ApplicationButton from "./components/application-button";
 import { scoringTabs } from "./pages/scoring-page";
 import { greyDark } from "@ant-design/colors";
 type MenuItem = Required<MenuProps>["items"][number] & {
-  roleRequired?: UserPermission[];
+  rolerequired?: UserPermission[];
 };
 
 function getKeys(items: any[]): string[] {
@@ -48,10 +48,10 @@ function filterMenuItems(items: MenuItem[], user: User | undefined) {
   let userRoles = user?.permissions;
   let authItems = [];
   for (let item of items) {
-    if (item.roleRequired) {
+    if (item.rolerequired) {
       if (
         userRoles &&
-        item.roleRequired.some((role) => userRoles.includes(role))
+        item.rolerequired.some((role) => userRoles.includes(role))
       ) {
         authItems.push(item);
       }
@@ -66,6 +66,7 @@ function App() {
   const [currentNav, setCurrentNav] = useState<string>();
   const [user, setUser] = useState<User>();
   const [currentEvent, setCurrentEvent] = useState<BPLEvent>();
+  const [events, setEvents] = useState<BPLEvent[]>([]);
   const [eventStatus, setEventStatus] = useState<EventStatus>();
   const [rules, setRules] = useState<ScoringCategory>();
   const { scoreData } = fetchScores(currentEvent?.id);
@@ -74,7 +75,7 @@ function App() {
   const [users, setUsers] = useState<MinimalUser[]>([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  const [gameVersion, setGameVersion] = useState<"poe1" | "poe2">("poe2");
+  const [gameVersion, setGameVersion] = useState<"poe1" | "poe2">("poe1");
   useEffect(() => {
     const items = [
       {
@@ -82,18 +83,21 @@ function App() {
         key: "Admin",
         icon: <SettingOutlined />,
         extra: "right",
-        roleRequired: [UserPermission.ADMIN],
+        rolerequired: [UserPermission.ADMIN],
         children: [
           { label: "Events", key: "/events" },
           { label: "Manage users", key: "/users" },
-          { label: "Sort users", key: "/users/sort" },
+          {
+            label: "Sort users",
+            key: `/events/${currentEvent?.id}/users/sort`,
+          },
         ],
       },
       {
-        // scoring subtabs are only shown in mobile view here
         label: "Scoring",
         key: "/scores",
         icon: <LineChartOutlined />,
+        // scoring subtabs are only shown in mobile view here
         children: isMobile
           ? scoringTabs.map((tab) => ({
               label: tab.key,
@@ -127,7 +131,7 @@ function App() {
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [currentEvent]);
 
   useEffect(() => {
     if (rules && scoreData && currentEvent && scoringPresets) {
@@ -144,13 +148,18 @@ function App() {
 
   useEffect(() => {
     getUserInfo().then((data) => setUser(data));
-    fetchCurrentEvent().then((event) => {
+    fetchAllEvents().then((events) => {
+      setEvents(events);
+      const event = events.find((event) => event.is_current);
       setCurrentEvent(event);
-      fetchCategoryForEvent(event.id).then((rules) => setRules(rules));
-      fetchScoringPresetsForEvent(event.id).then((presets) =>
-        setScoringPresets(presets)
-      );
-      fetchUsersForEvent(event.id).then((users) => setUsers(users));
+      if (event) {
+        setGameVersion(event.game_version);
+        fetchCategoryForEvent(event.id).then((rules) => setRules(rules));
+        fetchScoringPresetsForEvent(event.id).then((presets) =>
+          setScoringPresets(presets)
+        );
+        fetchUsersForEvent(event.id).then((users) => setUsers(users));
+      }
     });
   }, []);
 
@@ -193,6 +202,8 @@ function App() {
           setUser: setUser,
           currentEvent: currentEvent,
           setCurrentEvent: setCurrentEvent,
+          events: events,
+          setEvents: setEvents,
           rules: rules,
           setRules: setRules,
           eventStatus: eventStatus,

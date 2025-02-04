@@ -1,18 +1,16 @@
-import { useContext } from "react";
 import { ScoreObjective } from "../types/score";
 import {
   getImageLocation,
   getItemName,
   ScoringObjective,
 } from "../types/scoring-objective";
-import { GlobalStateContext } from "../utils/context-provider";
 
 export type ObjectiveIconProps = {
   objective: ScoreObjective | ScoringObjective;
+  gameVersion: "poe1" | "poe2";
 };
 
-export function ObjectiveIcon({ objective }: ObjectiveIconProps) {
-  const { gameVersion } = useContext(GlobalStateContext);
+export function ObjectiveIcon({ objective, gameVersion }: ObjectiveIconProps) {
   const img_location = getImageLocation(objective, gameVersion);
   const itemName = getItemName(objective);
   if (!img_location) {

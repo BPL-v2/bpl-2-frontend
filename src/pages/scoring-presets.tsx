@@ -17,11 +17,13 @@ import { GlobalStateContext } from "../utils/context-provider";
 import { UserPermission } from "../types/user";
 
 const ScoringPresetsPage: React.FC = () => {
+  const { user, events } = useContext(GlobalStateContext);
   let { eventId } = useParams();
-  if (!eventId) {
-    return <div>Event ID not found</div>;
+  const event = events.find((event) => event.id === Number(eventId));
+
+  if (!eventId || !event) {
+    return <div>Event not found</div>;
   }
-  const { user } = useContext(GlobalStateContext);
   if (!user || !user.permissions.includes(UserPermission.ADMIN)) {
     return <div>You do not have permission to view this page</div>;
   }
@@ -82,7 +84,7 @@ const ScoringPresetsPage: React.FC = () => {
   return (
     <>
       <Typography.Title level={1}>
-        {"Scoring Presets for Event " + eventId}
+        {`Scoring Presets for Event "${event.name}"`}
       </Typography.Title>
       <CrudTable<ScoringPreset>
         resourceName="Scoring Preset"
