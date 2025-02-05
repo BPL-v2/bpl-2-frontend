@@ -443,7 +443,6 @@ const ScoringCategoryPage: React.FC = () => {
               return condition;
             })
           : [];
-        // data.scoring_preset_id = data.scoring_preset?.id;
         createObjective(Number(categoryId), data).then(() => {
           setRefreshObjectives((prev) => !prev);
         });

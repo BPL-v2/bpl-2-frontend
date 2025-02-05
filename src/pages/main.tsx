@@ -215,17 +215,19 @@ export function MainPage() {
                         }}
                       >
                         {team.allowed_classes.map((className) => (
-                          <Tooltip title={className}>
-                            <Avatar
-                              size={80}
-                              key={className}
-                              shape="circle"
-                              src={`/assets/${gameVersion}/ascendancies/thumbnails/${className.replaceAll(
-                                " ",
-                                "_"
-                              )}.png`}
-                            ></Avatar>
-                          </Tooltip>
+                          <div key={team.id + className}>
+                            <Tooltip title={className}>
+                              <Avatar
+                                size={80}
+                                key={className}
+                                shape="circle"
+                                src={`/assets/${gameVersion}/ascendancies/thumbnails/${className.replaceAll(
+                                  " ",
+                                  "_"
+                                )}.png`}
+                              ></Avatar>
+                            </Tooltip>
+                          </div>
                         ))}
                       </div>
                     </div>

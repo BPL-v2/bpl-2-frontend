@@ -21,8 +21,8 @@ import {
 } from "@ant-design/icons";
 import { ScoringCategory } from "./types/scoring-category";
 import { fetchCategoryForEvent } from "./client/category-client";
-import { fetchScores } from "./client/score-client";
-import { ScoreCategory } from "./types/score";
+import { establishScoreSocket } from "./client/score-client";
+import { Score, ScoreCategory } from "./types/score";
 import { mergeScores } from "./utils/utils";
 import { fetchScoringPresetsForEvent } from "./client/scoring-preset-client";
 import { ScoringPreset } from "./types/scoring-preset";
@@ -69,7 +69,7 @@ function App() {
   const [events, setEvents] = useState<BPLEvent[]>([]);
   const [eventStatus, setEventStatus] = useState<EventStatus>();
   const [rules, setRules] = useState<ScoringCategory>();
-  const { scoreData } = fetchScores(currentEvent?.id);
+  const [scoreData, setScoreData] = useState<Score[]>([]);
   const [scores, setScores] = useState<ScoreCategory>();
   const [scoringPresets, setScoringPresets] = useState<ScoringPreset[]>();
   const [users, setUsers] = useState<MinimalUser[]>([]);
@@ -153,6 +153,7 @@ function App() {
       const event = events.find((event) => event.is_current);
       setCurrentEvent(event);
       if (event) {
+        establishScoreSocket(event.id, setScoreData);
         setGameVersion(event.game_version);
         fetchCategoryForEvent(event.id).then((rules) => setRules(rules));
         fetchScoringPresetsForEvent(event.id).then((presets) =>
