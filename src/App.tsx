@@ -22,7 +22,7 @@ import {
 import { ScoringCategory } from "./types/scoring-category";
 import { fetchCategoryForEvent } from "./client/category-client";
 import { establishScoreSocket } from "./client/score-client";
-import { Score, ScoreCategory } from "./types/score";
+import { ScoreCategory, ScoreMap } from "./types/score";
 import { mergeScores } from "./utils/utils";
 import { fetchScoringPresetsForEvent } from "./client/scoring-preset-client";
 import { ScoringPreset } from "./types/scoring-preset";
@@ -69,13 +69,30 @@ function App() {
   const [events, setEvents] = useState<BPLEvent[]>([]);
   const [eventStatus, setEventStatus] = useState<EventStatus>();
   const [rules, setRules] = useState<ScoringCategory>();
-  const [scoreData, setScoreData] = useState<Score[]>([]);
+  const [scoreData, setScoreData] = useState<ScoreMap>({});
   const [scores, setScores] = useState<ScoreCategory>();
   const [scoringPresets, setScoringPresets] = useState<ScoringPreset[]>();
   const [users, setUsers] = useState<MinimalUser[]>([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [gameVersion, setGameVersion] = useState<"poe1" | "poe2">("poe1");
+  useEffect(() => {
+    getUserInfo().then((data) => setUser(data));
+    fetchAllEvents().then((events) => {
+      setEvents(events);
+      const event = events.find((event) => event.is_current);
+      setCurrentEvent(event);
+      if (event) {
+        establishScoreSocket(event.id, setScoreData);
+        setGameVersion(event.game_version);
+        fetchCategoryForEvent(event.id).then((rules) => setRules(rules));
+        fetchScoringPresetsForEvent(event.id).then((presets) =>
+          setScoringPresets(presets)
+        );
+        fetchUsersForEvent(event.id).then((users) => setUsers(users));
+      }
+    });
+  }, []);
   useEffect(() => {
     const items = [
       {
@@ -145,24 +162,6 @@ function App() {
       );
     }
   }, [rules, scoreData, currentEvent, scoringPresets]);
-
-  useEffect(() => {
-    getUserInfo().then((data) => setUser(data));
-    fetchAllEvents().then((events) => {
-      setEvents(events);
-      const event = events.find((event) => event.is_current);
-      setCurrentEvent(event);
-      if (event) {
-        establishScoreSocket(event.id, setScoreData);
-        setGameVersion(event.game_version);
-        fetchCategoryForEvent(event.id).then((rules) => setRules(rules));
-        fetchScoringPresetsForEvent(event.id).then((presets) =>
-          setScoringPresets(presets)
-        );
-        fetchUsersForEvent(event.id).then((users) => setUsers(users));
-      }
-    });
-  }, []);
 
   useEffect(() => {
     if (currentEvent && user) {

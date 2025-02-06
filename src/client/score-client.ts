@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { Score } from "../types/score";
+import { Score, ScoreMap } from "../types/score";
 import { fetchWrapper } from "./base";
 
 export const fetchScores = (eventId?: number) => {
@@ -22,7 +22,7 @@ export const fetchScores = (eventId?: number) => {
 
 export const establishScoreSocket = (
   eventId: number,
-  setScores: (scores: Score[]) => void
+  setScores: (scores: ScoreMap) => void
 ) => {
   const url =
     import.meta.env.VITE_BACKEND_URL.replace("http", "ws") +
@@ -32,9 +32,23 @@ export const establishScoreSocket = (
     console.log("WebSocket connection established", new Date());
   };
 
+  const previousScores: ScoreMap = {};
   ws.onmessage = (event) => {
-    console.log("Received new scores", new Date());
-    setScores(JSON.parse(event.data));
+    console.log("Received new scores");
+    Object.entries(JSON.parse(event.data) as ScoreMap).forEach(
+      ([key, value]) => {
+        if (value.diff_type !== "Unchanged") {
+          console.log("changed", key, value);
+        }
+
+        if (value.diff_type === "Removed") {
+          delete previousScores[key];
+        } else {
+          previousScores[key] = value;
+        }
+      }
+    );
+    setScores({ ...previousScores });
   };
 
   ws.onerror = (error) => {
@@ -46,7 +60,7 @@ export const establishScoreSocket = (
     // Reconnect
     setTimeout(() => {
       establishScoreSocket(eventId, setScores);
-    }, 1000);
+    }, 10000);
   };
   return ws;
 };
