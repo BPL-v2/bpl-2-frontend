@@ -1,22 +1,15 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
-import { Divider } from "antd";
 import TeamScore from "../components/team-score";
 import { ItemTable } from "../components/item-table";
 
 export const GemTab: React.FC = () => {
-  const { currentEvent, eventStatus, scores } = useContext(GlobalStateContext);
-  const [selectedTeam, setSelectedTeam] = useState<number | undefined>();
-  useEffect(() => {
-    if (eventStatus) {
-      setSelectedTeam(eventStatus.team_id);
-    }
-  }, [eventStatus]);
+  const { currentEvent, scores } = useContext(GlobalStateContext);
   if (!currentEvent || !scores) {
     return <></>;
   }
   const gemCategory = scores.sub_categories.find(
-    (category) => category.name === "Transfigured Gems"
+    (category) => category.name === "Gems"
   );
 
   if (!gemCategory) {
@@ -24,13 +17,9 @@ export const GemTab: React.FC = () => {
   }
   return (
     <>
-      <TeamScore
-        category={gemCategory}
-        selectedTeam={selectedTeam}
-        setSelectedTeam={setSelectedTeam}
-      />
-      <Divider>{gemCategory.name}</Divider>
-      <ItemTable category={gemCategory} selectedTeam={selectedTeam} />
+      <TeamScore category={gemCategory} />
+      <div className="divider divider-primary">{gemCategory.name}</div>
+      <ItemTable category={gemCategory} />
     </>
   );
 };

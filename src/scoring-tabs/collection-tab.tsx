@@ -1,11 +1,8 @@
-import { Card, Divider, Tooltip } from "antd";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { getSubCategory } from "../types/scoring-category";
-import { red } from "@ant-design/colors";
 import TeamScore from "../components/team-score";
 import { CollectionCardTable } from "../components/collection-card-table";
-import Meta from "antd/es/card/Meta";
 import { ObjectiveIcon } from "../components/objective-icon";
 
 export function CollectionTab() {
@@ -18,62 +15,33 @@ export function CollectionTab() {
   return (
     <>
       <TeamScore category={category}></TeamScore>
-      <Divider>{`Collection Goals`}</Divider>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-          gap: "8px",
-          marginTop: "20px",
-          marginBottom: "20px",
-        }}
-      >
+      <div className="divider divider-primary">{`Collection Goals`}</div>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {category.objectives.map((objective) => {
           return (
-            <Card
-              key={objective.id}
-              size="small"
-              styles={{
-                body: {
-                  // so that the highlight color goes all the way to the edge
-                  paddingLeft: "0px",
-                  paddingRight: "0px",
-                },
-              }}
-            >
-              <Meta
-                avatar={
-                  <ObjectiveIcon
-                    objective={objective}
-                    gameVersion={currentEvent.game_version}
-                  />
-                }
-                style={{
-                  height: "100%",
-                  maxHeight: "60px",
-                  width: "auto",
-                  paddingLeft: "10px",
-                  paddingRight: "10px",
-                }}
-                title={
-                  <Tooltip title={objective.extra}>
-                    <div
-                      style={{
-                        whiteSpace: "normal",
-                        wordWrap: "break-word",
-                        overflowWrap: "break-word",
-                      }}
-                    >
-                      {`Collect ${objective.required_number} ${objective.name}`}
-                      {objective.extra ? (
-                        <a style={{ color: red[6] }}>*</a>
-                      ) : null}
-                    </div>
-                  </Tooltip>
-                }
-              />
+            <div className="card bg-base-300 rounded-none" key={objective.id}>
+              <div className="card-title flex items-center m-0 px-4 bg-base-200 h-25  ">
+                <ObjectiveIcon
+                  style={{
+                    maxWidth: "3em",
+                    maxHeight: "3em",
+                  }}
+                  objective={objective}
+                  gameVersion={currentEvent.game_version}
+                />
+                <div
+                  className={objective.extra ? "tooltip  text-2xl " : undefined}
+                  data-tip={objective.extra}
+                >
+                  <h3 className="flex-grow text-center mt-4 text-xl font-medium mx-4">
+                    {`Collect ${objective.required_number} ${objective.name}`}
+                    {objective.extra ? <a className="text-red-600">*</a> : null}
+                  </h3>
+                </div>
+              </div>
+
               <CollectionCardTable objective={objective} />
-            </Card>
+            </div>
           );
         })}
       </div>

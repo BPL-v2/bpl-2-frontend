@@ -1,71 +1,50 @@
-import { Button, Input, Table, theme } from "antd";
-import { ColumnsType, TableProps } from "antd/es/table";
 import { ScoreCategory, ScoreObjective } from "../types/score";
 import { getImageLocation } from "../types/scoring-objective";
 import { GlobalStateContext } from "../utils/context-provider";
-import { useContext, useEffect, useMemo, useState } from "react";
-import { cyanDark } from "@ant-design/colors";
-import { BPLEvent } from "../types/event";
+import { useContext, useEffect, useState } from "react";
 import { ObjectiveIcon } from "./objective-icon";
 
 export type ItemTableProps = {
   category?: ScoreCategory;
-  selectedTeam?: number;
-  style?: React.CSSProperties;
-  tableProps?: TableProps<any>;
 };
-const { useToken } = theme;
 
-function imageOverlayedWithText(record: any, gameVersion: "poe1" | "poe2") {
-  const img_location = getImageLocation(record.objective, gameVersion);
-  if (!img_location) {
-    return <></>;
-  }
-  return (
-    <div
-      style={{
-        position: "relative",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100%",
-        maxHeight: "60px",
-      }}
-    >
-      <img
-        src={img_location}
-        style={{ maxWidth: "3.5em", maxHeight: "3.5em" }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          color: "white",
-          padding: "0px",
-          textAlign: "center",
-          textShadow: "2px 2px 4px rgba(0, 0, 0,1)", // Text shadow for better readability
-        }}
-      >
-        {record.name}
-      </div>
-    </div>
-  );
-}
-
-export function ItemTable({
-  category,
-  selectedTeam,
-  style,
-  tableProps,
-}: ItemTableProps) {
+export function ItemTable({ category }: ItemTableProps) {
   const { currentEvent, isMobile, gameVersion } =
     useContext(GlobalStateContext);
   const [nameFilter, setNameFilter] = useState<string | undefined>();
   const [completionFilter, setCompletionFilter] = useState<{
     [teamId: number]: number;
   }>({});
+  const [showVariants, setShowVariants] = useState<{
+    [objectiveName: string]: boolean;
+  }>({});
+  const [variantMap, setVariantMap] = useState<{
+    [objectiveName: string]: ScoreObjective[];
+  }>({});
+
+  useEffect(() => {
+    if (!category) {
+      return;
+    }
+    const map = category.sub_categories
+      .filter((subCategory) => subCategory.name.includes("Variants"))
+      .reduce((acc: { [name: string]: ScoreObjective[] }, subCategory) => {
+        const name = subCategory.name.split("Variants")[0].trim();
+        acc[name] = subCategory.objectives;
+        return acc;
+      }, {});
+    setVariantMap(map);
+    setShowVariants(
+      category.objectives.reduce(
+        (acc: { [objectiveName: string]: boolean }, objective) => {
+          acc[objective.name] = false;
+          return acc;
+        },
+        {}
+      )
+    );
+  }, [category]);
+
   useEffect(() => {
     if (currentEvent) {
       setCompletionFilter(
@@ -76,223 +55,191 @@ export function ItemTable({
       );
     }
   }, [currentEvent]);
-  const token = useToken().token;
 
   if (!currentEvent || !category) {
     return <></>;
   }
-
-  const variantMap = category.sub_categories
-    .filter((subCategory) => subCategory.name.includes("Variants"))
-    .reduce((acc: { [name: string]: ScoreObjective[] }, subCategory) => {
-      const name = subCategory.name.split("Variants")[0].trim();
-      acc[name] = subCategory.objectives;
-      return acc;
-    }, {});
-
-  const tableRows = useMemo(
-    () =>
-      category.objectives
-        .map((objective) => {
-          const row = {
-            nameId: objective.name,
-            key: objective.id,
-            name: objective.extra ? (
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <div>{objective.name}</div>
-                <span style={{ color: token.colorPrimary }}>
-                  [{objective.extra}]
-                </span>
-              </div>
-            ) : (
-              objective.name
-            ),
-            extra: objective.extra,
-            ...currentEvent.teams.reduce(
-              (acc: { [teamId: number]: boolean }, team) => {
-                acc[team.id] = objective.team_score[team.id].finished;
-                return acc;
-              },
-              {}
-            ),
-            objective: objective,
-          };
-          if (variantMap[objective.name]) {
-            row.name = (
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <div>{objective.name}</div>
-                <span style={{ color: cyanDark[5] }}>
-                  [Click to toggle Variants]
-                </span>
-              </div>
-            );
-            // @ts-ignore - too lazy to fix it just works okay?!?!?
-            row.children = variantMap[objective.name].map((variant) => {
-              return {
-                nameId: variant.name,
-                key: variant.id,
-                name: variant.extra,
-                ...currentEvent.teams.reduce(
-                  (acc: { [teamId: number]: boolean }, team) => {
-                    acc[team.id] = variant.team_score[team.id].finished;
-                    return acc;
-                  },
-                  {}
-                ),
-              };
-            });
-          }
-          return row;
-        })
-        .filter((row: any) => {
-          if (
-            nameFilter &&
-            !row.nameId.toLowerCase().includes(nameFilter.toLowerCase())
-          ) {
-            return false;
-          }
-          for (const teamId in completionFilter) {
-            if (completionFilter[teamId] === 1 && !row[teamId]) {
-              return false;
-            }
-            if (completionFilter[teamId] === 2 && row[teamId]) {
-              return false;
-            }
-          }
-          return true;
-        }),
-    [category, currentEvent, variantMap, nameFilter, completionFilter]
-  );
-
-  const tableColumns: ColumnsType = useMemo(
-    () => [
-      ...(isMobile
-        ? []
-        : [
-            {
-              title: "",
-              render: (row: any) => (
-                <ObjectiveIcon
-                  objective={row.objective}
-                  gameVersion={currentEvent.game_version}
-                />
-              ),
-              key: "image",
-              width: 120,
-            },
-          ]),
-      {
-        title: (
-          <Input
-            placeholder="Name"
-            allowClear
-            onChange={(e) => setNameFilter(e.target.value)}
-          ></Input>
-        ),
-
-        key: "name",
-        render: (record: any) => {
-          if (isMobile) {
-            return imageOverlayedWithText(record, gameVersion);
-          }
-          return record.name;
-        },
-      },
-      ...getCompletionColumns(currentEvent, selectedTeam || 0, isMobile),
-    ],
-    [currentEvent, selectedTeam, isMobile, gameVersion, completionFilter]
-  );
-
-  function getCompletionColumns(
-    event: BPLEvent,
-    selectedTeam: number,
-    isMobile: boolean
-  ) {
-    if (isMobile) {
-      return [
-        {
-          title: "Status",
-          key: "status",
-          render: (record: any) => {
-            return (
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr",
-                  gap: "8px",
-                }}
-              >
-                {event.teams.slice().map((team) => {
-                  return (
-                    <div
-                      key={team.id + "_" + record.id}
-                      style={{ display: "flex", alignItems: "center" }}
-                    >
-                      {record[team.id] ? "✅" : "❌"}
-                      <span style={{ marginLeft: "8px" }}>{team.name}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          },
-        },
-      ];
+  const rowFilter = (objective: ScoreObjective) => {
+    if (
+      nameFilter &&
+      !objective.name.toLowerCase().includes(nameFilter.toLowerCase())
+    ) {
+      return false;
     }
-    return event.teams
-      .slice()
-      .sort((a, b) =>
-        a.id === selectedTeam ? -1 : b.id === selectedTeam ? 1 : 0
-      )
-      .map((team) => ({
-        title: (
-          <>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <div>{team.name}</div>
-              <Button
-                style={{ marginLeft: 8 }}
-                icon={[null, "✅", "❌"][completionFilter[team.id]]}
-                onClick={(e) => {
-                  const newFilter = { ...completionFilter };
-                  newFilter[team.id] = (newFilter[team.id] + 1) % 3;
-                  setCompletionFilter(newFilter);
-                  e.stopPropagation();
-                }}
-              ></Button>
-            </div>
-          </>
-        ),
-        dataIndex: team.id.toString(),
-        key: team.id.toString(),
-        render: (finished: boolean) => (finished ? "✅" : "❌"),
-        sorter: (a: any, b: any) => {
-          return a[team.id] === b[team.id] ? 0 : a[team.id] ? -1 : 1;
-        },
-      }));
-  }
+    for (const teamId in completionFilter) {
+      if (
+        completionFilter[teamId] === 1 &&
+        !objective.team_score[teamId].finished
+      ) {
+        return false;
+      }
+      if (
+        completionFilter[teamId] === 2 &&
+        objective.team_score[teamId].finished
+      ) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const objectNameRender = (objective: ScoreObjective) => {
+    if (variantMap[objective.name]) {
+      return (
+        <div className="flex flex-col cursor-pointer ">
+          <div>{objective.name}</div>
+          <span className="text-sm text-primary">
+            [Click to toggle Variants]
+          </span>
+        </div>
+      );
+    }
+    return <>{objective.name}</>;
+  };
+
+  const imageOverlayedWithText = (
+    objective: ScoreObjective,
+    gameVersion: "poe1" | "poe2"
+  ) => {
+    const img_location = getImageLocation(objective, gameVersion);
+    if (!img_location) {
+      return <></>;
+    }
+    return (
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100%",
+          maxHeight: "60px",
+        }}
+      >
+        <img
+          src={img_location}
+          style={{ maxWidth: "3.5em", maxHeight: "3.5em" }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            color: "white",
+            padding: "0px",
+            textAlign: "center",
+            textShadow: "2px 2px 4px rgba(0, 0, 0,1)", // Text shadow for better readability
+          }}
+        >
+          {objectNameRender(objective)}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
-      <Table
-        columns={tableColumns}
-        dataSource={tableRows}
-        style={{ ...style }}
-        showSorterTooltip={false}
-        size="small"
-        expandable={{
-          expandRowByClick: true,
-          expandIcon: () => null,
-          expandedRowClassName: () => "expanded-row",
-        }}
-        rowClassName={(record) => (record.children ? "clickable" : "")}
-        pagination={{ position: ["bottomRight"] }}
-        {...tableProps}
-      />
+      <div className="max-h-150 overflow-auto">
+        <table className="table bg-base-300 table-lg	">
+          <thead className="bg-base-200 sticky top-0 z-10">
+            <tr className="text-lg">
+              {isMobile ? null : <th></th>}
+              <th>
+                <input
+                  type="text"
+                  placeholder="Name"
+                  className="input text-lg w-full max-w-xs focus:outline-0 focus:border-primary"
+                  onChange={(e) => setNameFilter(e.target.value)}
+                />
+              </th>
+              {currentEvent.teams.map((team) => (
+                <th key={`${category.id}-${team.name}`}>
+                  <div className="flex flex-row items-center">
+                    {team.name}
+                    <button
+                      className="btn w-8 h-8  bg-base-300 ml-2 select-none text-center align-middle border-1 border-primary"
+                      onClick={(e) => {
+                        setCompletionFilter({
+                          ...completionFilter,
+                          [team.id]: (completionFilter[team.id] + 1) % 3,
+                        });
+                        e.stopPropagation();
+                      }}
+                    >
+                      {[null, "✅", "❌"][completionFilter[team.id]]}
+                    </button>
+                  </div>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="text-lg">
+            {category.objectives.filter(rowFilter).flatMap((objective) => {
+              const objRow = (
+                <tr
+                  key={`${category.id}-${objective.id}`}
+                  className={"hover:bg-base-200"}
+                  onClick={() => {
+                    if (!variantMap[objective.name]) {
+                      return;
+                    }
+                    setShowVariants({
+                      ...showVariants,
+                      [objective.name]: !showVariants[objective.name],
+                    });
+                  }}
+                >
+                  {isMobile ? (
+                    <td>{imageOverlayedWithText(objective, gameVersion)}</td>
+                  ) : (
+                    <>
+                      <td>
+                        <ObjectiveIcon
+                          objective={objective}
+                          gameVersion={currentEvent.game_version}
+                        />
+                      </td>
+                      <td>{objectNameRender(objective)}</td>
+                    </>
+                  )}
+
+                  {currentEvent.teams.map((team) => (
+                    <td key={`${category.id}-${team.id}-${objective.id}`}>
+                      {objective.team_score[team.id].finished ? "✅" : "❌"}
+                    </td>
+                  ))}
+                </tr>
+              );
+
+              const variantRows = variantMap[objective.name]?.map((variant) => {
+                return (
+                  <tr
+                    key={`${category.id}-${variant.id}`}
+                    className="bg-base-200 hover:bg-base-300 m-0 p-0"
+                  >
+                    <>
+                      {isMobile ? null : <td></td>}
+                      <td className="text-primary">{variant.extra}</td>
+                    </>
+
+                    {currentEvent.teams.map((team) => (
+                      <td key={`${category.id}-${team.id}-${variant.id}`}>
+                        {variant.team_score[team.id].finished ? "✅" : "❌"}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              });
+              const rows = [
+                objRow,
+                ...(showVariants[objective.name] ? variantRows : []),
+              ];
+              return rows;
+            })}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 }

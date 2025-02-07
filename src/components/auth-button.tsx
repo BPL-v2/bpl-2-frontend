@@ -1,23 +1,12 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
-import { Button, Dropdown } from "antd";
+import { Dropdown } from "antd";
 import { LoginOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { getUserInfo, logoutUser } from "../client/user-client";
-import { grey } from "@ant-design/colors";
 import { router } from "../router";
 
-type AuthButtonProps = {
-  style?: React.CSSProperties;
-};
-const AuthButton = ({ style }: AuthButtonProps) => {
+const AuthButton = () => {
   const { user, setUser } = useContext(GlobalStateContext);
-  const buttonStyle = {
-    ...style,
-    borderRadius: "0",
-    borderWidth: "1px",
-    borderStyle: "solid",
-    background: grey[7],
-  };
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -64,22 +53,23 @@ const AuthButton = ({ style }: AuthButtonProps) => {
         }}
         trigger={["hover"]}
       >
-        <Button style={buttonStyle} icon={<UserOutlined />}>
-          {user ? user.display_name : "Login"}
-        </Button>
+        <button
+          className={`btn bg-base-300 h-full hover:text-primary hover:border-primary`}
+        >
+          <UserOutlined /> {user ? user.display_name : "Login"}
+        </button>
       </Dropdown>
     );
   }
   return (
-    <Button
-      style={buttonStyle}
-      icon={<LoginOutlined />}
+    <button
+      className={`btn bg-base-300 h-full hover:text-primary hover:border-primary`}
       onClick={() => {
         window.open(import.meta.env.VITE_BACKEND_URL + "/oauth2/discord", "");
       }}
     >
-      Login
-    </Button>
+      <LoginOutlined /> Login
+    </button>
   );
 };
 

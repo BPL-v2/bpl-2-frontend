@@ -1,13 +1,11 @@
-import { Progress, theme, Tooltip } from "antd";
 import { ScoreLite, ScoreObjective } from "../types/score";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
-import { green, red } from "@ant-design/colors";
+import { ProgressBar } from "./progress-bar";
 
 type CollectionCardTableProps = {
   objective: ScoreObjective;
 };
-const { useToken } = theme;
 
 function getPlace(score: ScoreLite) {
   if (score.rank === 0) {
@@ -38,18 +36,9 @@ function finishTooltip(objective: ScoreObjective, score: ScoreLite) {
 
 export function CollectionCardTable({ objective }: CollectionCardTableProps) {
   const { eventStatus, currentEvent } = useContext(GlobalStateContext);
-  const token = useToken().token;
 
   return (
-    <table
-      key={objective.id}
-      style={{
-        width: "100%",
-        borderCollapse: "collapse",
-        marginTop: ".5rem",
-        marginBottom: ".5rem",
-      }}
-    >
+    <table key={objective.id} className="w-full border-collapse">
       <tbody>
         {Object.entries(objective.team_score)
           .map(([teamId, score]) => {
@@ -65,52 +54,39 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
             const percent = (100 * score.number) / objective.required_number;
             return (
               <tr
+                className={
+                  teamId === eventStatus?.team_id
+                    ? "bg-highlight"
+                    : "bg-base-300"
+                }
                 key={teamId}
-                style={{
-                  backgroundColor:
-                    teamId === eventStatus?.team_id
-                      ? token.colorBgSpotlight
-                      : "transparent",
-                }}
               >
-                <td
-                  style={{
-                    paddingTop: "4px",
-                    paddingBottom: "4px",
-                    paddingRight: "8px",
-                    paddingLeft: "8px",
-                    color: score.rank === 0 ? red[4] : green[4],
-                  }}
-                >
-                  <Tooltip title={finishTooltip(objective, score)}>
-                    <div style={{ color: percent >= 100 ? green[4] : red[4] }}>
+                <td>
+                  <div
+                    className="tooltip"
+                    data-tip={finishTooltip(objective, score)}
+                  >
+                    <div
+                      className={`pt-1 pb-1 pl-2 pr-2 text-left ${
+                        percent < 100 ? "text-error" : "text-success"
+                      }`}
+                    >
                       {score.points}
                     </div>
-                  </Tooltip>
+                  </div>
                 </td>
                 <td
                   style={{
                     width: "50%",
                   }}
                 >
-                  <Progress
-                    percent={percent}
-                    format={() => (
-                      <>
-                        {score.number}/{objective.required_number}
-                      </>
-                    )}
+                  <ProgressBar
+                    style={{ width: "180px" }}
+                    value={score.number}
+                    maxVal={objective.required_number}
                   />
                 </td>
-                <td
-                  style={{
-                    paddingTop: "4px",
-                    paddingBottom: "4px",
-                    paddingRight: "16px",
-                    paddingLeft: "8px",
-                    alignItems: "center",
-                  }}
-                >
+                <td className="pl-4 text-left">
                   {currentEvent?.teams.find((team) => team.id === teamId)?.name}
                 </td>
               </tr>

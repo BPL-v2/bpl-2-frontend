@@ -5,7 +5,7 @@ import { TwitchStreamEmbed } from "../components/twitch-stream";
 // @ts-ignore: library is not typed
 import ReactTwitchEmbedVideo from "react-twitch-embed-video";
 import { GlobalStateContext } from "../utils/context-provider";
-import { Divider, Flex, theme, Typography } from "antd";
+import { Flex, theme, Typography } from "antd";
 import { teamSort } from "../types/team";
 const { useToken } = theme;
 
@@ -29,7 +29,8 @@ export function TwitchPage() {
       <Typography.Title level={2}>Twitch Streams by Team</Typography.Title>
       {currentEvent?.teams.sort(teamSort(eventStatus)).map((team) => (
         <div key={`team-video-thumbnails-${team.id}`}>
-          <Divider>{team.name}</Divider>
+          <div className="divider divider-primary">{team.name}</div>
+
           <Flex wrap gap="middle" justify="left">
             <></>
             {twitchStreams

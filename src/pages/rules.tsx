@@ -1,4 +1,4 @@
-import { Anchor, Col, Collapse, CollapseProps, Divider, Row } from "antd";
+import { Anchor, Col, Collapse, CollapseProps, Row } from "antd";
 
 export function RulePage() {
   // const { eventStatus, scores, currentEvent } = useContext(GlobalStateContext);
@@ -111,7 +111,7 @@ export function RulePage() {
     <Row>
       <Col span={20} style={{ textAlign: "left" }}>
         <div id={"rules"}>
-          <Divider>{`Gameplay Rules`}</Divider>
+          <div className="divider divider-primary">{"Gameplay Rules"}</div>
         </div>
         <p>
           Below are the major rules you should follow when playing in BPL. If
@@ -120,7 +120,7 @@ export function RulePage() {
         </p>
         <Collapse items={ruleCollapse} style={{ borderWidth: 0 }} />
         <div id={"points"}>
-          <Divider>{`Earning Points`}</Divider>
+          <div className="divider divider-primary">{"Earning Points"}</div>
         </div>
         <p>
           In BPL 15.5, One team that attempts to 100% complete BPL in 7 days.
@@ -134,7 +134,9 @@ export function RulePage() {
           effect"
         </p>
         <div id={"faq"}>
-          <Divider>{`Frequently Asked Questions`}</Divider>
+          <div className="divider divider-primary">
+            {"Frequently Asked Questions"}
+          </div>
         </div>
         <Collapse items={faqCollapse} style={{ borderWidth: 0 }} />
       </Col>

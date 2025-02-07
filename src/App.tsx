@@ -1,8 +1,6 @@
-import { Button, Layout, Menu, MenuProps } from "antd";
 import "./App.css";
 import { useEffect, useState } from "react";
 import { RouterProvider } from "react-router-dom";
-import { Content, Footer, Header } from "antd/es/layout/layout";
 import AuthButton from "./components/auth-button";
 import { ContextProvider } from "./utils/context-provider";
 import { MinimalUser, User, UserPermission } from "./types/user";
@@ -12,9 +10,7 @@ import { fetchAllEvents, fetchEventStatus } from "./client/event-client";
 import { BPLEvent, EventStatus } from "./types/event";
 import { useError } from "./components/errorcontext";
 import {
-  HomeOutlined,
   LineChartOutlined,
-  MenuOutlined,
   ReadOutlined,
   SettingOutlined,
   TwitchOutlined,
@@ -28,10 +24,6 @@ import { fetchScoringPresetsForEvent } from "./client/scoring-preset-client";
 import { ScoringPreset } from "./types/scoring-preset";
 import ApplicationButton from "./components/application-button";
 import { scoringTabs } from "./pages/scoring-page";
-import { greyDark } from "@ant-design/colors";
-type MenuItem = Required<MenuProps>["items"][number] & {
-  rolerequired?: UserPermission[];
-};
 
 function getKeys(items: any[]): string[] {
   let keys = [];
@@ -42,24 +34,6 @@ function getKeys(items: any[]): string[] {
     }
   }
   return keys;
-}
-
-function filterMenuItems(items: MenuItem[], user: User | undefined) {
-  let userRoles = user?.permissions;
-  let authItems = [];
-  for (let item of items) {
-    if (item.rolerequired) {
-      if (
-        userRoles &&
-        item.rolerequired.some((role) => userRoles.includes(role))
-      ) {
-        authItems.push(item);
-      }
-    } else {
-      authItems.push(item);
-    }
-  }
-  return authItems;
 }
 
 function App() {
@@ -74,7 +48,7 @@ function App() {
   const [scoringPresets, setScoringPresets] = useState<ScoringPreset[]>();
   const [users, setUsers] = useState<MinimalUser[]>([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  // const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [gameVersion, setGameVersion] = useState<"poe1" | "poe2">("poe1");
   useEffect(() => {
     getUserInfo().then((data) => setUser(data));
@@ -139,7 +113,7 @@ function App() {
         break;
       }
     }
-    setMenuItems(filterMenuItems(items, user));
+    // setMenuItems(filterMenuItems(items, user));
   }, [isMobile, user]);
 
   useEffect(() => {
@@ -194,6 +168,69 @@ function App() {
   const handleSuccess = (a: Event) => {
     sendNotification((a as CustomEvent).detail, "success");
   };
+  const closeDropdown = () => {
+    const elem = document.activeElement as HTMLElement;
+    if (elem) {
+      elem.blur();
+    }
+  };
+
+  const menu = [
+    {
+      label: (
+        <>
+          <SettingOutlined /> Admin
+        </>
+      ),
+      key: "admin",
+      rolerequired: [UserPermission.ADMIN],
+      children: [
+        { label: "Events", url: "/events", key: "events" },
+        { label: "Manage users", url: "/users", key: "users" },
+        {
+          label: "Sort users",
+          url: `/events/${currentEvent?.id}/users/sort`,
+          key: "sort-users",
+        },
+      ],
+    },
+    {
+      label: (
+        <>
+          <LineChartOutlined /> Scoring
+        </>
+      ),
+      url: "/scores",
+      key: "scores",
+      // scoring subtabs are only shown in mobile view here
+      children: isMobile
+        ? scoringTabs.map((tab) => ({
+            label: tab.key,
+            url: `/scores?tab=${tab.key}`,
+            key: tab.key,
+          }))
+        : undefined,
+    },
+    {
+      label: (
+        <>
+          <TwitchOutlined /> Streams
+        </>
+      ),
+      url: "/streams",
+      key: "streams",
+    },
+    {
+      label: (
+        <>
+          <ReadOutlined /> Rules
+        </>
+      ),
+      url: "/rules",
+      key: "rules",
+    },
+  ];
+
   return (
     <>
       <ContextProvider
@@ -218,95 +255,92 @@ function App() {
           setGameVersion: setGameVersion,
         }}
       >
-        {" "}
-        <Layout
-          style={{
-            maxWidth: "1440px",
-            margin: "auto",
-            textAlign: "center",
-          }}
-        >
-          <Header
-            style={{
-              display: "flex",
-              alignItems: "center",
-              backgroundColor: "#4096ff",
-              padding: "0",
-            }}
-          >
-            {isMobile ? null : (
-              <Button
-                type="text"
-                style={{
-                  height: "100%",
-                  borderRadius: "0",
-                  borderWidth: "20px",
-                  borderStyle: "solid",
-                  background: greyDark[3],
-                  fontSize: "2em",
-                  fontWeight: "bold",
-                  fontFamily: "fantasy",
-                  padding: "0px 40px 0px 20px",
-                }}
-                icon={
-                  <img
-                    src="assets/app-logos/bpl-logo.png"
-                    style={{ height: "40px" }}
-                  />
-                }
-                onClick={() => {
-                  setCurrentNav("/");
-                  router.navigate("/");
-                }}
-              >
-                BPL
-              </Button>
-            )}
-            <Menu
-              style={{
-                flex: 1,
-                userSelect: "none",
-                border: "1px solid transparent",
-                alignItems: "left",
-                display: "flex",
-              }}
-              onClick={(e) => {
-                setCurrentNav(e.key);
-                router.navigate(e.key);
-              }}
-              selectedKeys={currentNav ? [currentNav] : []}
-              mode="horizontal"
-              items={
-                isMobile
-                  ? [
-                      {
-                        key: "Menu",
-                        icon: <MenuOutlined />,
-                        children: [
-                          {
-                            key: "/",
-                            label: "Home",
-                            icon: <HomeOutlined />,
-                          },
-                          ...menuItems,
-                        ],
-                      },
-                    ]
-                  : menuItems
-              }
-            />
-            <ApplicationButton style={{ height: "100%" }} />
-            <AuthButton style={{ height: "100%" }} />
-          </Header>
-          <Content style={{ minHeight: "80vh" }}>
+        <div className="max-w-[1440px] text-center mx-auto ">
+          <div className="text-2xl p-0 flex items-center justify-between h-14">
+            <ul className="navbar bg-base-200 w-full gap-2 h-14 text-xl">
+              {isMobile ? null : (
+                <button
+                  className="btn h-14 w-40 bg-base-200 text-white text-4xl font-bold"
+                  onClick={() => {
+                    setCurrentNav("/");
+                    router.navigate("/");
+                  }}
+                >
+                  <img className="h-10" src="assets/app-logos/bpl-logo.png" />
+                  BPL
+                </button>
+              )}
+              <div className="flex flex-1 justify-left px-2 gap-2 ">
+                {menu
+                  .filter((item) =>
+                    item.rolerequired
+                      ? item.rolerequired.some((role) =>
+                          user?.permissions?.includes(role)
+                        )
+                      : true
+                  )
+                  .map((item) => (
+                    <li className=" m-2" key={item.key}>
+                      <a
+                        className={`dropdown dropdown-hover ${
+                          currentNav === item.key
+                            ? "bg-primary text-primary-content"
+                            : ""
+                        }`}
+                        onClick={() => {
+                          setCurrentNav(item.key);
+                          if (item.url) {
+                            router.navigate(item.url);
+                          }
+                        }}
+                      >
+                        <div
+                          tabIndex={0}
+                          role="button"
+                          className="btn btn-ghost hover:bg-base-300 text-xl h-14 rounded-none"
+                        >
+                          {item.label}
+                        </div>
+                        {item.children && (
+                          <ul
+                            tabIndex={0}
+                            className="dropdown-content menu bg-base-300 z-[1] w-50 shadow"
+                          >
+                            {item.children.map((child) => (
+                              <li key={child.key} onClick={closeDropdown}>
+                                <div
+                                  className="bg-base-300 text-base-content hover:bg-primary hover:text-primary-content "
+                                  onClick={() => {
+                                    setCurrentNav(child.key);
+                                    if (child.url) {
+                                      router.navigate(child.url);
+                                    }
+                                  }}
+                                >
+                                  {child.label}
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                        )}{" "}
+                      </a>
+                    </li>
+                  ))}
+              </div>
+              <div tabIndex={0} className="h-full">
+                <ApplicationButton />
+                <AuthButton />
+              </div>
+            </ul>
+          </div>
+          <div className="min-h-[80vh]">
             <RouterProvider router={router} />
-          </Content>
-
-          <Footer>
+          </div>
+          <div className="bg-base-200  p-4 text-center mt-20">
             This product isn't affiliated with or endorsed by Grinding Gear
             Games in any way.
-          </Footer>
-        </Layout>
+          </div>
+        </div>
       </ContextProvider>
     </>
   );

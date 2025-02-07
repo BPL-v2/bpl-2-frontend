@@ -1,4 +1,3 @@
-import { Divider } from "antd";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { getSubCategory } from "../types/scoring-category";
@@ -39,7 +38,7 @@ export function DailyTab() {
   return (
     <>
       <TeamScore category={category}></TeamScore>
-      <Divider>{`Dailies`}</Divider>
+      <div className="divider divider-primary">{`Dailies`}</div>
       <div
         style={{
           display: "grid",

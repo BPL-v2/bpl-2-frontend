@@ -12,7 +12,6 @@ import {
   Space,
   theme,
 } from "antd";
-import { greyDark } from "@ant-design/colors";
 import { Team } from "../types/team";
 import { EventStatusEnum } from "../types/event";
 import {
@@ -24,9 +23,8 @@ import { DiscordFilled } from "@ant-design/icons";
 
 const { useToken } = theme;
 type ApplicationButtonProps = {
-  style?: React.CSSProperties;
 };
-const ApplicationButton = ({ style }: ApplicationButtonProps) => {
+const ApplicationButton = ({  }: ApplicationButtonProps) => {
   let { user, eventStatus, currentEvent, setEventStatus } =
     useContext(GlobalStateContext);
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -34,13 +32,6 @@ const ApplicationButton = ({ style }: ApplicationButtonProps) => {
   const [userTeam, setUserTeam] = React.useState<Team | undefined>(undefined);
   const [isServerMember, setIsServerMember] = React.useState(true);
   const token = useToken().token;
-  const buttonStyle = {
-    ...style,
-    borderRadius: "0",
-    borderWidth: "1px",
-    borderStyle: "solid",
-    background: greyDark[2],
-  };
   useEffect(() => {
     setUserTeam(
       user
@@ -56,7 +47,13 @@ const ApplicationButton = ({ style }: ApplicationButtonProps) => {
     return null;
   }
   if (userTeam) {
-    return <Button style={buttonStyle}>{userTeam.name}</Button>;
+    return (
+      <button
+        className={`btn bg-base-100 h-full hover:text-primary hover:border-primary`}
+      >
+        {userTeam.name}
+      </button>
+    );
   }
   if (eventStatus?.application_status === EventStatusEnum.Applied) {
     const items = [
@@ -76,7 +73,11 @@ const ApplicationButton = ({ style }: ApplicationButtonProps) => {
     ] as MenuProps["items"];
     return (
       <Dropdown menu={{ items }} trigger={["hover"]}>
-        <Button style={buttonStyle}>Application Pending</Button>
+        <button
+          className={`btn bg-base-100 h-full hover:text-primary hover:border-primary`}
+        >
+          Application Pending
+        </button>
       </Dropdown>
     );
   }
@@ -181,15 +182,15 @@ const ApplicationButton = ({ style }: ApplicationButtonProps) => {
             </Space>
           </Form>
         </Modal>
-        <Button
-          style={buttonStyle}
+        <button
+          className={`btn bg-base-100 h-full hover:text-primary hover:border-primary`}
           onClick={() => {
             setModalOpen(true);
             formRef.current?.resetFields();
           }}
         >
           Apply for Event
-        </Button>
+        </button>
       </>
     );
   }

@@ -1,5 +1,3 @@
-import { Card, theme, Typography } from "antd";
-import Meta from "antd/es/card/Meta";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { ScoreCategory } from "../types/score";
@@ -10,7 +8,6 @@ export type TeamScoreProps = {
   setSelectedTeam?: (teamId: number) => void;
   category: ScoreCategory;
 };
-const { useToken } = theme;
 
 const TeamScore = ({
   category,
@@ -19,104 +16,51 @@ const TeamScore = ({
 }: TeamScoreProps) => {
   const teamScores = getTotalPoints(category);
   const potentialScores = getPotentialPoints(category);
-  const { currentEvent, isMobile, eventStatus } =
-    useContext(GlobalStateContext);
-  const token = useToken().token;
+  const { currentEvent, eventStatus } = useContext(GlobalStateContext);
   if (!currentEvent) {
     return <></>;
   }
+  const interactive = selectedTeam ? "cursor-pointer hover:bg-base-200" : "";
   return (
     <>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-          gap: "8px",
-          marginTop: "20px",
-          marginBottom: "20px",
-        }}
-      >
-        {currentEvent.teams.map((team) => (
-          <Card
-            key={team.id}
-            hoverable
-            onClick={() => (setSelectedTeam ? setSelectedTeam(team.id) : null)}
-            style={{
-              borderColor:
-                selectedTeam === team.id ? token.colorPrimary : "transparent",
-              borderWidth: 4,
-              flex: "1 1 0",
-              backgroundColor:
-                team.id === eventStatus?.team_id ? token.colorBgSpotlight : "",
-            }}
-            styles={{
-              body: {
-                paddingLeft: "10px",
-                paddingRight: "10px",
-              },
-            }}
-          >
-            {/* <Space direction={"horizontal"}>
-              <img
-                style={{
-                  width: 120,
-                  height: 120,
-                }}
-                src={`/assets/teams/${currentEvent.name
-                  .toLowerCase()
-                  .replaceAll(
-                    " ",
-                    "_"
-                  )}/${team.name.toLowerCase()}/logo-w-name.svg`}
-              />
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                <Typography.Text level={4}>{team.name}</Typography.Text>
-                <Typography.Text>
-                  {`Score: ${teamScores[team.id]} / ${
-                    potentialScores[team.id]
-                  }`}
-                </Typography.Text>
+      <div className={`grid grid-cols-1 gap-1 md:grid-cols-2 lg:grid-cols-4`}>
+        {currentEvent.teams.map((team) => {
+          const bgColor =
+            team.id === eventStatus?.team_id ? "bg-highlight" : "bg-base-300";
+          const borderColor =
+            team.id === selectedTeam ? "border-primary" : "border-transparent";
+          return (
+            <div
+              className={`card border-4 rounded-none px-2 h-30 ${bgColor} ${borderColor} ${interactive}`}
+              key={team.id}
+              onClick={() =>
+                setSelectedTeam ? setSelectedTeam(team.id) : null
+              }
+            >
+              <div className="flex justify-center gap-4 m-4 ">
+                <div className="avatar w-24 select-none">
+                  <img
+                    className=""
+                    src={`/assets/teams/${currentEvent.name
+                      .toLowerCase()
+                      .replaceAll(
+                        " ",
+                        "_"
+                      )}/${team.name.toLowerCase()}/logo-w-name.svg`}
+                  ></img>
+                </div>
+                <div className="flex flex-col justify-center">
+                  <h2 className="text-2xl font-bold">{team.name}</h2>
+                  <p className="text-xl font-bold">
+                    {`Score: ${teamScores[team.id]} / ${
+                      potentialScores[team.id]
+                    }`}
+                  </p>
+                </div>
               </div>
-            </Space> */}
-
-            <Meta
-              avatar={
-                !isMobile ? (
-                  <div
-                    style={{
-                      width: 96,
-                      height: 96,
-                      display: "inline-flex",
-                    }}
-                  >
-                    <img
-                      src={`/assets/teams/${currentEvent.name
-                        .toLowerCase()
-                        .replaceAll(
-                          " ",
-                          "_"
-                        )}/${team.name.toLowerCase()}/logo-w-name.svg`}
-                    />
-                  </div>
-                ) : null
-              }
-              title={team.name}
-              description={
-                <Typography.Text style={{ fontSize: 20 }}>
-                  {`Score: ${teamScores[team.id]} / ${
-                    potentialScores[team.id]
-                  }`}
-                </Typography.Text>
-              }
-            />
-          </Card>
-        ))}
+            </div>
+          );
+        })}
       </div>
     </>
   );

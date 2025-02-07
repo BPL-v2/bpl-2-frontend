@@ -1,4 +1,3 @@
-import { Divider, Flex, Table, Tag } from "antd";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import {
@@ -7,8 +6,6 @@ import {
 } from "../types/scoring-category";
 import { Team } from "../types/team";
 import { getTotalPoints } from "../utils/utils";
-import { ColumnsType } from "antd/es/table";
-import { cyanDark } from "@ant-design/colors";
 
 type RowDef = {
   default: number;
@@ -22,8 +19,7 @@ type RowDef = {
 };
 
 export function LadderTab() {
-  const { eventStatus, scores, currentEvent, isMobile } =
-    useContext(GlobalStateContext);
+  const { scores, currentEvent, isMobile } = useContext(GlobalStateContext);
   if (!scores || !currentEvent) {
     return <></>;
   }
@@ -54,7 +50,6 @@ export function LadderTab() {
     }
     return acc;
   }, {} as { [teamId: number]: { [categoryName: string]: number } });
-
   const rows = Object.entries(points).map(([teamId, teamPoints]) => {
     return {
       team: teamMap[parseInt(teamId)],
@@ -62,18 +57,20 @@ export function LadderTab() {
       ...teamPoints,
     } as RowDef;
   });
-  const columns: ColumnsType<RowDef> = [
+  const columns: any[] = [
     {
       title: "Team",
       dataIndex: ["team", "name"],
+      render: (row: any) => row.team?.name,
       key: "team",
-      sorter: (a, b) => a.team.name.localeCompare(b.team.name),
+      // sorter: (a, b) => a.team.name.localeCompare(b.team.name),
+      // className: "bg-base-100",
     },
     {
       title: "Total",
       dataIndex: "default",
       key: "default",
-      sorter: (a, b) => a.default - b.default,
+      // sorter: (a, b) => a.default - b.default,
       defaultSortOrder: "descend",
     },
     ...getCompletionColumns(isMobile),
@@ -86,16 +83,19 @@ export function LadderTab() {
           render: (record: RowDef) => {
             return (
               <>
-                <Flex wrap="wrap" gap="4px">
-                  {categoryNames.map((categoryName, idx) => {
+                <div className="flex flex-wrap gap-2">
+                  {categoryNames.map((categoryName) => {
                     return (
-                      <Tag key={categoryName} color={cyanDark[1 + (idx % 4)]}>
+                      <div
+                        key={categoryName}
+                        className="badge badge-info badge-lg"
+                      >
                         {/* @ts-ignore */}
                         {`${categoryName} ${record[categoryName]}`}
-                      </Tag>
+                      </div>
                     );
                   })}
-                </Flex>
+                </div>
               </>
             );
           },
@@ -111,18 +111,37 @@ export function LadderTab() {
   }
   return (
     <>
-      <Divider>{`Team Scores`}</Divider>
-      <Table
-        dataSource={rows}
-        columns={columns}
-        rowClassName={(record) =>
-          record.team.id === eventStatus?.team_id ? "table-row-light" : ""
-        }
-        pagination={false}
-        size="small"
-        showSorterTooltip={false}
-      />
-      <Divider>{`Ladder`}</Divider>
+      <div className="divider divider-primary ">{"Team Scores"}</div>
+      <table className="table bg-base-300 text-lg">
+        <thead className="bg-base-200">
+          <tr>
+            {columns.map((column) => (
+              <th key={column.key}>
+                {
+                  // @ts-ignore
+                  column.title
+                }
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row.key} className="">
+              {columns.map((column) => (
+                <td key={column.key}>
+                  {
+                    // @ts-ignore
+                    column.render ? column.render(row) : row[column.dataIndex]
+                  }
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div className="divider divider-primary">{"Ladder"}</div>
     </>
   );
 }

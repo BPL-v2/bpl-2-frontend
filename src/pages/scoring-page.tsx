@@ -1,4 +1,3 @@
-import { Menu } from "antd";
 import UniqueTab from "../scoring-tabs/unique-tab";
 import { useContext, useEffect, useState } from "react";
 import { SubmissionTab } from "../scoring-tabs/submission-tab";
@@ -74,27 +73,25 @@ const ScoringPage = ({ tab }: ScoringPageProps) => {
   return (
     <>
       {isMobile ? null : (
-        <Menu
-          onClick={(info) => setSelectedTab(info.key)}
-          style={{
-            marginBottom: 20,
-            marginTop: 5,
-            userSelect: "none",
-            display: "flex",
-          }}
-          mode="horizontal"
-          theme="dark"
-          items={scoringTabs
+        <ul className="menu menu-horizontal bg-base-200 w-full gap-2">
+          {scoringTabs
             .filter((tab) => tabNames.includes(tab.key))
-            .map((tab) => ({
-              key: tab.key,
-              title: tab.key,
-              label: tab.key,
-            }))}
-          selectedKeys={[selectedTab]}
-        />
+            .map((tab) => (
+              <li key={tab.key}>
+                <a
+                  className={` ${
+                    selectedTab === tab.key
+                      ? "bg-primary text-primary-content"
+                      : ""
+                  }`}
+                  onClick={() => setSelectedTab(tab.key)}
+                >
+                  {tab.key}
+                </a>
+              </li>
+            ))}
+        </ul>
       )}
-
       {scoringTabs.find((tab) => tab.key === selectedTab)?.tab}
     </>
   );

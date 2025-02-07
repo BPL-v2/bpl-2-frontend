@@ -8,9 +8,14 @@ import {
 export type ObjectiveIconProps = {
   objective: ScoreObjective | ScoringObjective;
   gameVersion: "poe1" | "poe2";
+  style?: React.CSSProperties;
 };
 
-export function ObjectiveIcon({ objective, gameVersion }: ObjectiveIconProps) {
+export function ObjectiveIcon({
+  objective,
+  gameVersion,
+  style,
+}: ObjectiveIconProps) {
   const img_location = getImageLocation(objective, gameVersion);
   const itemName = getItemName(objective);
   if (!img_location) {
@@ -33,11 +38,11 @@ export function ObjectiveIcon({ objective, gameVersion }: ObjectiveIconProps) {
 
   return (
     <a
+      className="select-none"
       style={{
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: "3.5em",
         cursor: itemName ? "pointer" : "default",
       }}
       href={wikilink}
@@ -45,7 +50,7 @@ export function ObjectiveIcon({ objective, gameVersion }: ObjectiveIconProps) {
     >
       <img
         src={img_location}
-        style={{ maxWidth: "3.5em", maxHeight: "3.5em" }}
+        style={{ maxWidth: "3.5em", maxHeight: "3.5em", ...style }}
       />
     </a>
   );

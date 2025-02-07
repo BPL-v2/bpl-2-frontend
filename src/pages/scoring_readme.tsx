@@ -1,4 +1,4 @@
-import { Anchor, Col, Divider, Modal, Row, Typography } from "antd";
+import { Anchor, Col, Modal, Row, Typography } from "antd";
 import React from "react";
 import JSONPretty from "react-json-pretty";
 
@@ -93,7 +93,7 @@ export function ScoringReadmePage() {
           </pre>
           <p>Next we will examine these objective fields in more detail.</p>
           <div id={"matching"}>
-            <Divider>{`Matching`}</Divider>
+            <div className="divider divider-primary">{"Matching"}</div>
           </div>
           <p>
             Matching is the process of finding candidates that satisfy a partial
@@ -206,7 +206,8 @@ export function ScoringReadmePage() {
             </li>
           </ul>
           <div id={"aggregation"}>
-            <Divider>{`Aggregation`}</Divider>
+            {" "}
+            <div className="divider divider-primary">{"Aggregation"}</div>
             In the next step, we aggregate the matches into something that can
             be scored later. The following fields are related to the aggregation
             process:
@@ -340,11 +341,13 @@ export function ScoringReadmePage() {
             </ul>
           </div>
           <div id={"scoring"}>
-            <Divider>{`Scoring`}</Divider>
+            {" "}
+            <div className="divider divider-primary">{"Scoring"}</div>
           </div>
           All objectives that grant points have an associated scoring preset.
           <div id={"examples"}>
-            <Divider>{`Examples`}</Divider>
+            {" "}
+            <div className="divider divider-primary">{"Examples"}</div>
           </div>
         </Col>
 
