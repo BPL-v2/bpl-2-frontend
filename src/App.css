@@ -41,6 +41,23 @@
 .bg-highlight {
   background-color: oklch(45% 0.041 260.031);
 }
+.bg-discord {
+  background-color: #5865f2;
+}
+.bg-twitch {
+  background-color: #9146ff;
+}
+
+.bottom-box-rounded {
+  border-bottom-left-radius: var(--radius-box);
+  border-bottom-right-radius: var(--radius-box);
+}
+
+.top-box-rounded {
+  border-top-left-radius: var(--radius-box);
+  border-top-right-radius: var(--radius-box);
+}
+
 html {
   overflow-y: scroll;
   --vaadin-grid-cell-background: var(--color-base-300);

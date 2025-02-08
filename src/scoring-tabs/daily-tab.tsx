@@ -39,19 +39,11 @@ export function DailyTab() {
     <>
       <TeamScore category={category}></TeamScore>
       <div className="divider divider-primary">{`Dailies`}</div>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-          gap: "8px",
-          marginTop: "20px",
-          marginBottom: "20px",
-        }}
-      >
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {Object.values(dailies)
           .sort(sortByReleasDate)
           .map((daily) => (
-            <DailyCard daily={daily} />
+            <DailyCard daily={daily} key={`daily-${daily.baseObjective.id}`} />
           ))}
       </div>
     </>

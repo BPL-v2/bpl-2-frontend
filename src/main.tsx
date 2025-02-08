@@ -9,10 +9,11 @@ createRoot(document.getElementById("root")!).render(
     theme={{
       algorithm: theme.darkAlgorithm,
       token: {
-        fontSize: 16,
+        fontSize: 18,
         colorBgBase: "var(--color-base-100)",
         colorBgContainer: "var(--color-base-300)",
         colorBgSpotlight: "var(--color-base-200)",
+        colorBgElevated: "var(--color-base-300)",
       },
       components: {
         Table: {
@@ -21,8 +22,6 @@ createRoot(document.getElementById("root")!).render(
           rowHoverBg: "var(--color-base-200)",
           headerSortHoverBg: "var(--color-base-300)",
           headerSortActiveBg: "var(--color-base-300)",
-          // cellFontSize: 20,
-          // cellFontSizeMD: 20,
           cellFontSizeSM: 18,
         },
       },

@@ -39,8 +39,8 @@ export const VideoEmbed: React.FC<VideoEmbedProps> = (
     return (
       <iframe
         style={{ border: "none", userSelect: "none", ...style }}
-        width={style?.width ? style?.width : "100%"}
-        height={style?.height ? style?.height : "100%"}
+        width={"100%"}
+        height={"100%"}
         src={embedUrl.toString()}
         title="Video player"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -62,9 +62,7 @@ export const VideoEmbed: React.FC<VideoEmbedProps> = (
           border: "none",
           userSelect: "none",
           width: "100%",
-          height: "75vw",
-          maxWidth: "640px",
-          maxHeight: "480px",
+          height: "100%",
 
           ...style,
         }}

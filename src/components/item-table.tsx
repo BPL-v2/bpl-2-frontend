@@ -140,38 +140,44 @@ export function ItemTable({ category }: ItemTableProps) {
 
   return (
     <>
-      <div className="max-h-150 overflow-auto">
+      <div className=" overflow-auto" style={{ maxHeight: "90vh" }}>
         <table className="table bg-base-300 table-lg	">
           <thead className="bg-base-200 sticky top-0 z-10">
             <tr className="text-lg">
               {isMobile ? null : <th></th>}
               <th>
-                <input
-                  type="text"
-                  placeholder="Name"
-                  className="input text-lg w-full max-w-xs focus:outline-0 focus:border-primary"
-                  onChange={(e) => setNameFilter(e.target.value)}
-                />
+                {!isMobile && (
+                  <input
+                    type="text"
+                    placeholder="Name"
+                    className="input text-lg w-full max-w-xs focus:outline-0 focus:border-primary"
+                    onChange={(e) => setNameFilter(e.target.value)}
+                  />
+                )}
               </th>
-              {currentEvent.teams.map((team) => (
-                <th key={`${category.id}-${team.name}`}>
-                  <div className="flex flex-row items-center">
-                    {team.name}
-                    <button
-                      className="btn w-8 h-8  bg-base-300 ml-2 select-none text-center align-middle border-1 border-primary"
-                      onClick={(e) => {
-                        setCompletionFilter({
-                          ...completionFilter,
-                          [team.id]: (completionFilter[team.id] + 1) % 3,
-                        });
-                        e.stopPropagation();
-                      }}
-                    >
-                      {[null, "✅", "❌"][completionFilter[team.id]]}
-                    </button>
-                  </div>
-                </th>
-              ))}
+              {isMobile ? (
+                <th className="text-center">Completion</th>
+              ) : (
+                currentEvent.teams.map((team) => (
+                  <th key={`${category.id}-${team.name}`}>
+                    <div className="flex flex-row items-center">
+                      {team.name}
+                      <button
+                        className="btn w-8 h-8  bg-base-300 ml-2 select-none text-center align-middle border-1 border-primary"
+                        onClick={(e) => {
+                          setCompletionFilter({
+                            ...completionFilter,
+                            [team.id]: (completionFilter[team.id] + 1) % 3,
+                          });
+                          e.stopPropagation();
+                        }}
+                      >
+                        {[null, "✅", "❌"][completionFilter[team.id]]}
+                      </button>
+                    </div>
+                  </th>
+                ))
+              )}
             </tr>
           </thead>
           <tbody className="text-lg">
@@ -204,11 +210,33 @@ export function ItemTable({ category }: ItemTableProps) {
                     </>
                   )}
 
-                  {currentEvent.teams.map((team) => (
-                    <td key={`${category.id}-${team.id}-${objective.id}`}>
-                      {objective.team_score[team.id].finished ? "✅" : "❌"}
+                  {isMobile ? (
+                    <td
+                      key={`${category.id}-${objective.id}`}
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-2 "
+                    >
+                      {currentEvent.teams.map((team) => (
+                        <div
+                          key={`badge-${category.id}-${team.id}-${objective.id}`}
+                          className={`badge gap-2 w-full text-left 
+                            ${
+                              objective.team_score[team.id].finished
+                                ? "bg-success text-success-content"
+                                : "bg-error text-error-content"
+                            }`}
+                        >
+                          {objective.team_score[team.id].finished ? "✅" : "❌"}
+                          {team.name}{" "}
+                        </div>
+                      ))}
                     </td>
-                  ))}
+                  ) : (
+                    currentEvent.teams.map((team) => (
+                      <td key={`${category.id}-${team.id}-${objective.id}`}>
+                        {objective.team_score[team.id].finished ? "✅" : "❌"}
+                      </td>
+                    ))
+                  )}
                 </tr>
               );
 

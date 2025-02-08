@@ -10,7 +10,9 @@ import { fetchAllEvents, fetchEventStatus } from "./client/event-client";
 import { BPLEvent, EventStatus } from "./types/event";
 import { useError } from "./components/errorcontext";
 import {
+  HomeOutlined,
   LineChartOutlined,
+  MenuOutlined,
   ReadOutlined,
   SettingOutlined,
   TwitchOutlined,
@@ -24,17 +26,28 @@ import { fetchScoringPresetsForEvent } from "./client/scoring-preset-client";
 import { ScoringPreset } from "./types/scoring-preset";
 import ApplicationButton from "./components/application-button";
 import { scoringTabs } from "./pages/scoring-page";
+import { Dropdown } from "antd";
 
-function getKeys(items: any[]): string[] {
-  let keys = [];
-  for (let item of items) {
-    keys.push(item.key);
-    if (item.children) {
-      keys.push(...getKeys(item.children));
-    }
-  }
-  return keys;
-}
+// function getKeys(items: any[]): string[] {
+//   let keys = [];
+//   for (let item of items) {
+//     keys.push(item.key);
+//     if (item.children) {
+//       keys.push(...getKeys(item.children));
+//     }
+//   }
+//   return keys;
+// }
+
+type MenuItem = {
+  label: string | JSX.Element;
+  key: string;
+  icon?: JSX.Element;
+  extra?: "left" | "right";
+  rolerequired?: UserPermission[];
+  children?: MenuItem[];
+  url?: string;
+};
 
 function App() {
   const [currentNav, setCurrentNav] = useState<string>();
@@ -47,8 +60,8 @@ function App() {
   const [scores, setScores] = useState<ScoreCategory>();
   const [scoringPresets, setScoringPresets] = useState<ScoringPreset[]>();
   const [users, setUsers] = useState<MinimalUser[]>([]);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
-  // const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [gameVersion, setGameVersion] = useState<"poe1" | "poe2">("poe1");
   useEffect(() => {
     getUserInfo().then((data) => setUser(data));
@@ -67,58 +80,75 @@ function App() {
       }
     });
   }, []);
+
   useEffect(() => {
-    const items = [
+    let menu: MenuItem[] = [
       {
         label: "Admin",
-        key: "Admin",
         icon: <SettingOutlined />,
-        extra: "right",
+        key: "admin",
         rolerequired: [UserPermission.ADMIN],
         children: [
-          { label: "Events", key: "/events" },
-          { label: "Manage users", key: "/users" },
+          { label: "Events", url: "/events", key: "events" },
+          { label: "Manage users", url: "/users", key: "users" },
           {
             label: "Sort users",
-            key: `/events/${currentEvent?.id}/users/sort`,
+            url: `/events/${currentEvent?.id}/users/sort`,
+            key: "sort-users",
           },
         ],
       },
       {
         label: "Scoring",
-        key: "/scores",
         icon: <LineChartOutlined />,
+        url: "/scores",
+        key: "scores",
         // scoring subtabs are only shown in mobile view here
         children: isMobile
           ? scoringTabs.map((tab) => ({
               label: tab.key,
-              key: `/scores?tab=${tab.key}`,
+              url: `/scores?tab=${tab.key}`,
+              key: tab.key,
             }))
-          : undefined,
+          : [],
       },
       {
         label: "Streams",
-        key: "/streams",
         icon: <TwitchOutlined />,
+        url: "/streams",
+        key: "streams",
       },
       {
         label: "Rules",
-        key: "/rules",
         icon: <ReadOutlined />,
+        url: "/rules",
+        key: "rules",
       },
     ];
-    for (let key of getKeys(items)) {
-      if (window.location.pathname.includes(key)) {
-        setCurrentNav(key);
-        break;
-      }
+    if (isMobile) {
+      menu = [
+        {
+          label: "",
+          icon: <MenuOutlined />,
+          key: "menu",
+          children: [
+            {
+              label: "Home",
+              icon: <HomeOutlined />,
+              key: "home",
+              url: "/",
+            },
+            ...menu,
+          ],
+        },
+      ];
     }
-    // setMenuItems(filterMenuItems(items, user));
+    setMenuItems(menu);
   }, [isMobile, user]);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 900);
+      setIsMobile(window.innerWidth <= 800);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -168,68 +198,6 @@ function App() {
   const handleSuccess = (a: Event) => {
     sendNotification((a as CustomEvent).detail, "success");
   };
-  const closeDropdown = () => {
-    const elem = document.activeElement as HTMLElement;
-    if (elem) {
-      elem.blur();
-    }
-  };
-
-  const menu = [
-    {
-      label: (
-        <>
-          <SettingOutlined /> Admin
-        </>
-      ),
-      key: "admin",
-      rolerequired: [UserPermission.ADMIN],
-      children: [
-        { label: "Events", url: "/events", key: "events" },
-        { label: "Manage users", url: "/users", key: "users" },
-        {
-          label: "Sort users",
-          url: `/events/${currentEvent?.id}/users/sort`,
-          key: "sort-users",
-        },
-      ],
-    },
-    {
-      label: (
-        <>
-          <LineChartOutlined /> Scoring
-        </>
-      ),
-      url: "/scores",
-      key: "scores",
-      // scoring subtabs are only shown in mobile view here
-      children: isMobile
-        ? scoringTabs.map((tab) => ({
-            label: tab.key,
-            url: `/scores?tab=${tab.key}`,
-            key: tab.key,
-          }))
-        : undefined,
-    },
-    {
-      label: (
-        <>
-          <TwitchOutlined /> Streams
-        </>
-      ),
-      url: "/streams",
-      key: "streams",
-    },
-    {
-      label: (
-        <>
-          <ReadOutlined /> Rules
-        </>
-      ),
-      url: "/rules",
-      key: "rules",
-    },
-  ];
 
   return (
     <>
@@ -271,7 +239,7 @@ function App() {
                 </button>
               )}
               <div className="flex flex-1 justify-left px-2 gap-2 ">
-                {menu
+                {menuItems
                   .filter((item) =>
                     item.rolerequired
                       ? item.rolerequired.some((role) =>
@@ -280,50 +248,76 @@ function App() {
                       : true
                   )
                   .map((item) => (
-                    <li className=" m-2" key={item.key}>
-                      <a
-                        className={`dropdown dropdown-hover ${
-                          currentNav === item.key
-                            ? "bg-primary text-primary-content"
-                            : ""
-                        }`}
-                        onClick={() => {
-                          setCurrentNav(item.key);
-                          if (item.url) {
-                            router.navigate(item.url);
-                          }
-                        }}
-                      >
-                        <div
-                          tabIndex={0}
-                          role="button"
-                          className="btn btn-ghost hover:bg-base-300 text-xl h-14 rounded-none"
-                        >
-                          {item.label}
-                        </div>
-                        {item.children && (
-                          <ul
-                            tabIndex={0}
-                            className="dropdown-content menu bg-base-300 z-[1] w-50 shadow"
-                          >
-                            {item.children.map((child) => (
-                              <li key={child.key} onClick={closeDropdown}>
-                                <div
-                                  className="bg-base-300 text-base-content hover:bg-primary hover:text-primary-content "
+                    <li
+                      className={`m-2 ${
+                        currentNav === item.key
+                          ? "bg-primary text-primary-content"
+                          : ""
+                      }`}
+                      onClick={() => {
+                        setCurrentNav(item.key);
+                        if (item.url) {
+                          router.navigate(item.url);
+                        }
+                      }}
+                      key={item.key}
+                    >
+                      {item.children ? (
+                        <Dropdown
+                          trigger={["click", "hover"]}
+                          menu={{
+                            items: item.children?.map((child) => ({
+                              label: (
+                                <a
                                   onClick={() => {
-                                    setCurrentNav(child.key);
+                                    setCurrentNav(item.key);
                                     if (child.url) {
                                       router.navigate(child.url);
                                     }
                                   }}
                                 >
                                   {child.label}
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
-                        )}{" "}
-                      </a>
+                                </a>
+                              ),
+                              icon: child.icon,
+                              key: child.key,
+                              children: child.children?.map((subchild) => ({
+                                label: (
+                                  <a
+                                    onClick={() => {
+                                      setCurrentNav(subchild.key);
+                                      if (subchild.url) {
+                                        router.navigate(subchild.url);
+                                      }
+                                    }}
+                                  >
+                                    {subchild.label}
+                                  </a>
+                                ),
+                                key: subchild.label,
+                              })),
+                            })),
+                          }}
+                        >
+                          <div
+                            tabIndex={0}
+                            role="button"
+                            className="btn btn-ghost hover:bg-base-300 text-xl h-14 rounded-none flex items-center"
+                          >
+                            {item.icon}
+                            <div className="hidden lg:block">{item.label}</div>
+                          </div>
+                        </Dropdown>
+                      ) : (
+                        <div
+                          tabIndex={0}
+                          role="button"
+                          className="btn btn-ghost hover:bg-base-300 text-xl h-14 rounded-none flex items-center"
+                        >
+                          {item.icon}
+                          <div className="hidden lg:block">{item.label}</div>
+                        </div>
+                      )}
                     </li>
                   ))}
               </div>

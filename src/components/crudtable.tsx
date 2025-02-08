@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Button,
   Checkbox,
   DatePicker,
   Form,
@@ -90,24 +89,28 @@ const CrudTable = <T,>({
               <Space size={5}>
                 {editFunction && (
                   <Tooltip title="Edit">
-                    <Button
+                    <button
+                      className="btn btn-warning"
                       onClick={() => {
                         setCurrentData(record);
                         setIsUpdateModalOpen(true);
                       }}
-                      icon={<EditOutlined />}
-                    ></Button>{" "}
+                    >
+                      <EditOutlined />
+                    </button>{" "}
                   </Tooltip>
                 )}
                 {deleteFunction && (
                   <Tooltip title="Delete">
-                    <Button
+                    <button
+                      className="btn btn-error"
                       onClick={() => {
                         setCurrentData(record);
                         setIsDeleteModalOpen(true);
                       }}
-                      icon={<DeleteOutlined />}
-                    ></Button>{" "}
+                    >
+                      <DeleteOutlined />
+                    </button>{" "}
                   </Tooltip>
                 )}
                 {addtionalActions &&
@@ -117,15 +120,15 @@ const CrudTable = <T,>({
                         title={action.icon ? action.name : ""}
                         key={action.name}
                       >
-                        <Button
+                        <button
+                          className="btn"
                           onClick={() => {
                             setCurrentData(record);
                             action.func(record);
                           }}
-                          icon={action.icon ? action.icon : null}
                         >
-                          {action.icon ? "" : action.name}
-                        </Button>{" "}
+                          {action.icon ? action.icon : action.name}
+                        </button>{" "}
                       </Tooltip>
                     ) : null;
                   })}
@@ -346,16 +349,16 @@ const CrudTable = <T,>({
         footer={() => (
           <>
             {createFunction ? (
-              <Button
+              <button
+                className="btn btn-primary"
                 onClick={() => {
                   creationFormRef.current?.resetFields();
                   setCurrentData({});
                   setIsCreateModalOpen(true);
                 }}
-                type="primary"
               >
                 Create new {resourceName}
-              </Button>
+              </button>
             ) : (
               ""
             )}

@@ -63,14 +63,11 @@ export function LadderTab() {
       dataIndex: ["team", "name"],
       render: (row: any) => row.team?.name,
       key: "team",
-      // sorter: (a, b) => a.team.name.localeCompare(b.team.name),
-      // className: "bg-base-100",
     },
     {
       title: "Total",
       dataIndex: "default",
       key: "default",
-      // sorter: (a, b) => a.default - b.default,
       defaultSortOrder: "descend",
     },
     ...getCompletionColumns(isMobile),
@@ -87,7 +84,7 @@ export function LadderTab() {
                   {categoryNames.map((categoryName) => {
                     return (
                       <div
-                        key={categoryName}
+                        key={`badge-${categoryName}`}
                         className="badge badge-info badge-lg"
                       >
                         {/* @ts-ignore */}
@@ -105,7 +102,7 @@ export function LadderTab() {
     return categoryNames.map((categoryName) => ({
       title: categoryName,
       dataIndex: categoryName,
-      key: categoryName,
+      key: `column-${categoryName}`,
       sorter: (a: any, b: any) => a[categoryName] - b[categoryName],
     }));
   }
@@ -116,7 +113,7 @@ export function LadderTab() {
         <thead className="bg-base-200">
           <tr>
             {columns.map((column) => (
-              <th key={column.key}>
+              <th key={`header-${column.key}`}>
                 {
                   // @ts-ignore
                   column.title
@@ -129,7 +126,7 @@ export function LadderTab() {
           {rows.map((row) => (
             <tr key={row.key} className="">
               {columns.map((column) => (
-                <td key={column.key}>
+                <td key={`column-${column.key}`}>
                   {
                     // @ts-ignore
                     column.render ? column.render(row) : row[column.dataIndex]

@@ -72,26 +72,28 @@ const ScoringPage = ({ tab }: ScoringPageProps) => {
 
   return (
     <>
-      {isMobile ? null : (
-        <ul className="menu menu-horizontal bg-base-200 w-full gap-2">
-          {scoringTabs
-            .filter((tab) => tabNames.includes(tab.key))
-            .map((tab) => (
-              <li key={tab.key}>
-                <a
-                  className={` ${
-                    selectedTab === tab.key
-                      ? "bg-primary text-primary-content"
-                      : ""
-                  }`}
-                  onClick={() => setSelectedTab(tab.key)}
-                >
-                  {tab.key}
-                </a>
-              </li>
-            ))}
-        </ul>
-      )}
+      <div className="mb-4">
+        {isMobile ? null : (
+          <ul className="menu menu-horizontal bg-base-200 w-full gap-2">
+            {scoringTabs
+              .filter((tab) => tabNames.includes(tab.key))
+              .map((tab) => (
+                <li key={tab.key}>
+                  <a
+                    className={` ${
+                      selectedTab === tab.key
+                        ? "bg-primary text-primary-content"
+                        : ""
+                    }`}
+                    onClick={() => setSelectedTab(tab.key)}
+                  >
+                    {tab.key}
+                  </a>
+                </li>
+              ))}
+          </ul>
+        )}
+      </div>
       {scoringTabs.find((tab) => tab.key === selectedTab)?.tab}
     </>
   );

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Button,
   Checkbox,
   DatePicker,
   Form,
@@ -78,28 +77,31 @@ const CrudTable = <T,>({
             render: (record: T) => (
               <Space size={5}>
                 {editFunction && (
-                  <Button
+                  <button
+                    className="btn btn-warning"
                     onClick={() => {
                       setCurrentData(record);
                       setIsUpdateModalOpen(true);
                     }}
                   >
                     Edit
-                  </Button>
+                  </button>
                 )}
                 {deleteFunction && (
-                  <Button
+                  <button
+                    className="btn btn-error"
                     onClick={() => {
                       setCurrentData(record);
                       setIsDeleteModalOpen(true);
                     }}
                   >
                     Delete
-                  </Button>
+                  </button>
                 )}
                 {addtionalActions
                   ? Object.entries(addtionalActions).map(([name, action]) => (
-                      <Button
+                      <button
+                        className="btn"
                         key={"action-" + name}
                         onClick={() => {
                           setCurrentData(record);
@@ -107,7 +109,7 @@ const CrudTable = <T,>({
                         }}
                       >
                         {name}
-                      </Button>
+                      </button>
                     ))
                   : ""}
               </Space>
@@ -315,16 +317,16 @@ const CrudTable = <T,>({
         footer={() => (
           <>
             {createFunction ? (
-              <Button
+              <button
+                className="btn btn-primary"
                 onClick={() => {
                   creationFormRef.current?.resetFields();
                   setCurrentData({});
                   setIsCreateModalOpen(true);
                 }}
-                type="primary"
               >
                 Create new {resourceName}
-              </Button>
+              </button>
             ) : (
               ""
             )}

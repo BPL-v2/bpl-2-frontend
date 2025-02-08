@@ -160,11 +160,11 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
       </Modal>
       <TeamScore category={category}></TeamScore>{" "}
       <div className="divider divider-primary">{category.name}</div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4">
         {category.objectives.map((objective) => {
           return (
-            <div className="card bg-base-200 rounded-none" key={objective.id}>
-              <div className="h-22 ">
+            <div className="card bg-base-200" key={objective.id}>
+              <div className="h-22">
                 <div
                   className={objective.extra ? "tooltip  text-2xl " : undefined}
                   data-tip={objective.extra}
@@ -177,38 +177,43 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
                   </h3>
                 </div>
               </div>
-              <table key={objective.id} className="w-full border-collapse">
-                <tbody>
-                  {Object.entries(objective.team_score)
-                    .map(([teamId, score]) => {
-                      return [parseInt(teamId), score] as [number, ScoreLite];
-                    })
-                    .sort(
-                      ([, scoreA], [, scoreB]) => scoreB.points - scoreA.points
-                    )
-                    .map(([teamId, score]) => {
-                      return (
-                        <tr
-                          key={teamId}
-                          className={`px-4 ${
-                            eventStatus?.team_id === teamId
-                              ? "bg-highlight"
-                              : "bg-base-300"
-                          }`}
-                        >
-                          <td
-                            className={`pl-8 text-left ${
-                              score.points == 0 ? "text-error" : "text-success"
+              <div className="pb-4 mb-0 bg-base-300 bottom-box-rounded">
+                <table key={objective.id} className="w-full border-collapse">
+                  <tbody className="">
+                    {Object.entries(objective.team_score)
+                      .map(([teamId, score]) => {
+                        return [parseInt(teamId), score] as [number, ScoreLite];
+                      })
+                      .sort(
+                        ([, scoreA], [, scoreB]) =>
+                          scoreB.points - scoreA.points
+                      )
+                      .map(([teamId, score]) => {
+                        return (
+                          <tr
+                            key={teamId}
+                            className={`px-4  ${
+                              eventStatus?.team_id === teamId
+                                ? "bg-highlight"
+                                : "bg-base-300"
                             }`}
                           >
-                            {score ? score.points : 0}
-                          </td>
-                          <td>{teamMap[teamId]?.name}</td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
+                            <td
+                              className={`pl-8 text-left ${
+                                score.points == 0
+                                  ? "text-error"
+                                  : "text-success"
+                              }`}
+                            >
+                              {score ? score.points : 0}
+                            </td>
+                            <td>{teamMap[teamId]?.name}</td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           );
         })}

@@ -19,8 +19,8 @@ export function CollectionTab() {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {category.objectives.map((objective) => {
           return (
-            <div className="card bg-base-300 rounded-none" key={objective.id}>
-              <div className="card-title flex items-center m-0 px-4 bg-base-200 h-25  ">
+            <div className="card bg-base-300" key={objective.id}>
+              <div className="card-title top-box-rounded flex items-center m-0 px-4 bg-base-200 h-25  ">
                 <ObjectiveIcon
                   style={{
                     maxWidth: "3em",
@@ -39,8 +39,9 @@ export function CollectionTab() {
                   </h3>
                 </div>
               </div>
-
-              <CollectionCardTable objective={objective} />
+              <div className="pb-4 mb-0 bg-base-300 bottom-box-rounded">
+                <CollectionCardTable objective={objective} />
+              </div>
             </div>
           );
         })}

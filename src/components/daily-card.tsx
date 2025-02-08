@@ -20,7 +20,7 @@ function bonusAvailableCounter(
     return null;
   }
   if (new Date(valid_to) < new Date()) {
-    return "Bonus points are no longer available";
+    return "Bonus no longer available";
   }
   return (
     <Countdown
@@ -29,7 +29,7 @@ function bonusAvailableCounter(
           ? "D [days], HH:mm:ss"
           : "HH:mm:ss"
       }
-      prefix={"Bonus points available until "}
+      prefix={"Bonus available until "}
       valueStyle={{ fontSize: "1em" }}
       value={new Date(valid_to).getTime()}
       onFinish={onFinish}
@@ -57,14 +57,11 @@ export function DailyCard({ daily }: DailyCardProps) {
     new Date(daily.baseObjective.valid_from) > new Date()
   ) {
     return (
-      <div
-        className="card bg-base-300 rounded-none"
-        key={daily.baseObjective.id}
-      >
-        <div className=" m-0 p-4 bg-base-200  text-center text-xl">
+      <div className="card bg-base-300" key={daily.baseObjective.id}>
+        <div className="card-title top-box-rounded m-0 p-4 bg-base-200 text-center text-xl">
           Daily not yet available
         </div>
-        <div className="bg-base-300 p-4">
+        <div className="card-body bg-base-300 p-4">
           <Countdown
             format={
               new Date(daily.baseObjective.valid_from).getTime() -
@@ -79,13 +76,13 @@ export function DailyCard({ daily }: DailyCardProps) {
               fetchCategoryForEvent(currentEvent.id).then(setRules);
             }}
           />
-        </div>{" "}
+        </div>
       </div>
     );
   }
   return (
-    <div className="card bg-base-300 rounded-none" key={objective.id}>
-      <div className="card-title flex items-center m-0 px-4 bg-base-200 h-25  ">
+    <div className="card bg-base-300" key={objective.id}>
+      <div className="card-title top-box-rounded flex items-center m-0 px-4 bg-base-200 h-25  ">
         <ObjectiveIcon
           style={{
             maxWidth: "3em",
@@ -106,7 +103,7 @@ export function DailyCard({ daily }: DailyCardProps) {
       </div>
 
       <CollectionCardTable objective={objective} />
-      <div className="py-4 bg-base-200">
+      <div className="py-4 mb-0 bg-base-200 rounded-b-xl">
         {bonusAvailableCounter(daily.raceObjective?.valid_to, () => {
           fetchCategoryForEvent(currentEvent.id).then(setRules);
         })}

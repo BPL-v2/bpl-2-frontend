@@ -22,9 +22,8 @@ import { PlayTime } from "../types/signup";
 import { DiscordFilled } from "@ant-design/icons";
 
 const { useToken } = theme;
-type ApplicationButtonProps = {
-};
-const ApplicationButton = ({  }: ApplicationButtonProps) => {
+type ApplicationButtonProps = {};
+const ApplicationButton = ({}: ApplicationButtonProps) => {
   let { user, eventStatus, currentEvent, setEventStatus } =
     useContext(GlobalStateContext);
   const [modalOpen, setModalOpen] = React.useState(false);
