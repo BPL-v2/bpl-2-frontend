@@ -9,6 +9,7 @@ import { DailyTab } from "../scoring-tabs/daily-tab";
 import { HeistTab } from "../scoring-tabs/heist-tab";
 import { GemTab } from "../scoring-tabs/gem-tab";
 import { getRootCategoryNames } from "../types/scoring-category";
+import { router } from "../router";
 export const scoringTabs: { key: string; tab: JSX.Element }[] = [
   {
     key: "Ladder",
@@ -82,10 +83,9 @@ const ScoringPage = ({ tab }: ScoringPageProps) => {
                     : ""
                 }`}
                 onClick={(e) => {
-                  // allow opening in new tab
                   if (!e.metaKey && !e.ctrlKey && e.button === 0) {
                     e.preventDefault();
-                    setSelectedTab(tab.key);
+                    router.navigate(`/scores?tab=${tab.key}`);
                   }
                 }}
               >
