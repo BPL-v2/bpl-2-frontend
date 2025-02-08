@@ -3,13 +3,14 @@ import { getImageLocation } from "../types/scoring-objective";
 import { GlobalStateContext } from "../utils/context-provider";
 import { useContext, useEffect, useState } from "react";
 import { ObjectiveIcon } from "./objective-icon";
+import { Team } from "../types/team";
 
 export type ItemTableProps = {
   category?: ScoreCategory;
 };
 
 export function ItemTable({ category }: ItemTableProps) {
-  const { currentEvent, isMobile, gameVersion } =
+  const { currentEvent, isMobile, gameVersion, eventStatus } =
     useContext(GlobalStateContext);
   const [nameFilter, setNameFilter] = useState<string | undefined>();
   const [completionFilter, setCompletionFilter] = useState<{
@@ -21,6 +22,7 @@ export function ItemTable({ category }: ItemTableProps) {
   const [variantMap, setVariantMap] = useState<{
     [objectiveName: string]: ScoreObjective[];
   }>({});
+  const userTeamID = eventStatus?.team_id || -1;
 
   useEffect(() => {
     if (!category) {
@@ -138,6 +140,30 @@ export function ItemTable({ category }: ItemTableProps) {
     );
   };
 
+  const badgeClass = (objective: ScoreObjective, teamID: number) => {
+    let className = "badge gap-2 w-full text-left font-bold py-3 border-3";
+    if (objective.team_score[teamID].finished) {
+      className += " bg-success text-success-content";
+    } else {
+      className += " bg-error text-error-content";
+    }
+    if (teamID === userTeamID) {
+      className += " border-white ";
+    } else {
+      className += " border-black";
+    }
+    return className;
+  };
+  const teamSort = (a: Team, b: Team) => {
+    if (a.id === userTeamID) {
+      return -1;
+    }
+    if (b.id === userTeamID) {
+      return 1;
+    }
+    return a.name.localeCompare(b.name);
+  };
+
   return (
     <>
       <div className=" overflow-auto" style={{ maxHeight: "80vh" }}>
@@ -158,8 +184,15 @@ export function ItemTable({ category }: ItemTableProps) {
               {isMobile ? (
                 <th className="text-center">Completion</th>
               ) : (
-                currentEvent.teams.map((team) => (
-                  <th key={`${category.id}-${team.name}`}>
+                currentEvent.teams.sort(teamSort).map((team) => (
+                  <th
+                    key={`${category.id}-${team.name}`}
+                    className={
+                      userTeamID === team.id
+                        ? "bg-highlight text-base-content"
+                        : ""
+                    }
+                  >
                     <div className="flex flex-row items-center">
                       <div>
                         <p>{team.name}</p>
@@ -196,7 +229,7 @@ export function ItemTable({ category }: ItemTableProps) {
               const objRow = (
                 <tr
                   key={`${category.id}-${objective.id}`}
-                  className={"hover:bg-base-200"}
+                  className={"hover:bg-slate-700"}
                   onClick={() => {
                     if (!variantMap[objective.name]) {
                       return;
@@ -226,24 +259,21 @@ export function ItemTable({ category }: ItemTableProps) {
                       key={`${category.id}-${objective.id}`}
                       className="grid grid-cols-1 sm:grid-cols-2 gap-2 "
                     >
-                      {currentEvent.teams.map((team) => (
+                      {currentEvent.teams.sort(teamSort).map((team) => (
                         <div
                           key={`badge-${category.id}-${team.id}-${objective.id}`}
-                          className={`badge gap-2 w-full text-left 
-                            ${
-                              objective.team_score[team.id].finished
-                                ? "bg-success text-success-content"
-                                : "bg-error text-error-content"
-                            }`}
+                          className={badgeClass(objective, team.id)}
                         >
-                          {objective.team_score[team.id].finished ? "✅" : "❌"}
                           {team.name}
                         </div>
                       ))}
                     </td>
                   ) : (
-                    currentEvent.teams.map((team) => (
-                      <td key={`${category.id}-${team.id}-${objective.id}`}>
+                    currentEvent.teams.sort(teamSort).map((team) => (
+                      <td
+                        key={`${category.id}-${team.id}-${objective.id}`}
+                        className={`text-center ${""}`}
+                      >
                         {objective.team_score[team.id].finished ? "✅" : "❌"}
                       </td>
                     ))
