@@ -33,8 +33,8 @@ export const UniqueCategoryCard = ({
   const bgColor = selected ? "bg-highlight" : "bg-base-300";
   const headerColor = selected ? "bg-base-300" : "bg-base-200";
   const borderColor = selected
-    ? "border-primary "
-    : "border-base-100  hover:border-secondary ";
+    ? "border-primary"
+    : "border-base-300 hover:border-secondary hover:border-dotted";
   const points = teamId
     ? `${getTotalPoints(category)[teamId]} / ${
         getPotentialPoints(category)[teamId]
@@ -43,7 +43,7 @@ export const UniqueCategoryCard = ({
 
   return (
     <div
-      className={`card border-3 cursor-pointer ${bgColor} ${borderColor} `}
+      className={`card border-3 cursor-pointer ${bgColor} ${borderColor}`}
       key={`unique-card-${category.id}`}
       onClick={onClick}
     >
@@ -51,7 +51,7 @@ export const UniqueCategoryCard = ({
         className={`card-title top-box-rounded m-0 p-2 flex items-center justify-between ${headerColor}`}
       >
         <div className="flex-shrink-0">
-          <Medal rank={category.team_score[teamId].rank} size={32} />
+          <Medal rank={category.team_score[teamId].rank} size={28} />
         </div>
         <h1 className="text-xl text-center">{category.name}</h1>
         <div className="flex-shrink-0 text-sm"> {points} </div>

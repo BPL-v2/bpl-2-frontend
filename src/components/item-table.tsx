@@ -164,6 +164,32 @@ export function ItemTable({ category }: ItemTableProps) {
     return a.name.localeCompare(b.name);
   };
 
+  const completionRows = (objective: ScoreObjective) => {
+    return isMobile ? (
+      <td
+        key={`${category.id}-${objective.id}`}
+        className="grid grid-cols-1 sm:grid-cols-2 gap-2 "
+      >
+        {currentEvent.teams.sort(teamSort).map((team) => (
+          <div
+            key={`badge-${category.id}-${team.id}-${objective.id}`}
+            className={badgeClass(objective, team.id)}
+          >
+            {team.name}
+          </div>
+        ))}
+      </td>
+    ) : (
+      currentEvent.teams.sort(teamSort).map((team) => (
+        <td
+          key={`${category.id}-${team.id}-${objective.id}`}
+          className={`text-center`}
+        >
+          {objective.team_score[team.id].finished ? "✅" : "❌"}
+        </td>
+      ))
+    );
+  };
   return (
     <>
       <div className=" overflow-auto" style={{ maxHeight: "80vh" }}>
@@ -253,31 +279,7 @@ export function ItemTable({ category }: ItemTableProps) {
                       <td>{objectNameRender(objective)}</td>
                     </>
                   )}
-
-                  {isMobile ? (
-                    <td
-                      key={`${category.id}-${objective.id}`}
-                      className="grid grid-cols-1 sm:grid-cols-2 gap-2 "
-                    >
-                      {currentEvent.teams.sort(teamSort).map((team) => (
-                        <div
-                          key={`badge-${category.id}-${team.id}-${objective.id}`}
-                          className={badgeClass(objective, team.id)}
-                        >
-                          {team.name}
-                        </div>
-                      ))}
-                    </td>
-                  ) : (
-                    currentEvent.teams.sort(teamSort).map((team) => (
-                      <td
-                        key={`${category.id}-${team.id}-${objective.id}`}
-                        className={`text-center ${""}`}
-                      >
-                        {objective.team_score[team.id].finished ? "✅" : "❌"}
-                      </td>
-                    ))
-                  )}
+                  {completionRows(objective)}
                 </tr>
               );
 
@@ -285,18 +287,19 @@ export function ItemTable({ category }: ItemTableProps) {
                 return (
                   <tr
                     key={`${category.id}-${variant.id}`}
-                    className="bg-base-200 hover:bg-base-300 m-0 p-0"
+                    className="bg-base-200 hover:bg-slate-700 m-0 p-0"
                   >
                     <>
                       {isMobile ? null : <td></td>}
-                      <td className="text-primary">{variant.extra}</td>
-                    </>
-
-                    {currentEvent.teams.map((team) => (
-                      <td key={`${category.id}-${team.id}-${variant.id}`}>
-                        {variant.team_score[team.id].finished ? "✅" : "❌"}
+                      <td
+                        className={`text-primary ${
+                          isMobile ? "text-center" : ""
+                        }`}
+                      >
+                        {variant.extra}
                       </td>
-                    ))}
+                    </>
+                    {completionRows(variant)}
                   </tr>
                 );
               });
