@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserPermission } from "../types/user";
 import { GlobalStateContext } from "../utils/context-provider";
-import { Button, Form, Input, Space, Table } from "antd";
+import { Form, Input, Space, Table } from "antd";
 import { PlayTime, Signup } from "../types/signup";
 import { assignUsersToTeams, fetchAllSignups } from "../client/signup-client";
 import { ColumnType } from "antd/es/table";
@@ -22,12 +22,12 @@ type TeamRow = {
   [PlayTime.NO_LIFE]: number;
 };
 
-const UserSortPage: React.FC = () => {
+const UserSortPage = () => {
   const { user, currentEvent, setEventStatus, eventStatus } =
     useContext(GlobalStateContext);
-  const [nameFilter, setNameFilter] = React.useState<string>("");
-  const [signups, setSignups] = React.useState<Signup[]>([]);
-  const [suggestions, setSuggestions] = React.useState<Signup[]>([]);
+  const [nameFilter, setNameFilter] = useState<string>("");
+  const [signups, setSignups] = useState<Signup[]>([]);
+  const [suggestions, setSuggestions] = useState<Signup[]>([]);
 
   function updateSignups() {
     if (!currentEvent) {
@@ -50,9 +50,9 @@ const UserSortPage: React.FC = () => {
     });
   }
 
-  React.useEffect(() => setSuggestions(signups), [signups]);
+  useEffect(() => setSuggestions(signups), [signups]);
 
-  React.useEffect(updateSignups, [currentEvent]);
+  useEffect(updateSignups, [currentEvent]);
   if (
     !user ||
     !user.permissions.includes(UserPermission.ADMIN) ||
@@ -89,7 +89,7 @@ const UserSortPage: React.FC = () => {
           <button
             key={team.id + "-" + signup.user.id}
             className={
-              signup.team_id !== team.id ? "secondary-button" : "primary-button"
+              signup.team_id !== team.id ? "btn btn-dash" : "btn btn-primary"
             }
             style={{ marginRight: "5px" }}
             onClick={() => {
@@ -169,7 +169,8 @@ const UserSortPage: React.FC = () => {
             />
           </Form.Item>
         </Form>
-        <Button
+        <button
+          className="btn"
           onClick={() => {
             const time = new Date().getTime();
             setSuggestions(sortUsers(currentEvent, signups));
@@ -177,25 +178,26 @@ const UserSortPage: React.FC = () => {
           }}
         >
           Get Sort Suggestions
-        </Button>
-        <Button onClick={() => setSuggestions(signups)}>
+        </button>
+        <button className="btn" onClick={() => setSuggestions(signups)}>
           Reset Suggestions
-        </Button>
-        <Button
+        </button>
+        <button
+          className="btn"
           onClick={() => {
             setSignups(signups.map((s) => ({ ...s, team_id: 0 })));
           }}
         >
           Reset Everything
-        </Button>
-        <Button
-          type="primary"
+        </button>
+        <button
+          className="btn btn-warning"
           onClick={() =>
             assignUsersToTeams(currentEvent.id, suggestions).then(updateSignups)
           }
         >
           Submit Assignments
-        </Button>
+        </button>
         {/* </div> */}
       </Space>
       <Table

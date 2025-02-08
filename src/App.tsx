@@ -10,9 +10,7 @@ import { fetchAllEvents, fetchEventStatus } from "./client/event-client";
 import { BPLEvent, EventStatus } from "./types/event";
 import { useError } from "./components/errorcontext";
 import {
-  HomeOutlined,
   LineChartOutlined,
-  MenuOutlined,
   ReadOutlined,
   SettingOutlined,
   TwitchOutlined,
@@ -25,7 +23,6 @@ import { mergeScores } from "./utils/utils";
 import { fetchScoringPresetsForEvent } from "./client/scoring-preset-client";
 import { ScoringPreset } from "./types/scoring-preset";
 import ApplicationButton from "./components/application-button";
-import { scoringTabs } from "./pages/scoring-page";
 import { Dropdown } from "antd";
 
 // function getKeys(items: any[]): string[] {
@@ -103,14 +100,6 @@ function App() {
         icon: <LineChartOutlined />,
         url: "/scores",
         key: "scores",
-        // scoring subtabs are only shown in mobile view here
-        children: isMobile
-          ? scoringTabs.map((tab) => ({
-              label: tab.key,
-              url: `/scores?tab=${tab.key}`,
-              key: tab.key,
-            }))
-          : [],
       },
       {
         label: "Streams",
@@ -125,24 +114,6 @@ function App() {
         key: "rules",
       },
     ];
-    if (isMobile) {
-      menu = [
-        {
-          label: "",
-          icon: <MenuOutlined />,
-          key: "menu",
-          children: [
-            {
-              label: "Home",
-              icon: <HomeOutlined />,
-              key: "home",
-              url: "/",
-            },
-            ...menu,
-          ],
-        },
-      ];
-    }
     setMenuItems(menu);
   }, [isMobile, user]);
 
@@ -225,20 +196,20 @@ function App() {
       >
         <div className="max-w-[1440px] text-center mx-auto ">
           <div className="text-2xl p-0 flex items-center justify-between h-14">
-            <ul className="navbar bg-base-200 w-full gap-2 h-14 text-xl">
-              {isMobile ? null : (
-                <button
-                  className="btn h-14 w-40 bg-base-200 text-white text-4xl font-bold"
-                  onClick={() => {
-                    setCurrentNav("/");
-                    router.navigate("/");
-                  }}
-                >
-                  <img className="h-10" src="assets/app-logos/bpl-logo.png" />
+            <ul className="navbar bg-base-200 w-full  h-14 text-xl gap-0 p-0">
+              <button
+                className="btn h-14 bg-base-200 "
+                onClick={() => {
+                  setCurrentNav("/");
+                  router.navigate("/");
+                }}
+              >
+                <img className="h-10" src="assets/app-logos/bpl-logo.png" />
+                <div className="text-white text-4xl font-bold hidden sm:block">
                   BPL
-                </button>
-              )}
-              <div className="flex flex-1 justify-left px-2 gap-2 ">
+                </div>
+              </button>
+              <div className="flex flex-1 justify-left gap-0 ">
                 {menuItems
                   .filter((item) =>
                     item.rolerequired
@@ -249,56 +220,72 @@ function App() {
                   )
                   .map((item) => (
                     <li
-                      className={`m-2 ${
+                      className={`m-0 sm:m-2 ${
                         currentNav === item.key
                           ? "bg-primary text-primary-content"
                           : ""
                       }`}
-                      onClick={() => {
-                        setCurrentNav(item.key);
-                        if (item.url) {
-                          router.navigate(item.url);
+                      onClick={(e) => {
+                        if (!e.metaKey && !e.ctrlKey && e.button === 0) {
+                          e.preventDefault();
+                          setCurrentNav(item.key);
+                          if (item.url) {
+                            router.navigate(item.url);
+                          }
                         }
                       }}
                       key={item.key}
                     >
-                      {item.children ? (
-                        <Dropdown
-                          trigger={["click", "hover"]}
-                          menu={{
-                            items: item.children?.map((child) => ({
-                              label: (
-                                <a
-                                  onClick={() => {
-                                    setCurrentNav(item.key);
-                                    if (child.url) {
-                                      router.navigate(child.url);
-                                    }
-                                  }}
-                                >
-                                  {child.label}
-                                </a>
-                              ),
-                              icon: child.icon,
-                              key: child.key,
-                              children: child.children?.map((subchild) => ({
+                      <a href={item.url}>
+                        {item.children ? (
+                          <Dropdown
+                            trigger={["click", "hover"]}
+                            menu={{
+                              items: item.children?.map((child) => ({
                                 label: (
                                   <a
                                     onClick={() => {
-                                      setCurrentNav(subchild.key);
-                                      if (subchild.url) {
-                                        router.navigate(subchild.url);
+                                      setCurrentNav(item.key);
+                                      if (child.url) {
+                                        router.navigate(child.url);
                                       }
                                     }}
                                   >
-                                    {subchild.label}
+                                    {child.label}
                                   </a>
                                 ),
-                                key: subchild.label,
+                                icon: child.icon,
+                                key: child.key,
+                                children: child.children?.map((subchild) => ({
+                                  label: (
+                                    <a
+                                      onClick={() => {
+                                        setCurrentNav(subchild.key);
+                                        if (subchild.url) {
+                                          router.navigate(subchild.url);
+                                        }
+                                      }}
+                                    >
+                                      {subchild.label}
+                                    </a>
+                                  ),
+                                  key: subchild.label,
+                                })),
                               })),
-                            })),
-                          }}
-                        >
+                            }}
+                          >
+                            <div
+                              tabIndex={0}
+                              role="button"
+                              className="btn btn-ghost hover:bg-base-300 text-xl h-14 rounded-none flex items-center"
+                            >
+                              {item.icon}
+                              <div className="hidden lg:block">
+                                {item.label}
+                              </div>
+                            </div>
+                          </Dropdown>
+                        ) : (
                           <div
                             tabIndex={0}
                             role="button"
@@ -307,30 +294,21 @@ function App() {
                             {item.icon}
                             <div className="hidden lg:block">{item.label}</div>
                           </div>
-                        </Dropdown>
-                      ) : (
-                        <div
-                          tabIndex={0}
-                          role="button"
-                          className="btn btn-ghost hover:bg-base-300 text-xl h-14 rounded-none flex items-center"
-                        >
-                          {item.icon}
-                          <div className="hidden lg:block">{item.label}</div>
-                        </div>
-                      )}
+                        )}
+                      </a>
                     </li>
                   ))}
               </div>
               <div tabIndex={0} className="h-full">
-                <ApplicationButton />
+                {isMobile ? null : <ApplicationButton />}
                 <AuthButton />
               </div>
             </ul>
           </div>
-          <div className="min-h-[80vh]">
+          <div className="min-h-[80vh] mb-4">
             <RouterProvider router={router} />
           </div>
-          <div className="bg-base-200  p-4 text-center mt-20">
+          <div className="bg-base-200 p-4 text-center mt-20">
             This product isn't affiliated with or endorsed by Grinding Gear
             Games in any way.
           </div>

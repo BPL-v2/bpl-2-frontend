@@ -47,7 +47,7 @@ export const scoringTabs: { key: string; tab: JSX.Element }[] = [
 type ScoringPageProps = { tab?: string };
 
 const ScoringPage = ({ tab }: ScoringPageProps) => {
-  const { isMobile, currentEvent } = useContext(GlobalStateContext);
+  const { currentEvent } = useContext(GlobalStateContext);
   const [searchParams] = useSearchParams();
   const [selectedTab, setSelectedTab] = useState<string>(tab || "Ladder");
   useEffect(() => {
@@ -57,10 +57,6 @@ const ScoringPage = ({ tab }: ScoringPageProps) => {
     }
   }, [searchParams]);
 
-  useEffect(() => {
-    window.history.pushState({}, "", `/scores?tab=${selectedTab}`);
-  }, [selectedTab]);
-
   if (!currentEvent) {
     return <div>Event not found</div>;
   }
@@ -69,31 +65,35 @@ const ScoringPage = ({ tab }: ScoringPageProps) => {
     "Ladder",
     ...getRootCategoryNames(currentEvent.game_version),
   ];
-
   return (
     <>
-      <div className="mb-4">
-        {isMobile ? null : (
-          <ul className="menu menu-horizontal bg-base-200 w-full gap-2">
-            {scoringTabs
-              .filter((tab) => tabNames.includes(tab.key))
-              .map((tab) => (
-                <li key={tab.key}>
-                  <a
-                    className={` ${
-                      selectedTab === tab.key
-                        ? "bg-primary text-primary-content"
-                        : ""
-                    }`}
-                    onClick={() => setSelectedTab(tab.key)}
-                  >
-                    {tab.key}
-                  </a>
-                </li>
-              ))}
-          </ul>
-        )}
-      </div>
+      <ul
+        className={`menu menu-horizontal bg-base-200 gap-0 md:gap-2 mb-4 w-full`}
+      >
+        {scoringTabs
+          .filter((tab) => tabNames.includes(tab.key))
+          .map((tab) => (
+            <li key={tab.key}>
+              <a
+                href={`/scores?tab=${tab.key}`}
+                className={`px-2 md:px-4 ${
+                  selectedTab === tab.key
+                    ? "bg-primary text-primary-content"
+                    : ""
+                }`}
+                onClick={(e) => {
+                  // allow opening in new tab
+                  if (!e.metaKey && !e.ctrlKey && e.button === 0) {
+                    e.preventDefault();
+                    setSelectedTab(tab.key);
+                  }
+                }}
+              >
+                {tab.key}
+              </a>
+            </li>
+          ))}
+      </ul>
       {scoringTabs.find((tab) => tab.key === selectedTab)?.tab}
     </>
   );

@@ -21,7 +21,7 @@ export function MainPage() {
     currentEvent && Date.parse(currentEvent.event_end_time) < now;
 
   return (
-    <div className="flex flex-col gap-8 mt-8">
+    <div className="flex flex-col gap-8 mt-8 mx-auto ">
       <div className="card max-w-full bg-base-300">
         <div className="card-body ">
           <div className="card-title text-4xl ">What is BPL?</div>

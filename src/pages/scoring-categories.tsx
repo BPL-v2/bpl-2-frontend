@@ -9,7 +9,6 @@ import {
   fetchCategoryById,
 } from "../client/category-client";
 import {
-  Button,
   Form,
   FormInstance,
   Input,
@@ -259,7 +258,7 @@ const ScoringCategoryPage: React.FC = () => {
         editable: true,
         render: (name: string, data: ScoringCategory) => {
           return (
-            <Button
+            <button
               onClick={() => {
                 router.navigate(
                   `/events/${eventId}/scoring-categories/${data.id}`
@@ -267,7 +266,7 @@ const ScoringCategoryPage: React.FC = () => {
               }}
             >
               {name}
-            </Button>
+            </button>
           );
         },
       },
@@ -280,8 +279,8 @@ const ScoringCategoryPage: React.FC = () => {
             <div>
               {data.map((category) => {
                 return (
-                  <Button
-                    style={{ margin: "2px" }}
+                  <button
+                    className="btn btn-dash m-1"
                     key={category.id}
                     onClick={() => {
                       router.navigate(
@@ -290,7 +289,7 @@ const ScoringCategoryPage: React.FC = () => {
                     }}
                   >
                     {category.name}
-                  </Button>
+                  </button>
                 );
               })}
             </div>
@@ -466,23 +465,23 @@ const ScoringCategoryPage: React.FC = () => {
           deleteFunction={deleteObjective}
           addtionalActions={addtionalObjectiveActions}
         />
-        <Button
+        <button
+          className="btn btn-primary m-2"
           onClick={() => {
             setCurrentObjective({});
             setIsObjectiveModalOpen(true);
           }}
-          type="primary"
         >
           Create new Objective
-        </Button>
-        <Button
+        </button>
+        <button
+          className="btn btn-primary m-2"
           onClick={() => {
             setIsBulkObjectiveModalOpen(true);
           }}
-          type="primary"
         >
           Create Bulk Objectives
-        </Button>
+        </button>
       </>
     );
   }, [objectiveColumns, categoryId, refreshObjectives]);

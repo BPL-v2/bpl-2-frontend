@@ -5,15 +5,12 @@ import { TwitchStreamEmbed } from "../components/twitch-stream";
 // @ts-ignore: library is not typed
 import ReactTwitchEmbedVideo from "react-twitch-embed-video";
 import { GlobalStateContext } from "../utils/context-provider";
-import { Flex, theme, Typography } from "antd";
 import { teamSort } from "../types/team";
-const { useToken } = theme;
 
 export function TwitchPage() {
   const [twitchStreams, setTwitchStreams] = useState<TwitchStream[]>([]);
   const [selectedChannel, setSelectedChannel] = useState<string | null>(null);
   const { eventStatus, users, currentEvent } = useContext(GlobalStateContext);
-  const token = useToken().token;
   useEffect(() => {
     fetchStreams().then((data) => setTwitchStreams(data));
   }, []);
@@ -26,13 +23,11 @@ export function TwitchPage() {
           width={"100%"}
         />
       ) : null}
-      <Typography.Title level={2}>Twitch Streams by Team</Typography.Title>
+      <h1 className="text-4xl mt-4">Twitch Streams by Team</h1>
       {currentEvent?.teams.sort(teamSort(eventStatus)).map((team) => (
         <div key={`team-video-thumbnails-${team.id}`}>
           <div className="divider divider-primary">{team.name}</div>
-
-          <Flex wrap gap="middle" justify="left">
-            <></>
+          <div className="flex flex-wrap gap-4 justify-left">
             {twitchStreams
               .filter((stream) =>
                 users.some(
@@ -46,20 +41,16 @@ export function TwitchPage() {
                 <div
                   key={`stream-${stream.id}`}
                   onClick={() => setSelectedChannel(stream.user_login)}
-                  style={{
-                    cursor: "pointer",
-                    border: `2px solid ${
-                      stream.user_login == selectedChannel
-                        ? token.colorPrimary
-                        : "transparent"
-                    }`,
-                    borderRadius: "8px",
-                  }}
+                  className={`cursor-pointer border-2 rounded-8 ${
+                    stream.user_login == selectedChannel
+                      ? "border-primary"
+                      : "border-transparent"
+                  }`}
                 >
                   <TwitchStreamEmbed stream={stream} width={360} height={180} />
                 </div>
               ))}
-          </Flex>
+          </div>
         </div>
       ))}
     </div>

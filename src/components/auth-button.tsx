@@ -56,7 +56,10 @@ const AuthButton = () => {
         <button
           className={`btn bg-base-300 h-full hover:text-primary hover:border-primary`}
         >
-          <UserOutlined /> {user ? user.display_name : "Login"}
+          <UserOutlined />{" "}
+          <div className="hidden sm:block">
+            {user ? user.display_name : "Login"}
+          </div>
         </button>
       </Dropdown>
     );

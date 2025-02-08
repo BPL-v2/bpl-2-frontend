@@ -121,7 +121,7 @@ const CrudTable = <T,>({
                         key={action.name}
                       >
                         <button
-                          className="btn"
+                          className="btn btn-soft"
                           onClick={() => {
                             setCurrentData(record);
                             action.func(record);

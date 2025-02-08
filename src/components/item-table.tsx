@@ -69,13 +69,13 @@ export function ItemTable({ category }: ItemTableProps) {
     for (const teamId in completionFilter) {
       if (
         completionFilter[teamId] === 1 &&
-        !objective.team_score[teamId].finished
+        objective.team_score[teamId].finished
       ) {
         return false;
       }
       if (
         completionFilter[teamId] === 2 &&
-        objective.team_score[teamId].finished
+        !objective.team_score[teamId].finished
       ) {
         return false;
       }
@@ -140,8 +140,8 @@ export function ItemTable({ category }: ItemTableProps) {
 
   return (
     <>
-      <div className=" overflow-auto" style={{ maxHeight: "90vh" }}>
-        <table className="table bg-base-300 table-lg	">
+      <div className=" overflow-auto" style={{ maxHeight: "80vh" }}>
+        <table className="table bg-base-300 table-md	">
           <thead className="bg-base-200 sticky top-0 z-10">
             <tr className="text-lg">
               {isMobile ? null : <th></th>}
@@ -161,7 +161,18 @@ export function ItemTable({ category }: ItemTableProps) {
                 currentEvent.teams.map((team) => (
                   <th key={`${category.id}-${team.name}`}>
                     <div className="flex flex-row items-center">
-                      {team.name}
+                      <div>
+                        <p>{team.name}</p>
+                        <p className="text-accent text-sm">
+                          {category.objectives.reduce(
+                            (acc: number, objective) =>
+                              acc +
+                              (objective.team_score[team.id].finished ? 1 : 0),
+                            0
+                          )}
+                          / {category.objectives.length}
+                        </p>
+                      </div>
                       <button
                         className="btn w-8 h-8  bg-base-300 ml-2 select-none text-center align-middle border-1 border-primary"
                         onClick={(e) => {
@@ -172,7 +183,7 @@ export function ItemTable({ category }: ItemTableProps) {
                           e.stopPropagation();
                         }}
                       >
-                        {[null, "✅", "❌"][completionFilter[team.id]]}
+                        {[null, "❌", "✅"][completionFilter[team.id]]}
                       </button>
                     </div>
                   </th>
@@ -226,7 +237,7 @@ export function ItemTable({ category }: ItemTableProps) {
                             }`}
                         >
                           {objective.team_score[team.id].finished ? "✅" : "❌"}
-                          {team.name}{" "}
+                          {team.name}
                         </div>
                       ))}
                     </td>

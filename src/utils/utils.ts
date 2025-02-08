@@ -187,7 +187,7 @@ export function getPotentialPoints(category: ScoreCategory) {
 function getPotentialPointsForCategory(category: ScoreCategory) {
   const points: { [teamId: number]: number } = {};
   for (const [teamId, teamScore] of Object.entries(category.team_score)) {
-    if (teamScore.points > 0) {
+    if (teamScore.points != 0) {
       points[parseInt(teamId)] = teamScore.points;
     } else {
       if (!category.scoring_preset) {

@@ -1,16 +1,12 @@
 import React, { useContext, useEffect } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import {
-  Button,
   Checkbox,
   Dropdown,
   Form,
   FormInstance,
   MenuProps,
-  Modal,
   Select,
-  Space,
-  theme,
 } from "antd";
 import { Team } from "../types/team";
 import { EventStatusEnum } from "../types/event";
@@ -21,7 +17,6 @@ import {
 import { PlayTime } from "../types/signup";
 import { DiscordFilled } from "@ant-design/icons";
 
-const { useToken } = theme;
 type ApplicationButtonProps = {};
 const ApplicationButton = ({}: ApplicationButtonProps) => {
   let { user, eventStatus, currentEvent, setEventStatus } =
@@ -30,7 +25,6 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
   const formRef = React.useRef<FormInstance>(null);
   const [userTeam, setUserTeam] = React.useState<Team | undefined>(undefined);
   const [isServerMember, setIsServerMember] = React.useState(true);
-  const token = useToken().token;
   useEffect(() => {
     setUserTeam(
       user
@@ -84,103 +78,128 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
   if (eventStatus?.application_status === EventStatusEnum.None) {
     return (
       <>
-        <Modal
+        <dialog
+          id="my_modal_1"
+          className="modal"
           open={modalOpen}
-          onCancel={() => setModalOpen(false)}
-          title="Apply for Event"
-          onOk={() => formRef.current?.submit()}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setModalOpen(false);
+          }}
+          onClose={() => setModalOpen(false)}
         >
-          <Form
-            layout="vertical"
-            ref={formRef}
-            onFinish={(values) => {
-              submitEventApplication(currentEvent.id, values)
-                .then(() => {
-                  setEventStatus({
-                    ...eventStatus,
-                    application_status: EventStatusEnum.Applied,
+          <div className="modal-box bg-base-200">
+            <h3 className="font-bold text-lg mb-8">Apply for Event</h3>
+            <Form
+              layout="vertical"
+              ref={formRef}
+              onFinish={(values) => {
+                submitEventApplication(currentEvent.id, values)
+                  .then(() => {
+                    setEventStatus({
+                      ...eventStatus,
+                      application_status: EventStatusEnum.Applied,
+                    });
+                    setModalOpen(false);
+                    formRef.current?.resetFields();
+                  })
+                  .catch((error) => {
+                    console.error(error);
+                    setIsServerMember(false);
                   });
+              }}
+            >
+              <Form.Item
+                label="How many hours will you be able to play per day?"
+                name="playtime"
+                rules={[
+                  {
+                    required: true,
+                    message:
+                      "Please select how many hours you can play per day",
+                  },
+                ]}
+              >
+                <Select>
+                  {Object.entries(PlayTime).map((entry) => (
+                    <Select.Option key={entry[0]} value={entry[0]}>
+                      {entry[1]}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                layout="horizontal"
+                label={
+                  <>
+                    {"I've read the "}
+                    <a
+                      className="underline text-primary ml-1"
+                      href="/rules"
+                      target="_blank"
+                    >
+                      rules
+                    </a>
+                  </>
+                }
+                name="rulecheck"
+                valuePropName={"checked"}
+                rules={[
+                  {
+                    required: true,
+                    validator: (_, value) => {
+                      if (!value) {
+                        return Promise.reject(
+                          "Please confirm that you've read the rules"
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
+              >
+                <Checkbox />
+              </Form.Item>
+            </Form>
+            {user.discord_id ? null : (
+              <div className="mt-4">
+                <p>
+                  You need a linked discord account and join our server to
+                  apply.
+                </p>
+                <button className="btn btn-lg bg-discord text-white text-xl mt-4">
+                  <DiscordFilled></DiscordFilled> Link Discord Account
+                </button>
+              </div>
+            )}
+            {isServerMember ? null : (
+              <div className="mt-4">
+                <p>Join our discord server to apply for the event.</p>
+                <button className="btn bg-discord btn-lg mt-4">
+                  <a href="https://discord.gg/7zBQXZqJpH" target="_blank">
+                    <DiscordFilled></DiscordFilled> Join Server
+                  </a>
+                </button>
+              </div>
+            )}
+            <div className="modal-action">
+              <button
+                className="btn btn-primary"
+                onClick={() => formRef.current?.submit()}
+              >
+                Apply
+              </button>
+              <button
+                className="btn btn-soft"
+                onClick={() => {
                   setModalOpen(false);
                   formRef.current?.resetFields();
-                })
-                .catch((error) => {
-                  console.error(error);
-                  setIsServerMember(false);
-                });
-            }}
-          >
-            <Form.Item
-              label="How many hours will you be able to play per day?"
-              name="playtime"
-              rules={[
-                {
-                  required: true,
-                  message: "Please select how many hours you can play per day",
-                },
-              ]}
-            >
-              <Select>
-                {Object.entries(PlayTime).map((entry) => (
-                  <Select.Option key={entry[0]} value={entry[0]}>
-                    {entry[1]}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              layout="horizontal"
-              label={
-                <>
-                  {"I've read the "}
-                  <a
-                    href="/rules"
-                    target="_blank"
-                    style={{ marginLeft: 4, color: token.colorPrimary }}
-                  >
-                    rules
-                  </a>
-                </>
-              }
-              name="rulecheck"
-              valuePropName={"checked"}
-              rules={[
-                {
-                  required: true,
-                  validator: (_, value) => {
-                    if (!value) {
-                      return Promise.reject(
-                        "Please confirm that you've read the rules"
-                      );
-                    }
-                    return Promise.resolve();
-                  },
-                },
-              ]}
-            >
-              <Checkbox />
-            </Form.Item>
-            <Space>
-              {user.discord_id ? null : (
-                <Button type="primary" icon={<DiscordFilled></DiscordFilled>}>
-                  Link Discord Account
-                </Button>
-              )}
-              {isServerMember ? null : (
-                <div>
-                  <p>Join our discord server to apply for the event.</p>
-                  <Button
-                    type="primary"
-                    icon={<DiscordFilled></DiscordFilled>}
-                    href="https://discord.gg/7zBQXZqJpH"
-                    target="_blank"
-                  >
-                    Join
-                  </Button>
-                </div>
-              )}
-            </Space>
-          </Form>
-        </Modal>
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </dialog>
         <button
           className={`btn bg-base-100 h-full hover:text-primary hover:border-primary`}
           onClick={() => {

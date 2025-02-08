@@ -1,7 +1,6 @@
 import CrudTable, { CrudColumn } from "../components/crudtable";
 
 import { useParams } from "react-router-dom";
-import { Typography } from "antd";
 import {
   ScoringMethod,
   ScoringPreset,
@@ -57,9 +56,7 @@ const ScoringPresetsPage: React.FC = () => {
       key: "points",
       type: "text",
       editable: true,
-      render: (value) => (
-        <Typography.Text>{JSON.stringify(value)}</Typography.Text>
-      ),
+      render: (value) => <p>{JSON.stringify(value)}</p>,
       required: true,
     },
     {
@@ -83,9 +80,7 @@ const ScoringPresetsPage: React.FC = () => {
   ];
   return (
     <>
-      <Typography.Title level={1}>
-        {`Scoring Presets for Event "${event.name}"`}
-      </Typography.Title>
+      <h1>{`Scoring Presets for Event "${event.name}"`}</h1>
       <CrudTable<ScoringPreset>
         resourceName="Scoring Preset"
         columns={scoringPresetsColumns}

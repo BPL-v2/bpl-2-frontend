@@ -30,47 +30,46 @@ export const UniqueCategoryCard = ({
         0
       )
     : 0;
-  const bgColor = selected
-    ? "bg-highlight"
-    : "bg-base-300 hover:border-secondary  ";
+  const bgColor = selected ? "bg-highlight" : "bg-base-300";
   const headerColor = selected ? "bg-base-300" : "bg-base-200";
-  const borderColor = selected ? "border-primary" : "border-base-100";
+  const borderColor = selected
+    ? "border-primary "
+    : "border-base-100  hover:border-secondary ";
   const points = teamId
     ? `${getTotalPoints(category)[teamId]} / ${
         getPotentialPoints(category)[teamId]
       }`
     : null;
+
   return (
     <div
-      className={`card border-4  cursor-pointer ${bgColor} ${borderColor}`}
+      className={`card border-3 cursor-pointer ${bgColor} ${borderColor} `}
       key={`unique-card-${category.id}`}
       onClick={onClick}
     >
       <div
-        className={`card-title top-box-rounded m-0 p-4 flex items-center justify-between ${headerColor}`}
+        className={`card-title top-box-rounded m-0 p-2 flex items-center justify-between ${headerColor}`}
       >
         <div className="flex-shrink-0">
           <Medal rank={category.team_score[teamId].rank} size={32} />
         </div>
-        <h1 className="text-2xl text-center">{category.name}</h1>
-        <div className="flex-shrink-0"> {points} </div>
+        <h1 className="text-xl text-center">{category.name}</h1>
+        <div className="flex-shrink-0 text-sm"> {points} </div>
       </div>
       <div className="px-4">
         <div>
-          <div className="stat pt-4 px-0 pb-0">
+          <div className="stat pt-2 px-0 pb-0">
             <div
               className={`stat-value text-4xl ${
-                numItems === totalItems ? "text-success" : "text-primary"
+                numItems === totalItems ? "text-success" : "text-error"
               }`}
             >
               {numItems} / {totalItems}
             </div>
             {totalVariants ? (
               <div
-                className={`stat-desc text-lg ${
-                  numVariants === totalVariants
-                    ? "text-success"
-                    : "text-primary"
+                className={`stat-desc text-lg font-bold ${
+                  numVariants === totalVariants ? "text-success" : "text-error"
                 }`}
               >
                 {`Variants: ${numVariants} / ${totalVariants}`}
@@ -78,7 +77,7 @@ export const UniqueCategoryCard = ({
             ) : null}
             <div className="col-start-2 row-span-2 row-start-1 self-center justify-self-end">
               <img
-                className="w-20 h-20 m-2"
+                className="size-16 m-2"
                 src={`/assets/${gameVersion}/icons/${category.name}.svg`}
               />
             </div>
@@ -86,7 +85,7 @@ export const UniqueCategoryCard = ({
         </div>
         <progress
           className={`progress my-2  ${
-            numItems === totalItems ? "progress-success" : "progress-primary"
+            numItems === totalItems ? "progress-success" : "progress-error"
           }`}
           value={numItems / totalItems}
           max="1"

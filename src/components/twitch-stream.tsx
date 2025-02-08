@@ -1,4 +1,3 @@
-import { Typography } from "antd";
 import { TwitchStream } from "../types/twitch-stream";
 
 export type TwitchStreamEmbedProps = {
@@ -37,9 +36,7 @@ export const TwitchStreamEmbed = ({
       </div>
       <div className="twitch-stream-info">
         <div>
-          <Typography.Title level={4} style={{ margin: 0 }}>
-            {stream.user_name}
-          </Typography.Title>
+          <h1>{stream.user_name}</h1>
           <p id="marquee" className="twitch-stream-title">
             <span>{stream.title}</span>
           </p>
