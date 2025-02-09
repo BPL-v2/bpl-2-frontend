@@ -177,6 +177,10 @@ function App() {
         <div className="max-w-[1440px] text-center mx-auto ">
           <div className="stack fixed top-0 right-0 p-4 gap-1 z-1000 w-120">
             {updates
+              .filter(
+                (update) =>
+                  Number(update.key.split("-")[2]) === eventStatus?.team_id
+              )
               .map((update, index) => {
                 return (
                   <ScoreUpdateCard
@@ -193,7 +197,7 @@ function App() {
                   />
                 );
               })
-              .slice(0, 5)}
+              .slice(0, 25)}
           </div>
           <div className="text-2xl p-0 flex items-center justify-between h-14">
             <ul className="navbar bg-base-200 w-full  h-14 text-xl gap-0 p-0">
