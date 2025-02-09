@@ -8,7 +8,6 @@ import { fetchUsersForEvent, getUserInfo } from "./client/user-client";
 import { router } from "./router";
 import { fetchAllEvents, fetchEventStatus } from "./client/event-client";
 import { BPLEvent, EventStatus } from "./types/event";
-import { useError } from "./components/errorcontext";
 import {
   LineChartOutlined,
   ReadOutlined,
@@ -18,12 +17,13 @@ import {
 import { ScoringCategory } from "./types/scoring-category";
 import { fetchCategoryForEvent } from "./client/category-client";
 import { establishScoreSocket } from "./client/score-client";
-import { ScoreCategory, ScoreMap } from "./types/score";
+import { ScoreCategory, ScoreDiff, ScoreMap } from "./types/score";
 import { mergeScores } from "./utils/utils";
 import { fetchScoringPresetsForEvent } from "./client/scoring-preset-client";
 import { ScoringPreset } from "./types/scoring-preset";
 import ApplicationButton from "./components/application-button";
 import { Dropdown } from "antd";
+import { ScoreUpdateCard } from "./components/score-update-card";
 
 // function getKeys(items: any[]): string[] {
 //   let keys = [];
@@ -60,6 +60,8 @@ function App() {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [gameVersion, setGameVersion] = useState<"poe1" | "poe2">("poe1");
+  const [updates, setUpdates] = useState<ScoreDiff[]>([]);
+
   useEffect(() => {
     getUserInfo().then((data) => setUser(data));
     fetchAllEvents().then((events) => {
@@ -67,7 +69,9 @@ function App() {
       const event = events.find((event) => event.is_current);
       setCurrentEvent(event);
       if (event) {
-        establishScoreSocket(event.id, setScoreData);
+        establishScoreSocket(event.id, setScoreData, (newUpdates) =>
+          setUpdates((prevUpdates) => [...newUpdates, ...prevUpdates])
+        );
         setGameVersion(event.game_version);
         fetchCategoryForEvent(event.id).then((rules) => setRules(rules));
         fetchScoringPresetsForEvent(event.id).then((presets) =>
@@ -146,30 +150,6 @@ function App() {
     }
   }, [currentEvent, user]);
 
-  const sendNotification = useError().sendNotification;
-
-  useEffect(() => {
-    window.addEventListener("error", handleError);
-  }, []);
-  const handleError = (a: ErrorEvent) => {
-    console.log("HANDLING ERROR");
-    sendNotification(a.message, "error");
-  };
-
-  useEffect(() => {
-    window.addEventListener("warning", handleWarning);
-  });
-  const handleWarning = (a: Event) => {
-    sendNotification((a as CustomEvent).detail, "warning");
-  };
-
-  useEffect(() => {
-    window.addEventListener("success", handleSuccess);
-  });
-  const handleSuccess = (a: Event) => {
-    sendNotification((a as CustomEvent).detail, "success");
-  };
-
   return (
     <>
       <ContextProvider
@@ -195,6 +175,23 @@ function App() {
         }}
       >
         <div className="max-w-[1440px] text-center mx-auto ">
+          <div className="stack fixed top-0 right-0 p-4 gap-1 z-1000 w-120">
+            {updates
+              .map((update, index) => {
+                return (
+                  <ScoreUpdateCard
+                    key={"update-" + index}
+                    update={update}
+                    remove={(update: ScoreDiff) =>
+                      setUpdates((prevUpdates) =>
+                        prevUpdates.filter((u) => u.key !== update.key)
+                      )
+                    }
+                  />
+                );
+              })
+              .slice(0, 5)}
+          </div>
           <div className="text-2xl p-0 flex items-center justify-between h-14">
             <ul className="navbar bg-base-200 w-full  h-14 text-xl gap-0 p-0">
               <button

@@ -75,7 +75,7 @@ export const UniqueCategoryCard = ({
                 {`Variants: ${numVariants} / ${totalVariants}`}
               </div>
             ) : null}
-            <div className="col-start-2 row-span-2 row-start-1 self-center justify-self-end">
+            <div className="col-start-2 row-span-2 row-start-1 self-center justify-self-end select-none">
               <img
                 className="size-16 m-2"
                 src={`/assets/${gameVersion}/icons/${category.name}.svg`}
@@ -83,13 +83,15 @@ export const UniqueCategoryCard = ({
             </div>
           </div>
         </div>
-        <progress
-          className={`progress my-2  ${
-            numItems === totalItems ? "progress-success" : "progress-error"
-          }`}
-          value={numItems / totalItems}
-          max="1"
-        ></progress>
+        <div className="select-none">
+          <progress
+            className={`progress my-2  ${
+              numItems === totalItems ? "progress-success" : "progress-error"
+            }`}
+            value={numItems / totalItems}
+            max="1"
+          ></progress>
+        </div>
       </div>
     </div>
   );

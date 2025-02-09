@@ -11,7 +11,7 @@ import {
   Table,
   Tooltip,
 } from "antd";
-import type { FormInstance, TableProps } from "antd";
+import type { FormInstance, TablePaginationConfig, TableProps } from "antd";
 import { ColumnType } from "antd/es/table";
 import { sendWarning } from "../utils/notifications";
 import ArrayInput from "./arrayinput";
@@ -62,6 +62,7 @@ type CrudTableProps<T> = {
   formValidator?: (data: Partial<T>) => string | undefined;
   reload?: boolean;
   filterFunction?: (data: T) => boolean;
+  pagination?: false | TablePaginationConfig;
 };
 
 const CrudTable = <T,>({
@@ -74,6 +75,7 @@ const CrudTable = <T,>({
   addtionalActions,
   formValidator,
   filterFunction,
+  pagination,
 }: CrudTableProps<T>) => {
   const creationFormRef = useRef<FormInstance>(null);
   const updateFormRef = useRef<FormInstance>(null);
@@ -364,6 +366,7 @@ const CrudTable = <T,>({
             )}
           </>
         )}
+        pagination={pagination}
       />
     </>
   );

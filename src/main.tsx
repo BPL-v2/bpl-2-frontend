@@ -1,7 +1,6 @@
 import { createRoot } from "react-dom/client";
 
 import App from "./App.tsx";
-import { NotificationProvider } from "./components/errorcontext.tsx";
 import { ConfigProvider, theme } from "antd";
 
 createRoot(document.getElementById("root")!).render(
@@ -22,13 +21,11 @@ createRoot(document.getElementById("root")!).render(
           rowHoverBg: "var(--color-base-200)",
           headerSortHoverBg: "var(--color-base-300)",
           headerSortActiveBg: "var(--color-base-300)",
-          cellFontSizeSM: 18,
+          cellFontSize: 14,
         },
       },
     }}
   >
-    <NotificationProvider>
-      <App />
-    </NotificationProvider>
+    <App />
   </ConfigProvider>
 );

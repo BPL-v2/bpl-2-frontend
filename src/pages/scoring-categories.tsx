@@ -259,6 +259,7 @@ const ScoringCategoryPage: React.FC = () => {
         render: (name: string, data: ScoringCategory) => {
           return (
             <button
+              className="btn btn-primary m-1"
               onClick={() => {
                 router.navigate(
                   `/events/${eventId}/scoring-categories/${data.id}`
@@ -493,6 +494,7 @@ const ScoringCategoryPage: React.FC = () => {
         <CrudTable<ScoringCategory>
           resourceName="Scoring Category"
           columns={categoryColumns}
+          pagination={false}
           fetchFunction={() =>
             fetchCategoryById(Number(categoryId)).then(
               (data) => data.sub_categories

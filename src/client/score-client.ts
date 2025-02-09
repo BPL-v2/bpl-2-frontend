@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { Score, ScoreMap } from "../types/score";
+import { Score, ScoreDiff, ScoreMap } from "../types/score";
 import { fetchWrapper } from "./base";
 
 export const fetchScores = (eventId?: number) => {
@@ -22,7 +22,8 @@ export const fetchScores = (eventId?: number) => {
 
 export const establishScoreSocket = (
   eventId: number,
-  setScores: (scores: ScoreMap) => void
+  setScores: (scores: ScoreMap) => void,
+  appendUpdates: (updates: ScoreDiff[]) => void
 ) => {
   const url =
     import.meta.env.VITE_BACKEND_URL.replace("http", "ws") +
@@ -35,12 +36,18 @@ export const establishScoreSocket = (
   const previousScores: ScoreMap = {};
   ws.onmessage = (event) => {
     console.log("Received new scores");
+    const updates: ScoreDiff[] = [];
     Object.entries(JSON.parse(event.data) as ScoreMap).forEach(
       ([key, value]) => {
-        if (value.diff_type !== "Unchanged") {
-          console.log("changed", key, value);
+        if (value.diff_type !== "Unchanged" && value.score.finished) {
+          console.log("key", key, value);
+          if (
+            value.diff_type === "Added" ||
+            (value.field_diff?.includes("Finished") && value.score.finished)
+          ) {
+            updates.push({ ...value, key: key });
+          }
         }
-
         if (value.diff_type === "Removed") {
           delete previousScores[key];
         } else {
@@ -48,6 +55,7 @@ export const establishScoreSocket = (
         }
       }
     );
+    appendUpdates(updates);
     setScores({ ...previousScores });
   };
 
@@ -59,7 +67,7 @@ export const establishScoreSocket = (
     console.log("WebSocket connection closed, trying reconnect", new Date());
     // Reconnect
     setTimeout(() => {
-      establishScoreSocket(eventId, setScores);
+      establishScoreSocket(eventId, setScores, appendUpdates);
     }, 10000);
   };
   return ws;

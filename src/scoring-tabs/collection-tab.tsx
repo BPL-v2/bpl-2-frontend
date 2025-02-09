@@ -22,10 +22,6 @@ export function CollectionTab() {
             <div className="card bg-base-300" key={objective.id}>
               <div className="card-title top-box-rounded flex items-center m-0 px-4 bg-base-200 h-25  ">
                 <ObjectiveIcon
-                  style={{
-                    maxWidth: "3em",
-                    maxHeight: "3em",
-                  }}
                   objective={objective}
                   gameVersion={currentEvent.game_version}
                 />
