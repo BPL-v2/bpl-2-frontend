@@ -182,10 +182,13 @@ function App() {
                   <ScoreUpdateCard
                     key={"update-" + index}
                     update={update}
-                    remove={(update: ScoreDiff) =>
+                    close={(update: ScoreDiff) =>
                       setUpdates((prevUpdates) =>
                         prevUpdates.filter((u) => u.key !== update.key)
                       )
+                    }
+                    closeAll={
+                      updates.length > 1 ? () => setUpdates([]) : undefined
                     }
                   />
                 );

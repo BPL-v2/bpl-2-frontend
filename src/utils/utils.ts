@@ -128,6 +128,7 @@ export function mergeScoringObjective(
     scoring_preset: objective.scoring_preset_id
       ? scoringPresets[objective.scoring_preset_id]
       : null,
+    category_id: objective.category_id,
     team_score: teamsIds.reduce((acc: TeamScores, teamId) => {
       const key = "O-" + objective.id + "-" + teamId;
       acc[teamId] = scores[key]?.score || getEmptyScore();

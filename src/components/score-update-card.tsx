@@ -5,20 +5,32 @@ import { ObjectiveIcon } from "./objective-icon";
 
 type ScoreUpdateCardProps = {
   update: ScoreDiff;
-  remove: (update: ScoreDiff) => void;
+  close: (update: ScoreDiff) => void;
+  closeAll?: () => void;
 };
 
-export const ScoreUpdateCard = ({ update, remove }: ScoreUpdateCardProps) => {
+export const ScoreUpdateCard = ({
+  update,
+  close,
+  closeAll,
+}: ScoreUpdateCardProps) => {
   const { users, scores, currentEvent, gameVersion } =
     useContext(GlobalStateContext);
   const meta = getMetaInfo(update, users, scores, currentEvent?.teams);
   let body: JSX.Element | null = null;
   let title: string | null = null;
+  if (meta.points <= 0) {
+    return;
+  }
   if (meta.objective) {
+    let text = `${meta.userName} scored "${meta.objective?.name}"`;
+    if (meta.category?.name) {
+      text += ` in section "${meta.category?.name}"`;
+    }
     body = (
       <div className="card-body flex gap-2 flex-row">
         <ObjectiveIcon objective={meta.objective} gameVersion={gameVersion} />
-        <p className="text-lg">{`${meta.userName} scored "${meta.objective?.name}" in section "${meta.category?.name}"`}</p>
+        <p className="text-lg">{text}</p>
       </div>
     );
     title = meta.teamName + " +" + meta.points;
@@ -27,7 +39,9 @@ export const ScoreUpdateCard = ({ update, remove }: ScoreUpdateCardProps) => {
     body = (
       <div className="card-body flex gap-2 flex-row">
         <img className="max-h-14" src={img_location} />
-        <p className="text-lg">{meta.category?.name} was finished</p>
+        <p className="text-lg">
+          {meta.category?.name} was finished in {meta.rank}. place
+        </p>
       </div>
     );
     title = meta.teamName + " +" + meta.points;
@@ -35,23 +49,20 @@ export const ScoreUpdateCard = ({ update, remove }: ScoreUpdateCardProps) => {
   return (
     <div className="card bg-base-300 border-1 border-info w-1">
       <div className="card-title top-box-rounded flex items-center pb-4 px-4 bg-base-200  mr-0">
-        <h1 className="flex-grow text-left mt-4 text-xl mx-4">{title}</h1>
-        <button className="btn" onClick={() => remove(update)}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        <h1 className="flex-grow text-left  text-xl mx-4 mt-4">{title}</h1>
+        <div className="flex justify-end gap-2 mt-4">
+          {closeAll ? (
+            <button className="btn btn-error btn-sm" onClick={closeAll}>
+              close all
+            </button>
+          ) : null}
+          <button
+            className="btn btn-warning  btn-sm"
+            onClick={() => close(update)}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
+            close
+          </button>
+        </div>
       </div>
       {body}
     </div>

@@ -85,7 +85,7 @@ export function getMetaInfo(
   } else if (type === "O") {
     meta.objective = findObjectiveById(id, scores);
     if (meta.objective) {
-      meta.category = findCategoryById(meta.objective.id, scores);
+      meta.category = findCategoryById(meta.objective.category_id, scores);
     }
   }
   meta.teamName =
@@ -132,6 +132,7 @@ export type ScoreObjective = {
   number_field: string;
   scoring_preset: ScoringPreset | null;
   team_score: TeamScore;
+  category_id: number;
 };
 
 export type ScoreCategory = {
