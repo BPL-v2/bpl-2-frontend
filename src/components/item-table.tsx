@@ -108,30 +108,12 @@ export function ItemTable({ category }: ItemTableProps) {
       return <></>;
     }
     return (
-      <div
-        style={{
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100%",
-          maxHeight: "60px",
-        }}
-      >
-        <img
-          src={img_location}
-          style={{ maxWidth: "3.5em", maxHeight: "3.5em" }}
-        />
+      <div className="relative flex items-center justify-center">
+        <img src={img_location} className="max-w-20 max-h-20" />
         <div
+          className="absolute  left-0 right-0 text-center text-lg"
           style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            color: "white",
-            padding: "0px",
-            textAlign: "center",
-            textShadow: "2px 2px 4px rgba(0, 0, 0,1)", // Text shadow for better readability
+            textShadow: "2px 2px 4px rgba(0, 0, 0)", // Text shadow for better readability
           }}
         >
           {objectNameRender(objective)}
@@ -141,16 +123,14 @@ export function ItemTable({ category }: ItemTableProps) {
   };
 
   const badgeClass = (objective: ScoreObjective, teamID: number) => {
-    let className = "badge gap-2 w-full text-left font-bold py-3 border-3";
+    let className = "badge gap-2 w-full font-semibold py-3 ring-2";
     if (objective.team_score[teamID].finished) {
       className += " bg-success text-success-content";
     } else {
       className += " bg-error text-error-content";
     }
     if (teamID === userTeamID) {
-      className += " border-white ";
-    } else {
-      className += " border-black";
+      className += " ring-white ";
     }
     return className;
   };

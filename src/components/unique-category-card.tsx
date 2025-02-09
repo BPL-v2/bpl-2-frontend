@@ -54,7 +54,7 @@ export const UniqueCategoryCard = ({
           <Medal rank={category.team_score[teamId].rank} size={28} />
         </div>
         <h1 className="text-xl text-center">{category.name}</h1>
-        <div className="flex-shrink-0 text-sm"> {points} </div>
+        <div className="hidden sm:block flex-shrink-0 text-sm"> {points} </div>
       </div>
       <div className="px-4">
         <div>
@@ -75,7 +75,7 @@ export const UniqueCategoryCard = ({
                 {`Variants: ${numVariants} / ${totalVariants}`}
               </div>
             ) : null}
-            <div className="col-start-2 row-span-2 row-start-1 self-center justify-self-end select-none">
+            <div className="hidden sm:block col-start-2 row-span-2 row-start-1 self-center justify-self-end select-none">
               <img
                 className="size-16 m-2"
                 src={`/assets/${gameVersion}/icons/${category.name}.svg`}
