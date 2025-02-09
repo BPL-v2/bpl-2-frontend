@@ -61,9 +61,7 @@ export function OauthCard({
         {connectionButton}
       </div>
       <div className="card-body grid gap-2 grid-cols-2 items-center text-lg ">
-        <div style={!connected ? { filter: "grayscale(100%)" } : undefined}>
-          {logo}
-        </div>
+        <div className={!connected ? "grayscale" : ""}>{logo}</div>
         <p>{description}</p>
       </div>
     </div>

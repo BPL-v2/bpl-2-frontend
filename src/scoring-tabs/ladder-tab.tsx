@@ -85,7 +85,7 @@ export function LadderTab() {
                     return (
                       <div
                         key={`badge-${categoryName}`}
-                        className="badge badge-info badge-lg"
+                        className="badge badge-primary badge-lg"
                       >
                         {/* @ts-ignore */}
                         {`${categoryName} ${record[categoryName]}`}

@@ -30,11 +30,11 @@ export const UniqueCategoryCard = ({
         0
       )
     : 0;
-  const bgColor = selected ? "bg-highlight" : "bg-base-300";
+  const bgColor = selected ? "bg-highlight" : "bg-base-300 ";
   const headerColor = selected ? "bg-base-300" : "bg-base-200";
-  const borderColor = selected
-    ? "border-primary"
-    : "border-base-300 hover:border-secondary hover:border-dotted";
+  const ring = selected ? "ring-3 ring-primary" : "";
+
+  const hover = selected ? "" : "hover:scale-103  transition duration-200 ";
   const points = teamId
     ? `${getTotalPoints(category)[teamId]} / ${
         getPotentialPoints(category)[teamId]
@@ -43,7 +43,7 @@ export const UniqueCategoryCard = ({
 
   return (
     <div
-      className={`card border-3 cursor-pointer ${bgColor} ${borderColor}`}
+      className={`card  cursor-pointer ${bgColor} ${ring} ${hover}`}
       key={`unique-card-${category.id}`}
       onClick={onClick}
     >

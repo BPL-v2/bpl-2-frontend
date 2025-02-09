@@ -47,7 +47,7 @@ export const ScoreUpdateCard = ({
     title = meta.teamName + " +" + meta.points;
   }
   return (
-    <div className="card bg-base-300 border-1 border-info w-1">
+    <div className="card bg-base-300 ring-1 ring-primary w-1">
       <div className="card-title top-box-rounded flex items-center pb-4 px-4 bg-base-200  mr-0">
         <h1 className="flex-grow text-left  text-xl mx-4 mt-4">{title}</h1>
         <div className="flex justify-end gap-2 mt-4">

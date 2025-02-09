@@ -46,6 +46,45 @@ type MenuItem = {
   url?: string;
 };
 
+// hack to get a highlight color
+const setHighlightColor = (root: HTMLElement) => {
+  // create a new color that is 20% lighter than base-300
+  const base300Color = getComputedStyle(root)
+    .getPropertyValue("--color-base-300")
+    .trim();
+  const base200Color = getComputedStyle(root)
+    .getPropertyValue("--color-base-200")
+    .trim();
+
+  // Regular expression to match oklch color format
+  const regex = /oklch\(([\d.]+)% ([\d.]+) ([\d.]+)\)/;
+
+  // Match base-300 color
+  const match300 = base300Color.match(regex);
+  if (!match300) return;
+
+  // Match base-200 color
+  const match200 = base200Color.match(regex);
+  if (!match200) return;
+
+  // Extract lightness values
+  const [_, l300, c300, h300] = match300.map(Number);
+  const [__, l200, c200, h200] = match200.map(Number);
+
+  // Switch base-200 and base-300 if base-200 is darker
+  if (l200 > l300) {
+    root.style.setProperty("--color-base-300", base200Color);
+    root.style.setProperty("--color-base-200", base300Color);
+  }
+
+  // Create a new color that is 20% lighter than base-300
+  const newL = Math.min(100, l300 + 10);
+  root.style.setProperty(
+    "--color-highlight",
+    `oklch(${newL}% ${c300} ${h300})`
+  );
+};
+
 function App() {
   const [currentNav, setCurrentNav] = useState<string>();
   const [user, setUser] = useState<User>();
@@ -61,6 +100,9 @@ function App() {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [gameVersion, setGameVersion] = useState<"poe1" | "poe2">("poe1");
   const [updates, setUpdates] = useState<ScoreDiff[]>([]);
+  useEffect(() => {
+    setHighlightColor(document.documentElement);
+  }, []);
 
   useEffect(() => {
     getUserInfo().then((data) => setUser(data));
@@ -175,43 +217,43 @@ function App() {
         }}
       >
         <div className="max-w-[1440px] text-center mx-auto ">
-          <div className="stack fixed top-0 right-0 p-4 gap-1 z-1000 w-120">
-            {updates
-              .filter(
-                (update) =>
-                  Number(update.key.split("-")[2]) === eventStatus?.team_id
-              )
-              .map((update, index) => {
-                return (
-                  <ScoreUpdateCard
-                    key={"update-" + index}
-                    update={update}
-                    close={(update: ScoreDiff) =>
-                      setUpdates((prevUpdates) =>
-                        prevUpdates.filter((u) => u.key !== update.key)
-                      )
-                    }
-                    closeAll={
-                      updates.length > 1 ? () => setUpdates([]) : undefined
-                    }
-                  />
-                );
-              })
-              .slice(0, 25)}
-          </div>
+          {updates.length > 0 && (
+            <div className="stack fixed top-0 right-0 p-4 gap-1 z-1000 w-120">
+              {updates
+                .filter(
+                  (update) =>
+                    Number(update.key.split("-")[2]) === eventStatus?.team_id
+                )
+                .map((update, index) => {
+                  return (
+                    <ScoreUpdateCard
+                      key={"update-" + index}
+                      update={update}
+                      close={(update: ScoreDiff) =>
+                        setUpdates((prevUpdates) =>
+                          prevUpdates.filter((u) => u.key !== update.key)
+                        )
+                      }
+                      closeAll={
+                        updates.length > 1 ? () => setUpdates([]) : undefined
+                      }
+                    />
+                  );
+                })
+                .slice(0, 25)}
+            </div>
+          )}
           <div className="text-2xl p-0 flex items-center justify-between h-14">
             <ul className="navbar bg-base-200 w-full  h-14 text-xl gap-0 p-0">
               <button
-                className="btn h-14 bg-base-200 "
+                className="btn btn-ghost h-14 bg-base-200 "
                 onClick={() => {
                   setCurrentNav("/");
                   router.navigate("/");
                 }}
               >
                 <img className="h-10" src="assets/app-logos/bpl-logo.png" />
-                <div className="text-white text-4xl font-bold hidden sm:block">
-                  BPL
-                </div>
+                <div className="text-4xl font-bold hidden sm:block">BPL</div>
               </button>
               <div className="flex flex-1 justify-left gap-0 ">
                 {menuItems

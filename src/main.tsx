@@ -13,6 +13,8 @@ createRoot(document.getElementById("root")!).render(
         colorBgContainer: "var(--color-base-300)",
         colorBgSpotlight: "var(--color-base-200)",
         colorBgElevated: "var(--color-base-300)",
+        colorTextBase: "var(--color-base-content)",
+        colorText: "var(--color-base-content)",
       },
       components: {
         Table: {

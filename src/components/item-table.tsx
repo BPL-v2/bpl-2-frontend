@@ -192,7 +192,7 @@ export function ItemTable({ category }: ItemTableProps) {
   };
   return (
     <>
-      <div className=" overflow-auto" style={{ maxHeight: "80vh" }}>
+      <div className="overflow-auto" style={{ maxHeight: "80vh" }}>
         <table className="table bg-base-300 table-md	">
           <thead className="bg-base-200 sticky top-0 z-10">
             <tr className="text-lg">
