@@ -69,7 +69,7 @@ const setHighlightColor = (root: HTMLElement) => {
 
   // Extract lightness values
   const [_, l300, c300, h300] = match300.map(Number);
-  const [__, l200, c200, h200] = match200.map(Number);
+  const [__, l200, _c200, _h200] = match200.map(Number);
 
   // Switch base-200 and base-300 if base-200 is darker
   if (l200 > l300) {
