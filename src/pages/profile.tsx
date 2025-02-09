@@ -39,7 +39,7 @@ export function ProfilePage() {
               name="display_name"
               rules={[{ required: true, message: "Please input a username!" }]}
               initialValue={user?.display_name}
-              style={{ width: "400px" }}
+              className="max-w-sm"
             >
               <Input />
             </Form.Item>
