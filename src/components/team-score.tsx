@@ -28,10 +28,10 @@ const TeamScore = ({
           const bgColor =
             team.id === eventStatus?.team_id ? "bg-highlight" : "bg-base-300";
           const borderColor =
-            team.id === selectedTeam ? "border-primary" : "border-transparent";
+            team.id === selectedTeam ? "ring-primary" : "ring-transparent";
           return (
             <div
-              className={`card border-4 rounded-none ${bgColor} ${borderColor} ${interactive}`}
+              className={`card ring-2  rounded-none ${bgColor} ${borderColor} ${interactive}`}
               key={team.id}
               onClick={() =>
                 setSelectedTeam ? setSelectedTeam(team.id) : null

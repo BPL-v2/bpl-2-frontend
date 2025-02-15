@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { RouterProvider } from "react-router-dom";
 import AuthButton from "./components/auth-button";
 import { ContextProvider } from "./utils/context-provider";
@@ -192,6 +192,36 @@ function App() {
     }
   }, [currentEvent, user]);
 
+  const notifications = useMemo(() => {
+    const teamUpdates = updates.filter(
+      (update) => Number(update.key.split("-")[2]) === eventStatus?.team_id
+    );
+    if (teamUpdates.length === 0) return null;
+
+    return (
+      <div className="stack fixed top-0 right-0 p-4 gap-1 z-1000 w-120 max-w-full">
+        {teamUpdates
+          .map((update, index) => {
+            return (
+              <ScoreUpdateCard
+                key={"update-" + index}
+                update={update}
+                close={(update: ScoreDiff) =>
+                  setUpdates((prevUpdates) =>
+                    prevUpdates.filter((u) => u.key !== update.key)
+                  )
+                }
+                closeAll={
+                  teamUpdates.length > 1 ? () => setUpdates([]) : undefined
+                }
+              />
+            );
+          })
+          .slice(0, 25)}
+      </div>
+    );
+  }, [updates]);
+
   return (
     <>
       <ContextProvider
@@ -217,32 +247,7 @@ function App() {
         }}
       >
         <div className="max-w-[1440px] text-center mx-auto ">
-          {updates.length > 0 && (
-            <div className="stack fixed top-0 right-0 p-4 gap-1 z-1000 w-120">
-              {updates
-                .filter(
-                  (update) =>
-                    Number(update.key.split("-")[2]) === eventStatus?.team_id
-                )
-                .map((update, index) => {
-                  return (
-                    <ScoreUpdateCard
-                      key={"update-" + index}
-                      update={update}
-                      close={(update: ScoreDiff) =>
-                        setUpdates((prevUpdates) =>
-                          prevUpdates.filter((u) => u.key !== update.key)
-                        )
-                      }
-                      closeAll={
-                        updates.length > 1 ? () => setUpdates([]) : undefined
-                      }
-                    />
-                  );
-                })
-                .slice(0, 25)}
-            </div>
-          )}
+          {notifications}
           <div className="text-2xl p-0 flex items-center justify-between h-14">
             <ul className="navbar bg-base-200 w-full  h-14 text-xl gap-0 p-0">
               <button

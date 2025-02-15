@@ -10,7 +10,7 @@ export type ItemTableProps = {
 };
 
 export function ItemTable({ category }: ItemTableProps) {
-  const { currentEvent, isMobile, gameVersion, eventStatus } =
+  const { currentEvent, isMobile, gameVersion, eventStatus, users } =
     useContext(GlobalStateContext);
   const [nameFilter, setNameFilter] = useState<string | undefined>();
   const [completionFilter, setCompletionFilter] = useState<{
@@ -160,14 +160,33 @@ export function ItemTable({ category }: ItemTableProps) {
         ))}
       </td>
     ) : (
-      currentEvent.teams.sort(teamSort).map((team) => (
-        <td
-          key={`${category.id}-${team.id}-${objective.id}`}
-          className={`text-center`}
-        >
-          {objective.team_score[team.id].finished ? "✅" : "❌"}
-        </td>
-      ))
+      currentEvent.teams.sort(teamSort).map((team) => {
+        const finished = objective.team_score[team.id].finished;
+        const user =
+          objective.team_score[team.id].finished &&
+          users?.find((u) => objective.team_score[team.id].user_id === u.id);
+        let entry: JSX.Element | string = "❌";
+        if (user) {
+          entry = (
+            <div
+              className="tooltip cursor-help tooltip-bottom"
+              data-tip={`scored by ${user.display_name}`}
+            >
+              ✅
+            </div>
+          );
+        } else if (finished) {
+          entry = "✅";
+        }
+        return (
+          <td
+            key={category.id + "-" + objective.id + "-" + team.id}
+            className={`text-center text-2xl`}
+          >
+            {entry}{" "}
+          </td>
+        );
+      })
     );
   };
   return (

@@ -43,7 +43,7 @@ export const UniqueCategoryCard = ({
 
   return (
     <div
-      className={`card  cursor-pointer ${bgColor} ${ring} ${hover}`}
+      className={`card cursor-pointer ${bgColor} ${ring} ${hover}`}
       key={`unique-card-${category.id}`}
       onClick={onClick}
     >

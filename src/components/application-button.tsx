@@ -87,7 +87,7 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
           }}
           onClose={() => setModalOpen(false)}
         >
-          <div className="modal-box bg-base-200">
+          <div className="modal-box bg-base-200 border-2 border-base-100">
             <h3 className="font-bold text-lg mb-8">Apply for Event</h3>
             <Form
               layout="vertical"

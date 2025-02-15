@@ -8,9 +8,9 @@
   default: false;
   prefersdark: false;
   color-scheme: "dark";
-  --color-base-100: oklch(5% 0.041 260.031);
-  --color-base-200: oklch(20% 0.042 265.755);
-  --color-base-300: oklch(27% 0.042 264.695);
+  --color-base-100: oklch(5% 0.042 260);
+  --color-base-200: oklch(20% 0.042 260);
+  --color-base-300: oklch(27% 0.042 260);
   --color-base-content: oklch(86% 0.022 252.894);
   --color-primary: oklch(70% 0.14 182.503);
   --color-primary-content: oklch(30% 0.056 229.695);
@@ -37,7 +37,6 @@
   --depth: 0;
   --noise: 0;
 }
-
 .bg-highlight {
   background-color: var(--color-highlight);
 }

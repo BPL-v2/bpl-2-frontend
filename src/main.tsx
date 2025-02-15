@@ -11,10 +11,10 @@ createRoot(document.getElementById("root")!).render(
         fontSize: 18,
         colorBgBase: "var(--color-base-100)",
         colorBgContainer: "var(--color-base-300)",
-        colorBgSpotlight: "var(--color-base-200)",
         colorBgElevated: "var(--color-base-300)",
         colorTextBase: "var(--color-base-content)",
         colorText: "var(--color-base-content)",
+        controlItemBgHover: "var(--color-base-200)",
       },
       components: {
         Table: {

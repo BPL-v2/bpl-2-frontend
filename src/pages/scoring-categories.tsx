@@ -15,7 +15,6 @@ import {
   InputNumber,
   Modal,
   Select,
-  Tag,
   Typography,
   DatePicker,
 } from "antd";
@@ -43,7 +42,12 @@ import { ScoringPreset, ScoringPresetType } from "../types/scoring-preset";
 import { fetchScoringPresetsForEvent } from "../client/scoring-preset-client";
 import { GlobalStateContext } from "../utils/context-provider";
 import { UserPermission } from "../types/user";
-import { CopyOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  CloseOutlined,
+  CopyOutlined,
+  EditOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import dayjs from "dayjs";
 import { ObjectiveIcon } from "../components/objective-icon";
 
@@ -392,19 +396,30 @@ const ScoringCategoryPage: React.FC = () => {
           return (
             <div>
               {data.map((condition) => {
+                const text =
+                  condition.field +
+                  " " +
+                  operatorToString(condition.operator) +
+                  " " +
+                  condition.value;
                 return (
-                  <Tag
-                    key={condition.id}
-                    closeIcon
-                    onClose={(event) => {
-                      deleteCondition(condition).then(() => {
-                        event.stopPropagation();
-                      });
-                    }}
+                  <div
+                    key={`badge-${condition.id}`}
+                    className="tooltip"
+                    data-tip={text}
                   >
-                    {condition.field} {operatorToString(condition.operator)}{" "}
-                    {condition.value}
-                  </Tag>
+                    <div className="badge badge-primary badge-sm">
+                      <CloseOutlined
+                        onClick={(event) => {
+                          deleteCondition(condition).then(() => {
+                            event.stopPropagation();
+                          });
+                        }}
+                      />
+                      {text.slice(0, 20)}
+                      {text.length > 20 ? "..." : ""}
+                    </div>
+                  </div>
                 );
               })}
             </div>

@@ -86,6 +86,18 @@ export function getMetaInfo(
     meta.objective = findObjectiveById(id, scores);
     if (meta.objective) {
       meta.category = findCategoryById(meta.objective.category_id, scores);
+      if (
+        meta.category &&
+        meta.category.scoring_preset?.scoring_method === "BONUS_PER_COMPLETION"
+      ) {
+        const finishedObjectives = Math.min(
+          meta.category.objectives.filter(
+            (objective) => objective.team_score[parseInt(teamId)].finished
+          ).length,
+          meta.category.scoring_preset.points.length - 1
+        );
+        meta.points += meta.category.scoring_preset.points[finishedObjectives];
+      }
     }
   }
   meta.teamName =
@@ -95,7 +107,7 @@ export function getMetaInfo(
     null;
   meta.finished = scoreDiff.score.finished;
   meta.rank = scoreDiff.score.rank;
-  meta.points = scoreDiff.score.points;
+  meta.points += scoreDiff.score.points;
   return meta;
 }
 
