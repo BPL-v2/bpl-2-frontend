@@ -1,11 +1,4 @@
-import {
-  DatePicker,
-  Form,
-  FormInstance,
-  Input,
-  InputNumber,
-  Modal,
-} from "antd";
+import { DatePicker, Form, FormInstance, Input, InputNumber } from "antd";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { getSubCategory } from "../types/scoring-category";
@@ -17,6 +10,8 @@ import React from "react";
 import { SubmissionCreate } from "../types/submission";
 import { submitBounty } from "../client/submission-client";
 import { ScoringMethod } from "../types/scoring-preset";
+import { PlusOutlined } from "@ant-design/icons";
+import { router } from "../router";
 
 export type SubmissionTabProps = {
   categoryName: string;
@@ -50,132 +45,143 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
     },
     {}
   );
-  // function objectiveToAction(objective: ScoreObjective) {
-  //   if (!eventStatus) {
-  //     return null;
-  //   }
-  //   const submission = submissions.find(
-  //     (submission) =>
-  //       submission.objective.id === objective.id &&
-  //       submission.team_id === eventStatus.team_id
-  //   );
-
-  //   if (!submission) {
-  //     return (
-  //       <Tooltip title={"Submit Bounty"}>
-  //         <PlusOutlined
-  //           onClick={() => {
-  //             setSelectedObjective(objective);
-  //             setShowModal(true);
-  //           }}
-  //         />
-  //       </Tooltip>
-  //     );
-  //   }
-  //   if (submission.approval_status === "PENDING") {
-  //     return (
-  //       <Tooltip title={"Submission is being reviewed"}>
-  //         <EyeInvisibleOutlined />{" "}
-  //       </Tooltip>
-  //     );
-  //   }
-  //   if (submission.approval_status === "APPROVED") {
-  //     return (
-  //       <Tooltip title={"Submission has been approved"}>
-  //         <CheckOutlined style={{ color: green[4] }} />
-  //       </Tooltip>
-  //     );
-  //   }
-  //   if (submission.approval_status === "REJECTED") {
-  //     return (
-  //       <Tooltip title={"Submission has been rejected"}>
-  //         <CloseOutlined style={{ color: red[4] }} />
-  //       </Tooltip>
-  //     );
-  //   }
-  // }
 
   return (
     <>
-      <Modal
-        title={`Submission for "${selectedObjective?.name}"`}
+      <dialog
+        id="my_modal_1"
+        className="modal"
         open={showModal}
-        onCancel={() => {
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            setShowModal(false);
+            setSelectedObjective(undefined);
+            formRef.current?.resetFields();
+          }
+        }}
+        onClose={() => {
           setShowModal(false);
           setSelectedObjective(undefined);
           formRef.current?.resetFields();
         }}
-        onOk={() => formRef.current?.submit()}
       >
-        <Form
-          layout="vertical"
-          ref={formRef}
-          onFinish={(values) => {
-            if (!selectedObjective) {
-              return;
-            }
-            const submissionCreate: SubmissionCreate = {
-              ...values,
-              objective_id: selectedObjective.id,
-              timestamp: values.timestamp.toISOString(),
-            };
-            submitBounty(currentEvent.id, submissionCreate).then(() => {
-              setShowModal(false);
-              setSelectedObjective(undefined);
-              setReloadSubmissions(!reloadSubmissions);
-            });
-          }}
-        >
-          {selectedObjective &&
-          selectedObjective.scoring_preset &&
-          (selectedObjective.scoring_preset.scoring_method ===
-            ScoringMethod.RANKED_VALUE ||
-            selectedObjective.scoring_preset.scoring_method ===
-              ScoringMethod.RANKED_REVERSE) ? (
-            <Form.Item rules={[{ required: true }]} label="Value" name="number">
-              <InputNumber style={{ width: "100%" }} />
+        <div className="modal-box bg-base-200 border-2 border-base-100">
+          <h3 className="font-bold text-lg mb-8">{`Submission for "${selectedObjective?.name}"`}</h3>
+
+          <Form
+            layout="vertical"
+            ref={formRef}
+            onFinish={(values) => {
+              if (!selectedObjective) {
+                return;
+              }
+              const submissionCreate: SubmissionCreate = {
+                ...values,
+                objective_id: selectedObjective.id,
+                timestamp: values.timestamp.toISOString(),
+              };
+              submitBounty(currentEvent.id, submissionCreate).then(() => {
+                setShowModal(false);
+                setSelectedObjective(undefined);
+                setReloadSubmissions(!reloadSubmissions);
+              });
+            }}
+          >
+            {selectedObjective &&
+            selectedObjective.scoring_preset &&
+            (selectedObjective.scoring_preset.scoring_method ===
+              ScoringMethod.RANKED_VALUE ||
+              selectedObjective.scoring_preset.scoring_method ===
+                ScoringMethod.RANKED_REVERSE) ? (
+              <Form.Item
+                rules={[{ required: true }]}
+                label="Value"
+                name="number"
+              >
+                <InputNumber style={{ width: "100%" }} />
+              </Form.Item>
+            ) : (
+              ""
+            )}
+            <Form.Item
+              rules={[{ required: true }]}
+              label="Time (in your timezone)"
+              name="timestamp"
+            >
+              <DatePicker showTime style={{ width: "100%" }} />
             </Form.Item>
-          ) : (
-            ""
-          )}
-          <Form.Item
-            rules={[{ required: true }]}
-            label="Time"
-            name="timestamp"
-            help="in your timezone"
-          >
-            <DatePicker showTime style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item
-            label="Link to proof"
-            name="proof"
-            rules={[{ required: true }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item label="Comment" name="comment">
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
+            <Form.Item
+              label="Link to proof"
+              name="proof"
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item label="Comment" name="comment">
+              <Input />
+            </Form.Item>
+          </Form>
+          <div className="modal-action">
+            <button
+              className="btn btn-soft"
+              onClick={() => {
+                setShowModal(false);
+                formRef.current?.resetFields();
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={() => formRef.current?.submit()}
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      </dialog>
       <TeamScore category={category}></TeamScore>{" "}
+      <h1 className="text-xl mt-4">
+        Click to see all{" "}
+        <a
+          href={`/submissions?type=${category.name}`}
+          onClick={(e) => {
+            e.preventDefault();
+            router.navigate(`/submissions?type=${category.name}`);
+          }}
+          className="text-primary underline cursor-pointer"
+        >
+          Submissions
+        </a>
+      </h1>
       <div className="divider divider-primary">{category.name}</div>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4">
         {category.objectives.map((objective) => {
           return (
             <div className="card bg-base-200" key={objective.id}>
-              <div className="h-22">
+              <div className="h-22 flex items-center justify-between bg-base-200 top-box-rounded px-4">
                 <div
                   className={objective.extra ? "tooltip  text-2xl " : undefined}
                   data-tip={objective.extra}
-                >
-                  <h3 className="flex-grow text-center m-4 text-xl font-medium mr-4">
-                    {`${objective.name}`}
-                    {objective.extra ? (
-                      <a style={{ color: red[6] }}>*</a>
-                    ) : null}
-                  </h3>
-                </div>
+                ></div>
+                <h3 className="flex-grow text-center m-4 text-xl font-medium mr-4">
+                  {`${objective.name}`}
+                  {objective.extra ? <a style={{ color: red[6] }}>*</a> : null}
+                </h3>
+
+                {eventStatus?.team_id ? (
+                  <div className="tooltip" data-tip="Submit Bounty">
+                    <button
+                      className="btn bg-highlight btn-sm"
+                      onClick={() => {
+                        setSelectedObjective(objective);
+                        setShowModal(true);
+                      }}
+                    >
+                      <PlusOutlined />
+                    </button>
+                  </div>
+                ) : null}
               </div>
               <div className="pb-4 mb-0 bg-base-300 bottom-box-rounded">
                 <table key={objective.id} className="w-full border-collapse">

@@ -15,6 +15,10 @@ createRoot(document.getElementById("root")!).render(
         colorTextBase: "var(--color-base-content)",
         colorText: "var(--color-base-content)",
         controlItemBgHover: "var(--color-base-200)",
+        colorTextDescription: "var(--color-gray-400)",
+        colorIcon: "var(--color-gray-400)",
+        colorTextDisabled: "var(--color-gray-400)",
+        colorTextPlaceholder: "var(--color-gray-400)",
       },
       components: {
         Table: {
@@ -24,6 +28,9 @@ createRoot(document.getElementById("root")!).render(
           headerSortHoverBg: "var(--color-base-300)",
           headerSortActiveBg: "var(--color-base-300)",
           cellFontSize: 14,
+        },
+        Form: {
+          labelColor: "var(--color-base-content)",
         },
       },
     }}

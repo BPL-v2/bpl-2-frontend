@@ -79,99 +79,122 @@ const SubmissionPage: React.FC = () => {
     }
 
     return (
-      <CrudTable<Submission>
-        resourceName="Submission"
-        columns={[
-          {
-            title: "Objective",
-            dataIndex: "objective",
-            key: "objective",
-            render: (objective) => objective.name,
-          },
-          {
-            title: "Submitter",
-            dataIndex: "user",
-            key: "user",
-            render: (user: User) =>
-              user.account_name ? user.account_name : user.discord_name,
-          },
-          {
-            title: "Value*",
-            dataIndex: "number",
-            key: "number",
-          },
-          {
-            title: "Proof",
-            dataIndex: "proof",
-            key: "proof",
-            render: renderStringWithUrl,
-          },
-          {
-            title: "Timestamp",
-            dataIndex: "timestamp",
-            key: "timestamp",
-            render: (timestamp) => new Date(timestamp).toLocaleString(),
-          },
-          {
-            title: "Status",
-            dataIndex: "approval_status",
-            key: "approval_status",
-            render: (approvalStatus) => {
-              switch (approvalStatus) {
-                case "PENDING":
-                  return <EyeInvisibleOutlined style={{ color: "yellow" }} />;
-                case "APPROVED":
-                  return <CheckOutlined style={{ color: "green" }} />;
-                case "REJECTED":
-                  return <CloseOutlined style={{ color: "red" }} />;
-              }
+      <div className=" mt-4">
+        <CrudTable<Submission>
+          resourceName="Submission"
+          columns={[
+            {
+              title: "Objective",
+              dataIndex: "objective",
+              key: "objective",
+              render: (objective) => objective.name,
             },
-          },
-          {
-            title: "Comment",
-            dataIndex: "comment",
-            key: "comment",
-          },
-        ]}
-        fetchFunction={() => fetchSubmissionsForEvent(currentEvent.id)}
-        addtionalActions={[
-          {
-            name: "Edit",
-            func: async (submission: Partial<Submission>) => {
-              setPickedSubmission(submission);
-              setShowModal(true);
+            {
+              title: "Submitter",
+              dataIndex: "user",
+              key: "user",
+              render: (user: User) =>
+                user.display_name ? user.display_name : user.discord_name,
             },
-            visible: (submission) => {
-              if (!user || !submission.user) {
-                return false;
-              }
-              return submission.user.id === user.id;
+            {
+              title: "Value*",
+              dataIndex: "number",
+              key: "number",
             },
-          },
-          {
-            name: "Approve",
-            func: async (submission: Partial<Submission>) => {
-              submission.id &&
-                reviewBounty(currentEvent.id, submission.id, {
-                  approval_status: ApprovalStatus.APPROVED,
-                }).then(() => setReloadTable(!reloadTable));
+            {
+              title: "Proof",
+              dataIndex: "proof",
+              key: "proof",
+              render: renderStringWithUrl,
             },
-            visible: () =>
-              user?.permissions.includes(UserPermission.ADMIN) ?? false,
-          },
-          {
-            name: "Reject",
-            func: async (submission: Partial<Submission>) => {
-              submission.id &&
-                reviewBounty(currentEvent.id, submission.id, {
-                  approval_status: ApprovalStatus.REJECTED,
-                }).then(() => setReloadTable(!reloadTable));
+            {
+              title: "Timestamp",
+              dataIndex: "timestamp",
+              key: "timestamp",
+              render: (timestamp) => new Date(timestamp).toLocaleString(),
             },
-            visible: () =>
-              user?.permissions.includes(UserPermission.ADMIN) ?? false,
-          },
-        ]}
-      />
+            {
+              title: "Status",
+              dataIndex: "approval_status",
+              key: "approval_status",
+              render: (approvalStatus) => {
+                switch (approvalStatus) {
+                  case "PENDING":
+                    return (
+                      <div
+                        className="text-warning tooltip cursor-help"
+                        data-tip="Pending"
+                      >
+                        <EyeInvisibleOutlined />
+                      </div>
+                    );
+                  case "APPROVED":
+                    return (
+                      <div
+                        className="text-success tooltip cursor-help"
+                        data-tip="Approved"
+                      >
+                        <CheckOutlined />
+                      </div>
+                    );
+                  case "REJECTED":
+                    return (
+                      <div
+                        className="text-error tooltip cursor-help"
+                        data-tip="Rejected"
+                      >
+                        <CloseOutlined />
+                      </div>
+                    );
+                }
+              },
+            },
+            {
+              title: "Comment",
+              dataIndex: "comment",
+              key: "comment",
+            },
+          ]}
+          fetchFunction={() => fetchSubmissionsForEvent(currentEvent.id)}
+          addtionalActions={[
+            {
+              name: "Edit",
+              func: async (submission: Partial<Submission>) => {
+                setPickedSubmission(submission);
+                setShowModal(true);
+              },
+              visible: (submission) => {
+                if (!user || !submission.user) {
+                  return false;
+                }
+                return submission.user.id === user.id;
+              },
+            },
+            {
+              name: "Approve",
+              func: async (submission: Partial<Submission>) => {
+                submission.id &&
+                  reviewBounty(currentEvent.id, submission.id, {
+                    approval_status: ApprovalStatus.APPROVED,
+                  }).then(() => setReloadTable(!reloadTable));
+              },
+              visible: () =>
+                user?.permissions.includes(UserPermission.ADMIN) ?? false,
+            },
+            {
+              name: "Reject",
+              func: async (submission: Partial<Submission>) => {
+                submission.id &&
+                  reviewBounty(currentEvent.id, submission.id, {
+                    approval_status: ApprovalStatus.REJECTED,
+                  }).then(() => setReloadTable(!reloadTable));
+              },
+              visible: () =>
+                user?.permissions.includes(UserPermission.ADMIN) ?? false,
+            },
+          ]}
+        />
+      </div>
     );
   }, [currentEvent, reloadTable, user]);
 

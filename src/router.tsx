@@ -71,4 +71,8 @@ export const router = createBrowserRouter([
     path: "/scoring-readme",
     element: <ScoringReadmePage />,
   },
+  {
+    path: "/submissions",
+    element: <SubmissionPage />,
+  },
 ]);
