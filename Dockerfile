@@ -26,19 +26,18 @@ RUN echo "VITE_BACKEND_URL=${VITE_BACKEND_URL}" > .env
 RUN npm run build
 
 # Remove the dev dependencies
-RUN npm prune --production
+RUN npm prune --omit=dev
 
 # Stage 2: Serve the application
-FROM node:23-alpine3.20
+FROM nginx:1.27.4-alpine
 
 WORKDIR /app
 
+# Copy the built files from the builder stage
 COPY --from=builder /app/dist /app/dist
-COPY --from=builder /app/node_modules /app/node_modules
+COPY /nginx.conf /etc/nginx/conf.d/default.conf
 
-
-# Install serve globally
-RUN npm install -g serve
 # Expose the port and start the server
 EXPOSE 3000
-CMD ["serve", "-s", "dist", "-l", "3000"]
+
+CMD ["nginx", "-g", "daemon off;"]
