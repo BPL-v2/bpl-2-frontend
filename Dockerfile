@@ -20,25 +20,23 @@ COPY . .
 # RUN ./generate_file_structure.sh
 
 # Build the application
+ARG VITE_BACKEND_URL
+ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
+RUN echo "VITE_BACKEND_URL=${VITE_BACKEND_URL}" > .env
 RUN npm run build
 
 # Remove the dev dependencies
 RUN npm prune --production
 
 # Stage 2: Serve the application
-FROM node:23-alpine3.20
+FROM nginx:1.27.4-alpine
 
 WORKDIR /app
 
 # Copy the built files from the builder stage
 COPY --from=builder /app/dist /app/dist
-COPY --from=builder /app/node_modules /app/node_modules
-ARG VITE_BACKEND_URL
-ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
 
-# Install serve globally
-RUN npm install -g serve
 # Expose the port and start the server
 EXPOSE 3000
 
-CMD ["serve", "-s", "dist", "-l", "3000"]
+CMD ["nginx", "-g", "daemon off;"]
