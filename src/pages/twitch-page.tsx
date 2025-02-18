@@ -3,9 +3,24 @@ import { TwitchStreamEmbed } from "../components/twitch-stream";
 // @ts-ignore: library is not typed
 import ReactTwitchEmbedVideo from "react-twitch-embed-video";
 import { GlobalStateContext } from "../utils/context-provider";
-import { teamSort } from "../types/team";
-import { TwitchStream } from "../client";
+import { EventStatus, Team, TwitchStream } from "../client";
 import { streamApi } from "../client/client";
+
+function teamSort(
+  eventStatus: EventStatus | undefined
+): (teamA: Team, teamB: Team) => number {
+  return (teamA, teamB) => {
+    if (eventStatus) {
+      if (teamA.id === eventStatus.team_id) {
+        return -1;
+      }
+      if (teamB.id === eventStatus.team_id) {
+        return 1;
+      }
+    }
+    return teamA.id - teamB.id;
+  };
+}
 
 export function TwitchPage() {
   const [twitchStreams, setTwitchStreams] = useState<TwitchStream[]>([]);

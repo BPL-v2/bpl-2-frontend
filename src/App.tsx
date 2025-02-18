@@ -11,7 +11,7 @@ import {
   TwitchOutlined,
 } from "@ant-design/icons";
 import { establishScoreSocket } from "./websocket/score-socket";
-import { ScoreCategory, ScoreDiffWithKey, ScoreMap } from "./types/score";
+import { ScoreCategory, ScoreDiffWithKey } from "./types/score";
 import { mergeScores } from "./utils/utils";
 import ApplicationButton from "./components/application-button";
 import { Dropdown } from "antd";
@@ -24,6 +24,7 @@ import {
   User,
   Event,
   GameVersion,
+  ScoreMap,
 } from "./client";
 import { MinimalTeamUser } from "./types/user";
 import { eventApi, scoringApi, userApi } from "./client/client";

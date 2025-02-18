@@ -2,22 +2,11 @@ import {
   Category,
   Objective,
   Score,
+  ScoreMap,
   ScoringMethod,
   ScoringPreset,
 } from "../client";
-import { ScoreCategory, ScoreMap, ScoreObjective } from "../types/score";
-
-export function getObjectiveIDs(category: Category): number[] {
-  return category.objectives.map((objective) => objective.id);
-}
-
-export function getAllSubcategories(category: Category): Category[] {
-  const subcategories = [category, ...category.sub_categories];
-  for (const subcategory of category.sub_categories) {
-    subcategories.push(...getAllSubcategories(subcategory));
-  }
-  return subcategories;
-}
+import { ScoreCategory, ScoreObjective } from "../types/score";
 
 type TeamScores = { [teamId: number]: Score };
 
@@ -257,12 +246,4 @@ function getPotentialPointsForObjective(objective: ScoreObjective) {
     }
   }
   return points;
-}
-
-export function getAllObjectives(category: ScoreCategory): ScoreObjective[] {
-  const objectives = [...category.objectives];
-  for (const subCategory of category.sub_categories) {
-    objectives.push(...getAllObjectives(subCategory));
-  }
-  return objectives;
 }

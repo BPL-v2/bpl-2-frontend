@@ -48,7 +48,6 @@ export function operatorForField(field: ItemField): Operator[] {
     Operator.CONTAINS_MATCH,
     Operator.CONTAINS_ALL_MATCHES,
   ];
-  // const numberArrayOperators = [Operator.CONTAINS, Operator.CONTAINS_ALL];
   const booleanOperators = [Operator.EQ];
 
   switch (field) {

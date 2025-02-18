@@ -7,8 +7,6 @@ import {
   Team,
 } from "../client";
 
-export type ScoreMap = { [key: string]: ScoreDiff };
-
 export type ScoreDiffWithKey = ScoreDiff & {
   key: string;
 };
@@ -111,15 +109,6 @@ export function getMetaInfo(
   meta.points += scoreDiff.score.points;
   return meta;
 }
-
-export type ScoreLite = {
-  points: number;
-  user_id: number;
-  rank: number;
-  timestamp: Date;
-  number: number;
-  finished: boolean;
-};
 
 export type TeamScore = { [teamId: number]: Score };
 

@@ -1,4 +1,5 @@
-import { ScoreDiffWithKey, ScoreMap } from "../types/score";
+import { ScoreMap } from "../client";
+import { ScoreDiffWithKey } from "../types/score";
 
 export const establishScoreSocket = (
   eventId: number,
