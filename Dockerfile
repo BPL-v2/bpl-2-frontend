@@ -29,14 +29,16 @@ RUN npm run build
 RUN npm prune --production
 
 # Stage 2: Serve the application
-FROM nginx:1.27.4-alpine
+FROM node:23-alpine3.20
 
 WORKDIR /app
 
-# Copy the built files from the builder stage
 COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/node_modules /app/node_modules
 
+
+# Install serve globally
+RUN npm install -g serve
 # Expose the port and start the server
 EXPOSE 3000
-
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["serve", "-s", "dist", "-l", "3000"]
