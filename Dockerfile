@@ -16,9 +16,6 @@ RUN npm install
 
 # Copy the rest of the application code
 COPY . .
-ARG VITE_BACKEND_URL
-ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
-RUN echo "VITE_BACKEND_URL=${VITE_BACKEND_URL}" > .env
 ## used for enumerating public images - but not really needed
 # RUN ./generate_file_structure.sh
 
@@ -36,6 +33,8 @@ WORKDIR /app
 # Copy the built files from the builder stage
 COPY --from=builder /app/dist /app/dist
 COPY --from=builder /app/node_modules /app/node_modules
+ARG VITE_BACKEND_URL
+ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
 
 # Install serve globally
 RUN npm install -g serve
