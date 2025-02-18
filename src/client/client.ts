@@ -14,7 +14,7 @@ import {
 
 import "portable-fetch";
 
-const baseUrl = "http://localhost/api";
+const baseUrl = process.env.VITE_BACKEND_URL;
 const config: Configuration = {
   basePath: baseUrl,
 };
