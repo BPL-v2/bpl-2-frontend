@@ -80,7 +80,7 @@ export async function getThumbnailUrl(
     };
     return fetch(apiUrl, { headers: headers })
       .then((res) => res.json())
-      .then((json) => {
+      .then((json: { data: { thumbnail_url: string }[] }) => {
         if (json.data.length === 0) {
           return;
         }

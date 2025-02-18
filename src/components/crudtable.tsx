@@ -36,18 +36,14 @@ export interface CrudColumn<T> extends ColumnType<T> {
     | "text[]"
     | "number[]";
   defaultValue?: string;
-  options?: string[] | Option[];
-  inputRenderer?: (
-    record: Partial<T>,
-    dataSetter: (data: Partial<T>) => void
-  ) => JSX.Element;
+  options?: any[] | Option[];
+  inputRenderer?: (record: any, dataSetter: (data: any) => void) => JSX.Element;
 }
 
-type funcOnData<T> = (data: Partial<T>) => Promise<any>;
-export type action<T> = {
+export type action = {
   name: string;
-  func: funcOnData<T>;
-  visible?: (data: Partial<T>) => boolean;
+  func: (data: any) => Promise<any>;
+  visible?: (data: any) => boolean;
   icon?: JSX.Element;
 };
 
@@ -55,10 +51,10 @@ type CrudTableProps<T> = {
   columns: CrudColumn<T>[];
   resourceName: string;
   fetchFunction: () => Promise<T[]>;
-  editFunction?: funcOnData<T>;
-  deleteFunction?: funcOnData<T>;
-  createFunction?: funcOnData<T>;
-  addtionalActions?: action<T>[];
+  editFunction?: (data: any) => Promise<T>;
+  deleteFunction?: (data: any) => Promise<any>;
+  createFunction?: (data: any) => Promise<T>;
+  addtionalActions?: action[];
   formValidator?: (data: Partial<T>) => string | undefined;
   reload?: boolean;
   filterFunction?: (data: T) => boolean;

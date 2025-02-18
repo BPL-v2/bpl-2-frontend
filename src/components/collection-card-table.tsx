@@ -1,13 +1,14 @@
-import { ScoreLite, ScoreObjective } from "../types/score";
+import { ScoreObjective } from "../types/score";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { ProgressBar } from "./progress-bar";
+import { Score } from "../client";
 
 type CollectionCardTableProps = {
   objective: ScoreObjective;
 };
 
-function getPlace(score: ScoreLite) {
+function getPlace(score: Score) {
   if (score.rank === 0) {
     return "Not Finished";
   }
@@ -23,7 +24,7 @@ function getPlace(score: ScoreLite) {
   return "Finished";
 }
 
-function finishTooltip(objective: ScoreObjective, score: ScoreLite) {
+function finishTooltip(objective: ScoreObjective, score: Score) {
   let place = getPlace(score);
   return `${place} ${
     objective.scoring_preset
@@ -42,7 +43,7 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
       <tbody>
         {Object.entries(objective.team_score)
           .map(([teamId, score]) => {
-            return [parseInt(teamId), score] as [number, ScoreLite];
+            return [parseInt(teamId), score] as [number, Score];
           })
           .sort(([, scoreA], [, scoreB]) => {
             if (scoreA.points === scoreB.points) {

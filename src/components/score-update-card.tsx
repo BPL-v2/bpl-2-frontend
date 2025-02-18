@@ -1,11 +1,11 @@
 import { useContext } from "react";
-import { getMetaInfo, ScoreDiff } from "../types/score";
+import { getMetaInfo, ScoreDiffWithKey } from "../types/score";
 import { GlobalStateContext } from "../utils/context-provider";
 import { ObjectiveIcon } from "./objective-icon";
 
 type ScoreUpdateCardProps = {
-  update: ScoreDiff;
-  close: (update: ScoreDiff) => void;
+  update: ScoreDiffWithKey;
+  close: (update: ScoreDiffWithKey) => void;
   closeAll?: () => void;
 };
 

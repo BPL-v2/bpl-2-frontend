@@ -1,9 +1,9 @@
 import { Form, FormInstance, Input } from "antd";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
-import { updateUser } from "../client/user-client";
 import React from "react";
 import { OauthCard } from "../components/oauth-card";
+import { userApi } from "../client/client";
 
 export function ProfilePage() {
   const { user, setUser } = useContext(GlobalStateContext);
@@ -31,7 +31,12 @@ export function ProfilePage() {
             display your score on the leaderboard.
           </p>
           <Form
-            onFinish={(value) => updateUser(value.display_name).then(setUser)}
+            // onFinish={(value) => updateUser(value.display_name).then(setUser)}
+            onFinish={(value) =>
+              userApi
+                .updateUser({ display_name: value.display_name })
+                .then(setUser)
+            }
             ref={formRef}
           >
             <Form.Item

@@ -1,27 +1,26 @@
 import { createContext } from "react";
-import { MinimalUser, User } from "../types/user";
-import { BPLEvent, EventStatus } from "../types/event";
-import { ScoringCategory } from "../types/scoring-category";
 import { ScoreCategory } from "../types/score";
+import { Category, Event, User, EventStatus, GameVersion } from "../client";
+import { MinimalTeamUser } from "../types/user";
 export type GlobalState = {
   user: User | undefined;
   setUser: (c: User | undefined) => void;
-  currentEvent: BPLEvent | undefined;
-  setCurrentEvent: (c: BPLEvent | undefined) => void;
-  events: BPLEvent[];
-  setEvents: (c: BPLEvent[]) => void;
-  rules: ScoringCategory | undefined;
-  setRules: (c: ScoringCategory | undefined) => void;
+  currentEvent: Event | undefined;
+  setCurrentEvent: (c: Event | undefined) => void;
+  events: Event[];
+  setEvents: (c: Event[]) => void;
+  rules: Category | undefined;
+  setRules: (c: Category | undefined) => void;
   eventStatus: EventStatus | undefined;
   setEventStatus: (c: EventStatus | undefined) => void;
   scores: ScoreCategory | undefined;
   setScores: (c: ScoreCategory | undefined) => void;
-  users: MinimalUser[];
-  setUsers: (c: MinimalUser[]) => void;
+  users: MinimalTeamUser[];
+  setUsers: (c: MinimalTeamUser[]) => void;
   isMobile: boolean;
   setIsMobile: (c: boolean) => void;
-  gameVersion: "poe1" | "poe2";
-  setGameVersion: (c: "poe1" | "poe2") => void;
+  gameVersion: GameVersion;
+  setGameVersion: (c: GameVersion) => void;
 };
 
 export const GlobalStateContext = createContext<GlobalState>({
@@ -41,7 +40,7 @@ export const GlobalStateContext = createContext<GlobalState>({
   setUsers: () => {},
   isMobile: false,
   setIsMobile: () => {},
-  gameVersion: "poe2",
+  gameVersion: GameVersion.poe1,
   setGameVersion: () => {},
 });
 

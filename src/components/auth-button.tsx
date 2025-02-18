@@ -2,8 +2,8 @@ import { useContext, useEffect } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { Dropdown } from "antd";
 import { LoginOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
-import { getUserInfo, logoutUser } from "../client/user-client";
 import { router } from "../router";
+import { userApi } from "../client/client";
 
 const AuthButton = () => {
   const { user, setUser } = useContext(GlobalStateContext);
@@ -16,7 +16,7 @@ const AuthButton = () => {
         event.data["bpl-auth"] !== true
       )
         return;
-      getUserInfo().then((data) => setUser(data));
+      userApi.getUser().then((data) => setUser(data));
     };
     window.addEventListener("message", handleMessage);
     // Cleanup the event listener on component unmount
@@ -44,7 +44,7 @@ const AuthButton = () => {
               icon: <LogoutOutlined />,
               danger: true,
               onClick: () => {
-                logoutUser().then(() => {
+                userApi.logout().then(() => {
                   setUser(undefined);
                 });
               },

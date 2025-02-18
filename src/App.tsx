@@ -3,27 +3,30 @@ import { useEffect, useMemo, useState } from "react";
 import { RouterProvider } from "react-router-dom";
 import AuthButton from "./components/auth-button";
 import { ContextProvider } from "./utils/context-provider";
-import { MinimalUser, User, UserPermission } from "./types/user";
-import { fetchUsersForEvent, getUserInfo } from "./client/user-client";
 import { router } from "./router";
-import { fetchAllEvents, fetchEventStatus } from "./client/event-client";
-import { BPLEvent, EventStatus } from "./types/event";
 import {
   LineChartOutlined,
   ReadOutlined,
   SettingOutlined,
   TwitchOutlined,
 } from "@ant-design/icons";
-import { ScoringCategory } from "./types/scoring-category";
-import { fetchCategoryForEvent } from "./client/category-client";
-import { establishScoreSocket } from "./client/score-client";
-import { ScoreCategory, ScoreDiff, ScoreMap } from "./types/score";
+import { establishScoreSocket } from "./websocket/score-socket";
+import { ScoreCategory, ScoreDiffWithKey, ScoreMap } from "./types/score";
 import { mergeScores } from "./utils/utils";
-import { fetchScoringPresetsForEvent } from "./client/scoring-preset-client";
-import { ScoringPreset } from "./types/scoring-preset";
 import ApplicationButton from "./components/application-button";
 import { Dropdown } from "antd";
 import { ScoreUpdateCard } from "./components/score-update-card";
+import {
+  Category,
+  EventStatus,
+  Permission,
+  ScoringPreset,
+  User,
+  Event,
+  GameVersion,
+} from "./client";
+import { MinimalTeamUser } from "./types/user";
+import { eventApi, scoringApi, userApi } from "./client/client";
 
 // function getKeys(items: any[]): string[] {
 //   let keys = [];
@@ -41,7 +44,7 @@ type MenuItem = {
   key: string;
   icon?: JSX.Element;
   extra?: "left" | "right";
-  rolerequired?: UserPermission[];
+  rolerequired?: Permission[];
   children?: MenuItem[];
   url?: string;
 };
@@ -88,25 +91,25 @@ const setHighlightColor = (root: HTMLElement) => {
 function App() {
   const [currentNav, setCurrentNav] = useState<string>();
   const [user, setUser] = useState<User>();
-  const [currentEvent, setCurrentEvent] = useState<BPLEvent>();
-  const [events, setEvents] = useState<BPLEvent[]>([]);
+  const [currentEvent, setCurrentEvent] = useState<Event>();
+  const [events, setEvents] = useState<Event[]>([]);
   const [eventStatus, setEventStatus] = useState<EventStatus>();
-  const [rules, setRules] = useState<ScoringCategory>();
+  const [rules, setRules] = useState<Category>();
   const [scoreData, setScoreData] = useState<ScoreMap>({});
   const [scores, setScores] = useState<ScoreCategory>();
   const [scoringPresets, setScoringPresets] = useState<ScoringPreset[]>();
-  const [users, setUsers] = useState<MinimalUser[]>([]);
+  const [users, setUsers] = useState<MinimalTeamUser[]>([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  const [gameVersion, setGameVersion] = useState<"poe1" | "poe2">("poe1");
-  const [updates, setUpdates] = useState<ScoreDiff[]>([]);
+  const [gameVersion, setGameVersion] = useState<GameVersion>(GameVersion.poe1);
+  const [updates, setUpdates] = useState<ScoreDiffWithKey[]>([]);
   useEffect(() => {
     setHighlightColor(document.documentElement);
   }, []);
 
   useEffect(() => {
-    getUserInfo().then((data) => setUser(data));
-    fetchAllEvents().then((events) => {
+    userApi.getUser().then((data) => setUser(data));
+    eventApi.getEvents().then((events) => {
       setEvents(events);
       const event = events.find((event) => event.is_current);
       setCurrentEvent(event);
@@ -115,11 +118,19 @@ function App() {
           setUpdates((prevUpdates) => [...newUpdates, ...prevUpdates])
         );
         setGameVersion(event.game_version);
-        fetchCategoryForEvent(event.id).then((rules) => setRules(rules));
-        fetchScoringPresetsForEvent(event.id).then((presets) =>
-          setScoringPresets(presets)
-        );
-        fetchUsersForEvent(event.id).then((users) => setUsers(users));
+        scoringApi.getRulesForEvent(event.id).then((rules) => setRules(rules));
+        scoringApi
+          .getScoringPresetsForEvent(event.id)
+          .then((presets) => setScoringPresets(presets));
+        userApi.getUsersForEvent(event.id).then((users) => {
+          setUsers(
+            Object.entries(users)
+              .map(([teamId, user]) => {
+                return user.map((u) => ({ ...u, team_id: parseInt(teamId) }));
+              })
+              .flat()
+          );
+        });
       }
     });
   }, []);
@@ -130,7 +141,7 @@ function App() {
         label: "Admin",
         icon: <SettingOutlined />,
         key: "admin",
-        rolerequired: [UserPermission.ADMIN],
+        rolerequired: [Permission.admin],
         children: [
           { label: "Events", url: "/events", key: "events" },
           { label: "Manage users", url: "/users", key: "users" },
@@ -186,9 +197,7 @@ function App() {
 
   useEffect(() => {
     if (currentEvent && user) {
-      fetchEventStatus(currentEvent.id).then((status) =>
-        setEventStatus(status)
-      );
+      eventApi.getEventStatusForUser(currentEvent.id).then(setEventStatus);
     }
   }, [currentEvent, user]);
 
@@ -206,7 +215,7 @@ function App() {
               <ScoreUpdateCard
                 key={"update-" + index}
                 update={update}
-                close={(update: ScoreDiff) =>
+                close={(update: ScoreDiffWithKey) =>
                   setUpdates((prevUpdates) =>
                     prevUpdates.filter((u) => u.key !== update.key)
                   )

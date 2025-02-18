@@ -1,16 +1,11 @@
 import React, { useContext } from "react";
-import { BPLEvent } from "../types/event";
 import CrudTable, { CrudColumn } from "../components/crudtable";
-import {
-  createEvent,
-  deleteEvent,
-  fetchAllEvents,
-} from "../client/event-client";
 import { router } from "../router";
 import { GlobalStateContext } from "../utils/context-provider";
-import { UserPermission } from "../types/user";
+import { EventCreate, Event, Permission } from "../client/api";
+import { eventApi } from "../client/client";
 
-const columns: CrudColumn<BPLEvent>[] = [
+const columns: CrudColumn<Event>[] = [
   {
     title: "ID",
     dataIndex: "id",
@@ -81,35 +76,40 @@ const columns: CrudColumn<BPLEvent>[] = [
 
 const EventPage: React.FC = () => {
   const { user, events, setEvents } = useContext(GlobalStateContext);
-  if (!user || !user.permissions.includes(UserPermission.ADMIN)) {
+  if (!user || !user.permissions.includes(Permission.admin)) {
     return <div>You do not have permission to view this page</div>;
   }
 
-  const createEventWrapper = async (data: Partial<BPLEvent>) => {
-    const newEvent = await createEvent(data);
-    setEvents([...events, newEvent]);
-    return newEvent;
+  const createEventWrapper = async (data: EventCreate) => {
+    // const newEvent = await createEvent(data);
+    // setEvents([...events, newEvent]);
+    return eventApi.createEvent(data).then((res) => {
+      setEvents([...events, res]);
+      return res;
+    });
   };
 
-  const deleteEventWrapper = async (data: Partial<BPLEvent>) => {
-    await deleteEvent(data);
-    setEvents(events.filter((event) => event.id !== data.id));
+  const deleteEventWrapper = async (data: Event) => {
+    return eventApi.deleteEvent(data.id).then(() => {
+      setEvents(events.filter((event) => event.id !== data.id));
+    });
   };
 
-  const editEventWrapper = async (data: Partial<BPLEvent>) => {
-    const newEvent = await createEvent(data);
-    setEvents(
-      events.map((event) => (event.id === newEvent.id ? newEvent : event))
-    );
-    return newEvent;
+  const editEventWrapper = async (data: Event) => {
+    return eventApi.createEvent(data).then((newEvent) => {
+      setEvents(
+        events.map((event) => (event.id === newEvent.id ? newEvent : event))
+      );
+      return newEvent;
+    });
   };
 
   return (
     <div>
-      <CrudTable<BPLEvent>
+      <CrudTable<Event>
         resourceName="Event"
         columns={columns}
-        fetchFunction={fetchAllEvents}
+        fetchFunction={eventApi.getEvents}
         createFunction={createEventWrapper}
         editFunction={editEventWrapper}
         deleteFunction={deleteEventWrapper}

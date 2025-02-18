@@ -1,18 +1,18 @@
 import { useContext, useEffect, useState } from "react";
-import { TwitchStream } from "../types/twitch-stream";
-import { fetchStreams } from "../client/twitch-client";
 import { TwitchStreamEmbed } from "../components/twitch-stream";
 // @ts-ignore: library is not typed
 import ReactTwitchEmbedVideo from "react-twitch-embed-video";
 import { GlobalStateContext } from "../utils/context-provider";
 import { teamSort } from "../types/team";
+import { TwitchStream } from "../client";
+import { streamApi } from "../client/client";
 
 export function TwitchPage() {
   const [twitchStreams, setTwitchStreams] = useState<TwitchStream[]>([]);
   const [selectedChannel, setSelectedChannel] = useState<string | null>(null);
   const { eventStatus, users, currentEvent } = useContext(GlobalStateContext);
   useEffect(() => {
-    fetchStreams().then((data) => setTwitchStreams(data));
+    streamApi.getStreams().then((data) => setTwitchStreams(data));
   }, []);
   return (
     <div key="twitch-page">
@@ -36,11 +36,11 @@ export function TwitchPage() {
                     user.team_id === team.id
                 )
               )
-              .sort((a, b) => b.viewer_count - a.viewer_count)
+              .sort((a, b) => (b.viewer_count || 0) - (a.viewer_count || 0))
               .map((stream) => (
                 <div
                   key={`stream-${stream.id}`}
-                  onClick={() => setSelectedChannel(stream.user_login)}
+                  onClick={() => setSelectedChannel(stream.user_login || null)}
                   className={`cursor-pointer border-2 rounded-8 ${
                     stream.user_login == selectedChannel
                       ? "border-primary"

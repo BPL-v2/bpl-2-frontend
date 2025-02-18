@@ -1,14 +1,9 @@
 import { useContext, useMemo } from "react";
 import CrudTable, { CrudColumn } from "../components/crudtable";
-import { Team } from "../types/team";
-import {
-  createTeam,
-  deleteTeam,
-  fetchTeamsForEvent,
-} from "../client/team-client";
 import { useParams } from "react-router-dom";
 import { GlobalStateContext } from "../utils/context-provider";
-import { UserPermission } from "../types/user";
+import { GameVersion, Permission, Team } from "../client";
+import { teamApi } from "../client/client";
 
 const TeamPage = () => {
   let { eventId } = useParams();
@@ -19,7 +14,7 @@ const TeamPage = () => {
   }
 
   const { user } = useContext(GlobalStateContext);
-  if (!user || !user.permissions.includes(UserPermission.ADMIN)) {
+  if (!user || !user.permissions.includes(Permission.admin)) {
     return <div>You do not have permission to view this page</div>;
   }
   const columns: CrudColumn<Team>[] = useMemo(
@@ -43,7 +38,7 @@ const TeamPage = () => {
         key: "allowed_classes",
         type: "multiselect",
         options:
-          event.game_version === "poe2"
+          event.game_version === GameVersion.poe2
             ? [
                 "Warbringer",
                 "Titan",
@@ -92,16 +87,14 @@ const TeamPage = () => {
     <CrudTable<Team>
       resourceName="Team"
       columns={columns}
-      fetchFunction={() => fetchTeamsForEvent(eventIdNum)}
-      createFunction={async (data) => {
-        return createTeam(eventIdNum, data);
-      }}
-      editFunction={async (data) => {
-        return createTeam(eventIdNum, data);
-      }}
-      deleteFunction={async (data) => {
-        return deleteTeam(eventIdNum, data);
-      }}
+      fetchFunction={() => teamApi.getTeams(eventIdNum)}
+      createFunction={(data) =>
+        teamApi.createTeam({ ...data, eventId: eventIdNum })
+      }
+      editFunction={(data) =>
+        teamApi.createTeam({ ...data, eventId: eventIdNum })
+      }
+      deleteFunction={(data) => teamApi.deleteTeam(eventIdNum, data.id)}
     />
   );
 };

@@ -1,7 +1,7 @@
 import { Tooltip } from "antd";
-import { disconnectOauth } from "../client/user-client";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
+import { userApi } from "../client/client";
 
 type OauthCardProps = {
   required?: boolean;
@@ -24,7 +24,7 @@ export function OauthCard({
   const connectionButton = connected ? (
     <button
       className={`btn btn-error btn-outline`}
-      onClick={() => disconnectOauth(provider).then(setUser)}
+      onClick={() => userApi.removeAuth(provider).then(setUser)}
     >
       Disconnect
     </button>

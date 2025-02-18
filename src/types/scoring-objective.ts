@@ -1,19 +1,13 @@
+import {
+  Objective,
+  GameVersion,
+  Operator,
+  ObjectiveType,
+  AggregationType,
+  NumberField,
+  ItemField,
+} from "../client";
 import { ScoreObjective } from "./score";
-import { ScoringPreset } from "./scoring-preset";
-
-export enum ObjectiveType {
-  ITEM = "ITEM",
-  PLAYER = "PLAYER",
-  SUBMISSION = "SUBMISSION",
-}
-
-export enum AggregationType {
-  SUM_LATEST = "SUM_LATEST",
-  EARLIEST = "EARLIEST",
-  EARLIEST_FRESH_ITEM = "EARLIEST_FRESH_ITEM",
-  MAXIMUM = "MAXIMUM",
-  MINIMUM = "MINIMUM",
-}
 
 export function availableAggregationTypes(
   objectiveType: ObjectiveType
@@ -26,32 +20,8 @@ export function availableAggregationTypes(
   );
 }
 
-export enum NumberField {
-  STACK_SIZE = "STACK_SIZE",
-  PLAYER_LEVEL = "PLAYER_LEVEL",
-  PLAYER_XP = "PLAYER_XP",
-  SUBMISSION_VALUE = "SUBMISSION_VALUE",
-}
-
 export function playerNumberfields(): NumberField[] {
   return [NumberField.PLAYER_LEVEL, NumberField.PLAYER_XP];
-}
-
-export enum Operator {
-  EQ = "EQ",
-  NEQ = "NEQ",
-  GT = "GT",
-  GTE = "GTE",
-  LT = "LT",
-  LTE = "LTE",
-  IN = "IN",
-  NOT_IN = "NOT_IN",
-  MATCHES = "MATCHES",
-
-  CONTAINS = "CONTAINS",
-  CONTAINS_ALL = "CONTAINS_ALL",
-  CONTAINS_MATCH = "CONTAINS_MATCH",
-  CONTAINS_ALL_MATCHES = "CONTAINS_ALL_MATCHES",
 }
 
 export function operatorForField(field: ItemField): Operator[] {
@@ -144,83 +114,6 @@ export function operatorToString(operator: Operator): string {
   }
 }
 
-export enum ItemField {
-  BASE_TYPE = "BASE_TYPE",
-  NAME = "NAME",
-  TYPE_LINE = "TYPE_LINE",
-  RARITY = "RARITY",
-  ILVL = "ILVL",
-  FRAME_TYPE = "FRAME_TYPE",
-  TALISMAN_TIER = "TALISMAN_TIER",
-  ENCHANT_MODS = "ENCHANT_MODS",
-  EXPLICIT_MODS = "EXPLICIT_MODS",
-  IMPLICIT_MODS = "IMPLICIT_MODS",
-  CRAFTED_MODS = "CRAFTED_MODS",
-  FRACTURED_MODS = "FRACTURED_MODS",
-  SIX_LINK = "SIX_LINK",
-}
-
-export type Condition = {
-  id?: number;
-  objective_id?: number;
-  field: ItemField;
-  operator: Operator;
-  value: string;
-};
-
-export type ScoringObjective = {
-  id: number;
-  name: string;
-  extra: string;
-  required_number: number;
-  conditions: Condition[];
-  category_id: number;
-  objective_type: ObjectiveType;
-  valid_from: string | null;
-  valid_to: string | null;
-  aggregation: AggregationType;
-  number_field: NumberField;
-  scoring_preset: ScoringPreset | null;
-  scoring_preset_id: number | null;
-};
-
-export type ConditionCreate = {
-  operator: Operator;
-  field: ItemField;
-  value: string;
-};
-
-export type ConditionUpdate = {
-  operator?: Operator;
-  field?: ItemField;
-  value?: string;
-};
-
-export type ScoringObjectiveCreate = {
-  id?: number;
-  name: string;
-  required_number: number;
-  objective_type: ObjectiveType;
-  valid_from: string | null;
-  valid_to: string | null;
-  conditions: ConditionCreate[];
-  category_id: number;
-  scoring_preset_id?: number;
-  aggregation: AggregationType;
-  number_field: NumberField;
-};
-
-export type ScoringObjectiveUpdate = {
-  id: number;
-  name: string;
-  required_number: number;
-  objective_type: ObjectiveType;
-  valid_from?: string | null;
-  valid_to?: string | null;
-  category_id: number;
-  scoring_id?: number;
-};
-
 var anomalousUniques: {
   [gameVersion: string]: { [key: string]: { [key: string]: string } };
 } = {
@@ -283,7 +176,7 @@ var anomalousUniques: {
 };
 
 export function getItemName(
-  objective: ScoreObjective | ScoringObjective
+  objective: ScoreObjective | Objective
 ): string | null {
   if (
     !objective ||
@@ -311,8 +204,8 @@ export function getItemName(
 }
 
 export function getImageLocation(
-  objective: ScoreObjective | ScoringObjective,
-  gameVersion: "poe1" | "poe2"
+  objective: ScoreObjective | Objective,
+  gameVersion: GameVersion
 ): string | null {
   if (
     !objective ||

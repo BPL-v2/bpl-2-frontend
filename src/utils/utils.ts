@@ -1,21 +1,17 @@
 import {
+  Category,
+  Objective,
   Score,
-  ScoreCategory,
-  ScoreLite,
-  ScoreMap,
-  ScoreObjective,
-} from "../types/score";
-import { ScoringCategory } from "../types/scoring-category";
-import { ScoringObjective } from "../types/scoring-objective";
-import { ScoringMethod, ScoringPreset } from "../types/scoring-preset";
+  ScoringMethod,
+  ScoringPreset,
+} from "../client";
+import { ScoreCategory, ScoreMap, ScoreObjective } from "../types/score";
 
-export function getObjectiveIDs(category: ScoringCategory): number[] {
+export function getObjectiveIDs(category: Category): number[] {
   return category.objectives.map((objective) => objective.id);
 }
 
-export function getAllSubcategories(
-  category: ScoringCategory
-): ScoringCategory[] {
+export function getAllSubcategories(category: Category): Category[] {
   const subcategories = [category, ...category.sub_categories];
   for (const subcategory of category.sub_categories) {
     subcategories.push(...getAllSubcategories(subcategory));
@@ -27,12 +23,12 @@ type TeamScores = { [teamId: number]: Score };
 
 type TeamScoreMap = { [scoreId: number]: TeamScores };
 
-function getEmptyScore(): ScoreLite {
+function getEmptyScore(): Score {
   return {
     points: 0,
     user_id: 0,
     rank: 0,
-    timestamp: new Date(),
+    timestamp: new Date().toISOString(),
     number: 0,
     finished: false,
   };
@@ -63,7 +59,7 @@ export function getTotalTeamScores(
 }
 
 export function mergeScores(
-  category: ScoringCategory,
+  category: Category,
   scores: ScoreMap,
   teamIds: number[],
   scoringPresets: ScoringPreset[]
@@ -83,7 +79,7 @@ export function mergeScores(
 }
 
 export function mergeScoringCategory(
-  category: ScoringCategory,
+  category: Category,
   scores: ScoreMap,
   teamsIds: number[],
   scoringPresets: { [presetId: number]: ScoringPreset }
@@ -93,7 +89,7 @@ export function mergeScoringCategory(
     name: category.name,
     scoring_preset: category.scoring_preset_id
       ? scoringPresets[category.scoring_preset_id]
-      : null,
+      : undefined,
     sub_categories: category.sub_categories.map((subcategory) =>
       mergeScoringCategory(subcategory, scores, teamsIds, scoringPresets)
     ),
@@ -109,7 +105,7 @@ export function mergeScoringCategory(
 }
 
 export function mergeScoringObjective(
-  objective: ScoringObjective,
+  objective: Objective,
   scores: ScoreMap,
   teamsIds: number[],
   scoringPresets: { [presetId: number]: ScoringPreset }
@@ -127,7 +123,7 @@ export function mergeScoringObjective(
     number_field: objective.number_field,
     scoring_preset: objective.scoring_preset_id
       ? scoringPresets[objective.scoring_preset_id]
-      : null,
+      : undefined,
     category_id: objective.category_id,
     team_score: teamsIds.reduce((acc: TeamScores, teamId) => {
       const key = "O-" + objective.id + "-" + teamId;

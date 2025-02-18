@@ -1,17 +1,7 @@
 import React, { useContext, useEffect, useMemo } from "react";
 import CrudTable from "../components/crudtable";
-import {
-  ApprovalStatus,
-  Submission,
-  SubmissionCreate,
-} from "../types/submission";
-import {
-  fetchSubmissionsForEvent,
-  reviewBounty,
-  submitBounty,
-} from "../client/submission-client";
+
 import { GlobalStateContext } from "../utils/context-provider";
-import { User, UserPermission } from "../types/user";
 import {
   CheckOutlined,
   CloseOutlined,
@@ -27,10 +17,18 @@ import {
   Select,
 } from "antd";
 import { getObjectives } from "../types/scoring-category";
-import { ObjectiveType, ScoringObjective } from "../types/scoring-objective";
-import { ScoringMethod } from "../types/scoring-preset";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import {
+  NonSensitiveUser,
+  Objective,
+  ObjectiveType,
+  Permission,
+  ScoringMethod,
+  Submission,
+  SubmissionCreate,
+} from "../client";
+import { submissionApi } from "../client/client";
 dayjs.extend(customParseFormat);
 
 function renderStringWithUrl(string: string) {
@@ -52,7 +50,7 @@ const SubmissionPage: React.FC = () => {
   const [showModal, setShowModal] = React.useState(false);
   const [reloadTable, setReloadTable] = React.useState(false);
   const [pickedObjective, setPickedObjective] = React.useState<
-    ScoringObjective | undefined
+    Objective | undefined
   >();
 
   const [pickedSubmission, setPickedSubmission] = React.useState<
@@ -93,7 +91,7 @@ const SubmissionPage: React.FC = () => {
               title: "Submitter",
               dataIndex: "user",
               key: "user",
-              render: (user: User) =>
+              render: (user: NonSensitiveUser) =>
                 user.display_name ? user.display_name : user.discord_name,
             },
             {
@@ -155,7 +153,7 @@ const SubmissionPage: React.FC = () => {
               key: "comment",
             },
           ]}
-          fetchFunction={() => fetchSubmissionsForEvent(currentEvent.id)}
+          fetchFunction={() => submissionApi.getSubmissions(currentEvent.id)}
           addtionalActions={[
             {
               name: "Edit",
@@ -174,23 +172,27 @@ const SubmissionPage: React.FC = () => {
               name: "Approve",
               func: async (submission: Partial<Submission>) => {
                 submission.id &&
-                  reviewBounty(currentEvent.id, submission.id, {
-                    approval_status: ApprovalStatus.APPROVED,
-                  }).then(() => setReloadTable(!reloadTable));
+                  submissionApi
+                    .reviewSubmission(currentEvent.id, submission.id, {
+                      approval_status: "APPROVED",
+                    })
+                    .then(() => setReloadTable(!reloadTable));
               },
               visible: () =>
-                user?.permissions.includes(UserPermission.ADMIN) ?? false,
+                user?.permissions.includes(Permission.admin) ?? false,
             },
             {
               name: "Reject",
               func: async (submission: Partial<Submission>) => {
                 submission.id &&
-                  reviewBounty(currentEvent.id, submission.id, {
-                    approval_status: ApprovalStatus.REJECTED,
-                  }).then(() => setReloadTable(!reloadTable));
+                  submissionApi
+                    .reviewSubmission(currentEvent.id, submission.id, {
+                      approval_status: "REJECTED",
+                    })
+                    .then(() => setReloadTable(!reloadTable));
               },
               visible: () =>
-                user?.permissions.includes(UserPermission.ADMIN) ?? false,
+                user?.permissions.includes(Permission.admin) ?? false,
             },
           ]}
         />
@@ -224,11 +226,13 @@ const SubmissionPage: React.FC = () => {
               ...values,
               timestamp: values.timestamp.toISOString(),
             };
-            submitBounty(currentEvent.id, submissionCreate).then(() => {
-              setShowModal(false);
-              setPickedSubmission(undefined);
-              setReloadTable(!reloadTable);
-            });
+            submissionApi
+              .submitBounty(currentEvent.id, submissionCreate)
+              .then(() => {
+                setShowModal(false);
+                setPickedSubmission(undefined);
+                setReloadTable(!reloadTable);
+              });
           }}
         >
           <Form.Item name="id" style={{ display: "none" }}>

@@ -1,6 +1,6 @@
 // @ts-nocheck - This is way too annoying to typecheck. Sue me i dont care
+import { ExpectedPlayTime, Signup } from "../client";
 import { BPLEvent } from "../types/event";
-import { PlayTime, Signup } from "../types/signup";
 
 export function sortUsers(currentEvent: BPLEvent, signups: Signup[]): Signup[] {
   let suggestion = getSortSuggestion(currentEvent, signups);
@@ -51,7 +51,7 @@ function getTeamCounts(
 export function getSortSuggestion(currentEvent: BPLEvent, signups: Signup[]) {
   const buckets: {
     [key: string]: { [teamId: number]: number };
-  } = Object.keys(PlayTime).reduce((buckets, playtime) => {
+  } = Object.keys(ExpectedPlayTime).reduce((buckets, playtime) => {
     buckets[playtime] = currentEvent.teams.reduce((teamNumbers, team) => {
       teamNumbers[team.id] = signups.filter(
         (signup) =>

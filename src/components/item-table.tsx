@@ -3,7 +3,7 @@ import { getImageLocation } from "../types/scoring-objective";
 import { GlobalStateContext } from "../utils/context-provider";
 import { useContext, useEffect, useState } from "react";
 import { ObjectiveIcon } from "./objective-icon";
-import { Team } from "../types/team";
+import { GameVersion, Team } from "../client";
 
 export type ItemTableProps = {
   category?: ScoreCategory;
@@ -101,7 +101,7 @@ export function ItemTable({ category }: ItemTableProps) {
 
   const imageOverlayedWithText = (
     objective: ScoreObjective,
-    gameVersion: "poe1" | "poe2"
+    gameVersion: GameVersion
   ) => {
     const img_location = getImageLocation(objective, gameVersion);
     if (!img_location) {

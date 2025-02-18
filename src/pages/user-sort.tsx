@@ -1,25 +1,24 @@
 import { useContext, useEffect, useState } from "react";
-import { UserPermission } from "../types/user";
 import { GlobalStateContext } from "../utils/context-provider";
 import { Form, Input, Space, Table } from "antd";
-import { PlayTime, Signup } from "../types/signup";
-import { assignUsersToTeams, fetchAllSignups } from "../client/signup-client";
 import { ColumnType } from "antd/es/table";
 import ColumnGroup from "antd/es/table/ColumnGroup";
 import Column from "antd/es/table/Column";
 import { sortUsers } from "../utils/usersort";
+import { ExpectedPlayTime, Permission, Signup } from "../client";
+import { signupApi, teamApi } from "../client/client";
 
 type TeamRow = {
   key: number;
   team: string;
   members: number;
-  [PlayTime.VERY_LOW]: number;
-  [PlayTime.LOW]: number;
-  [PlayTime.MEDIUM]: number;
-  [PlayTime.HIGH]: number;
-  [PlayTime.VERY_HIGH]: number;
-  [PlayTime.EXTREME]: number;
-  [PlayTime.NO_LIFE]: number;
+  [ExpectedPlayTime.VERY_LOW]: number;
+  [ExpectedPlayTime.LOW]: number;
+  [ExpectedPlayTime.MEDIUM]: number;
+  [ExpectedPlayTime.HIGH]: number;
+  [ExpectedPlayTime.VERY_HIGH]: number;
+  [ExpectedPlayTime.EXTREME]: number;
+  [ExpectedPlayTime.NO_LIFE]: number;
 };
 
 const UserSortPage = () => {
@@ -33,12 +32,13 @@ const UserSortPage = () => {
     if (!currentEvent) {
       return;
     }
-    fetchAllSignups(currentEvent.id).then((data) => {
-      setSignups(data);
+    signupApi.getEventSignups(currentEvent.id).then((data) => {
+      const signups = Object.values(data).flatMap((x) => x);
+      setSignups(signups);
       if (!eventStatus) {
         return;
       }
-      for (const signup of data) {
+      for (const signup of signups) {
         if (signup.user.id == user?.id) {
           setEventStatus({
             ...eventStatus,
@@ -53,11 +53,7 @@ const UserSortPage = () => {
   useEffect(() => setSuggestions(signups), [signups]);
 
   useEffect(updateSignups, [currentEvent]);
-  if (
-    !user ||
-    !user.permissions.includes(UserPermission.ADMIN) ||
-    !currentEvent
-  ) {
+  if (!user || !user.permissions.includes(Permission.admin) || !currentEvent) {
     return <div>You do not have permission to view this page</div>;
   }
   const userColumns: ColumnType<Signup>[] = [
@@ -77,8 +73,8 @@ const UserSortPage = () => {
       title: "Expected Playtime",
       dataIndex: "expected_playtime",
       key: "expected_playtime",
-      render: (expectedPlaytime: keyof typeof PlayTime) =>
-        PlayTime[expectedPlaytime],
+      render: (expectedPlaytime: keyof typeof ExpectedPlayTime) =>
+        ExpectedPlayTime[expectedPlaytime],
     },
     {
       title: "Assign Team",
@@ -129,7 +125,7 @@ const UserSortPage = () => {
 
   const totalRow = teamRows.reduce(
     (acc, row) => {
-      (Object.keys(PlayTime) as PlayTime[]).forEach((key) => {
+      (Object.keys(ExpectedPlayTime) as ExpectedPlayTime[]).forEach((key) => {
         if (!acc[key]) {
           acc[key] = 0;
         }
@@ -153,11 +149,11 @@ const UserSortPage = () => {
         <Column title="Team" dataIndex="team" key="team" />
         <Column title="Members" dataIndex="members" key="members" />
         <ColumnGroup title="Playtime in hours per day">
-          {Object.entries(PlayTime).map((entry) => (
+          {Object.entries(ExpectedPlayTime).map((entry) => (
             <Column title={entry[1]} dataIndex={entry[0]} key={entry[0]} />
           ))}
         </ColumnGroup>
-      </Table>{" "}
+      </Table>
       <div className="divider divider-primary">{"Users"}</div>
       <Space style={{ marginBottom: "20px" }} wrap>
         <Form layout="inline">
@@ -193,12 +189,13 @@ const UserSortPage = () => {
         <button
           className="btn btn-warning"
           onClick={() =>
-            assignUsersToTeams(currentEvent.id, suggestions).then(updateSignups)
+            teamApi
+              .addUsersToTeams(currentEvent.id, suggestions)
+              .then(updateSignups)
           }
         >
           Submit Assignments
         </button>
-        {/* </div> */}
       </Space>
       <Table
         columns={userColumns}

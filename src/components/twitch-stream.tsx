@@ -1,4 +1,4 @@
-import { TwitchStream } from "../types/twitch-stream";
+import { TwitchStream } from "../client";
 
 export type TwitchStreamEmbedProps = {
   stream: TwitchStream;
@@ -25,12 +25,14 @@ export const TwitchStreamEmbed = ({
           position: "relative",
         }}
       >
-        <img
-          src={stream.thumbnail_url
-            .replace("{height}", String(height))
-            .replace("{width}", String(width))}
-          alt={stream.title}
-        />
+        {stream.thumbnail_url ? (
+          <img
+            src={stream.thumbnail_url
+              .replace("{height}", String(height))
+              .replace("{width}", String(width))}
+            alt={stream.title}
+          />
+        ) : null}
         <div className="twitch-live-indicator">LIVE</div>
         <div className="twitch-viewer-count">{stream.viewer_count} viewers</div>
       </div>

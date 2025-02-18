@@ -1,33 +1,15 @@
-import useSWR from "swr";
-import { Score, ScoreDiff, ScoreMap } from "../types/score";
-import { fetchWrapper } from "./base";
-
-export const fetchScores = (eventId?: number) => {
-  const { data, ...restSWR } = useSWR(
-    eventId ? `scores/${eventId}` : null,
-    () => fetchWrapper<Score[]>(`/events/${eventId}/scores/latest`, "GET"),
-    {
-      refreshInterval: 60000,
-      revalidateIfStale: false,
-      revalidateOnFocus: true,
-      revalidateOnReconnect: true,
-    }
-  );
-
-  return {
-    ...restSWR,
-    scoreData: data,
-  };
-};
+import { ScoreDiffWithKey, ScoreMap } from "../types/score";
 
 export const establishScoreSocket = (
   eventId: number,
   setScores: (scores: ScoreMap) => void,
-  appendUpdates: (updates: ScoreDiff[]) => void
+  appendUpdates: (updates: ScoreDiffWithKey[]) => void
 ) => {
   const url =
-    import.meta.env.VITE_BACKEND_URL.replace("http", "ws") +
-    `/events/${eventId}/scores/ws`;
+    import.meta.env.VITE_BACKEND_URL.replace("https", "ws").replace(
+      "http",
+      "ws"
+    ) + `/events/${eventId}/scores/ws`;
   const ws = new WebSocket(url);
   ws.onopen = () => {
     console.log("WebSocket connection established", new Date());
@@ -36,7 +18,7 @@ export const establishScoreSocket = (
   const previousScores: ScoreMap = {};
   ws.onmessage = (event) => {
     console.log("Received new scores");
-    const updates: ScoreDiff[] = [];
+    const updates: ScoreDiffWithKey[] = [];
     Object.entries(JSON.parse(event.data) as ScoreMap).forEach(
       ([key, value]) => {
         if (value.diff_type !== "Unchanged" && value.score.finished) {

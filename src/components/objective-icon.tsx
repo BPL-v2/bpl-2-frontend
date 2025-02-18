@@ -1,13 +1,10 @@
+import { Objective, GameVersion } from "../client";
 import { ScoreObjective } from "../types/score";
-import {
-  getImageLocation,
-  getItemName,
-  ScoringObjective,
-} from "../types/scoring-objective";
+import { getImageLocation, getItemName } from "../types/scoring-objective";
 
 export type ObjectiveIconProps = {
-  objective: ScoreObjective | ScoringObjective;
-  gameVersion: "poe1" | "poe2";
+  objective: ScoreObjective | Objective;
+  gameVersion: GameVersion;
   className?: string;
 };
 
@@ -23,7 +20,7 @@ export function ObjectiveIcon({
   }
   let wikilink: string | undefined = undefined;
   if (itemName) {
-    if (gameVersion === "poe1") {
+    if (gameVersion === GameVersion.poe1) {
       wikilink = `https://www.poewiki.net/wiki/${itemName.replaceAll(
         " ",
         "_"

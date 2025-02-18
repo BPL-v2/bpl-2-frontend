@@ -2,16 +2,13 @@ import { DatePicker, Form, FormInstance, Input, InputNumber } from "antd";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { getSubCategory } from "../types/scoring-category";
-import { Team } from "../types/team";
-import { ScoreLite, ScoreObjective } from "../types/score";
-import { red } from "@ant-design/colors";
+import { ScoreObjective } from "../types/score";
 import TeamScore from "../components/team-score";
 import React from "react";
-import { SubmissionCreate } from "../types/submission";
-import { submitBounty } from "../client/submission-client";
-import { ScoringMethod } from "../types/scoring-preset";
 import { PlusOutlined } from "@ant-design/icons";
 import { router } from "../router";
+import { Score, ScoringMethod, SubmissionCreate, Team } from "../client";
+import { submissionApi } from "../client/client";
 
 export type SubmissionTabProps = {
   categoryName: string;
@@ -80,11 +77,13 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
                 objective_id: selectedObjective.id,
                 timestamp: values.timestamp.toISOString(),
               };
-              submitBounty(currentEvent.id, submissionCreate).then(() => {
-                setShowModal(false);
-                setSelectedObjective(undefined);
-                setReloadSubmissions(!reloadSubmissions);
-              });
+              submissionApi
+                .submitBounty(currentEvent.id, submissionCreate)
+                .then(() => {
+                  setShowModal(false);
+                  setSelectedObjective(undefined);
+                  setReloadSubmissions(!reloadSubmissions);
+                });
             }}
           >
             {selectedObjective &&
@@ -155,7 +154,7 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
         </a>
       </h1>
       <div className="divider divider-primary">{category.name}</div>
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {category.objectives.map((objective) => {
           return (
             <div className="card bg-base-200" key={objective.id}>
@@ -166,7 +165,7 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
                 ></div>
                 <h3 className="flex-grow text-center m-4 text-xl font-medium mr-4">
                   {`${objective.name}`}
-                  {objective.extra ? <a style={{ color: red[6] }}>*</a> : null}
+                  {objective.extra ? <a className="text-error">*</a> : null}
                 </h3>
 
                 {eventStatus?.team_id ? (
@@ -188,7 +187,7 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
                   <tbody className="">
                     {Object.entries(objective.team_score)
                       .map(([teamId, score]) => {
-                        return [parseInt(teamId), score] as [number, ScoreLite];
+                        return [parseInt(teamId), score] as [number, Score];
                       })
                       .sort(
                         ([, scoreA], [, scoreB]) =>

@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import Countdown from "antd/es/statistic/Countdown";
-import { fetchCategoryForEvent } from "../client/category-client";
 import { CollectionCardTable } from "./collection-card-table";
 import { Daily } from "../types/scoring-objective";
 import { ObjectiveIcon } from "./objective-icon";
+import { scoringApi } from "../client/client";
 
 export type DailyCardProps = {
   daily: Daily;
@@ -73,7 +73,7 @@ export function DailyCard({ daily }: DailyCardProps) {
             title="Daily release in"
             value={new Date(daily.baseObjective.valid_from).getTime()}
             onFinish={() => {
-              fetchCategoryForEvent(currentEvent.id).then(setRules);
+              scoringApi.getRulesForEvent(currentEvent.id).then(setRules);
             }}
           />
         </div>
@@ -101,7 +101,7 @@ export function DailyCard({ daily }: DailyCardProps) {
       <CollectionCardTable objective={objective} />
       <div className="py-4 mb-0 bg-base-200 rounded-b-xl">
         {bonusAvailableCounter(daily.raceObjective?.valid_to, () => {
-          fetchCategoryForEvent(currentEvent.id).then(setRules);
+          scoringApi.getRulesForEvent(currentEvent.id).then(setRules);
         })}
       </div>
     </div>

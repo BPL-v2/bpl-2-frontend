@@ -2,12 +2,6 @@ import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import CrudTable, { CrudColumn } from "../components/crudtable";
 
 import { useParams } from "react-router-dom";
-import { ScoringCategory } from "../types/scoring-category";
-import {
-  createScoringCategory,
-  deleteCategory as deleteScoringCategory,
-  fetchCategoryById,
-} from "../client/category-client";
 import {
   Form,
   FormInstance,
@@ -20,28 +14,12 @@ import {
 } from "antd";
 import { router } from "../router";
 import {
-  createBulkItemObjectives,
-  createObjective,
-  deleteObjective,
-} from "../client/objective-client";
-import {
-  AggregationType,
   availableAggregationTypes,
-  Condition,
-  ItemField,
-  NumberField,
-  ObjectiveType,
-  Operator,
   operatorForField,
   operatorToString,
   playerNumberfields,
-  ScoringObjective,
 } from "../types/scoring-objective";
-import { createCondition, deleteCondition } from "../client/condition-client";
-import { ScoringPreset, ScoringPresetType } from "../types/scoring-preset";
-import { fetchScoringPresetsForEvent } from "../client/scoring-preset-client";
 import { GlobalStateContext } from "../utils/context-provider";
-import { UserPermission } from "../types/user";
 import {
   CloseOutlined,
   CopyOutlined,
@@ -50,12 +28,28 @@ import {
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { ObjectiveIcon } from "../components/objective-icon";
+import {
+  Category,
+  Condition,
+  ObjectiveCreate,
+  Objective,
+  ScoringPreset,
+  AggregationType,
+  GameVersion,
+  ItemField,
+  NumberField,
+  ObjectiveType,
+  Operator,
+  Permission,
+  ScoringPresetType,
+} from "../client";
+import { conditionApi, objectiveApi, scoringApi } from "../client/client";
 
 function addCondition(
-  data: Partial<ScoringObjective>,
+  data: ObjectiveCreate,
   value: string,
   type: ItemField
-) {
+): ObjectiveCreate {
   let conditions = (data.conditions || []).filter(
     (condition) => condition.field !== type
   );
@@ -70,8 +64,8 @@ function addCondition(
 }
 
 var renderConditionInput = (
-  currentData: Partial<ScoringObjective>,
-  dataSetter: (data: Partial<ScoringObjective>) => void
+  currentData: ObjectiveCreate,
+  dataSetter: (data: ObjectiveCreate) => void
 ) => {
   return (
     <>
@@ -106,15 +100,15 @@ type FormObjective = {
   objective_type: ObjectiveType | undefined;
   aggregation: AggregationType | undefined;
   number_field: NumberField | undefined;
-  scoring_preset_id?: number | null | undefined;
+  scoring_preset_id?: number | undefined;
   "conditions-basetype"?: string | undefined;
   "conditions-name"?: string | undefined;
-  valid_from?: string | null | undefined;
-  valid_to?: string | null | undefined;
+  valid_from?: string | undefined;
+  valid_to?: string | undefined;
 };
 
 function objectiveToFormObjective(
-  objective: Partial<ScoringObjective>
+  objective: Partial<ObjectiveCreate>
 ): FormObjective {
   let formObjective: FormObjective = {
     name: objective.name,
@@ -149,9 +143,11 @@ function objectiveToFormObjective(
 }
 
 function updateObjectiveWithFormObjective(
-  objective: Partial<ScoringObjective>,
+  obj: Partial<ObjectiveCreate>,
   formObjective: FormObjective
-): Partial<ScoringObjective> {
+): ObjectiveCreate {
+  // @ts-ignore
+  const objective: ObjectiveCreate = { ...obj };
   objective.name = formObjective.name ?? objective.name;
   objective.extra = formObjective.extra ?? objective.extra;
   objective.required_number =
@@ -201,6 +197,34 @@ function updateObjectiveWithFormObjective(
   return objective;
 }
 
+async function createBulkItemObjectives(
+  categoryId: number,
+  nameList: string,
+  scoring_preset_id: number,
+  aggregation_method: AggregationType,
+  field: ItemField
+) {
+  const objectives: ObjectiveCreate[] = nameList.split(",").map((name) => {
+    return {
+      name: name.trim(),
+      required_number: 1,
+      objective_type: ObjectiveType.ITEM,
+      aggregation: aggregation_method,
+      number_field: NumberField.STACK_SIZE,
+      scoring_preset_id: scoring_preset_id,
+      category_id: categoryId,
+      conditions: [
+        {
+          field: field,
+          operator: Operator.EQ,
+          value: name,
+        },
+      ],
+    };
+  });
+  await Promise.all(objectives.map(objectiveApi.createObjective));
+}
+
 const ScoringCategoryPage: React.FC = () => {
   let { user, events } = useContext(GlobalStateContext);
   let { eventId, categoryId } = useParams();
@@ -213,7 +237,7 @@ const ScoringCategoryPage: React.FC = () => {
   const [refreshObjectives, setRefreshObjectives] = useState(false);
   const [conditionField, setConditionField] = useState<ItemField>();
   const [currentObjective, setCurrentObjective] = useState<
-    Partial<ScoringObjective>
+    Partial<ObjectiveCreate>
   >({});
   const objectiveFormRef = useRef<FormInstance>(null);
   const conditionFormRef = useRef<FormInstance>(null);
@@ -231,21 +255,19 @@ const ScoringCategoryPage: React.FC = () => {
     if (!event) {
       return;
     }
-    fetchScoringPresetsForEvent(event?.id).then((data) => {
-      setScoringPresets(data);
-    });
+    scoringApi.getScoringPresetsForEvent(event.id).then(setScoringPresets);
   }, [event, setScoringPresets]);
 
   useEffect(() => {
     if (!categoryId) {
       return;
     }
-    fetchCategoryById(Number(categoryId)).then((data) => {
+    scoringApi.getScoringCategory(Number(categoryId)).then((data) => {
       setCategoryName(data.name);
     });
   }, [categoryId]);
 
-  const categoryColumns: CrudColumn<ScoringCategory>[] = useMemo(
+  const categoryColumns: CrudColumn<Category>[] = useMemo(
     () => [
       {
         title: "ID",
@@ -260,7 +282,7 @@ const ScoringCategoryPage: React.FC = () => {
         type: "text",
         required: true,
         editable: true,
-        render: (name: string, data: ScoringCategory) => {
+        render: (name: string, data: Category) => {
           return (
             <button
               className="btn btn-primary m-1"
@@ -279,7 +301,7 @@ const ScoringCategoryPage: React.FC = () => {
         title: "Sub Categories",
         dataIndex: "sub_categories",
         key: "sub_categories",
-        render: (data: ScoringCategory[]) => {
+        render: (data: Category[]) => {
           return (
             <div>
               {data.map((category) => {
@@ -320,15 +342,15 @@ const ScoringCategoryPage: React.FC = () => {
     [scoringPresets]
   );
 
-  const objectiveColumns: CrudColumn<ScoringObjective>[] = useMemo(
+  const objectiveColumns: CrudColumn<Objective>[] = useMemo(
     () => [
       {
         title: "",
         key: "id",
-        render: (data: ScoringObjective) => (
+        render: (data: Objective) => (
           <ObjectiveIcon
             objective={data}
-            gameVersion={event?.game_version ?? "poe1"}
+            gameVersion={event?.game_version ?? GameVersion.poe1}
           />
         ),
       },
@@ -411,9 +433,11 @@ const ScoringCategoryPage: React.FC = () => {
                     <div className="badge badge-primary badge-sm">
                       <CloseOutlined
                         onClick={(event) => {
-                          deleteCondition(condition).then(() => {
-                            event.stopPropagation();
-                          });
+                          conditionApi
+                            .deleteCondition(condition.id)
+                            .then(() => {
+                              event.stopPropagation();
+                            });
                         }}
                       />
                       {text.slice(0, 20)}
@@ -434,7 +458,7 @@ const ScoringCategoryPage: React.FC = () => {
   const addtionalObjectiveActions = [
     {
       name: "Edit",
-      func: async (data: Partial<ScoringObjective>) => {
+      func: async (data: Objective) => {
         setCurrentObjective({ ...data });
         setIsObjectiveModalOpen(true);
       },
@@ -442,7 +466,7 @@ const ScoringCategoryPage: React.FC = () => {
     },
     {
       name: "Add Condition",
-      func: async (data: Partial<ScoringObjective>) => {
+      func: async (data: Objective) => {
         setCurrentObjective({ ...data });
         setIsConditionModalOpen(true);
       },
@@ -450,15 +474,15 @@ const ScoringCategoryPage: React.FC = () => {
     },
     {
       name: "Duplicate",
-      func: async (data: Partial<ScoringObjective>) => {
-        data.id = undefined;
-        data.conditions = data.conditions
-          ? data.conditions.map((condition) => {
-              condition.id = undefined;
-              return condition;
-            })
-          : [];
-        createObjective(Number(categoryId), data).then(() => {
+      func: async (data: Objective) => {
+        const newObjective: ObjectiveCreate = {
+          ...data,
+          id: undefined,
+          conditions: data.conditions.map((condition) => {
+            return { ...condition, id: undefined, objective_id: undefined };
+          }),
+        };
+        objectiveApi.createObjective(newObjective).then(() => {
           setRefreshObjectives((prev) => !prev);
         });
       },
@@ -470,15 +494,15 @@ const ScoringCategoryPage: React.FC = () => {
     return (
       <>
         <Typography.Title level={2}>{"Objectives"} </Typography.Title>
-        <CrudTable<ScoringObjective>
+        <CrudTable<Objective>
           resourceName="Objective"
           columns={objectiveColumns}
           fetchFunction={() =>
-            fetchCategoryById(Number(categoryId)).then(
-              (data) => data.objectives
-            )
+            scoringApi
+              .getScoringCategory(Number(categoryId))
+              .then((data) => data.objectives)
           }
-          deleteFunction={deleteObjective}
+          deleteFunction={(obj) => objectiveApi.deleteObjective(obj.id)}
           addtionalActions={addtionalObjectiveActions}
         />
         <button
@@ -506,22 +530,28 @@ const ScoringCategoryPage: React.FC = () => {
     return (
       <>
         <Typography.Title level={2}>{"Sub-Categories"}</Typography.Title>
-        <CrudTable<ScoringCategory>
+        <CrudTable<Category>
           resourceName="Scoring Category"
           columns={categoryColumns}
           pagination={false}
           fetchFunction={() =>
-            fetchCategoryById(Number(categoryId)).then(
-              (data) => data.sub_categories
-            )
+            scoringApi.getScoringCategory(Number(categoryId)).then((data) => {
+              return data.sub_categories;
+            })
           }
           createFunction={(data) =>
-            createScoringCategory(Number(categoryId), data)
+            scoringApi.createCategory({
+              ...data,
+              parent_id: Number(categoryId),
+            })
           }
           editFunction={(data) =>
-            createScoringCategory(Number(categoryId), data)
+            scoringApi.createCategory({
+              ...data,
+              parent_id: Number(categoryId),
+            })
           }
-          deleteFunction={deleteScoringCategory}
+          deleteFunction={(data) => scoringApi.deleteCategory(data.id)}
         />
       </>
     );
@@ -610,10 +640,14 @@ const ScoringCategoryPage: React.FC = () => {
               currentObjective,
               objectiveFormRef.current?.getFieldsValue()
             );
-            createObjective(Number(categoryId), updatedObjective).then(() => {
+            objectiveApi.createObjective(updatedObjective).then(() => {
               setIsObjectiveModalOpen(false);
               setRefreshObjectives((prev) => !prev);
             });
+            // createObjective(Number(categoryId), updatedObjective).then(() => {
+            //   setIsObjectiveModalOpen(false);
+            //   setRefreshObjectives((prev) => !prev);
+            // });
           }}
         >
           <Form.Item
@@ -707,6 +741,7 @@ const ScoringCategoryPage: React.FC = () => {
             rules={[{ required: true, message: "Please select a method!" }]}
             initialValue={
               currentObjective.scoring_preset_id ??
+              // @ts-ignore
               currentObjective.scoring_preset?.id
             }
             style={{ width: "100%" }}
@@ -821,13 +856,15 @@ const ScoringCategoryPage: React.FC = () => {
             if (!currentObjective.id) {
               return;
             }
-            createCondition(
-              currentObjective.id,
-              conditionFormRef.current?.getFieldsValue()
-            ).then(() => {
-              setIsConditionModalOpen(false);
-              setRefreshObjectives((prev) => !prev);
-            });
+            conditionApi
+              .createCondition({
+                ...conditionFormRef.current?.getFieldsValue(),
+                objective_id: currentObjective.id,
+              })
+              .then(() => {
+                setIsConditionModalOpen(false);
+                setRefreshObjectives((prev) => !prev);
+              });
           }}
         >
           <Form.Item
@@ -861,10 +898,7 @@ const ScoringCategoryPage: React.FC = () => {
                 })}
               </Select>
             </Form.Item>
-          ) : (
-            ""
-            // conditionFormRef.current?.getFieldsValue()
-          )}
+          ) : null}
           <Form.Item
             name="value"
             label="Value"
@@ -885,7 +919,7 @@ const ScoringCategoryPage: React.FC = () => {
   if (!categoryId) {
     return <></>;
   }
-  if (!user || !user.permissions.includes(UserPermission.ADMIN)) {
+  if (!user || !user.permissions.includes(Permission.admin)) {
     return <div>You do not have permission to view this page</div>;
   }
 

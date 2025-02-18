@@ -4,8 +4,8 @@ import {
   getRootCategoryNames,
   getSubCategory,
 } from "../types/scoring-category";
-import { Team } from "../types/team";
 import { getTotalPoints } from "../utils/utils";
+import { Team } from "../client";
 
 type RowDef = {
   default: number;

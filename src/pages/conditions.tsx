@@ -1,11 +1,9 @@
 import React, { useContext } from "react";
 import CrudTable, { CrudColumn } from "../components/crudtable";
 import { useParams } from "react-router-dom";
-import { Condition, ItemField, Operator } from "../types/scoring-objective";
-import { getObjectiveById } from "../client/objective-client";
-import { createCondition, deleteCondition } from "../client/condition-client";
 import { GlobalStateContext } from "../utils/context-provider";
-import { UserPermission } from "../types/user";
+import { conditionApi, objectiveApi } from "../client/client";
+import { Condition, ItemField, Operator, Permission } from "../client";
 
 const columns: CrudColumn<Condition>[] = [
   {
@@ -35,7 +33,7 @@ const columns: CrudColumn<Condition>[] = [
 
 const ConditionPage: React.FC = () => {
   const { user } = useContext(GlobalStateContext);
-  if (!user || !user.permissions.includes(UserPermission.ADMIN)) {
+  if (!user || !user.permissions.includes(Permission.admin)) {
     return <div>You do not have permission to view this page</div>;
   }
   let { objectiveId } = useParams();
@@ -49,15 +47,20 @@ const ConditionPage: React.FC = () => {
       resourceName="Condition"
       columns={columns}
       fetchFunction={() =>
-        getObjectiveById(objectiveIdNum).then((data) => data.conditions)
+        objectiveApi
+          .getObjective(objectiveIdNum)
+          .then((data) => data.conditions)
       }
-      createFunction={async (data) => {
-        return createCondition(objectiveIdNum, data);
-      }}
+      createFunction={(data) =>
+        conditionApi.createCondition({
+          ...data,
+          objectiveId: objectiveIdNum,
+        })
+      }
       // editFunction={async (data) => {
       //   return updateTeam(eventIdNum, data);
       // }}
-      deleteFunction={deleteCondition}
+      deleteFunction={(data) => conditionApi.deleteCondition(data.id)}
     />
   );
 };

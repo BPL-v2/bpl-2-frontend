@@ -8,14 +8,9 @@ import {
   MenuProps,
   Select,
 } from "antd";
-import { Team } from "../types/team";
-import { EventStatusEnum } from "../types/event";
-import {
-  submitEventApplication,
-  withdrawEventApplication,
-} from "../client/signup-client";
-import { PlayTime } from "../types/signup";
 import { DiscordFilled } from "@ant-design/icons";
+import { ApplicationStatus, ExpectedPlayTime, Team } from "../client";
+import { signupApi } from "../client/client";
 
 type ApplicationButtonProps = {};
 const ApplicationButton = ({}: ApplicationButtonProps) => {
@@ -48,17 +43,17 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
       </button>
     );
   }
-  if (eventStatus?.application_status === EventStatusEnum.Applied) {
+  if (eventStatus?.application_status === ApplicationStatus.applied) {
     const items = [
       {
         key: "withdraw",
         danger: true,
         label: "Withdraw Application",
         onClick: () => {
-          withdrawEventApplication(currentEvent.id).then(() => {
+          signupApi.deleteSignup(currentEvent.id).then(() => {
             setEventStatus({
               ...eventStatus,
-              application_status: EventStatusEnum.None,
+              application_status: ApplicationStatus.none,
             });
           });
         },
@@ -75,7 +70,7 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
     );
   }
 
-  if (eventStatus?.application_status === EventStatusEnum.None) {
+  if (eventStatus?.application_status === ApplicationStatus.none) {
     return (
       <>
         <dialog
@@ -93,11 +88,12 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
               layout="vertical"
               ref={formRef}
               onFinish={(values) => {
-                submitEventApplication(currentEvent.id, values)
+                signupApi
+                  .createSignup(currentEvent.id, values)
                   .then(() => {
                     setEventStatus({
                       ...eventStatus,
-                      application_status: EventStatusEnum.Applied,
+                      application_status: ApplicationStatus.applied,
                     });
                     setModalOpen(false);
                     formRef.current?.resetFields();
@@ -120,7 +116,7 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
                 ]}
               >
                 <Select>
-                  {Object.entries(PlayTime).map((entry) => (
+                  {Object.entries(ExpectedPlayTime).map((entry) => (
                     <Select.Option key={entry[0]} value={entry[0]}>
                       {entry[1]}
                     </Select.Option>

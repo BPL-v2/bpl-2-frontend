@@ -1,19 +1,15 @@
 import CrudTable, { CrudColumn } from "../components/crudtable";
 
 import { useParams } from "react-router-dom";
+import { useContext } from "react";
+import { GlobalStateContext } from "../utils/context-provider";
 import {
+  Permission,
   ScoringMethod,
   ScoringPreset,
   ScoringPresetType,
-} from "../types/scoring-preset";
-import {
-  createScoringPreset,
-  deleteScoringPresetById,
-  fetchScoringPresetsForEvent,
-} from "../client/scoring-preset-client";
-import { useContext } from "react";
-import { GlobalStateContext } from "../utils/context-provider";
-import { UserPermission } from "../types/user";
+} from "../client";
+import { scoringApi } from "../client/client";
 
 const ScoringPresetsPage: React.FC = () => {
   const { user, events } = useContext(GlobalStateContext);
@@ -23,7 +19,7 @@ const ScoringPresetsPage: React.FC = () => {
   if (!eventId || !event) {
     return <div>Event not found</div>;
   }
-  if (!user || !user.permissions.includes(UserPermission.ADMIN)) {
+  if (!user || !user.permissions.includes(Permission.admin)) {
     return <div>You do not have permission to view this page</div>;
   }
 
@@ -84,16 +80,22 @@ const ScoringPresetsPage: React.FC = () => {
       <CrudTable<ScoringPreset>
         resourceName="Scoring Preset"
         columns={scoringPresetsColumns}
-        fetchFunction={() => fetchScoringPresetsForEvent(parseInt(eventId))}
-        createFunction={async (data) => {
-          return createScoringPreset(parseInt(eventId), data);
-        }}
-        editFunction={async (data) => {
-          return createScoringPreset(parseInt(eventId), data);
-        }}
-        deleteFunction={async (data) => {
-          return deleteScoringPresetById(data.id!);
-        }}
+        fetchFunction={() =>
+          scoringApi.getScoringPresetsForEvent(parseInt(eventId))
+        }
+        createFunction={(data) =>
+          scoringApi.createScoringPreset({
+            ...data,
+            event_id: parseInt(eventId),
+          })
+        }
+        editFunction={(data) =>
+          scoringApi.createScoringPreset({
+            ...data,
+            event_id: parseInt(eventId),
+          })
+        }
+        deleteFunction={(data) => scoringApi.deleteScoringPreset(data.id)}
       ></CrudTable>
     </>
   );

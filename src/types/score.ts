@@ -1,14 +1,15 @@
-import { Condition, ObjectiveType } from "./scoring-objective";
-import { ScoringPreset } from "./scoring-preset";
-import { Team } from "./team";
-import { MinimalUser } from "./user";
+import {
+  Category,
+  MinimalUser,
+  Objective,
+  Score,
+  ScoreDiff,
+  Team,
+} from "../client";
 
 export type ScoreMap = { [key: string]: ScoreDiff };
 
-export type ScoreDiff = {
-  score: Score;
-  diff_type: "Added" | "Removed" | "Changed" | "Unchanged";
-  field_diff: String[];
+export type ScoreDiffWithKey = ScoreDiff & {
   key: string;
 };
 
@@ -63,7 +64,7 @@ export function findObjectiveById(
 }
 
 export function getMetaInfo(
-  scoreDiff: ScoreDiff,
+  scoreDiff: ScoreDiffWithKey,
   users: MinimalUser[],
   scores?: ScoreCategory,
   teams?: Team[]
@@ -111,15 +112,6 @@ export function getMetaInfo(
   return meta;
 }
 
-export type Score = {
-  points: number;
-  user_id: number;
-  rank: number;
-  timestamp: Date;
-  number: number;
-  finished: boolean;
-};
-
 export type ScoreLite = {
   points: number;
   user_id: number;
@@ -129,29 +121,14 @@ export type ScoreLite = {
   finished: boolean;
 };
 
-export type TeamScore = { [teamId: number]: ScoreLite };
+export type TeamScore = { [teamId: number]: Score };
 
-export type ScoreObjective = {
-  id: number;
-  name: string;
-  extra: string;
-  required_number: number;
-  conditions: Condition[];
-  objective_type: ObjectiveType;
-  valid_from: string | null;
-  valid_to: string | null;
-  aggregation: string;
-  number_field: string;
-  scoring_preset: ScoringPreset | null;
+export type ScoreObjective = Objective & {
   team_score: TeamScore;
-  category_id: number;
 };
 
-export type ScoreCategory = {
-  id: number;
-  name: string;
+export type ScoreCategory = Omit<Category, "sub_categories" | "objectives"> & {
   sub_categories: ScoreCategory[];
   objectives: ScoreObjective[];
-  scoring_preset: ScoringPreset | null;
   team_score: TeamScore;
 };

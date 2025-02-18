@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import CrudTable, { CrudColumn } from "../components/crudtable";
-import { User, UserPermission } from "../types/user";
-import { editUserPermissions, getAllUsers } from "../client/user-client";
 import { CopyOutlined } from "@ant-design/icons";
 import { GlobalStateContext } from "../utils/context-provider";
 import { Form, Input, Select } from "antd";
+import { Permission, User } from "../client";
+import { userApi } from "../client/client";
 
 const columns: CrudColumn<User>[] = [
   {
@@ -50,10 +50,10 @@ const columns: CrudColumn<User>[] = [
     dataIndex: "permissions",
     key: "permissions",
     type: "multiselect",
-    render: (value: UserPermission[]) => {
+    render: (value: Permission[]) => {
       return value.join(", ");
     },
-    options: Object.values(UserPermission),
+    options: Object.values(Permission),
     editable: true,
   },
 ];
@@ -65,8 +65,8 @@ function copyDiscordId(value: number) {
 const UserPage: React.FC = () => {
   const { user } = useContext(GlobalStateContext);
   const [nameFilter, setNameFilter] = React.useState<string>("");
-  const [roleFilter, setRoleFilter] = React.useState<UserPermission | "">("");
-  if (!user || !user.permissions.includes(UserPermission.ADMIN)) {
+  const [roleFilter, setRoleFilter] = React.useState<Permission | "">("");
+  if (!user || !user.permissions.includes(Permission.admin)) {
     return <div>You do not have permission to view this page</div>;
   }
   return (
@@ -89,7 +89,7 @@ const UserPage: React.FC = () => {
             <Select.Option key="all" value={""}>
               All
             </Select.Option>
-            {Object.values(UserPermission).map((role) => (
+            {Object.values(Permission).map((role) => (
               <Select.Option key={role} value={role}>
                 {role}
               </Select.Option>
@@ -100,8 +100,10 @@ const UserPage: React.FC = () => {
       <CrudTable<User>
         resourceName="User"
         columns={columns}
-        fetchFunction={getAllUsers}
-        editFunction={editUserPermissions}
+        fetchFunction={userApi.getAllUsers}
+        editFunction={(user: User) =>
+          userApi.changePermissions(user.id, user.permissions)
+        }
         filterFunction={(user) =>
           !!(
             user.display_name?.toLowerCase().includes(nameFilter) ||
