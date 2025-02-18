@@ -58,7 +58,7 @@ export function DailyCard({ daily }: DailyCardProps) {
   ) {
     return (
       <div className="card bg-base-300" key={daily.baseObjective.id}>
-        <div className="top-box-rounded   p-8 bg-base-200 h-25 text-center text-xl font-semibold ">
+        <div className="top-box-rounded p-8 bg-base-200 h-25 text-center text-xl font-semibold">
           Daily not yet available
         </div>
         <div className="card-body bg-base-300 p-8 bottom-box-rounded">
@@ -82,18 +82,18 @@ export function DailyCard({ daily }: DailyCardProps) {
   }
   return (
     <div className="card bg-base-200" key={objective.id}>
-      <div className="card-title top-box-rounded flex items-center m-0 px-4 bg-base-200 h-25  ">
+      <div className="card-title top-box-rounded flex items-center m-0 px-4 bg-base-200 h-25">
         <ObjectiveIcon
           objective={objective}
           gameVersion={currentEvent.game_version}
         />
         <div
-          className={objective.extra ? "tooltip  text-2xl " : undefined}
+          className={objective.extra ? "tooltip text-2xl" : undefined}
           data-tip={objective.extra}
         >
           <h3 className="flex-grow text-center mt-4 text-xl font-medium mx-4">
             {objective.name}
-            {objective.extra ? <a className="text-red-600">*</a> : null}
+            {objective.extra ? <a className="text-error">*</a> : null}
           </h3>
         </div>
       </div>

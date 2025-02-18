@@ -1,4 +1,4 @@
-import { Anchor, Col, Modal, Row, Typography } from "antd";
+import { Anchor, Col, Modal, Row } from "antd";
 import React from "react";
 import JSONPretty from "react-json-pretty";
 
@@ -32,56 +32,44 @@ export function ScoringReadmePage() {
           Scoring happens in 3 seperate steps:
           <ul>
             <li>
-              <Typography.Link href={"#matching"}>Matching</Typography.Link>:
-              describes how a (partial) completion candidate is found
+              <a href={"#matching"}>Matching</a>: describes how a (partial)
+              completion candidate is found
             </li>
             <li>
-              <Typography.Link href={"#aggregation"}>
-                Aggregation
-              </Typography.Link>
-              : aggregate these candidates into something that can be scored
+              <a href={"#aggregation"}>Aggregation</a>: aggregate these
+              candidates into something that can be scored
             </li>
             <li>
-              <Typography.Link href={"#scoring"}>Scoring</Typography.Link>:
-              determine if an aggregation satisfies an objective / how the teams
-              are ranked according to each other
+              <a href={"#scoring"}>Scoring</a>: determine if an aggregation
+              satisfies an objective / how the teams are ranked according to
+              each other
             </li>
           </ul>
           A typical Objective could look like this
           <pre>
             {`{    
   `}
-            <Typography.Link href={"#objective.name"}>name</Typography.Link>
+            <a href={"#objective.name"}>name</a>
             {`: "First team to gather 500 Scrolls of Wisdom"`}
             {`
   `}
-            <Typography.Link href={"#objective.objective_type"}>
-              objective_type
-            </Typography.Link>
+            <a href={"#objective.objective_type"}>objective_type</a>
             {`: "Item"`}
             {`
   `}
-            <Typography.Link href={"#objective.required_number"}>
-              required_number
-            </Typography.Link>
+            <a href={"#objective.required_number"}>required_number</a>
             {`: 500`}
             {`
   `}
-            <Typography.Link href={"#objective.number_field"}>
-              number_field
-            </Typography.Link>
+            <a href={"#objective.number_field"}>number_field</a>
             {`: "stack_size"`}
             {`
   `}
-            <Typography.Link href={"#objective.aggregation"}>
-              aggregation
-            </Typography.Link>
+            <a href={"#objective.aggregation"}>aggregation</a>
             {`: "EARLIEST"`}
             {`
   `}
-            <Typography.Link href={"#objective.conditions"}>
-              conditions
-            </Typography.Link>
+            <a href={"#objective.conditions"}>conditions</a>
             {`: [
     {
       field: "base_type"
@@ -100,60 +88,48 @@ export function ScoringReadmePage() {
             completion of an objective. The following objective fields are
             related to the matching process:
           </p>
-          <Typography.Title id={"objective.objective_type"} level={4} code>
-            objective_type
-          </Typography.Title>
+          <h4 id={"objective.objective_type"}>objective_type</h4>
           This describes how we are tracking this objective.
           <ul>
             <li>
-              <Typography.Text code>Item</Typography.Text> - Tracked via the
-              public stash api
+              <p>Item</p> - Tracked via the public stash api
             </li>
             <li>
-              <Typography.Text code>Player</Typography.Text> - Tracked via the
-              ggg character api
+              <p>Player</p> - Tracked via the ggg character api
             </li>
             <li>
-              <Typography.Text code>Submission</Typography.Text> - Tracked via
-              manual player submission
+              <p>Submission</p> - Tracked via manual player submission
             </li>
           </ul>
           Examples for each of these types are:
           <ul>
             <li>
-              <Typography.Text code>Item</Typography.Text> - First team to
-              gather 500 Scrolls of Wisdom
+              <p>Item</p> - First team to gather 500 Scrolls of Wisdom
             </li>
             <li>
-              <Typography.Text code>Player</Typography.Text> - First team to
-              have a player reach level 100
+              <p>Player</p> - First team to have a player reach level 100
             </li>
             <li>
-              <Typography.Text code>Submission</Typography.Text> - First team to
-              kill the Maven
+              <p>Submission</p> - First team to kill the Maven
             </li>
           </ul>
-          <Typography.Title id={"objective.number_field"} level={4} code>
-            number_field
-          </Typography.Title>
+          <h4 id={"objective.number_field"}>number_field</h4>
           This describes how we are counting the items. Possible values are for
           example:
           <ul>
             <li>
-              <Typography.Text code>stack_size</Typography.Text> - Count the
-              number of items in the stack (this is the default for items)
+              <p>stack_size</p> - Count the number of items in the stack (this
+              is the default for items)
             </li>
             <li>
-              <Typography.Text code>level</Typography.Text> - Count the level of
-              the player
+              <p>level</p> - Count the level of the player
             </li>
             <li>
-              <Typography.Text code>depth</Typography.Text> - Count the depth of
-              the delve
+              <p>depth</p> - Count the depth of the delve
             </li>
             <li>
-              <Typography.Text code>submission_value</Typography.Text> - Used
-              when a submission objective has an additional parameter
+              <p>submission_value</p> - Used when a submission objective has an
+              additional parameter
               <ul>
                 <li>
                   Example: "Kill the Maven with as little equipped items as
@@ -163,46 +139,37 @@ export function ScoringReadmePage() {
               </ul>
             </li>
           </ul>
-          <Typography.Title id={"objective.required_number"} level={4} code>
-            required_number (optional)
-          </Typography.Title>
+          <h1 id={"objective.required_number"}>required_number (optional)</h1>
           This describes the minimum value resulting from the aforementioned
           number field that is required for the objective to be considered
           complete.
-          <Typography.Title id={"objective.conditions"} level={4} code>
-            conditions
-          </Typography.Title>
-          A list of conditions that must be satisfied for a match to be
-          considered valid. Each condition is an object with the following
-          fields:
+          <h1 id={"objective.conditions"}>conditions</h1>A list of conditions
+          that must be satisfied for a match to be considered valid. Each
+          condition is an object with the following fields:
           <ul>
             <li>
-              <Typography.Text code>field</Typography.Text> - The field to check
+              <p>field</p> - The field to check
             </li>
             <li>
-              <Typography.Text code>operator</Typography.Text> - The operator to
-              apply
+              <p>operator</p> - The operator to apply
             </li>
             <li>
-              <Typography.Text code>value</Typography.Text> - The value to check
-              against
+              <p>value</p> - The value to check against
             </li>
           </ul>
           Examples for conditions are:
           <ul>
             <li>
               Item must be "Scroll of Wisdom"
-              <Typography.Text code>
+              <p>
                 {
                   "{ field: 'base_type', operator: 'eq', value: 'Scroll of Wisdom' }"
                 }
-              </Typography.Text>
+              </p>
             </li>
             <li>
               Item must have an item level of at least 82
-              <Typography.Text code>
-                {"{ field: 'ilvl', operator: 'gte', value: '82' }"}
-              </Typography.Text>
+              <p>{"{ field: 'ilvl', operator: 'gte', value: '82' }"}</p>
             </li>
           </ul>
           <div id={"aggregation"}>
@@ -211,15 +178,12 @@ export function ScoringReadmePage() {
             In the next step, we aggregate the matches into something that can
             be scored later. The following fields are related to the aggregation
             process:
-            <Typography.Title id={"objective.aggregation"} level={4} code>
-              aggregation
-            </Typography.Title>
+            <h1 id={"objective.aggregation"}>aggregation</h1>
             Potential options are:
             <ul>
               <li>
-                <Typography.Text code>SUM_LATEST</Typography.Text> - Sum up the
-                latest match for each player.{" "}
-                <Typography.Link
+                <p>SUM_LATEST</p> - Sum up the latest match for each player.{" "}
+                <a
                   onClick={() => {
                     setExampleModalOpen(true);
                     setExampleData({
@@ -234,12 +198,11 @@ export function ScoringReadmePage() {
                   }}
                 >
                   Example
-                </Typography.Link>
+                </a>
               </li>
               <li>
-                <Typography.Text code>EARLIEST</Typography.Text> - Pick the
-                earliest match per team{" "}
-                <Typography.Link
+                <p>EARLIEST</p> - Pick the earliest match per team{" "}
+                <a
                   onClick={() => {
                     setExampleModalOpen(true);
                     setExampleData({
@@ -253,12 +216,12 @@ export function ScoringReadmePage() {
                   }}
                 >
                   Example
-                </Typography.Link>
+                </a>
               </li>
               <li>
-                <Typography.Text code>MAXIMUM</Typography.Text> - Pick the match
-                with the highest associated value (see number_field) per team{" "}
-                <Typography.Link
+                <p>MAXIMUM</p> - Pick the match with the highest associated
+                value (see number_field) per team{" "}
+                <a
                   onClick={() => {
                     setExampleModalOpen(true);
                     setExampleData({
@@ -278,12 +241,12 @@ export function ScoringReadmePage() {
                   }}
                 >
                   Example
-                </Typography.Link>
+                </a>
               </li>
               <li>
-                <Typography.Text code>MINIMUM</Typography.Text> - Pick the match
-                with the lowest associated value (see number_field) per team{" "}
-                <Typography.Link
+                <p>MINIMUM</p> - Pick the match with the lowest associated value
+                (see number_field) per team{" "}
+                <a
                   onClick={() => {
                     setExampleModalOpen(true);
                     setExampleData({
@@ -298,19 +261,18 @@ export function ScoringReadmePage() {
                   }}
                 >
                   Example
-                </Typography.Link>
+                </a>
               </li>
               <li>
-                <Typography.Text code>EARLIEST_FRESH_ITEM</Typography.Text> -
-                This one is a bit more complicated since it depends on how we
-                fetch items. as it stands we can not guarantee that if a team
-                has an item, it wasn&apos;t traded with another team. so if an
-                item is currently not in the possession of a team anymore, we
-                might not want to give them points. this aggregation method
-                looks for the earliest occurrence of an item, but will also make
-                sure that it is still in the possession of the team before it
-                counts.{" "}
-                <Typography.Link
+                <p>EARLIEST_FRESH_ITEM</p> - This one is a bit more complicated
+                since it depends on how we fetch items. as it stands we can not
+                guarantee that if a team has an item, it wasn&apos;t traded with
+                another team. so if an item is currently not in the possession
+                of a team anymore, we might not want to give them points. this
+                aggregation method looks for the earliest occurrence of an item,
+                but will also make sure that it is still in the possession of
+                the team before it counts.{" "}
+                <a
                   onClick={() => {
                     setExampleModalOpen(true);
                     setExampleData({
@@ -336,7 +298,7 @@ export function ScoringReadmePage() {
                   }}
                 >
                   Example
-                </Typography.Link>
+                </a>
               </li>
             </ul>
           </div>

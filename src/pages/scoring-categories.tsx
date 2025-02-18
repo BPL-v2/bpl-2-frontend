@@ -9,7 +9,6 @@ import {
   InputNumber,
   Modal,
   Select,
-  Typography,
   DatePicker,
 } from "antd";
 import { router } from "../router";
@@ -70,7 +69,7 @@ var renderConditionInput = (
   return (
     <>
       <div key={"input-condition-basetype"}>
-        <Typography.Title level={5}>Base type =</Typography.Title>
+        <h5>Base type =</h5>
         <Input
           onChange={(e) =>
             dataSetter(
@@ -80,7 +79,7 @@ var renderConditionInput = (
         />
       </div>
       <div key={"input-condition-name"}>
-        <Typography.Title level={5}>Item Name =</Typography.Title>
+        <h5>Item Name =</h5>
         <Input
           onChange={(e) =>
             dataSetter(
@@ -493,7 +492,7 @@ const ScoringCategoryPage: React.FC = () => {
   let objectiveTable = useMemo(() => {
     return (
       <>
-        <Typography.Title level={2}>{"Objectives"} </Typography.Title>
+        <h2>{"Objectives"} </h2>
         <CrudTable<Objective>
           resourceName="Objective"
           columns={objectiveColumns}
@@ -529,7 +528,7 @@ const ScoringCategoryPage: React.FC = () => {
   let categoryTable = useMemo(() => {
     return (
       <>
-        <Typography.Title level={2}>{"Sub-Categories"}</Typography.Title>
+        <h2>{"Sub-Categories"}</h2>
         <CrudTable<Category>
           resourceName="Scoring Category"
           columns={categoryColumns}
@@ -928,9 +927,7 @@ const ScoringCategoryPage: React.FC = () => {
       {objectiveModal}
       {bulkObjeciveModal}
       {conditionModal}
-      <Typography.Title level={1}>
-        {"Category " + categoryName}{" "}
-      </Typography.Title>
+      <h1>{"Category " + categoryName} </h1>
       {categoryTable}
       {objectiveTable}
     </>

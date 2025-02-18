@@ -258,10 +258,10 @@ function App() {
       >
         <div className="max-w-[1440px] text-center mx-auto ">
           {notifications}
-          <div className="text-2xl p-0 flex items-center justify-between h-14">
-            <ul className="navbar bg-base-200 w-full  h-14 text-xl gap-0 p-0">
+          <div className="text-2xl p-0 flex items-center justify-between h-18">
+            <ul className="navbar bg-base-200 w-full  h-full text-xl gap-0 p-0">
               <button
-                className="btn btn-ghost h-14 bg-base-200 "
+                className="btn btn-ghost h-full rounded-none bg-base-200 hover:bg-base-300"
                 onClick={() => {
                   setCurrentNav("/");
                   router.navigate("/");
@@ -270,7 +270,7 @@ function App() {
                 <img className="h-10" src="assets/app-logos/bpl-logo.png" />
                 <div className="text-4xl font-bold hidden sm:block">BPL</div>
               </button>
-              <div className="flex flex-1 justify-left gap-0 ">
+              <div className="flex flex-1 justify-left gap-0 h-full">
                 {menuItems
                   .filter((item) =>
                     item.rolerequired
@@ -281,7 +281,7 @@ function App() {
                   )
                   .map((item) => (
                     <li
-                      className={`m-0 sm:m-2 ${
+                      className={`m-0 sm:mx-2 ${
                         currentNav === item.key
                           ? "bg-primary text-primary-content"
                           : ""
@@ -338,7 +338,7 @@ function App() {
                             <div
                               tabIndex={0}
                               role="button"
-                              className="btn btn-ghost hover:bg-base-300 text-xl h-14 rounded-none flex items-center"
+                              className="btn btn-ghost hover:bg-base-300 text-xl h-full rounded-none flex items-center"
                             >
                               {item.icon}
                               <div className="hidden lg:block">
@@ -350,7 +350,7 @@ function App() {
                           <div
                             tabIndex={0}
                             role="button"
-                            className="btn btn-ghost hover:bg-base-300 text-xl h-14 rounded-none flex items-center"
+                            className="btn btn-ghost hover:bg-base-300 text-xl h-full rounded-none flex items-center"
                           >
                             {item.icon}
                             <div className="hidden lg:block">{item.label}</div>

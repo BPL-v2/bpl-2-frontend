@@ -191,8 +191,8 @@ export function ItemTable({ category }: ItemTableProps) {
   };
   return (
     <>
-      <div className="overflow-auto" style={{ maxHeight: "80vh" }}>
-        <table className="table bg-base-300 table-md	">
+      <div className=" max-h-[70vh] overflow-auto">
+        <table className="table bg-base-300 table-md">
           <thead className="bg-base-200 sticky top-0 z-10">
             <tr className="text-lg">
               {isMobile ? null : <th></th>}
@@ -249,7 +249,7 @@ export function ItemTable({ category }: ItemTableProps) {
               )}
             </tr>
           </thead>
-          <tbody className="text-lg">
+          <tbody>
             {category.objectives.filter(rowFilter).flatMap((objective) => {
               const objRow = (
                 <tr
