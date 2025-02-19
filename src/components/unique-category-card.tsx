@@ -48,12 +48,14 @@ export const UniqueCategoryCard = ({
       onClick={onClick}
     >
       <div
-        className={`card-title top-box-rounded m-0 p-2 flex items-center justify-between ${headerColor}`}
+        className={`card-title top-box-rounded m-0 p-2 flex items-center justify-center sm:justify-between ${headerColor}`}
       >
         <div className="flex-shrink-0">
           <Medal rank={category.team_score[teamId].rank} size={28} />
         </div>
-        <h1 className="text-xl text-center">{category.name}</h1>
+        <h1 className="text-xl text-center text-white font-extrabold">
+          {category.name}
+        </h1>
         <div className="hidden sm:block flex-shrink-0 text-sm"> {points} </div>
       </div>
       <div className="px-4">

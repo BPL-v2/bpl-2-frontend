@@ -121,3 +121,33 @@ export type ScoreCategory = Omit<Category, "sub_categories" | "objectives"> & {
   objectives: ScoreObjective[];
   team_score: TeamScore;
 };
+
+export function isWinnable(category: ScoreCategory): boolean {
+  if (category.scoring_preset?.scoring_method === "BONUS_PER_COMPLETION") {
+    return false;
+  }
+  if (category.objectives.length === 0) {
+    return false;
+  }
+  for (const teamId in category.team_score) {
+    if (category.team_score[teamId].finished) {
+      return false;
+    }
+  }
+  return true;
+}
+
+export function isFinished(category: ScoreCategory, teamId: number): boolean {
+  if (category.scoring_preset?.scoring_method === "BONUS_PER_COMPLETION") {
+    const finishedObjectives = category.objectives.filter(
+      (objective) => objective.team_score[teamId].finished
+    ).length;
+    return finishedObjectives === category.objectives.length;
+  }
+  for (const objective of category.objectives) {
+    if (!objective.team_score[teamId].finished) {
+      return false;
+    }
+  }
+  return true;
+}
