@@ -1665,7 +1665,7 @@ export const EventApiFetchParamCreator = function (configuration?: Configuration
             }
             const localVarPath = `/events`;
             const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
