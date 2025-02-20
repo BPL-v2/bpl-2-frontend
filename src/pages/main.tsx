@@ -117,12 +117,9 @@ export function MainPage() {
                     <div className="card-body">
                       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 items-center">
                         <img
-                          src={`/assets/teams/${currentEvent.name
-                            .toLowerCase()
-                            .replaceAll(
-                              " ",
-                              "_"
-                            )}/${team.name.toLowerCase()}/logo-w-name.svg`}
+                          src={`/assets/teams/${
+                            currentEvent.id
+                          }/${team.name.toLowerCase()}/logo-w-name.svg`}
                           alt={team.name}
                           className="w-full"
                         />

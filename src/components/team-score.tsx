@@ -46,12 +46,9 @@ const TeamScore = ({
                   <div className="avatar online">
                     <div className="w-24">
                       <img
-                        src={`/assets/teams/${currentEvent.name
-                          .toLowerCase()
-                          .replaceAll(
-                            " ",
-                            "_"
-                          )}/${team.name.toLowerCase()}/logo-w-name.svg`}
+                        src={`/assets/teams/${
+                          currentEvent.id
+                        }/${team.name.toLowerCase()}/logo-w-name.svg`}
                       ></img>
                     </div>
                   </div>
@@ -66,12 +63,9 @@ const TeamScore = ({
                 <div className="avatar w-24 select-none">
                   <img
                     className=""
-                    src={`/assets/teams/${currentEvent.name
-                      .toLowerCase()
-                      .replaceAll(
-                        " ",
-                        "_"
-                      )}/${team.name.toLowerCase()}/logo-w-name.svg`}
+                        src={`/assets/teams/${
+                          currentEvent.id
+                        }/${team.name.toLowerCase()}/logo-w-name.svg`}
                   ></img>
                 </div>
                 <div className="flex flex-col justify-center">
