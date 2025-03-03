@@ -89,10 +89,10 @@ const TeamPage = () => {
       columns={columns}
       fetchFunction={() => teamApi.getTeams(eventIdNum)}
       createFunction={(data) =>
-        teamApi.createTeam({ ...data, eventId: eventIdNum })
+        teamApi.createTeam(eventIdNum, { ...data, eventId: eventIdNum })
       }
       editFunction={(data) =>
-        teamApi.createTeam({ ...data, eventId: eventIdNum })
+        teamApi.createTeam(eventIdNum, { ...data, eventId: eventIdNum })
       }
       deleteFunction={(data) => teamApi.deleteTeam(eventIdNum, data.id)}
     />
