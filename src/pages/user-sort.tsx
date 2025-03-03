@@ -33,7 +33,13 @@ const UserSortPage = () => {
       return;
     }
     signupApi.getEventSignups(currentEvent.id).then((data) => {
-      const signups = Object.values(data).flatMap((x) => x);
+      const signups = Object.entries(data)
+        .map(([key, value]) =>
+          value.map((value) => {
+            return { ...value, team_id: parseInt(key) };
+          })
+        )
+        .flat();
       setSignups(signups);
       if (!eventStatus) {
         return;
@@ -190,7 +196,12 @@ const UserSortPage = () => {
           className="btn btn-warning"
           onClick={() =>
             teamApi
-              .addUsersToTeams(currentEvent.id, suggestions)
+              .addUsersToTeams(
+                currentEvent.id,
+                suggestions.map((s) => {
+                  return { user_id: s.user.id, team_id: s.team_id || 0 };
+                })
+              )
               .then(updateSignups)
           }
         >

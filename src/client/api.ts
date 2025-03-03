@@ -1127,6 +1127,20 @@ export interface Signup {
 /**
  * 
  * @export
+ * @interface SignupCreate
+ */
+export interface SignupCreate {
+    /**
+     * 
+     * @type {ExpectedPlayTime}
+     * @memberof SignupCreate
+     */
+    expected_playtime: ExpectedPlayTime;
+}
+
+/**
+ * 
+ * @export
  * @interface Submission
  */
 export interface Submission {
@@ -1292,6 +1306,58 @@ export interface Team {
      * @memberof Team
      */
     name: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface TeamCreate
+ */
+export interface TeamCreate {
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof TeamCreate
+     */
+    allowed_classes: Array<string>;
+    /**
+     * 
+     * @type {number}
+     * @memberof TeamCreate
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof TeamCreate
+     */
+    name: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface TeamUserCreate
+ */
+export interface TeamUserCreate {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof TeamUserCreate
+     */
+    is_team_lead?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof TeamUserCreate
+     */
+    team_id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TeamUserCreate
+     */
+    user_id: number;
 }
 
 /**
@@ -3473,13 +3539,18 @@ export const SignupApiFetchParamCreator = function (configuration?: Configuratio
         /**
          * Creates a signup for the authenticated user
          * @param {number} event_id Event ID
+         * @param {SignupCreate} body Signup
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createSignup(event_id: number, options: any = {}): FetchArgs {
+        createSignup(event_id: number, body: SignupCreate, options: any = {}): FetchArgs {
             // verify required parameter 'event_id' is not null or undefined
             if (event_id === null || event_id === undefined) {
                 throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createSignup.');
+            }
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling createSignup.');
             }
             const localVarPath = `/events/{event_id}/signups/self`
                 .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
@@ -3488,10 +3559,14 @@ export const SignupApiFetchParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             localVarUrlObj.search = null;
             localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"SignupCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -3594,11 +3669,12 @@ export const SignupApiFp = function(configuration?: Configuration) {
         /**
          * Creates a signup for the authenticated user
          * @param {number} event_id Event ID
+         * @param {SignupCreate} body Signup
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createSignup(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Signup> {
-            const localVarFetchArgs = SignupApiFetchParamCreator(configuration).createSignup(event_id, options);
+        createSignup(event_id: number, body: SignupCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Signup> {
+            const localVarFetchArgs = SignupApiFetchParamCreator(configuration).createSignup(event_id, body, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -3675,11 +3751,12 @@ export const SignupApiFactory = function (configuration?: Configuration, fetch?:
         /**
          * Creates a signup for the authenticated user
          * @param {number} event_id Event ID
+         * @param {SignupCreate} body Signup
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createSignup(event_id: number, options?: any) {
-            return SignupApiFp(configuration).createSignup(event_id, options)(fetch, basePath);
+        createSignup(event_id: number, body: SignupCreate, options?: any) {
+            return SignupApiFp(configuration).createSignup(event_id, body, options)(fetch, basePath);
         },
         /**
          * Deletes the authenticated user's signup for the event
@@ -3721,12 +3798,13 @@ export class SignupApi extends BaseAPI {
     /**
      * Creates a signup for the authenticated user
      * @param {number} event_id Event ID
+     * @param {SignupCreate} body Signup
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SignupApi
      */
-    public createSignup(event_id: number, options?: any) {
-        return SignupApiFp(this.configuration).createSignup(event_id, options)(this.fetch, this.basePath);
+    public createSignup(event_id: number, body: SignupCreate, options?: any) {
+        return SignupApiFp(this.configuration).createSignup(event_id, body, options)(this.fetch, this.basePath);
     }
 
     /**
@@ -4208,13 +4286,18 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
         /**
          * Adds users to teams
          * @param {number} event_id Event ID
+         * @param {Array<TeamUserCreate>} body Users to add to teams
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addUsersToTeams(event_id: number, options: any = {}): FetchArgs {
+        addUsersToTeams(event_id: number, body: Array<TeamUserCreate>, options: any = {}): FetchArgs {
             // verify required parameter 'event_id' is not null or undefined
             if (event_id === null || event_id === undefined) {
                 throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling addUsersToTeams.');
+            }
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling addUsersToTeams.');
             }
             const localVarPath = `/events/{event_id}/teams/users`
                 .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
@@ -4223,10 +4306,14 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             localVarUrlObj.search = null;
             localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"Array&lt;TeamUserCreate&gt;" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -4236,13 +4323,18 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
         /**
          * Creates a team for an event
          * @param {number} event_id Event ID
+         * @param {TeamCreate} body Team to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createTeam(event_id: number, options: any = {}): FetchArgs {
+        createTeam(event_id: number, body: TeamCreate, options: any = {}): FetchArgs {
             // verify required parameter 'event_id' is not null or undefined
             if (event_id === null || event_id === undefined) {
                 throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createTeam.');
+            }
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling createTeam.');
             }
             const localVarPath = `/events/{event_id}/teams`
                 .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
@@ -4251,10 +4343,14 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             localVarUrlObj.search = null;
             localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"TeamCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -4369,11 +4465,12 @@ export const TeamApiFp = function(configuration?: Configuration) {
         /**
          * Adds users to teams
          * @param {number} event_id Event ID
+         * @param {Array<TeamUserCreate>} body Users to add to teams
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addUsersToTeams(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).addUsersToTeams(event_id, options);
+        addUsersToTeams(event_id: number, body: Array<TeamUserCreate>, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).addUsersToTeams(event_id, body, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -4387,11 +4484,12 @@ export const TeamApiFp = function(configuration?: Configuration) {
         /**
          * Creates a team for an event
          * @param {number} event_id Event ID
+         * @param {TeamCreate} body Team to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createTeam(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Team> {
-            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).createTeam(event_id, options);
+        createTeam(event_id: number, body: TeamCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Team> {
+            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).createTeam(event_id, body, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -4470,20 +4568,22 @@ export const TeamApiFactory = function (configuration?: Configuration, fetch?: F
         /**
          * Adds users to teams
          * @param {number} event_id Event ID
+         * @param {Array<TeamUserCreate>} body Users to add to teams
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addUsersToTeams(event_id: number, options?: any) {
-            return TeamApiFp(configuration).addUsersToTeams(event_id, options)(fetch, basePath);
+        addUsersToTeams(event_id: number, body: Array<TeamUserCreate>, options?: any) {
+            return TeamApiFp(configuration).addUsersToTeams(event_id, body, options)(fetch, basePath);
         },
         /**
          * Creates a team for an event
          * @param {number} event_id Event ID
+         * @param {TeamCreate} body Team to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createTeam(event_id: number, options?: any) {
-            return TeamApiFp(configuration).createTeam(event_id, options)(fetch, basePath);
+        createTeam(event_id: number, body: TeamCreate, options?: any) {
+            return TeamApiFp(configuration).createTeam(event_id, body, options)(fetch, basePath);
         },
         /**
          * Deletes a team
@@ -4527,23 +4627,25 @@ export class TeamApi extends BaseAPI {
     /**
      * Adds users to teams
      * @param {number} event_id Event ID
+     * @param {Array<TeamUserCreate>} body Users to add to teams
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TeamApi
      */
-    public addUsersToTeams(event_id: number, options?: any) {
-        return TeamApiFp(this.configuration).addUsersToTeams(event_id, options)(this.fetch, this.basePath);
+    public addUsersToTeams(event_id: number, body: Array<TeamUserCreate>, options?: any) {
+        return TeamApiFp(this.configuration).addUsersToTeams(event_id, body, options)(this.fetch, this.basePath);
     }
 
     /**
      * Creates a team for an event
      * @param {number} event_id Event ID
+     * @param {TeamCreate} body Team to create
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TeamApi
      */
-    public createTeam(event_id: number, options?: any) {
-        return TeamApiFp(this.configuration).createTeam(event_id, options)(this.fetch, this.basePath);
+    public createTeam(event_id: number, body: TeamCreate, options?: any) {
+        return TeamApiFp(this.configuration).createTeam(event_id, body, options)(this.fetch, this.basePath);
     }
 
     /**
@@ -4592,13 +4694,18 @@ export const UserApiFetchParamCreator = function (configuration?: Configuration)
         /**
          * Adds users to teams
          * @param {number} event_id Event ID
+         * @param {Array<TeamUserCreate>} body Users to add to teams
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addUsersToTeams(event_id: number, options: any = {}): FetchArgs {
+        addUsersToTeams(event_id: number, body: Array<TeamUserCreate>, options: any = {}): FetchArgs {
             // verify required parameter 'event_id' is not null or undefined
             if (event_id === null || event_id === undefined) {
                 throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling addUsersToTeams.');
+            }
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling addUsersToTeams.');
             }
             const localVarPath = `/events/{event_id}/teams/users`
                 .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
@@ -4607,10 +4714,14 @@ export const UserApiFetchParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             localVarUrlObj.search = null;
             localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"Array&lt;TeamUserCreate&gt;" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -4822,11 +4933,12 @@ export const UserApiFp = function(configuration?: Configuration) {
         /**
          * Adds users to teams
          * @param {number} event_id Event ID
+         * @param {Array<TeamUserCreate>} body Users to add to teams
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addUsersToTeams(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = UserApiFetchParamCreator(configuration).addUsersToTeams(event_id, options);
+        addUsersToTeams(event_id: number, body: Array<TeamUserCreate>, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = UserApiFetchParamCreator(configuration).addUsersToTeams(event_id, body, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -4973,11 +5085,12 @@ export const UserApiFactory = function (configuration?: Configuration, fetch?: F
         /**
          * Adds users to teams
          * @param {number} event_id Event ID
+         * @param {Array<TeamUserCreate>} body Users to add to teams
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addUsersToTeams(event_id: number, options?: any) {
-            return UserApiFp(configuration).addUsersToTeams(event_id, options)(fetch, basePath);
+        addUsersToTeams(event_id: number, body: Array<TeamUserCreate>, options?: any) {
+            return UserApiFp(configuration).addUsersToTeams(event_id, body, options)(fetch, basePath);
         },
         /**
          * Changes the permissions of a user
@@ -5053,12 +5166,13 @@ export class UserApi extends BaseAPI {
     /**
      * Adds users to teams
      * @param {number} event_id Event ID
+     * @param {Array<TeamUserCreate>} body Users to add to teams
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public addUsersToTeams(event_id: number, options?: any) {
-        return UserApiFp(this.configuration).addUsersToTeams(event_id, options)(this.fetch, this.basePath);
+    public addUsersToTeams(event_id: number, body: Array<TeamUserCreate>, options?: any) {
+        return UserApiFp(this.configuration).addUsersToTeams(event_id, body, options)(this.fetch, this.basePath);
     }
 
     /**

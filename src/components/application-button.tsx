@@ -106,7 +106,7 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
             >
               <Form.Item
                 label="How many hours will you be able to play per day?"
-                name="playtime"
+                name="expected_playtime"
                 rules={[
                   {
                     required: true,
