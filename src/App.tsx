@@ -48,6 +48,7 @@ type MenuItem = {
   rolerequired?: Permission[];
   children?: MenuItem[];
   url?: string;
+  external?: boolean;
 };
 
 // hack to get a highlight color
@@ -87,6 +88,16 @@ const setHighlightColor = (root: HTMLElement) => {
     "--color-highlight",
     `oklch(${newL}% ${c300} ${h300})`
   );
+};
+
+const route = (item: MenuItem) => {
+  if (item.url) {
+    if (item.external) {
+      window.open(item.url, "_blank");
+    } else {
+      router.navigate(item.url);
+    }
+  }
 };
 
 function App() {
@@ -155,6 +166,7 @@ function App() {
             label: "Monitoring",
             url: "/monitoring",
             key: "monitoring",
+            external: true,
           },
           {
             label: "Recurring Jobs",
@@ -300,9 +312,7 @@ function App() {
                         if (!e.metaKey && !e.ctrlKey && e.button === 0) {
                           e.preventDefault();
                           setCurrentNav(item.key);
-                          if (item.url) {
-                            router.navigate(item.url);
-                          }
+                          route(item);
                         }
                       }}
                       key={item.key}
@@ -316,9 +326,7 @@ function App() {
                                   <a
                                     onClick={() => {
                                       setCurrentNav(item.key);
-                                      if (child.url) {
-                                        router.navigate(child.url);
-                                      }
+                                      route(child);
                                     }}
                                   >
                                     {child.label}
@@ -330,10 +338,8 @@ function App() {
                                   label: (
                                     <a
                                       onClick={() => {
-                                        setCurrentNav(subchild.key);
-                                        if (subchild.url) {
-                                          router.navigate(subchild.url);
-                                        }
+                                        setCurrentNav(item.key);
+                                        route(subchild);
                                       }}
                                     >
                                       {subchild.label}
