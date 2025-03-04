@@ -151,6 +151,16 @@ function App() {
             url: `/events/${currentEvent?.id}/users/sort`,
             key: "sort-users",
           },
+          {
+            label: "Monitoring",
+            url: "/monitoring",
+            key: "monitoring",
+          },
+          {
+            label: "Recurring Jobs",
+            url: "/recurring-jobs",
+            key: "recurring-jobs",
+          },
         ],
       },
       {
@@ -267,7 +277,7 @@ function App() {
                   router.navigate("/");
                 }}
               >
-                <img className="h-10" src="assets/app-logos/bpl-logo.png" />
+                <img className="h-10" src="/assets/app-logos/bpl-logo.png" />
                 <div className="text-4xl font-bold hidden sm:block">BPL</div>
               </button>
               <div className="flex flex-1 justify-left gap-0 h-full">
@@ -300,7 +310,6 @@ function App() {
                       <a href={item.url}>
                         {item.children ? (
                           <Dropdown
-                            trigger={["click", "hover"]}
                             menu={{
                               items: item.children?.map((child) => ({
                                 label: (

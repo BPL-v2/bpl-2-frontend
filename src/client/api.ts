@@ -866,25 +866,25 @@ export interface RecurringJob {
      * @type {string}
      * @memberof RecurringJob
      */
-    end_date?: string;
+    end_date: string;
     /**
      * 
      * @type {number}
      * @memberof RecurringJob
      */
-    event_id?: number;
+    event_id: number;
     /**
      * 
      * @type {JobType}
      * @memberof RecurringJob
      */
-    job_type?: JobType;
+    job_type: JobType;
     /**
      * 
      * @type {number}
      * @memberof RecurringJob
      */
-    sleep_after_each_run_seconds?: number;
+    sleep_after_each_run_seconds: number;
 }
 
 /**
@@ -2157,6 +2157,37 @@ export const JobsApiFetchParamCreator = function (configuration?: Configuration)
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Start a recurring job
+         * @param {JobCreate} job Job to create
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        startJob(job: JobCreate, options: any = {}): FetchArgs {
+            // verify required parameter 'job' is not null or undefined
+            if (job === null || job === undefined) {
+                throw new RequiredError('job','Required parameter job was null or undefined when calling startJob.');
+            }
+            const localVarPath = `/jobs`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"JobCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(job || {}) : (job || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -2173,6 +2204,24 @@ export const JobsApiFp = function(configuration?: Configuration) {
          */
         getJobs(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<RecurringJob>> {
             const localVarFetchArgs = JobsApiFetchParamCreator(configuration).getJobs(options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * Start a recurring job
+         * @param {JobCreate} job Job to create
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        startJob(job: JobCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<RecurringJob> {
+            const localVarFetchArgs = JobsApiFetchParamCreator(configuration).startJob(job, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -2200,6 +2249,15 @@ export const JobsApiFactory = function (configuration?: Configuration, fetch?: F
         getJobs(options?: any) {
             return JobsApiFp(configuration).getJobs(options)(fetch, basePath);
         },
+        /**
+         * Start a recurring job
+         * @param {JobCreate} job Job to create
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        startJob(job: JobCreate, options?: any) {
+            return JobsApiFp(configuration).startJob(job, options)(fetch, basePath);
+        },
     };
 };
 
@@ -2218,6 +2276,17 @@ export class JobsApi extends BaseAPI {
      */
     public getJobs(options?: any) {
         return JobsApiFp(this.configuration).getJobs(options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Start a recurring job
+     * @param {JobCreate} job Job to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof JobsApi
+     */
+    public startJob(job: JobCreate, options?: any) {
+        return JobsApiFp(this.configuration).startJob(job, options)(this.fetch, this.basePath);
     }
 
 }

@@ -7,16 +7,8 @@ import { teamApi } from "../client/client";
 
 const TeamPage = () => {
   let { eventId } = useParams();
-  const { events } = useContext(GlobalStateContext);
+  const { events, user } = useContext(GlobalStateContext);
   const event = events.find((event) => event.id === Number(eventId));
-  if (!event) {
-    return <></>;
-  }
-
-  const { user } = useContext(GlobalStateContext);
-  if (!user || !user.permissions.includes(Permission.admin)) {
-    return <div>You do not have permission to view this page</div>;
-  }
   const columns: CrudColumn<Team>[] = useMemo(
     () => [
       {
@@ -38,7 +30,7 @@ const TeamPage = () => {
         key: "allowed_classes",
         type: "multiselect",
         options:
-          event.game_version === GameVersion.poe2
+          event?.game_version === GameVersion.poe2
             ? [
                 "Warbringer",
                 "Titan",
@@ -81,6 +73,13 @@ const TeamPage = () => {
     ],
     [event]
   );
+  if (!event) {
+    return <></>;
+  }
+
+  if (!user || !user.permissions.includes(Permission.admin)) {
+    return <div>You do not have permission to view this page</div>;
+  }
 
   const eventIdNum = Number(eventId);
   return (

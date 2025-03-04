@@ -71,7 +71,7 @@ export function MainPage() {
                   <p>
                     {new Date(currentEvent.event_start_time).toLocaleString()}{" "}
                   </p>
-                  <p>Start time: </p>
+                  <p>End time: </p>
                   <p>
                     {new Date(currentEvent.event_end_time).toLocaleString()}.
                   </p>

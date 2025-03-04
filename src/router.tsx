@@ -8,6 +8,7 @@ import UserSortPage from "./pages/user-sort";
 import { ScoringReadmePage } from "./pages/scoring_readme";
 import { MainPage } from "./pages/main";
 import React from "react";
+import RecurringJobsPage from "./pages/recurring-jobs";
 
 // load admin pages lazily
 const ScoringPresetsPage = React.lazy(() => import("./pages/scoring-presets"));
@@ -79,5 +80,9 @@ export const router = createBrowserRouter([
   {
     path: "/submissions",
     element: <SubmissionPage />,
+  },
+  {
+    path: "/recurring-jobs",
+    element: <RecurringJobsPage />,
   },
 ]);

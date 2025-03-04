@@ -2,6 +2,7 @@ import { Configuration } from ".";
 import {
   ConditionApiFactory,
   EventApiFactory,
+  JobsApiFactory,
   OauthApiFactory,
   ObjectiveApiFactory,
   ScoringApiFactory,
@@ -29,3 +30,4 @@ export const submissionApi = SubmissionApiFactory(config, fetch, baseUrl);
 export const signupApi = SignupApiFactory(config, fetch, baseUrl);
 export const oauthApi = OauthApiFactory(config, fetch, baseUrl);
 export const streamApi = StreamsApiFactory(config, fetch, baseUrl);
+export const jobApi = JobsApiFactory(config, fetch, baseUrl);
