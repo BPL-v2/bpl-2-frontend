@@ -11,6 +11,9 @@ const RecurringJobsPage = () => {
   const [jobs, setJobs] = React.useState<RecurringJob[]>([]);
   const [showModal, setShowModal] = React.useState(false);
   const [selectedEvent, setSelectedEvent] = React.useState<Event | null>(null);
+  const [selectedEndDate, setSelectedEndDate] = React.useState<Date | null>(
+    null
+  );
   const formRef = React.useRef<HTMLFormElement>(null);
 
   const stopJob = (job: RecurringJob) => {
@@ -29,6 +32,14 @@ const RecurringJobsPage = () => {
     jobApi.getJobs().then(setJobs);
   }, []);
 
+  React.useEffect(() => {
+    if (selectedEvent) {
+      setSelectedEndDate(
+        dayjs(selectedEvent.event_end_time, "YYYY-MM-DDTHH:mm:ssZ").toDate()
+      );
+    }
+  }, [selectedEvent]);
+
   if (!user || !user.permissions.includes(Permission.admin)) {
     return <div>You do not have permission to view this page</div>;
   }
@@ -46,10 +57,10 @@ const RecurringJobsPage = () => {
           setShowModal(false);
         }}
       >
-        <div className="modal-box bg-base-200 border-2 border-base-100 max-w-2xl">
+        <div className="modal-box bg-base-200 border-2 border-base-100 max-w-sm">
           <h3 className="font-bold text-lg mb-8">Create recurring job</h3>
           <form
-            className="space-y-4 text-left w-full"
+            className="space-y-4 text-left"
             onSubmit={(e) => {
               const values = new FormData(formRef.current!);
               e.preventDefault();
@@ -69,13 +80,13 @@ const RecurringJobsPage = () => {
             }}
             ref={formRef}
           >
-            <fieldset className="fieldset w-full">
+            <fieldset className="fieldset">
               <legend className="fieldset-legend">Event</legend>
               <select
                 id="event"
                 name="event"
                 defaultValue=""
-                className="select w-full"
+                className="select"
                 required
                 onChange={(e) =>
                   setSelectedEvent(
@@ -100,7 +111,7 @@ const RecurringJobsPage = () => {
                 id="jobType"
                 name="jobType"
                 defaultValue=""
-                className="select w-full"
+                className="select"
                 required
               >
                 <option disabled value="">
@@ -120,19 +131,10 @@ const RecurringJobsPage = () => {
                   name="endDate"
                   required
                   showTime={{ format: "YYYY-MM-DD" }}
-                  value={
-                    selectedEvent
-                      ? dayjs(
-                          selectedEvent.event_end_time,
-                          "YYYY-MM-DDTHH:mm:ssZ"
-                        )
-                      : undefined
+                  onChange={(date) =>
+                    setSelectedEndDate(date?.toDate() || null)
                   }
-                />
-                <input
-                  type="number"
-                  className="input input-bordered "
-                  placeholder="Duration in seconds"
+                  value={selectedEndDate ? dayjs(selectedEndDate) : null}
                 />
               </div>
             </fieldset>
