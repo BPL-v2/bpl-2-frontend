@@ -83,18 +83,26 @@ const ScoringPresetsPage: React.FC = () => {
         fetchFunction={() =>
           scoringApi.getScoringPresetsForEvent(parseInt(eventId))
         }
-        createFunction={(data) =>
-          scoringApi.createScoringPreset({
+        createFunction={(data) => {
+          const points = data.points
+            .split(",")
+            .map((point: string) => parseInt(point.trim()));
+          return scoringApi.createScoringPreset({
             ...data,
+            points: points,
             event_id: parseInt(eventId),
-          })
-        }
-        editFunction={(data) =>
-          scoringApi.createScoringPreset({
+          });
+        }}
+        editFunction={(data) => {
+          const points = data.points
+            .split(",")
+            .map((point: string) => parseInt(point.trim()));
+          return scoringApi.createScoringPreset({
             ...data,
+            points: points,
             event_id: parseInt(eventId),
-          })
-        }
+          });
+        }}
         deleteFunction={(data) => scoringApi.deleteScoringPreset(data.id)}
       ></CrudTable>
     </>

@@ -44,6 +44,7 @@ export type action = {
   name: string;
   func: (data: any) => Promise<any>;
   visible?: (data: any) => boolean;
+  reload?: boolean;
   icon?: JSX.Element;
 };
 
@@ -122,7 +123,13 @@ const CrudTable = <T,>({
                           className="btn btn-soft"
                           onClick={() => {
                             setCurrentData(record);
-                            action.func(record);
+                            action.func(record).then(() => {
+                              if (action.reload) {
+                                fetchFunction().then((data) => {
+                                  setData(data);
+                                });
+                              }
+                            });
                           }}
                         >
                           {action.icon ? action.icon : action.name}

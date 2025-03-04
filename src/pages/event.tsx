@@ -81,8 +81,6 @@ const EventPage: React.FC = () => {
   }
 
   const createEventWrapper = async (data: EventCreate) => {
-    // const newEvent = await createEvent(data);
-    // setEvents([...events, newEvent]);
     return eventApi.createEvent(data).then((res) => {
       setEvents([...events, res]);
       return res;
@@ -114,6 +112,14 @@ const EventPage: React.FC = () => {
         editFunction={editEventWrapper}
         deleteFunction={deleteEventWrapper}
         addtionalActions={[
+          {
+            name: "Duplicate Config",
+            func: async (data) =>
+              eventApi
+                .duplicateEvent(data.id, data)
+                .then((res) => setEvents([...events, res])),
+            reload: true,
+          },
           {
             name: "Teams",
             func: async (data) => router.navigate(data.id + "/teams"),

@@ -1778,6 +1778,43 @@ export const EventApiFetchParamCreator = function (configuration?: Configuration
             };
         },
         /**
+         * Duplicates an event's configuration
+         * @param {number} event_id Event ID
+         * @param {EventCreate} event Event to create
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        duplicateEvent(event_id: number, event: EventCreate, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling duplicateEvent.');
+            }
+            // verify required parameter 'event' is not null or undefined
+            if (event === null || event === undefined) {
+                throw new RequiredError('event','Required parameter event was null or undefined when calling duplicateEvent.');
+            }
+            const localVarPath = `/events/{event_id}/duplicate`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"EventCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(event || {}) : (event || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Fetches the current event
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1923,6 +1960,25 @@ export const EventApiFp = function(configuration?: Configuration) {
             };
         },
         /**
+         * Duplicates an event's configuration
+         * @param {number} event_id Event ID
+         * @param {EventCreate} event Event to create
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        duplicateEvent(event_id: number, event: EventCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Event> {
+            const localVarFetchArgs = EventApiFetchParamCreator(configuration).duplicateEvent(event_id, event, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
          * Fetches the current event
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2020,6 +2076,16 @@ export const EventApiFactory = function (configuration?: Configuration, fetch?: 
             return EventApiFp(configuration).deleteEvent(event_id, options)(fetch, basePath);
         },
         /**
+         * Duplicates an event's configuration
+         * @param {number} event_id Event ID
+         * @param {EventCreate} event Event to create
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        duplicateEvent(event_id: number, event: EventCreate, options?: any) {
+            return EventApiFp(configuration).duplicateEvent(event_id, event, options)(fetch, basePath);
+        },
+        /**
          * Fetches the current event
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2083,6 +2149,18 @@ export class EventApi extends BaseAPI {
      */
     public deleteEvent(event_id: number, options?: any) {
         return EventApiFp(this.configuration).deleteEvent(event_id, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Duplicates an event's configuration
+     * @param {number} event_id Event ID
+     * @param {EventCreate} event Event to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EventApi
+     */
+    public duplicateEvent(event_id: number, event: EventCreate, options?: any) {
+        return EventApiFp(this.configuration).duplicateEvent(event_id, event, options)(this.fetch, this.basePath);
     }
 
     /**

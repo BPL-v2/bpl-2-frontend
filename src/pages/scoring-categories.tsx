@@ -639,14 +639,11 @@ const ScoringCategoryPage: React.FC = () => {
               currentObjective,
               objectiveFormRef.current?.getFieldsValue()
             );
+            updatedObjective.category_id = Number(categoryId);
             objectiveApi.createObjective(updatedObjective).then(() => {
               setIsObjectiveModalOpen(false);
               setRefreshObjectives((prev) => !prev);
             });
-            // createObjective(Number(categoryId), updatedObjective).then(() => {
-            //   setIsObjectiveModalOpen(false);
-            //   setRefreshObjectives((prev) => !prev);
-            // });
           }}
         >
           <Form.Item
