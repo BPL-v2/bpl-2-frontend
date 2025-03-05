@@ -29,9 +29,7 @@ export function operatorForField(field: ItemField): Operator[] {
     Operator.EQ,
     Operator.NEQ,
     Operator.GT,
-    Operator.GTE,
     Operator.LT,
-    Operator.LTE,
     Operator.IN,
     Operator.NOT_IN,
   ];
@@ -42,13 +40,7 @@ export function operatorForField(field: ItemField): Operator[] {
     Operator.NOT_IN,
     Operator.MATCHES,
   ];
-  const stringArrayOperators = [
-    Operator.CONTAINS,
-    Operator.CONTAINS_ALL,
-    Operator.CONTAINS_MATCH,
-    Operator.CONTAINS_ALL_MATCHES,
-  ];
-  const booleanOperators = [Operator.EQ];
+  const stringArrayOperators = [Operator.CONTAINS, Operator.CONTAINS_MATCH];
 
   switch (field) {
     case ItemField.BASE_TYPE:
@@ -73,8 +65,8 @@ export function operatorForField(field: ItemField): Operator[] {
       return stringArrayOperators;
     case ItemField.ILVL:
       return numberOperators;
-    case ItemField.SIX_LINK:
-      return booleanOperators;
+    case ItemField.MAX_LINKS:
+      return numberOperators;
     case ItemField.ENCHANT_MODS:
       return stringArrayOperators;
     default:
@@ -90,12 +82,8 @@ export function operatorToString(operator: Operator): string {
       return "≠";
     case Operator.GT:
       return ">";
-    case Operator.GTE:
-      return "≥";
     case Operator.LT:
       return "<";
-    case Operator.LTE:
-      return "≤";
     case Operator.IN:
       return "in";
     case Operator.NOT_IN:
@@ -104,13 +92,15 @@ export function operatorToString(operator: Operator): string {
       return "matches";
     case Operator.CONTAINS:
       return "contains";
-    case Operator.CONTAINS_ALL:
-      return "contains all";
     case Operator.CONTAINS_MATCH:
       return "contains match";
-    case Operator.CONTAINS_ALL_MATCHES:
-      return "contains all matches";
+    case Operator.LENGTH_EQ:
+      return "length =";
+    case Operator.LENGTH_GT:
+      return "length >";
+    case Operator.LENGTH_LT:
   }
+  return "";
 }
 
 var anomalousUniques: {

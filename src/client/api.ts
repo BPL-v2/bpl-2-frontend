@@ -271,6 +271,26 @@ export interface ConditionCreateField {
 /**
  * 
  * @export
+ * @interface ConditionMappings
+ */
+export interface ConditionMappings {
+    /**
+     * 
+     * @type {{ [key: string]: FieldType; }}
+     * @memberof ConditionMappings
+     */
+    field_to_type: { [key: string]: FieldType; };
+    /**
+     * 
+     * @type {{ [key: string]: Array<Operator>; }}
+     * @memberof ConditionMappings
+     */
+    valid_operators: { [key: string]: Array<Operator>; };
+}
+
+/**
+ * 
+ * @export
  * @enum {string}
  */
 export enum Difftype {
@@ -458,6 +478,18 @@ export enum ExpectedPlayTime {
  * @export
  * @enum {string}
  */
+export enum FieldType {
+    string = 'string',
+    int = 'int',
+    bool = 'bool',
+    string_2 = 'string[]'
+}
+
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
 export enum GameVersion {
     poe1 = 'poe1',
     poe2 = 'poe2'
@@ -472,6 +504,8 @@ export enum ItemField {
     BASE_TYPE = 'BASE_TYPE',
     NAME = 'NAME',
     TYPE_LINE = 'TYPE_LINE',
+    QUALITY = 'QUALITY',
+    LEVEL = 'LEVEL',
     RARITY = 'RARITY',
     ILVL = 'ILVL',
     FRAME_TYPE = 'FRAME_TYPE',
@@ -481,7 +515,15 @@ export enum ItemField {
     IMPLICIT_MODS = 'IMPLICIT_MODS',
     CRAFTED_MODS = 'CRAFTED_MODS',
     FRACTURED_MODS = 'FRACTURED_MODS',
-    SIX_LINK = 'SIX_LINK'
+    MAX_LINKS = 'MAX_LINKS',
+    SOCKETS = 'SOCKETS',
+    INCUBATOR_KILLS = 'INCUBATOR_KILLS',
+    IS_CORRUPTED = 'IS_CORRUPTED',
+    IS_VAAL = 'IS_VAAL',
+    SANCTUM_AFFLICTIONS = 'SANCTUM_AFFLICTIONS',
+    TEMPLE_ROOMS = 'TEMPLE_ROOMS',
+    RITUAL_VESSEL_BOSSES = 'RITUAL_VESSEL_BOSSES',
+    RITUAL_VESSEL_MAP = 'RITUAL_VESSEL_MAP'
 }
 
 /**
@@ -833,16 +875,15 @@ export enum Operator {
     EQ = 'EQ',
     NEQ = 'NEQ',
     GT = 'GT',
-    GTE = 'GTE',
     LT = 'LT',
-    LTE = 'LTE',
     IN = 'IN',
     NOT_IN = 'NOT_IN',
     MATCHES = 'MATCHES',
     CONTAINS = 'CONTAINS',
-    CONTAINS_ALL = 'CONTAINS_ALL',
     CONTAINS_MATCH = 'CONTAINS_MATCH',
-    CONTAINS_ALL_MATCHES = 'CONTAINS_ALL_MATCHES'
+    LENGTH_EQ = 'LENGTH_EQ',
+    LENGTH_GT = 'LENGTH_GT',
+    LENGTH_LT = 'LENGTH_LT'
 }
 
 /**
@@ -1580,7 +1621,7 @@ export const ConditionApiFetchParamCreator = function (configuration?: Configura
         },
         /**
          * Deletes a condition
-         * @param {number} id Condition ID
+         * @param {number} id Condition Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1593,6 +1634,28 @@ export const ConditionApiFetchParamCreator = function (configuration?: Configura
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Get valid mappings for conditions
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getValidMappings(options: any = {}): FetchArgs {
+            const localVarPath = `/scoring/conditions/valid-mappings`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -1635,7 +1698,7 @@ export const ConditionApiFp = function(configuration?: Configuration) {
         },
         /**
          * Deletes a condition
-         * @param {number} id Condition ID
+         * @param {number} id Condition Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1645,6 +1708,23 @@ export const ConditionApiFp = function(configuration?: Configuration) {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
                         return response;
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * Get valid mappings for conditions
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getValidMappings(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ConditionMappings> {
+            const localVarFetchArgs = ConditionApiFetchParamCreator(configuration).getValidMappings(options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
                     } else {
                         throw response;
                     }
@@ -1671,12 +1751,20 @@ export const ConditionApiFactory = function (configuration?: Configuration, fetc
         },
         /**
          * Deletes a condition
-         * @param {number} id Condition ID
+         * @param {number} id Condition Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         deleteCondition(id: number, options?: any) {
             return ConditionApiFp(configuration).deleteCondition(id, options)(fetch, basePath);
+        },
+        /**
+         * Get valid mappings for conditions
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getValidMappings(options?: any) {
+            return ConditionApiFp(configuration).getValidMappings(options)(fetch, basePath);
         },
     };
 };
@@ -1701,13 +1789,23 @@ export class ConditionApi extends BaseAPI {
 
     /**
      * Deletes a condition
-     * @param {number} id Condition ID
+     * @param {number} id Condition Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ConditionApi
      */
     public deleteCondition(id: number, options?: any) {
         return ConditionApiFp(this.configuration).deleteCondition(id, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Get valid mappings for conditions
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ConditionApi
+     */
+    public getValidMappings(options?: any) {
+        return ConditionApiFp(this.configuration).getValidMappings(options)(this.fetch, this.basePath);
     }
 
 }
@@ -1751,7 +1849,7 @@ export const EventApiFetchParamCreator = function (configuration?: Configuration
         },
         /**
          * Deletes an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1779,7 +1877,7 @@ export const EventApiFetchParamCreator = function (configuration?: Configuration
         },
         /**
          * Duplicates an event's configuration
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {EventCreate} event Event to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1838,7 +1936,7 @@ export const EventApiFetchParamCreator = function (configuration?: Configuration
         },
         /**
          * Gets an event by id
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1866,7 +1964,7 @@ export const EventApiFetchParamCreator = function (configuration?: Configuration
         },
         /**
          * Gets the users application status for an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1943,7 +2041,7 @@ export const EventApiFp = function(configuration?: Configuration) {
         },
         /**
          * Deletes an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1961,7 +2059,7 @@ export const EventApiFp = function(configuration?: Configuration) {
         },
         /**
          * Duplicates an event's configuration
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {EventCreate} event Event to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1997,7 +2095,7 @@ export const EventApiFp = function(configuration?: Configuration) {
         },
         /**
          * Gets an event by id
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2015,7 +2113,7 @@ export const EventApiFp = function(configuration?: Configuration) {
         },
         /**
          * Gets the users application status for an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2068,7 +2166,7 @@ export const EventApiFactory = function (configuration?: Configuration, fetch?: 
         },
         /**
          * Deletes an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2077,7 +2175,7 @@ export const EventApiFactory = function (configuration?: Configuration, fetch?: 
         },
         /**
          * Duplicates an event's configuration
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {EventCreate} event Event to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2095,7 +2193,7 @@ export const EventApiFactory = function (configuration?: Configuration, fetch?: 
         },
         /**
          * Gets an event by id
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2104,7 +2202,7 @@ export const EventApiFactory = function (configuration?: Configuration, fetch?: 
         },
         /**
          * Gets the users application status for an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2142,7 +2240,7 @@ export class EventApi extends BaseAPI {
 
     /**
      * Deletes an event
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EventApi
@@ -2153,7 +2251,7 @@ export class EventApi extends BaseAPI {
 
     /**
      * Duplicates an event's configuration
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {EventCreate} event Event to create
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -2175,7 +2273,7 @@ export class EventApi extends BaseAPI {
 
     /**
      * Gets an event by id
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EventApi
@@ -2186,7 +2284,7 @@ export class EventApi extends BaseAPI {
 
     /**
      * Gets the users application status for an event
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EventApi
@@ -2741,7 +2839,7 @@ export const ObjectiveApiFetchParamCreator = function (configuration?: Configura
         },
         /**
          * Deletes an objective
-         * @param {number} id Objective ID
+         * @param {number} id Objective Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2769,7 +2867,7 @@ export const ObjectiveApiFetchParamCreator = function (configuration?: Configura
         },
         /**
          * Gets an objective by id
-         * @param {number} id Objective ID
+         * @param {number} id Objective Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2824,7 +2922,7 @@ export const ObjectiveApiFp = function(configuration?: Configuration) {
         },
         /**
          * Deletes an objective
-         * @param {number} id Objective ID
+         * @param {number} id Objective Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2842,7 +2940,7 @@ export const ObjectiveApiFp = function(configuration?: Configuration) {
         },
         /**
          * Gets an objective by id
-         * @param {number} id Objective ID
+         * @param {number} id Objective Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2878,7 +2976,7 @@ export const ObjectiveApiFactory = function (configuration?: Configuration, fetc
         },
         /**
          * Deletes an objective
-         * @param {number} id Objective ID
+         * @param {number} id Objective Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2887,7 +2985,7 @@ export const ObjectiveApiFactory = function (configuration?: Configuration, fetc
         },
         /**
          * Gets an objective by id
-         * @param {number} id Objective ID
+         * @param {number} id Objective Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2917,7 +3015,7 @@ export class ObjectiveApi extends BaseAPI {
 
     /**
      * Deletes an objective
-     * @param {number} id Objective ID
+     * @param {number} id Objective Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ObjectiveApi
@@ -2928,7 +3026,7 @@ export class ObjectiveApi extends BaseAPI {
 
     /**
      * Gets an objective by id
-     * @param {number} id Objective ID
+     * @param {number} id Objective Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ObjectiveApi
@@ -2947,7 +3045,7 @@ export const ScoresApiFetchParamCreator = function (configuration?: Configuratio
     return {
         /**
          * Fetches the latest scores for the current event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2975,7 +3073,7 @@ export const ScoresApiFetchParamCreator = function (configuration?: Configuratio
         },
         /**
          * Websocket for score updates. Once connected, the client will receive score updates in real-time.
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3012,7 +3110,7 @@ export const ScoresApiFp = function(configuration?: Configuration) {
     return {
         /**
          * Fetches the latest scores for the current event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3030,7 +3128,7 @@ export const ScoresApiFp = function(configuration?: Configuration) {
         },
         /**
          * Websocket for score updates. Once connected, the client will receive score updates in real-time.
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3057,7 +3155,7 @@ export const ScoresApiFactory = function (configuration?: Configuration, fetch?:
     return {
         /**
          * Fetches the latest scores for the current event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3066,7 +3164,7 @@ export const ScoresApiFactory = function (configuration?: Configuration, fetch?:
         },
         /**
          * Websocket for score updates. Once connected, the client will receive score updates in real-time.
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3085,7 +3183,7 @@ export const ScoresApiFactory = function (configuration?: Configuration, fetch?:
 export class ScoresApi extends BaseAPI {
     /**
      * Fetches the latest scores for the current event
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ScoresApi
@@ -3096,7 +3194,7 @@ export class ScoresApi extends BaseAPI {
 
     /**
      * Websocket for score updates. Once connected, the client will receive score updates in real-time.
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ScoresApi
@@ -3177,7 +3275,7 @@ export const ScoringApiFetchParamCreator = function (configuration?: Configurati
         },
         /**
          * Deletes a scoring category
-         * @param {number} id Category ID
+         * @param {number} id Category Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3205,7 +3303,7 @@ export const ScoringApiFetchParamCreator = function (configuration?: Configurati
         },
         /**
          * Deletes a scoring preset by id
-         * @param {number} id Preset ID
+         * @param {number} id Preset Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3233,7 +3331,7 @@ export const ScoringApiFetchParamCreator = function (configuration?: Configurati
         },
         /**
          * Fetches the rules for the current event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3261,7 +3359,7 @@ export const ScoringApiFetchParamCreator = function (configuration?: Configurati
         },
         /**
          * Fetches a scoring category by id
-         * @param {number} id Category ID
+         * @param {number} id Category Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3289,7 +3387,7 @@ export const ScoringApiFetchParamCreator = function (configuration?: Configurati
         },
         /**
          * Fetches a scoring preset by id
-         * @param {number} id Preset ID
+         * @param {number} id Preset Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3317,7 +3415,7 @@ export const ScoringApiFetchParamCreator = function (configuration?: Configurati
         },
         /**
          * Fetches the scoring presets for the current event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3390,7 +3488,7 @@ export const ScoringApiFp = function(configuration?: Configuration) {
         },
         /**
          * Deletes a scoring category
-         * @param {number} id Category ID
+         * @param {number} id Category Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3408,7 +3506,7 @@ export const ScoringApiFp = function(configuration?: Configuration) {
         },
         /**
          * Deletes a scoring preset by id
-         * @param {number} id Preset ID
+         * @param {number} id Preset Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3426,7 +3524,7 @@ export const ScoringApiFp = function(configuration?: Configuration) {
         },
         /**
          * Fetches the rules for the current event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3444,7 +3542,7 @@ export const ScoringApiFp = function(configuration?: Configuration) {
         },
         /**
          * Fetches a scoring category by id
-         * @param {number} id Category ID
+         * @param {number} id Category Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3462,7 +3560,7 @@ export const ScoringApiFp = function(configuration?: Configuration) {
         },
         /**
          * Fetches a scoring preset by id
-         * @param {number} id Preset ID
+         * @param {number} id Preset Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3480,7 +3578,7 @@ export const ScoringApiFp = function(configuration?: Configuration) {
         },
         /**
          * Fetches the scoring presets for the current event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3525,7 +3623,7 @@ export const ScoringApiFactory = function (configuration?: Configuration, fetch?
         },
         /**
          * Deletes a scoring category
-         * @param {number} id Category ID
+         * @param {number} id Category Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3534,7 +3632,7 @@ export const ScoringApiFactory = function (configuration?: Configuration, fetch?
         },
         /**
          * Deletes a scoring preset by id
-         * @param {number} id Preset ID
+         * @param {number} id Preset Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3543,7 +3641,7 @@ export const ScoringApiFactory = function (configuration?: Configuration, fetch?
         },
         /**
          * Fetches the rules for the current event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3552,7 +3650,7 @@ export const ScoringApiFactory = function (configuration?: Configuration, fetch?
         },
         /**
          * Fetches a scoring category by id
-         * @param {number} id Category ID
+         * @param {number} id Category Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3561,7 +3659,7 @@ export const ScoringApiFactory = function (configuration?: Configuration, fetch?
         },
         /**
          * Fetches a scoring preset by id
-         * @param {number} id Preset ID
+         * @param {number} id Preset Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3570,7 +3668,7 @@ export const ScoringApiFactory = function (configuration?: Configuration, fetch?
         },
         /**
          * Fetches the scoring presets for the current event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3611,7 +3709,7 @@ export class ScoringApi extends BaseAPI {
 
     /**
      * Deletes a scoring category
-     * @param {number} id Category ID
+     * @param {number} id Category Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ScoringApi
@@ -3622,7 +3720,7 @@ export class ScoringApi extends BaseAPI {
 
     /**
      * Deletes a scoring preset by id
-     * @param {number} id Preset ID
+     * @param {number} id Preset Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ScoringApi
@@ -3633,7 +3731,7 @@ export class ScoringApi extends BaseAPI {
 
     /**
      * Fetches the rules for the current event
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ScoringApi
@@ -3644,7 +3742,7 @@ export class ScoringApi extends BaseAPI {
 
     /**
      * Fetches a scoring category by id
-     * @param {number} id Category ID
+     * @param {number} id Category Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ScoringApi
@@ -3655,7 +3753,7 @@ export class ScoringApi extends BaseAPI {
 
     /**
      * Fetches a scoring preset by id
-     * @param {number} id Preset ID
+     * @param {number} id Preset Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ScoringApi
@@ -3666,7 +3764,7 @@ export class ScoringApi extends BaseAPI {
 
     /**
      * Fetches the scoring presets for the current event
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ScoringApi
@@ -3685,7 +3783,7 @@ export const SignupApiFetchParamCreator = function (configuration?: Configuratio
     return {
         /**
          * Creates a signup for the authenticated user
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {SignupCreate} body Signup
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3722,7 +3820,7 @@ export const SignupApiFetchParamCreator = function (configuration?: Configuratio
         },
         /**
          * Deletes the authenticated user's signup for the event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3750,7 +3848,7 @@ export const SignupApiFetchParamCreator = function (configuration?: Configuratio
         },
         /**
          * Fetches all signups for the event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3778,7 +3876,7 @@ export const SignupApiFetchParamCreator = function (configuration?: Configuratio
         },
         /**
          * Fetches an authenticated user's signup for the event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3815,7 +3913,7 @@ export const SignupApiFp = function(configuration?: Configuration) {
     return {
         /**
          * Creates a signup for the authenticated user
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {SignupCreate} body Signup
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3834,7 +3932,7 @@ export const SignupApiFp = function(configuration?: Configuration) {
         },
         /**
          * Deletes the authenticated user's signup for the event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3852,7 +3950,7 @@ export const SignupApiFp = function(configuration?: Configuration) {
         },
         /**
          * Fetches all signups for the event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3870,7 +3968,7 @@ export const SignupApiFp = function(configuration?: Configuration) {
         },
         /**
          * Fetches an authenticated user's signup for the event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3897,7 +3995,7 @@ export const SignupApiFactory = function (configuration?: Configuration, fetch?:
     return {
         /**
          * Creates a signup for the authenticated user
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {SignupCreate} body Signup
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3907,7 +4005,7 @@ export const SignupApiFactory = function (configuration?: Configuration, fetch?:
         },
         /**
          * Deletes the authenticated user's signup for the event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3916,7 +4014,7 @@ export const SignupApiFactory = function (configuration?: Configuration, fetch?:
         },
         /**
          * Fetches all signups for the event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3925,7 +4023,7 @@ export const SignupApiFactory = function (configuration?: Configuration, fetch?:
         },
         /**
          * Fetches an authenticated user's signup for the event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3944,7 +4042,7 @@ export const SignupApiFactory = function (configuration?: Configuration, fetch?:
 export class SignupApi extends BaseAPI {
     /**
      * Creates a signup for the authenticated user
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {SignupCreate} body Signup
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3956,7 +4054,7 @@ export class SignupApi extends BaseAPI {
 
     /**
      * Deletes the authenticated user's signup for the event
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SignupApi
@@ -3967,7 +4065,7 @@ export class SignupApi extends BaseAPI {
 
     /**
      * Fetches all signups for the event
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SignupApi
@@ -3978,7 +4076,7 @@ export class SignupApi extends BaseAPI {
 
     /**
      * Fetches an authenticated user's signup for the event
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SignupApi
@@ -4090,8 +4188,8 @@ export const SubmissionApiFetchParamCreator = function (configuration?: Configur
     return {
         /**
          * Deletes a submission
-         * @param {number} event_id Event ID
-         * @param {number} submission_id Submission ID
+         * @param {number} event_id Event Id
+         * @param {number} submission_id Submission Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4124,7 +4222,7 @@ export const SubmissionApiFetchParamCreator = function (configuration?: Configur
         },
         /**
          * Fetches all submissions for an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4152,8 +4250,8 @@ export const SubmissionApiFetchParamCreator = function (configuration?: Configur
         },
         /**
          * Reviews a submission
-         * @param {number} event_id Event ID
-         * @param {number} submission_id Submission ID
+         * @param {number} event_id Event Id
+         * @param {number} submission_id Submission Id
          * @param {SubmissionReview} submission Submission review
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4195,7 +4293,7 @@ export const SubmissionApiFetchParamCreator = function (configuration?: Configur
         },
         /**
          * Submits a bounty for an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {SubmissionCreate} body Submission to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4241,8 +4339,8 @@ export const SubmissionApiFp = function(configuration?: Configuration) {
     return {
         /**
          * Deletes a submission
-         * @param {number} event_id Event ID
-         * @param {number} submission_id Submission ID
+         * @param {number} event_id Event Id
+         * @param {number} submission_id Submission Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4260,7 +4358,7 @@ export const SubmissionApiFp = function(configuration?: Configuration) {
         },
         /**
          * Fetches all submissions for an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4278,8 +4376,8 @@ export const SubmissionApiFp = function(configuration?: Configuration) {
         },
         /**
          * Reviews a submission
-         * @param {number} event_id Event ID
-         * @param {number} submission_id Submission ID
+         * @param {number} event_id Event Id
+         * @param {number} submission_id Submission Id
          * @param {SubmissionReview} submission Submission review
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4298,7 +4396,7 @@ export const SubmissionApiFp = function(configuration?: Configuration) {
         },
         /**
          * Submits a bounty for an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {SubmissionCreate} body Submission to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4326,8 +4424,8 @@ export const SubmissionApiFactory = function (configuration?: Configuration, fet
     return {
         /**
          * Deletes a submission
-         * @param {number} event_id Event ID
-         * @param {number} submission_id Submission ID
+         * @param {number} event_id Event Id
+         * @param {number} submission_id Submission Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4336,7 +4434,7 @@ export const SubmissionApiFactory = function (configuration?: Configuration, fet
         },
         /**
          * Fetches all submissions for an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4345,8 +4443,8 @@ export const SubmissionApiFactory = function (configuration?: Configuration, fet
         },
         /**
          * Reviews a submission
-         * @param {number} event_id Event ID
-         * @param {number} submission_id Submission ID
+         * @param {number} event_id Event Id
+         * @param {number} submission_id Submission Id
          * @param {SubmissionReview} submission Submission review
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4356,7 +4454,7 @@ export const SubmissionApiFactory = function (configuration?: Configuration, fet
         },
         /**
          * Submits a bounty for an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {SubmissionCreate} body Submission to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4376,8 +4474,8 @@ export const SubmissionApiFactory = function (configuration?: Configuration, fet
 export class SubmissionApi extends BaseAPI {
     /**
      * Deletes a submission
-     * @param {number} event_id Event ID
-     * @param {number} submission_id Submission ID
+     * @param {number} event_id Event Id
+     * @param {number} submission_id Submission Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SubmissionApi
@@ -4388,7 +4486,7 @@ export class SubmissionApi extends BaseAPI {
 
     /**
      * Fetches all submissions for an event
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SubmissionApi
@@ -4399,8 +4497,8 @@ export class SubmissionApi extends BaseAPI {
 
     /**
      * Reviews a submission
-     * @param {number} event_id Event ID
-     * @param {number} submission_id Submission ID
+     * @param {number} event_id Event Id
+     * @param {number} submission_id Submission Id
      * @param {SubmissionReview} submission Submission review
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4412,7 +4510,7 @@ export class SubmissionApi extends BaseAPI {
 
     /**
      * Submits a bounty for an event
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {SubmissionCreate} body Submission to create
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4432,7 +4530,7 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
     return {
         /**
          * Adds users to teams
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {Array<TeamUserCreate>} body Users to add to teams
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4469,7 +4567,7 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
         },
         /**
          * Creates a team for an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {TeamCreate} body Team to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4506,8 +4604,8 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
         },
         /**
          * Deletes a team
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
+         * @param {number} event_id Event Id
+         * @param {number} team_id Team Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4540,8 +4638,8 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
         },
         /**
          * Fetches a team by id
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
+         * @param {number} event_id Event Id
+         * @param {number} team_id Team Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4574,7 +4672,7 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
         },
         /**
          * Fetches all teams for an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4611,7 +4709,7 @@ export const TeamApiFp = function(configuration?: Configuration) {
     return {
         /**
          * Adds users to teams
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {Array<TeamUserCreate>} body Users to add to teams
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4630,7 +4728,7 @@ export const TeamApiFp = function(configuration?: Configuration) {
         },
         /**
          * Creates a team for an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {TeamCreate} body Team to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4649,8 +4747,8 @@ export const TeamApiFp = function(configuration?: Configuration) {
         },
         /**
          * Deletes a team
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
+         * @param {number} event_id Event Id
+         * @param {number} team_id Team Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4668,8 +4766,8 @@ export const TeamApiFp = function(configuration?: Configuration) {
         },
         /**
          * Fetches a team by id
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
+         * @param {number} event_id Event Id
+         * @param {number} team_id Team Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4687,7 +4785,7 @@ export const TeamApiFp = function(configuration?: Configuration) {
         },
         /**
          * Fetches all teams for an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4714,7 +4812,7 @@ export const TeamApiFactory = function (configuration?: Configuration, fetch?: F
     return {
         /**
          * Adds users to teams
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {Array<TeamUserCreate>} body Users to add to teams
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4724,7 +4822,7 @@ export const TeamApiFactory = function (configuration?: Configuration, fetch?: F
         },
         /**
          * Creates a team for an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {TeamCreate} body Team to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4734,8 +4832,8 @@ export const TeamApiFactory = function (configuration?: Configuration, fetch?: F
         },
         /**
          * Deletes a team
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
+         * @param {number} event_id Event Id
+         * @param {number} team_id Team Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4744,8 +4842,8 @@ export const TeamApiFactory = function (configuration?: Configuration, fetch?: F
         },
         /**
          * Fetches a team by id
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
+         * @param {number} event_id Event Id
+         * @param {number} team_id Team Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4754,7 +4852,7 @@ export const TeamApiFactory = function (configuration?: Configuration, fetch?: F
         },
         /**
          * Fetches all teams for an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4773,7 +4871,7 @@ export const TeamApiFactory = function (configuration?: Configuration, fetch?: F
 export class TeamApi extends BaseAPI {
     /**
      * Adds users to teams
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {Array<TeamUserCreate>} body Users to add to teams
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4785,7 +4883,7 @@ export class TeamApi extends BaseAPI {
 
     /**
      * Creates a team for an event
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {TeamCreate} body Team to create
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4797,8 +4895,8 @@ export class TeamApi extends BaseAPI {
 
     /**
      * Deletes a team
-     * @param {number} event_id Event ID
-     * @param {number} team_id Team ID
+     * @param {number} event_id Event Id
+     * @param {number} team_id Team Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TeamApi
@@ -4809,8 +4907,8 @@ export class TeamApi extends BaseAPI {
 
     /**
      * Fetches a team by id
-     * @param {number} event_id Event ID
-     * @param {number} team_id Team ID
+     * @param {number} event_id Event Id
+     * @param {number} team_id Team Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TeamApi
@@ -4821,7 +4919,7 @@ export class TeamApi extends BaseAPI {
 
     /**
      * Fetches all teams for an event
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TeamApi
@@ -4840,7 +4938,7 @@ export const UserApiFetchParamCreator = function (configuration?: Configuration)
     return {
         /**
          * Adds users to teams
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {Array<TeamUserCreate>} body Users to add to teams
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4877,7 +4975,7 @@ export const UserApiFetchParamCreator = function (configuration?: Configuration)
         },
         /**
          * Changes the permissions of a user
-         * @param {number} userId User ID
+         * @param {number} userId User Id
          * @param {Array<Permission>} permissions Permissions
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4958,7 +5056,7 @@ export const UserApiFetchParamCreator = function (configuration?: Configuration)
         },
         /**
          * Fetches all users for an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5079,7 +5177,7 @@ export const UserApiFp = function(configuration?: Configuration) {
     return {
         /**
          * Adds users to teams
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {Array<TeamUserCreate>} body Users to add to teams
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5098,7 +5196,7 @@ export const UserApiFp = function(configuration?: Configuration) {
         },
         /**
          * Changes the permissions of a user
-         * @param {number} userId User ID
+         * @param {number} userId User Id
          * @param {Array<Permission>} permissions Permissions
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5151,7 +5249,7 @@ export const UserApiFp = function(configuration?: Configuration) {
         },
         /**
          * Fetches all users for an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5231,7 +5329,7 @@ export const UserApiFactory = function (configuration?: Configuration, fetch?: F
     return {
         /**
          * Adds users to teams
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {Array<TeamUserCreate>} body Users to add to teams
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5241,7 +5339,7 @@ export const UserApiFactory = function (configuration?: Configuration, fetch?: F
         },
         /**
          * Changes the permissions of a user
-         * @param {number} userId User ID
+         * @param {number} userId User Id
          * @param {Array<Permission>} permissions Permissions
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5267,7 +5365,7 @@ export const UserApiFactory = function (configuration?: Configuration, fetch?: F
         },
         /**
          * Fetches all users for an event
-         * @param {number} event_id Event ID
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5312,7 +5410,7 @@ export const UserApiFactory = function (configuration?: Configuration, fetch?: F
 export class UserApi extends BaseAPI {
     /**
      * Adds users to teams
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {Array<TeamUserCreate>} body Users to add to teams
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5324,7 +5422,7 @@ export class UserApi extends BaseAPI {
 
     /**
      * Changes the permissions of a user
-     * @param {number} userId User ID
+     * @param {number} userId User Id
      * @param {Array<Permission>} permissions Permissions
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5356,7 +5454,7 @@ export class UserApi extends BaseAPI {
 
     /**
      * Fetches all users for an event
-     * @param {number} event_id Event ID
+     * @param {number} event_id Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
