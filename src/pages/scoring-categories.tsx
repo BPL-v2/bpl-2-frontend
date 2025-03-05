@@ -14,7 +14,6 @@ import {
 import { router } from "../router";
 import {
   availableAggregationTypes,
-  operatorForField,
   operatorToString,
   playerNumberfields,
 } from "../types/scoring-objective";
@@ -223,7 +222,6 @@ async function createBulkItemObjectives(
   });
   await Promise.all(objectives.map(objectiveApi.createObjective));
 }
-
 const ScoringCategoryPage: React.FC = () => {
   let { user, events } = useContext(GlobalStateContext);
   let { eventId, categoryId } = useParams();
@@ -242,6 +240,21 @@ const ScoringCategoryPage: React.FC = () => {
   const conditionFormRef = useRef<FormInstance>(null);
   const bulkObjectiveFormRef = useRef<FormInstance>(null);
   const event = events.find((event) => event.id === Number(eventId));
+  const [operatorForField, setOperatorForField] = useState<{
+    [key in ItemField]: Operator[];
+  }>();
+
+  useEffect(() => {
+    conditionApi.getValidMappings().then((data) => {
+      setOperatorForField(
+        Object.entries(data.field_to_type).reduce((acc, [key, value]) => {
+          acc[key as ItemField] = data.valid_operators[value];
+          return acc;
+        }, {} as { [key in ItemField]: Operator[] })
+      );
+    });
+  }, []);
+
   useEffect(() => {
     if (objectiveFormRef.current) {
       objectiveFormRef.current.setFieldsValue(
@@ -439,8 +452,8 @@ const ScoringCategoryPage: React.FC = () => {
                             });
                         }}
                       />
-                      {text.slice(0, 20)}
-                      {text.length > 20 ? "..." : ""}
+                      {text.slice(0, 10)}
+                      {text.length > 10 ? "..." : ""}
                     </div>
                   </div>
                 );
@@ -885,13 +898,15 @@ const ScoringCategoryPage: React.FC = () => {
               rules={[{ required: true, message: "Operator is required!" }]}
             >
               <Select>
-                {operatorForField(conditionField).map((operator) => {
-                  return (
-                    <Select.Option key={operator} value={operator}>
-                      {operator}
-                    </Select.Option>
-                  );
-                })}
+                {operatorForField
+                  ? operatorForField[conditionField].map((operator) => {
+                      return (
+                        <Select.Option key={operator} value={operator}>
+                          {operator}
+                        </Select.Option>
+                      );
+                    })
+                  : null}
               </Select>
             </Form.Item>
           ) : null}

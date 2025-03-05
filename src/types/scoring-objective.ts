@@ -24,56 +24,6 @@ export function playerNumberfields(): NumberField[] {
   return [NumberField.PLAYER_LEVEL, NumberField.PLAYER_XP];
 }
 
-export function operatorForField(field: ItemField): Operator[] {
-  const numberOperators = [
-    Operator.EQ,
-    Operator.NEQ,
-    Operator.GT,
-    Operator.LT,
-    Operator.IN,
-    Operator.NOT_IN,
-  ];
-  const stringOperators = [
-    Operator.EQ,
-    Operator.NEQ,
-    Operator.IN,
-    Operator.NOT_IN,
-    Operator.MATCHES,
-  ];
-  const stringArrayOperators = [Operator.CONTAINS, Operator.CONTAINS_MATCH];
-
-  switch (field) {
-    case ItemField.BASE_TYPE:
-      return stringOperators;
-    case ItemField.NAME:
-      return stringOperators;
-    case ItemField.TYPE_LINE:
-      return stringOperators;
-    case ItemField.RARITY:
-      return stringOperators;
-    case ItemField.FRAME_TYPE:
-      return numberOperators;
-    case ItemField.TALISMAN_TIER:
-      return numberOperators;
-    case ItemField.EXPLICIT_MODS:
-      return stringArrayOperators;
-    case ItemField.IMPLICIT_MODS:
-      return stringArrayOperators;
-    case ItemField.CRAFTED_MODS:
-      return stringArrayOperators;
-    case ItemField.FRACTURED_MODS:
-      return stringArrayOperators;
-    case ItemField.ILVL:
-      return numberOperators;
-    case ItemField.MAX_LINKS:
-      return numberOperators;
-    case ItemField.ENCHANT_MODS:
-      return stringArrayOperators;
-    default:
-      return [];
-  }
-}
-
 export function operatorToString(operator: Operator): string {
   switch (operator) {
     case Operator.EQ:
@@ -99,6 +49,7 @@ export function operatorToString(operator: Operator): string {
     case Operator.LENGTH_GT:
       return "length >";
     case Operator.LENGTH_LT:
+      return "length <";
   }
   return "";
 }
