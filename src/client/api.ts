@@ -282,6 +282,12 @@ export interface ConditionMappings {
     field_to_type: { [key: string]: FieldType; };
     /**
      * 
+     * @type {{ [key: string]: Array<NumberField>; }}
+     * @memberof ConditionMappings
+     */
+    objective_type_to_number_fields: { [key: string]: Array<NumberField>; };
+    /**
+     * 
      * @type {{ [key: string]: Array<Operator>; }}
      * @memberof ConditionMappings
      */
@@ -653,7 +659,10 @@ export interface NonSensitiveUser {
 export enum NumberField {
     STACK_SIZE = 'STACK_SIZE',
     PLAYER_LEVEL = 'PLAYER_LEVEL',
-    PLAYER_XP = 'PLAYER_XP',
+    DELVE_DEPTH = 'DELVE_DEPTH',
+    PANTHEON = 'PANTHEON',
+    ASCENDANCY = 'ASCENDANCY',
+    PLAYER_SCORE = 'PLAYER_SCORE',
     SUBMISSION_VALUE = 'SUBMISSION_VALUE'
 }
 

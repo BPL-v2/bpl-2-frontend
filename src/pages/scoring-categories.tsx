@@ -15,7 +15,6 @@ import { router } from "../router";
 import {
   availableAggregationTypes,
   operatorToString,
-  playerNumberfields,
 } from "../types/scoring-objective";
 import { GlobalStateContext } from "../utils/context-provider";
 import {
@@ -243,6 +242,10 @@ const ScoringCategoryPage: React.FC = () => {
   const [operatorForField, setOperatorForField] = useState<{
     [key in ItemField]: Operator[];
   }>();
+  const [numberFieldsForObjectiveType, setNumberFieldsForObjectiveType] =
+    useState<{
+      [key in ObjectiveType]: NumberField[];
+    }>();
 
   useEffect(() => {
     conditionApi.getValidMappings().then((data) => {
@@ -251,6 +254,11 @@ const ScoringCategoryPage: React.FC = () => {
           acc[key as ItemField] = data.valid_operators[value];
           return acc;
         }, {} as { [key in ItemField]: Operator[] })
+      );
+      setNumberFieldsForObjectiveType(
+        data.objective_type_to_number_fields as {
+          [key in ObjectiveType]: NumberField[];
+        }
       );
     });
   }, []);
@@ -810,16 +818,18 @@ const ScoringCategoryPage: React.FC = () => {
               style={{ width: "100%" }}
             >
               <Select>
-                {playerNumberfields().map((field) => {
-                  return (
-                    <Select.Option
-                      key={"playernumberfield" + field}
-                      value={field}
-                    >
-                      {field}
-                    </Select.Option>
-                  );
-                })}
+                {numberFieldsForObjectiveType![ObjectiveType.PLAYER].map(
+                  (field) => {
+                    return (
+                      <Select.Option
+                        key={"playernumberfield" + field}
+                        value={field}
+                      >
+                        {field}
+                      </Select.Option>
+                    );
+                  }
+                )}
               </Select>
             </Form.Item>
           ) : (

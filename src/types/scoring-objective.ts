@@ -4,7 +4,6 @@ import {
   Operator,
   ObjectiveType,
   AggregationType,
-  NumberField,
   ItemField,
 } from "../client";
 import { ScoreObjective } from "./score";
@@ -18,10 +17,6 @@ export function availableAggregationTypes(
   return Object.values(AggregationType).filter(
     (type) => type !== AggregationType.EARLIEST_FRESH_ITEM
   );
-}
-
-export function playerNumberfields(): NumberField[] {
-  return [NumberField.PLAYER_LEVEL, NumberField.PLAYER_XP];
 }
 
 export function operatorToString(operator: Operator): string {
