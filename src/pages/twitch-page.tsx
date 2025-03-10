@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { TwitchStreamEmbed } from "../components/twitch-stream";
-import { TwitchEmbed } from "react-twitch-embed";
 import { GlobalStateContext } from "../utils/context-provider";
 import { EventStatus, Team, TwitchStream } from "../client";
 import { streamApi } from "../client/client";
@@ -30,9 +29,9 @@ export function TwitchPage() {
   }, []);
   return (
     <div key="twitch-page">
-      {selectedChannel ? (
+      {/* {selectedChannel ? (
         <TwitchEmbed key="video" channel={selectedChannel} width={"100%"} />
-      ) : null}
+      ) : null} */}
       <h1 className="text-4xl mt-4">Twitch Streams by Team</h1>
       {currentEvent?.teams.sort(teamSort(eventStatus)).map((team) => (
         <div key={`team-video-thumbnails-${team.id}`}>

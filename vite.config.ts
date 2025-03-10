@@ -7,6 +7,7 @@ config();
 
 // https://vite.dev/config/
 export default defineConfig({
+  // @ts-ignore
   plugins: [react(), tailwindcss()],
   preview: {
     port: 3001,

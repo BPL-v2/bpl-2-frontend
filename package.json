@@ -20,7 +20,6 @@
     "react-dom": "^19.0.0",
     "react-json-pretty": "^2.2.0",
     "react-router-dom": "^7.3.0",
-    "react-twitch-embed": "^3.0.2",
     "url": "^0.11.4"
   },
   "devDependencies": {
