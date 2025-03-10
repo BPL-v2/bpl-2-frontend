@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { JSX, useContext } from "react";
 import { getMetaInfo, ScoreDiffWithKey } from "../types/score";
 import { GlobalStateContext } from "../utils/context-provider";
 import { ObjectiveIcon } from "./objective-icon";

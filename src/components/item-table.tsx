@@ -1,7 +1,7 @@
 import { ScoreCategory, ScoreObjective } from "../types/score";
 import { getImageLocation } from "../types/scoring-objective";
 import { GlobalStateContext } from "../utils/context-provider";
-import { useContext, useEffect, useState } from "react";
+import { JSX, useContext, useEffect, useState } from "react";
 import { ObjectiveIcon } from "./objective-icon";
 import { GameVersion, Team } from "../client";
 

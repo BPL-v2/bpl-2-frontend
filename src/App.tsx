@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect, useMemo, useState } from "react";
+import { JSX, useEffect, useMemo, useState } from "react";
 import { RouterProvider } from "react-router-dom";
 import AuthButton from "./components/auth-button";
 import { ContextProvider } from "./utils/context-provider";

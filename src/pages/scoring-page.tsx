@@ -1,5 +1,5 @@
 import UniqueTab from "../scoring-tabs/unique-tab";
-import { useContext, useEffect, useState } from "react";
+import { JSX, useContext, useEffect, useState } from "react";
 import { SubmissionTab } from "../scoring-tabs/submission-tab";
 import { CollectionTab } from "../scoring-tabs/collection-tab";
 import { LadderTab } from "../scoring-tabs/ladder-tab";
