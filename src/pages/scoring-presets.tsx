@@ -11,6 +11,25 @@ import {
 } from "../client";
 import { scoringApi } from "../client/client";
 
+function pointsRenderer(points: number[]) {
+  if (points.length === 1) {
+    return points[0];
+  }
+  const val2Count = new Map<number, number>();
+  points.forEach((val) => {
+    val2Count.set(val, (val2Count.get(val) || 0) + 1);
+  });
+  let out = "[";
+  for (const [val, count] of val2Count.entries()) {
+    if (count === 1) {
+      out += `${val}, `;
+    } else {
+      out += `${val}x${count}, `;
+    }
+  }
+  return out.slice(0, -2) + "]";
+}
+
 const ScoringPresetsPage: React.FC = () => {
   const { user, events } = useContext(GlobalStateContext);
   let { eventId } = useParams();
@@ -52,7 +71,7 @@ const ScoringPresetsPage: React.FC = () => {
       key: "points",
       type: "text",
       editable: true,
-      render: (value) => <p>{JSON.stringify(value)}</p>,
+      render: (value) => <p>{pointsRenderer(value)}</p>,
       required: true,
     },
     {
