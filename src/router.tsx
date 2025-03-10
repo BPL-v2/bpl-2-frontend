@@ -7,18 +7,13 @@ import { ProfilePage } from "./pages/profile";
 import UserSortPage from "./pages/user-sort";
 import { ScoringReadmePage } from "./pages/scoring_readme";
 import { MainPage } from "./pages/main";
-import React from "react";
 import RecurringJobsPage from "./pages/recurring-jobs";
-
-// load admin pages lazily
-const ScoringPresetsPage = React.lazy(() => import("./pages/scoring-presets"));
-const ConditionPage = React.lazy(() => import("./pages/conditions"));
-const ScoringCategoryPage = React.lazy(
-  () => import("./pages/scoring-categories")
-);
-const EventPage = React.lazy(() => import("./pages/event"));
-const TeamPage = React.lazy(() => import("./pages/teams"));
-const UserPage = React.lazy(() => import("./pages/users"));
+import ConditionPage from "./pages/conditions";
+import UserPage from "./pages/users";
+import ScoringCategoryPage from "./pages/scoring-categories";
+import ScoringPresetsPage from "./pages/scoring-presets";
+import TeamPage from "./pages/teams";
+import EventPage from "./pages/event";
 
 export const router = createBrowserRouter([
   {
