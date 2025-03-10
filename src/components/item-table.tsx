@@ -96,6 +96,14 @@ export function ItemTable({ category }: ItemTableProps) {
         </div>
       );
     }
+    if (objective.extra) {
+      return (
+        <div className="flex flex-col ">
+          <div>{objective.name}</div>
+          <span className="text-sm text-primary">{objective.extra}</span>
+        </div>
+      );
+    }
     return <>{objective.name}</>;
   };
 
