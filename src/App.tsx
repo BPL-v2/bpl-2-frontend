@@ -25,9 +25,10 @@ import {
   Event,
   GameVersion,
   ScoreMap,
+  LadderEntry,
 } from "./client";
 import { MinimalTeamUser } from "./types/user";
-import { eventApi, scoringApi, userApi } from "./client/client";
+import { eventApi, ladderApi, scoringApi, userApi } from "./client/client";
 
 // function getKeys(items: any[]): string[] {
 //   let keys = [];
@@ -115,12 +116,14 @@ function App() {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [gameVersion, setGameVersion] = useState<GameVersion>(GameVersion.poe1);
   const [updates, setUpdates] = useState<ScoreDiffWithKey[]>([]);
+  const [ladder, setLadder] = useState<LadderEntry[]>([]);
+
   useEffect(() => {
     setHighlightColor(document.documentElement);
   }, []);
 
   useEffect(() => {
-    userApi.getUser().then((data) => setUser(data));
+    userApi.getUser().then(setUser);
     eventApi.getEvents().then((events) => {
       setEvents(events);
       const event = events.find((event) => event.is_current);
@@ -130,10 +133,8 @@ function App() {
           setUpdates((prevUpdates) => [...newUpdates, ...prevUpdates])
         );
         setGameVersion(event.game_version);
-        scoringApi.getRulesForEvent(event.id).then((rules) => setRules(rules));
-        scoringApi
-          .getScoringPresetsForEvent(event.id)
-          .then((presets) => setScoringPresets(presets));
+        scoringApi.getRulesForEvent(event.id).then(setRules);
+        scoringApi.getScoringPresetsForEvent(event.id).then(setScoringPresets);
         userApi.getUsersForEvent(event.id).then((users) => {
           setUsers(
             Object.entries(users)
@@ -143,6 +144,7 @@ function App() {
               .flat()
           );
         });
+        ladderApi.getLadder(event.id).then(setLadder);
       }
     });
   }, []);
@@ -276,6 +278,8 @@ function App() {
           setIsMobile: setIsMobile,
           gameVersion: gameVersion,
           setGameVersion: setGameVersion,
+          ladder: ladder,
+          setLadder: setLadder,
         }}
       >
         <div className="max-w-[1440px] text-center mx-auto ">

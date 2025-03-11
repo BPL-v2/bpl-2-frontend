@@ -3,6 +3,7 @@ import {
   ConditionApiFactory,
   EventApiFactory,
   JobsApiFactory,
+  LadderApiFactory,
   OauthApiFactory,
   ObjectiveApiFactory,
   ScoringApiFactory,
@@ -31,3 +32,4 @@ export const signupApi = SignupApiFactory(config, fetch, baseUrl);
 export const oauthApi = OauthApiFactory(config, fetch, baseUrl);
 export const streamApi = StreamsApiFactory(config, fetch, baseUrl);
 export const jobApi = JobsApiFactory(config, fetch, baseUrl);
+export const ladderApi = LadderApiFactory(config, fetch, baseUrl);

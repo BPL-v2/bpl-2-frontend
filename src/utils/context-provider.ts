@@ -1,6 +1,13 @@
 import { createContext } from "react";
 import { ScoreCategory } from "../types/score";
-import { Category, Event, User, EventStatus, GameVersion } from "../client";
+import {
+  Category,
+  Event,
+  User,
+  EventStatus,
+  GameVersion,
+  LadderEntry,
+} from "../client";
 import { MinimalTeamUser } from "../types/user";
 export type GlobalState = {
   user: User | undefined;
@@ -21,6 +28,8 @@ export type GlobalState = {
   setIsMobile: (c: boolean) => void;
   gameVersion: GameVersion;
   setGameVersion: (c: GameVersion) => void;
+  ladder: LadderEntry[];
+  setLadder: (c: LadderEntry[]) => void;
 };
 
 export const GlobalStateContext = createContext<GlobalState>({
@@ -42,6 +51,8 @@ export const GlobalStateContext = createContext<GlobalState>({
   setIsMobile: () => {},
   gameVersion: GameVersion.poe1,
   setGameVersion: () => {},
+  ladder: [],
+  setLadder: () => {},
 });
 
 export const ContextProvider = GlobalStateContext.Provider;

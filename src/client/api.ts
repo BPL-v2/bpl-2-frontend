@@ -584,6 +584,62 @@ export enum JobType {
 /**
  * 
  * @export
+ * @interface LadderEntry
+ */
+export interface LadderEntry {
+    /**
+     * 
+     * @type {string}
+     * @memberof LadderEntry
+     */
+    account_name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof LadderEntry
+     */
+    character_class: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof LadderEntry
+     */
+    character_name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof LadderEntry
+     */
+    delve: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof LadderEntry
+     */
+    experience: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof LadderEntry
+     */
+    level: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof LadderEntry
+     */
+    rank: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof LadderEntry
+     */
+    user_id: number;
+}
+
+/**
+ * 
+ * @export
  * @interface MinimalUser
  */
 export interface MinimalUser {
@@ -2472,6 +2528,108 @@ export class JobsApi extends BaseAPI {
      */
     public startJob(job: JobCreate, options?: any) {
         return JobsApiFp(this.configuration).startJob(job, options)(this.fetch, this.basePath);
+    }
+
+}
+
+/**
+ * LadderApi - fetch parameter creator
+ * @export
+ */
+export const LadderApiFetchParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Get the ladder for an event
+         * @param {number} event_id Event ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getLadder(event_id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getLadder.');
+            }
+            const localVarPath = `/events/{event_id}/ladder`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * LadderApi - functional programming interface
+ * @export
+ */
+export const LadderApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * Get the ladder for an event
+         * @param {number} event_id Event ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getLadder(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<LadderEntry>> {
+            const localVarFetchArgs = LadderApiFetchParamCreator(configuration).getLadder(event_id, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+    }
+};
+
+/**
+ * LadderApi - factory interface
+ * @export
+ */
+export const LadderApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+    return {
+        /**
+         * Get the ladder for an event
+         * @param {number} event_id Event ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getLadder(event_id: number, options?: any) {
+            return LadderApiFp(configuration).getLadder(event_id, options)(fetch, basePath);
+        },
+    };
+};
+
+/**
+ * LadderApi - object-oriented interface
+ * @export
+ * @class LadderApi
+ * @extends {BaseAPI}
+ */
+export class LadderApi extends BaseAPI {
+    /**
+     * Get the ladder for an event
+     * @param {number} event_id Event ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof LadderApi
+     */
+    public getLadder(event_id: number, options?: any) {
+        return LadderApiFp(this.configuration).getLadder(event_id, options)(this.fetch, this.basePath);
     }
 
 }
