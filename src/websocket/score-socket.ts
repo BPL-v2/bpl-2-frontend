@@ -7,7 +7,7 @@ export const establishScoreSocket = (
   appendUpdates: (updates: ScoreDiffWithKey[]) => void
 ) => {
   const url =
-    import.meta.env.VITE_BACKEND_URL.replace("https", "ws").replace(
+    import.meta.env.VITE_BACKEND_URL.replace("https", "wss").replace(
       "http",
       "ws"
     ) + `/events/${eventId}/scores/ws`;
