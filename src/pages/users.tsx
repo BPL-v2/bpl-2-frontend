@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import CrudTable, { CrudColumn } from "../components/crudtable";
 import { CopyOutlined } from "@ant-design/icons";
 import { GlobalStateContext } from "../utils/context-provider";
-import { Form, Input, Select } from "antd";
 import { Permission, User } from "../client";
 import { userApi } from "../client/client";
 
@@ -65,14 +64,35 @@ function copyDiscordId(value: number) {
 const UserPage: React.FC = () => {
   const { user } = useContext(GlobalStateContext);
   const [nameFilter, setNameFilter] = React.useState<string>("");
-  const [roleFilter, setRoleFilter] = React.useState<Permission | "">("");
+  const [roleFilter, _] = React.useState<Permission | "">("");
   if (!user || !user.permissions.includes(Permission.admin)) {
     return <div>You do not have permission to view this page</div>;
   }
   return (
     <div style={{ marginTop: "20px" }}>
       <h1>Users</h1>
-      <Form layout="inline" style={{ marginBottom: "20px" }}>
+      <div className="m-2 flex gap-2 bg-base-300 p-4">
+        <label className="input">
+          <span className="label">Filter by name</span>
+          <input
+            type="text"
+            value={nameFilter}
+            onChange={(e) => setNameFilter(e.target.value.toLowerCase())}
+          />
+        </label>
+        <label className="select">
+          <span className="label">Filter by role</span>
+          <select>
+            <option value="">All</option>
+            {Object.values(Permission).map((role) => (
+              <option key={role} value={role}>
+                {role}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+      {/* <Form layout="inline" style={{ marginBottom: "20px" }}>
         <Form.Item label="Filter by name">
           <Input
             allowClear
@@ -96,7 +116,7 @@ const UserPage: React.FC = () => {
             ))}
           </Select>
         </Form.Item>
-      </Form>
+      </Form> */}
       <CrudTable<User>
         resourceName="User"
         columns={columns}

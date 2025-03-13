@@ -103,7 +103,7 @@ const EventPage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="mt-4">
       <CrudTable<Event>
         resourceName="Event"
         columns={columns}

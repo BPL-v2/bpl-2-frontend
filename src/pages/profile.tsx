@@ -1,13 +1,10 @@
-import { Form, FormInstance, Input } from "antd";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
-import React from "react";
 import { OauthCard } from "../components/oauth-card";
 import { userApi } from "../client/client";
 
 export function ProfilePage() {
   const { user, setUser } = useContext(GlobalStateContext);
-  const formRef = React.useRef<FormInstance>(null);
   // const [searchParams] = useSearchParams();
   // const { isMobile } = useContext(GlobalStateContext);
   // const [profileUserName, setProfileUserName] = useState<User | null>(null);
@@ -30,25 +27,30 @@ export function ProfilePage() {
             You can change your username here. Your username will be used to
             display your score on the leaderboard.
           </p>
-          <Form
-            // onFinish={(value) => updateUser(value.display_name).then(setUser)}
-            onFinish={(value) =>
+          <form
+            className="flex"
+            onSubmit={(e) => {
+              e.preventDefault();
               userApi
-                .updateUser({ display_name: value.display_name })
-                .then(setUser)
-            }
-            ref={formRef}
+                .updateUser({
+                  display_name: new FormData(e.target as HTMLFormElement).get(
+                    "display_name"
+                  ) as string,
+                })
+                .then(setUser);
+            }}
           >
-            <Form.Item
-              label="Username"
+            <input
+              type="text"
               name="display_name"
-              rules={[{ required: true, message: "Please input a username!" }]}
-              initialValue={user?.display_name}
-              className="max-w-sm"
-            >
-              <Input />
-            </Form.Item>
-          </Form>
+              defaultValue={user.display_name}
+              className="input"
+              required
+            />
+            <button type="submit" className="btn btn-primary">
+              Save
+            </button>
+          </form>
         </div>
       </div>
       <div className="card bg-base-200 mt-4">

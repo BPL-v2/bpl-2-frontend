@@ -1,4 +1,3 @@
-import { Tooltip } from "antd";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { userApi } from "../client/client";
@@ -70,11 +69,11 @@ export function OauthCard({
     return card;
   }
   return (
-    <Tooltip
-      title={"Connect your account to participate in the event."}
-      color="var(--color-error)"
+    <div
+      className="tooltip tooltip-error"
+      data-tip="Connect your account to participate in the event"
     >
       {card}
-    </Tooltip>
+    </div>
   );
 }

@@ -1,4 +1,3 @@
-import { DatePicker, Form, FormInstance, Input, InputNumber } from "antd";
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { getSubCategory } from "../types/scoring-category";
@@ -7,8 +6,9 @@ import TeamScore from "../components/team-score";
 import React from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { router } from "../router";
-import { Score, ScoringMethod, SubmissionCreate, Team } from "../client";
+import { Score, SubmissionCreate, Team } from "../client";
 import { submissionApi } from "../client/client";
+import { DateTimePicker } from "../components/datetime-picker";
 
 export type SubmissionTabProps = {
   categoryName: string;
@@ -20,17 +20,8 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
   const [showModal, setShowModal] = React.useState(false);
   const [selectedObjective, setSelectedObjective] =
     React.useState<ScoreObjective>();
-  const formRef = React.useRef<FormInstance>(null);
-  // const [submissions, setSubmissions] = React.useState<Submission[]>([]);
+  const formRef = React.useRef<HTMLFormElement>(null);
   const [reloadSubmissions, setReloadSubmissions] = React.useState(false);
-
-  // React.useEffect(() => {
-  //   if (currentEvent) {
-  //     fetchSubmissionsForEvent(currentEvent.id).then((data) =>
-  //       setSubmissions(data)
-  //     );
-  //   }
-  // }, [currentEvent, reloadSubmissions]);
 
   if (!category || !currentEvent) {
     return <></>;
@@ -53,29 +44,34 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
           if (e.target === e.currentTarget) {
             setShowModal(false);
             setSelectedObjective(undefined);
-            formRef.current?.resetFields();
           }
         }}
         onClose={() => {
           setShowModal(false);
           setSelectedObjective(undefined);
-          formRef.current?.resetFields();
         }}
       >
-        <div className="modal-box bg-base-200 border-2 border-base-100">
+        <div className="modal-box bg-base-200 border-2 border-base-100 w-md">
           <h3 className="font-bold text-lg mb-8">{`Submission for "${selectedObjective?.name}"`}</h3>
-
-          <Form
-            layout="vertical"
+          <form
             ref={formRef}
-            onFinish={(values) => {
+            onSubmit={(e) => {
+              e.preventDefault();
+              for (const [key, value] of new FormData(
+                e.target as HTMLFormElement
+              ).entries()) {
+                console.log(key, value);
+              }
+              const values = Object.fromEntries(
+                new FormData(e.target as HTMLFormElement)
+              ) as any;
+
               if (!selectedObjective) {
                 return;
               }
               const submissionCreate: SubmissionCreate = {
                 ...values,
                 objective_id: selectedObjective.id,
-                timestamp: values.timestamp.toISOString(),
               };
               submissionApi
                 .submitBounty(currentEvent.id, submissionCreate)
@@ -84,55 +80,47 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
                   setSelectedObjective(undefined);
                   setReloadSubmissions(!reloadSubmissions);
                 });
+              setShowModal(false);
+              setSelectedObjective(undefined);
             }}
+            className="form"
           >
-            {selectedObjective &&
-            selectedObjective.scoring_preset &&
-            (selectedObjective.scoring_preset.scoring_method ===
-              ScoringMethod.RANKED_VALUE ||
-              selectedObjective.scoring_preset.scoring_method ===
-                ScoringMethod.RANKED_REVERSE) ? (
-              <Form.Item
-                rules={[{ required: true }]}
-                label="Value"
-                name="number"
-              >
-                <InputNumber style={{ width: "100%" }} />
-              </Form.Item>
-            ) : (
-              ""
-            )}
-            <Form.Item
-              rules={[{ required: true }]}
-              label="Time (in your timezone)"
-              name="timestamp"
-            >
-              <DatePicker showTime style={{ width: "100%" }} />
-            </Form.Item>
-            <Form.Item
-              label="Link to proof"
-              name="proof"
-              rules={[{ required: true }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item label="Comment" name="comment">
-              <Input />
-            </Form.Item>
-          </Form>
+            <fieldset className="fieldset bg-base-300 p-6">
+              <DateTimePicker
+                label="Time (in your timezone)"
+                name="timestamp"
+              ></DateTimePicker>
+              <label className="label">Value</label>
+              <input
+                type="number"
+                className="input w-full"
+                required
+                name="value"
+              />
+              <label className="label">Link to proof</label>
+              <input
+                type="text"
+                className="input w-full"
+                required
+                name="proof"
+              />
+              <label className="label">Comment</label>
+              <input type="text" className="input w-full" name="comment" />
+            </fieldset>
+          </form>
+
           <div className="modal-action">
             <button
               className="btn btn-soft"
               onClick={() => {
                 setShowModal(false);
-                formRef.current?.resetFields();
               }}
             >
               Cancel
             </button>
             <button
               className="btn btn-primary"
-              onClick={() => formRef.current?.submit()}
+              onClick={() => formRef.current?.requestSubmit()}
             >
               Submit
             </button>
@@ -222,35 +210,6 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
             </div>
           );
         })}
-        {/* <Card
-              key={objective.id}
-              title={
-                <Tooltip title={objective.extra}>
-                  <div
-                    style={{
-                      whiteSpace: "normal",
-                      wordWrap: "break-word",
-                      overflowWrap: "break-word",
-                    }}
-                  >
-                    {objective.name}
-                    {objective.extra ? (
-                      <a style={{ color: red[6] }}>*</a>
-                    ) : null}
-                  </div>
-                </Tooltip>
-              }
-              extra={objectiveToAction(objective)}
-              size="small"
-              styles={{
-                body: {
-                  padding: "0px",
-                },
-              }}
-            >
-            </Card> */}
-
-        {/* </Flex> */}
       </div>
     </>
   );

@@ -1,9 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
-import { Form, Input, Space, Table } from "antd";
-import { ColumnType } from "antd/es/table";
-import ColumnGroup from "antd/es/table/ColumnGroup";
-import Column from "antd/es/table/Column";
 import { sortUsers } from "../utils/usersort";
 import { ExpectedPlayTime, Permission, Signup } from "../client";
 import { signupApi, teamApi } from "../client/client";
@@ -62,51 +58,6 @@ const UserSortPage = () => {
   if (!user || !user.permissions.includes(Permission.admin) || !currentEvent) {
     return <div>You do not have permission to view this page</div>;
   }
-  const userColumns: ColumnType<Signup>[] = [
-    {
-      title: "Name",
-      dataIndex: ["user", "display_name"],
-      key: "account_name",
-      sorter: (a, b) => a.user.display_name.localeCompare(b.user.display_name),
-      defaultSortOrder: "ascend",
-    },
-    {
-      title: "PoE Name",
-      dataIndex: ["user", "account_name"],
-      key: "discord_name",
-    },
-    {
-      title: "Expected Playtime",
-      dataIndex: "expected_playtime",
-      key: "expected_playtime",
-      render: (expectedPlaytime: keyof typeof ExpectedPlayTime) =>
-        ExpectedPlayTime[expectedPlaytime],
-    },
-    {
-      title: "Assign Team",
-      key: "assign_team",
-      render: (signup) =>
-        currentEvent.teams.map((team) => (
-          // we are not using antd buttons here since the render takes about 3x as long which is significant here
-          <button
-            key={team.id + "-" + signup.user.id}
-            className={
-              signup.team_id !== team.id ? "btn btn-dash" : "btn btn-primary"
-            }
-            style={{ marginRight: "5px" }}
-            onClick={() => {
-              setSuggestions(
-                suggestions.map((s) =>
-                  s.user.id === signup.user.id ? { ...s, team_id: team.id } : s
-                )
-              );
-            }}
-          >
-            {team.name.slice()}
-          </button>
-        )),
-    },
-  ];
 
   let teamRows = [...currentEvent.teams, { id: 0, name: "No team" }].map(
     (team) =>
@@ -151,26 +102,46 @@ const UserSortPage = () => {
   return (
     <div style={{ marginTop: "20px" }}>
       <h1>Sort</h1> <div className="divider divider-primary">{"Teams"}</div>
-      <Table dataSource={teamRows} size="small" pagination={false}>
-        <Column title="Team" dataIndex="team" key="team" />
-        <Column title="Members" dataIndex="members" key="members" />
-        <ColumnGroup title="Playtime in hours per day">
-          {Object.entries(ExpectedPlayTime).map((entry) => (
-            <Column title={entry[1]} dataIndex={entry[0]} key={entry[0]} />
+      <table className="table table-striped">
+        <thead className="bg-base-200">
+          <tr>
+            <th rowSpan={2}>Team</th>
+            <th rowSpan={2}>Members</th>
+            <th
+              colSpan={Object.values(ExpectedPlayTime).length}
+              className="text-center"
+            >
+              Playtime in hours per day
+            </th>
+          </tr>
+          <tr>
+            {Object.values(ExpectedPlayTime).map((time) => (
+              <th key={time}>{time}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="bg-base-300">
+          {teamRows.map((row) => (
+            <tr key={row.key}>
+              <td>{row.team}</td>
+              <td>{row.members}</td>
+              {Object.keys(ExpectedPlayTime).map((key) => (
+                // @ts-ignore
+                <td key={key}>{row[key]}</td>
+              ))}
+            </tr>
           ))}
-        </ColumnGroup>
-      </Table>
+        </tbody>
+      </table>
       <div className="divider divider-primary">{"Users"}</div>
-      <Space style={{ marginBottom: "20px" }} wrap>
-        <Form layout="inline">
-          <Form.Item label="Filter by name">
-            <Input
-              allowClear
-              value={nameFilter}
-              onChange={(e) => setNameFilter(e.target.value.toLowerCase())}
-            />
-          </Form.Item>
-        </Form>
+      <div className="flex gap-2 bg-base-300 p-4 wrap mb-2">
+        <label className="input">
+          <span className="label">Filter by name:</span>
+          <input
+            type="text"
+            onChange={(e) => setNameFilter(e.target.value.toLowerCase())}
+          />
+        </label>
         <button
           className="btn"
           onClick={() => {
@@ -207,14 +178,54 @@ const UserSortPage = () => {
         >
           Submit Assignments
         </button>
-      </Space>
-      <Table
-        columns={userColumns}
-        dataSource={suggestions
-          .filter((s) => s.user.display_name.toLowerCase().includes(nameFilter))
-          .map((s, index) => ({ ...s, key: `user-table-${index}` }))}
-        size="small"
-      />
+      </div>
+      <table className="table table-md">
+        <thead className="bg-base-200">
+          <tr>
+            <th>Name</th>
+            <th>PoE Name</th>
+            <th>Expected Playtime</th>
+            <th>Assign Team</th>
+          </tr>
+        </thead>
+        <tbody className="bg-base-300">
+          {suggestions
+            .filter((s) =>
+              s.user.display_name.toLowerCase().includes(nameFilter)
+            )
+            .map((s, index) => (
+              <tr key={index}>
+                <td>{s.user.display_name}</td>
+                <td>{s.user.account_name}</td>
+                <td>{ExpectedPlayTime[s.expected_playtime]}</td>
+                <td>
+                  {currentEvent.teams.map((team) => (
+                    <button
+                      key={team.id + "-" + s.user.id}
+                      className={
+                        s.team_id !== team.id
+                          ? "btn btn-dash"
+                          : "btn btn-primary"
+                      }
+                      style={{ marginRight: "5px" }}
+                      onClick={() => {
+                        setSuggestions(
+                          suggestions.map((signup) =>
+                            signup.user.id === s.user.id
+                              ? { ...signup, team_id: team.id }
+                              : signup
+                          )
+                        );
+                      }}
+                    >
+                      {team.name.slice()}
+                    </button>
+                  ))}
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
     </div>
   );
 };

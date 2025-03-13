@@ -5,7 +5,7 @@ import { TwitchPage } from "./pages/twitch-page";
 import { RulePage } from "./pages/rules";
 import { ProfilePage } from "./pages/profile";
 import UserSortPage from "./pages/user-sort";
-import { ScoringReadmePage } from "./pages/scoring_readme";
+// import { ScoringReadmePage } from "./pages/scoring_readme";
 import { MainPage } from "./pages/main";
 import RecurringJobsPage from "./pages/recurring-jobs";
 import ConditionPage from "./pages/conditions";
@@ -68,10 +68,10 @@ export const router = createBrowserRouter([
     path: "/profile",
     element: <ProfilePage />,
   },
-  {
-    path: "/scoring-readme",
-    element: <ScoringReadmePage />,
-  },
+  // {
+  //   path: "/scoring-readme",
+  //   element: <ScoringReadmePage />,
+  // },
   {
     path: "/submissions",
     element: <SubmissionPage />,

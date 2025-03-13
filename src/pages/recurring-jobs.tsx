@@ -3,8 +3,18 @@ import { GlobalStateContext } from "../utils/context-provider";
 import { Event, JobType, Permission, RecurringJob } from "../client";
 import { jobApi } from "../client/client";
 import React from "react";
-import { DatePicker } from "antd";
 import dayjs from "dayjs";
+
+const formatDateForInput = (date: Date | null) => {
+  if (!date) return "";
+  const pad = (num: number) => String(num).padStart(2, "0");
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  const hours = pad(date.getHours());
+  const minutes = pad(date.getMinutes());
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
 
 const RecurringJobsPage = () => {
   const { events, user } = useContext(GlobalStateContext);
@@ -35,7 +45,7 @@ const RecurringJobsPage = () => {
   React.useEffect(() => {
     if (selectedEvent) {
       setSelectedEndDate(
-        dayjs(selectedEvent.event_end_time, "YYYY-MM-DDTHH:mm:ssZ").toDate()
+        dayjs(selectedEvent.event_end_time, "YYYY-MM-DDTHH:mm:ss").toDate()
       );
     }
   }, [selectedEvent]);
@@ -123,20 +133,15 @@ const RecurringJobsPage = () => {
                   </option>
                 ))}
               </select>
-
               <legend className="fieldset-legend">End Date</legend>
-              <div className="flex gap-4">
-                <DatePicker
-                  id="endDate"
-                  name="endDate"
-                  required
-                  showTime={{ format: "YYYY-MM-DD" }}
-                  onChange={(date) =>
-                    setSelectedEndDate(date?.toDate() || null)
-                  }
-                  value={selectedEndDate ? dayjs(selectedEndDate) : null}
-                />
-              </div>
+              <input
+                id="endDate"
+                name="endDate"
+                type="datetime-local"
+                className="input"
+                defaultValue={formatDateForInput(selectedEndDate)}
+                required
+              />
             </fieldset>
           </form>
           <div className="modal-action">

@@ -14,7 +14,7 @@ import { establishScoreSocket } from "./websocket/score-socket";
 import { ScoreCategory, ScoreDiffWithKey } from "./types/score";
 import { mergeScores } from "./utils/utils";
 import ApplicationButton from "./components/application-button";
-import { Dropdown } from "antd";
+
 import { ScoreUpdateCard } from "./components/score-update-card";
 import {
   Category,
@@ -323,37 +323,7 @@ function App() {
                     >
                       <a href={item.url}>
                         {item.children ? (
-                          <Dropdown
-                            menu={{
-                              items: item.children?.map((child) => ({
-                                label: (
-                                  <a
-                                    onClick={() => {
-                                      setCurrentNav(item.key);
-                                      route(child);
-                                    }}
-                                  >
-                                    {child.label}
-                                  </a>
-                                ),
-                                icon: child.icon,
-                                key: child.key,
-                                children: child.children?.map((subchild) => ({
-                                  label: (
-                                    <a
-                                      onClick={() => {
-                                        setCurrentNav(item.key);
-                                        route(subchild);
-                                      }}
-                                    >
-                                      {subchild.label}
-                                    </a>
-                                  ),
-                                  key: subchild.label,
-                                })),
-                              })),
-                            }}
-                          >
+                          <div className="dropdown h-full">
                             <div
                               tabIndex={0}
                               role="button"
@@ -364,7 +334,38 @@ function App() {
                                 {item.label}
                               </div>
                             </div>
-                          </Dropdown>
+                            <ul
+                              tabIndex={0}
+                              className="dropdown-content menu bg-base-300  z-1 w-52 p-2 shadow-sm text-base-content text-lg"
+                              onClick={() => {
+                                if (
+                                  document.activeElement instanceof HTMLElement
+                                ) {
+                                  document.activeElement?.blur();
+                                }
+                              }}
+                            >
+                              {item.children.map((child) => (
+                                <li
+                                  className={`${
+                                    currentNav === child.key
+                                      ? "bg-primary text-primary-content"
+                                      : ""
+                                  }`}
+                                  key={child.key}
+                                >
+                                  <div
+                                    onClick={() => {
+                                      setCurrentNav(item.key);
+                                      route(child);
+                                    }}
+                                  >
+                                    {child.label}
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         ) : (
                           <div
                             tabIndex={0}

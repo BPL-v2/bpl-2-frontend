@@ -1,18 +1,4 @@
-import { JSX, useEffect, useRef, useState } from "react";
-import {
-  Checkbox,
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Modal,
-  Select,
-  Space,
-  Table,
-  Tooltip,
-} from "antd";
-import type { FormInstance, TablePaginationConfig, TableProps } from "antd";
-import { ColumnType } from "antd/es/table";
+import { JSX, useEffect, useMemo, useRef, useState } from "react";
 import { sendWarning } from "../utils/notifications";
 import ArrayInput from "./arrayinput";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
@@ -23,7 +9,10 @@ type Option = {
   value: any;
 };
 
-export interface CrudColumn<T> extends ColumnType<T> {
+export interface CrudColumn<T> {
+  dataIndex?: keyof T;
+  title: string;
+  key: string;
   editable?: boolean;
   required?: boolean;
   type?:
@@ -37,6 +26,7 @@ export interface CrudColumn<T> extends ColumnType<T> {
     | "number[]";
   defaultValue?: string;
   options?: any[] | Option[];
+  render?: (value: any, record: T, index: number) => React.ReactNode;
   inputRenderer?: (record: any, dataSetter: (data: any) => void) => JSX.Element;
 }
 
@@ -59,8 +49,29 @@ type CrudTableProps<T> = {
   formValidator?: (data: Partial<T>) => string | undefined;
   reload?: boolean;
   filterFunction?: (data: T) => boolean;
-  pagination?: false | TablePaginationConfig;
 };
+
+function getFormData<T>(
+  form: HTMLFormElement,
+  columns: CrudColumn<T>[]
+): Partial<T> {
+  const data = {} as any;
+  const formdata = new FormData(form);
+  for (const c of columns) {
+    if (c.type === "multiselect") {
+      data[c.key] = formdata.getAll(c.key);
+    } else if (c.type === "checkbox") {
+      data[c.key] = formdata.get(c.key) ? true : false;
+    } else if (c.type === "date") {
+      data[c.key] = dayjs(formdata.get(c.key) as string).toISOString();
+    } else if (c.type === "number") {
+      data[c.key] = Number(formdata.get(c.key));
+    } else {
+      data[c.key] = formdata.get(c.key);
+    }
+  }
+  return data as T;
+}
 
 const CrudTable = <T,>({
   resourceName,
@@ -72,305 +83,417 @@ const CrudTable = <T,>({
   addtionalActions,
   formValidator,
   filterFunction,
-  pagination,
 }: CrudTableProps<T>) => {
-  const creationFormRef = useRef<FormInstance>(null);
-  const updateFormRef = useRef<FormInstance>(null);
-  const antdColumns = columns as TableProps<T>["columns"];
-
-  const actionColumns =
-    editFunction || deleteFunction || addtionalActions
-      ? [
-          {
-            title: "",
-            key: "action",
-            render: (record: T) => (
-              <Space size={5}>
-                {editFunction && (
-                  <Tooltip title="Edit">
-                    <button
-                      className="btn btn-warning"
-                      onClick={() => {
-                        setCurrentData(record);
-                        setIsUpdateModalOpen(true);
-                      }}
-                    >
-                      <EditOutlined />
-                    </button>{" "}
-                  </Tooltip>
-                )}
-                {deleteFunction && (
-                  <Tooltip title="Delete">
-                    <button
-                      className="btn btn-error"
-                      onClick={() => {
-                        setCurrentData(record);
-                        setIsDeleteModalOpen(true);
-                      }}
-                    >
-                      <DeleteOutlined />
-                    </button>{" "}
-                  </Tooltip>
-                )}
-                {addtionalActions &&
-                  addtionalActions.map((action) => {
-                    return !action.visible || action.visible(record) ? (
-                      <Tooltip
-                        title={action.icon ? action.name : ""}
-                        key={action.name}
-                      >
-                        <button
-                          className="btn btn-soft"
-                          onClick={() => {
-                            setCurrentData(record);
-                            action.func(record).then(() => {
-                              if (action.reload) {
-                                fetchFunction().then((data) => {
-                                  setData(data);
-                                });
-                              }
-                            });
-                          }}
-                        >
-                          {action.icon ? action.icon : action.name}
-                        </button>{" "}
-                      </Tooltip>
-                    ) : null;
-                  })}
-              </Space>
-            ),
-          },
-        ]
-      : [];
+  const formRef = useRef<HTMLFormElement>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentData, setCurrentData] = useState<Partial<T>>({});
 
   const [data, setData] = useState<T[]>([]);
-  useEffect(() => {
-    if (updateFormRef.current) {
-      updateFormRef.current.setFieldsValue(currentData);
-    }
-  }, [currentData]);
+
   useEffect(() => {
     fetchFunction().then((data) => {
       setData([...data]);
     });
   }, [fetchFunction]);
-  function renderForm(presets: Partial<T>) {
-    return columns
-      .filter((column) => column.editable)
-      .map((column, idx) => {
-        if (column.inputRenderer) {
-          return (
-            <div key={"inputRenderer" + idx}>
-              {column.inputRenderer(currentData, setCurrentData)}
-            </div>
-          );
-        }
 
-        const key = column.dataIndex as keyof T;
-        let input;
-        if (column.type === "text") {
-          input = <Input />;
-        } else if (column.type === "number") {
-          input = <InputNumber style={{ width: "100%" }} />;
-        } else if (column.type === "checkbox") {
-          input = <Checkbox />;
-        } else if (column.type === "date") {
-          input = <DatePicker showTime={{ format: "HH:mm" }}></DatePicker>;
-        } else if (column.type === "select") {
-          input = (
-            <Select style={{ width: "100%" }}>
-              {column.required ? null : (
-                <Select.Option value={""}>None</Select.Option>
-              )}
-              {column.options?.map((option) => {
-                let label = typeof option === "string" ? option : option.label;
-                let value = typeof option === "string" ? option : option.value;
+  const form = useMemo(() => {
+    return (
+      <form ref={formRef} className="space-y-4 text-left">
+        <fieldset className="fieldset w-xs bg-base-200 p-4">
+          {columns
+            .filter((column) => column.editable)
+            .map((column, idx) => {
+              if (column.inputRenderer) {
                 return (
-                  <Select.Option key={value} id={value} value={value}>
-                    {label}
-                  </Select.Option>
+                  <div key={"inputRenderer" + idx}>
+                    {column.inputRenderer(currentData, setCurrentData)}
+                  </div>
                 );
-              })}
-            </Select>
-          );
-        } else if (column.type === "text[]") {
-          input = <ArrayInput />;
-        } else if (column.type === "multiselect") {
-          input = (
-            <Select mode="multiple" style={{ width: "100%" }}>
-              {column.options?.map((option) => {
-                let label = typeof option === "string" ? option : option.label;
-                let value = typeof option === "string" ? option : option.value;
-                return (
-                  <Select.Option key={value} id={value} value={value}>
-                    {label}
-                  </Select.Option>
+              }
+              const key = column.dataIndex as keyof T;
+              let input;
+              if (column.type === "text") {
+                input = (
+                  <input
+                    name={String(key)}
+                    id={String(key)}
+                    className="input"
+                    defaultValue={currentData[key] as string}
+                  />
                 );
-              })}
-            </Select>
-          );
-        } else {
-          return;
-        }
-        return (
-          <Form.Item
-            key={String(key)}
-            name={String(key)}
-            label={String(column.title)}
-            valuePropName={column.type === "checkbox" ? "checked" : "value"}
-            getValueProps={(value) => {
-              if (column.type === "date") {
-                return { value: value ? dayjs(value) : "" };
+              } else if (column.type === "number") {
+                input = (
+                  <input
+                    name={String(key)}
+                    type="number"
+                    className="input "
+                    defaultValue={currentData[key] as number}
+                  />
+                );
+              } else if (column.type === "checkbox") {
+                input = (
+                  <input
+                    name={String(key)}
+                    type="checkbox"
+                    className="checkbox"
+                    defaultChecked={currentData[key] as boolean}
+                    key={String(currentData[key])}
+                  />
+                );
+              } else if (column.type === "date") {
+                const val = currentData[key] as string;
+                input = (
+                  <input
+                    name={String(key)}
+                    type="datetime-local"
+                    className="input"
+                    defaultValue={
+                      val ? dayjs(val).format("YYYY-MM-DDTHH:mm") : undefined
+                    }
+                  />
+                );
+              } else if (column.type === "select") {
+                const defaultVal = currentData[key] as string;
+                input = (
+                  <select
+                    name={String(key)}
+                    className="select"
+                    defaultValue={defaultVal}
+                    key={defaultVal}
+                  >
+                    {column.required ? null : <option value={""}>None</option>}
+                    {column.options?.map((option) => {
+                      let label =
+                        typeof option === "string" ? option : option.label;
+                      let value =
+                        typeof option === "string" ? option : option.value;
+                      return (
+                        <option key={value} id={value} value={value}>
+                          {label}
+                        </option>
+                      );
+                    })}
+                  </select>
+                );
+              } else if (column.type === "text[]") {
+                input = (
+                  <ArrayInput
+                    value={currentData[key] as string[]}
+                    label={String(column.title)}
+                    key={String(currentData[key])}
+                  />
+                );
+              } else if (column.type === "multiselect") {
+                input = (
+                  <select
+                    multiple
+                    className="select h-40"
+                    key={String(currentData[key])}
+                    name={String(key)}
+                  >
+                    {column.options?.map((option) => {
+                      let label =
+                        typeof option === "string" ? option : option.label;
+                      let value =
+                        typeof option === "string" ? option : option.value;
+
+                      return (
+                        <option
+                          key={value}
+                          id={value}
+                          value={value}
+                          selected={(
+                            (currentData[key] as string[]) ?? []
+                          ).includes(value)}
+                        >
+                          {label}
+                        </option>
+                      );
+                    })}
+                  </select>
+                );
+              } else {
+                return;
               }
-              if (column.type === "checkbox") {
-                return { checked: value ? value : false };
-              }
-              return { value: value };
-            }}
-            rules={[
-              {
-                required: column.required ?? false,
-                message: `Please input ${column.title}!`,
-              },
-            ]}
-            initialValue={presets[key]}
-          >
-            {input}
-          </Form.Item>
-        );
-      })
-      .filter((element) => element !== undefined);
-  }
+              return (
+                <div key={String(column.title)}>
+                  <label className="fieldset-label">
+                    {String(column.title)}
+                  </label>
+                  {input}
+                </div>
+              );
+              // return input;
+            })
+            .filter((element) => element !== undefined)}
+        </fieldset>
+      </form>
+    );
+  }, [currentData]);
+
   return (
     <>
       {createFunction ? (
-        <Modal
-          title={`Create new ${resourceName}`}
+        <dialog
+          className="modal"
           open={isCreateModalOpen}
-          onOk={() => {
-            creationFormRef.current?.submit();
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setIsCreateModalOpen(false);
+            }
           }}
-          onCancel={() => setIsCreateModalOpen(false)}
+          onClose={() => {
+            setIsCreateModalOpen(false);
+          }}
         >
-          <Form
-            ref={creationFormRef}
-            onFinish={() => {
-              const validationError = formValidator?.(
-                updateFormRef.current?.getFieldsValue()
-              );
-              if (validationError) {
-                sendWarning(validationError);
-                return;
-              }
-              createFunction(creationFormRef.current?.getFieldsValue()).then(
-                () => {
+          <div className="modal-box bg-base-200 border-2 border-base-100 max-w-sm">
+            <h3 className="font-bold text-lg mb-8">
+              Create new {resourceName}
+            </h3>
+            <div className="flex justify-end flex-col gap-y-4">{form}</div>
+            <div className="flex gap-2 justify-end ">
+              <button
+                className="btn btn-secondary"
+                onClick={() => {
                   setIsCreateModalOpen(false);
-                  setCurrentData({});
-                  setTimeout(() => {
-                    fetchFunction().then((data) => {
-                      setData(data);
-                    });
-                  }, 10);
-                }
-              );
-            }}
-          >
-            {renderForm(currentData)}
-          </Form>
-        </Modal>
-      ) : (
-        ""
-      )}
-      {editFunction ? (
-        <Modal
-          title={`Edit ${resourceName}`}
-          open={isUpdateModalOpen}
-          onOk={() => {
-            updateFormRef.current?.submit();
-          }}
-          onCancel={() => setIsUpdateModalOpen(false)}
-        >
-          {" "}
-          <Form
-            ref={updateFormRef}
-            onFinish={() => {
-              editFunction({
-                ...currentData,
-                ...updateFormRef.current?.getFieldsValue(),
-              })
-                .then(() => {
-                  setIsUpdateModalOpen(false);
-                  setCurrentData({});
-
-                  setTimeout(() => {
-                    fetchFunction().then((data) => {
-                      setData(data);
-                    });
-                  }, 100);
-                })
-                .catch((e) => {
-                  sendWarning(e.message);
-                });
-            }}
-          >
-            {renderForm(currentData)}
-          </Form>
-        </Modal>
-      ) : (
-        ""
-      )}
-      {deleteFunction ? (
-        <Modal
-          title={`Delete ${resourceName}`}
-          open={isDeleteModalOpen}
-          onOk={() =>
-            deleteFunction(currentData).then(() => {
-              setIsDeleteModalOpen(false);
-              fetchFunction().then((data) => {
-                setData(data);
-              });
-            })
-          }
-          onCancel={() => setIsDeleteModalOpen(false)}
-        >
-          Do you really want to delete this {resourceName}?
-        </Modal>
-      ) : (
-        ""
-      )}
-      <Table<T>
-        columns={[...antdColumns!, ...actionColumns]}
-        dataSource={data
-          .filter((entry) => filterFunction?.(entry) ?? true)
-          // @ts-ignore lets just assume that T has an id (no, setting T extends {id: number} leads to other issues)
-          .sort((a, b) => a.id - b.id)
-          .map((entry, idx) => {
-            return { key: idx, ...entry };
-          })}
-        footer={() => (
-          <>
-            {createFunction ? (
+                }}
+              >
+                Cancel
+              </button>
               <button
                 className="btn btn-primary"
                 onClick={() => {
-                  creationFormRef.current?.resetFields();
-                  setCurrentData({});
-                  setIsCreateModalOpen(true);
+                  const form = formRef.current;
+                  if (!form) {
+                    sendWarning("Form not found");
+                    return;
+                  }
+                  const data = Object.fromEntries(
+                    new FormData(form).entries()
+                  ) as Partial<T>;
+                  if (formValidator) {
+                    const error = formValidator(data);
+                    if (error) {
+                      sendWarning(error);
+                      return;
+                    }
+                  }
+                  createFunction(data).then(() => {
+                    fetchFunction().then((data) => {
+                      setData(data);
+                    });
+                  });
+                  setIsCreateModalOpen(false);
                 }}
               >
-                Create new {resourceName}
+                Create
               </button>
-            ) : (
-              ""
-            )}
-          </>
-        )}
-        pagination={pagination}
-      />
+            </div>
+          </div>
+        </dialog>
+      ) : null}
+      {editFunction ? (
+        <dialog
+          className="modal"
+          open={isUpdateModalOpen}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setIsUpdateModalOpen(false);
+            }
+          }}
+          onClose={() => {
+            setIsUpdateModalOpen(false);
+          }}
+        >
+          <div className="modal-box bg-base-200 border-2 border-base-100 max-w-sm">
+            <h3 className="font-bold text-lg mb-8">Edit {resourceName}</h3>
+            <div className="flex justify-end flex-col gap-y-4">{form}</div>
+            <div className="flex gap-2 justify-end ">
+              <button
+                className="btn btn-secondary"
+                onClick={() => {
+                  setIsUpdateModalOpen(false);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  const form = formRef.current;
+                  if (!form) {
+                    return;
+                  }
+                  const data = getFormData(form, columns);
+                  if (formValidator) {
+                    const error = formValidator(data);
+                    if (error) {
+                      sendWarning(error);
+                      return;
+                    }
+                  }
+                  // @ts-ignore ugly hack so that we can use put endpoints for updates and no new object is created
+                  data.id = currentData.id;
+                  editFunction(data).then(() => {
+                    fetchFunction().then((data) => {
+                      setData(data);
+                    });
+                  });
+                  setIsUpdateModalOpen(false);
+                }}
+              >
+                Update
+              </button>
+            </div>
+          </div>
+        </dialog>
+      ) : null}
+      {deleteFunction ? (
+        <dialog
+          className="modal"
+          open={isDeleteModalOpen}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setIsDeleteModalOpen(false);
+            }
+          }}
+          onClose={() => {
+            setIsDeleteModalOpen(false);
+          }}
+        >
+          <div className="modal-box bg-base-200 border-2 border-base-100 max-w-sm">
+            <h3 className="font-bold text-lg mb-8">Delete {resourceName}</h3>
+            Do you really want to delete this {resourceName}?
+            <div className="flex gap-2 justify-end mt-8">
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  setIsDeleteModalOpen(false);
+                }}
+              >
+                No
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => {
+                  deleteFunction(currentData).then(() => {
+                    setIsDeleteModalOpen(false);
+                    fetchFunction().then((data) => {
+                      setData(data);
+                    });
+                  });
+                }}
+              >
+                Yes
+              </button>
+            </div>
+          </div>
+        </dialog>
+      ) : (
+        ""
+      )}
+
+      <table className="table bg-base-300 table-md">
+        <thead className="bg-base-200 text-neutral-300">
+          <tr>
+            {columns.map((column) => (
+              <th key={String(column.title)}>{String(column.title)}</th>
+            ))}
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data
+            .filter((entry) => filterFunction?.(entry) ?? true)
+            .sort((a, b) => (a as any).id - (b as any).id)
+            .map((entry, idx) => {
+              return (
+                <tr key={idx}>
+                  {columns.map((column, cid) => {
+                    const value = entry[column.dataIndex as keyof T] as any;
+                    if (column.render) {
+                      return (
+                        <td key={String(column.dataIndex) + cid}>
+                          {column.render(value, entry, cid) as React.ReactNode}
+                        </td>
+                      );
+                    }
+                    return <td key={String(column.dataIndex)}>{value}</td>;
+                  })}
+                  <td>
+                    <div className="flex gap-2">
+                      {editFunction && (
+                        <button
+                          className="btn btn-warning btn-sm"
+                          onClick={() => {
+                            setCurrentData({ ...entry });
+                            setIsUpdateModalOpen(true);
+                          }}
+                        >
+                          <EditOutlined />
+                        </button>
+                      )}
+                      {deleteFunction && (
+                        <button
+                          className="btn btn-error btn-sm"
+                          onClick={() => {
+                            setCurrentData({ ...entry });
+                            setIsDeleteModalOpen(true);
+                          }}
+                        >
+                          <DeleteOutlined />
+                        </button>
+                      )}
+                      {addtionalActions &&
+                        addtionalActions.map((action) => {
+                          return !action.visible || action.visible(entry) ? (
+                            <button
+                              key={action.name}
+                              className="btn btn-soft btn-sm"
+                              onClick={() => {
+                                setCurrentData(entry);
+                                action.func(entry).then(() => {
+                                  if (action.reload) {
+                                    fetchFunction().then((data) => {
+                                      setData(data);
+                                    });
+                                  }
+                                });
+                              }}
+                            >
+                              {action.icon ? action.icon : action.name}
+                            </button>
+                          ) : null;
+                        })}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+        </tbody>
+        {createFunction ? (
+          <tfoot>
+            <tr>
+              <td
+                colSpan={columns.length + 1}
+                className="text-center bg-base-200"
+              >
+                <button
+                  className="btn btn-success"
+                  onClick={() => {
+                    setCurrentData({});
+                    setIsCreateModalOpen(true);
+                  }}
+                >
+                  Create new {resourceName}
+                </button>
+              </td>
+            </tr>
+          </tfoot>
+        ) : null}
+      </table>
     </>
   );
 };

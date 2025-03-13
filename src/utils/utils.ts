@@ -247,3 +247,19 @@ function getPotentialPointsForObjective(objective: ScoreObjective) {
   }
   return points;
 }
+
+export function formToJson(form: HTMLFormElement): any {
+  const data = {} as any;
+  for (const [key, value] of new FormData(form).entries()) {
+    if (data[key]) {
+      if (Array.isArray(data[key])) {
+        data[key].push(value);
+      } else {
+        data[key] = [data[key], value];
+      }
+    } else {
+      data[key] = value;
+    }
+  }
+  return data;
+}

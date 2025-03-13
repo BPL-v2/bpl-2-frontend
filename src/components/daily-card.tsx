@@ -1,16 +1,14 @@
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
-import Countdown from "antd/es/statistic/Countdown";
 import { CollectionCardTable } from "./collection-card-table";
 import { Daily } from "../types/scoring-objective";
 import { ObjectiveIcon } from "./objective-icon";
 import { scoringApi } from "../client/client";
+import { Countdown } from "./countdown";
 
 export type DailyCardProps = {
   daily: Daily;
 };
-
-const dayInMS = 24 * 60 * 60 * 1000;
 
 function bonusAvailableCounter(
   valid_to: string | null | undefined,
@@ -23,17 +21,12 @@ function bonusAvailableCounter(
     return <p className="text-lg"> Bonus no longer available</p>;
   }
   return (
-    <Countdown
-      format={
-        new Date(valid_to).getTime() - new Date().getTime() > dayInMS
-          ? "D [days], HH:mm:ss"
-          : "HH:mm:ss"
-      }
-      prefix={"Bonus available until "}
-      valueStyle={{ fontSize: "1em" }}
-      value={new Date(valid_to).getTime()}
-      onFinish={onFinish}
-    />
+    <div className="flex flex-row justify-center gap-8">
+      <p className="text-center text-lg">Bonus available:</p>
+      <div className="flex justify-center">
+        <Countdown target={new Date(valid_to)} size="small" />
+      </div>
+    </div>
   );
 }
 
@@ -62,20 +55,10 @@ export function DailyCard({ daily }: DailyCardProps) {
           Daily not yet available
         </div>
         <div className="card-body bg-base-300 p-8 bottom-box-rounded">
-          <Countdown
-            format={
-              new Date(daily.baseObjective.valid_from).getTime() -
-                new Date().getTime() >
-              dayInMS
-                ? "D [days], HH:mm:ss"
-                : "HH:mm:ss"
-            }
-            title="Daily release in"
-            value={new Date(daily.baseObjective.valid_from).getTime()}
-            onFinish={() => {
-              scoringApi.getRulesForEvent(currentEvent.id).then(setRules);
-            }}
-          />
+          <p className="text-center text-lg">The daily will be available in:</p>
+          <div className="flex justify-center">
+            <Countdown target={new Date(daily.baseObjective.valid_from)} />
+          </div>
         </div>
       </div>
     );

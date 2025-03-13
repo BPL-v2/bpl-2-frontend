@@ -1,12 +1,16 @@
 import React from "react";
-import { Input } from "antd";
 
 interface ArrayInputProps {
   value?: string[];
   onChange?: (value: string[]) => void;
+  label: string;
 }
 
-const ArrayInput: React.FC<ArrayInputProps> = ({ value = [], onChange }) => {
+const ArrayInput: React.FC<ArrayInputProps> = ({
+  value = [],
+  onChange,
+  label,
+}) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue =
       e.target.value.length > 0
@@ -17,7 +21,13 @@ const ArrayInput: React.FC<ArrayInputProps> = ({ value = [], onChange }) => {
     }
   };
 
-  return <Input value={value.join(",")} onChange={handleChange} />;
+  return (
+    <label className="floating-label">
+      {" "}
+      <span>{label}</span>
+      <input value={value.join(",")} onChange={handleChange} />
+    </label>
+  );
 };
 
 export default ArrayInput;

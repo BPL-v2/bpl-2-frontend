@@ -1,8 +1,10 @@
-import { Anchor, Col, Collapse, CollapseProps, Row } from "antd";
-
+type CollapseItems = {
+  label: string;
+  children: React.ReactNode;
+};
 export function RulePage() {
   // const { eventStatus, scores, currentEvent } = useContext(GlobalStateContext);
-  const ruleCollapse: CollapseProps["items"] = [
+  const ruleCollapse: CollapseItems[] = [
     {
       label:
         "1. Do not play a character of a class that your team does not have access to.",
@@ -73,7 +75,7 @@ export function RulePage() {
     },
   ];
 
-  const faqCollapse: CollapseProps["items"] = [
+  const faqCollapse: CollapseItems[] = [
     {
       label: "Can I signup with my friend?",
       children: (
@@ -108,61 +110,47 @@ export function RulePage() {
   ];
 
   return (
-    <Row>
-      <Col span={20} style={{ textAlign: "left" }}>
-        <div id={"rules"}>
-          <div className="divider divider-primary">{"Gameplay Rules"}</div>
-        </div>
-        <p>
-          Below are the major rules you should follow when playing in BPL. If
-          there is a discrepancy between the information listed here and in the
-          rules channel on Discord - the Discord one is correct.
-        </p>
-        <Collapse items={ruleCollapse} style={{ borderWidth: 0 }} />
-        <div id={"points"}>
-          <div className="divider divider-primary">{"Earning Points"}</div>
-        </div>
-        <p>
-          In BPL 15.5, One team that attempts to 100% complete BPL in 7 days.
-          Dailies, bounty board, and collection goals have been adjusted to
-          compensate. In categories that require you to submit an item, only
-          items in team lead's stashes count.
-        </p>{" "}
-        <p>
-          The follow private league mods have been enabled: "Monsters fire 2
-          additional projectiles" and "Monsters have 35% increased area of
-          effect"
-        </p>
-        <div id={"faq"}>
-          <div className="divider divider-primary">
-            {"Frequently Asked Questions"}
+    <div className="text-left">
+      <div className="divider divider-primary">Gameplay Rules</div>
+      <p>
+        Below are the major rules you should follow when playing in BPL. If
+        there is a discrepancy between the information listed here and in the
+        rules channel on Discord - the Discord one is correct.
+      </p>
+      <div className="flex flex-col gap-2 mt-4">
+        {ruleCollapse.map((rule, index) => (
+          <div
+            tabIndex={index}
+            className="bg-base-200 focus:bg-base-300 collapse"
+          >
+            <div className="collapse-title font-semibold">{rule.label}</div>
+            <div className="collapse-content text-sm">{rule.children}</div>
           </div>
-        </div>
-        <Collapse items={faqCollapse} style={{ borderWidth: 0 }} />
-      </Col>
-
-      <Col span={4}>
-        <Anchor
-          replace
-          items={[
-            {
-              key: "rules",
-              href: "#rules",
-              title: "Gameplay Rules",
-            },
-            {
-              key: "points",
-              href: "#points",
-              title: "Earning Points",
-            },
-            {
-              key: "faq",
-              href: "#faq",
-              title: "FAQ",
-            },
-          ]}
-        />
-      </Col>
-    </Row>
+        ))}
+      </div>
+      <div className="divider divider-primary">Earning Points</div>
+      <p>
+        In BPL 15.5, One team that attempts to 100% complete BPL in 7 days.
+        Dailies, bounty board, and collection goals have been adjusted to
+        compensate. In categories that require you to submit an item, only items
+        in team lead's stashes count.
+      </p>
+      <p>
+        The follow private league mods have been enabled: "Monsters fire 2
+        additional projectiles" and "Monsters have 35% increased area of effect"
+      </p>
+      <div className="divider divider-primary">Frequently Asked Questions</div>
+      <div className="flex flex-col gap-1 mt-4">
+        {faqCollapse.map((faq, index) => (
+          <div
+            tabIndex={index}
+            className="bg-base-200 focus:bg-base-300 collapse"
+          >
+            <div className="collapse-title font-semibold">{faq.label}</div>
+            <div className="collapse-content text-sm">{faq.children}</div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

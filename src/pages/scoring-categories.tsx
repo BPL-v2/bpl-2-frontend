@@ -1,16 +1,7 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import CrudTable, { CrudColumn } from "../components/crudtable";
 
 import { useParams } from "react-router-dom";
-import {
-  Form,
-  FormInstance,
-  Input,
-  InputNumber,
-  Modal,
-  Select,
-  DatePicker,
-} from "antd";
 import { router } from "../router";
 import {
   availableAggregationTypes,
@@ -23,7 +14,6 @@ import {
   EditOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import dayjs from "dayjs";
 import { ObjectiveIcon } from "../components/objective-icon";
 import {
   Category,
@@ -41,158 +31,7 @@ import {
   ScoringPresetType,
 } from "../client";
 import { conditionApi, objectiveApi, scoringApi } from "../client/client";
-
-function addCondition(
-  data: ObjectiveCreate,
-  value: string,
-  type: ItemField
-): ObjectiveCreate {
-  let conditions = (data.conditions || []).filter(
-    (condition) => condition.field !== type
-  );
-  if (value !== "") {
-    conditions.push({
-      field: type,
-      operator: Operator.EQ,
-      value: value,
-    });
-  }
-  return { ...data, conditions: conditions };
-}
-
-var renderConditionInput = (
-  currentData: ObjectiveCreate,
-  dataSetter: (data: ObjectiveCreate) => void
-) => {
-  return (
-    <>
-      <div key={"input-condition-basetype"}>
-        <h5>Base type =</h5>
-        <Input
-          onChange={(e) =>
-            dataSetter(
-              addCondition(currentData, e.target.value, ItemField.BASE_TYPE)
-            )
-          }
-        />
-      </div>
-      <div key={"input-condition-name"}>
-        <h5>Item Name =</h5>
-        <Input
-          onChange={(e) =>
-            dataSetter(
-              addCondition(currentData, e.target.value, ItemField.NAME)
-            )
-          }
-        />
-      </div>
-    </>
-  );
-};
-
-type FormObjective = {
-  name: string | undefined;
-  extra: string | undefined;
-  required_number: number | undefined;
-  objective_type: ObjectiveType | undefined;
-  aggregation: AggregationType | undefined;
-  number_field: NumberField | undefined;
-  scoring_preset_id?: number | undefined;
-  "conditions-basetype"?: string | undefined;
-  "conditions-name"?: string | undefined;
-  valid_from?: string | undefined;
-  valid_to?: string | undefined;
-};
-
-function objectiveToFormObjective(
-  objective: Partial<ObjectiveCreate>
-): FormObjective {
-  let formObjective: FormObjective = {
-    name: objective.name,
-    extra: objective.extra,
-    required_number: objective.required_number,
-    objective_type: objective.objective_type,
-    aggregation: objective.aggregation,
-    number_field: objective.number_field,
-    "conditions-basetype": undefined,
-    "conditions-name": undefined,
-    scoring_preset_id: objective.scoring_preset_id,
-    valid_from: objective.valid_from,
-    valid_to: objective.valid_to,
-  };
-  if (objective.conditions) {
-    objective.conditions.forEach((condition) => {
-      if (
-        condition.field === ItemField.BASE_TYPE &&
-        condition.operator === Operator.EQ
-      ) {
-        formObjective["conditions-basetype"] = condition.value;
-      }
-      if (
-        condition.field === ItemField.NAME &&
-        condition.operator === Operator.EQ
-      ) {
-        formObjective["conditions-name"] = condition.value;
-      }
-    });
-  }
-  return formObjective;
-}
-
-function updateObjectiveWithFormObjective(
-  obj: Partial<ObjectiveCreate>,
-  formObjective: FormObjective
-): ObjectiveCreate {
-  // @ts-ignore
-  const objective: ObjectiveCreate = { ...obj };
-  objective.name = formObjective.name ?? objective.name;
-  objective.extra = formObjective.extra ?? objective.extra;
-  objective.required_number =
-    formObjective.required_number ?? objective.required_number;
-  objective.objective_type =
-    formObjective.objective_type ?? objective.objective_type;
-  objective.aggregation = formObjective.aggregation ?? objective.aggregation;
-  objective.number_field = formObjective.number_field ?? objective.number_field;
-  objective.scoring_preset_id =
-    formObjective.scoring_preset_id ?? objective.scoring_preset_id;
-  objective.valid_from = formObjective.valid_from;
-  objective.valid_to = formObjective.valid_to;
-  if (formObjective["conditions-basetype"]) {
-    let id = objective.conditions?.find(
-      (condition) =>
-        condition.field === ItemField.BASE_TYPE &&
-        condition.operator === Operator.EQ
-    )?.id;
-    objective.conditions = objective.conditions?.filter(
-      (condition) =>
-        condition.field !== ItemField.BASE_TYPE ||
-        condition.operator !== Operator.EQ
-    );
-    objective.conditions?.push({
-      id: id,
-      field: ItemField.BASE_TYPE,
-      operator: Operator.EQ,
-      value: formObjective["conditions-basetype"],
-    });
-  }
-  if (formObjective["conditions-name"]) {
-    let id = objective.conditions?.find(
-      (condition) =>
-        condition.field === ItemField.NAME && condition.operator === Operator.EQ
-    )?.id;
-    objective.conditions = objective.conditions?.filter(
-      (condition) =>
-        condition.field !== ItemField.NAME || condition.operator !== Operator.EQ
-    );
-    objective.conditions?.push({
-      id: id,
-      field: ItemField.NAME,
-      operator: Operator.EQ,
-      value: formObjective["conditions-name"],
-    });
-  }
-  return objective;
-}
+import { DateTimePicker } from "../components/datetime-picker";
 
 async function createBulkItemObjectives(
   categoryId: number,
@@ -235,9 +74,11 @@ const ScoringCategoryPage: React.FC = () => {
   const [currentObjective, setCurrentObjective] = useState<
     Partial<ObjectiveCreate>
   >({});
-  const objectiveFormRef = useRef<FormInstance>(null);
-  const conditionFormRef = useRef<FormInstance>(null);
-  const bulkObjectiveFormRef = useRef<FormInstance>(null);
+
+  const [objectiveType, setObjectiveType] = useState<ObjectiveType | null>(
+    null
+  );
+
   const event = events.find((event) => event.id === Number(eventId));
   const [operatorForField, setOperatorForField] = useState<{
     [key in ItemField]: Operator[];
@@ -262,14 +103,6 @@ const ScoringCategoryPage: React.FC = () => {
       );
     });
   }, []);
-
-  useEffect(() => {
-    if (objectiveFormRef.current) {
-      objectiveFormRef.current.setFieldsValue(
-        objectiveToFormObjective(currentObjective)
-      );
-    }
-  }, [currentObjective]);
 
   useEffect(() => {
     if (!event) {
@@ -362,12 +195,267 @@ const ScoringCategoryPage: React.FC = () => {
     [scoringPresets]
   );
 
+  const objectiveForm = useMemo(() => {
+    const nameInput = (
+      <>
+        <label className="label">Name</label>
+        <input
+          name="name"
+          type="text"
+          className="input"
+          required
+          defaultValue={currentObjective.name}
+        />
+      </>
+    );
+    const extraInput = (
+      <>
+        <label className="label">Extra</label>
+        <input
+          name="extra"
+          className="input"
+          type="text"
+          defaultValue={currentObjective.extra}
+        />
+      </>
+    );
+    const requiredNumberInput = (
+      <>
+        <label className="label">Required Number</label>
+        <input
+          name="required_number"
+          type="number"
+          className="input"
+          required
+          defaultValue={currentObjective.required_number || 1}
+        />
+      </>
+    );
+    const objectiveTypeInput = (
+      <>
+        <label className="label">Objective Type</label>
+        <select
+          name="objective_type"
+          className="select"
+          required
+          defaultValue={currentObjective.objective_type}
+          onChange={(e) => {
+            setObjectiveType(e.target.value as ObjectiveType);
+          }}
+        >
+          <option value=""></option>
+          {Object.values(ObjectiveType).map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
+        </select>
+      </>
+    );
+    const numberfieldInput = objectiveType ? (
+      <>
+        <label className="label">Number Field</label>
+        <select
+          name="number_field"
+          className="select"
+          required
+          defaultValue={currentObjective.number_field}
+        >
+          {numberFieldsForObjectiveType
+            ? numberFieldsForObjectiveType[objectiveType].map((field) => (
+                <option key={field} value={field}>
+                  {field}
+                </option>
+              ))
+            : null}
+        </select>
+      </>
+    ) : null;
+    const aggregationInput = objectiveType ? (
+      <>
+        <label className="label">Aggregation Method</label>
+        <select
+          name="aggregation"
+          className="select"
+          required
+          defaultValue={currentObjective.aggregation}
+          key={"aggregation-" + objectiveType}
+        >
+          <option value=""></option>
+          {availableAggregationTypes(objectiveType).map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
+        </select>
+      </>
+    ) : null;
+
+    const scoringMethodInput = (
+      <>
+        <label className="label">Scoring Method</label>
+        <select
+          name="scoring_preset_id"
+          className="select"
+          defaultValue={currentObjective.scoring_preset_id}
+        >
+          <option value=""></option>
+          {scoringPresets
+            .filter((preset) => preset.type == ScoringPresetType.OBJECTIVE)
+            .map((preset) => (
+              <option key={preset.id} value={preset.id}>
+                {preset.name}
+              </option>
+            ))}
+        </select>
+      </>
+    );
+    const validFromInput = (
+      <DateTimePicker
+        label="Valid From"
+        name="valid_from"
+        defaultValue={currentObjective.valid_from}
+      />
+    );
+    const validToInput = (
+      <DateTimePicker
+        label="Valid To"
+        name="valid_to"
+        defaultValue={currentObjective.valid_to}
+      />
+    );
+    const itemNameInput =
+      objectiveType === ObjectiveType.ITEM ? (
+        <>
+          <label className="label">Item Name</label>
+          <input
+            name="conditions-name"
+            type="text"
+            className="input"
+            defaultValue={
+              currentObjective.conditions?.find(
+                (condition) =>
+                  condition.field === ItemField.NAME &&
+                  condition.operator === Operator.EQ
+              )?.value
+            }
+          />
+        </>
+      ) : null;
+
+    const itemBaseTypeInput =
+      objectiveType === ObjectiveType.ITEM ? (
+        <>
+          <label className="label">Base Type</label>
+          <input
+            name="conditions-basetype"
+            type="text"
+            className="input"
+            defaultValue={
+              currentObjective.conditions?.find(
+                (condition) =>
+                  condition.field === ItemField.BASE_TYPE &&
+                  condition.operator === Operator.EQ
+              )?.value
+            }
+          />
+        </>
+      ) : null;
+
+    function objectiveFormSubmit(e: React.FormEvent<HTMLFormElement>) {
+      const form = e.currentTarget;
+      e.preventDefault();
+      const data = new FormData(form);
+      let conditions =
+        currentObjective.conditions?.map((condition) => {
+          if (
+            condition.field === ItemField.BASE_TYPE &&
+            condition.operator === Operator.EQ &&
+            data.get("conditions-basetype")
+          ) {
+            condition.value = data.get("conditions-basetype") as string;
+          }
+          if (
+            condition.field === ItemField.NAME &&
+            condition.operator === Operator.EQ &&
+            data.get("conditions-name")
+          ) {
+            condition.value = data.get("conditions-name") as string;
+          }
+          return condition;
+        }) || [];
+      const objectiveCreate: ObjectiveCreate = {
+        aggregation: data.get("aggregation") as AggregationType,
+        category_id: Number(categoryId),
+        conditions: conditions,
+        extra: data.get("extra") as string,
+        name: data.get("name") as string,
+        number_field: data.get("number_field") as NumberField,
+        objective_type: data.get("objective_type") as ObjectiveType,
+        required_number: Number(data.get("required_number")),
+      };
+      if (data.get("scoring_preset_id")) {
+        objectiveCreate.scoring_preset_id = Number(
+          data.get("scoring_preset_id")
+        );
+      }
+      if (data.get("valid_from")) {
+        objectiveCreate.valid_from = data.get("valid_from") as string;
+      }
+      if (data.get("valid_to")) {
+        objectiveCreate.valid_to = data.get("valid_to") as string;
+      }
+      if (currentObjective.id) {
+        objectiveCreate.id = currentObjective.id;
+      }
+      objectiveApi.createObjective(objectiveCreate).then(() => {
+        setRefreshObjectives((prev) => !prev);
+        setIsObjectiveModalOpen(false);
+      });
+    }
+
+    return (
+      <form key={currentObjective.id} onSubmit={objectiveFormSubmit}>
+        <div className="flex flxe-col gap-4">
+          <fieldset className="fieldset mb-4 w-full">
+            {nameInput}
+            {objectiveTypeInput}
+            {itemNameInput}
+            {aggregationInput}
+            {numberfieldInput}
+            {scoringMethodInput}
+          </fieldset>
+          <fieldset className="fieldset mb-4 w-full">
+            {extraInput}
+            {requiredNumberInput}
+            {itemBaseTypeInput}
+            {validFromInput}
+            {validToInput}{" "}
+          </fieldset>
+        </div>
+        <div className="flex gap-2 justify-end ">
+          <button
+            className="btn btn-secondary"
+            onClick={() => {
+              setIsObjectiveModalOpen(false);
+            }}
+          >
+            Cancel
+          </button>
+          <button type="submit" className="btn btn-primary">
+            Create
+          </button>
+        </div>
+      </form>
+    );
+  }, [currentObjective, objectiveType, scoringPresets]);
+
   const objectiveColumns: CrudColumn<Objective>[] = useMemo(
     () => [
       {
         title: "",
         key: "id",
-        render: (data: Objective) => (
+        render: (_: string, data: Objective) => (
           <ObjectiveIcon
             objective={data}
             gameVersion={event?.game_version ?? GameVersion.poe1}
@@ -457,6 +545,7 @@ const ScoringCategoryPage: React.FC = () => {
                             .deleteCondition(condition.id)
                             .then(() => {
                               event.stopPropagation();
+                              setRefreshObjectives((prev) => !prev);
                             });
                         }}
                       />
@@ -469,7 +558,6 @@ const ScoringCategoryPage: React.FC = () => {
             </div>
           );
         },
-        inputRenderer: renderConditionInput,
       },
     ],
     [scoringPresets, event]
@@ -479,6 +567,7 @@ const ScoringCategoryPage: React.FC = () => {
     {
       name: "Edit",
       func: async (data: Objective) => {
+        setObjectiveType(data.objective_type);
         setCurrentObjective({ ...data });
         setIsObjectiveModalOpen(true);
       },
@@ -553,7 +642,6 @@ const ScoringCategoryPage: React.FC = () => {
         <CrudTable<Category>
           resourceName="Scoring Category"
           columns={categoryColumns}
-          pagination={false}
           fetchFunction={() =>
             scoringApi.getScoringCategory(Number(categoryId)).then((data) => {
               return data.sub_categories;
@@ -577,365 +665,210 @@ const ScoringCategoryPage: React.FC = () => {
     );
   }, [categoryColumns, categoryId]);
 
-  let bulkObjeciveModal = useMemo(() => {
-    return (
-      <Modal
-        title={`Bulk Objective Creation`}
+  let bulkObjeciveModal = useMemo(
+    () => (
+      <dialog
         open={isBulkObjectiveModalOpen}
-        onOk={() => bulkObjectiveFormRef.current?.submit()}
-        onCancel={() => {
+        className="modal"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            setIsBulkObjectiveModalOpen(false);
+          }
+        }}
+        onClose={() => {
           setIsBulkObjectiveModalOpen(false);
         }}
       >
-        <Form
-          ref={bulkObjectiveFormRef}
-          onFinish={() => {
-            createBulkItemObjectives(
-              Number(categoryId),
-              bulkObjectiveFormRef.current?.getFieldValue("name_list"),
-              bulkObjectiveFormRef.current?.getFieldValue("scoring_method"),
-              bulkObjectiveFormRef.current?.getFieldValue("aggregation_method"),
-              bulkObjectiveFormRef.current?.getFieldValue("identifier")
-            ).then(() => {
-              setIsBulkObjectiveModalOpen(false);
-              setRefreshObjectives((prev) => !prev);
-            });
-          }}
-        >
-          <Form.Item name="name_list" label="Comma separated list of names">
-            <Input />
-          </Form.Item>
-          <Form.Item name="identifier" label="Identifier">
-            <Select>
-              <Select.Option key="NAME" value="NAME">
-                NAME
-              </Select.Option>
-              <Select.Option key="BASE_TYPE" value="BASE_TYPE">
-                BASE_TYPE
-              </Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item name="scoring_method" label="Scoring Method">
-            <Select>
-              {scoringPresets
-                .filter((preset) => preset.type == ScoringPresetType.OBJECTIVE)
-                .map((preset) => {
-                  return (
-                    <Select.Option key={preset.id} value={preset.id}>
-                      {preset.name}
-                    </Select.Option>
-                  );
-                })}
-            </Select>
-          </Form.Item>
-          <Form.Item name="aggregation_method" label="Aggregation Method">
-            <Select>
-              {Object.values(AggregationType).map((type) => {
-                return (
-                  <Select.Option key={type} value={type}>
-                    {type}
-                  </Select.Option>
-                );
-              })}
-            </Select>
-          </Form.Item>
-        </Form>
-      </Modal>
-    );
-  }, [isBulkObjectiveModalOpen]);
-  let objectiveModal = useMemo(() => {
-    return (
-      <Modal
-        title={`Objective`}
-        open={isObjectiveModalOpen}
-        onOk={() => objectiveFormRef.current?.submit()}
-        onCancel={() => {
-          setIsObjectiveModalOpen(false);
-        }}
-      >
-        <Form
-          ref={objectiveFormRef}
-          onFinish={() => {
-            let updatedObjective = updateObjectiveWithFormObjective(
-              currentObjective,
-              objectiveFormRef.current?.getFieldsValue()
-            );
-            updatedObjective.category_id = Number(categoryId);
-            objectiveApi.createObjective(updatedObjective).then(() => {
-              setIsObjectiveModalOpen(false);
-              setRefreshObjectives((prev) => !prev);
-            });
-          }}
-        >
-          <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true, message: "Name is required!" }]}
-            initialValue={currentObjective.name}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="extra"
-            label="Extra"
-            initialValue={currentObjective.extra}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="required_number"
-            label="Required Number"
-            rules={[
-              { required: true, message: "Required Number is required!" },
-            ]}
-            initialValue={currentObjective.required_number}
-            style={{ width: "100%" }}
-          >
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item
-            name="objective_type"
-            label="Objective Type"
-            rules={[{ required: true, message: "Please select a type!" }]}
-            initialValue={currentObjective.objective_type}
-          >
-            <Select
-              style={{ width: "100%" }}
-              onChange={(value) => {
-                let obj = { ...currentObjective };
-                obj.objective_type = value;
-                obj.conditions = [];
-                obj.aggregation = undefined;
-                obj.number_field = undefined;
-                if (value === ObjectiveType.ITEM) {
-                  obj.number_field = NumberField.STACK_SIZE;
-                } else if (value === ObjectiveType.SUBMISSION) {
-                  obj.number_field = NumberField.SUBMISSION_VALUE;
-                }
-                setCurrentObjective(
-                  updateObjectiveWithFormObjective(
-                    obj,
-                    objectiveFormRef.current?.getFieldsValue()
-                  )
-                );
+        <div className="modal-box bg-base-200 border-2 border-base-100 max-w-sm">
+          <h3 className="font-bold text-lg mb-8">Create Objectives in bulk</h3>
+          <div className="flex justify-end flex-col gap-y-4">
+            <form
+              onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                e.preventDefault();
+                const form = e.currentTarget;
+                const data = new FormData(form);
+                createBulkItemObjectives(
+                  Number(categoryId),
+                  data.get("name_list") as string,
+                  Number(data.get("scoring_method")),
+                  data.get("aggregation_method") as AggregationType,
+                  data.get("identifier") as ItemField
+                ).then(() => {
+                  setIsBulkObjectiveModalOpen(false);
+                  setRefreshObjectives((prev) => !prev);
+                });
               }}
             >
-              {Object.values(ObjectiveType).map((type) => {
-                return (
-                  <Select.Option key={type} value={type}>
-                    {type}
-                  </Select.Option>
-                );
-              })}
-            </Select>
-          </Form.Item>
-          {currentObjective.objective_type ? (
-            <Form.Item
-              name="aggregation"
-              label="Aggregation Method"
-              rules={[{ required: true, message: "Please select a method!" }]}
-              initialValue={currentObjective.aggregation}
-              style={{ width: "100%" }}
-            >
-              <Select>
-                {availableAggregationTypes(currentObjective.objective_type).map(
-                  (type) => {
+              <fieldset className="fieldset bg-base-300 p-4 rounded-xl mb-4">
+                <label className="label">Comma separated list of names</label>
+                <input
+                  name="name_list"
+                  type="text"
+                  className="input"
+                  required
+                />
+                <label className="label">Identifier</label>
+                <select name="identifier" className="select">
+                  <option value="NAME">NAME</option>
+                  <option value="BASE_TYPE">BASE_TYPE</option>
+                </select>
+                <label className="label">Scoring Method</label>
+                <select name="scoring_method" className="select">
+                  {scoringPresets
+                    .filter(
+                      (preset) => preset.type == ScoringPresetType.OBJECTIVE
+                    )
+                    .map((preset) => {
+                      return (
+                        <option key={preset.id} value={preset.id}>
+                          {preset.name}
+                        </option>
+                      );
+                    })}
+                </select>
+                <label className="label">Aggregation Method</label>
+                <select name="aggregation_method" className="select">
+                  {Object.values(AggregationType).map((type) => {
                     return (
-                      <Select.Option key={type} value={type}>
+                      <option key={type} value={type}>
                         {type}
-                      </Select.Option>
+                      </option>
                     );
-                  }
-                )}
-              </Select>
-            </Form.Item>
-          ) : (
-            ""
-          )}
-          <Form.Item
-            name="scoring_preset_id"
-            label="Scoring Method"
-            rules={[{ required: true, message: "Please select a method!" }]}
-            initialValue={
-              currentObjective.scoring_preset_id ??
-              // @ts-ignore
-              currentObjective.scoring_preset?.id
-            }
-            style={{ width: "100%" }}
-          >
-            <Select>
-              {scoringPresets
-                .filter((preset) => preset.type == ScoringPresetType.OBJECTIVE)
-                .map((preset) => {
-                  return (
-                    <Select.Option key={preset.id} value={preset.id}>
-                      {preset.name}
-                    </Select.Option>
-                  );
-                })}
-            </Select>
-          </Form.Item>
-          {currentObjective.objective_type === ObjectiveType.ITEM ? (
-            <>
-              <Form.Item
-                name="conditions-basetype"
-                label="Item Base Type"
-                initialValue={
-                  currentObjective.conditions?.find(
-                    (condition) =>
-                      condition.field === ItemField.BASE_TYPE &&
-                      condition.operator === Operator.EQ
-                  )?.value
-                }
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                name="conditions-name"
-                label="Item Name"
-                initialValue={
-                  currentObjective.conditions?.find(
-                    (condition) =>
-                      condition.field === ItemField.NAME &&
-                      condition.operator === Operator.EQ
-                  )?.value
-                }
-              >
-                <Input />
-              </Form.Item>
-            </>
-          ) : (
-            ""
-          )}
-          {currentObjective.objective_type === ObjectiveType.PLAYER ? (
-            <Form.Item
-              name="number_field"
-              label="Attribute"
-              rules={[
-                { required: true, message: "Please select an attribute!" },
-              ]}
-              initialValue={currentObjective.number_field}
-              style={{ width: "100%" }}
-            >
-              <Select>
-                {numberFieldsForObjectiveType![ObjectiveType.PLAYER].map(
-                  (field) => {
-                    return (
-                      <Select.Option
-                        key={"playernumberfield" + field}
-                        value={field}
-                      >
-                        {field}
-                      </Select.Option>
-                    );
-                  }
-                )}
-              </Select>
-            </Form.Item>
-          ) : (
-            ""
-          )}
-
-          <Form.Item
-            name="valid_from"
-            label="Valid From"
-            getValueProps={(value) => ({ value: value ? dayjs(value) : "" })}
-          >
-            <DatePicker
-              showTime={{ format: "HH:mm" }}
-              style={{ width: "100%" }}
-            />
-          </Form.Item>
-          <Form.Item
-            name="valid_to"
-            label="Valid To"
-            getValueProps={(value) => ({ value: value ? dayjs(value) : "" })}
-          >
-            <DatePicker
-              showTime={{ format: "HH:mm" }}
-              style={{ width: "100%" }}
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
-    );
-  }, [currentObjective, isObjectiveModalOpen]);
+                  })}
+                </select>
+              </fieldset>
+              <div className="flex gap-2 justify-end ">
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => {
+                    setIsBulkObjectiveModalOpen(false);
+                  }}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary">
+                  Create
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </dialog>
+    ),
+    [isBulkObjectiveModalOpen]
+  );
+  let objectiveModal = (
+    <dialog
+      open={isObjectiveModalOpen}
+      className="modal"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          setIsObjectiveModalOpen(false);
+        }
+      }}
+      onClose={() => {
+        setIsObjectiveModalOpen(false);
+      }}
+    >
+      <div className="modal-box bg-base-200 border-2 border-base-100">
+        <h3 className="font-bold text-lg mb-8">Create Objective</h3>
+        <div className="flex justify-end flex-col gap-y-4">{objectiveForm}</div>
+      </div>
+    </dialog>
+  );
 
   let conditionModal = useMemo(() => {
     return (
-      <Modal
-        title={`Add Condition`}
+      <dialog
+        className="modal"
         open={isConditionModalOpen}
-        onOk={conditionFormRef.current?.submit}
-        onCancel={() => setIsConditionModalOpen(false)}
+        onClose={() => {
+          setIsConditionModalOpen(false);
+        }}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            setIsConditionModalOpen(false);
+          }
+        }}
       >
-        <Form
-          ref={conditionFormRef}
-          onFinish={() => {
-            if (!currentObjective.id) {
-              return;
-            }
-            conditionApi
-              .createCondition({
-                ...conditionFormRef.current?.getFieldsValue(),
+        <div className="modal-box bg-base-200 border-2 border-base-100 max-w-sm">
+          <h3 className="font-bold text-lg mb-8">Add Condition</h3>
+          <form
+            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+              e.preventDefault();
+              const form = e.currentTarget;
+              const data = new FormData(form);
+              if (!currentObjective.id) {
+                return;
+              }
+              const conditionCreate = {
+                field: conditionField!,
+                operator: data.get("operator") as Operator,
+                value: data.get("value") as string,
                 objective_id: currentObjective.id,
-              })
-              .then(() => {
+              };
+              conditionApi.createCondition(conditionCreate).then(() => {
                 setIsConditionModalOpen(false);
                 setRefreshObjectives((prev) => !prev);
               });
-          }}
-        >
-          <Form.Item
-            name="field"
-            label="Field"
-            rules={[{ required: true, message: "Field is required!" }]}
+            }}
           >
-            <Select onChange={setConditionField}>
-              {Object.values(ItemField).map((field) => {
-                return (
-                  <Select.Option key={field} value={field}>
-                    {field}
-                  </Select.Option>
-                );
-              })}
-            </Select>
-          </Form.Item>
-          {conditionField !== undefined ? (
-            <Form.Item
-              name="operator"
-              label="Operator"
-              rules={[{ required: true, message: "Operator is required!" }]}
-            >
-              <Select>
-                {operatorForField
-                  ? operatorForField[conditionField].map((operator) => {
-                      return (
-                        <Select.Option key={operator} value={operator}>
-                          {operator}
-                        </Select.Option>
-                      );
-                    })
-                  : null}
-              </Select>
-            </Form.Item>
-          ) : null}
-          <Form.Item
-            name="value"
-            label="Value"
-            rules={[{ required: true, message: "Value is required!" }]}
-          >
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
+            <fieldset className="fieldset bg-base-300 p-4 rounded-xl mb-4">
+              <label className="label">Field</label>
+              <select
+                name="field"
+                className="select"
+                required
+                onChange={(e) => {
+                  setConditionField(e.target.value as ItemField);
+                }}
+              >
+                <option value=""></option>
+                {Object.values(ItemField).map((field) => {
+                  return (
+                    <option key={field} value={field}>
+                      {field}
+                    </option>
+                  );
+                })}
+              </select>
+              {conditionField !== undefined ? (
+                <>
+                  <label className="label">Operator</label>
+                  <select name="operator" className="select" required>
+                    {operatorForField
+                      ? operatorForField[conditionField].map((operator) => {
+                          return (
+                            <option key={operator} value={operator}>
+                              {operator}
+                            </option>
+                          );
+                        })
+                      : null}
+                  </select>
+                </>
+              ) : null}
+              <label className="label">Value</label>
+              <input name="value" type="text" className="input" required />
+            </fieldset>
+            <div className="flex gap-2 justify-end ">
+              <button
+                className="btn btn-secondary"
+                onClick={() => {
+                  setIsConditionModalOpen(false);
+                }}
+              >
+                Cancel
+              </button>
+              <button type="submit" className="btn btn-primary">
+                Create
+              </button>
+            </div>
+          </form>
+        </div>
+      </dialog>
     );
-  }, [
-    currentObjective,
-    isConditionModalOpen,
-    conditionField,
-    setConditionField,
-  ]);
+  }, [currentObjective, isConditionModalOpen, conditionField]);
 
   if (!categoryId) {
     return <></>;

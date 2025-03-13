@@ -2,14 +2,7 @@ import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { VideoEmbed } from "../components/video-embed";
 import { DiscordOutlined, HeartOutlined } from "@ant-design/icons";
-import Countdown from "antd/es/statistic/Countdown";
-
-function countDownFormat(timeString: string): string {
-  return new Date(timeString).getTime() - new Date().getTime() >
-    24 * 60 * 60 * 1000
-    ? "D [days], HH:mm:ss"
-    : "HH:mm:ss";
-}
+import { Countdown } from "../components/countdown";
 
 export function MainPage() {
   const { currentEvent, gameVersion } = useContext(GlobalStateContext);
@@ -88,16 +81,15 @@ export function MainPage() {
                   <div>
                     <h3 className="text-3xl">See you at the Beach in</h3>{" "}
                     <Countdown
-                      format={countDownFormat(currentEvent.event_start_time)}
-                      value={currentEvent.event_start_time}
+                      target={new Date(currentEvent.event_start_time)}
                     />
                   </div>
                 ) : (
-                  <div>
+                  <div className="flex flex-col items-center">
                     <h3 className="text-3xl">Event will end in</h3>
                     <Countdown
-                      format={countDownFormat(currentEvent.event_end_time)}
-                      value={currentEvent.event_end_time}
+                      target={new Date(currentEvent.event_end_time)}
+                      size="large"
                     />
                   </div>
                 )}

@@ -1,6 +1,5 @@
 import { useContext, useEffect } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
-import { Dropdown } from "antd";
 import { LoginOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { router } from "../router";
 import { userApi } from "../client/client";
@@ -27,33 +26,9 @@ const AuthButton = () => {
 
   if (user) {
     return (
-      <Dropdown
-        menu={{
-          items: [
-            {
-              label: "Profile",
-              key: "profile",
-              icon: <UserOutlined />,
-              onClick: () => {
-                router.navigate("/profile");
-              },
-            },
-            {
-              label: "Logout",
-              key: "Logout",
-              icon: <LogoutOutlined />,
-              danger: true,
-              onClick: () => {
-                userApi.logout().then(() => {
-                  setUser(undefined);
-                });
-              },
-            },
-          ],
-        }}
-        trigger={["hover"]}
-      >
+      <div className="dropdown dropdown-bottom dropdown-end h-full">
         <button
+          tabIndex={0}
           className={`btn bg-base-300 h-full hover:text-primary hover:border-primary`}
         >
           <UserOutlined />{" "}
@@ -61,7 +36,40 @@ const AuthButton = () => {
             {user ? user.display_name : "Login"}
           </div>
         </button>
-      </Dropdown>
+        <ul
+          tabIndex={0}
+          className="dropdown-content menu bg-base-300 min-w-[100%] z-1 shadow-sm text-base-content"
+          onClick={() => {
+            if (document.activeElement instanceof HTMLElement) {
+              document.activeElement?.blur();
+            }
+          }}
+        >
+          <li>
+            <div
+              onClick={() => {
+                router.navigate("/profile");
+              }}
+            >
+              <UserOutlined />
+              Profile
+            </div>
+          </li>
+          <li className="text-error">
+            <div
+              className="hover:bg-error hover:text-error-content"
+              onClick={() => {
+                userApi.logout().then(() => {
+                  setUser(undefined);
+                });
+              }}
+            >
+              <LogoutOutlined />
+              Logout
+            </div>
+          </li>
+        </ul>
+      </div>
     );
   }
   return (

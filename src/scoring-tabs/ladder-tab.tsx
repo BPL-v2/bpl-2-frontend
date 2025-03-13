@@ -5,11 +5,7 @@ import {
   getSubCategory,
 } from "../types/scoring-category";
 import { getTotalPoints } from "../utils/utils";
-import { Progress, Table } from "antd";
-import { LadderEntry, Team } from "../client";
-import { ColumnType } from "antd/es/table";
-import { getLevelProgress } from "../types/level-info";
-import { ascendancies, phreciaMapping } from "../types/ascendancy";
+import { Team } from "../client";
 type RowDef = {
   default: number;
   team: Team;
@@ -22,8 +18,7 @@ type RowDef = {
 };
 
 export function LadderTab() {
-  const { scores, currentEvent, isMobile, users, ladder } =
-    useContext(GlobalStateContext);
+  const { scores, currentEvent, isMobile } = useContext(GlobalStateContext);
 
   if (!scores || !currentEvent) {
     return <></>;
@@ -35,10 +30,10 @@ export function LadderTab() {
     },
     {}
   );
-  const userToTeam = users.reduce((acc, user) => {
-    acc[user.id] = teamMap[user.team_id]?.name;
-    return acc;
-  }, {} as { [userId: number]: string });
+  // const userToTeam = users.reduce((acc, user) => {
+  //   acc[user.id] = teamMap[user.team_id]?.name;
+  //   return acc;
+  // }, {} as { [userId: number]: string });
   const categoryNames = getRootCategoryNames(currentEvent.game_version);
   const categories = categoryNames.map((categoryName) =>
     getSubCategory(scores, categoryName)
@@ -82,88 +77,88 @@ export function LadderTab() {
     ...getCompletionColumns(isMobile),
   ];
 
-  const ladderColumns: ColumnType<LadderEntry>[] = [
-    {
-      title: "Rank",
-      dataIndex: "rank",
-      key: "rank",
-      sorter: (a: LadderEntry, b: LadderEntry) => a.rank - b.rank,
-      defaultSortOrder: "ascend",
-    },
-    {
-      title: "Character",
-      dataIndex: "character_name",
-      key: "character_name",
-      sorter: (a: LadderEntry, b: LadderEntry) =>
-        a.character_name.localeCompare(b.character_name),
-    },
-    {
-      title: "Account",
-      dataIndex: "account_name",
-      key: "account_name",
-      sorter: (a: LadderEntry, b: LadderEntry) =>
-        a.account_name.localeCompare(b.account_name),
-    },
-    {
-      title: "Ascendancy",
-      dataIndex: "character_class",
-      key: "character_class",
-      sorter: (a: LadderEntry, b: LadderEntry) =>
-        a.character_class.localeCompare(b.character_class),
-      render: (character_class: string) => {
-        const classObj =
-          ascendancies["poe1"][
-            phreciaMapping[character_class as keyof typeof phreciaMapping]
-          ];
-        if (!classObj) {
-          return character_class;
-        }
-        return (
-          // <div className="flex items-center gap-2">
-          //   <img
-          //     src={classObj.thumbnail}
-          //     alt={character_class}
-          //     className="w-8 h-8"
-          //   />
-          <p className="font-semibold" style={{ color: classObj.classColor }}>
-            {character_class}
-          </p>
-          // </div>
-        );
-      },
-    },
-    {
-      title: "Level",
-      key: "level",
-      sorter: (a: LadderEntry, b: LadderEntry) => a.level - b.level,
-      render: (record: LadderEntry) => (
-        <div className="w-[100px]">
-          {record.level}
-          <div className="w-full ">
-            <Progress
-              strokeColor={{
-                "0%": "#2196f3",
-                "100%": "#1e88e5",
-              }}
-              percent={getLevelProgress(record.experience, record.level)}
-              showInfo={false}
-            ></Progress>
-          </div>
-        </div>
-      ),
-    },
-    {
-      title: "Delve",
-      dataIndex: "delve",
-      key: "delve",
-      sorter: (a: LadderEntry, b: LadderEntry) => a.delve - b.delve,
-    },
-    {
-      title: "Team",
-      key: "team",
-      render: (record: LadderEntry) => userToTeam[record.user_id],
-    },
-  ];
+  // const ladderColumns: ColumnType<LadderEntry>[] = [
+  //   {
+  //     title: "Rank",
+  //     dataIndex: "rank",
+  //     key: "rank",
+  //     sorter: (a: LadderEntry, b: LadderEntry) => a.rank - b.rank,
+  //     defaultSortOrder: "ascend",
+  //   },
+  //   {
+  //     title: "Character",
+  //     dataIndex: "character_name",
+  //     key: "character_name",
+  //     sorter: (a: LadderEntry, b: LadderEntry) =>
+  //       a.character_name.localeCompare(b.character_name),
+  //   },
+  //   {
+  //     title: "Account",
+  //     dataIndex: "account_name",
+  //     key: "account_name",
+  //     sorter: (a: LadderEntry, b: LadderEntry) =>
+  //       a.account_name.localeCompare(b.account_name),
+  //   },
+  //   {
+  //     title: "Ascendancy",
+  //     dataIndex: "character_class",
+  //     key: "character_class",
+  //     sorter: (a: LadderEntry, b: LadderEntry) =>
+  //       a.character_class.localeCompare(b.character_class),
+  //     render: (character_class: string) => {
+  //       const classObj =
+  //         ascendancies["poe1"][
+  //           phreciaMapping[character_class as keyof typeof phreciaMapping]
+  //         ];
+  //       if (!classObj) {
+  //         return character_class;
+  //       }
+  //       return (
+  //         // <div className="flex items-center gap-2">
+  //         //   <img
+  //         //     src={classObj.thumbnail}
+  //         //     alt={character_class}
+  //         //     className="w-8 h-8"
+  //         //   />
+  //         <p className="font-semibold" style={{ color: classObj.classColor }}>
+  //           {character_class}
+  //         </p>
+  //         // </div>
+  //       );
+  //     },
+  //   },
+  //   {
+  //     title: "Level",
+  //     key: "level",
+  //     sorter: (a: LadderEntry, b: LadderEntry) => a.level - b.level,
+  //     render: (record: LadderEntry) => (
+  //       <div className="w-[100px]">
+  //         {record.level}
+  //         <div className="w-full ">
+  //           <Progress
+  //             strokeColor={{
+  //               "0%": "#2196f3",
+  //               "100%": "#1e88e5",
+  //             }}
+  //             percent={getLevelProgress(record.experience, record.level)}
+  //             showInfo={false}
+  //           ></Progress>
+  //         </div>
+  //       </div>
+  //     ),
+  //   },
+  //   {
+  //     title: "Delve",
+  //     dataIndex: "delve",
+  //     key: "delve",
+  //     sorter: (a: LadderEntry, b: LadderEntry) => a.delve - b.delve,
+  //   },
+  //   {
+  //     title: "Team",
+  //     key: "team",
+  //     render: (record: LadderEntry) => userToTeam[record.user_id],
+  //   },
+  // ];
   function getCompletionColumns(isMobile: boolean) {
     if (isMobile) {
       return [
@@ -231,7 +226,7 @@ export function LadderTab() {
       </table>
 
       <div className="divider divider-primary">{"Ladder"}</div>
-      <Table
+      {/* <Table
         columns={ladderColumns}
         dataSource={ladder.map((entry, index) => ({
           ...entry,
@@ -240,7 +235,7 @@ export function LadderTab() {
         // pagination={false}
         size="small"
         rowKey="key"
-      />
+      /> */}
     </>
   );
 }
