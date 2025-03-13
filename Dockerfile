@@ -10,7 +10,7 @@ ENV PATH /app/node_modules/.bin:$PATH
 COPY deno.lock ./
 COPY package*.json ./
 
-
+RUN apk add python3
 # Install dependencies
 RUN npm install
 
@@ -24,6 +24,7 @@ ARG VITE_BACKEND_URL
 ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
 RUN echo "VITE_BACKEND_URL=${VITE_BACKEND_URL}" > .env
 RUN npm run build
+RUN python3 crazy-hackzz.py
 
 # Remove the dev dependencies
 RUN npm prune --omit=dev
