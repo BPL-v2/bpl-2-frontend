@@ -13,7 +13,7 @@ export type GlobalState = {
   user: User | undefined;
   setUser: (c: User | undefined) => void;
   currentEvent: Event | undefined;
-  setCurrentEvent: (c: Event | undefined) => void;
+  setCurrentEvent: (c: Event) => void;
   events: Event[];
   setEvents: (c: Event[]) => void;
   rules: Category | undefined;

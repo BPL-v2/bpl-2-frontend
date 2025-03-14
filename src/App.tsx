@@ -104,7 +104,13 @@ const route = (item: MenuItem) => {
 function App() {
   const [currentNav, setCurrentNav] = useState<string>();
   const [user, setUser] = useState<User>();
-  const [currentEvent, setCurrentEvent] = useState<Event>();
+  // initialize with a dummy event so that we can start making api calls
+  const ev = {
+    id: "current",
+    game_version: GameVersion.poe1,
+    teams: [],
+  } as unknown as Event;
+  const [currentEvent, setCurrentEvent] = useState<Event>(ev);
   const [events, setEvents] = useState<Event[]>([]);
   const [eventStatus, setEventStatus] = useState<EventStatus>();
   const [rules, setRules] = useState<Category>();
@@ -123,29 +129,38 @@ function App() {
   }, []);
 
   useEffect(() => {
+    // @ts-ignore just a manual flag to avoid refetching on initial load
+    if (currentEvent.ignoreRefetch) {
+      return;
+    }
     userApi.getUser().then(setUser);
+    establishScoreSocket(currentEvent.id, setScoreData, (newUpdates) =>
+      setUpdates((prevUpdates) => [...newUpdates, ...prevUpdates])
+    );
+    setGameVersion(currentEvent.game_version);
+    scoringApi.getRulesForEvent(currentEvent.id).then(setRules);
+    scoringApi
+      .getScoringPresetsForEvent(currentEvent.id)
+      .then(setScoringPresets);
+    userApi.getUsersForEvent(currentEvent.id).then((users) => {
+      setUsers(
+        Object.entries(users)
+          .map(([teamId, user]) => {
+            return user.map((u) => ({ ...u, team_id: parseInt(teamId) }));
+          })
+          .flat()
+      );
+    });
+    ladderApi.getLadder(currentEvent.id).then(setLadder);
+  }, [currentEvent]);
+
+  useEffect(() => {
     eventApi.getEvents().then((events) => {
       setEvents(events);
       const event = events.find((event) => event.is_current);
-      setCurrentEvent(event);
-      if (event) {
-        establishScoreSocket(event.id, setScoreData, (newUpdates) =>
-          setUpdates((prevUpdates) => [...newUpdates, ...prevUpdates])
-        );
-        setGameVersion(event.game_version);
-        scoringApi.getRulesForEvent(event.id).then(setRules);
-        scoringApi.getScoringPresetsForEvent(event.id).then(setScoringPresets);
-        userApi.getUsersForEvent(event.id).then((users) => {
-          setUsers(
-            Object.entries(users)
-              .map(([teamId, user]) => {
-                return user.map((u) => ({ ...u, team_id: parseInt(teamId) }));
-              })
-              .flat()
-          );
-        });
-        ladderApi.getLadder(event.id).then(setLadder);
-      }
+      if (!event) return;
+      // @ts-ignore just a manual flag to avoid refetching on initial load
+      setCurrentEvent({ ...event, ignoreRefetch: true });
     });
   }, []);
 
@@ -205,7 +220,7 @@ function App() {
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [currentEvent]);
+  }, []);
 
   useEffect(() => {
     if (rules && scoreData && currentEvent && scoringPresets) {

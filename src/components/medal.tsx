@@ -1,10 +1,10 @@
 type MedalProps = {
   size?: string | number;
-  rank: number;
+  rank?: number;
 };
 
 export const Medal = ({ size, rank }: MedalProps) => {
-  if (rank === 0 || rank > 9) {
+  if (rank === undefined || rank === 0 || rank > 9) {
     return <></>;
   }
   let color = "";

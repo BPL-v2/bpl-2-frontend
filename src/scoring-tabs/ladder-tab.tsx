@@ -20,7 +20,7 @@ type RowDef = {
 export function LadderTab() {
   const { scores, currentEvent, isMobile } = useContext(GlobalStateContext);
 
-  if (!scores || !currentEvent) {
+  if (!scores || !currentEvent || !currentEvent.teams) {
     return <></>;
   }
   const teamMap = currentEvent.teams.reduce(

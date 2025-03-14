@@ -17,7 +17,7 @@ const TeamScore = ({
   const teamScores = getTotalPoints(category);
   const potentialScores = getPotentialPoints(category);
   const { currentEvent, eventStatus } = useContext(GlobalStateContext);
-  if (!currentEvent) {
+  if (!currentEvent || !currentEvent.teams) {
     return <></>;
   }
   const interactive = selectedTeam ? "cursor-pointer hover:bg-base-200" : "";

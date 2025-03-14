@@ -27,7 +27,11 @@ const UniqueTab: React.FC = () => {
   useEffect(() => {
     if (eventStatus && eventStatus.team_id) {
       setSelectedTeam(eventStatus.team_id);
-    } else if (currentEvent && currentEvent.teams.length > 0) {
+    } else if (
+      currentEvent &&
+      currentEvent.teams &&
+      currentEvent.teams.length > 0
+    ) {
       setSelectedTeam(currentEvent.teams[0].id);
     }
   }, [eventStatus, currentEvent]);

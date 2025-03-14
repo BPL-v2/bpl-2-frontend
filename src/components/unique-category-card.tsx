@@ -23,12 +23,18 @@ export const UniqueCategoryCard = ({
     (acc, subCategory) => acc + subCategory.objectives.length,
     0
   );
-  const numItems = teamId ? category.team_score[teamId].number : 0;
+
+  const numItems =
+    teamId && category.team_score[teamId]
+      ? category.team_score[teamId].number
+      : 0;
   const numVariants = teamId
-    ? category.sub_categories.reduce(
-        (acc, subCategory) => acc + subCategory.team_score[teamId].number,
-        0
-      )
+    ? category.sub_categories.reduce((acc, subCategory) => {
+        if (!subCategory.team_score[teamId]) {
+          return acc;
+        }
+        return acc + subCategory.team_score[teamId].number;
+      }, 0)
     : 0;
   const bgColor = selected ? "bg-highlight" : "bg-base-300 ";
   const headerColor = selected ? "bg-base-300" : "bg-base-200";
@@ -51,7 +57,7 @@ export const UniqueCategoryCard = ({
         className={`card-title top-box-rounded m-0 p-2 flex items-center justify-center sm:justify-between ${headerColor}`}
       >
         <div className="flex-shrink-0">
-          <Medal rank={category.team_score[teamId].rank} size={28} />
+          <Medal rank={category.team_score[teamId]?.rank} size={28} />
         </div>
         <h1 className="text-xl text-center text-neutral-content font-extrabold">
           {category.name}

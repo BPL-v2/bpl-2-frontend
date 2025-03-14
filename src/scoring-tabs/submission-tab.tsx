@@ -23,7 +23,7 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
   const formRef = React.useRef<HTMLFormElement>(null);
   const [reloadSubmissions, setReloadSubmissions] = React.useState(false);
 
-  if (!category || !currentEvent) {
+  if (!category || !currentEvent || !currentEvent.teams) {
     return <></>;
   }
   const teamMap = currentEvent.teams.reduce(

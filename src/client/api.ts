@@ -1978,56 +1978,6 @@ export const EventApiFetchParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Fetches the current event
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCurrentEvent(options: any = {}): FetchArgs {
-            const localVarPath = `/events/current`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Gets an event by id
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEvent(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getEvent.');
-            }
-            const localVarPath = `/events/{event_id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Gets the users application status for an event
          * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
@@ -2142,41 +2092,6 @@ export const EventApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         * Fetches the current event
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCurrentEvent(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Event> {
-            const localVarFetchArgs = EventApiFetchParamCreator(configuration).getCurrentEvent(options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Gets an event by id
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEvent(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Event> {
-            const localVarFetchArgs = EventApiFetchParamCreator(configuration).getEvent(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
          * Gets the users application status for an event
          * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
@@ -2249,23 +2164,6 @@ export const EventApiFactory = function (configuration?: Configuration, fetch?: 
             return EventApiFp(configuration).duplicateEvent(event_id, event, options)(fetch, basePath);
         },
         /**
-         * Fetches the current event
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCurrentEvent(options?: any) {
-            return EventApiFp(configuration).getCurrentEvent(options)(fetch, basePath);
-        },
-        /**
-         * Gets an event by id
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEvent(event_id: number, options?: any) {
-            return EventApiFp(configuration).getEvent(event_id, options)(fetch, basePath);
-        },
-        /**
          * Gets the users application status for an event
          * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
@@ -2324,27 +2222,6 @@ export class EventApi extends BaseAPI {
      */
     public duplicateEvent(event_id: number, event: EventCreate, options?: any) {
         return EventApiFp(this.configuration).duplicateEvent(event_id, event, options)(this.fetch, this.basePath);
-    }
-
-    /**
-     * Fetches the current event
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof EventApi
-     */
-    public getCurrentEvent(options?: any) {
-        return EventApiFp(this.configuration).getCurrentEvent(options)(this.fetch, this.basePath);
-    }
-
-    /**
-     * Gets an event by id
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof EventApi
-     */
-    public getEvent(event_id: number, options?: any) {
-        return EventApiFp(this.configuration).getEvent(event_id, options)(this.fetch, this.basePath);
     }
 
     /**
