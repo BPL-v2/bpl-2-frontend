@@ -107,7 +107,6 @@ function App() {
   // initialize with a dummy event so that we can start making api calls
   const ev = {
     id: "current",
-    game_version: GameVersion.poe1,
     teams: [],
   } as unknown as Event;
   const [currentEvent, setCurrentEvent] = useState<Event>(ev);
@@ -137,7 +136,6 @@ function App() {
     establishScoreSocket(currentEvent.id, setScoreData, (newUpdates) =>
       setUpdates((prevUpdates) => [...newUpdates, ...prevUpdates])
     );
-    setGameVersion(currentEvent.game_version);
     scoringApi.getRulesForEvent(currentEvent.id).then(setRules);
     scoringApi
       .getScoringPresetsForEvent(currentEvent.id)
@@ -161,6 +159,7 @@ function App() {
       if (!event) return;
       // @ts-ignore just a manual flag to avoid refetching on initial load
       setCurrentEvent({ ...event, ignoreRefetch: true });
+      setGameVersion(event.game_version);
     });
   }, []);
 
