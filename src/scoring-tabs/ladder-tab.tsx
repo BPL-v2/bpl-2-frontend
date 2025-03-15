@@ -16,6 +16,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { getLevelProgress } from "../types/level-info";
+import { ascendancies, phreciaMapping } from "../types/ascendancy";
+import { TableSortIcon } from "../icons/table-sort";
 type RowDef = {
   default: number;
   team: Team;
@@ -33,7 +35,7 @@ export function LadderTab() {
     pageIndex: 0, //initial page index
     pageSize: 10, //default page size
   });
-  const { scores, currentEvent, isMobile, users, ladder } =
+  const { scores, currentEvent, isMobile, users, ladder, gameVersion } =
     useContext(GlobalStateContext);
   const columnHelper = createColumnHelper<LadderEntry>();
 
@@ -54,6 +56,29 @@ export function LadderTab() {
     }),
     columnHelper.accessor("character_class", {
       header: () => "Ascendancy",
+      cell: (info) => {
+        const classObj =
+          ascendancies[gameVersion][
+            phreciaMapping[
+              info.row.original.character_class as keyof typeof phreciaMapping
+            ]
+          ];
+        if (!classObj) {
+          return info.row.original.character_class;
+        }
+        return (
+          <div className="flex items-center gap-2">
+            <img
+              src={classObj.thumbnail}
+              alt={classObj.image}
+              className="h-8 w-8 rounded-full"
+            />
+            <p className={`font-bold ${classObj.classColor}`}>
+              {info.row.original.character_class}
+            </p>
+          </div>
+        );
+      },
     }),
     columnHelper.accessor("experience", {
       header: "Level",
@@ -74,6 +99,12 @@ export function LadderTab() {
             </div>
           </div>
         );
+      },
+    }),
+    columnHelper.accessor("delve", {
+      header: "Delve",
+      cell: (info) => {
+        return info.row.original.delve;
       },
     }),
   ];
@@ -147,88 +178,6 @@ export function LadderTab() {
     ...getCompletionColumns(isMobile),
   ];
 
-  // const ladderColumns: ColumnType<LadderEntry>[] = [
-  //   {
-  //     title: "Rank",
-  //     dataIndex: "rank",
-  //     key: "rank",
-  //     sorter: (a: LadderEntry, b: LadderEntry) => a.rank - b.rank,
-  //     defaultSortOrder: "ascend",
-  //   },
-  //   {
-  //     title: "Character",
-  //     dataIndex: "character_name",
-  //     key: "character_name",
-  //     sorter: (a: LadderEntry, b: LadderEntry) =>
-  //       a.character_name.localeCompare(b.character_name),
-  //   },
-  //   {
-  //     title: "Account",
-  //     dataIndex: "account_name",
-  //     key: "account_name",
-  //     sorter: (a: LadderEntry, b: LadderEntry) =>
-  //       a.account_name.localeCompare(b.account_name),
-  //   },
-  //   {
-  //     title: "Ascendancy",
-  //     dataIndex: "character_class",
-  //     key: "character_class",
-  //     sorter: (a: LadderEntry, b: LadderEntry) =>
-  //       a.character_class.localeCompare(b.character_class),
-  //     render: (character_class: string) => {
-  //       const classObj =
-  //         ascendancies["poe1"][
-  //           phreciaMapping[character_class as keyof typeof phreciaMapping]
-  //         ];
-  //       if (!classObj) {
-  //         return character_class;
-  //       }
-  //       return (
-  //         // <div className="flex items-center gap-2">
-  //         //   <img
-  //         //     src={classObj.thumbnail}
-  //         //     alt={character_class}
-  //         //     className="w-8 h-8"
-  //         //   />
-  //         <p className="font-semibold" style={{ color: classObj.classColor }}>
-  //           {character_class}
-  //         </p>
-  //         // </div>
-  //       );
-  //     },
-  //   },
-  //   {
-  //     title: "Level",
-  //     key: "level",
-  //     sorter: (a: LadderEntry, b: LadderEntry) => a.level - b.level,
-  //     render: (record: LadderEntry) => (
-  //       <div className="w-[100px]">
-  //         {record.level}
-  //         <div className="w-full ">
-  //           <Progress
-  //             strokeColor={{
-  //               "0%": "#2196f3",
-  //               "100%": "#1e88e5",
-  //             }}
-  //             percent={getLevelProgress(record.experience, record.level)}
-  //             showInfo={false}
-  //           ></Progress>
-  //         </div>
-  //       </div>
-  //     ),
-  //   },
-  //   {
-  //     title: "Delve",
-  //     dataIndex: "delve",
-  //     key: "delve",
-  //     sorter: (a: LadderEntry, b: LadderEntry) => a.delve - b.delve,
-  //   },
-  //   {
-  //     title: "Team",
-  //     key: "team",
-  //     render: (record: LadderEntry) => userToTeam[record.user_id],
-  //   },
-  // ];
   function getCompletionColumns(isMobile: boolean) {
     if (isMobile) {
       return [
@@ -283,7 +232,7 @@ export function LadderTab() {
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.key} className="">
+            <tr key={row.key} className="hover:bg-base-200/50">
               {scoreColumns.map((column) => (
                 <td key={`column-${column.key}`}>
                   {
@@ -303,30 +252,39 @@ export function LadderTab() {
         <thead className="bg-base-200">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th
-                  className={
-                    header.column.getCanSort()
-                      ? "cursor-pointer select-none"
-                      : undefined
-                  }
-                  key={header.id}
-                  onClick={header.column.getToggleSortingHandler()}
-                >
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
+              {headerGroup.headers.map((header) => {
+                return (
+                  <th
+                    className={
+                      header.column.getCanSort()
+                        ? "cursor-pointer select-none"
+                        : undefined
+                    }
+                    key={header.id}
+                    onClick={header.column.getToggleSortingHandler()}
+                  >
+                    <div className="flex items-center gap-1">
+                      <TableSortIcon
+                        className="h-5 w-5"
+                        sort={sorting.find((sort) => sort.id === header.id)}
+                      ></TableSortIcon>
+
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </div>
+                  </th>
+                );
+              })}
             </tr>
           ))}
         </thead>
         <tbody className="bg-base-300">
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
+            <tr key={row.id} className="hover:bg-base-200/50">
               {row.getVisibleCells().map((cell) => (
                 <td key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}

@@ -222,7 +222,7 @@ export function ItemTable({ category }: ItemTableProps) {
                     key={`${category.id}-${team.name}`}
                     className={
                       userTeamID === team.id
-                        ? "bg-highlight text-base-content"
+                        ? "bg-base-300/15 text-base-content"
                         : ""
                     }
                   >
@@ -240,7 +240,7 @@ export function ItemTable({ category }: ItemTableProps) {
                         </p>
                       </div>
                       <button
-                        className="btn w-8 h-8  bg-base-300 ml-2 select-none text-center align-middle border-1 border-primary"
+                        className="btn w-8 h-8  bg-base-300 ml-2 select-none text-center align-middle border-1 border-primary/50"
                         onClick={(e) => {
                           setCompletionFilter({
                             ...completionFilter,
@@ -262,7 +262,7 @@ export function ItemTable({ category }: ItemTableProps) {
               const objRow = (
                 <tr
                   key={`${category.id}-${objective.id}`}
-                  className={"hover:bg-slate-700"}
+                  className={"hover:bg-base-200/50"}
                   onClick={() => {
                     if (!variantMap[objective.name]) {
                       return;
@@ -294,7 +294,7 @@ export function ItemTable({ category }: ItemTableProps) {
                 return (
                   <tr
                     key={`${category.id}-${variant.id}`}
-                    className="bg-base-200 hover:bg-slate-700 m-0 p-0"
+                    className="bg-base-200 hover:bg-base-100/50 m-0 p-0"
                   >
                     <>
                       {isMobile ? null : <td></td>}

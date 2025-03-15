@@ -2,16 +2,16 @@ import React, { useContext } from "react";
 import CrudTable from "../components/crudtable";
 
 import { GlobalStateContext } from "../utils/context-provider";
-import {
-  CheckOutlined,
-  CloseOutlined,
-  EyeInvisibleOutlined,
-} from "@ant-design/icons";
 
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { NonSensitiveUser, Permission, Submission } from "../client";
 import { submissionApi } from "../client/client";
+import {
+  CheckCircleIcon,
+  EyeSlashIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
 dayjs.extend(customParseFormat);
 
 function renderStringWithUrl(string: string) {
@@ -83,7 +83,7 @@ const SubmissionPage: React.FC = () => {
                       className="text-warning tooltip cursor-help"
                       data-tip="Pending"
                     >
-                      <EyeInvisibleOutlined />
+                      <EyeSlashIcon className="h-6 w-6 text-warning" />
                     </div>
                   );
                 case "APPROVED":
@@ -92,7 +92,7 @@ const SubmissionPage: React.FC = () => {
                       className="text-success tooltip cursor-help"
                       data-tip="Approved"
                     >
-                      <CheckOutlined />
+                      <CheckCircleIcon className="h-6 w-6 text-success" />
                     </div>
                   );
                 case "REJECTED":
@@ -101,7 +101,7 @@ const SubmissionPage: React.FC = () => {
                       className="text-error tooltip cursor-help"
                       data-tip="Rejected"
                     >
-                      <CloseOutlined />
+                      <XCircleIcon className="h-6 w-6 text-error" />
                     </div>
                   );
               }

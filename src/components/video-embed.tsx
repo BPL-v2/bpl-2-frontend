@@ -4,8 +4,7 @@ import {
   getIconLocation,
   getThumbnailUrl,
 } from "../utils/video-utils";
-import { PlayCircleOutlined } from "@ant-design/icons";
-
+import { PlayCircleIcon } from "@heroicons/react/24/outline";
 export interface VideoEmbedProps {
   url: string;
   title?: string;
@@ -88,7 +87,7 @@ export const VideoEmbed: React.FC<VideoEmbedProps> = (
           aria-label="Play"
         >
           {!iconLocation ? (
-            <PlayCircleOutlined />
+            <PlayCircleIcon className="h-6 w-6" />
           ) : (
             <img
               alt="click to view video"

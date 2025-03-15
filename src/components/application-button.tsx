@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
-import { DiscordFilled } from "@ant-design/icons";
 import { ApplicationStatus, ExpectedPlayTime, Team } from "../client";
 import { signupApi } from "../client/client";
+import { DiscordFilled } from "../icons/discord";
 
 type ApplicationButtonProps = {};
 const ApplicationButton = ({}: ApplicationButtonProps) => {
@@ -112,7 +112,7 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
                   });
               }}
             >
-              <fieldset className="fieldset w-xs bg-base-200 p-4">
+              <fieldset className="fieldset w-xs bg-base-200 p-4 rounded-box">
                 <label className="fieldset-label">
                   How many hours will you be able to play per day?
                 </label>
@@ -148,7 +148,8 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
                   apply.
                 </p>
                 <button className="btn btn-lg bg-discord text-white text-xl mt-4">
-                  <DiscordFilled></DiscordFilled> Link Discord Account
+                  <DiscordFilled className="w-6 h-6" />
+                  Link Discord Account
                 </button>
               </div>
             )}
@@ -157,7 +158,8 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
                 <p>Join our discord server to apply for the event.</p>
                 <button className="btn bg-discord btn-lg mt-4">
                   <a href="https://discord.gg/7zBQXZqJpH" target="_blank">
-                    <DiscordFilled></DiscordFilled> Join Server
+                    <DiscordFilled className="w-6 h-6" />
+                    Join Server
                   </a>
                 </button>
               </div>

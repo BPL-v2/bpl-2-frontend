@@ -1,8 +1,12 @@
 import { useContext, useEffect } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
-import { LoginOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { router } from "../router";
 import { userApi } from "../client/client";
+import {
+  UserIcon,
+  ArrowLeftStartOnRectangleIcon,
+  ArrowRightEndOnRectangleIcon,
+} from "@heroicons/react/24/outline";
 
 const AuthButton = () => {
   const { user, setUser } = useContext(GlobalStateContext);
@@ -31,7 +35,7 @@ const AuthButton = () => {
           tabIndex={0}
           className={`btn bg-base-300 h-full hover:text-primary hover:border-primary`}
         >
-          <UserOutlined />{" "}
+          <UserIcon className="h-6 w-6" />
           <div className="hidden sm:block">
             {user ? user.display_name : "Login"}
           </div>
@@ -51,8 +55,7 @@ const AuthButton = () => {
                 router.navigate("/profile");
               }}
             >
-              <UserOutlined />
-              Profile
+              <UserIcon className="h-6 w-6" /> Profile
             </div>
           </li>
           <li className="text-error">
@@ -64,7 +67,7 @@ const AuthButton = () => {
                 });
               }}
             >
-              <LogoutOutlined />
+              <ArrowLeftStartOnRectangleIcon className="h-6 w-6" />
               Logout
             </div>
           </li>
@@ -79,7 +82,8 @@ const AuthButton = () => {
         window.open(import.meta.env.VITE_BACKEND_URL + "/oauth2/discord", "");
       }}
     >
-      <LoginOutlined /> Login
+      <ArrowRightEndOnRectangleIcon className="h-6 w-6" />
+      Login
     </button>
   );
 };

@@ -4,11 +4,11 @@ import { getSubCategory } from "../types/scoring-category";
 import { ScoreObjective } from "../types/score";
 import TeamScore from "../components/team-score";
 import React from "react";
-import { PlusOutlined } from "@ant-design/icons";
 import { router } from "../router";
 import { Score, SubmissionCreate, Team } from "../client";
 import { submissionApi } from "../client/client";
 import { DateTimePicker } from "../components/datetime-picker";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
 
 export type SubmissionTabProps = {
   categoryName: string;
@@ -85,7 +85,7 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
             }}
             className="form"
           >
-            <fieldset className="fieldset bg-base-300 p-6">
+            <fieldset className="fieldset bg-base-300 p-6 rounded-box">
               <DateTimePicker
                 label="Time (in your timezone)"
                 name="timestamp"
@@ -145,7 +145,7 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {category.objectives.map((objective) => {
           return (
-            <div className="card bg-base-200" key={objective.id}>
+            <div className="card bg-base-300" key={objective.id}>
               <div className="h-22 flex items-center justify-between bg-base-200 top-box-rounded px-4">
                 <div
                   className={objective.extra ? "tooltip  text-2xl " : undefined}
@@ -159,18 +159,18 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
                 {eventStatus?.team_id ? (
                   <div className="tooltip" data-tip="Submit Bounty">
                     <button
-                      className="btn bg-highlight btn-sm"
+                      className="btn btn-sm btn-ghost"
                       onClick={() => {
                         setSelectedObjective(objective);
                         setShowModal(true);
                       }}
                     >
-                      <PlusOutlined />
+                      <PlusCircleIcon className="h-8 w-8 cursor-pointer" />
                     </button>
                   </div>
                 ) : null}
               </div>
-              <div className="pb-4 mb-0 bg-base-300 bottom-box-rounded">
+              <div className="pb-4 mb-0 bottom-box-rounded">
                 <table key={objective.id} className="w-full border-collapse">
                   <tbody className="">
                     {Object.entries(objective.team_score)
@@ -185,10 +185,10 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
                         return (
                           <tr
                             key={teamId}
-                            className={`px-4  ${
+                            className={`px-4 bg-base-300 ${
                               eventStatus?.team_id === teamId
-                                ? "bg-highlight"
-                                : "bg-base-300"
+                                ? "border-y-1 border-primary/50"
+                                : ""
                             }`}
                           >
                             <td

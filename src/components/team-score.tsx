@@ -26,7 +26,7 @@ const TeamScore = ({
       <div className={`grid grid-cols-2  gap-1 md:grid-cols-2 xl:grid-cols-4`}>
         {currentEvent.teams.map((team) => {
           const bgColor =
-            team.id === eventStatus?.team_id ? "bg-highlight" : "bg-base-300";
+            team.id === eventStatus?.team_id ? "bg-base-300" : "bg-base-200";
           const borderColor =
             team.id === selectedTeam ? "ring-primary" : "ring-transparent";
           return (

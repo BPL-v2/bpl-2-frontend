@@ -8,12 +8,6 @@ import {
   operatorToString,
 } from "../types/scoring-objective";
 import { GlobalStateContext } from "../utils/context-provider";
-import {
-  CloseOutlined,
-  CopyOutlined,
-  EditOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
 import { ObjectiveIcon } from "../components/objective-icon";
 import {
   Category,
@@ -32,6 +26,12 @@ import {
 } from "../client";
 import { conditionApi, objectiveApi, scoringApi } from "../client/client";
 import { DateTimePicker } from "../components/datetime-picker";
+import {
+  ClipboardDocumentCheckIcon,
+  PencilSquareIcon,
+  PlusIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
 
 async function createBulkItemObjectives(
   eventId: number,
@@ -423,8 +423,8 @@ const ScoringCategoryPage: React.FC = () => {
 
     return (
       <form key={currentObjective.id} onSubmit={objectiveFormSubmit}>
-        <div className="flex flxe-col gap-4">
-          <fieldset className="fieldset mb-4 w-full">
+        <div className="flex flxe-col">
+          <fieldset className="fieldset mb-4 p-4 w-full rounded-l-box bg-base-300">
             {nameInput}
             {objectiveTypeInput}
             {itemNameInput}
@@ -432,7 +432,7 @@ const ScoringCategoryPage: React.FC = () => {
             {numberfieldInput}
             {scoringMethodInput}
           </fieldset>
-          <fieldset className="fieldset mb-4 w-full">
+          <fieldset className="fieldset mb-4 p-4 w-full rounded-r-box bg-base-300">
             {extraInput}
             {requiredNumberInput}
             {itemBaseTypeInput}
@@ -546,7 +546,8 @@ const ScoringCategoryPage: React.FC = () => {
                     data-tip={text}
                   >
                     <div className="badge badge-primary badge-sm">
-                      <CloseOutlined
+                      <XCircleIcon
+                        className="h-4 w-4 cursor-pointer"
                         onClick={(event) => {
                           conditionApi
                             .deleteCondition(Number(eventId), condition.id)
@@ -556,6 +557,7 @@ const ScoringCategoryPage: React.FC = () => {
                             });
                         }}
                       />
+
                       {text.slice(0, 10)}
                       {text.length > 10 ? "..." : ""}
                     </div>
@@ -578,7 +580,7 @@ const ScoringCategoryPage: React.FC = () => {
         setCurrentObjective({ ...data });
         setIsObjectiveModalOpen(true);
       },
-      icon: <EditOutlined />,
+      icon: <PencilSquareIcon className="h-6 w-6" />,
     },
     {
       name: "Add Condition",
@@ -586,7 +588,7 @@ const ScoringCategoryPage: React.FC = () => {
         setCurrentObjective({ ...data });
         setIsConditionModalOpen(true);
       },
-      icon: <PlusOutlined />,
+      icon: <PlusIcon className="h-6 w-6" />,
     },
     {
       name: "Duplicate",
@@ -602,7 +604,7 @@ const ScoringCategoryPage: React.FC = () => {
           setRefreshObjectives((prev) => !prev);
         });
       },
-      icon: <CopyOutlined />,
+      icon: <ClipboardDocumentCheckIcon className="h-6 w-6" />,
     },
   ];
 
@@ -713,7 +715,7 @@ const ScoringCategoryPage: React.FC = () => {
                 });
               }}
             >
-              <fieldset className="fieldset bg-base-300 p-4 rounded-xl mb-4">
+              <fieldset className="fieldset bg-base-300 p-4 rounded-box mb-4">
                 <label className="label">Comma separated list of names</label>
                 <input
                   name="name_list"
@@ -829,7 +831,7 @@ const ScoringCategoryPage: React.FC = () => {
                 });
             }}
           >
-            <fieldset className="fieldset bg-base-300 p-4 rounded-xl mb-4">
+            <fieldset className="fieldset bg-base-300 p-4 rounded-box mb-4">
               <label className="label">Field</label>
               <select
                 name="field"

@@ -55,10 +55,10 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   return (
     <>
       {label && <label className="label">{label}</label>}
-      <div className="join gap-1">
+      <div className="join gap-1 ">
         <input
           type="date"
-          className="input"
+          className="input rounded-l-field"
           name={`${name}-date`}
           value={date}
           onChange={(e) => setDate(e.target.value)}
@@ -66,7 +66,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
         />
         <input
           type="time"
-          className="input"
+          className="input rounded-r-field"
           name={`${name}-time`}
           value={time}
           onChange={(e) => setTime(e.target.value)}

@@ -90,7 +90,7 @@ const RecurringJobsPage = () => {
             }}
             ref={formRef}
           >
-            <fieldset className="fieldset">
+            <fieldset className="fieldset rounded-box bg-base-300">
               <legend className="fieldset-legend">Event</legend>
               <select
                 id="event"

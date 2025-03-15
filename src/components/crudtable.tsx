@@ -1,9 +1,9 @@
-import { JSX, useEffect, useMemo, useRef, useState } from "react";
+import { JSX, useEffect, useMemo, useState } from "react";
 import { sendWarning } from "../utils/notifications";
 import ArrayInput from "./arrayinput";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { DateTimePicker } from "./datetime-picker";
+import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 
 type Option = {
   label: string;
@@ -135,7 +135,7 @@ const CrudTable = <T,>({
           form.reset();
         }}
       >
-        <fieldset className="fieldset w-xs bg-base-200 p-4">
+        <fieldset className="fieldset w-xs bg-base-300 p-4 rounded-box">
           {columns
             .filter((column) => column.editable)
             .map((column, idx) => {
@@ -399,7 +399,7 @@ const CrudTable = <T,>({
                             setIsCreateModalOpen(true);
                           }}
                         >
-                          <EditOutlined />
+                          <PencilSquareIcon className="h-6 w-6" />
                         </button>
                       )}
                       {deleteFunction && (
@@ -410,7 +410,7 @@ const CrudTable = <T,>({
                             setIsDeleteModalOpen(true);
                           }}
                         >
-                          <DeleteOutlined />
+                          <TrashIcon className="h-6 w-6" />
                         </button>
                       )}
                       {addtionalActions &&

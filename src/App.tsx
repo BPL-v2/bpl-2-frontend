@@ -4,12 +4,6 @@ import { RouterProvider } from "react-router-dom";
 import AuthButton from "./components/auth-button";
 import { ContextProvider } from "./utils/context-provider";
 import { router } from "./router";
-import {
-  LineChartOutlined,
-  ReadOutlined,
-  SettingOutlined,
-  TwitchOutlined,
-} from "@ant-design/icons";
 import { establishScoreSocket } from "./websocket/score-socket";
 import { ScoreCategory, ScoreDiffWithKey } from "./types/score";
 import { mergeScores } from "./utils/utils";
@@ -29,17 +23,16 @@ import {
 } from "./client";
 import { MinimalTeamUser } from "./types/user";
 import { eventApi, ladderApi, scoringApi, userApi } from "./client/client";
-
-// function getKeys(items: any[]): string[] {
-//   let keys = [];
-//   for (let item of items) {
-//     keys.push(item.key);
-//     if (item.children) {
-//       keys.push(...getKeys(item.children));
-//     }
-//   }
-//   return keys;
-// }
+import {
+  BookOpenIcon,
+  ChartBarIcon,
+  Cog6ToothIcon,
+} from "@heroicons/react/24/outline";
+import { TwitchFilled } from "./icons/twitch";
+import { YoutubeFilled } from "./icons/youtube";
+import { TwitterFilled } from "./icons/twitter";
+import { GithubFilled } from "./icons/github";
+import { DiscordFilled } from "./icons/discord";
 
 type MenuItem = {
   label: string | JSX.Element;
@@ -50,45 +43,6 @@ type MenuItem = {
   children?: MenuItem[];
   url?: string;
   external?: boolean;
-};
-
-// hack to get a highlight color
-const setHighlightColor = (root: HTMLElement) => {
-  // create a new color that is 20% lighter than base-300
-  const base300Color = getComputedStyle(root)
-    .getPropertyValue("--color-base-300")
-    .trim();
-  const base200Color = getComputedStyle(root)
-    .getPropertyValue("--color-base-200")
-    .trim();
-
-  // Regular expression to match oklch color format
-  const regex = /oklch\(([\d.]+)% ([\d.]+) ([\d.]+)\)/;
-
-  // Match base-300 color
-  const match300 = base300Color.match(regex);
-  if (!match300) return;
-
-  // Match base-200 color
-  const match200 = base200Color.match(regex);
-  if (!match200) return;
-
-  // Extract lightness values
-  const [_, l300, c300, h300] = match300.map(Number);
-  const [__, l200, _c200, _h200] = match200.map(Number);
-
-  // Switch base-200 and base-300 if base-200 is darker
-  if (l200 > l300) {
-    root.style.setProperty("--color-base-300", base200Color);
-    root.style.setProperty("--color-base-200", base300Color);
-  }
-
-  // Create a new color that is 20% lighter than base-300
-  const newL = Math.min(100, l300 + 10);
-  root.style.setProperty(
-    "--color-highlight",
-    `oklch(${newL}% ${c300} ${h300})`
-  );
 };
 
 const route = (item: MenuItem) => {
@@ -122,10 +76,10 @@ function App() {
   const [gameVersion, setGameVersion] = useState<GameVersion>(GameVersion.poe1);
   const [updates, setUpdates] = useState<ScoreDiffWithKey[]>([]);
   const [ladder, setLadder] = useState<LadderEntry[]>([]);
-
+  const [theme, setTheme] = useState("dark");
   useEffect(() => {
-    setHighlightColor(document.documentElement);
-  }, []);
+    document?.querySelector("html")?.setAttribute("data-theme", theme);
+  }, [theme]);
 
   useEffect(() => {
     // @ts-ignore just a manual flag to avoid refetching on initial load
@@ -167,7 +121,7 @@ function App() {
     let menu: MenuItem[] = [
       {
         label: "Admin",
-        icon: <SettingOutlined />,
+        icon: <Cog6ToothIcon className="h-6 w-6" />,
         key: "admin",
         rolerequired: [Permission.admin],
         children: [
@@ -193,19 +147,19 @@ function App() {
       },
       {
         label: "Scoring",
-        icon: <LineChartOutlined />,
+        icon: <ChartBarIcon className="h-6 w-6" />,
         url: "/scores",
         key: "scores",
       },
       {
         label: "Streams",
-        icon: <TwitchOutlined />,
+        icon: <TwitchFilled className="h-6 w-6" />,
         url: "/streams",
         key: "streams",
       },
       {
         label: "Rules",
-        icon: <ReadOutlined />,
+        icon: <BookOpenIcon className="h-6 w-6" />,
         url: "/rules",
         key: "rules",
       },
@@ -297,7 +251,7 @@ function App() {
         }}
       >
         <div className="max-w-[1440px] text-center mx-auto ">
-          {notifications}
+          {notifications}{" "}
           <div className="text-2xl p-0 flex items-center justify-between h-18">
             <ul className="navbar bg-base-200 w-full  h-full text-xl gap-0 p-0">
               <button
@@ -394,6 +348,57 @@ function App() {
                     </li>
                   ))}
               </div>
+
+              <select
+                defaultValue="Pick a theme"
+                className="select w-40 mx-4"
+                onChange={(e) => setTheme(e.target.value)}
+              >
+                <option disabled={true}>Pick a theme</option>
+                {[
+                  "dark",
+                  "synthwave",
+                  "halloween",
+                  "forest",
+                  "black",
+                  "luxury",
+                  "dracula",
+                  "business",
+                  "night",
+                  "coffee",
+                  "dim",
+                  "sunset",
+                  "abyss",
+                  "aqua",
+                  "cyberpunk",
+                  "valentine",
+                  "light",
+                  "cupcake",
+                  "bumblebee",
+                  "emerald",
+                  "corporate",
+                  "retro",
+                  "garden",
+                  "lofi",
+                  "pastel",
+                  "fantasy",
+                  "wireframe",
+                  "cmyk",
+                  "autumn",
+                  "acid",
+                  "lemonade",
+
+                  "winter",
+                  "nord",
+                  "caramellatte",
+                  "silk",
+                ].map((theme) => (
+                  <option key={theme} value={theme} data-theme={theme}>
+                    {theme}
+                  </option>
+                ))}
+              </select>
+
               <div tabIndex={0} className="h-full">
                 {isMobile ? null : <ApplicationButton />}
                 <AuthButton />
@@ -403,10 +408,55 @@ function App() {
           <div className="min-h-[80vh] mb-4">
             <RouterProvider router={router} />
           </div>
-          <div className="bg-base-200 p-4 text-center mt-20">
+          <footer className="footer sm:footer-horizontal bg-base-200 items-center p-4">
+            <aside className="grid-flow-col items-center">
+              <p>
+                This product isn't affiliated with or endorsed by Grinding Gear
+                Games in any way.
+              </p>
+            </aside>
+            <nav className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
+              <a
+                href="https://discord.com/invite/3weG9JACgb"
+                target="_blank"
+                className="cursor-pointer"
+              >
+                <DiscordFilled className="h-6 w-6 cursor-pointer" />
+              </a>
+              <a
+                href="https://github.com/Liberatorist/bpl-2"
+                target="_blank"
+                className="cursor-pointer"
+              >
+                <GithubFilled className="h-6 w-6 cursor-pointer" />
+              </a>
+              <a
+                href="https://www.twitch.tv/bpl_poe"
+                target="_blank"
+                className="cursor-pointer"
+              >
+                <TwitchFilled className="h-6 w-6 cursor-pointer" />
+              </a>
+              <a
+                href="https://www.youtube.com/@BPL-PoE"
+                target="_blank"
+                className="cursor-pointer"
+              >
+                <YoutubeFilled className="h-6 w-6 cursor-pointer" />
+              </a>
+              <a
+                href="https://x.com/BPL_PoE"
+                target="_blank"
+                className="cursor-pointer"
+              >
+                <TwitterFilled className="h-6 w-6 cursor-pointer" />
+              </a>
+            </nav>
+          </footer>
+          {/* <div className="bg-base-200 p-4 text-center mt-20">
             This product isn't affiliated with or endorsed by Grinding Gear
             Games in any way.
-          </div>
+          </div> */}
         </div>
       </ContextProvider>
     </>

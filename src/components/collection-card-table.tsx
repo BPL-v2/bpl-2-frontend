@@ -39,7 +39,7 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
   const { eventStatus, currentEvent } = useContext(GlobalStateContext);
 
   return (
-    <table key={objective.id} className="w-full border-collapse">
+    <table key={objective.id} className="w-full border-collapse bg-base-300">
       <tbody>
         {Object.entries(objective.team_score)
           .map(([teamId, score]) => {
@@ -57,8 +57,8 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
               <tr
                 className={
                   teamId === eventStatus?.team_id
-                    ? "bg-highlight"
-                    : "bg-base-300"
+                    ? "border-y-1 border-primary/50"
+                    : ""
                 }
                 key={teamId}
               >

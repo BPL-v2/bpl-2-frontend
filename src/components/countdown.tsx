@@ -59,7 +59,7 @@ export function Countdown({ target, onEnd, size }: CountdownProps) {
         <div className="flex flex-col">
           <span className={`countdown font-mono ${numberSize}`}>
             <span
-              style={{ "--value": days } as React.CSSProperties}
+              style={{ "--value": Math.min(days, 99) } as React.CSSProperties}
               aria-live="polite"
               aria-label={"days"}
             >

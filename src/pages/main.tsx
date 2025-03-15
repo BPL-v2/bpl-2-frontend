@@ -1,8 +1,9 @@
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { VideoEmbed } from "../components/video-embed";
-import { DiscordOutlined, HeartOutlined } from "@ant-design/icons";
 import { Countdown } from "../components/countdown";
+import { DiscordFilled } from "../icons/discord";
+import { HeartIcon } from "@heroicons/react/24/solid";
 
 export function MainPage() {
   const { currentEvent, gameVersion } = useContext(GlobalStateContext);
@@ -31,18 +32,19 @@ export function MainPage() {
                   <a
                     href="https://discord.com/invite/3weG9JACgb"
                     target="_blank"
-                    className="text-white text-2xl"
+                    className="text-white text-2xl flex items-center justify-center gap-2"
                   >
-                    <DiscordOutlined /> Join the Discord
+                    <DiscordFilled className="w-6 h-6" />
+                    Join the Discord
                   </a>
                 </button>
                 <button className="btn h-16 bg-fuchsia-600">
                   <a
                     href="https://ko-fi.com/bpl_poe"
                     target="_blank"
-                    className="text-white text-2xl"
+                    className="text-white text-2xl flex items-center justify-center gap-2"
                   >
-                    <HeartOutlined /> Support BPL
+                    <HeartIcon className="h-7 w-7" /> Support BPL
                   </a>
                 </button>
               </div>
@@ -78,14 +80,14 @@ export function MainPage() {
                 </div>
 
                 {!hasStarted ? (
-                  <div>
+                  <div className="flex flex-col items-center gap-4">
                     <h3 className="text-3xl">See you at the Beach in</h3>{" "}
                     <Countdown
                       target={new Date(currentEvent.event_start_time)}
                     />
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center gap-4">
                     <h3 className="text-3xl">Event will end in</h3>
                     <Countdown
                       target={new Date(currentEvent.event_end_time)}

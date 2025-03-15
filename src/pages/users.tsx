@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import CrudTable, { CrudColumn } from "../components/crudtable";
-import { CopyOutlined } from "@ant-design/icons";
 import { GlobalStateContext } from "../utils/context-provider";
 import { Permission, User } from "../client";
 import { userApi } from "../client/client";
+import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 
 const columns: CrudColumn<User>[] = [
   {
@@ -37,8 +37,8 @@ const columns: CrudColumn<User>[] = [
     type: "number",
     render: (value: number) => {
       return (
-        <a onClick={() => copyDiscordId(value)}>
-          <CopyOutlined />
+        <a onClick={() => copyDiscordId(value)} className="flex gap-2">
+          <ClipboardDocumentCheckIcon className="cursor-pointer h-6 w-6" />
           {value}
         </a>
       );

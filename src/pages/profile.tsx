@@ -40,16 +40,19 @@ export function ProfilePage() {
                 .then(setUser);
             }}
           >
-            <input
-              type="text"
-              name="display_name"
-              defaultValue={user.display_name}
-              className="input"
-              required
-            />
-            <button type="submit" className="btn btn-primary">
-              Save
-            </button>
+            {" "}
+            <div className="join gap-0 ">
+              <input
+                type="text"
+                name="display_name"
+                defaultValue={user.display_name}
+                className="input rounded-l-field focus:border-r-transparent focus:outline-transparent"
+                required
+              />
+              <button type="submit" className="btn btn-primary rounded-r-field">
+                Save
+              </button>
+            </div>
           </form>
         </div>
       </div>
