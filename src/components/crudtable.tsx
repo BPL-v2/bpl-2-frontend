@@ -88,7 +88,6 @@ const CrudTable = <T,>({
   formValidator,
   filterFunction,
 }: CrudTableProps<T>) => {
-  const formRef = useRef<HTMLFormElement>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentData, setCurrentData] = useState<Partial<T>>({});
@@ -104,11 +103,11 @@ const CrudTable = <T,>({
   const form = useMemo(() => {
     return (
       <form
-        ref={formRef}
         className="space-y-4 text-left"
         onSubmit={(e) => {
+          const form = e.target as HTMLFormElement;
           e.preventDefault();
-          const createData = getFormData(e.target as HTMLFormElement, columns);
+          const createData = getFormData(form, columns);
           if (formValidator) {
             const error = formValidator(data as never);
             if (error) {
@@ -133,6 +132,7 @@ const CrudTable = <T,>({
             });
             setIsCreateModalOpen(false);
           }
+          form.reset();
         }}
       >
         <fieldset className="fieldset w-xs bg-base-200 p-4">
