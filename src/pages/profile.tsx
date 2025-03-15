@@ -49,7 +49,10 @@ export function ProfilePage() {
                 className="input rounded-l-field focus:border-r-transparent focus:outline-transparent"
                 required
               />
-              <button type="submit" className="btn btn-primary rounded-r-field">
+              <button
+                type="submit"
+                className="btn btn-primary btn-outline rounded-r-field"
+              >
                 Save
               </button>
             </div>

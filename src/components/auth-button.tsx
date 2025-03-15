@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import { useContext, useEffect } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { router } from "../router";

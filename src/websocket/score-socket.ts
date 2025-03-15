@@ -4,6 +4,7 @@ import { ScoreDiffWithKey } from "../types/score";
 export const establishScoreSocket = (
   eventId: number,
   setScores: (scores: ScoreMap) => void,
+  setWebsocket: (ws: WebSocket) => void,
   appendUpdates: (updates: ScoreDiffWithKey[]) => void
 ) => {
   const url =
@@ -46,12 +47,14 @@ export const establishScoreSocket = (
     console.error("WebSocket error", error);
   };
 
-  ws.onclose = () => {
-    console.log("WebSocket connection closed, trying reconnect", new Date());
-    // Reconnect
+  ws.onclose = (ev) => {
+    if (ev.code === 1000 && ev.reason === "eventChange") {
+      return;
+    }
+    // in case of unexpected close, try to reconnect
     setTimeout(() => {
-      establishScoreSocket(eventId, setScores, appendUpdates);
+      establishScoreSocket(eventId, setScores, setWebsocket, appendUpdates);
     }, 10000);
   };
-  return ws;
+  setWebsocket(ws);
 };

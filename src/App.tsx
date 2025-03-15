@@ -33,6 +33,8 @@ import { YoutubeFilled } from "./icons/youtube";
 import { TwitterFilled } from "./icons/twitter";
 import { GithubFilled } from "./icons/github";
 import { DiscordFilled } from "./icons/discord";
+import { ThemePicker } from "./components/theme-picker";
+import { EventPicker } from "./components/event-picker";
 
 type MenuItem = {
   label: string | JSX.Element;
@@ -76,10 +78,7 @@ function App() {
   const [gameVersion, setGameVersion] = useState<GameVersion>(GameVersion.poe1);
   const [updates, setUpdates] = useState<ScoreDiffWithKey[]>([]);
   const [ladder, setLadder] = useState<LadderEntry[]>([]);
-  const [theme, setTheme] = useState("dark");
-  useEffect(() => {
-    document?.querySelector("html")?.setAttribute("data-theme", theme);
-  }, [theme]);
+  const [websocket, setWebsocket] = useState<WebSocket>();
 
   useEffect(() => {
     // @ts-ignore just a manual flag to avoid refetching on initial load
@@ -87,8 +86,13 @@ function App() {
       return;
     }
     userApi.getUser().then(setUser);
-    establishScoreSocket(currentEvent.id, setScoreData, (newUpdates) =>
-      setUpdates((prevUpdates) => [...newUpdates, ...prevUpdates])
+    websocket?.close(1000, "eventChange");
+    establishScoreSocket(
+      currentEvent.id,
+      setScoreData,
+      setWebsocket,
+      (newUpdates) =>
+        setUpdates((prevUpdates) => [...newUpdates, ...prevUpdates])
     );
     scoringApi.getRulesForEvent(currentEvent.id).then(setRules);
     scoringApi
@@ -348,57 +352,8 @@ function App() {
                     </li>
                   ))}
               </div>
-
-              <select
-                defaultValue="Pick a theme"
-                className="select w-40 mx-4"
-                onChange={(e) => setTheme(e.target.value)}
-              >
-                <option disabled={true}>Pick a theme</option>
-                {[
-                  "dark",
-                  "synthwave",
-                  "halloween",
-                  "forest",
-                  "black",
-                  "luxury",
-                  "dracula",
-                  "business",
-                  "night",
-                  "coffee",
-                  "dim",
-                  "sunset",
-                  "abyss",
-                  "aqua",
-                  "cyberpunk",
-                  "valentine",
-                  "light",
-                  "cupcake",
-                  "bumblebee",
-                  "emerald",
-                  "corporate",
-                  "retro",
-                  "garden",
-                  "lofi",
-                  "pastel",
-                  "fantasy",
-                  "wireframe",
-                  "cmyk",
-                  "autumn",
-                  "acid",
-                  "lemonade",
-
-                  "winter",
-                  "nord",
-                  "caramellatte",
-                  "silk",
-                ].map((theme) => (
-                  <option key={theme} value={theme} data-theme={theme}>
-                    {theme}
-                  </option>
-                ))}
-              </select>
-
+              <ThemePicker />
+              <EventPicker />
               <div tabIndex={0} className="h-full">
                 {isMobile ? null : <ApplicationButton />}
                 <AuthButton />
