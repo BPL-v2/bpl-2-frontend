@@ -34,6 +34,7 @@ import { conditionApi, objectiveApi, scoringApi } from "../client/client";
 import { DateTimePicker } from "../components/datetime-picker";
 
 async function createBulkItemObjectives(
+  eventId: number,
   categoryId: number,
   nameList: string,
   scoring_preset_id: number,
@@ -58,7 +59,9 @@ async function createBulkItemObjectives(
       ],
     };
   });
-  await Promise.all(objectives.map(objectiveApi.createObjective));
+  await Promise.all(
+    objectives.map((obj) => objectiveApi.createObjective(eventId, obj))
+  );
 }
 const ScoringCategoryPage: React.FC = () => {
   let { user, events } = useContext(GlobalStateContext);
@@ -89,7 +92,7 @@ const ScoringCategoryPage: React.FC = () => {
     }>();
 
   useEffect(() => {
-    conditionApi.getValidMappings().then((data) => {
+    conditionApi.getValidMappings(Number(eventId)).then((data) => {
       setOperatorForField(
         Object.entries(data.field_to_type).reduce((acc, [key, value]) => {
           acc[key as ItemField] = data.valid_operators[value];
@@ -115,9 +118,11 @@ const ScoringCategoryPage: React.FC = () => {
     if (!categoryId) {
       return;
     }
-    scoringApi.getScoringCategory(Number(categoryId)).then((data) => {
-      setCategoryName(data.name);
-    });
+    scoringApi
+      .getScoringCategory(Number(eventId), Number(categoryId))
+      .then((data) => {
+        setCategoryName(data.name);
+      });
   }, [categoryId]);
 
   const categoryColumns: CrudColumn<Category>[] = useMemo(
@@ -408,10 +413,12 @@ const ScoringCategoryPage: React.FC = () => {
       if (currentObjective.id) {
         objectiveCreate.id = currentObjective.id;
       }
-      objectiveApi.createObjective(objectiveCreate).then(() => {
-        setRefreshObjectives((prev) => !prev);
-        setIsObjectiveModalOpen(false);
-      });
+      objectiveApi
+        .createObjective(Number(eventId), objectiveCreate)
+        .then(() => {
+          setRefreshObjectives((prev) => !prev);
+          setIsObjectiveModalOpen(false);
+        });
     }
 
     return (
@@ -542,7 +549,7 @@ const ScoringCategoryPage: React.FC = () => {
                       <CloseOutlined
                         onClick={(event) => {
                           conditionApi
-                            .deleteCondition(condition.id)
+                            .deleteCondition(Number(eventId), condition.id)
                             .then(() => {
                               event.stopPropagation();
                               setRefreshObjectives((prev) => !prev);
@@ -591,7 +598,7 @@ const ScoringCategoryPage: React.FC = () => {
             return { ...condition, id: undefined, objective_id: undefined };
           }),
         };
-        objectiveApi.createObjective(newObjective).then(() => {
+        objectiveApi.createObjective(Number(eventId), newObjective).then(() => {
           setRefreshObjectives((prev) => !prev);
         });
       },
@@ -608,10 +615,12 @@ const ScoringCategoryPage: React.FC = () => {
           columns={objectiveColumns}
           fetchFunction={() =>
             scoringApi
-              .getScoringCategory(Number(categoryId))
+              .getScoringCategory(Number(eventId), Number(categoryId))
               .then((data) => data.objectives)
           }
-          deleteFunction={(obj) => objectiveApi.deleteObjective(obj.id)}
+          deleteFunction={(obj) =>
+            objectiveApi.deleteObjective(Number(eventId), obj.id)
+          }
           addtionalActions={addtionalObjectiveActions}
         />
         <button
@@ -643,23 +652,27 @@ const ScoringCategoryPage: React.FC = () => {
           resourceName="Scoring Category"
           columns={categoryColumns}
           fetchFunction={() =>
-            scoringApi.getScoringCategory(Number(categoryId)).then((data) => {
-              return data.sub_categories;
-            })
+            scoringApi
+              .getScoringCategory(Number(eventId), Number(categoryId))
+              .then((data) => {
+                return data.sub_categories;
+              })
           }
           createFunction={(data) =>
-            scoringApi.createCategory({
+            scoringApi.createCategory(Number(eventId), {
               ...data,
               parent_id: Number(categoryId),
             })
           }
           editFunction={(data) =>
-            scoringApi.createCategory({
+            scoringApi.createCategory(Number(eventId), {
               ...data,
               parent_id: Number(categoryId),
             })
           }
-          deleteFunction={(data) => scoringApi.deleteCategory(data.id)}
+          deleteFunction={(data) =>
+            scoringApi.deleteCategory(Number(eventId), data.id)
+          }
         />
       </>
     );
@@ -688,6 +701,7 @@ const ScoringCategoryPage: React.FC = () => {
                 const form = e.currentTarget;
                 const data = new FormData(form);
                 createBulkItemObjectives(
+                  Number(eventId),
                   Number(categoryId),
                   data.get("name_list") as string,
                   Number(data.get("scoring_method")),
@@ -807,10 +821,12 @@ const ScoringCategoryPage: React.FC = () => {
                 value: data.get("value") as string,
                 objective_id: currentObjective.id,
               };
-              conditionApi.createCondition(conditionCreate).then(() => {
-                setIsConditionModalOpen(false);
-                setRefreshObjectives((prev) => !prev);
-              });
+              conditionApi
+                .createCondition(Number(eventId), conditionCreate)
+                .then(() => {
+                  setIsConditionModalOpen(false);
+                  setRefreshObjectives((prev) => !prev);
+                });
             }}
           >
             <fieldset className="fieldset bg-base-300 p-4 rounded-xl mb-4">

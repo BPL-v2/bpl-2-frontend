@@ -4,12 +4,14 @@ interface DateTimePickerProps {
   defaultValue?: Date | string;
   label?: string;
   name?: string;
+  required?: boolean;
 }
 
 export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   defaultValue,
   label,
   name,
+  required,
 }) => {
   const pad = (n: number) => (n < 10 ? `0${n}` : n);
 
@@ -60,6 +62,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
           name={`${name}-date`}
           value={date}
           onChange={(e) => setDate(e.target.value)}
+          required={required}
         />
         <input
           type="time"
@@ -67,6 +70,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
           name={`${name}-time`}
           value={time}
           onChange={(e) => setTime(e.target.value)}
+          required={required}
         />
         <input type="hidden" name={name} value={toIsoString(time, date)} />
       </div>

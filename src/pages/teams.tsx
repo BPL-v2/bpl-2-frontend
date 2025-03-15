@@ -23,6 +23,7 @@ const TeamPage = () => {
         key: "name",
         type: "text",
         editable: true,
+        required: true,
       },
       {
         title: "Allowed Classes",

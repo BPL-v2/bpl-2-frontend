@@ -3,7 +3,7 @@ import CrudTable, { CrudColumn } from "../components/crudtable";
 import { router } from "../router";
 import { GlobalStateContext } from "../utils/context-provider";
 import { EventCreate, Event, Permission } from "../client/api";
-import { eventApi } from "../client/client";
+import { eventApi, scoringApi } from "../client/client";
 
 const columns: CrudColumn<Event>[] = [
   {
@@ -21,15 +21,7 @@ const columns: CrudColumn<Event>[] = [
     required: true,
   },
   {
-    title: "Current",
-    dataIndex: "is_current",
-    key: "is_current",
-    type: "checkbox",
-    editable: true,
-    render: (_, event) => (event.is_current ? "Yes" : "No"),
-  },
-  {
-    title: "Game Version",
+    title: "Version",
     dataIndex: "game_version",
     key: "game_version",
     type: "select",
@@ -38,13 +30,27 @@ const columns: CrudColumn<Event>[] = [
     required: true,
   },
   {
+    title: "Dates",
+    key: "dates",
+    render: (_, event) => (
+      <div className="grid grid-cols-2 gap-2">
+        <div>Application Start: </div>
+        <div>{new Date(event.application_start_time).toLocaleString()}</div>
+        <div>Event Start: </div>
+        <div>{new Date(event.event_start_time).toLocaleString()}</div>
+        <div>Event End: </div>
+        <div>{new Date(event.event_end_time).toLocaleString()}</div>
+      </div>
+    ),
+  },
+  {
     title: "Application Start",
     dataIndex: "application_start_time",
     key: "application_start_time",
     type: "date",
     editable: true,
     required: true,
-    render: (date) => new Date(date).toLocaleString(),
+    hidden: true,
   },
   {
     title: "Event Start",
@@ -53,7 +59,7 @@ const columns: CrudColumn<Event>[] = [
     type: "date",
     editable: true,
     required: true,
-    render: (date) => new Date(date).toLocaleString(),
+    hidden: true,
   },
   {
     title: "Event End",
@@ -62,15 +68,39 @@ const columns: CrudColumn<Event>[] = [
     type: "date",
     editable: true,
     required: true,
-    render: (date) => new Date(date).toLocaleString(),
+    hidden: true,
   },
   {
-    title: "Maximum Size",
+    title: "MaxSize",
     dataIndex: "max_size",
     key: "max_size",
     type: "number",
     editable: true,
     required: true,
+  },
+  {
+    title: "Current",
+    dataIndex: "is_current",
+    key: "is_current",
+    type: "checkbox",
+    editable: true,
+    render: (_, event) => (event.is_current ? "✅" : "❌"),
+  },
+  {
+    title: "Public",
+    dataIndex: "is_public",
+    key: "is_public",
+    type: "checkbox",
+    editable: true,
+    render: (_, event) => (event.is_public ? "✅" : "❌"),
+  },
+  {
+    title: "Locked",
+    dataIndex: "is_locked",
+    key: "is_locked",
+    type: "checkbox",
+    editable: true,
+    render: (_, event) => (event.is_locked ? "✅" : "❌"),
   },
 ];
 
@@ -127,9 +157,11 @@ const EventPage: React.FC = () => {
           {
             name: "Scoring Categories",
             func: async (data) =>
-              router.navigate(
-                `/events/${data.id}/scoring-categories/${data.scoring_category_id}`
-              ),
+              scoringApi.getRulesForEvent(data.id).then((rules) => {
+                router.navigate(
+                  `/events/${data.id}/scoring-categories/${rules.id}`
+                );
+              }),
           },
           {
             name: "Scoring Presets",

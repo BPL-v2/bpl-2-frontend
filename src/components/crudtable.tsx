@@ -3,6 +3,7 @@ import { sendWarning } from "../utils/notifications";
 import ArrayInput from "./arrayinput";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+import { DateTimePicker } from "./datetime-picker";
 
 type Option = {
   label: string;
@@ -15,6 +16,7 @@ export interface CrudColumn<T> {
   key: string;
   editable?: boolean;
   required?: boolean;
+  hidden?: boolean;
   type?:
     | "text"
     | "number"
@@ -55,22 +57,24 @@ function getFormData<T>(
   form: HTMLFormElement,
   columns: CrudColumn<T>[]
 ): Partial<T> {
-  const data = {} as any;
-  const formdata = new FormData(form);
+  const formData = new FormData(form);
+  const createData = {} as any;
   for (const c of columns) {
+    if (!c.editable) continue;
     if (c.type === "multiselect") {
-      data[c.key] = formdata.getAll(c.key);
+      createData[c.key] = formData.getAll(c.key);
     } else if (c.type === "checkbox") {
-      data[c.key] = formdata.get(c.key) ? true : false;
+      createData[c.key] = formData.get(c.key) ? true : false;
     } else if (c.type === "date") {
-      data[c.key] = dayjs(formdata.get(c.key) as string).toISOString();
+      createData[c.key] = dayjs(formData.get(c.key) as string).toISOString();
     } else if (c.type === "number") {
-      data[c.key] = Number(formdata.get(c.key));
+      createData[c.key] = Number(formData.get(c.key));
     } else {
-      data[c.key] = formdata.get(c.key);
+      createData[c.key] = formData.get(c.key);
     }
   }
-  return data as T;
+
+  return createData as T;
 }
 
 const CrudTable = <T,>({
@@ -86,7 +90,6 @@ const CrudTable = <T,>({
 }: CrudTableProps<T>) => {
   const formRef = useRef<HTMLFormElement>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentData, setCurrentData] = useState<Partial<T>>({});
 
@@ -100,7 +103,38 @@ const CrudTable = <T,>({
 
   const form = useMemo(() => {
     return (
-      <form ref={formRef} className="space-y-4 text-left">
+      <form
+        ref={formRef}
+        className="space-y-4 text-left"
+        onSubmit={(e) => {
+          e.preventDefault();
+          const createData = getFormData(e.target as HTMLFormElement, columns);
+          if (formValidator) {
+            const error = formValidator(data as never);
+            if (error) {
+              sendWarning(error);
+              return;
+            }
+          }
+          if (!currentData && createFunction) {
+            createFunction(createData).then(() => {
+              fetchFunction().then((data) => {
+                setData(data);
+              });
+            });
+            setIsCreateModalOpen(false);
+          } else if (currentData && editFunction) {
+            // @ts-ignore ugly hack so that we can use put endpoints for updates and no new object is created
+            createData.id = currentData.id;
+            editFunction(createData).then(() => {
+              fetchFunction().then((data) => {
+                setData(data);
+              });
+            });
+            setIsCreateModalOpen(false);
+          }
+        }}
+      >
         <fieldset className="fieldset w-xs bg-base-200 p-4">
           {columns
             .filter((column) => column.editable)
@@ -121,6 +155,8 @@ const CrudTable = <T,>({
                     id={String(key)}
                     className="input"
                     defaultValue={currentData[key] as string}
+                    required={column.required}
+                    key={String(currentData[key])}
                   />
                 );
               } else if (column.type === "number") {
@@ -130,6 +166,8 @@ const CrudTable = <T,>({
                     type="number"
                     className="input "
                     defaultValue={currentData[key] as number}
+                    required={column.required}
+                    key={String(currentData[key])}
                   />
                 );
               } else if (column.type === "checkbox") {
@@ -145,13 +183,11 @@ const CrudTable = <T,>({
               } else if (column.type === "date") {
                 const val = currentData[key] as string;
                 input = (
-                  <input
+                  <DateTimePicker
+                    key={val}
                     name={String(key)}
-                    type="datetime-local"
-                    className="input"
-                    defaultValue={
-                      val ? dayjs(val).format("YYYY-MM-DDTHH:mm") : undefined
-                    }
+                    defaultValue={val}
+                    required={column.required}
                   />
                 );
               } else if (column.type === "select") {
@@ -218,24 +254,38 @@ const CrudTable = <T,>({
                 return;
               }
               return (
-                <div key={String(column.title)}>
+                <>
                   <label className="fieldset-label">
                     {String(column.title)}
                   </label>
                   {input}
-                </div>
+                </>
               );
               // return input;
             })
             .filter((element) => element !== undefined)}
         </fieldset>
+        <div className="flex gap-2 justify-end ">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => {
+              setIsCreateModalOpen(false);
+            }}
+          >
+            Cancel
+          </button>
+          <button className="btn btn-primary" type="submit">
+            {currentData ? "Update" : "Create"}
+          </button>
+        </div>
       </form>
     );
   }, [currentData]);
 
   return (
     <>
-      {createFunction ? (
+      {createFunction || editFunction ? (
         <dialog
           className="modal"
           open={isCreateModalOpen}
@@ -250,103 +300,10 @@ const CrudTable = <T,>({
         >
           <div className="modal-box bg-base-200 border-2 border-base-100 max-w-sm">
             <h3 className="font-bold text-lg mb-8">
-              Create new {resourceName}
+              {currentData ? "Update " : "Create "}
+              {resourceName}
             </h3>
             <div className="flex justify-end flex-col gap-y-4">{form}</div>
-            <div className="flex gap-2 justify-end ">
-              <button
-                className="btn btn-secondary"
-                onClick={() => {
-                  setIsCreateModalOpen(false);
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  const form = formRef.current;
-                  if (!form) {
-                    sendWarning("Form not found");
-                    return;
-                  }
-                  const data = Object.fromEntries(
-                    new FormData(form).entries()
-                  ) as Partial<T>;
-                  if (formValidator) {
-                    const error = formValidator(data);
-                    if (error) {
-                      sendWarning(error);
-                      return;
-                    }
-                  }
-                  createFunction(data).then(() => {
-                    fetchFunction().then((data) => {
-                      setData(data);
-                    });
-                  });
-                  setIsCreateModalOpen(false);
-                }}
-              >
-                Create
-              </button>
-            </div>
-          </div>
-        </dialog>
-      ) : null}
-      {editFunction ? (
-        <dialog
-          className="modal"
-          open={isUpdateModalOpen}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setIsUpdateModalOpen(false);
-            }
-          }}
-          onClose={() => {
-            setIsUpdateModalOpen(false);
-          }}
-        >
-          <div className="modal-box bg-base-200 border-2 border-base-100 max-w-sm">
-            <h3 className="font-bold text-lg mb-8">Edit {resourceName}</h3>
-            <div className="flex justify-end flex-col gap-y-4">{form}</div>
-            <div className="flex gap-2 justify-end ">
-              <button
-                className="btn btn-secondary"
-                onClick={() => {
-                  setIsUpdateModalOpen(false);
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  const form = formRef.current;
-                  if (!form) {
-                    return;
-                  }
-                  const data = getFormData(form, columns);
-                  if (formValidator) {
-                    const error = formValidator(data);
-                    if (error) {
-                      sendWarning(error);
-                      return;
-                    }
-                  }
-                  // @ts-ignore ugly hack so that we can use put endpoints for updates and no new object is created
-                  data.id = currentData.id;
-                  editFunction(data).then(() => {
-                    fetchFunction().then((data) => {
-                      setData(data);
-                    });
-                  });
-                  setIsUpdateModalOpen(false);
-                }}
-              >
-                Update
-              </button>
-            </div>
           </div>
         </dialog>
       ) : null}
@@ -398,9 +355,11 @@ const CrudTable = <T,>({
       <table className="table bg-base-300 table-md">
         <thead className="bg-base-200 text-neutral-300">
           <tr>
-            {columns.map((column) => (
-              <th key={String(column.title)}>{String(column.title)}</th>
-            ))}
+            {columns
+              .filter((column) => !column.hidden)
+              .map((column) => (
+                <th key={String(column.title)}>{String(column.title)}</th>
+              ))}
             <th>Actions</th>
           </tr>
         </thead>
@@ -411,17 +370,25 @@ const CrudTable = <T,>({
             .map((entry, idx) => {
               return (
                 <tr key={idx}>
-                  {columns.map((column, cid) => {
-                    const value = entry[column.dataIndex as keyof T] as any;
-                    if (column.render) {
-                      return (
-                        <td key={String(column.dataIndex) + cid}>
-                          {column.render(value, entry, cid) as React.ReactNode}
-                        </td>
-                      );
-                    }
-                    return <td key={String(column.dataIndex)}>{value}</td>;
-                  })}
+                  {columns
+                    .filter((column) => !column.hidden)
+                    .map((column, cid) => {
+                      const value = entry[column.dataIndex as keyof T] as any;
+                      if (column.render) {
+                        return (
+                          <td key={String(column.dataIndex) + cid}>
+                            {
+                              column.render(
+                                value,
+                                entry,
+                                cid
+                              ) as React.ReactNode
+                            }
+                          </td>
+                        );
+                      }
+                      return <td key={String(column.dataIndex)}>{value}</td>;
+                    })}
                   <td>
                     <div className="flex gap-2">
                       {editFunction && (
@@ -429,7 +396,7 @@ const CrudTable = <T,>({
                           className="btn btn-warning btn-sm"
                           onClick={() => {
                             setCurrentData({ ...entry });
-                            setIsUpdateModalOpen(true);
+                            setIsCreateModalOpen(true);
                           }}
                         >
                           <EditOutlined />

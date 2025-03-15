@@ -364,6 +364,18 @@ export interface Event {
     is_current: boolean;
     /**
      * 
+     * @type {boolean}
+     * @memberof Event
+     */
+    is_locked: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Event
+     */
+    is_public: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof Event
      */
@@ -374,12 +386,6 @@ export interface Event {
      * @memberof Event
      */
     name: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof Event
-     */
-    scoring_category_id: number;
     /**
      * 
      * @type {Array<Team>}
@@ -430,6 +436,18 @@ export interface EventCreate {
      * @memberof EventCreate
      */
     is_current?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof EventCreate
+     */
+    is_locked?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof EventCreate
+     */
+    is_public?: boolean;
     /**
      * 
      * @type {number}
@@ -958,7 +976,9 @@ export enum Operator {
  */
 export enum Permission {
     admin = 'admin',
-    command_team = 'command_team'
+    command_team = 'command_team',
+    objective_designer = 'objective_designer',
+    judge = 'judge'
 }
 
 /**
@@ -1144,12 +1164,6 @@ export interface ScoringPresetCreate {
      * @memberof ScoringPresetCreate
      */
     description?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ScoringPresetCreate
-     */
-    event_id: number;
     /**
      * 
      * @type {number}
@@ -1655,16 +1669,22 @@ export const ConditionApiFetchParamCreator = function (configuration?: Configura
     return {
         /**
          * Creates a condition
+         * @param {number} event_id Event Id
          * @param {ConditionCreate} condition Condition to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createCondition(condition: ConditionCreate, options: any = {}): FetchArgs {
+        createCondition(event_id: number, condition: ConditionCreate, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createCondition.');
+            }
             // verify required parameter 'condition' is not null or undefined
             if (condition === null || condition === undefined) {
                 throw new RequiredError('condition','Required parameter condition was null or undefined when calling createCondition.');
             }
-            const localVarPath = `/scoring/conditions`;
+            const localVarPath = `/events/{event_id}/conditions`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
             const localVarHeaderParameter = {} as any;
@@ -1686,16 +1706,22 @@ export const ConditionApiFetchParamCreator = function (configuration?: Configura
         },
         /**
          * Deletes a condition
+         * @param {number} event_id Event Id
          * @param {number} id Condition Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteCondition(id: number, options: any = {}): FetchArgs {
+        deleteCondition(event_id: number, id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling deleteCondition.');
+            }
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
                 throw new RequiredError('id','Required parameter id was null or undefined when calling deleteCondition.');
             }
-            const localVarPath = `/scoring/conditions/{id}`
+            const localVarPath = `/events/{event_id}/conditions/{id}`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
@@ -1714,11 +1740,17 @@ export const ConditionApiFetchParamCreator = function (configuration?: Configura
         },
         /**
          * Get valid mappings for conditions
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getValidMappings(options: any = {}): FetchArgs {
-            const localVarPath = `/scoring/conditions/valid-mappings`;
+        getValidMappings(event_id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getValidMappings.');
+            }
+            const localVarPath = `/events/{event_id}/conditions/valid-mappings`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
             const localVarHeaderParameter = {} as any;
@@ -1745,12 +1777,13 @@ export const ConditionApiFp = function(configuration?: Configuration) {
     return {
         /**
          * Creates a condition
+         * @param {number} event_id Event Id
          * @param {ConditionCreate} condition Condition to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createCondition(condition: ConditionCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Condition> {
-            const localVarFetchArgs = ConditionApiFetchParamCreator(configuration).createCondition(condition, options);
+        createCondition(event_id: number, condition: ConditionCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Condition> {
+            const localVarFetchArgs = ConditionApiFetchParamCreator(configuration).createCondition(event_id, condition, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -1763,12 +1796,13 @@ export const ConditionApiFp = function(configuration?: Configuration) {
         },
         /**
          * Deletes a condition
+         * @param {number} event_id Event Id
          * @param {number} id Condition Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteCondition(id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = ConditionApiFetchParamCreator(configuration).deleteCondition(id, options);
+        deleteCondition(event_id: number, id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = ConditionApiFetchParamCreator(configuration).deleteCondition(event_id, id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -1781,11 +1815,12 @@ export const ConditionApiFp = function(configuration?: Configuration) {
         },
         /**
          * Get valid mappings for conditions
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getValidMappings(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ConditionMappings> {
-            const localVarFetchArgs = ConditionApiFetchParamCreator(configuration).getValidMappings(options);
+        getValidMappings(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ConditionMappings> {
+            const localVarFetchArgs = ConditionApiFetchParamCreator(configuration).getValidMappings(event_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -1807,29 +1842,32 @@ export const ConditionApiFactory = function (configuration?: Configuration, fetc
     return {
         /**
          * Creates a condition
+         * @param {number} event_id Event Id
          * @param {ConditionCreate} condition Condition to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createCondition(condition: ConditionCreate, options?: any) {
-            return ConditionApiFp(configuration).createCondition(condition, options)(fetch, basePath);
+        createCondition(event_id: number, condition: ConditionCreate, options?: any) {
+            return ConditionApiFp(configuration).createCondition(event_id, condition, options)(fetch, basePath);
         },
         /**
          * Deletes a condition
+         * @param {number} event_id Event Id
          * @param {number} id Condition Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteCondition(id: number, options?: any) {
-            return ConditionApiFp(configuration).deleteCondition(id, options)(fetch, basePath);
+        deleteCondition(event_id: number, id: number, options?: any) {
+            return ConditionApiFp(configuration).deleteCondition(event_id, id, options)(fetch, basePath);
         },
         /**
          * Get valid mappings for conditions
+         * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getValidMappings(options?: any) {
-            return ConditionApiFp(configuration).getValidMappings(options)(fetch, basePath);
+        getValidMappings(event_id: number, options?: any) {
+            return ConditionApiFp(configuration).getValidMappings(event_id, options)(fetch, basePath);
         },
     };
 };
@@ -1843,34 +1881,37 @@ export const ConditionApiFactory = function (configuration?: Configuration, fetc
 export class ConditionApi extends BaseAPI {
     /**
      * Creates a condition
+     * @param {number} event_id Event Id
      * @param {ConditionCreate} condition Condition to create
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ConditionApi
      */
-    public createCondition(condition: ConditionCreate, options?: any) {
-        return ConditionApiFp(this.configuration).createCondition(condition, options)(this.fetch, this.basePath);
+    public createCondition(event_id: number, condition: ConditionCreate, options?: any) {
+        return ConditionApiFp(this.configuration).createCondition(event_id, condition, options)(this.fetch, this.basePath);
     }
 
     /**
      * Deletes a condition
+     * @param {number} event_id Event Id
      * @param {number} id Condition Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ConditionApi
      */
-    public deleteCondition(id: number, options?: any) {
-        return ConditionApiFp(this.configuration).deleteCondition(id, options)(this.fetch, this.basePath);
+    public deleteCondition(event_id: number, id: number, options?: any) {
+        return ConditionApiFp(this.configuration).deleteCondition(event_id, id, options)(this.fetch, this.basePath);
     }
 
     /**
      * Get valid mappings for conditions
+     * @param {number} event_id Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ConditionApi
      */
-    public getValidMappings(options?: any) {
-        return ConditionApiFp(this.configuration).getValidMappings(options)(this.fetch, this.basePath);
+    public getValidMappings(event_id: number, options?: any) {
+        return ConditionApiFp(this.configuration).getValidMappings(event_id, options)(this.fetch, this.basePath);
     }
 
 }
@@ -2852,16 +2893,22 @@ export const ObjectiveApiFetchParamCreator = function (configuration?: Configura
     return {
         /**
          * Creates a new objective
+         * @param {number} event_id Event Id
          * @param {ObjectiveCreate} body Objective to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createObjective(body: ObjectiveCreate, options: any = {}): FetchArgs {
+        createObjective(event_id: number, body: ObjectiveCreate, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createObjective.');
+            }
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body','Required parameter body was null or undefined when calling createObjective.');
             }
-            const localVarPath = `/scoring/objectives`;
+            const localVarPath = `/events/{event_id}/objectives`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
             const localVarHeaderParameter = {} as any;
@@ -2883,16 +2930,22 @@ export const ObjectiveApiFetchParamCreator = function (configuration?: Configura
         },
         /**
          * Deletes an objective
+         * @param {number} event_id Event Id
          * @param {number} id Objective Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteObjective(id: number, options: any = {}): FetchArgs {
+        deleteObjective(event_id: number, id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling deleteObjective.');
+            }
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
                 throw new RequiredError('id','Required parameter id was null or undefined when calling deleteObjective.');
             }
-            const localVarPath = `/scoring/objectives/{id}`
+            const localVarPath = `/events/{event_id}/objectives/{id}`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
@@ -2911,16 +2964,22 @@ export const ObjectiveApiFetchParamCreator = function (configuration?: Configura
         },
         /**
          * Gets an objective by id
+         * @param {number} event_id Event Id
          * @param {number} id Objective Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getObjective(id: number, options: any = {}): FetchArgs {
+        getObjective(event_id: number, id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getObjective.');
+            }
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
                 throw new RequiredError('id','Required parameter id was null or undefined when calling getObjective.');
             }
-            const localVarPath = `/scoring/objectives/{id}`
+            const localVarPath = `/events/{event_id}/objectives/{id}`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
@@ -2948,12 +3007,13 @@ export const ObjectiveApiFp = function(configuration?: Configuration) {
     return {
         /**
          * Creates a new objective
+         * @param {number} event_id Event Id
          * @param {ObjectiveCreate} body Objective to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createObjective(body: ObjectiveCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Objective> {
-            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).createObjective(body, options);
+        createObjective(event_id: number, body: ObjectiveCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Objective> {
+            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).createObjective(event_id, body, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -2966,12 +3026,13 @@ export const ObjectiveApiFp = function(configuration?: Configuration) {
         },
         /**
          * Deletes an objective
+         * @param {number} event_id Event Id
          * @param {number} id Objective Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteObjective(id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).deleteObjective(id, options);
+        deleteObjective(event_id: number, id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).deleteObjective(event_id, id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -2984,12 +3045,13 @@ export const ObjectiveApiFp = function(configuration?: Configuration) {
         },
         /**
          * Gets an objective by id
+         * @param {number} event_id Event Id
          * @param {number} id Objective Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getObjective(id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Objective> {
-            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).getObjective(id, options);
+        getObjective(event_id: number, id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Objective> {
+            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).getObjective(event_id, id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -3011,30 +3073,33 @@ export const ObjectiveApiFactory = function (configuration?: Configuration, fetc
     return {
         /**
          * Creates a new objective
+         * @param {number} event_id Event Id
          * @param {ObjectiveCreate} body Objective to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createObjective(body: ObjectiveCreate, options?: any) {
-            return ObjectiveApiFp(configuration).createObjective(body, options)(fetch, basePath);
+        createObjective(event_id: number, body: ObjectiveCreate, options?: any) {
+            return ObjectiveApiFp(configuration).createObjective(event_id, body, options)(fetch, basePath);
         },
         /**
          * Deletes an objective
+         * @param {number} event_id Event Id
          * @param {number} id Objective Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteObjective(id: number, options?: any) {
-            return ObjectiveApiFp(configuration).deleteObjective(id, options)(fetch, basePath);
+        deleteObjective(event_id: number, id: number, options?: any) {
+            return ObjectiveApiFp(configuration).deleteObjective(event_id, id, options)(fetch, basePath);
         },
         /**
          * Gets an objective by id
+         * @param {number} event_id Event Id
          * @param {number} id Objective Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getObjective(id: number, options?: any) {
-            return ObjectiveApiFp(configuration).getObjective(id, options)(fetch, basePath);
+        getObjective(event_id: number, id: number, options?: any) {
+            return ObjectiveApiFp(configuration).getObjective(event_id, id, options)(fetch, basePath);
         },
     };
 };
@@ -3048,35 +3113,38 @@ export const ObjectiveApiFactory = function (configuration?: Configuration, fetc
 export class ObjectiveApi extends BaseAPI {
     /**
      * Creates a new objective
+     * @param {number} event_id Event Id
      * @param {ObjectiveCreate} body Objective to create
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ObjectiveApi
      */
-    public createObjective(body: ObjectiveCreate, options?: any) {
-        return ObjectiveApiFp(this.configuration).createObjective(body, options)(this.fetch, this.basePath);
+    public createObjective(event_id: number, body: ObjectiveCreate, options?: any) {
+        return ObjectiveApiFp(this.configuration).createObjective(event_id, body, options)(this.fetch, this.basePath);
     }
 
     /**
      * Deletes an objective
+     * @param {number} event_id Event Id
      * @param {number} id Objective Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ObjectiveApi
      */
-    public deleteObjective(id: number, options?: any) {
-        return ObjectiveApiFp(this.configuration).deleteObjective(id, options)(this.fetch, this.basePath);
+    public deleteObjective(event_id: number, id: number, options?: any) {
+        return ObjectiveApiFp(this.configuration).deleteObjective(event_id, id, options)(this.fetch, this.basePath);
     }
 
     /**
      * Gets an objective by id
+     * @param {number} event_id Event Id
      * @param {number} id Objective Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ObjectiveApi
      */
-    public getObjective(id: number, options?: any) {
-        return ObjectiveApiFp(this.configuration).getObjective(id, options)(this.fetch, this.basePath);
+    public getObjective(event_id: number, id: number, options?: any) {
+        return ObjectiveApiFp(this.configuration).getObjective(event_id, id, options)(this.fetch, this.basePath);
     }
 
 }
@@ -3257,16 +3325,22 @@ export const ScoringApiFetchParamCreator = function (configuration?: Configurati
     return {
         /**
          * Creates a new scoring category
+         * @param {number} event_id Event Id
          * @param {CategoryCreate} body Category to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createCategory(body: CategoryCreate, options: any = {}): FetchArgs {
+        createCategory(event_id: number, body: CategoryCreate, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createCategory.');
+            }
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body','Required parameter body was null or undefined when calling createCategory.');
             }
-            const localVarPath = `/scoring/categories`;
+            const localVarPath = `/events/{event_id}/categories`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
             const localVarHeaderParameter = {} as any;
@@ -3288,16 +3362,22 @@ export const ScoringApiFetchParamCreator = function (configuration?: Configurati
         },
         /**
          * Creates a new scoring preset
+         * @param {number} event_id Event Id
          * @param {ScoringPresetCreate} body Preset to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createScoringPreset(body: ScoringPresetCreate, options: any = {}): FetchArgs {
+        createScoringPreset(event_id: number, body: ScoringPresetCreate, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createScoringPreset.');
+            }
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body','Required parameter body was null or undefined when calling createScoringPreset.');
             }
-            const localVarPath = `/scoring/presets`;
+            const localVarPath = `/events/{event_id}/scoring-presets`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
             const localVarHeaderParameter = {} as any;
@@ -3319,16 +3399,22 @@ export const ScoringApiFetchParamCreator = function (configuration?: Configurati
         },
         /**
          * Deletes a scoring category
+         * @param {number} event_id Event Id
          * @param {number} id Category Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteCategory(id: number, options: any = {}): FetchArgs {
+        deleteCategory(event_id: number, id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling deleteCategory.');
+            }
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
                 throw new RequiredError('id','Required parameter id was null or undefined when calling deleteCategory.');
             }
-            const localVarPath = `/scoring/categories/{id}`
+            const localVarPath = `/events/{event_id}/categories/{id}`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
@@ -3347,16 +3433,22 @@ export const ScoringApiFetchParamCreator = function (configuration?: Configurati
         },
         /**
          * Deletes a scoring preset by id
+         * @param {number} event_id Event Id
          * @param {number} id Preset Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteScoringPreset(id: number, options: any = {}): FetchArgs {
+        deleteScoringPreset(event_id: number, id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling deleteScoringPreset.');
+            }
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
                 throw new RequiredError('id','Required parameter id was null or undefined when calling deleteScoringPreset.');
             }
-            const localVarPath = `/scoring/presets/{id}`
+            const localVarPath = `/events/{event_id}/scoring-presets/{id}`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
@@ -3384,7 +3476,7 @@ export const ScoringApiFetchParamCreator = function (configuration?: Configurati
             if (event_id === null || event_id === undefined) {
                 throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getRulesForEvent.');
             }
-            const localVarPath = `/events/{event_id}/rules`
+            const localVarPath = `/events/{event_id}/categories`
                 .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
@@ -3403,44 +3495,22 @@ export const ScoringApiFetchParamCreator = function (configuration?: Configurati
         },
         /**
          * Fetches a scoring category by id
+         * @param {number} event_id Event Id
          * @param {number} id Category Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getScoringCategory(id: number, options: any = {}): FetchArgs {
+        getScoringCategory(event_id: number, id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getScoringCategory.');
+            }
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
                 throw new RequiredError('id','Required parameter id was null or undefined when calling getScoringCategory.');
             }
-            const localVarPath = `/scoring/categories/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches a scoring preset by id
-         * @param {number} id Preset Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getScoringPreset(id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getScoringPreset.');
-            }
-            const localVarPath = `/scoring/presets/{id}`
+            const localVarPath = `/events/{event_id}/categories/{id}`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
@@ -3496,12 +3566,13 @@ export const ScoringApiFp = function(configuration?: Configuration) {
     return {
         /**
          * Creates a new scoring category
+         * @param {number} event_id Event Id
          * @param {CategoryCreate} body Category to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createCategory(body: CategoryCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Category> {
-            const localVarFetchArgs = ScoringApiFetchParamCreator(configuration).createCategory(body, options);
+        createCategory(event_id: number, body: CategoryCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Category> {
+            const localVarFetchArgs = ScoringApiFetchParamCreator(configuration).createCategory(event_id, body, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -3514,12 +3585,13 @@ export const ScoringApiFp = function(configuration?: Configuration) {
         },
         /**
          * Creates a new scoring preset
+         * @param {number} event_id Event Id
          * @param {ScoringPresetCreate} body Preset to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createScoringPreset(body: ScoringPresetCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ScoringPreset> {
-            const localVarFetchArgs = ScoringApiFetchParamCreator(configuration).createScoringPreset(body, options);
+        createScoringPreset(event_id: number, body: ScoringPresetCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ScoringPreset> {
+            const localVarFetchArgs = ScoringApiFetchParamCreator(configuration).createScoringPreset(event_id, body, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -3532,12 +3604,13 @@ export const ScoringApiFp = function(configuration?: Configuration) {
         },
         /**
          * Deletes a scoring category
+         * @param {number} event_id Event Id
          * @param {number} id Category Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteCategory(id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = ScoringApiFetchParamCreator(configuration).deleteCategory(id, options);
+        deleteCategory(event_id: number, id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = ScoringApiFetchParamCreator(configuration).deleteCategory(event_id, id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -3550,12 +3623,13 @@ export const ScoringApiFp = function(configuration?: Configuration) {
         },
         /**
          * Deletes a scoring preset by id
+         * @param {number} event_id Event Id
          * @param {number} id Preset Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteScoringPreset(id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = ScoringApiFetchParamCreator(configuration).deleteScoringPreset(id, options);
+        deleteScoringPreset(event_id: number, id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = ScoringApiFetchParamCreator(configuration).deleteScoringPreset(event_id, id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -3586,30 +3660,13 @@ export const ScoringApiFp = function(configuration?: Configuration) {
         },
         /**
          * Fetches a scoring category by id
+         * @param {number} event_id Event Id
          * @param {number} id Category Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getScoringCategory(id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Category> {
-            const localVarFetchArgs = ScoringApiFetchParamCreator(configuration).getScoringCategory(id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches a scoring preset by id
-         * @param {number} id Preset Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getScoringPreset(id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ScoringPreset> {
-            const localVarFetchArgs = ScoringApiFetchParamCreator(configuration).getScoringPreset(id, options);
+        getScoringCategory(event_id: number, id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Category> {
+            const localVarFetchArgs = ScoringApiFetchParamCreator(configuration).getScoringCategory(event_id, id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -3649,39 +3706,43 @@ export const ScoringApiFactory = function (configuration?: Configuration, fetch?
     return {
         /**
          * Creates a new scoring category
+         * @param {number} event_id Event Id
          * @param {CategoryCreate} body Category to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createCategory(body: CategoryCreate, options?: any) {
-            return ScoringApiFp(configuration).createCategory(body, options)(fetch, basePath);
+        createCategory(event_id: number, body: CategoryCreate, options?: any) {
+            return ScoringApiFp(configuration).createCategory(event_id, body, options)(fetch, basePath);
         },
         /**
          * Creates a new scoring preset
+         * @param {number} event_id Event Id
          * @param {ScoringPresetCreate} body Preset to create
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createScoringPreset(body: ScoringPresetCreate, options?: any) {
-            return ScoringApiFp(configuration).createScoringPreset(body, options)(fetch, basePath);
+        createScoringPreset(event_id: number, body: ScoringPresetCreate, options?: any) {
+            return ScoringApiFp(configuration).createScoringPreset(event_id, body, options)(fetch, basePath);
         },
         /**
          * Deletes a scoring category
+         * @param {number} event_id Event Id
          * @param {number} id Category Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteCategory(id: number, options?: any) {
-            return ScoringApiFp(configuration).deleteCategory(id, options)(fetch, basePath);
+        deleteCategory(event_id: number, id: number, options?: any) {
+            return ScoringApiFp(configuration).deleteCategory(event_id, id, options)(fetch, basePath);
         },
         /**
          * Deletes a scoring preset by id
+         * @param {number} event_id Event Id
          * @param {number} id Preset Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteScoringPreset(id: number, options?: any) {
-            return ScoringApiFp(configuration).deleteScoringPreset(id, options)(fetch, basePath);
+        deleteScoringPreset(event_id: number, id: number, options?: any) {
+            return ScoringApiFp(configuration).deleteScoringPreset(event_id, id, options)(fetch, basePath);
         },
         /**
          * Fetches the rules for the current event
@@ -3694,21 +3755,13 @@ export const ScoringApiFactory = function (configuration?: Configuration, fetch?
         },
         /**
          * Fetches a scoring category by id
+         * @param {number} event_id Event Id
          * @param {number} id Category Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getScoringCategory(id: number, options?: any) {
-            return ScoringApiFp(configuration).getScoringCategory(id, options)(fetch, basePath);
-        },
-        /**
-         * Fetches a scoring preset by id
-         * @param {number} id Preset Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getScoringPreset(id: number, options?: any) {
-            return ScoringApiFp(configuration).getScoringPreset(id, options)(fetch, basePath);
+        getScoringCategory(event_id: number, id: number, options?: any) {
+            return ScoringApiFp(configuration).getScoringCategory(event_id, id, options)(fetch, basePath);
         },
         /**
          * Fetches the scoring presets for the current event
@@ -3731,46 +3784,50 @@ export const ScoringApiFactory = function (configuration?: Configuration, fetch?
 export class ScoringApi extends BaseAPI {
     /**
      * Creates a new scoring category
+     * @param {number} event_id Event Id
      * @param {CategoryCreate} body Category to create
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ScoringApi
      */
-    public createCategory(body: CategoryCreate, options?: any) {
-        return ScoringApiFp(this.configuration).createCategory(body, options)(this.fetch, this.basePath);
+    public createCategory(event_id: number, body: CategoryCreate, options?: any) {
+        return ScoringApiFp(this.configuration).createCategory(event_id, body, options)(this.fetch, this.basePath);
     }
 
     /**
      * Creates a new scoring preset
+     * @param {number} event_id Event Id
      * @param {ScoringPresetCreate} body Preset to create
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ScoringApi
      */
-    public createScoringPreset(body: ScoringPresetCreate, options?: any) {
-        return ScoringApiFp(this.configuration).createScoringPreset(body, options)(this.fetch, this.basePath);
+    public createScoringPreset(event_id: number, body: ScoringPresetCreate, options?: any) {
+        return ScoringApiFp(this.configuration).createScoringPreset(event_id, body, options)(this.fetch, this.basePath);
     }
 
     /**
      * Deletes a scoring category
+     * @param {number} event_id Event Id
      * @param {number} id Category Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ScoringApi
      */
-    public deleteCategory(id: number, options?: any) {
-        return ScoringApiFp(this.configuration).deleteCategory(id, options)(this.fetch, this.basePath);
+    public deleteCategory(event_id: number, id: number, options?: any) {
+        return ScoringApiFp(this.configuration).deleteCategory(event_id, id, options)(this.fetch, this.basePath);
     }
 
     /**
      * Deletes a scoring preset by id
+     * @param {number} event_id Event Id
      * @param {number} id Preset Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ScoringApi
      */
-    public deleteScoringPreset(id: number, options?: any) {
-        return ScoringApiFp(this.configuration).deleteScoringPreset(id, options)(this.fetch, this.basePath);
+    public deleteScoringPreset(event_id: number, id: number, options?: any) {
+        return ScoringApiFp(this.configuration).deleteScoringPreset(event_id, id, options)(this.fetch, this.basePath);
     }
 
     /**
@@ -3786,24 +3843,14 @@ export class ScoringApi extends BaseAPI {
 
     /**
      * Fetches a scoring category by id
+     * @param {number} event_id Event Id
      * @param {number} id Category Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ScoringApi
      */
-    public getScoringCategory(id: number, options?: any) {
-        return ScoringApiFp(this.configuration).getScoringCategory(id, options)(this.fetch, this.basePath);
-    }
-
-    /**
-     * Fetches a scoring preset by id
-     * @param {number} id Preset Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ScoringApi
-     */
-    public getScoringPreset(id: number, options?: any) {
-        return ScoringApiFp(this.configuration).getScoringPreset(id, options)(this.fetch, this.basePath);
+    public getScoringCategory(event_id: number, id: number, options?: any) {
+        return ScoringApiFp(this.configuration).getScoringCategory(event_id, id, options)(this.fetch, this.basePath);
     }
 
     /**

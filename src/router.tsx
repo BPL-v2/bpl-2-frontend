@@ -8,7 +8,6 @@ import UserSortPage from "./pages/user-sort";
 // import { ScoringReadmePage } from "./pages/scoring_readme";
 import { MainPage } from "./pages/main";
 import RecurringJobsPage from "./pages/recurring-jobs";
-import ConditionPage from "./pages/conditions";
 import UserPage from "./pages/users";
 import ScoringCategoryPage from "./pages/scoring-categories";
 import ScoringPresetsPage from "./pages/scoring-presets";
@@ -35,10 +34,6 @@ export const router = createBrowserRouter([
   {
     path: "/events/:eventId/scoring-presets",
     element: <ScoringPresetsPage />,
-  },
-  {
-    path: "/events/:eventId/objectives/:objectiveId/conditions",
-    element: <ConditionPage />,
   },
   {
     path: "/users",
