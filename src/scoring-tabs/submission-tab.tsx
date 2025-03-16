@@ -187,7 +187,7 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
                             key={teamId}
                             className={`px-4 bg-base-300 ${
                               eventStatus?.team_id === teamId
-                                ? "border-y-1 border-primary/50"
+                                ? "bg-white/10"
                                 : ""
                             }`}
                           >

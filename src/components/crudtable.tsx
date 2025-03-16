@@ -353,7 +353,7 @@ const CrudTable = <T,>({
       )}
 
       <table className="table bg-base-300 table-md">
-        <thead className="bg-base-200 text-neutral-300">
+        <thead className="bg-base-200 text-base-content">
           <tr>
             {columns
               .filter((column) => !column.hidden)

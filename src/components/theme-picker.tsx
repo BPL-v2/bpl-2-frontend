@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export function ThemePicker() {
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState("lime");
   useEffect(() => {
     document?.querySelector("html")?.setAttribute("data-theme", theme);
   }, [theme]);
@@ -13,6 +13,7 @@ export function ThemePicker() {
     >
       <option disabled={true}>Pick a theme</option>
       {[
+        "lime",
         "dark",
         "synthwave",
         "halloween",

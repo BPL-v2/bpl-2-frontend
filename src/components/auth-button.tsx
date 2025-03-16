@@ -34,7 +34,7 @@ const AuthButton = () => {
       <div className="dropdown dropdown-bottom dropdown-end h-full">
         <button
           tabIndex={0}
-          className={`btn bg-base-300 h-full hover:text-primary hover:border-primary`}
+          className={`btn bg-base-300 h-full hover:text-primary hover:border-primary rounded-none`}
         >
           <UserIcon className="h-6 w-6" />
           <div className="hidden sm:block">
@@ -78,7 +78,7 @@ const AuthButton = () => {
   }
   return (
     <button
-      className={`btn bg-base-300 h-full hover:text-primary hover:border-primary`}
+      className={`btn bg-base-300 h-full hover:text-primary hover:border-primary rounded-none`}
       onClick={() => {
         window.open(import.meta.env.VITE_BACKEND_URL + "/oauth2/discord", "");
       }}

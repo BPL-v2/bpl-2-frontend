@@ -268,7 +268,7 @@ function App() {
                 <img className="h-10" src="/assets/app-logos/bpl-logo.png" />
                 <div className="text-4xl font-bold hidden sm:block">BPL</div>
               </button>
-              <div className="flex flex-1 justify-left gap-0 h-full">
+              <div className="flex flex-1 justify-left gap-0">
                 {menuItems
                   .filter((item) =>
                     item.rolerequired
@@ -281,7 +281,7 @@ function App() {
                     <li
                       className={`m-0 sm:mx-2 ${
                         currentNav === item.key
-                          ? "bg-primary text-primary-content"
+                          ? "bg-primary text-primary-content rounded-field hover:bg-base-300"
                           : ""
                       }`}
                       onClick={(e) => {
@@ -293,13 +293,13 @@ function App() {
                       }}
                       key={item.key}
                     >
-                      <a href={item.url}>
+                      <a href={item.url} className="h-full">
                         {item.children ? (
                           <div className="dropdown h-full">
                             <div
                               tabIndex={0}
                               role="button"
-                              className="btn btn-ghost hover:bg-base-300 text-xl h-full rounded-none flex items-center"
+                              className="btn btn-ghost  text-xl h-full rounded-field flex items-center"
                             >
                               {item.icon}
                               <div className="hidden lg:block">
@@ -308,7 +308,7 @@ function App() {
                             </div>
                             <ul
                               tabIndex={0}
-                              className="dropdown-content menu bg-base-300  z-1 w-52 p-2 shadow-sm text-base-content text-lg"
+                              className="dropdown-content menu bg-base-300  z-1 w-52 p-2 shadow-sm text-base-content text-lg rounded-field"
                               onClick={() => {
                                 if (
                                   document.activeElement instanceof HTMLElement
@@ -342,7 +342,7 @@ function App() {
                           <div
                             tabIndex={0}
                             role="button"
-                            className="btn btn-ghost hover:bg-base-300 text-xl h-full rounded-none flex items-center"
+                            className="btn btn-ghost text-xl flex items-center h-15 p-4"
                           >
                             {item.icon}
                             <div className="hidden lg:block">{item.label}</div>

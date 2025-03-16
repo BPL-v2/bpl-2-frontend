@@ -82,7 +82,7 @@ export function DailyCard({ daily }: DailyCardProps) {
       </div>
 
       <CollectionCardTable objective={objective} />
-      <div className="py-4 mb-0 rounded-b-xl">
+      <div className="py-4 mb-0 rounded-b-box">
         {bonusAvailableCounter(daily.raceObjective?.valid_to, () => {
           scoringApi.getRulesForEvent(currentEvent.id).then(setRules);
         })}

@@ -44,18 +44,28 @@ export function LadderTab() {
       cell: (info) => info.getValue(),
       header: () => "Rank",
       sortingFn: "alphanumeric",
+      size: 30,
+      enableResizing: false,
     }),
     columnHelper.accessor("character_name", {
       header: () => "Character",
+      size: 400,
+      enableResizing: false,
     }),
     columnHelper.accessor("account_name", {
       header: () => "Account",
+      size: 400,
+      enableResizing: false,
     }),
     columnHelper.accessor((row) => userToTeam[row.user_id] || "Cartographers", {
       header: "Team",
+      size: 200,
+      enableResizing: false,
     }),
     columnHelper.accessor("character_class", {
       header: () => "Ascendancy",
+      size: 300,
+      enableResizing: false,
       cell: (info) => {
         const classObj =
           ascendancies[gameVersion][
@@ -82,6 +92,8 @@ export function LadderTab() {
     }),
     columnHelper.accessor("experience", {
       header: "Level",
+      size: 100,
+      enableResizing: false,
       cell: (info) => {
         const progress = getLevelProgress(
           info.row.original.experience,
@@ -102,6 +114,8 @@ export function LadderTab() {
       },
     }),
     columnHelper.accessor("delve", {
+      size: 100,
+      enableResizing: false,
       header: "Delve",
       cell: (info) => {
         return info.row.original.delve;
@@ -248,7 +262,7 @@ export function LadderTab() {
 
       <div className="divider divider-primary">{"Ladder"}</div>
 
-      <table className="table bg-base-300 table-compact ">
+      <table className="table table-compact">
         <thead className="bg-base-200">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -257,11 +271,12 @@ export function LadderTab() {
                   <th
                     className={
                       header.column.getCanSort()
-                        ? "cursor-pointer select-none"
+                        ? "cursor-pointer select-none "
                         : undefined
                     }
                     key={header.id}
                     onClick={header.column.getToggleSortingHandler()}
+                    // style={{ width: `${header.getSize()}px` }}
                   >
                     <div className="flex items-center gap-1">
                       <TableSortIcon
@@ -282,7 +297,7 @@ export function LadderTab() {
             </tr>
           ))}
         </thead>
-        <tbody className="bg-base-300">
+        <tbody className="bg-base-300 ">
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id} className="hover:bg-base-200/50">
               {row.getVisibleCells().map((cell) => (
@@ -295,7 +310,7 @@ export function LadderTab() {
         </tbody>
       </table>
       <div className="bg-base-200 flex justify-end">
-        <div className="join border-1 ">
+        <div className="join border-1 rounded-field">
           <button
             className="join-item btn bg-base-100"
             onClick={() => table.firstPage()}

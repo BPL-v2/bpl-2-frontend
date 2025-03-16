@@ -62,10 +62,16 @@ def download():
     gems = get_gem_dict()
 
     for version in ["poe1", "poe2"]:
-        if version == "poe1":
-            baseUrl = "https://repoe-fork.github.io/"
-        else:
-            baseUrl = "https://repoe-fork.github.io/poe2/"
+        if not os.path.exists(f"public/assets/{version}/items/uniques"):
+            os.makedirs(f"public/assets/{version}/items/uniques")
+        if not os.path.exists(f"public/assets/{version}/items/basetypes"):
+            os.makedirs(f"public/assets/{version}/items/basetypes")
+        if not os.path.exists(f"icon-generation/temp/{version}"):
+            os.makedirs(f"icon-generation/temp/{version}")
+
+        baseUrl = "https://repoe-fork.github.io/"
+        if version == "poe2":
+            baseUrl += "poe2/"
         response = request.urlopen(
             f"{baseUrl}/base_items.json")
         base_items: ItemDict = json.loads(response.read())
@@ -106,7 +112,8 @@ def save_gem_image(base_name, gems: list[Gem], path: str, url: str):
                 file.write(response.read())
         except Exception as e:
             print("could not download", url)
-
+            print(e)
+            return
     for gem in gems:
         try:
             img = generate_gem_image(
@@ -134,6 +141,8 @@ def save_flask_image(item: Item, path: str, baseUrl: str):
                 file.write(response.read())
         except Exception as e:
             print("could not download", url)
+            print(e)
+            return
     generate_flask_image(temp_path, game_version, rarity).save(full_path)
 
 

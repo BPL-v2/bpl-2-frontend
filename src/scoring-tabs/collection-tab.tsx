@@ -35,7 +35,7 @@ export function CollectionTab() {
                   </h3>
                 </div>
               </div>
-              <div className="pb-4 mb-0 bg-base-300 bottom-box-rounded">
+              <div className="pb-4 mb-0 bg-base-300 rounded-b-box">
                 <CollectionCardTable objective={objective} />
               </div>
             </div>

@@ -37,7 +37,43 @@
   --depth: 0;
   --noise: 0;
 }
-.bg-highlight {
+
+@plugin "daisyui/theme" {
+  name: "lime";
+  default: false;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: oklch(97% 0.014 254.604);
+  --color-base-200: oklch(93% 0.032 255.585);
+  --color-base-300: oklch(88% 0.059 254.128);
+  --color-base-content: oklch(35.519% 0.032 262.988);
+  --color-primary: oklch(62% 0.265 303.9);
+  --color-primary-content: oklch(26% 0.079 36.259);
+  --color-secondary: oklch(72% 0.219 149.579);
+  --color-secondary-content: oklch(100% 0 0);
+  --color-accent: oklch(55% 0.288 302.321);
+  --color-accent-content: oklch(29% 0.149 302.717);
+  --color-neutral: oklch(68% 0.169 237.323);
+  --color-neutral-content: oklch(48% 0.243 264.376);
+  --color-info: oklch(74% 0.16 232.661);
+  --color-info-content: oklch(29% 0.066 243.157);
+  --color-success: oklch(64.8% 0.15 160);
+  --color-success-content: oklch(0% 0 0);
+  --color-warning: oklch(84.71% 0.199 83.87);
+  --color-warning-content: oklch(0% 0 0);
+  --color-error: oklch(71.76% 0.221 22.18);
+  --color-error-content: oklch(0% 0 0);
+  --radius-selector: 2rem;
+  --radius-field: 2rem;
+  --radius-box: 2rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.21875rem;
+  --border: 2px;
+  --depth: 1;
+  --noise: 1;
+}
+
+s .bg-highlight {
   background-color: var(--color-highlight);
 }
 .bg-discord {

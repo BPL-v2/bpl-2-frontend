@@ -64,7 +64,7 @@ export const UniqueCategoryCard = ({
         </h1>
         <div className="hidden sm:block flex-shrink-0 text-sm"> {points} </div>
       </div>
-      <div className="px-4">
+      <div className="px-4 g">
         <div>
           <div className="stat pt-2 px-0 pb-0">
             <div

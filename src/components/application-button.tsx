@@ -29,7 +29,7 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
   if (userTeam) {
     return (
       <button
-        className={`btn bg-base-100 h-full hover:text-primary hover:border-primary`}
+        className={`btn bg-base-100 h-full hover:text-primary hover:border-primary rounded-none`}
       >
         {userTeam.name}
       </button>
@@ -37,9 +37,9 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
   }
   if (eventStatus?.application_status === ApplicationStatus.applied) {
     return (
-      <div className="dropdown dropdown-bottom dropdown-end h-full ">
+      <div className="dropdown dropdown-bottom dropdown-end h-full">
         <button
-          className={`btn bg-base-100 h-full hover:text-primary hover:border-primary`}
+          className={`btn bg-base-100 h-full hover:text-primary hover:border-primary rounded-none`}
         >
           Application Pending
         </button>
@@ -183,7 +183,7 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
           </div>
         </dialog>
         <button
-          className={`btn bg-base-100 h-full hover:text-primary hover:border-primary`}
+          className={`btn bg-base-100 h-full hover:text-primary hover:border-primary rounded-none`}
           onClick={() => {
             setModalOpen(true);
           }}

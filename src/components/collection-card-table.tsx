@@ -40,7 +40,7 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
 
   return (
     <table key={objective.id} className="w-full border-collapse bg-base-300">
-      <tbody>
+      <tbody className="bg-base-300">
         {Object.entries(objective.team_score)
           .map(([teamId, score]) => {
             return [parseInt(teamId), score] as [number, Score];
@@ -55,11 +55,7 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
             const percent = (100 * score.number) / objective.required_number;
             return (
               <tr
-                className={
-                  teamId === eventStatus?.team_id
-                    ? "border-y-1 border-primary/50"
-                    : ""
-                }
+                className={teamId === eventStatus?.team_id ? "bg-white/10" : ""}
                 key={teamId}
               >
                 <td>
