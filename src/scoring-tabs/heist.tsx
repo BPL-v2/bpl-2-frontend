@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import TeamScore from "../components/team-score";
 import { ItemTable } from "../components/item-table";
-import { GameVersion, ScoringMethod } from "../client";
+import { GameVersion } from "../client";
 import { router } from "../router";
 import { Ranking } from "../components/ranking";
 
