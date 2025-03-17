@@ -6,6 +6,7 @@ import { Score } from "../client";
 
 type CollectionCardTableProps = {
   objective: ScoreObjective;
+  showPoints?: boolean;
 };
 
 function getPlace(score: Score) {
@@ -35,11 +36,14 @@ function finishTooltip(objective: ScoreObjective, score: Score) {
   }`;
 }
 
-export function CollectionCardTable({ objective }: CollectionCardTableProps) {
+export function CollectionCardTable({
+  objective,
+  showPoints = true,
+}: CollectionCardTableProps) {
   const { eventStatus, currentEvent } = useContext(GlobalStateContext);
 
   return (
-    <table key={objective.id} className="w-full border-collapse bg-base-300">
+    <table key={objective.id} className="w-full">
       <tbody className="bg-base-300">
         {Object.entries(objective.team_score)
           .map(([teamId, score]) => {
@@ -55,35 +59,36 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
             const percent = (100 * score.number) / objective.required_number;
             return (
               <tr
-                className={teamId === eventStatus?.team_id ? "bg-white/10" : ""}
+                className={
+                  "px-4 " +
+                  (teamId === eventStatus?.team_id ? "bg-white/10" : "")
+                }
                 key={teamId}
               >
-                <td>
-                  <div
-                    className="tooltip"
-                    data-tip={finishTooltip(objective, score)}
-                  >
+                {showPoints ? (
+                  <td>
                     <div
-                      className={`pt-1 pb-1 pl-2 pr-2 text-left ${
-                        percent < 100 ? "text-error" : "text-success"
-                      }`}
+                      className="tooltip"
+                      data-tip={finishTooltip(objective, score)}
                     >
-                      {score.points}
+                      <div
+                        className={`pt-1 pb-1 pl-2 pr-2 text-left ${
+                          percent < 100 ? "text-error" : "text-success"
+                        }`}
+                      >
+                        {score.points}
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td
-                  style={{
-                    width: "50%",
-                  }}
-                >
+                  </td>
+                ) : null}
+                <td className="pl-4">
                   <ProgressBar
                     style={{ width: "180px" }}
                     value={score.number}
                     maxVal={objective.required_number}
                   />
                 </td>
-                <td className="pl-4 text-left">
+                <td className="text-left">
                   {currentEvent?.teams.find((team) => team.id === teamId)?.name}
                 </td>
               </tr>

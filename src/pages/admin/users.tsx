@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import CrudTable, { CrudColumn } from "../components/crudtable";
-import { GlobalStateContext } from "../utils/context-provider";
-import { Permission, User } from "../client";
-import { userApi } from "../client/client";
+import CrudTable, { CrudColumn } from "../../components/crudtable";
+import { GlobalStateContext } from "../../utils/context-provider";
+import { Permission, User } from "../../client";
+import { userApi } from "../../client/client";
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 
 const columns: CrudColumn<User>[] = [

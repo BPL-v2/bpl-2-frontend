@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
-import CrudTable, { CrudColumn } from "../components/crudtable";
-import { router } from "../router";
-import { GlobalStateContext } from "../utils/context-provider";
-import { EventCreate, Event, Permission } from "../client/api";
-import { eventApi, scoringApi } from "../client/client";
+import CrudTable, { CrudColumn } from "../../components/crudtable";
+import { router } from "../../router";
+import { GlobalStateContext } from "../../utils/context-provider";
+import { EventCreate, Event, Permission } from "../../client/api";
+import { eventApi, scoringApi } from "../../client/client";
 
 const columns: CrudColumn<Event>[] = [
   {

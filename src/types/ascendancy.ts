@@ -1,6 +1,6 @@
 import { GameVersion } from "../client";
 
-type ClassDef = {
+export type ClassDef = {
   thumbnail: string;
   image: string;
   classColor: string;
@@ -193,4 +193,19 @@ export const phreciaMapping: Record<string, string> = {
   Polytheist: "Hierophant",
   Puppeteer: "Inquisitor",
   Scavenger: "Ascendant",
+};
+
+export const poe2Mapping: Record<string, string> = {
+  Warrior1: "Warbringer",
+  Warrior2: "Titan",
+  Sorceress1: "Stormweaver",
+  Sorceress2: "Chronomancer",
+  Mercenary2: "Witchhunter",
+  Mercenary3: "Gemling Legionnaire",
+  Monk2: "Invoker",
+  Monk3: "Acolyte of Chayula",
+  Witch1: "Infernalist",
+  Witch2: "Blood Mage",
+  Ranger1: "Deadeye",
+  Ranger3: "Pathfinder",
 };

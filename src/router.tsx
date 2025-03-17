@@ -4,15 +4,15 @@ import ScoringPage from "./pages/scoring-page";
 import { TwitchPage } from "./pages/twitch-page";
 import { RulePage } from "./pages/rules";
 import { ProfilePage } from "./pages/profile";
-import UserSortPage from "./pages/user-sort";
+import UserSortPage from "./pages/admin/user-sort";
 // import { ScoringReadmePage } from "./pages/scoring_readme";
 import { MainPage } from "./pages/main";
-import RecurringJobsPage from "./pages/recurring-jobs";
-import UserPage from "./pages/users";
-import ScoringCategoryPage from "./pages/scoring-categories";
-import ScoringPresetsPage from "./pages/scoring-presets";
-import TeamPage from "./pages/teams";
-import EventPage from "./pages/event";
+import RecurringJobsPage from "./pages/admin/recurring-jobs";
+import UserPage from "./pages/admin/users";
+import ScoringCategoryPage from "./pages/admin/scoring-categories";
+import ScoringPresetsPage from "./pages/admin/scoring-presets";
+import TeamPage from "./pages/admin/teams";
+import EventPage from "./pages/admin/event";
 
 export const router = createBrowserRouter([
   {

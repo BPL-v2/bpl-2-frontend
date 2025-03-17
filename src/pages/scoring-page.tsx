@@ -1,47 +1,65 @@
-import UniqueTab from "../scoring-tabs/unique-tab";
+import UniqueTab from "../scoring-tabs/uniques";
 import { JSX, useContext, useEffect, useState } from "react";
-import { SubmissionTab } from "../scoring-tabs/submission-tab";
-import { CollectionTab } from "../scoring-tabs/collection-tab";
-import { LadderTab } from "../scoring-tabs/ladder-tab";
+import { SubmissionTab } from "../scoring-tabs/submissions";
+import { CollectionTab } from "../scoring-tabs/collections";
+import { LadderTab } from "../scoring-tabs/ladder";
 import { GlobalStateContext } from "../utils/context-provider";
 import { useSearchParams } from "react-router-dom";
-import { DailyTab } from "../scoring-tabs/daily-tab";
-import { HeistTab } from "../scoring-tabs/heist-tab";
-import { GemTab } from "../scoring-tabs/gem-tab";
-import { getRootCategoryNames } from "../types/scoring-category";
+import { DailyTab } from "../scoring-tabs/dailies";
+import { HeistTab } from "../scoring-tabs/heist";
+import { GemTab } from "../scoring-tabs/gems";
 import { router } from "../router";
-export const scoringTabs: { key: string; tab: JSX.Element }[] = [
+import { DelveTab } from "../scoring-tabs/delve";
+import { GameVersion } from "../client";
+export const scoringTabs: {
+  key: string;
+  tab: JSX.Element;
+  gameVersions: GameVersion[];
+}[] = [
   {
     key: "Ladder",
     tab: <LadderTab />,
+    gameVersions: [GameVersion.poe1, GameVersion.poe2],
   },
   {
     key: "Uniques",
     tab: <UniqueTab />,
+    gameVersions: [GameVersion.poe1, GameVersion.poe2],
   },
   {
     key: "Races",
     tab: <SubmissionTab categoryName="Races" />,
+    gameVersions: [GameVersion.poe1, GameVersion.poe2],
   },
   {
     key: "Bounties",
     tab: <SubmissionTab categoryName="Bounties" />,
+    gameVersions: [GameVersion.poe1, GameVersion.poe2],
   },
   {
     key: "Collections",
     tab: <CollectionTab />,
+    gameVersions: [GameVersion.poe1, GameVersion.poe2],
   },
   {
     key: "Dailies",
     tab: <DailyTab />,
+    gameVersions: [GameVersion.poe1, GameVersion.poe2],
   },
   {
     key: "Heist",
     tab: <HeistTab />,
+    gameVersions: [GameVersion.poe1],
   },
   {
     key: "Gems",
     tab: <GemTab />,
+    gameVersions: [GameVersion.poe1],
+  },
+  {
+    key: "Delve",
+    tab: <DelveTab />,
+    gameVersions: [GameVersion.poe1],
   },
 ];
 
@@ -62,17 +80,13 @@ const ScoringPage = ({ tab }: ScoringPageProps) => {
     return <div>Event not found</div>;
   }
 
-  const tabNames = [
-    "Ladder",
-    ...getRootCategoryNames(currentEvent.game_version),
-  ];
   return (
     <>
       <ul
         className={`menu menu-horizontal bg-base-200 gap-0 md:gap-2 mb-4 w-full`}
       >
         {scoringTabs
-          .filter((tab) => tabNames.includes(tab.key))
+          .filter((tab) => tab.gameVersions.includes(currentEvent.game_version))
           .map((tab) => (
             <li key={tab.key}>
               <a

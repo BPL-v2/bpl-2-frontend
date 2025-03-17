@@ -169,10 +169,10 @@ export function ItemTable({ category }: ItemTableProps) {
       </td>
     ) : (
       currentEvent.teams.sort(teamSort).map((team) => {
-        const finished = objective.team_score[team.id].finished;
+        const finished = objective.team_score[team.id]?.finished || false;
         const user =
-          objective.team_score[team.id].finished &&
-          users?.find((u) => objective.team_score[team.id].user_id === u.id);
+          finished &&
+          users?.find((u) => objective.team_score[team.id]?.user_id === u.id);
         let entry: JSX.Element | string = "❌";
         if (user) {
           entry = (
@@ -191,7 +191,7 @@ export function ItemTable({ category }: ItemTableProps) {
             key={category.id + "-" + objective.id + "-" + team.id}
             className={`text-center text-2xl`}
           >
-            {entry}{" "}
+            {entry}
           </td>
         );
       })
@@ -233,7 +233,7 @@ export function ItemTable({ category }: ItemTableProps) {
                           {category.objectives.reduce(
                             (acc: number, objective) =>
                               acc +
-                              (objective.team_score[team.id].finished ? 1 : 0),
+                              (objective.team_score[team.id]?.finished ? 1 : 0),
                             0
                           )}
                           / {category.objectives.length}

@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { GlobalStateContext } from "../utils/context-provider";
-import { sortUsers } from "../utils/usersort";
-import { ExpectedPlayTime, Permission, Signup } from "../client";
-import { signupApi, teamApi } from "../client/client";
+import { GlobalStateContext } from "../../utils/context-provider";
+import { sortUsers } from "../../utils/usersort";
+import { ExpectedPlayTime, Permission, Signup } from "../../client";
+import { signupApi, teamApi } from "../../client/client";
 
 type TeamRow = {
   key: number;

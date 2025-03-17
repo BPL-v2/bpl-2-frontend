@@ -1,15 +1,15 @@
-import CrudTable, { CrudColumn } from "../components/crudtable";
+import CrudTable, { CrudColumn } from "../../components/crudtable";
 
 import { useParams } from "react-router-dom";
 import { useContext } from "react";
-import { GlobalStateContext } from "../utils/context-provider";
+import { GlobalStateContext } from "../../utils/context-provider";
 import {
   Permission,
   ScoringMethod,
   ScoringPreset,
   ScoringPresetType,
-} from "../client";
-import { scoringApi } from "../client/client";
+} from "../../client";
+import { scoringApi } from "../../client/client";
 
 function pointsRenderer(points: number[]) {
   if (points.length === 1) {

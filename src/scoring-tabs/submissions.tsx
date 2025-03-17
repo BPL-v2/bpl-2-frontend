@@ -127,7 +127,7 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
           </div>
         </div>
       </dialog>
-      <TeamScore category={category}></TeamScore>{" "}
+      <TeamScore category={category}></TeamScore>
       <h1 className="text-xl mt-4">
         Click to see all{" "}
         <a

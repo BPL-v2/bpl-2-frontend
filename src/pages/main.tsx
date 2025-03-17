@@ -64,7 +64,7 @@ export function MainPage() {
                 <div className="text-2xl mt-4 grid grid-cols-2  text-left">
                   <p>Start time: </p>
                   <p>
-                    {new Date(currentEvent.event_start_time).toLocaleString()}{" "}
+                    {new Date(currentEvent.event_start_time).toLocaleString()}
                   </p>
                   <p>End time: </p>
                   <p>
@@ -81,7 +81,7 @@ export function MainPage() {
 
                 {!hasStarted ? (
                   <div className="flex flex-col items-center gap-4">
-                    <h3 className="text-3xl">See you at the Beach in</h3>{" "}
+                    <h3 className="text-3xl">See you at the Beach in</h3>
                     <Countdown
                       target={new Date(currentEvent.event_start_time)}
                     />

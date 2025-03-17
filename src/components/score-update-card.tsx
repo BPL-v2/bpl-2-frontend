@@ -36,7 +36,7 @@ export const ScoreUpdateCard = ({
             className=""
             objective={meta.objective}
             gameVersion={gameVersion}
-          />{" "}
+          />
         </div>
 
         {bodyText}

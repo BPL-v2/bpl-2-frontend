@@ -1,9 +1,9 @@
 import { useContext, useMemo } from "react";
-import CrudTable, { CrudColumn } from "../components/crudtable";
+import CrudTable, { CrudColumn } from "../../components/crudtable";
 import { useParams } from "react-router-dom";
-import { GlobalStateContext } from "../utils/context-provider";
-import { GameVersion, Permission, Team } from "../client";
-import { teamApi } from "../client/client";
+import { GlobalStateContext } from "../../utils/context-provider";
+import { GameVersion, Permission, Team } from "../../client";
+import { teamApi } from "../../client/client";
 
 const TeamPage = () => {
   let { eventId } = useParams();

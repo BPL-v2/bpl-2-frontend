@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { GlobalStateContext } from "../utils/context-provider";
-import { Event, JobType, Permission, RecurringJob } from "../client";
-import { jobApi } from "../client/client";
+import { GlobalStateContext } from "../../utils/context-provider";
+import { Event, JobType, Permission, RecurringJob } from "../../client";
+import { jobApi } from "../../client/client";
 import React from "react";
 import dayjs from "dayjs";
 

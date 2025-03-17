@@ -4,7 +4,7 @@
 }
 
 @plugin "daisyui/theme" {
-  name: "dark";
+  name: "ocean";
   default: false;
   prefersdark: false;
   color-scheme: "dark";
@@ -39,7 +39,7 @@
 }
 
 @plugin "daisyui/theme" {
-  name: "lime";
+  name: "sky";
   default: false;
   prefersdark: false;
   color-scheme: "light";
@@ -47,8 +47,8 @@
   --color-base-200: oklch(93% 0.032 255.585);
   --color-base-300: oklch(88% 0.059 254.128);
   --color-base-content: oklch(35.519% 0.032 262.988);
-  --color-primary: oklch(62% 0.265 303.9);
-  --color-primary-content: oklch(26% 0.079 36.259);
+  --color-primary: oklch(52% 0.265 303.9);
+  --color-primary-content: oklch(100% 0.2 303.9);
   --color-secondary: oklch(72% 0.219 149.579);
   --color-secondary-content: oklch(100% 0 0);
   --color-accent: oklch(55% 0.288 302.321);
@@ -242,3 +242,45 @@ html {
 .ant-menu-submenu {
   text-align: left !important;
 } */
+
+.bg-silver-metallic {
+  color: #000000;
+  background: linear-gradient(
+    60deg,
+    #e7e7e7 5%,
+    #fff 10%,
+    #ccc 30%,
+    #ddd 50%,
+    #ccc 70%,
+    #fff 80%,
+    #e7e7e7 95%
+  );
+}
+
+.bg-gold-metallic {
+  color: #000000;
+  background: linear-gradient(
+    60deg,
+    #edaf10 5%,
+    #f0e68c 10%,
+    #daa520 30%,
+    #ffd700 50%,
+    #daa520 70%,
+    #f0e68c 80%,
+    #edaf10 95%
+  );
+}
+
+.bg-bronze-metallic {
+  color: #000000;
+  background: linear-gradient(
+    60deg,
+    #e79038 5%,
+    #e6b899 10%,
+    #b87333 30%,
+    #c88f6a 50%,
+    #b87333 70%,
+    #e6b899 80%,
+    #e79038 95%
+  );
+}

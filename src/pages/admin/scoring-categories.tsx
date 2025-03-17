@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import CrudTable, { CrudColumn } from "../components/crudtable";
+import CrudTable, { CrudColumn } from "../../components/crudtable";
 
 import { useParams } from "react-router-dom";
-import { router } from "../router";
+import { router } from "../../router";
 import {
   availableAggregationTypes,
   operatorToString,
-} from "../types/scoring-objective";
-import { GlobalStateContext } from "../utils/context-provider";
-import { ObjectiveIcon } from "../components/objective-icon";
+} from "../../types/scoring-objective";
+import { GlobalStateContext } from "../../utils/context-provider";
+import { ObjectiveIcon } from "../../components/objective-icon";
 import {
   Category,
   Condition,
@@ -23,9 +23,9 @@ import {
   Operator,
   Permission,
   ScoringPresetType,
-} from "../client";
-import { conditionApi, objectiveApi, scoringApi } from "../client/client";
-import { DateTimePicker } from "../components/datetime-picker";
+} from "../../client";
+import { conditionApi, objectiveApi, scoringApi } from "../../client/client";
+import { DateTimePicker } from "../../components/datetime-picker";
 import {
   ClipboardDocumentCheckIcon,
   PencilSquareIcon,
@@ -437,7 +437,7 @@ const ScoringCategoryPage: React.FC = () => {
             {requiredNumberInput}
             {itemBaseTypeInput}
             {validFromInput}
-            {validToInput}{" "}
+            {validToInput}
           </fieldset>
         </div>
         <div className="flex gap-2 justify-end ">
@@ -663,12 +663,14 @@ const ScoringCategoryPage: React.FC = () => {
           createFunction={(data) =>
             scoringApi.createCategory(Number(eventId), {
               ...data,
+              scoring_preset_id: Number(data.scoring_preset_id),
               parent_id: Number(categoryId),
             })
           }
           editFunction={(data) =>
             scoringApi.createCategory(Number(eventId), {
               ...data,
+              scoring_preset_id: Number(data.scoring_preset_id),
               parent_id: Number(categoryId),
             })
           }

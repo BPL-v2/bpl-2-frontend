@@ -263,3 +263,19 @@ export function formToJson(form: HTMLFormElement): any {
   }
   return data;
 }
+
+export function rank2text(rank: number) {
+  if (rank === 0) {
+    return "Unfinished";
+  }
+  if (rank === 1) {
+    return "1st place";
+  }
+  if (rank === 2) {
+    return "2nd place";
+  }
+  if (rank === 3) {
+    return "3rd place";
+  }
+  return `${rank}th place`;
+}

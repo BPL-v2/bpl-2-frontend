@@ -87,6 +87,7 @@ function App() {
     }
     userApi.getUser().then(setUser);
     websocket?.close(1000, "eventChange");
+    setGameVersion(currentEvent.game_version);
     establishScoreSocket(
       currentEvent.id,
       setScoreData,
@@ -255,7 +256,7 @@ function App() {
         }}
       >
         <div className="max-w-[1440px] text-center mx-auto ">
-          {notifications}{" "}
+          {notifications}
           <div className="text-2xl p-0 flex items-center justify-between h-18">
             <ul className="navbar bg-base-200 w-full  h-full text-xl gap-0 p-0">
               <button
@@ -281,7 +282,7 @@ function App() {
                     <li
                       className={`m-0 sm:mx-2 ${
                         currentNav === item.key
-                          ? "bg-primary text-primary-content rounded-field hover:bg-base-300"
+                          ? "bg-primary text-primary-content rounded-field hover:bg-primary"
                           : ""
                       }`}
                       onClick={(e) => {
@@ -299,7 +300,7 @@ function App() {
                             <div
                               tabIndex={0}
                               role="button"
-                              className="btn btn-ghost  text-xl h-full rounded-field flex items-center"
+                              className="btn btn-ghost hover:btn-primary text-xl h-full rounded-field flex items-center"
                             >
                               {item.icon}
                               <div className="hidden lg:block">
@@ -342,7 +343,7 @@ function App() {
                           <div
                             tabIndex={0}
                             role="button"
-                            className="btn btn-ghost text-xl flex items-center h-15 p-4"
+                            className="btn btn-ghost hover:btn-primary text-xl flex items-center h-15 p-4"
                           >
                             {item.icon}
                             <div className="hidden lg:block">{item.label}</div>
@@ -352,8 +353,12 @@ function App() {
                     </li>
                   ))}
               </div>
-              <ThemePicker />
-              <EventPicker />
+              {isMobile ? null : (
+                <>
+                  <ThemePicker />
+                  <EventPicker />
+                </>
+              )}
               <div tabIndex={0} className="h-full">
                 {isMobile ? null : <ApplicationButton />}
                 <AuthButton />

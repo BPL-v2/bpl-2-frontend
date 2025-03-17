@@ -23,7 +23,6 @@ const ArrayInput: React.FC<ArrayInputProps> = ({
 
   return (
     <label className="floating-label">
-      {" "}
       <span>{label}</span>
       <input value={value.join(",")} onChange={handleChange} />
     </label>

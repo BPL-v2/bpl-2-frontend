@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 
 export function ThemePicker() {
-  const [theme, setTheme] = useState("lime");
+  const [theme, setTheme] = useState("ocean");
   useEffect(() => {
     document?.querySelector("html")?.setAttribute("data-theme", theme);
   }, [theme]);
   return (
     <select
       defaultValue="Pick a theme"
-      className="select w-40 mx-4"
+      className="select w-35"
       onChange={(e) => setTheme(e.target.value)}
     >
       <option disabled={true}>Pick a theme</option>
       {[
-        "lime",
+        "ocean",
         "dark",
         "synthwave",
         "halloween",
@@ -45,7 +45,7 @@ export function ThemePicker() {
         "autumn",
         "acid",
         "lemonade",
-
+        "sky",
         "winter",
         "nord",
         "caramellatte",
