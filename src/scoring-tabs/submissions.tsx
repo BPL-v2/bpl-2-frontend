@@ -9,6 +9,7 @@ import { Score, SubmissionCreate, Team } from "../client";
 import { submissionApi } from "../client/client";
 import { DateTimePicker } from "../components/datetime-picker";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import { Dialog } from "../components/dialog";
 
 export type SubmissionTabProps = {
   categoryName: string;
@@ -36,97 +37,74 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
 
   return (
     <>
-      <dialog
-        id="my_modal_1"
-        className="modal"
+      <Dialog
+        title={`Submission for "${selectedObjective?.name}"`}
         open={showModal}
-        onClick={(e) => {
-          if (e.target === e.currentTarget) {
+        setOpen={setShowModal}
+      >
+        <form
+          ref={formRef}
+          onSubmit={(e) => {
+            e.preventDefault();
+            const values = Object.fromEntries(
+              new FormData(e.target as HTMLFormElement)
+            ) as any;
+
+            if (!selectedObjective) {
+              return;
+            }
+            const submissionCreate: SubmissionCreate = {
+              ...values,
+              number: parseInt(values.number) || 1,
+              objective_id: selectedObjective.id,
+            };
+            submissionApi
+              .submitBounty(currentEvent.id, submissionCreate)
+              .then(() => {
+                setShowModal(false);
+                setSelectedObjective(undefined);
+                setReloadSubmissions(!reloadSubmissions);
+              });
             setShowModal(false);
             setSelectedObjective(undefined);
-          }
-        }}
-        onClose={() => {
-          setShowModal(false);
-          setSelectedObjective(undefined);
-        }}
-      >
-        <div className="modal-box bg-base-200 border-2 border-base-100 w-md">
-          <h3 className="font-bold text-lg mb-8">{`Submission for "${selectedObjective?.name}"`}</h3>
-          <form
-            ref={formRef}
-            onSubmit={(e) => {
-              e.preventDefault();
-              for (const [key, value] of new FormData(
-                e.target as HTMLFormElement
-              ).entries()) {
-                console.log(key, value);
-              }
-              const values = Object.fromEntries(
-                new FormData(e.target as HTMLFormElement)
-              ) as any;
-
-              if (!selectedObjective) {
-                return;
-              }
-              const submissionCreate: SubmissionCreate = {
-                ...values,
-                objective_id: selectedObjective.id,
-              };
-              submissionApi
-                .submitBounty(currentEvent.id, submissionCreate)
-                .then(() => {
-                  setShowModal(false);
-                  setSelectedObjective(undefined);
-                  setReloadSubmissions(!reloadSubmissions);
-                });
+          }}
+          className="form"
+        >
+          <fieldset className="fieldset bg-base-300 p-6 rounded-box">
+            <DateTimePicker
+              label="Time (in your timezone)"
+              name="timestamp"
+            ></DateTimePicker>
+            <label className="label">Value</label>
+            <input
+              type="number"
+              className="input w-full"
+              required
+              name="number"
+            />
+            <label className="label">Link to proof</label>
+            <input type="text" className="input w-full" required name="proof" />
+            <label className="label">Comment</label>
+            <input type="text" className="input w-full" name="comment" />
+          </fieldset>
+        </form>
+        <div className="modal-action">
+          <button
+            className="btn btn-soft"
+            onClick={() => {
               setShowModal(false);
-              setSelectedObjective(undefined);
             }}
-            className="form"
           >
-            <fieldset className="fieldset bg-base-300 p-6 rounded-box">
-              <DateTimePicker
-                label="Time (in your timezone)"
-                name="timestamp"
-              ></DateTimePicker>
-              <label className="label">Value</label>
-              <input
-                type="number"
-                className="input w-full"
-                required
-                name="value"
-              />
-              <label className="label">Link to proof</label>
-              <input
-                type="text"
-                className="input w-full"
-                required
-                name="proof"
-              />
-              <label className="label">Comment</label>
-              <input type="text" className="input w-full" name="comment" />
-            </fieldset>
-          </form>
-
-          <div className="modal-action">
-            <button
-              className="btn btn-soft"
-              onClick={() => {
-                setShowModal(false);
-              }}
-            >
-              Cancel
-            </button>
-            <button
-              className="btn btn-primary"
-              onClick={() => formRef.current?.requestSubmit()}
-            >
-              Submit
-            </button>
-          </div>
+            Cancel
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={() => formRef.current?.requestSubmit()}
+          >
+            Submit
+          </button>
         </div>
-      </dialog>
+      </Dialog>
       <TeamScore category={category}></TeamScore>
       <h1 className="text-xl mt-4">
         Click to see all{" "}

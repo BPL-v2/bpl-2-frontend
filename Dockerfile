@@ -21,7 +21,6 @@ COPY . .
 # Build the application
 ARG VITE_BACKEND_URL
 ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
-RUN echo "VITE_BACKEND_URL=${VITE_BACKEND_URL}" > .env
 RUN npm run build
 # RUN apk add python3
 # RUN python3 crazy-hackzz.py

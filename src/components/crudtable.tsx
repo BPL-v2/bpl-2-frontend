@@ -4,6 +4,7 @@ import ArrayInput from "./arrayinput";
 import dayjs from "dayjs";
 import { DateTimePicker } from "./datetime-picker";
 import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
+import { Dialog } from "./dialog";
 
 type Option = {
   label: string;
@@ -135,7 +136,7 @@ const CrudTable = <T,>({
           form.reset();
         }}
       >
-        <fieldset className="fieldset w-xs bg-base-300 p-4 rounded-box">
+        <fieldset className="fieldset bg-base-300 p-4 rounded-box w-full">
           {columns
             .filter((column) => column.editable)
             .map((column, idx) => {
@@ -153,7 +154,7 @@ const CrudTable = <T,>({
                   <input
                     name={String(key)}
                     id={String(key)}
-                    className="input"
+                    className="input w-full"
                     defaultValue={currentData[key] as string}
                     required={column.required}
                     key={String(currentData[key])}
@@ -164,7 +165,7 @@ const CrudTable = <T,>({
                   <input
                     name={String(key)}
                     type="number"
-                    className="input "
+                    className="input w-full"
                     defaultValue={currentData[key] as number}
                     required={column.required}
                     key={String(currentData[key])}
@@ -195,7 +196,7 @@ const CrudTable = <T,>({
                 input = (
                   <select
                     name={String(key)}
-                    className="select"
+                    className="select w-full"
                     defaultValue={defaultVal}
                     key={defaultVal}
                   >
@@ -225,7 +226,7 @@ const CrudTable = <T,>({
                 input = (
                   <select
                     multiple
-                    className="select h-40"
+                    className="select h-40 w-full"
                     key={String(currentData[key])}
                     name={String(key)}
                   >
@@ -286,68 +287,46 @@ const CrudTable = <T,>({
   return (
     <>
       {createFunction || editFunction ? (
-        <dialog
-          className="modal"
+        <Dialog
+          title={` ${currentData ? "Update " : "Create "}
+              ${resourceName}`}
           open={isCreateModalOpen}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setIsCreateModalOpen(false);
-            }
-          }}
-          onClose={() => {
-            setIsCreateModalOpen(false);
-          }}
+          setOpen={setIsCreateModalOpen}
         >
-          <div className="modal-box bg-base-200 border-2 border-base-100 max-w-sm">
-            <h3 className="font-bold text-lg mb-8">
-              {currentData ? "Update " : "Create "}
-              {resourceName}
-            </h3>
-            <div className="flex justify-end flex-col gap-y-4">{form}</div>
-          </div>
-        </dialog>
+          <div className="flex justify-end flex-col gap-y-4">{form}</div>
+        </Dialog>
       ) : null}
       {deleteFunction ? (
-        <dialog
-          className="modal"
+        <Dialog
+          title={`Delete ${resourceName}`}
           open={isDeleteModalOpen}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setIsDeleteModalOpen(false);
-            }
-          }}
-          onClose={() => {
-            setIsDeleteModalOpen(false);
-          }}
+          setOpen={setIsDeleteModalOpen}
         >
-          <div className="modal-box bg-base-200 border-2 border-base-100 max-w-sm">
-            <h3 className="font-bold text-lg mb-8">Delete {resourceName}</h3>
-            Do you really want to delete this {resourceName}?
-            <div className="flex gap-2 justify-end mt-8">
-              <button
-                className="btn btn-primary"
-                onClick={() => {
+          Do you really want to delete this {resourceName}?
+          <div className="flex gap-2 justify-end mt-8">
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                setIsDeleteModalOpen(false);
+              }}
+            >
+              No
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => {
+                deleteFunction(currentData).then(() => {
                   setIsDeleteModalOpen(false);
-                }}
-              >
-                No
-              </button>
-              <button
-                className="btn btn-secondary"
-                onClick={() => {
-                  deleteFunction(currentData).then(() => {
-                    setIsDeleteModalOpen(false);
-                    fetchFunction().then((data) => {
-                      setData(data);
-                    });
+                  fetchFunction().then((data) => {
+                    setData(data);
                   });
-                }}
-              >
-                Yes
-              </button>
-            </div>
+                });
+              }}
+            >
+              Yes
+            </button>
           </div>
-        </dialog>
+        </Dialog>
       ) : (
         ""
       )}

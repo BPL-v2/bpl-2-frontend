@@ -32,6 +32,7 @@ import {
   PlusIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
+import { Dialog } from "../../components/dialog";
 
 async function createBulkItemObjectives(
   eventId: number,
@@ -443,6 +444,7 @@ const ScoringCategoryPage: React.FC = () => {
         <div className="flex gap-2 justify-end ">
           <button
             className="btn btn-secondary"
+            type="button"
             onClick={() => {
               setIsObjectiveModalOpen(false);
             }}
@@ -684,198 +686,74 @@ const ScoringCategoryPage: React.FC = () => {
 
   let bulkObjeciveModal = useMemo(
     () => (
-      <dialog
+      <Dialog
+        title="Create Objectives in bulk"
         open={isBulkObjectiveModalOpen}
-        className="modal"
-        onClick={(e) => {
-          if (e.target === e.currentTarget) {
-            setIsBulkObjectiveModalOpen(false);
-          }
-        }}
-        onClose={() => {
-          setIsBulkObjectiveModalOpen(false);
-        }}
+        setOpen={setIsBulkObjectiveModalOpen}
       >
-        <div className="modal-box bg-base-200 border-2 border-base-100 max-w-sm">
-          <h3 className="font-bold text-lg mb-8">Create Objectives in bulk</h3>
-          <div className="flex justify-end flex-col gap-y-4">
-            <form
-              onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-                e.preventDefault();
-                const form = e.currentTarget;
-                const data = new FormData(form);
-                createBulkItemObjectives(
-                  Number(eventId),
-                  Number(categoryId),
-                  data.get("name_list") as string,
-                  Number(data.get("scoring_method")),
-                  data.get("aggregation_method") as AggregationType,
-                  data.get("identifier") as ItemField
-                ).then(() => {
-                  setIsBulkObjectiveModalOpen(false);
-                  setRefreshObjectives((prev) => !prev);
-                });
-              }}
-            >
-              <fieldset className="fieldset bg-base-300 p-4 rounded-box mb-4">
-                <label className="label">Comma separated list of names</label>
-                <input
-                  name="name_list"
-                  type="text"
-                  className="input"
-                  required
-                />
-                <label className="label">Identifier</label>
-                <select name="identifier" className="select">
-                  <option value="NAME">NAME</option>
-                  <option value="BASE_TYPE">BASE_TYPE</option>
-                </select>
-                <label className="label">Scoring Method</label>
-                <select name="scoring_method" className="select">
-                  {scoringPresets
-                    .filter(
-                      (preset) => preset.type == ScoringPresetType.OBJECTIVE
-                    )
-                    .map((preset) => {
-                      return (
-                        <option key={preset.id} value={preset.id}>
-                          {preset.name}
-                        </option>
-                      );
-                    })}
-                </select>
-                <label className="label">Aggregation Method</label>
-                <select name="aggregation_method" className="select">
-                  {Object.values(AggregationType).map((type) => {
-                    return (
-                      <option key={type} value={type}>
-                        {type}
-                      </option>
-                    );
-                  })}
-                </select>
-              </fieldset>
-              <div className="flex gap-2 justify-end ">
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => {
-                    setIsBulkObjectiveModalOpen(false);
-                  }}
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="btn btn-primary">
-                  Create
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </dialog>
-    ),
-    [isBulkObjectiveModalOpen]
-  );
-  let objectiveModal = (
-    <dialog
-      open={isObjectiveModalOpen}
-      className="modal"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          setIsObjectiveModalOpen(false);
-        }
-      }}
-      onClose={() => {
-        setIsObjectiveModalOpen(false);
-      }}
-    >
-      <div className="modal-box bg-base-200 border-2 border-base-100">
-        <h3 className="font-bold text-lg mb-8">Create Objective</h3>
-        <div className="flex justify-end flex-col gap-y-4">{objectiveForm}</div>
-      </div>
-    </dialog>
-  );
-
-  let conditionModal = useMemo(() => {
-    return (
-      <dialog
-        className="modal"
-        open={isConditionModalOpen}
-        onClose={() => {
-          setIsConditionModalOpen(false);
-        }}
-        onClick={(e) => {
-          if (e.target === e.currentTarget) {
-            setIsConditionModalOpen(false);
-          }
-        }}
-      >
-        <div className="modal-box bg-base-200 border-2 border-base-100 max-w-sm">
-          <h3 className="font-bold text-lg mb-8">Add Condition</h3>
+        <div className="flex justify-end flex-col gap-y-4">
           <form
             onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
               e.preventDefault();
               const form = e.currentTarget;
               const data = new FormData(form);
-              if (!currentObjective.id) {
-                return;
-              }
-              const conditionCreate = {
-                field: conditionField!,
-                operator: data.get("operator") as Operator,
-                value: data.get("value") as string,
-                objective_id: currentObjective.id,
-              };
-              conditionApi
-                .createCondition(Number(eventId), conditionCreate)
-                .then(() => {
-                  setIsConditionModalOpen(false);
-                  setRefreshObjectives((prev) => !prev);
-                });
+              createBulkItemObjectives(
+                Number(eventId),
+                Number(categoryId),
+                data.get("name_list") as string,
+                Number(data.get("scoring_method")),
+                data.get("aggregation_method") as AggregationType,
+                data.get("identifier") as ItemField
+              ).then(() => {
+                setIsBulkObjectiveModalOpen(false);
+                setRefreshObjectives((prev) => !prev);
+              });
             }}
           >
             <fieldset className="fieldset bg-base-300 p-4 rounded-box mb-4">
-              <label className="label">Field</label>
-              <select
-                name="field"
-                className="select"
+              <label className="label">Comma separated list of names</label>
+              <input
+                name="name_list"
+                type="text"
+                className="input w-full"
                 required
-                onChange={(e) => {
-                  setConditionField(e.target.value as ItemField);
-                }}
-              >
-                <option value=""></option>
-                {Object.values(ItemField).map((field) => {
+              />
+              <label className="label">Identifier</label>
+              <select name="identifier" className="select w-full">
+                <option value="NAME">NAME</option>
+                <option value="BASE_TYPE">BASE_TYPE</option>
+              </select>
+              <label className="label">Scoring Method</label>
+              <select name="scoring_method" className="select w-full">
+                {scoringPresets
+                  .filter(
+                    (preset) => preset.type == ScoringPresetType.OBJECTIVE
+                  )
+                  .map((preset) => {
+                    return (
+                      <option key={preset.id} value={preset.id}>
+                        {preset.name}
+                      </option>
+                    );
+                  })}
+              </select>
+              <label className="label">Aggregation Method</label>
+              <select name="aggregation_method" className="select w-full">
+                {Object.values(AggregationType).map((type) => {
                   return (
-                    <option key={field} value={field}>
-                      {field}
+                    <option key={type} value={type}>
+                      {type}
                     </option>
                   );
                 })}
               </select>
-              {conditionField !== undefined ? (
-                <>
-                  <label className="label">Operator</label>
-                  <select name="operator" className="select" required>
-                    {operatorForField
-                      ? operatorForField[conditionField].map((operator) => {
-                          return (
-                            <option key={operator} value={operator}>
-                              {operator}
-                            </option>
-                          );
-                        })
-                      : null}
-                  </select>
-                </>
-              ) : null}
-              <label className="label">Value</label>
-              <input name="value" type="text" className="input" required />
             </fieldset>
             <div className="flex gap-2 justify-end ">
               <button
                 className="btn btn-secondary"
+                type="button"
                 onClick={() => {
-                  setIsConditionModalOpen(false);
+                  setIsBulkObjectiveModalOpen(false);
                 }}
               >
                 Cancel
@@ -886,7 +764,103 @@ const ScoringCategoryPage: React.FC = () => {
             </div>
           </form>
         </div>
-      </dialog>
+      </Dialog>
+    ),
+    [isBulkObjectiveModalOpen]
+  );
+  let objectiveModal = (
+    <Dialog
+      title="Create Objective"
+      open={isObjectiveModalOpen}
+      setOpen={setIsObjectiveModalOpen}
+    >
+      <div className="flex justify-end flex-col gap-y-4">{objectiveForm}</div>
+    </Dialog>
+  );
+
+  let conditionModal = useMemo(() => {
+    return (
+      <Dialog
+        title="Create Condition"
+        open={isConditionModalOpen}
+        setOpen={setIsConditionModalOpen}
+      >
+        <form
+          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+            e.preventDefault();
+            const form = e.currentTarget;
+            const data = new FormData(form);
+            if (!currentObjective.id) {
+              return;
+            }
+            const conditionCreate = {
+              field: conditionField!,
+              operator: data.get("operator") as Operator,
+              value: data.get("value") as string,
+              objective_id: currentObjective.id,
+            };
+            conditionApi
+              .createCondition(Number(eventId), conditionCreate)
+              .then(() => {
+                setIsConditionModalOpen(false);
+                setRefreshObjectives((prev) => !prev);
+              });
+          }}
+        >
+          <fieldset className="fieldset bg-base-300 p-4 rounded-box mb-4">
+            <label className="label">Field</label>
+            <select
+              name="field"
+              className="select w-full"
+              required
+              onChange={(e) => {
+                setConditionField(e.target.value as ItemField);
+              }}
+            >
+              <option value=""></option>
+              {Object.values(ItemField).map((field) => {
+                return (
+                  <option key={field} value={field}>
+                    {field}
+                  </option>
+                );
+              })}
+            </select>
+            {conditionField !== undefined ? (
+              <>
+                <label className="label">Operator</label>
+                <select name="operator" className="select w-full" required>
+                  {operatorForField
+                    ? operatorForField[conditionField].map((operator) => {
+                        return (
+                          <option key={operator} value={operator}>
+                            {operator}
+                          </option>
+                        );
+                      })
+                    : null}
+                </select>
+              </>
+            ) : null}
+            <label className="label">Value</label>
+            <input name="value" type="text" className="input w-full" required />
+          </fieldset>
+          <div className="flex gap-2 justify-end ">
+            <button
+              className="btn btn-secondary"
+              type="button"
+              onClick={() => {
+                setIsConditionModalOpen(false);
+              }}
+            >
+              Cancel
+            </button>
+            <button type="submit" className="btn btn-primary">
+              Create
+            </button>
+          </div>
+        </form>
+      </Dialog>
     );
   }, [currentObjective, isConditionModalOpen, conditionField]);
 

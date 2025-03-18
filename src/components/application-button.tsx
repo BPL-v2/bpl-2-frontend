@@ -3,6 +3,7 @@ import { GlobalStateContext } from "../utils/context-provider";
 import { ApplicationStatus, ExpectedPlayTime, Team } from "../client";
 import { signupApi } from "../client/client";
 import { DiscordFilled } from "../icons/discord";
+import { Dialog } from "./dialog";
 
 type ApplicationButtonProps = {};
 const ApplicationButton = ({}: ApplicationButtonProps) => {
@@ -76,112 +77,101 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
   if (eventStatus?.application_status === ApplicationStatus.none) {
     return (
       <>
-        <dialog
-          id="my_modal_1"
-          className="modal"
-          open={modalOpen}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setModalOpen(false);
-          }}
-          onClose={() => setModalOpen(false)}
-        >
-          <div className="modal-box bg-base-200 border-2 border-base-100">
-            <h3 className="font-bold text-lg mb-8">Apply for Event</h3>
-            <form
-              ref={formRef}
-              onSubmit={(e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target as HTMLFormElement);
-                signupApi
-                  .createSignup(currentEvent.id, {
-                    expected_playtime: formData.get(
-                      "expected_playtime"
-                    ) as ExpectedPlayTime,
-                  })
-                  .then(() => {
-                    setEventStatus({
-                      ...eventStatus,
-                      application_status: ApplicationStatus.applied,
-                    });
-                    setModalOpen(false);
-                  })
-                  .catch((e) => {
-                    if (e.status === 403) {
-                      setIsServerMember(false);
-                    }
+        <Dialog title="Apply for Event" open={modalOpen} setOpen={setModalOpen}>
+          <form
+            ref={formRef}
+            onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.target as HTMLFormElement);
+              signupApi
+                .createSignup(currentEvent.id, {
+                  expected_playtime: formData.get(
+                    "expected_playtime"
+                  ) as ExpectedPlayTime,
+                })
+                .then(() => {
+                  setEventStatus({
+                    ...eventStatus,
+                    application_status: ApplicationStatus.applied,
                   });
-              }}
-            >
-              <fieldset className="fieldset w-xs bg-base-200 p-4 rounded-box">
-                <label className="fieldset-label">
-                  How many hours will you be able to play per day?
-                </label>
-                <select
-                  className="select"
-                  id="expected_playtime"
-                  name="expected_playtime"
-                >
-                  {Object.entries(ExpectedPlayTime).map((entry) => (
-                    <option key={entry[0]} value={entry[0]}>
-                      {entry[1]}
-                    </option>
-                  ))}
-                </select>
-                <label className="label">
-                  <input
-                    type="checkbox"
-                    id="rulecheck"
-                    name="rulecheck"
-                    required
-                  />
-                  I've read the{" "}
-                  <a href="/rules" target="_blank">
-                    rules
-                  </a>
-                </label>
-              </fieldset>
-            </form>
-            {user.discord_id ? null : (
-              <div className="mt-4">
-                <p>
-                  You need a linked discord account and join our server to
-                  apply.
-                </p>
-                <button className="btn btn-lg bg-discord text-white text-xl mt-4">
-                  <DiscordFilled className="w-6 h-6" />
-                  Link Discord Account
-                </button>
-              </div>
-            )}
-            {isServerMember ? null : (
-              <div className="mt-4">
-                <p>Join our discord server to apply for the event.</p>
-                <button className="btn bg-discord btn-lg mt-4">
-                  <a href="https://discord.gg/7zBQXZqJpH" target="_blank">
-                    <DiscordFilled className="w-6 h-6" />
-                    Join Server
-                  </a>
-                </button>
-              </div>
-            )}
-            <div className="modal-action">
-              <button
-                className="btn btn-primary"
-                onClick={() => formRef.current?.requestSubmit()}
-              >
-                Apply
-              </button>
-              <button
-                className="btn btn-soft"
-                onClick={() => {
                   setModalOpen(false);
-                }}
+                })
+                .catch((e) => {
+                  if (e.status === 403) {
+                    setIsServerMember(false);
+                  }
+                });
+            }}
+          >
+            <fieldset className="fieldset bg-base-300 p-4 rounded-box">
+              <label className="fieldset-label">
+                How many hours will you be able to play per day?
+              </label>
+              <select
+                className="select"
+                id="expected_playtime"
+                name="expected_playtime"
               >
-                Cancel
+                {Object.entries(ExpectedPlayTime).map((entry) => (
+                  <option key={entry[0]} value={entry[0]}>
+                    {entry[1]}
+                  </option>
+                ))}
+              </select>
+              <label className="label">
+                I've read the{" "}
+                <a href="/rules" target="_blank">
+                  rules
+                </a>
+              </label>
+              <input
+                type="checkbox"
+                id="rulecheck"
+                name="rulecheck"
+                className="checkbox"
+                required
+              />
+            </fieldset>
+          </form>
+          {user.discord_id ? null : (
+            <div className="mt-4">
+              <p>
+                You need a linked discord account and join our server to apply.
+              </p>
+              <button className="btn btn-lg bg-discord text-white text-xl mt-4">
+                <DiscordFilled className="w-6 h-6" />
+                Link Discord Account
               </button>
             </div>
+          )}
+          {isServerMember ? null : (
+            <div className="mt-4">
+              <p>Join our discord server to apply for the event.</p>
+              <button className="btn bg-discord btn-lg mt-4">
+                <a href="https://discord.gg/7zBQXZqJpH" target="_blank">
+                  <DiscordFilled className="w-6 h-6" />
+                  Join Server
+                </a>
+              </button>
+            </div>
+          )}
+          <div className="modal-action">
+            <button
+              className="btn btn-primary"
+              onClick={() => formRef.current?.requestSubmit()}
+            >
+              Apply
+            </button>
+            <button
+              className="btn btn-soft"
+              onClick={() => {
+                setModalOpen(false);
+              }}
+            >
+              Cancel
+            </button>
           </div>
-        </dialog>
+        </Dialog>
         <button
           className={`btn bg-base-100 h-full hover:text-primary hover:border-primary rounded-none`}
           onClick={() => {

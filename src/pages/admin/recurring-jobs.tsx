@@ -4,6 +4,7 @@ import { Event, JobType, Permission, RecurringJob } from "../../client";
 import { jobApi } from "../../client/client";
 import React from "react";
 import dayjs from "dayjs";
+import { Dialog } from "../../components/dialog";
 
 const formatDateForInput = (date: Date | null) => {
   if (!date) return "";
@@ -55,113 +56,104 @@ const RecurringJobsPage = () => {
   }
   return (
     <>
-      <dialog
-        className="modal "
+      <Dialog
+        title="Create recurring job"
         open={showModal}
-        onClick={(e) => {
-          if (e.target === e.currentTarget) {
-            setShowModal(false);
-          }
-        }}
-        onClose={() => {
-          setShowModal(false);
-        }}
+        setOpen={setShowModal}
       >
-        <div className="modal-box bg-base-200 border-2 border-base-100 max-w-sm">
-          <h3 className="font-bold text-lg mb-8">Create recurring job</h3>
-          <form
-            className="space-y-4 text-left"
-            onSubmit={(e) => {
-              const values = new FormData(formRef.current!);
-              e.preventDefault();
-              jobApi
-                .startJob({
-                  event_id: Number(values.get("event")),
-                  job_type: values.get("jobType") as JobType,
-                  end_date: new Date(
-                    values.get("endDate") as string
-                  ).toISOString(),
-                })
-                .then(() => {
-                  jobApi.getJobs().then(setJobs);
-                  setShowModal(false);
-                  formRef.current?.reset();
-                });
-            }}
-            ref={formRef}
-          >
-            <fieldset className="fieldset rounded-box bg-base-300">
-              <legend className="fieldset-legend">Event</legend>
-              <select
-                id="event"
-                name="event"
-                defaultValue=""
-                className="select"
-                required
-                onChange={(e) =>
-                  setSelectedEvent(
-                    events.find(
-                      (event) => event.id === parseInt(e.target.value)
-                    ) || null
-                  )
-                }
-              >
-                <option disabled value="">
-                  Pick an event
-                </option>
-                {events.map((event) => (
-                  <option key={event.id} value={event.id}>
-                    {event.name}
-                  </option>
-                ))}
-              </select>
-
-              <legend className="fieldset-legend">Job Type</legend>
-              <select
-                id="jobType"
-                name="jobType"
-                defaultValue=""
-                className="select"
-                required
-              >
-                <option disabled value="">
-                  Pick a job type
-                </option>
-                {Object.values(JobType).map((jobType) => (
-                  <option key={jobType} value={jobType}>
-                    {jobType}
-                  </option>
-                ))}
-              </select>
-              <legend className="fieldset-legend">End Date</legend>
-              <input
-                id="endDate"
-                name="endDate"
-                type="datetime-local"
-                className="input"
-                defaultValue={formatDateForInput(selectedEndDate)}
-                required
-              />
-            </fieldset>
-          </form>
-          <div className="modal-action">
-            <button
-              className="btn btn-soft"
-              onClick={() => {
+        <form
+          className="space-y-4 text-left"
+          onSubmit={(e) => {
+            const values = new FormData(formRef.current!);
+            e.preventDefault();
+            jobApi
+              .startJob({
+                event_id: Number(values.get("event")),
+                job_type: values.get("jobType") as JobType,
+                end_date: new Date(
+                  values.get("endDate") as string
+                ).toISOString(),
+              })
+              .then(() => {
+                jobApi.getJobs().then(setJobs);
                 setShowModal(false);
-              }}
+                formRef.current?.reset();
+              });
+          }}
+          ref={formRef}
+        >
+          <fieldset className="fieldset rounded-box bg-base-300">
+            <legend className="fieldset-legend">Event</legend>
+            <select
+              id="event"
+              name="event"
+              defaultValue=""
+              className="select"
+              required
+              onChange={(e) =>
+                setSelectedEvent(
+                  events.find(
+                    (event) => event.id === parseInt(e.target.value)
+                  ) || null
+                )
+              }
             >
-              Cancel
-            </button>
-            <button
-              className="btn btn-primary"
-              onClick={() => formRef.current?.requestSubmit()}
+              <option disabled value="">
+                Pick an event
+              </option>
+              {events.map((event) => (
+                <option key={event.id} value={event.id}>
+                  {event.name}
+                </option>
+              ))}
+            </select>
+
+            <legend className="fieldset-legend">Job Type</legend>
+            <select
+              id="jobType"
+              name="jobType"
+              defaultValue=""
+              className="select"
+              required
             >
-              Submit
-            </button>
-          </div>
+              <option disabled value="">
+                Pick a job type
+              </option>
+              {Object.values(JobType).map((jobType) => (
+                <option key={jobType} value={jobType}>
+                  {jobType}
+                </option>
+              ))}
+            </select>
+            <legend className="fieldset-legend">End Date</legend>
+            <input
+              id="endDate"
+              name="endDate"
+              type="datetime-local"
+              className="input"
+              defaultValue={formatDateForInput(selectedEndDate)}
+              required
+            />
+          </fieldset>
+        </form>
+        <div className="modal-action">
+          <button
+            className="btn btn-soft"
+            type="button"
+            onClick={() => {
+              setShowModal(false);
+            }}
+          >
+            Cancel
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={() => formRef.current?.requestSubmit()}
+          >
+            Submit
+          </button>
         </div>
-      </dialog>
+      </Dialog>
 
       <table className="table w-full mt-4">
         <thead className="bg-base-200">
