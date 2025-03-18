@@ -23,7 +23,7 @@ export function Dialog({ title, open, setOpen, children }: DialogProps) {
     <dialog open={open} className="modal">
       <div className="modal-box bg-base-200 border-2 border-base-100">
         <h3 className="font-bold text-lg mb-8">{title}</h3>
-        <div className="w-full">{children}</div>{" "}
+        <div className="w-full">{children}</div>
       </div>
     </dialog>
   );

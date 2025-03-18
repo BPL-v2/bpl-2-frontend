@@ -11,9 +11,9 @@ export function TableSortIcon({ sort, className }: Props) {
   let downColor = "currentColor";
   if (sort) {
     if (sort.desc) {
-      downColor = "var(--color-primary)";
-    } else {
       upColor = "var(--color-primary)";
+    } else {
+      downColor = "var(--color-primary)";
     }
   }
   return (

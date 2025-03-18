@@ -5,7 +5,7 @@ import TeamScore from "../components/team-score";
 import { DailyCard } from "../components/daily-card";
 import { Daily } from "../types/scoring-objective";
 
-function sortByReleasDate(dailyA: Daily, dailyB: Daily) {
+function sortByReleaseDate(dailyA: Daily, dailyB: Daily) {
   const a = dailyA.baseObjective;
   const b = dailyB.baseObjective!;
   const releaseA = a.valid_from ? new Date(a.valid_from) : new Date();
@@ -38,10 +38,10 @@ export function DailyTab() {
   return (
     <>
       <TeamScore category={category}></TeamScore>
-      <div className="divider divider-primary">{`Dailies`}</div>
+      <div className="divider divider-primary">Dailies</div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {Object.values(dailies)
-          .sort(sortByReleasDate)
+          .sort(sortByReleaseDate)
           .map((daily) => (
             <DailyCard daily={daily} key={`daily-${daily.baseObjective.id}`} />
           ))}

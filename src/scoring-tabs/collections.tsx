@@ -15,12 +15,12 @@ export function CollectionTab() {
   return (
     <>
       <TeamScore category={category}></TeamScore>
-      <div className="divider divider-primary">{`Collection Goals`}</div>
+      <div className="divider divider-primary">Collection Goals</div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {category.objectives.map((objective) => {
           return (
             <div className="card bg-base-300" key={objective.id}>
-              <div className="card-title top-box-rounded flex items-center m-0 px-4 bg-base-200 h-25  ">
+              <div className="card-title rounded-t-box flex items-center m-0 px-4 bg-base-200 h-25  ">
                 <ObjectiveIcon
                   objective={objective}
                   gameVersion={currentEvent.game_version}

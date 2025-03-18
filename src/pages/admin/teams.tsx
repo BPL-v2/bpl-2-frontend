@@ -84,18 +84,26 @@ const TeamPage = () => {
 
   const eventIdNum = Number(eventId);
   return (
-    <CrudTable<Team>
-      resourceName="Team"
-      columns={columns}
-      fetchFunction={() => teamApi.getTeams(eventIdNum)}
-      createFunction={(data) =>
-        teamApi.createTeam(eventIdNum, { ...data, eventId: eventIdNum })
-      }
-      editFunction={(data) =>
-        teamApi.createTeam(eventIdNum, { ...data, eventId: eventIdNum })
-      }
-      deleteFunction={(data) => teamApi.deleteTeam(eventIdNum, data.id)}
-    />
+    <>
+      <input
+        type="color"
+        className="input"
+        onChange={(e) => console.log(e.target.value)}
+      />
+
+      <CrudTable<Team>
+        resourceName="Team"
+        columns={columns}
+        fetchFunction={() => teamApi.getTeams(eventIdNum)}
+        createFunction={(data) =>
+          teamApi.createTeam(eventIdNum, { ...data, eventId: eventIdNum })
+        }
+        editFunction={(data) =>
+          teamApi.createTeam(eventIdNum, { ...data, eventId: eventIdNum })
+        }
+        deleteFunction={(data) => teamApi.deleteTeam(eventIdNum, data.id)}
+      />
+    </>
   );
 };
 

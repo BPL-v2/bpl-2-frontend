@@ -101,7 +101,7 @@ const UserSortPage = () => {
 
   return (
     <div style={{ marginTop: "20px" }}>
-      <h1>Sort</h1> <div className="divider divider-primary">{"Teams"}</div>
+      <h1>Sort</h1> <div className="divider divider-primary">Teams</div>
       <table className="table table-striped">
         <thead className="bg-base-200">
           <tr>
@@ -133,7 +133,7 @@ const UserSortPage = () => {
           ))}
         </tbody>
       </table>
-      <div className="divider divider-primary">{"Users"}</div>
+      <div className="divider divider-primary">Users</div>
       <div className="flex gap-2 bg-base-300 p-4 wrap mb-2">
         <label className="input">
           <span className="label">Filter by name:</span>

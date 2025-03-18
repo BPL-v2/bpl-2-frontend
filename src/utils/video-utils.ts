@@ -91,21 +91,3 @@ export async function getThumbnailUrl(
   }
   return;
 }
-
-export function getIconLocation(url: string): string | undefined {
-  let parsedUrl: URL;
-  try {
-    parsedUrl = new URL(url);
-  } catch (e) {
-    return;
-  }
-
-  if (parsedUrl.hostname === "www.youtube.com") {
-    return "/assets/app-logos/youtube-icon.svg";
-  } else if (parsedUrl.hostname === "youtu.be") {
-    return "/assets/app-logos/youtube-icon.svg";
-  } else if (parsedUrl.hostname === "www.twitch.tv") {
-    return "/assets/app-logos/twitch-icon.svg";
-  }
-  return;
-}

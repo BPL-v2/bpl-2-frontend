@@ -6,7 +6,7 @@ import {
 } from "../types/scoring-category";
 import { getTotalPoints } from "../utils/utils";
 import { LadderEntry, Team } from "../client";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, sortingFns } from "@tanstack/react-table";
 
 import { Table } from "../components/table";
 import { Ascendancy } from "../components/ascendancy";
@@ -40,21 +40,25 @@ export function LadderTab() {
     {
       accessorKey: "rank",
       header: "Rank",
+      sortingFn: sortingFns.basic,
       size: 60,
     },
     {
       accessorKey: "character_name",
       header: "Character",
+      sortingFn: sortingFns.text,
       size: 250,
     },
     {
       accessorKey: "account_name",
       header: "Account",
+      sortingFn: sortingFns.text,
       size: 180,
     },
     {
       accessorFn: (row) => userToTeam[row.user_id] || "Cartographers",
       header: "Team",
+      sortingFn: sortingFns.text,
       size: 120,
     },
     {
@@ -63,6 +67,7 @@ export function LadderTab() {
       cell: (info) => (
         <Ascendancy character_class={info.row.original.character_class} />
       ),
+      sortingFn: sortingFns.text,
       size: 200,
     },
     {
@@ -74,11 +79,14 @@ export function LadderTab() {
           level={info.row.original.level}
         />
       ),
+      sortingFn: sortingFns.basic,
+
       size: 80,
     },
     {
       accessorKey: "delve",
       header: "Delve",
+      sortingFn: sortingFns.basic,
     },
   ];
   if (!scores || !currentEvent || !currentEvent.teams) {
@@ -165,7 +173,7 @@ export function LadderTab() {
 
   return (
     <>
-      <div className="divider divider-primary ">{"Team Scores"}</div>
+      <div className="divider divider-primary ">Team Scores</div>
       <table className="table bg-base-300 text-lg">
         <thead className="bg-base-200">
           <tr>
@@ -195,7 +203,7 @@ export function LadderTab() {
         </tbody>
       </table>
 
-      <div className="divider divider-primary">{"Ladder"}</div>
+      <div className="divider divider-primary">Ladder</div>
       <Table
         data={ladder}
         columns={ladderColumns}

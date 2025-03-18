@@ -105,7 +105,7 @@ export function DelveTab() {
             {fossilRaceCategory.objectives.map((objective) => {
               return (
                 <div className="card bg-base-300" key={objective.id}>
-                  <div className=" top-box-rounded flex  m-0 px-4 bg-base-200 p-2 ">
+                  <div className=" rounded-t-box flex  m-0 px-4 bg-base-200 p-2 ">
                     <ObjectiveIcon
                       objective={objective}
                       gameVersion={currentEvent.game_version}

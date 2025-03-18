@@ -54,7 +54,7 @@ export function OauthCard({
       className={`card border-2 max-h-100 max-w-120 ${borderColour} ${bodyColour}`}
     >
       <div
-        className={`top-box-rounded px-8 py-4 items-center justify-between flex ${headerColour}`}
+        className={`rounded-t-box px-8 py-4 items-center justify-between flex ${headerColour}`}
       >
         <h1 className="text-2xl font-bold text-center">{title}</h1>
         {connectionButton}

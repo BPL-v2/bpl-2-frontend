@@ -1,14 +1,29 @@
 import React, { CSSProperties } from "react";
-import {
-  getEmbedUrl,
-  getIconLocation,
-  getThumbnailUrl,
-} from "../utils/video-utils";
+import { getEmbedUrl, getThumbnailUrl } from "../utils/video-utils";
 import { PlayCircleIcon } from "@heroicons/react/24/outline";
+import { YoutubeFilled } from "../icons/youtube";
+import { TwitchFilled } from "../icons/twitch";
 export interface VideoEmbedProps {
   url: string;
   title?: string;
   style?: CSSProperties;
+}
+function getIcon(url: string): React.ReactNode {
+  let parsedUrl: URL;
+  try {
+    parsedUrl = new URL(url);
+  } catch (e) {
+    return;
+  }
+
+  if (parsedUrl.hostname === "www.youtube.com") {
+    return <YoutubeFilled className="h-16 w-16" brandColor />;
+  } else if (parsedUrl.hostname === "youtu.be") {
+    return <YoutubeFilled className="h-16 w-16" brandColor />;
+  } else if (parsedUrl.hostname === "www.twitch.tv") {
+    return <TwitchFilled className="h-16 w-16" brandColor />;
+  }
+  return;
 }
 
 export const VideoEmbed: React.FC<VideoEmbedProps> = (
@@ -32,7 +47,7 @@ export const VideoEmbed: React.FC<VideoEmbedProps> = (
     return <></>;
   }
 
-  const iconLocation = getIconLocation(url);
+  const icon = getIcon(url);
 
   if (isOpened) {
     return (
@@ -86,18 +101,7 @@ export const VideoEmbed: React.FC<VideoEmbedProps> = (
           }}
           aria-label="Play"
         >
-          {!iconLocation ? (
-            <PlayCircleIcon className="h-6 w-6" />
-          ) : (
-            <img
-              alt="click to view video"
-              src={iconLocation}
-              style={{
-                width: `$60px`,
-                height: `60px`,
-              }}
-            ></img>
-          )}
+          {!icon ? <PlayCircleIcon className="h-6 w-6" /> : icon}
         </button>
       </div>
     </>

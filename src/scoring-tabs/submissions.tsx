@@ -124,7 +124,7 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
         {category.objectives.map((objective) => {
           return (
             <div className="card bg-base-300" key={objective.id}>
-              <div className="h-22 flex items-center justify-between bg-base-200 top-box-rounded px-4">
+              <div className="h-22 flex items-center justify-between bg-base-200 rounded-t-box px-4">
                 <div
                   className={objective.extra ? "tooltip  text-2xl " : undefined}
                   data-tip={objective.extra}
@@ -148,7 +148,7 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
                   </div>
                 ) : null}
               </div>
-              <div className="pb-4 mb-0 bottom-box-rounded">
+              <div className="pb-4 mb-0 rounded-b-box">
                 <table key={objective.id} className="w-full border-collapse">
                   <tbody className="">
                     {Object.entries(objective.team_score)

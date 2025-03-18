@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { ScoreCategory } from "../types/score";
 import { getPotentialPoints, getTotalPoints } from "../utils/utils";
 import { GlobalStateContext } from "../utils/context-provider";
-import { Medal } from "./medal";
+import { Medal } from "../icons/medal";
 
 type UniqueCategoryCardProps = {
   category: ScoreCategory;
@@ -54,7 +54,7 @@ export const UniqueCategoryCard = ({
       onClick={onClick}
     >
       <div
-        className={`card-title top-box-rounded m-0 p-2 flex items-center justify-center sm:justify-between ${headerColor}`}
+        className={`card-title rounded-t-box m-0 p-2 flex items-center justify-center sm:justify-between ${headerColor}`}
       >
         <div className="flex-shrink-0">
           <Medal rank={category.team_score[teamId]?.rank} size={28} />

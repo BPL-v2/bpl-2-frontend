@@ -1,9 +1,9 @@
-type MedalProps = {
+type Props = {
   size?: string | number;
   rank?: number;
 };
 
-export const Medal = ({ size, rank }: MedalProps) => {
+export const Medal = ({ size, rank }: Props) => {
   if (rank === undefined || rank === 0 || rank > 9) {
     return <></>;
   }
