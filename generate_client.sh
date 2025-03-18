@@ -14,3 +14,6 @@ for file in src/client/*.ts; do
   # Fix weird enum types 
   sed -i -E "s/= <any> '/= '/g" "$file"
 done
+
+# Replace portable-fetch with isomorphic-fetch in src/client/api.ts
+sed -i "s/portable-fetch/isomorphic-fetch/g" src/client/api.ts

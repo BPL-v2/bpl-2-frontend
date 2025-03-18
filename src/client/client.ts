@@ -14,7 +14,7 @@ import {
   UserApiFactory,
 } from "./api";
 
-import "portable-fetch";
+import "isomorphic-fetch";
 
 const baseUrl = process.env.VITE_BACKEND_URL;
 const config: Configuration = {
