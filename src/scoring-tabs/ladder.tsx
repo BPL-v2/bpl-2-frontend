@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import {
   getRootCategoryNames,
@@ -12,6 +12,8 @@ import { Table } from "../components/table";
 import { Ascendancy } from "../components/ascendancy";
 import { ExperienceBar } from "../components/experience-bar";
 import { TeamName } from "../components/team-name";
+import { LadderPortrait } from "../components/ladder-portrait";
+import { AscendancyPortrait } from "../components/ascendancy-portrait";
 type RowDef = {
   default: number;
   team: Team;
@@ -37,60 +39,94 @@ export function LadderTab() {
       return acc;
     }, {} as { [userId: number]: Team }) || {};
 
-  const ladderColumns: ColumnDef<LadderEntry, any>[] = [
-    {
-      accessorKey: "rank",
-      header: "Rank",
-      sortingFn: sortingFns.basic,
-      size: 60,
-    },
-    {
-      accessorKey: "character_name",
-      header: "Character",
-      sortingFn: sortingFns.text,
-      size: 250,
-    },
-    {
-      accessorKey: "account_name",
-      header: "Account",
-      sortingFn: sortingFns.text,
-      size: 180,
-    },
-    {
-      accessorFn: (row) => userToTeam[row.user_id] || "Cartographers",
-      header: "Team",
-      cell: (info) => <TeamName team={userToTeam[info.row.original.user_id]} />,
-      sortingFn: sortingFns.text,
-      size: 120,
-    },
-    {
-      accessorKey: "character_class",
-      header: "Ascendancy",
-      cell: (info) => (
-        <Ascendancy character_class={info.row.original.character_class} />
-      ),
-      sortingFn: sortingFns.text,
-      size: 200,
-    },
-    {
-      accessorKey: "experience",
-      header: "Level",
-      cell: (info) => (
-        <ExperienceBar
-          experience={info.row.original.experience}
-          level={info.row.original.level}
-        />
-      ),
-      sortingFn: sortingFns.basic,
+  const ladderColumns = useMemo(() => {
+    let columns: ColumnDef<LadderEntry, any>[] = [];
+    if (!isMobile) {
+      columns = [
+        {
+          accessorKey: "rank",
+          header: "Rank",
+          sortingFn: sortingFns.basic,
+          size: 60,
+        },
+        {
+          accessorKey: "character_name",
+          header: "Character",
+          sortingFn: sortingFns.text,
+          size: 250,
+        },
+        {
+          accessorKey: "account_name",
+          header: "Account",
+          sortingFn: sortingFns.text,
+          size: 180,
+        },
+        {
+          accessorFn: (row) => userToTeam[row.user_id] || "Cartographers",
+          header: "Team",
+          cell: (info) => (
+            <TeamName team={userToTeam[info.row.original.user_id]} />
+          ),
+          sortingFn: sortingFns.text,
+          size: 120,
+        },
+        {
+          accessorKey: "character_class",
+          header: "Ascendancy",
+          cell: (info) => (
+            <div className="flex items-center gap-2">
+              <AscendancyPortrait
+                character_class={info.row.original.character_class}
+                className="w-8 h-8 rounded-full"
+              />
+              <Ascendancy character_class={info.row.original.character_class} />
+            </div>
+          ),
+          sortingFn: sortingFns.text,
+          size: 200,
+        },
+        {
+          accessorKey: "experience",
+          header: "Level",
+          cell: (info) => (
+            <ExperienceBar
+              experience={info.row.original.experience}
+              level={info.row.original.level}
+            />
+          ),
+          sortingFn: sortingFns.basic,
 
-      size: 80,
-    },
-    {
-      accessorKey: "delve",
-      header: "Delve",
-      sortingFn: sortingFns.basic,
-    },
-  ];
+          size: 80,
+        },
+        {
+          accessorKey: "delve",
+          header: "Delve",
+          sortingFn: sortingFns.basic,
+        },
+      ];
+    } else {
+      columns = [
+        {
+          accessorKey: "rank",
+          header: "Rank",
+          sortingFn: sortingFns.basic,
+          size: 10,
+        },
+        {
+          header: "Character",
+          cell: (info) => (
+            <LadderPortrait
+              entry={info.row.original}
+              teamName={userToTeam[info.row.original.user_id]?.name}
+            />
+          ),
+          size: 400,
+        },
+      ];
+    }
+    return columns;
+  }, [isMobile]);
+
   if (!scores || !currentEvent || !currentEvent.teams) {
     return <></>;
   }

@@ -1,18 +1,20 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import TeamScore from "../components/team-score";
 import { ObjectiveIcon } from "../components/objective-icon";
 import { CollectionCardTable } from "../components/collection-card-table";
 import { Ranking } from "../components/ranking";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, sortingFns } from "@tanstack/react-table";
 import { LadderEntry, Team } from "../client";
 import { Ascendancy } from "../components/ascendancy";
 import { ExperienceBar } from "../components/experience-bar";
 import { Table } from "../components/table";
 import { TeamName } from "../components/team-name";
+import { LadderPortrait } from "../components/ladder-portrait";
+import { AscendancyPortrait } from "../components/ascendancy-portrait";
 
 export function DelveTab() {
-  const { scores, currentEvent, users, ladder } =
+  const { scores, currentEvent, users, ladder, isMobile } =
     useContext(GlobalStateContext);
   const category = scores?.sub_categories.find((c) => c.name === "Delve");
   if (!category || !currentEvent) {
@@ -35,49 +37,93 @@ export function DelveTab() {
       return acc;
     }, {} as { [userId: number]: Team }) || {};
 
-  const delveLadderColumns: ColumnDef<LadderEntry, any>[] = [
-    {
-      accessorKey: "delve",
-      header: "Delve Depth",
-      size: 60,
-    },
-    {
-      accessorKey: "character_name",
-      header: "Character",
-      size: 250,
-    },
-    {
-      accessorKey: "account_name",
-      header: "Account",
-      size: 180,
-    },
-    {
-      accessorFn: (row) => userToTeam[row.user_id] || "Cartographers",
-      header: "Team",
-      cell: (info) => <TeamName team={userToTeam[info.row.original.user_id]} />,
-      size: 120,
-    },
-    {
-      accessorKey: "character_class",
-      header: "Ascendancy",
-      cell: (info) => (
-        <Ascendancy character_class={info.row.original.character_class} />
-      ),
-      size: 200,
-    },
-    {
-      accessorKey: "experience",
-      header: "Level",
-      cell: (info) => (
-        <ExperienceBar
-          experience={info.row.original.experience}
-          level={info.row.original.level}
-        />
-      ),
-      size: 80,
-    },
-  ];
+  const delveLadderColumns = useMemo(() => {
+    let columns: ColumnDef<LadderEntry, any>[] = [];
+    if (!isMobile) {
+      columns = [
+        {
+          accessorKey: "delve",
+          header: "Delve Depth",
+          sortingFn: sortingFns.basic,
+          size: 60,
+        },
+        {
+          accessorKey: "character_name",
+          header: "Character",
+          sortingFn: sortingFns.text,
+          size: 250,
+        },
+        {
+          accessorKey: "account_name",
+          header: "Account",
+          sortingFn: sortingFns.text,
+          size: 180,
+        },
+        {
+          accessorFn: (row) => userToTeam[row.user_id] || "Cartographers",
+          header: "Team",
+          cell: (info) => (
+            <TeamName team={userToTeam[info.row.original.user_id]} />
+          ),
+          sortingFn: sortingFns.text,
+          size: 120,
+        },
+        {
+          accessorKey: "character_class",
+          header: "Ascendancy",
+          cell: (info) => (
+            <div className="flex items-center gap-2">
+              <AscendancyPortrait
+                character_class={info.row.original.character_class}
+                className="w-8 h-8 rounded-full"
+              />
+              <Ascendancy character_class={info.row.original.character_class} />
+            </div>
+          ),
+          sortingFn: sortingFns.text,
+          size: 200,
+        },
+        {
+          accessorKey: "experience",
+          header: "Level",
+          cell: (info) => (
+            <ExperienceBar
+              experience={info.row.original.experience}
+              level={info.row.original.level}
+            />
+          ),
+          sortingFn: sortingFns.basic,
 
+          size: 80,
+        },
+        {
+          accessorKey: "delve",
+          header: "Delve",
+          sortingFn: sortingFns.basic,
+        },
+      ];
+    } else {
+      columns = [
+        {
+          accessorKey: "delve",
+          header: "Depth",
+          sortingFn: sortingFns.basic,
+          size: 10,
+        },
+        {
+          header: "Character",
+          cell: (info) => (
+            <LadderPortrait
+              entry={info.row.original}
+              teamName={userToTeam[info.row.original.user_id]?.name}
+            />
+          ),
+          size: 400,
+        },
+      ];
+    }
+    return columns;
+  }, [isMobile]);
   return (
     <>
       <TeamScore category={category} />

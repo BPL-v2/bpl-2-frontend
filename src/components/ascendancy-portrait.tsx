@@ -10,20 +10,22 @@ import { GlobalStateContext } from "../utils/context-provider";
 
 interface AscendancyProps {
   character_class: string;
+  className?: string;
 }
 
-export function Ascendancy({ character_class }: AscendancyProps) {
+export function AscendancyPortrait({
+  character_class,
+  className,
+}: AscendancyProps) {
   const { gameVersion } = useContext(GlobalStateContext);
   let classObj: ClassDef;
-  let className = "";
   if (gameVersion === GameVersion.poe1) {
     classObj =
       ascendancies[gameVersion][
         phreciaMapping[character_class as keyof typeof phreciaMapping]
       ];
-    className = character_class;
   } else {
-    className =
+    const className =
       poe2Mapping[
         character_class as keyof (typeof ascendancies)[GameVersion.poe2]
       ];
@@ -33,5 +35,5 @@ export function Ascendancy({ character_class }: AscendancyProps) {
   if (!classObj) {
     return character_class;
   }
-  return <p className={`font-bold ${classObj.classColor}`}>{className}</p>;
+  return <img src={classObj.thumbnail} className={className} />;
 }

@@ -61,11 +61,12 @@ export function Table<T>({ data, columns, pageSizeOptions }: TableProps<T>) {
                     style={{ width: `${header.getSize()}px` }}
                   >
                     <div className="flex items-center gap-1">
-                      <TableSortIcon
-                        className="h-5 w-5"
-                        sort={sorting.find((sort) => sort.id === header.id)}
-                      ></TableSortIcon>
-
+                      {header.column.getCanSort() ? (
+                        <TableSortIcon
+                          className="h-5 w-5"
+                          sort={sorting.find((sort) => sort.id === header.id)}
+                        ></TableSortIcon>
+                      ) : null}
                       {header.isPlaceholder
                         ? null
                         : flexRender(
