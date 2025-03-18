@@ -4,6 +4,7 @@ import { GlobalStateContext } from "../utils/context-provider";
 import { JSX, useContext, useEffect, useState } from "react";
 import { ObjectiveIcon } from "./objective-icon";
 import { GameVersion, Team } from "../client";
+import { TeamName } from "./team-name";
 
 export type ItemTableProps = {
   category?: ScoreCategory;
@@ -228,7 +229,8 @@ export function ItemTable({ category }: ItemTableProps) {
                   >
                     <div className="flex flex-row items-center">
                       <div>
-                        <p>{team.name}</p>
+                        <TeamName className="font-semibold" team={team} />
+
                         <p className="text-accent text-sm">
                           {category.objectives.reduce(
                             (acc: number, objective) =>

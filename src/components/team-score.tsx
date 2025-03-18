@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
 import { ScoreCategory } from "../types/score";
 import { getPotentialPoints, getTotalPoints } from "../utils/utils";
+import { TeamName } from "./team-name";
 
 export type TeamScoreProps = {
   selectedTeam?: number;
@@ -39,7 +40,7 @@ const TeamScore = ({
             >
               <div className="stat px-0 md:px-4">
                 <div className="col-start-1 font-bold text-xl md:text-2xl">
-                  {team.name}
+                  <TeamName team={team} />
                 </div>
 
                 <div className="stat-figure text-secondary row-span-2 hidden md:block">

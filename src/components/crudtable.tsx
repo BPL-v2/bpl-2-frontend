@@ -26,7 +26,8 @@ export interface CrudColumn<T> {
     | "select"
     | "multiselect"
     | "text[]"
-    | "number[]";
+    | "number[]"
+    | "color";
   defaultValue?: string;
   options?: any[] | Option[];
   render?: (value: any, record: T, index: number) => React.ReactNode;
@@ -250,6 +251,16 @@ const CrudTable = <T,>({
                       );
                     })}
                   </select>
+                );
+              } else if (column.type === "color") {
+                input = (
+                  <input
+                    type="color"
+                    name={String(key)}
+                    className="input w-full"
+                    defaultValue={currentData[key] as string}
+                    key={String(currentData[key])}
+                  />
                 );
               } else {
                 return;

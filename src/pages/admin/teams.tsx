@@ -26,6 +26,19 @@ const TeamPage = () => {
         required: true,
       },
       {
+        title: "Color",
+        dataIndex: "color",
+        key: "color",
+        type: "color",
+        editable: true,
+        render: (_, team) => (
+          <div
+            className="w-6 h-6 rounded-full"
+            style={{ backgroundColor: team.color }}
+          />
+        ),
+      },
+      {
         title: "Allowed Classes",
         dataIndex: "allowed_classes",
         key: "allowed_classes",

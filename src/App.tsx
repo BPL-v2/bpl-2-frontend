@@ -379,44 +379,40 @@ function App() {
               <a
                 href="https://discord.com/invite/3weG9JACgb"
                 target="_blank"
-                className="cursor-pointer"
+                className="cursor-pointer hover:text-primary"
               >
-                <DiscordFilled className="h-6 w-6 cursor-pointer" />
+                <DiscordFilled className="h-6 w-6" />
               </a>
               <a
                 href="https://github.com/Liberatorist/bpl-2"
                 target="_blank"
-                className="cursor-pointer"
+                className="cursor-pointer hover:text-primary"
               >
-                <GithubFilled className="h-6 w-6 cursor-pointer" />
+                <GithubFilled className="h-6 w-6" />
               </a>
               <a
                 href="https://www.twitch.tv/bpl_poe"
                 target="_blank"
-                className="cursor-pointer"
+                className="cursor-pointer hover:text-primary"
               >
-                <TwitchFilled className="h-6 w-6 cursor-pointer" />
+                <TwitchFilled className="h-6 w-6" />
               </a>
               <a
                 href="https://www.youtube.com/@BPL-PoE"
                 target="_blank"
-                className="cursor-pointer"
+                className="cursor-pointer hover:text-primary"
               >
-                <YoutubeFilled className="h-6 w-6 cursor-pointer" />
+                <YoutubeFilled className="h-6 w-6" />
               </a>
               <a
                 href="https://x.com/BPL_PoE"
                 target="_blank"
-                className="cursor-pointer"
+                className="cursor-pointer hover:text-primary"
               >
-                <TwitterFilled className="h-6 w-6 cursor-pointer" />
+                <TwitterFilled className="h-6 w-6" />
               </a>
             </nav>
           </footer>
-          {/* <div className="bg-base-200 p-4 text-center mt-20">
-            This product isn't affiliated with or endorsed by Grinding Gear
-            Games in any way.
-          </div> */}
         </div>
       </ContextProvider>
     </>

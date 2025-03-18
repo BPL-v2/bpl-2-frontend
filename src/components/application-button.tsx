@@ -118,19 +118,20 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
                   </option>
                 ))}
               </select>
-              <label className="label">
-                I've read the{" "}
-                <a href="/rules" target="_blank">
+              <label className="fieldset-label">
+                <input
+                  type="checkbox"
+                  id="rulecheck"
+                  name="rulecheck"
+                  className="checkbox"
+                  required
+                />
+                I've read the
+                <a href="/rules" target="_blank" className="link link-info">
                   rules
                 </a>
               </label>
-              <input
-                type="checkbox"
-                id="rulecheck"
-                name="rulecheck"
-                className="checkbox"
-                required
-              />
+              <legend className="fieldset-legend">Login options</legend>
             </fieldset>
           </form>
           {user.discord_id ? null : (
@@ -140,19 +141,19 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
               </p>
               <button className="btn btn-lg bg-discord text-white text-xl mt-4">
                 <DiscordFilled className="w-6 h-6" />
-                Link Discord Account
+                Link Discord account
               </button>
             </div>
           )}
           {isServerMember ? null : (
             <div className="mt-4">
               <p>Join our discord server to apply for the event.</p>
-              <button className="btn bg-discord btn-lg mt-4">
-                <a href="https://discord.gg/7zBQXZqJpH" target="_blank">
+              <a href="https://discord.gg/JVZVKSck" target="_blank">
+                <button className="btn btn-lg bg-discord text-white text-xl mt-4">
                   <DiscordFilled className="w-6 h-6" />
                   Join Server
-                </a>
-              </button>
+                </button>
+              </a>
             </div>
           )}
           <div className="modal-action">

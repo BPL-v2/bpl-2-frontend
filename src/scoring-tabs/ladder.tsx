@@ -11,6 +11,7 @@ import { ColumnDef, sortingFns } from "@tanstack/react-table";
 import { Table } from "../components/table";
 import { Ascendancy } from "../components/ascendancy";
 import { ExperienceBar } from "../components/experience-bar";
+import { TeamName } from "../components/team-name";
 type RowDef = {
   default: number;
   team: Team;
@@ -32,9 +33,9 @@ export function LadderTab() {
     }, {}) || {};
   const userToTeam =
     users?.reduce((acc, user) => {
-      acc[user.id] = teamMap[user.team_id]?.name;
+      acc[user.id] = teamMap[user.team_id];
       return acc;
-    }, {} as { [userId: number]: string }) || {};
+    }, {} as { [userId: number]: Team }) || {};
 
   const ladderColumns: ColumnDef<LadderEntry, any>[] = [
     {
@@ -58,6 +59,7 @@ export function LadderTab() {
     {
       accessorFn: (row) => userToTeam[row.user_id] || "Cartographers",
       header: "Team",
+      cell: (info) => <TeamName team={userToTeam[info.row.original.user_id]} />,
       sortingFn: sortingFns.text,
       size: 120,
     },
@@ -123,7 +125,9 @@ export function LadderTab() {
     {
       title: "Team",
       dataIndex: ["team", "name"],
-      render: (row: any) => row.team?.name,
+      render: (row: any) => (
+        <TeamName className="font-semibold" team={row.team} />
+      ),
       key: "team",
     },
     {

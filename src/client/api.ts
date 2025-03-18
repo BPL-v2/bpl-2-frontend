@@ -1410,6 +1410,12 @@ export interface Team {
     allowed_classes: Array<string>;
     /**
      * 
+     * @type {string}
+     * @memberof Team
+     */
+    color?: string;
+    /**
+     * 
      * @type {number}
      * @memberof Team
      */
@@ -1440,6 +1446,12 @@ export interface TeamCreate {
      * @memberof TeamCreate
      */
     allowed_classes: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof TeamCreate
+     */
+    color?: string;
     /**
      * 
      * @type {number}

@@ -9,6 +9,7 @@ import { LadderEntry, Team } from "../client";
 import { Ascendancy } from "../components/ascendancy";
 import { ExperienceBar } from "../components/experience-bar";
 import { Table } from "../components/table";
+import { TeamName } from "../components/team-name";
 
 export function DelveTab() {
   const { scores, currentEvent, users, ladder } =
@@ -30,9 +31,9 @@ export function DelveTab() {
     }, {}) || {};
   const userToTeam =
     users?.reduce((acc, user) => {
-      acc[user.id] = teamMap[user.team_id]?.name;
+      acc[user.id] = teamMap[user.team_id];
       return acc;
-    }, {} as { [userId: number]: string }) || {};
+    }, {} as { [userId: number]: Team }) || {};
 
   const delveLadderColumns: ColumnDef<LadderEntry, any>[] = [
     {
@@ -53,6 +54,7 @@ export function DelveTab() {
     {
       accessorFn: (row) => userToTeam[row.user_id] || "Cartographers",
       header: "Team",
+      cell: (info) => <TeamName team={userToTeam[info.row.original.user_id]} />,
       size: 120,
     },
     {
