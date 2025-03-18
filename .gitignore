@@ -27,3 +27,4 @@ dist-ssr
 icon-generation/temp
 */__pycache__
 swagger-codegen*
+tsconfig.tsbuildinfo
