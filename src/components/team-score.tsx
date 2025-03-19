@@ -24,7 +24,9 @@ const TeamScore = ({
   const interactive = selectedTeam ? "cursor-pointer hover:bg-base-200" : "";
   return (
     <>
-      <div className={`grid grid-cols-2 gap-1 md:grid-cols-2 xl:grid-cols-4 `}>
+      <div
+        className={`grid grid-cols-2 gap-1 md:grid-cols-2 xl:grid-cols-4 px-1 2xl:px-0`}
+      >
         {currentEvent.teams.map((team) => {
           const bgColor =
             team.id === eventStatus?.team_id ? "bg-base-300" : "bg-base-200";
