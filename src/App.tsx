@@ -255,7 +255,7 @@ function App() {
         }}
       >
         <div className="max-w-[1440px] text-center mx-auto ">
-          {notifications}
+          {/* {notifications} */}
           <div className="text-2xl p-0 flex items-center justify-between h-18">
             <ul className="navbar bg-base-200 w-full  h-full text-xl gap-0 p-0">
               <a href="/" target="_self" className="h-full">
