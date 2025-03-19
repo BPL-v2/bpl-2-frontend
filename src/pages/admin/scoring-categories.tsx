@@ -372,6 +372,8 @@ const ScoringCategoryPage: React.FC = () => {
       const form = e.currentTarget;
       e.preventDefault();
       const data = new FormData(form);
+      let baseTypeConditionExists = false;
+      let nameConditionExists = false;
       let conditions =
         currentObjective.conditions?.map((condition) => {
           if (
@@ -379,6 +381,7 @@ const ScoringCategoryPage: React.FC = () => {
             condition.operator === Operator.EQ &&
             data.get("conditions-basetype")
           ) {
+            baseTypeConditionExists = true;
             condition.value = data.get("conditions-basetype") as string;
           }
           if (
@@ -386,10 +389,27 @@ const ScoringCategoryPage: React.FC = () => {
             condition.operator === Operator.EQ &&
             data.get("conditions-name")
           ) {
+            nameConditionExists = true;
             condition.value = data.get("conditions-name") as string;
           }
           return condition;
         }) || [];
+
+      if (data.get("conditions-basetype") && !baseTypeConditionExists) {
+        conditions.push({
+          field: ItemField.BASE_TYPE,
+          operator: Operator.EQ,
+          value: data.get("conditions-basetype") as string,
+        });
+      }
+      if (data.get("conditions-name") && !nameConditionExists) {
+        conditions.push({
+          field: ItemField.NAME,
+          operator: Operator.EQ,
+          value: data.get("conditions-name") as string,
+        });
+      }
+
       const objectiveCreate: ObjectiveCreate = {
         aggregation: data.get("aggregation") as AggregationType,
         category_id: Number(categoryId),
