@@ -9,7 +9,7 @@ import { ScoreCategory, ScoreDiffWithKey } from "./types/score";
 import { mergeScores } from "./utils/utils";
 import ApplicationButton from "./components/application-button";
 
-import { ScoreUpdateCard } from "./components/score-update-card";
+// import { ScoreUpdateCard } from "./components/score-update-card";
 import {
   Category,
   EventStatus,
@@ -203,29 +203,29 @@ function App() {
       (update) => Number(update.key.split("-")[2]) === eventStatus?.team_id
     );
     if (teamUpdates.length === 0) return null;
-
-    return (
-      <div className="stack fixed top-0 right-0 p-4 gap-1 z-1000 w-120 max-w-full">
-        {teamUpdates
-          .map((update, index) => {
-            return (
-              <ScoreUpdateCard
-                key={"update-" + index}
-                update={update}
-                close={(update: ScoreDiffWithKey) =>
-                  setUpdates((prevUpdates) =>
-                    prevUpdates.filter((u) => u.key !== update.key)
-                  )
-                }
-                closeAll={
-                  teamUpdates.length > 1 ? () => setUpdates([]) : undefined
-                }
-              />
-            );
-          })
-          .slice(0, 25)}
-      </div>
-    );
+    return null;
+    // return (
+    //   <div className="stack fixed top-0 right-0 p-4 gap-1 z-1000 w-120 max-w-full">
+    //     {teamUpdates
+    //       .map((update, index) => {
+    //         return (
+    //           <ScoreUpdateCard
+    //             key={"update-" + index}
+    //             update={update}
+    //             close={(update: ScoreDiffWithKey) =>
+    //               setUpdates((prevUpdates) =>
+    //                 prevUpdates.filter((u) => u.key !== update.key)
+    //               )
+    //             }
+    //             closeAll={
+    //               teamUpdates.length > 1 ? () => setUpdates([]) : undefined
+    //             }
+    //           />
+    //         );
+    //       })
+    //       .slice(0, 25)}
+    //   </div>
+    // );
   }, [updates]);
 
   return (
@@ -255,7 +255,7 @@ function App() {
         }}
       >
         <div className="max-w-[1440px] text-center mx-auto ">
-          {/* {notifications} */}
+          {notifications}
           <div className="text-2xl p-0 flex items-center justify-between h-18">
             <ul className="navbar bg-base-200 w-full  h-full text-xl gap-0 p-0">
               <a href="/" target="_self" className="h-full">
