@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
-import { ScoringMethod, ScoringPreset } from "../client";
+import { ScoringMethod } from "../client";
 import { pointsToGroup } from "../utils/text-utils";
 
 function convertArrayToText(points: number[] | undefined): string {

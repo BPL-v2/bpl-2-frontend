@@ -1,37 +1,6 @@
 import { JSX, useContext } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
-import { pointsToGroup } from "../utils/text-utils";
 
-function bpUniquePointsToText(points: number[] | undefined): JSX.Element[] {
-  const groups = pointsToGroup(points || []);
-  const textParts = groups.map((group, index) => {
-    if (index === 0) {
-      return (
-        <span key={index}>
-          the first <b className="text-info">{group.count}</b> items award{" "}
-          <b className="text-info">{group.value}</b> points
-        </span>
-      );
-    } else if (index === groups.length - 1) {
-      return (
-        <span key={index}>
-          {" "}
-          and the remaining items award{" "}
-          <b className="text-info">{group.value}</b> points
-        </span>
-      );
-    } else {
-      return (
-        <span key={index}>
-          {" "}
-          the next <b className="text-info">{group.count}</b> items award{" "}
-          <b className="text-info">{group.value}</b> points
-        </span>
-      );
-    }
-  });
-  return textParts;
-}
 function racePointsToText(points: number[]): JSX.Element[] {
   const textParts = points.map((point, index) => {
     if (index === 0) {
