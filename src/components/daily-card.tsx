@@ -21,8 +21,8 @@ function bonusAvailableCounter(
     return <p className="text-lg"> Bonus no longer available</p>;
   }
   return (
-    <div className="flex flex-row justify-center gap-8">
-      <p className="text-center text-lg">Bonus available:</p>
+    <div className="flex flex-row justify-center gap-2 p-2">
+      <p className="text-center text-lg">Bonus available for</p>
       <div className="flex justify-center">
         <Countdown target={new Date(valid_to)} size="small" />
       </div>
