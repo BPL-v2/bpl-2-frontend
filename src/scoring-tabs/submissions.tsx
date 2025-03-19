@@ -75,13 +75,13 @@ export function SubmissionTab({ categoryName }: SubmissionTabProps) {
               label="Time (in your timezone)"
               name="timestamp"
             ></DateTimePicker>
-            <label className="label">Value</label>
+            {/* <label className="label">Value</label>
             <input
               type="number"
               className="input w-full"
               required
               name="number"
-            />
+            /> */}
             <label className="label">Link to proof</label>
             <input type="text" className="input w-full" required name="proof" />
             <label className="label">Comment</label>
