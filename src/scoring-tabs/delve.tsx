@@ -17,15 +17,6 @@ export function DelveTab() {
   const { scores, currentEvent, users, ladder, isMobile } =
     useContext(GlobalStateContext);
   const category = scores?.sub_categories.find((c) => c.name === "Delve");
-  if (!category || !currentEvent) {
-    return <></>;
-  }
-  const fossilRaceCategory = category.sub_categories.find(
-    (c) => c.name === "Fossil Race"
-  );
-  const culmulativeDepthObjective = category.objectives.find(
-    (o) => o.name === "Culmulative Depth"
-  );
   const teamMap =
     currentEvent?.teams?.reduce((acc: { [teamId: number]: Team }, team) => {
       acc[team.id] = team;
@@ -36,7 +27,6 @@ export function DelveTab() {
       acc[user.id] = teamMap[user.team_id];
       return acc;
     }, {} as { [userId: number]: Team }) || {};
-
   const delveLadderColumns = useMemo(() => {
     let columns: ColumnDef<LadderEntry, any>[] = [];
     if (!isMobile) {
@@ -96,11 +86,6 @@ export function DelveTab() {
 
           size: 80,
         },
-        {
-          accessorKey: "delve",
-          header: "Delve",
-          sortingFn: sortingFns.basic,
-        },
       ];
     } else {
       columns = [
@@ -124,6 +109,16 @@ export function DelveTab() {
     }
     return columns;
   }, [isMobile]);
+  if (!category || !currentEvent) {
+    return <></>;
+  }
+  const fossilRaceCategory = category.sub_categories.find(
+    (c) => c.name === "Fossil Race"
+  );
+  const culmulativeDepthObjective = category.objectives.find(
+    (o) => o.name === "Culmulative Depth"
+  );
+
   return (
     <>
       <TeamScore category={category} />

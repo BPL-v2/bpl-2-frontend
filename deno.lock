@@ -1624,6 +1624,7 @@
         "npm:@eslint/js@^9.22.0",
         "npm:@heroicons/react@^2.2.0",
         "npm:@tailwindcss/postcss@^4.0.14",
+        "npm:@tailwindcss/typography@~0.5.16",
         "npm:@tailwindcss/vite@^4.0.14",
         "npm:@tanstack/react-table@^8.21.2",
         "npm:@types/isomorphic-fetch@^0.0.39",

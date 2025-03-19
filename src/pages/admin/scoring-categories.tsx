@@ -613,7 +613,7 @@ const ScoringCategoryPage: React.FC = () => {
   let objectiveTable = useMemo(() => {
     return (
       <>
-        <h2>{"Objectives"} </h2>
+        <h3>{"Objectives"} </h3>
         <CrudTable<Objective>
           resourceName="Objective"
           columns={objectiveColumns}
@@ -651,7 +651,7 @@ const ScoringCategoryPage: React.FC = () => {
   let categoryTable = useMemo(() => {
     return (
       <>
-        <h2>{"Sub-Categories"}</h2>
+        <h3>{"Sub-Categories"}</h3>
         <CrudTable<Category>
           resourceName="Scoring Category"
           columns={categoryColumns}

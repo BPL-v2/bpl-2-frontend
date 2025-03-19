@@ -74,7 +74,6 @@ function App() {
   const [scoringPresets, setScoringPresets] = useState<ScoringPreset[]>();
   const [users, setUsers] = useState<MinimalTeamUser[]>([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [gameVersion, setGameVersion] = useState<GameVersion>(GameVersion.poe1);
   const [updates, setUpdates] = useState<ScoreDiffWithKey[]>([]);
   const [ladder, setLadder] = useState<LadderEntry[]>([]);
@@ -122,55 +121,55 @@ function App() {
     });
   }, []);
 
+  const menu: MenuItem[] = [
+    {
+      label: "Admin",
+      icon: <Cog6ToothIcon className="h-6 w-6" />,
+      key: "admin",
+      rolerequired: [Permission.admin],
+      children: [
+        { label: "Events", url: "/events", key: "events" },
+        { label: "Manage users", url: "/users", key: "users" },
+        {
+          label: "Sort users",
+          url: `/events/${currentEvent?.id}/users/sort`,
+          key: "sort-users",
+        },
+        {
+          label: "Monitoring",
+          url: "/monitoring",
+          key: "monitoring",
+          external: true,
+        },
+        {
+          label: "Recurring Jobs",
+          url: "/recurring-jobs",
+          key: "recurring-jobs",
+        },
+      ],
+    },
+    {
+      label: "Scoring",
+      icon: <ChartBarIcon className="h-6 w-6" />,
+      url: "/scores",
+      key: "scores",
+    },
+    {
+      label: "Streams",
+      icon: <TwitchFilled className="h-6 w-6" />,
+      url: "/streams",
+      key: "streams",
+    },
+    {
+      label: "Rules",
+      icon: <BookOpenIcon className="h-6 w-6" />,
+      url: "/rules",
+      key: "rules",
+    },
+  ];
   useEffect(() => {
-    let menu: MenuItem[] = [
-      {
-        label: "Admin",
-        icon: <Cog6ToothIcon className="h-6 w-6" />,
-        key: "admin",
-        rolerequired: [Permission.admin],
-        children: [
-          { label: "Events", url: "/events", key: "events" },
-          { label: "Manage users", url: "/users", key: "users" },
-          {
-            label: "Sort users",
-            url: `/events/${currentEvent?.id}/users/sort`,
-            key: "sort-users",
-          },
-          {
-            label: "Monitoring",
-            url: "/monitoring",
-            key: "monitoring",
-            external: true,
-          },
-          {
-            label: "Recurring Jobs",
-            url: "/recurring-jobs",
-            key: "recurring-jobs",
-          },
-        ],
-      },
-      {
-        label: "Scoring",
-        icon: <ChartBarIcon className="h-6 w-6" />,
-        url: "/scores",
-        key: "scores",
-      },
-      {
-        label: "Streams",
-        icon: <TwitchFilled className="h-6 w-6" />,
-        url: "/streams",
-        key: "streams",
-      },
-      {
-        label: "Rules",
-        icon: <BookOpenIcon className="h-6 w-6" />,
-        url: "/rules",
-        key: "rules",
-      },
-    ];
-    setMenuItems(menu);
-  }, [isMobile, user]);
+    setCurrentNav(router.state.location.pathname.split("/")[1]);
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -259,18 +258,21 @@ function App() {
           {notifications}
           <div className="text-2xl p-0 flex items-center justify-between h-18">
             <ul className="navbar bg-base-200 w-full  h-full text-xl gap-0 p-0">
-              <button
-                className="btn btn-ghost h-full rounded-none bg-base-200 hover:bg-base-300"
-                onClick={() => {
-                  setCurrentNav("/");
-                  router.navigate("/");
-                }}
-              >
-                <img className="h-10" src="/assets/app-logos/bpl-logo.png" />
-                <div className="text-4xl font-bold hidden sm:block">BPL</div>
-              </button>
+              <a href="/" target="_self" className="h-full">
+                <button
+                  className="btn btn-ghost h-full rounded-none bg-base-200 hover:bg-base-300"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCurrentNav("/");
+                    router.navigate("/");
+                  }}
+                >
+                  <img className="h-10" src="/assets/app-logos/bpl-logo.png" />
+                  <div className="text-4xl font-bold hidden sm:block">BPL</div>
+                </button>
+              </a>{" "}
               <div className="flex flex-1 justify-left gap-0">
-                {menuItems
+                {menu
                   .filter((item) =>
                     item.rolerequired
                       ? item.rolerequired.some((role) =>
@@ -359,7 +361,7 @@ function App() {
                   <EventPicker />
                 </>
               )}
-              <div tabIndex={0} className="h-full">
+              <div tabIndex={0} className="h-full flex items-center">
                 {isMobile ? null : <ApplicationButton />}
                 <AuthButton />
               </div>

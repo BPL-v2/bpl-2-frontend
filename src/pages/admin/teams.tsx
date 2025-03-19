@@ -98,11 +98,7 @@ const TeamPage = () => {
   const eventIdNum = Number(eventId);
   return (
     <>
-      <input
-        type="color"
-        className="input"
-        onChange={(e) => console.log(e.target.value)}
-      />
+      <input type="color" className="input" />
 
       <CrudTable<Team>
         resourceName="Team"

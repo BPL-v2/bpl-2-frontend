@@ -62,7 +62,6 @@ export function Ranking({
   actual,
 }: RankingProps) {
   const { currentEvent } = useContext(GlobalStateContext);
-  console.log("objective", objective);
   return (
     <div
       className={`grid gap-4 ${getGridLayout(

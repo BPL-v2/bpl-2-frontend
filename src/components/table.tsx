@@ -81,15 +81,17 @@ export function Table<T>({ data, columns, pageSizeOptions }: TableProps<T>) {
           ))}
         </thead>
         <tbody className="bg-base-300 ">
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="hover:bg-base-200/50">
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
+          {table.getRowModel().rows.map((row) => {
+            return (
+              <tr key={row.id} className="hover:bg-base-200/50">
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
       {pageSizeOptions ? (

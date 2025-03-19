@@ -267,7 +267,7 @@ const CrudTable = <T,>({
               }
               return (
                 <>
-                  <label className="fieldset-label">
+                  <label className="fieldset-label" key={String(column.title)}>
                     {String(column.title)}
                   </label>
                   {input}

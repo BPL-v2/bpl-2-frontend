@@ -23,7 +23,6 @@ export const HeistTab: React.FC = () => {
   const rogueGearCategory = heistCategory.sub_categories.find(
     (category) => category.name === "Rogue Gear"
   );
-  console.log(rogueGearCategory);
   const experimentalBasesCategory = heistCategory.sub_categories.find(
     (category) => category.name === "Experimental Bases"
   );
