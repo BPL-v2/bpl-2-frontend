@@ -1,70 +1,72 @@
-import React, { useContext } from "react";
-import CrudTable, { CrudColumn } from "../../components/crudtable";
+import React, { useContext, useEffect } from "react";
 import { GlobalStateContext } from "../../utils/context-provider";
 import { Permission, User } from "../../client";
 import { userApi } from "../../client/client";
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
+import { ColumnDef, sortingFns } from "@tanstack/react-table";
+import { Table } from "../../components/table";
 
-const columns: CrudColumn<User>[] = [
+const columns: ColumnDef<User, any>[] = [
   {
-    title: "ID",
-    dataIndex: "id",
-    key: "id",
-    type: "number",
+    accessorKey: "id",
+    header: "ID",
+    sortingFn: sortingFns.basic,
   },
   {
-    title: "Name",
-    dataIndex: "display_name",
-    key: "display_name",
-    type: "text",
+    accessorKey: "display_name",
+    header: "Name",
+    sortingFn: sortingFns.text,
   },
   {
-    title: "PoE Name",
-    dataIndex: "account_name",
-    key: "account_name",
-    type: "text",
+    accessorKey: "account_name",
+    header: "PoE Name",
+    sortingFn: sortingFns.text,
   },
   {
-    title: "Discord Name",
-    dataIndex: "discord_name",
-    key: "discord_name",
-    type: "text",
+    accessorKey: "discord_name",
+    header: "Discord Name",
+    sortingFn: sortingFns.text,
   },
   {
-    title: "Discord ID",
-    dataIndex: "discord_id",
-    key: "discord_id",
-    type: "number",
-    render: (value: number) => {
-      return (
-        <a onClick={() => copyDiscordId(value)} className="flex gap-2">
-          <ClipboardDocumentCheckIcon className="cursor-pointer h-6 w-6" />
-          {value}
-        </a>
-      );
-    },
+    accessorKey: "discord_id",
+    header: "Discord ID",
+    sortingFn: sortingFns.basic,
+    cell: (info) => (
+      <a
+        onClick={() => copyDiscordId(info.row.original.discord_id)}
+        className="flex gap-2"
+      >
+        <ClipboardDocumentCheckIcon className="cursor-pointer h-6 w-6" />
+        {info.row.original.discord_id}
+      </a>
+    ),
   },
   {
-    title: "Permissions",
-    dataIndex: "permissions",
-    key: "permissions",
-    type: "multiselect",
-    render: (value: Permission[]) => {
-      return value.join(", ");
-    },
-    options: Object.values(Permission),
-    editable: true,
+    accessorKey: "permissions",
+    header: "Permissions",
+    sortingFn: (a, b) =>
+      a.original.permissions.length - b.original.permissions.length,
+    cell: (info) => info.row.original.permissions.join(", "),
+    size: 200,
   },
 ];
 
-function copyDiscordId(value: number) {
-  navigator.clipboard.writeText("<@" + value.toString() + ">");
+function copyDiscordId(value: string | undefined) {
+  if (!value) {
+    return;
+  }
+  navigator.clipboard.writeText("<@" + value + ">");
 }
 
 const UserPage: React.FC = () => {
   const { user } = useContext(GlobalStateContext);
   const [nameFilter, setNameFilter] = React.useState<string>("");
-  const [roleFilter, _] = React.useState<Permission | "">("");
+  const [roleFilter, setRoleFilter] = React.useState<Permission | "">("");
+  const [users, setUsers] = React.useState<User[]>([]);
+  useEffect(() => {
+    userApi.getAllUsers().then((users) => setUsers(users));
+  }, []);
+
   if (!user || !user.permissions.includes(Permission.admin)) {
     return <div>You do not have permission to view this page</div>;
   }
@@ -82,7 +84,10 @@ const UserPage: React.FC = () => {
         </label>
         <label className="select">
           <span className="label">Filter by role</span>
-          <select>
+          <select
+            value={roleFilter}
+            onChange={(e) => setRoleFilter(e.target.value as Permission)}
+          >
             <option value="">All</option>
             {Object.values(Permission).map((role) => (
               <option key={role} value={role}>
@@ -92,47 +97,19 @@ const UserPage: React.FC = () => {
           </select>
         </label>
       </div>
-      {/* <Form layout="inline" style={{ marginBottom: "20px" }}>
-        <Form.Item label="Filter by name">
-          <Input
-            allowClear
-            value={nameFilter}
-            onChange={(e) => setNameFilter(e.target.value.toLowerCase())}
-          />
-        </Form.Item>
-        <Form.Item label="Filter by role" style={{ width: "300px" }}>
-          <Select
-            value={roleFilter}
-            onChange={(value) => setRoleFilter(value)}
-            allowClear
-          >
-            <Select.Option key="all" value={""}>
-              All
-            </Select.Option>
-            {Object.values(Permission).map((role) => (
-              <Select.Option key={role} value={role}>
-                {role}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-      </Form> */}
-      <CrudTable<User>
-        resourceName="User"
+      <Table<User>
+        data={users.filter(
+          (user) =>
+            !!(
+              user.display_name?.toLowerCase().includes(nameFilter) ||
+              user.account_name?.toLowerCase().includes(nameFilter) ||
+              user.discord_name?.toLowerCase().includes(nameFilter) ||
+              user.twitch_name?.toLowerCase().includes(nameFilter)
+            ) &&
+            (!roleFilter || user.permissions.includes(roleFilter))
+        )}
         columns={columns}
-        fetchFunction={userApi.getAllUsers}
-        editFunction={(user: User) =>
-          userApi.changePermissions(user.id, user.permissions)
-        }
-        filterFunction={(user) =>
-          !!(
-            user.display_name?.toLowerCase().includes(nameFilter) ||
-            user.account_name?.toLowerCase().includes(nameFilter) ||
-            user.discord_name?.toLowerCase().includes(nameFilter) ||
-            user.twitch_name?.toLowerCase().includes(nameFilter)
-          ) &&
-          (!roleFilter || user.permissions.includes(roleFilter))
-        }
+        pageSizeOptions={[20, 50, 100]}
       />
     </div>
   );
