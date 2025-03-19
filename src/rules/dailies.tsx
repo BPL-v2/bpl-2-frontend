@@ -42,7 +42,7 @@ export function DailyTabRules() {
 
   return (
     <>
-      <h3>Daily Releases </h3>
+      <h3>Daily Quest Releases </h3>
       <p>
         Dailies are released periodically (see the countdowns). These are
         objectives that require the participation of the entire team.

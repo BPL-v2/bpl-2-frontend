@@ -178,28 +178,28 @@ export function LadderTab() {
   function getCompletionColumns(isMobile: boolean) {
     if (isMobile) {
       return [
-        {
-          title: "Categories",
-          render: (record: RowDef) => {
-            return (
-              <>
-                <div className="flex flex-wrap gap-2">
-                  {categoryNames.map((categoryName) => {
-                    return (
-                      <div
-                        key={`badge-${categoryName}`}
-                        className="badge badge-primary badge-lg"
-                      >
-                        {/* @ts-ignore */}
-                        {`${categoryName} ${record[categoryName]}`}
-                      </div>
-                    );
-                  })}
-                </div>
-              </>
-            );
-          },
-        },
+        // {
+        //   title: "Categories",
+        //   render: (record: RowDef) => {
+        //     return (
+        //       <>
+        //         <div className="flex flex-wrap gap-2">
+        //           {categoryNames.map((categoryName) => {
+        //             return (
+        //               <div
+        //                 key={`badge-${categoryName}`}
+        //                 className="badge badge-primary badge-lg"
+        //               >
+        //                 {/* @ts-ignore */}
+        //                 {`${categoryName} ${record[categoryName]}`}
+        //               </div>
+        //             );
+        //           })}
+        //         </div>
+        //       </>
+        //     );
+        //   },
+        // },
       ];
     }
 
@@ -228,18 +228,20 @@ export function LadderTab() {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
-            <tr key={row.key} className="hover:bg-base-200/50">
-              {scoreColumns.map((column) => (
-                <td key={`column-${column.key}`}>
-                  {
-                    // @ts-ignore
-                    column.render ? column.render(row) : row[column.dataIndex]
-                  }
-                </td>
-              ))}
-            </tr>
-          ))}
+          {rows
+            .sort((a, b) => b.default - a.default)
+            .map((row) => (
+              <tr key={row.key} className="hover:bg-base-200/50">
+                {scoreColumns.map((column) => (
+                  <td key={`column-${column.key}`}>
+                    {
+                      // @ts-ignore
+                      column.render ? column.render(row) : row[column.dataIndex]
+                    }
+                  </td>
+                ))}
+              </tr>
+            ))}
         </tbody>
       </table>
 

@@ -29,21 +29,17 @@ function racePointsToText(points: number[]): JSX.Element[] {
   return textParts;
 }
 export function DelveTabRules() {
-  const { currentEvent, scores } = useContext(GlobalStateContext);
+  const { scores } = useContext(GlobalStateContext);
 
   const delveCategory = scores?.sub_categories.find(
     (category) => category.name === "Delve"
   );
 
-  if (!delveCategory || !currentEvent) {
-    return <></>;
-  }
-
-  const fossilRaceCategory = delveCategory.sub_categories.find(
+  const fossilRaceCategory = delveCategory?.sub_categories.find(
     (c) => c.name === "Fossil Race"
   );
 
-  const culmDepthObjective = delveCategory.objectives.find(
+  const culmDepthObjective = delveCategory?.objectives.find(
     (c) => c.name === "Culmulative Depth"
   );
 

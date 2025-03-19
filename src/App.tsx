@@ -345,7 +345,7 @@ function App() {
                           <div
                             tabIndex={0}
                             role="button"
-                            className="btn btn-ghost hover:btn-primary text-xl flex items-center h-15 p-4"
+                            className=" text-xl flex items-center h-15 p-4 gap-2"
                           >
                             {item.icon}
                             <div className="hidden lg:block">{item.label}</div>

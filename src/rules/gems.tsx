@@ -34,7 +34,6 @@ export function GemTabRules() {
   const gemCategory = scores?.sub_categories.find(
     (category) => category.name === "Gems"
   );
-
   const racePoints = gemCategory?.objectives[0].scoring_preset?.points || [];
   const gemPoints = gemCategory?.objectives[1].scoring_preset?.points[0];
   return (

@@ -18,7 +18,7 @@ function convertArrayToText(points: number[] | undefined): string {
 }
 
 export function UniqueTabRules() {
-  const { currentEvent, scores, gameVersion } = useContext(GlobalStateContext);
+  const { scores, gameVersion } = useContext(GlobalStateContext);
 
   const uniqueCategory = scores?.sub_categories.find(
     (category) => category.name === "Uniques"
@@ -26,7 +26,7 @@ export function UniqueTabRules() {
   const variantPoints = 5;
   const uniquePoints = 10;
 
-  if (!uniqueCategory || !currentEvent) {
+  if (!uniqueCategory) {
     return <></>;
   }
   // const categoryScoringMethods = uniqueCategory.sub_categories.reduce(

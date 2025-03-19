@@ -17,11 +17,11 @@ export function MainPage() {
   return (
     <div className="flex flex-col gap-8 mt-8 mx-auto ">
       <div className="card max-w-full bg-base-300">
-        <div className="card-body ">
+        <div className="card-body p-12">
           <div className="card-title text-4xl ">What is BPL?</div>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 items-center">
             <div>
-              <p className="text-2xl mt-4">
+              <p className="text-2xl mt-4 text-left">
                 BPL is a cooperative, team-based Path of Exile community event
                 where players compete to score points in a variety of
                 categories. At the end of the event, the team with the most
@@ -58,10 +58,10 @@ export function MainPage() {
       {currentEvent && !hasEnded ? (
         <>
           <div className="card bg-base-300">
-            <div className="card-body">
+            <div className="card-body p-12">
               <div className="card-title text-4xl">Save the Date!</div>
               <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 items-center">
-                <div className="text-2xl mt-4 grid grid-cols-2  text-left">
+                <div className="text-2xl mt-4 grid grid-cols-2 text-left">
                   <p>Start time: </p>
                   <p>
                     {new Date(currentEvent.event_start_time).toLocaleString()}
@@ -84,6 +84,7 @@ export function MainPage() {
                     <h3 className="text-3xl">See you at the Beach in</h3>
                     <Countdown
                       target={new Date(currentEvent.event_start_time)}
+                      size="large"
                     />
                   </div>
                 ) : (
@@ -99,7 +100,7 @@ export function MainPage() {
             </div>
           </div>
           <div className="card bg-base-300">
-            <div className="card-body">
+            <div className="card-body p-12">
               <div className="card-title text-4xl">Meet the Teams</div>
               <p className="text-2xl mt-4">
                 The teams only have access to a limited number of Ascendancy
@@ -118,7 +119,7 @@ export function MainPage() {
                           className="w-full"
                         />
                         <div>
-                          <div className="grid grid-cols-4  sm:grid-cols-4  lg:grid-cols-3 xl:grid-cols-4 gap-2 mt-8">
+                          <div className="grid grid-cols-4  sm:grid-cols-3  lg:grid-cols-4 xl:grid-cols-4 gap-2 mt-8">
                             {team.allowed_classes.map((className) => (
                               <div
                                 key={team.id + className}
@@ -131,7 +132,7 @@ export function MainPage() {
                                     "_"
                                   )}.png`}
                                   alt={className}
-                                  className="avatar w-20 h-20 rounded-full "
+                                  className="avatar w-15 h-15 sm:w-16 sm:h-16 xl:w-20 xl:h-20 rounded-full "
                                 />
                               </div>
                             ))}

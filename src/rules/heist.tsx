@@ -32,6 +32,7 @@ function bpUniquePointsToText(points: number[] | undefined): JSX.Element[] {
   });
   return textParts;
 }
+
 function racePointsToText(points: number[]): JSX.Element[] {
   const textParts = points.map((point, index) => {
     if (index === 0) {
@@ -59,26 +60,23 @@ function racePointsToText(points: number[]): JSX.Element[] {
   });
   return textParts;
 }
+
 export function HeistTabRules() {
-  const { currentEvent, scores } = useContext(GlobalStateContext);
+  const { scores } = useContext(GlobalStateContext);
 
   const heistCategory = scores?.sub_categories.find(
     (category) => category.name === "Heist"
   );
 
-  if (!heistCategory || !currentEvent) {
-    return <></>;
-  }
-
-  const rogueGearCategory = heistCategory.sub_categories.find(
+  const rogueGearCategory = heistCategory?.sub_categories.find(
     (c) => c.name === "Rogue Gear"
   );
 
-  const uniqueCategory = heistCategory.sub_categories.find(
+  const uniqueCategory = heistCategory?.sub_categories.find(
     (c) => c.name === "Blueprint Uniques"
   );
 
-  const experimentalItemsCategory = heistCategory.sub_categories.find(
+  const experimentalItemsCategory = heistCategory?.sub_categories.find(
     (c) => c.name === "Experimental Bases"
   );
 

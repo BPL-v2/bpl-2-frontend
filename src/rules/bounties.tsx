@@ -4,16 +4,14 @@ import { GlobalStateContext } from "../utils/context-provider";
 export function BountyTabRules() {
   const { scores } = useContext(GlobalStateContext);
 
-  const bountyCategory = scores?.sub_categories.find(
+  const objs = scores?.sub_categories.find(
     (category) => category.name === "Bounties"
-  );
+  )?.objectives;
 
-  const objs = bountyCategory?.objectives;
-  if (!bountyCategory || !objs) {
-    return null;
+  if (!objs) {
+    return <></>;
   }
   const bountyPoints = objs[0].scoring_preset?.points || [];
-
   return (
     <>
       <h3>Points</h3>
