@@ -1,78 +1,117 @@
-import { useState } from "react";
+import React from "react";
 import {
+  Column,
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
+  getFilteredRowModel,
   getSortedRowModel,
+  OnChangeFn,
+  Row,
   SortingState,
   TableOptions,
   TableState,
   useReactTable,
 } from "@tanstack/react-table";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { TableSortIcon } from "../icons/table-sort";
 
-interface TableProps<T> {
+function Table<T>({
+  data,
+  columns,
+  rowClassName,
+  className,
+}: {
   data: T[];
-  columns: ColumnDef<T, any>[];
-  pageSizeOptions?: number[];
-}
+  columns: ColumnDef<T>[];
+  rowClassName?: (row: Row<T>) => string;
+  className?: string;
+}) {
+  const tableContainerRef = React.useRef<HTMLDivElement>(null);
 
-export function Table<T>({ data, columns, pageSizeOptions }: TableProps<T>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: pageSizeOptions ? pageSizeOptions[0] : 10,
-  });
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const options: TableOptions<T> = {
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
+    getFilteredRowModel: getFilteredRowModel(),
   };
   const state: Partial<TableState> = {
     sorting,
   };
   options.state = state;
-  if (pageSizeOptions) {
-    state["pagination"] = pagination;
-    options.getPaginationRowModel = getPaginationRowModel();
-    options.onPaginationChange = setPagination;
-  }
-  const table = useReactTable<T>(options);
 
+  const table = useReactTable(options);
+
+  const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
+    setSorting(updater);
+    if (!!table.getRowModel().rows.length) {
+      rowVirtualizer.scrollToIndex?.(0);
+    }
+  };
+
+  table.setOptions((prev) => ({
+    ...prev,
+    onSortingChange: handleSortingChange,
+  }));
+
+  const { rows } = table.getRowModel();
+
+  const rowVirtualizer = useVirtualizer({
+    count: rows.length,
+    estimateSize: () => 33,
+    getScrollElement: () => tableContainerRef.current,
+    overscan: 5,
+  });
   return (
-    <>
-      <table className="table table-compact">
-        <thead className="bg-base-200">
+    <div ref={tableContainerRef} className={"overflow-auto " + className}>
+      <table className="table table-md">
+        <thead className="bg-base-300 sticky top-0 z-1000 font-bold text-lg">
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
+            <tr
+              key={headerGroup.id}
+              className="flex w-full bg-base-200 text-contrast"
+            >
               {headerGroup.headers.map((header) => {
                 return (
                   <th
-                    className={
-                      header.column.getCanSort()
-                        ? "cursor-pointer select-none "
-                        : undefined
-                    }
                     key={header.id}
-                    onClick={header.column.getToggleSortingHandler()}
-                    style={{ width: `${header.getSize()}px` }}
+                    style={{
+                      width: header.getSize(),
+                    }}
+                    className="flex items-center"
                   >
-                    <div className="flex items-center gap-1">
+                    <div
+                      className={
+                        header.column.getCanSort()
+                          ? "select-none flex items-center gap-2 cursor-pointer"
+                          : ""
+                      }
+                    >
                       {header.column.getCanSort() ? (
-                        <TableSortIcon
-                          className="h-5 w-5"
-                          sort={sorting.find((sort) => sort.id === header.id)}
-                        ></TableSortIcon>
-                      ) : null}
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                        <div onClick={header.column.getToggleSortingHandler()}>
+                          <TableSortIcon
+                            className="h-5 w-5 "
+                            sort={sorting.find((sort) => sort.id === header.id)}
+                          ></TableSortIcon>
+                        </div>
+                      ) : null}{" "}
+                      <div
+                        className="flex items-center flex-row"
+                        onClick={header.column.getToggleSortingHandler()}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}{" "}
+                        {header.column.getCanFilter() ? (
+                          <div onClick={(e) => e.stopPropagation()}>
+                            <Filter column={header.column} />
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
                   </th>
                 );
@@ -80,58 +119,121 @@ export function Table<T>({ data, columns, pageSizeOptions }: TableProps<T>) {
             </tr>
           ))}
         </thead>
-        <tbody className="bg-base-300 ">
-          {table.getRowModel().rows.map((row) => {
+        <tbody
+          className="bg-base-300"
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+          }}
+        >
+          {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+            const row = rows[virtualRow.index] as Row<T>;
             return (
-              <tr key={row.id} className="hover:bg-base-200/50">
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
+              <tr
+                className={
+                  "flex absolute w-full items-center " +
+                  (rowClassName ? rowClassName(row) : " hover:bg-base-200/50")
+                }
+                data-index={virtualRow.index}
+                ref={(node) => rowVirtualizer.measureElement(node)}
+                key={row.id}
+                style={{
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
+              >
+                {row.getVisibleCells().map((cell) => {
+                  return (
+                    <td
+                      key={cell.id}
+                      style={{
+                        display: "flex",
+                        width: cell.column.getSize(),
+                      }}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  );
+                })}
               </tr>
             );
           })}
         </tbody>
       </table>
-      {pageSizeOptions ? (
-        <div className="bg-base-200 flex justify-end">
-          <div className="join border-1 rounded-field">
-            <button
-              className="join-item btn bg-base-100"
-              onClick={() => table.firstPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              {"<<"}
-            </button>
-            <button
-              className="join-item btn bg-base-100"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              {"<"}
-            </button>
-            <button className="join-item btn  bg-base-100">
-              {table.getState().pagination.pageIndex + 1}
-            </button>
-
-            <button
-              className="join-item btn  bg-base-100"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              {">"}
-            </button>
-            <button
-              className="join-item btn bg-base-100"
-              onClick={() => table.lastPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              {">>"}
-            </button>
-          </div>
-        </div>
-      ) : null}
-    </>
+    </div>
   );
+}
+
+export default Table;
+
+function Filter({ column }: { column: Column<any, unknown> }) {
+  const columnFilterValue = column.getFilterValue();
+  // @ts-ignore
+  const { filterVariant, filterPlaceholder, options } =
+    column.columnDef.meta ?? {};
+
+  if (filterVariant === "string") {
+    return (
+      <input
+        className="input text-lg"
+        onChange={(e) => {
+          column.setFilterValue(e.target.value);
+          e.stopPropagation();
+        }}
+        placeholder={filterPlaceholder}
+        type="string"
+        value={(columnFilterValue ?? "") as string}
+      />
+    );
+  }
+  if (filterVariant === "enum") {
+    return (
+      <select
+        className="select text-lg"
+        onChange={(e) => {
+          column.setFilterValue(e.target.value);
+          e.stopPropagation();
+        }}
+        value={(columnFilterValue ?? "") as string}
+      >
+        <option value="" disabled>
+          {filterPlaceholder}
+        </option>
+        <option value="">All</option>
+        {options?.map((option: string) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    );
+  }
+
+  if (filterVariant === "boolean") {
+    return (
+      <button
+        className="btn w-8 h-8 bg-base-300 ml-2 select-none text-center align-middle border-1 border-primary/50"
+        onClick={(e) => {
+          const currentValue = column.getFilterValue();
+          if (currentValue === undefined) {
+            column.setFilterValue(false);
+          }
+          if (currentValue === false) {
+            column.setFilterValue(true);
+          }
+          if (currentValue === true) {
+            column.setFilterValue(undefined);
+          }
+          e.stopPropagation();
+        }}
+      >
+        {column.getFilterValue() === undefined
+          ? undefined
+          : column.getFilterValue() === false
+          ? "❌"
+          : "✅"}
+      </button>
+    );
+  }
 }

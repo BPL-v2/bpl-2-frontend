@@ -8,10 +8,11 @@ import { ColumnDef, sortingFns } from "@tanstack/react-table";
 import { LadderEntry, Team } from "../client";
 import { Ascendancy } from "../components/ascendancy";
 import { ExperienceBar } from "../components/experience-bar";
-import { Table } from "../components/table";
 import { TeamName } from "../components/team-name";
 import { LadderPortrait } from "../components/ladder-portrait";
 import { AscendancyPortrait } from "../components/ascendancy-portrait";
+import { phreciaMapping } from "../types/ascendancy";
+import Table from "../components/table";
 
 export function DelveTab() {
   const { scores, currentEvent, users, ladder, isMobile } =
@@ -28,39 +29,58 @@ export function DelveTab() {
       return acc;
     }, {} as { [userId: number]: Team }) || {};
   const delveLadderColumns = useMemo(() => {
+    if (!currentEvent) {
+      return [];
+    }
     let columns: ColumnDef<LadderEntry, any>[] = [];
     if (!isMobile) {
       columns = [
         {
           accessorKey: "delve",
-          header: "Delve Depth",
+          header: "Depth",
           sortingFn: sortingFns.basic,
-          size: 60,
+          size: 100,
         },
         {
           accessorKey: "character_name",
-          header: "Character",
-          sortingFn: sortingFns.text,
+          header: "",
+          enableSorting: false,
           size: 250,
+          filterFn: "includesString",
+          meta: {
+            filterVariant: "string",
+            filterPlaceholder: "Character",
+          },
         },
         {
           accessorKey: "account_name",
-          header: "Account",
-          sortingFn: sortingFns.text,
-          size: 180,
+          header: "",
+          enableSorting: false,
+          size: 250,
+          filterFn: "includesString",
+          meta: {
+            filterVariant: "string",
+            filterPlaceholder: "Account",
+          },
         },
         {
           accessorFn: (row) => userToTeam[row.user_id] || "Cartographers",
-          header: "Team",
+          header: " ",
           cell: (info) => (
             <TeamName team={userToTeam[info.row.original.user_id]} />
           ),
-          sortingFn: sortingFns.text,
-          size: 120,
+          enableSorting: false,
+          size: 250,
+          filterFn: "includesString",
+          meta: {
+            filterVariant: "enum",
+            filterPlaceholder: "Team",
+            options: currentEvent.teams.map((team) => team.name),
+          },
         },
         {
           accessorKey: "character_class",
-          header: "Ascendancy",
+          header: "",
           cell: (info) => (
             <div className="flex items-center gap-2">
               <AscendancyPortrait
@@ -70,8 +90,17 @@ export function DelveTab() {
               <Ascendancy character_class={info.row.original.character_class} />
             </div>
           ),
-          sortingFn: sortingFns.text,
-          size: 200,
+          size: 250,
+          filterFn: "includesString",
+          enableSorting: false,
+          meta: {
+            filterVariant: "enum",
+            filterPlaceholder: "Ascendancy",
+            // options: Object.keys(
+            //   ascendancies[currentEvent.game_version] || {}
+            // ).map((ascendancy) => ascendancy),
+            options: Object.keys(phreciaMapping),
+          },
         },
         {
           accessorKey: "experience",
@@ -83,8 +112,7 @@ export function DelveTab() {
             />
           ),
           sortingFn: sortingFns.basic,
-
-          size: 80,
+          size: 150,
         },
       ];
     } else {
@@ -93,10 +121,17 @@ export function DelveTab() {
           accessorKey: "delve",
           header: "Depth",
           sortingFn: sortingFns.basic,
-          size: 10,
+          size: 100,
         },
         {
-          header: "Character",
+          accessorFn: (row) =>
+            row.account_name + row.character_name + row.character_class,
+          header: " ",
+          filterFn: "includesString",
+          meta: {
+            filterVariant: "string",
+            filterPlaceholder: "Character",
+          },
           cell: (info) => (
             <LadderPortrait
               entry={info.row.original}
@@ -108,7 +143,90 @@ export function DelveTab() {
       ];
     }
     return columns;
-  }, [isMobile]);
+  }, [isMobile, currentEvent]);
+
+  // const delveLadderColumns = useMemo(() => {
+  //   let columns: ColumnDef<LadderEntry, any>[] = [];
+  //   if (!isMobile) {
+  //     columns = [
+  //       {
+  //         accessorKey: "delve",
+  //         header: "Delve Depth",
+  //         sortingFn: sortingFns.basic,
+  //         size: 60,
+  //       },
+  //       {
+  //         accessorKey: "character_name",
+  //         header: "Character",
+  //         sortingFn: sortingFns.text,
+  //         size: 250,
+  //       },
+  //       {
+  //         accessorKey: "account_name",
+  //         header: "Account",
+  //         sortingFn: sortingFns.text,
+  //         size: 180,
+  //       },
+  //       {
+  //         accessorFn: (row) => userToTeam[row.user_id] || "Cartographers",
+  //         header: "Team",
+  //         cell: (info) => (
+  //           <TeamName team={userToTeam[info.row.original.user_id]} />
+  //         ),
+  //         sortingFn: sortingFns.text,
+  //         size: 120,
+  //       },
+  //       {
+  //         accessorKey: "character_class",
+  //         header: "Ascendancy",
+  //         cell: (info) => (
+  //           <div className="flex items-center gap-2">
+  //             <AscendancyPortrait
+  //               character_class={info.row.original.character_class}
+  //               className="w-8 h-8 rounded-full"
+  //             />
+  //             <Ascendancy character_class={info.row.original.character_class} />
+  //           </div>
+  //         ),
+  //         sortingFn: sortingFns.text,
+  //         size: 200,
+  //       },
+  //       {
+  //         accessorKey: "experience",
+  //         header: "Level",
+  //         cell: (info) => (
+  //           <ExperienceBar
+  //             experience={info.row.original.experience}
+  //             level={info.row.original.level}
+  //           />
+  //         ),
+  //         sortingFn: sortingFns.basic,
+
+  //         size: 80,
+  //       },
+  //     ];
+  //   } else {
+  //     columns = [
+  //       {
+  //         accessorKey: "delve",
+  //         header: "Depth",
+  //         sortingFn: sortingFns.basic,
+  //         size: 10,
+  //       },
+  //       {
+  //         header: "Character",
+  //         cell: (info) => (
+  //           <LadderPortrait
+  //             entry={info.row.original}
+  //             teamName={userToTeam[info.row.original.user_id]?.name}
+  //           />
+  //         ),
+  //         size: 400,
+  //       },
+  //     ];
+  //   }
+  //   return columns;
+  // }, [isMobile]);
   if (!category || !currentEvent) {
     return <></>;
   }
@@ -187,8 +305,8 @@ export function DelveTab() {
             />
             <Table
               columns={delveLadderColumns}
-              data={ladder}
-              pageSizeOptions={[10, 25, 50, 100]}
+              data={ladder.sort((a, b) => b.delve - a.delve)}
+              className="h-[70vh]"
             />
           </div>
         </>

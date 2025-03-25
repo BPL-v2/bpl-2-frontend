@@ -117,6 +117,38 @@ export enum ApprovalStatus {
 /**
  * 
  * @export
+ * @interface Atlas
+ */
+export interface Atlas {
+    /**
+     * 
+     * @type {number}
+     * @memberof Atlas
+     */
+    event_id: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Atlas
+     */
+    index: number;
+    /**
+     * 
+     * @type {Array<Array<number>>}
+     * @memberof Atlas
+     */
+    trees: Array<Array<number>>;
+    /**
+     * 
+     * @type {number}
+     * @memberof Atlas
+     */
+    user_id: number;
+}
+
+/**
+ * 
+ * @export
  * @interface Category
  */
 export interface Category {
@@ -188,6 +220,74 @@ export interface CategoryCreate {
      * @memberof CategoryCreate
      */
     scoring_preset_id?: number;
+}
+
+/**
+ * 
+ * @export
+ * @interface Character
+ */
+export interface Character {
+    /**
+     * 
+     * @type {string}
+     * @memberof Character
+     */
+    ascendancy: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Character
+     */
+    ascendancy_points: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Character
+     */
+    atlas_node_count: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Character
+     */
+    event_id: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Character
+     */
+    level: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Character
+     */
+    main_skill: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Character
+     */
+    name: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Character
+     */
+    pantheon: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof Character
+     */
+    timestamp: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Character
+     */
+    user_id: number;
 }
 
 /**
@@ -635,6 +735,12 @@ export interface LadderEntry {
      * @memberof LadderEntry
      */
     experience: number;
+    /**
+     * 
+     * @type {Character}
+     * @memberof LadderEntry
+     */
+    extra?: Character;
     /**
      * 
      * @type {number}
@@ -1672,6 +1778,285 @@ export interface UserUpdate {
     display_name: string;
 }
 
+
+/**
+ * AtlasApi - fetch parameter creator
+ * @export
+ */
+export const AtlasApiFetchParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Get atlas trees for your team for an event
+         * @param {number} event_id Event ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTeamAtlasesForEvent(event_id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getTeamAtlasesForEvent.');
+            }
+            const localVarPath = `/events/{event_id}/atlas`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * AtlasApi - functional programming interface
+ * @export
+ */
+export const AtlasApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * Get atlas trees for your team for an event
+         * @param {number} event_id Event ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTeamAtlasesForEvent(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Atlas>> {
+            const localVarFetchArgs = AtlasApiFetchParamCreator(configuration).getTeamAtlasesForEvent(event_id, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+    }
+};
+
+/**
+ * AtlasApi - factory interface
+ * @export
+ */
+export const AtlasApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+    return {
+        /**
+         * Get atlas trees for your team for an event
+         * @param {number} event_id Event ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTeamAtlasesForEvent(event_id: number, options?: any) {
+            return AtlasApiFp(configuration).getTeamAtlasesForEvent(event_id, options)(fetch, basePath);
+        },
+    };
+};
+
+/**
+ * AtlasApi - object-oriented interface
+ * @export
+ * @class AtlasApi
+ * @extends {BaseAPI}
+ */
+export class AtlasApi extends BaseAPI {
+    /**
+     * Get atlas trees for your team for an event
+     * @param {number} event_id Event ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AtlasApi
+     */
+    public getTeamAtlasesForEvent(event_id: number, options?: any) {
+        return AtlasApiFp(this.configuration).getTeamAtlasesForEvent(event_id, options)(this.fetch, this.basePath);
+    }
+
+}
+
+/**
+ * CharactersApi - fetch parameter creator
+ * @export
+ */
+export const CharactersApiFetchParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Get all characters for an event for a user
+         * @param {number} event_id Event ID
+         * @param {number} user_id User ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCharacterEventHistoryForUser(event_id: number, user_id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getCharacterEventHistoryForUser.');
+            }
+            // verify required parameter 'user_id' is not null or undefined
+            if (user_id === null || user_id === undefined) {
+                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling getCharacterEventHistoryForUser.');
+            }
+            const localVarPath = `/events/{event_id}/characters/{user_id}`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Get all characters for an event
+         * @param {number} event_id Event ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCharactersForEvent(event_id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getCharactersForEvent.');
+            }
+            const localVarPath = `/events/{event_id}/characters`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * CharactersApi - functional programming interface
+ * @export
+ */
+export const CharactersApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * Get all characters for an event for a user
+         * @param {number} event_id Event ID
+         * @param {number} user_id User ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCharacterEventHistoryForUser(event_id: number, user_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Character>> {
+            const localVarFetchArgs = CharactersApiFetchParamCreator(configuration).getCharacterEventHistoryForUser(event_id, user_id, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * Get all characters for an event
+         * @param {number} event_id Event ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCharactersForEvent(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Character>> {
+            const localVarFetchArgs = CharactersApiFetchParamCreator(configuration).getCharactersForEvent(event_id, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+    }
+};
+
+/**
+ * CharactersApi - factory interface
+ * @export
+ */
+export const CharactersApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+    return {
+        /**
+         * Get all characters for an event for a user
+         * @param {number} event_id Event ID
+         * @param {number} user_id User ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCharacterEventHistoryForUser(event_id: number, user_id: number, options?: any) {
+            return CharactersApiFp(configuration).getCharacterEventHistoryForUser(event_id, user_id, options)(fetch, basePath);
+        },
+        /**
+         * Get all characters for an event
+         * @param {number} event_id Event ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCharactersForEvent(event_id: number, options?: any) {
+            return CharactersApiFp(configuration).getCharactersForEvent(event_id, options)(fetch, basePath);
+        },
+    };
+};
+
+/**
+ * CharactersApi - object-oriented interface
+ * @export
+ * @class CharactersApi
+ * @extends {BaseAPI}
+ */
+export class CharactersApi extends BaseAPI {
+    /**
+     * Get all characters for an event for a user
+     * @param {number} event_id Event ID
+     * @param {number} user_id User ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CharactersApi
+     */
+    public getCharacterEventHistoryForUser(event_id: number, user_id: number, options?: any) {
+        return CharactersApiFp(this.configuration).getCharacterEventHistoryForUser(event_id, user_id, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Get all characters for an event
+     * @param {number} event_id Event ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CharactersApi
+     */
+    public getCharactersForEvent(event_id: number, options?: any) {
+        return CharactersApiFp(this.configuration).getCharactersForEvent(event_id, options)(this.fetch, this.basePath);
+    }
+
+}
 
 /**
  * ConditionApi - fetch parameter creator
@@ -3223,6 +3608,34 @@ export const ScoresApiFetchParamCreator = function (configuration?: Configuratio
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Websocket for simple score updates.
+         * @param {number} event_id Event Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        simpleScoreWebSocket(event_id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling simpleScoreWebSocket.');
+            }
+            const localVarPath = `/events/{event_id}/scores/simple/ws`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -3268,6 +3681,24 @@ export const ScoresApiFp = function(configuration?: Configuration) {
                 });
             };
         },
+        /**
+         * Websocket for simple score updates.
+         * @param {number} event_id Event Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        simpleScoreWebSocket(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<{ [key: string]: number; }> {
+            const localVarFetchArgs = ScoresApiFetchParamCreator(configuration).simpleScoreWebSocket(event_id, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
     }
 };
 
@@ -3294,6 +3725,15 @@ export const ScoresApiFactory = function (configuration?: Configuration, fetch?:
          */
         scoreWebSocket(event_id: number, options?: any) {
             return ScoresApiFp(configuration).scoreWebSocket(event_id, options)(fetch, basePath);
+        },
+        /**
+         * Websocket for simple score updates.
+         * @param {number} event_id Event Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        simpleScoreWebSocket(event_id: number, options?: any) {
+            return ScoresApiFp(configuration).simpleScoreWebSocket(event_id, options)(fetch, basePath);
         },
     };
 };
@@ -3325,6 +3765,17 @@ export class ScoresApi extends BaseAPI {
      */
     public scoreWebSocket(event_id: number, options?: any) {
         return ScoresApiFp(this.configuration).scoreWebSocket(event_id, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Websocket for simple score updates.
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ScoresApi
+     */
+    public simpleScoreWebSocket(event_id: number, options?: any) {
+        return ScoresApiFp(this.configuration).simpleScoreWebSocket(event_id, options)(this.fetch, this.basePath);
     }
 
 }
@@ -5158,6 +5609,34 @@ export const UserApiFetchParamCreator = function (configuration?: Configuration)
             };
         },
         /**
+         * Fetches all event characters for a user
+         * @param {number} userId User Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserCharacters(userId: number, options: any = {}): FetchArgs {
+            // verify required parameter 'userId' is not null or undefined
+            if (userId === null || userId === undefined) {
+                throw new RequiredError('userId','Required parameter userId was null or undefined when calling getUserCharacters.');
+            }
+            const localVarPath = `/users/{userId}/characters`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Fetches all users for an event
          * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
@@ -5351,6 +5830,24 @@ export const UserApiFp = function(configuration?: Configuration) {
             };
         },
         /**
+         * Fetches all event characters for a user
+         * @param {number} userId User Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserCharacters(userId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Character>> {
+            const localVarFetchArgs = UserApiFetchParamCreator(configuration).getUserCharacters(userId, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
          * Fetches all users for an event
          * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
@@ -5467,6 +5964,15 @@ export const UserApiFactory = function (configuration?: Configuration, fetch?: F
             return UserApiFp(configuration).getUser(options)(fetch, basePath);
         },
         /**
+         * Fetches all event characters for a user
+         * @param {number} userId User Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserCharacters(userId: number, options?: any) {
+            return UserApiFp(configuration).getUserCharacters(userId, options)(fetch, basePath);
+        },
+        /**
          * Fetches all users for an event
          * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
@@ -5553,6 +6059,17 @@ export class UserApi extends BaseAPI {
      */
     public getUser(options?: any) {
         return UserApiFp(this.configuration).getUser(options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Fetches all event characters for a user
+     * @param {number} userId User Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public getUserCharacters(userId: number, options?: any) {
+        return UserApiFp(this.configuration).getUserCharacters(userId, options)(this.fetch, this.basePath);
     }
 
     /**

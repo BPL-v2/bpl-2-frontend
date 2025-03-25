@@ -8,12 +8,14 @@ import { getTotalPoints } from "../utils/utils";
 import { LadderEntry, Team } from "../client";
 import { ColumnDef, sortingFns } from "@tanstack/react-table";
 
-import { Table } from "../components/table";
 import { Ascendancy } from "../components/ascendancy";
 import { ExperienceBar } from "../components/experience-bar";
 import { TeamName } from "../components/team-name";
 import { LadderPortrait } from "../components/ladder-portrait";
 import { AscendancyPortrait } from "../components/ascendancy-portrait";
+import Table from "../components/table";
+import { phreciaMapping } from "../types/ascendancy";
+import { calcPersonalPoints } from "../utils/personal-points";
 type RowDef = {
   default: number;
   team: Team;
@@ -40,6 +42,9 @@ export function LadderTab() {
     }, {} as { [userId: number]: Team }) || {};
 
   const ladderColumns = useMemo(() => {
+    if (!currentEvent) {
+      return [];
+    }
     let columns: ColumnDef<LadderEntry, any>[] = [];
     if (!isMobile) {
       columns = [
@@ -47,32 +52,48 @@ export function LadderTab() {
           accessorKey: "rank",
           header: "Rank",
           sortingFn: sortingFns.basic,
-          size: 60,
+          size: 100,
         },
         {
           accessorKey: "character_name",
-          header: "Character",
-          sortingFn: sortingFns.text,
+          header: "",
+          enableSorting: false,
           size: 250,
+          filterFn: "includesString",
+          meta: {
+            filterVariant: "string",
+            filterPlaceholder: "Character",
+          },
         },
         {
           accessorKey: "account_name",
-          header: "Account",
-          sortingFn: sortingFns.text,
-          size: 180,
+          header: "",
+          enableSorting: false,
+          size: 250,
+          filterFn: "includesString",
+          meta: {
+            filterVariant: "string",
+            filterPlaceholder: "Account",
+          },
         },
         {
           accessorFn: (row) => userToTeam[row.user_id] || "Cartographers",
-          header: "Team",
+          header: " ",
           cell: (info) => (
             <TeamName team={userToTeam[info.row.original.user_id]} />
           ),
-          sortingFn: sortingFns.text,
-          size: 120,
+          enableSorting: false,
+          size: 250,
+          filterFn: "includesString",
+          meta: {
+            filterVariant: "enum",
+            filterPlaceholder: "Team",
+            options: currentEvent.teams.map((team) => team.name),
+          },
         },
         {
           accessorKey: "character_class",
-          header: "Ascendancy",
+          header: "",
           cell: (info) => (
             <div className="flex items-center gap-2">
               <AscendancyPortrait
@@ -82,8 +103,17 @@ export function LadderTab() {
               <Ascendancy character_class={info.row.original.character_class} />
             </div>
           ),
-          sortingFn: sortingFns.text,
-          size: 200,
+          size: 250,
+          filterFn: "includesString",
+          enableSorting: false,
+          meta: {
+            filterVariant: "enum",
+            filterPlaceholder: "Ascendancy",
+            // options: Object.keys(
+            //   ascendancies[currentEvent.game_version] || {}
+            // ).map((ascendancy) => ascendancy),
+            options: Object.keys(phreciaMapping),
+          },
         },
         {
           accessorKey: "experience",
@@ -95,13 +125,13 @@ export function LadderTab() {
             />
           ),
           sortingFn: sortingFns.basic,
-
-          size: 80,
+          size: 150,
         },
         {
-          accessorKey: "delve",
-          header: "Delve",
+          accessorFn: (row) => calcPersonalPoints(row),
+          header: "PO Points",
           sortingFn: sortingFns.basic,
+          size: 100,
         },
       ];
     } else {
@@ -110,10 +140,17 @@ export function LadderTab() {
           accessorKey: "rank",
           header: "Rank",
           sortingFn: sortingFns.basic,
-          size: 10,
+          size: 100,
         },
         {
-          header: "Character",
+          accessorFn: (row) =>
+            row.account_name + row.character_name + row.character_class,
+          header: " ",
+          filterFn: "includesString",
+          meta: {
+            filterVariant: "string",
+            filterPlaceholder: "Character",
+          },
           cell: (info) => (
             <LadderPortrait
               entry={info.row.original}
@@ -125,7 +162,7 @@ export function LadderTab() {
       ];
     }
     return columns;
-  }, [isMobile]);
+  }, [isMobile, currentEvent]);
 
   if (!scores || !currentEvent || !currentEvent.teams) {
     return <></>;
@@ -247,9 +284,9 @@ export function LadderTab() {
 
       <div className="divider divider-primary">Ladder</div>
       <Table
-        data={ladder}
+        data={ladder.sort((a, b) => a.rank - b.rank)}
         columns={ladderColumns}
-        pageSizeOptions={[10, 25, 50, 100]}
+        className="h-[70vh]"
       />
     </>
   );

@@ -17,6 +17,10 @@ const UniqueTab: React.FC = () => {
   const tableRef = useRef<HTMLDivElement>(null);
 
   const handleCategoryClick = (category: ScoreCategory) => {
+    if (category.id === selectedCategory?.id) {
+      setSelectedCategory(undefined);
+      return;
+    }
     setSelectedCategory(category);
     if (!tableRef.current) {
       return;
@@ -80,8 +84,28 @@ const UniqueTab: React.FC = () => {
   ]);
 
   const table = useMemo(() => {
-    if (!selectedCategory) {
+    if (!uniqueCategory) {
       return <></>;
+    }
+    if (!selectedCategory) {
+      const objectives =
+        uniqueCategory?.sub_categories.flatMap(
+          (category) => category.objectives
+        ) || [];
+      const subCategories =
+        uniqueCategory?.sub_categories.flatMap(
+          (category) => category.sub_categories
+        ) || [];
+
+      return (
+        <ItemTable
+          category={{
+            ...uniqueCategory,
+            objectives: objectives,
+            sub_categories: subCategories,
+          }}
+        />
+      );
     }
     return <ItemTable category={selectedCategory}></ItemTable>;
   }, [selectedCategory, selectedTeam, uniqueCategory]);

@@ -1627,6 +1627,7 @@
         "npm:@tailwindcss/typography@~0.5.16",
         "npm:@tailwindcss/vite@^4.0.14",
         "npm:@tanstack/react-table@^8.21.2",
+        "npm:@tanstack/react-virtual@^3.13.5",
         "npm:@types/isomorphic-fetch@^0.0.39",
         "npm:@types/node@^22.13.10",
         "npm:@types/react-dom@^19.0.4",

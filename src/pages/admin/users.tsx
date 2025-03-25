@@ -4,28 +4,32 @@ import { Permission, User } from "../../client";
 import { userApi } from "../../client/client";
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 import { ColumnDef, sortingFns } from "@tanstack/react-table";
-import { Table } from "../../components/table";
+import Table from "../../components/table";
 
 const columns: ColumnDef<User, any>[] = [
   {
     accessorKey: "id",
     header: "ID",
     sortingFn: sortingFns.basic,
+    size: 100,
   },
   {
     accessorKey: "display_name",
     header: "Name",
     sortingFn: sortingFns.text,
+    size: 200,
   },
   {
     accessorKey: "account_name",
     header: "PoE Name",
     sortingFn: sortingFns.text,
+    size: 200,
   },
   {
     accessorKey: "discord_name",
     header: "Discord Name",
     sortingFn: sortingFns.text,
+    size: 200,
   },
   {
     accessorKey: "discord_id",
@@ -40,6 +44,7 @@ const columns: ColumnDef<User, any>[] = [
         {info.row.original.discord_id}
       </a>
     ),
+    size: 200,
   },
   {
     accessorKey: "permissions",
@@ -109,7 +114,8 @@ const UserPage: React.FC = () => {
             (!roleFilter || user.permissions.includes(roleFilter))
         )}
         columns={columns}
-        pageSizeOptions={[20, 50, 100]}
+        className="h-[70vh]"
+        // pageSizeOptions={[20, 50, 100]}
       />
     </div>
   );

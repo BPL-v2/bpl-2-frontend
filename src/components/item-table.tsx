@@ -1,41 +1,52 @@
 import { ScoreCategory, ScoreObjective } from "../types/score";
 import { getImageLocation } from "../types/scoring-objective";
 import { GlobalStateContext } from "../utils/context-provider";
-import { JSX, useContext, useEffect, useState } from "react";
+import { JSX, useContext, useEffect, useMemo, useState } from "react";
 import { ObjectiveIcon } from "./objective-icon";
 import { GameVersion, Team } from "../client";
-import { TeamName } from "./team-name";
+import { CellContext, ColumnDef } from "@tanstack/react-table";
+import Table from "./table";
 
 export type ItemTableProps = {
-  category?: ScoreCategory;
+  category: ScoreCategory;
+};
+
+export type ExtendedScoreObjective = ScoreObjective & {
+  isVariant?: boolean;
 };
 
 export function ItemTable({ category }: ItemTableProps) {
-  const { currentEvent, isMobile, gameVersion, eventStatus, users } =
+  const { currentEvent, gameVersion, eventStatus, users } =
     useContext(GlobalStateContext);
-  const [nameFilter, setNameFilter] = useState<string | undefined>();
-  const [completionFilter, setCompletionFilter] = useState<{
-    [teamId: number]: number;
-  }>({});
   const [showVariants, setShowVariants] = useState<{
     [objectiveName: string]: boolean;
   }>({});
   const [variantMap, setVariantMap] = useState<{
-    [objectiveName: string]: ScoreObjective[];
+    [objectiveName: string]: ExtendedScoreObjective[];
   }>({});
   const userTeamID = eventStatus?.team_id || -1;
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
-    if (!category) {
-      return;
-    }
     const map = category.sub_categories
       .filter((subCategory) => subCategory.name.includes("Variants"))
-      .reduce((acc: { [name: string]: ScoreObjective[] }, subCategory) => {
-        const name = subCategory.name.split("Variants")[0].trim();
-        acc[name] = subCategory.objectives;
-        return acc;
-      }, {});
+      .reduce(
+        (acc: { [name: string]: ExtendedScoreObjective[] }, subCategory) => {
+          const name = subCategory.name.split("Variants")[0].trim();
+          acc[name] = subCategory.objectives;
+          return acc;
+        },
+        {}
+      );
     setVariantMap(map);
     setShowVariants(
       category.objectives.reduce(
@@ -48,48 +59,22 @@ export function ItemTable({ category }: ItemTableProps) {
     );
   }, [category]);
 
-  useEffect(() => {
-    if (currentEvent) {
-      setCompletionFilter(
-        currentEvent.teams.reduce((acc: { [teamId: number]: number }, team) => {
-          acc[team.id] = 0;
-          return acc;
-        }, {})
-      );
-    }
-  }, [currentEvent]);
-
   if (!currentEvent || !category) {
     return <></>;
   }
-  const rowFilter = (objective: ScoreObjective) => {
-    if (
-      nameFilter &&
-      !objective.name.toLowerCase().includes(nameFilter.toLowerCase())
-    ) {
-      return false;
-    }
-    for (const teamId in completionFilter) {
-      if (
-        completionFilter[teamId] === 1 &&
-        objective.team_score[teamId].finished
-      ) {
-        return false;
-      }
-      if (
-        completionFilter[teamId] === 2 &&
-        !objective.team_score[teamId].finished
-      ) {
-        return false;
-      }
-    }
-    return true;
-  };
 
-  const objectNameRender = (objective: ScoreObjective) => {
-    if (variantMap[objective.name]) {
+  const objectNameRender = (objective: ExtendedScoreObjective) => {
+    if (variantMap[objective.name] && !objective.isVariant) {
       return (
-        <div className="flex flex-col cursor-pointer ">
+        <div
+          className="flex flex-col cursor-pointer w-full"
+          onClick={() =>
+            setShowVariants({
+              ...showVariants,
+              [objective.name]: !showVariants[objective.name],
+            })
+          }
+        >
           <div>{objective.name}</div>
           <span className="text-sm text-primary">
             [Click to toggle Variants]
@@ -97,11 +82,14 @@ export function ItemTable({ category }: ItemTableProps) {
         </div>
       );
     }
+    if (objective.isVariant) {
+      return <span className="text-primary">{objective.extra}</span>;
+    }
     if (objective.extra) {
       return (
-        <div className="flex flex-col ">
+        <div className="flex flex-col">
           <div>{objective.name}</div>
-          <span className="text-sm text-primary">{objective.extra}</span>
+          <span className="text-sm text-primary">[{objective.extra}]</span>
         </div>
       );
     }
@@ -109,9 +97,13 @@ export function ItemTable({ category }: ItemTableProps) {
   };
 
   const imageOverlayedWithText = (
-    objective: ScoreObjective,
+    objective: ExtendedScoreObjective,
     gameVersion: GameVersion
   ) => {
+    if (objective.isVariant) {
+      return <span className="text-primary">{objective.extra}</span>;
+    }
+
     const img_location = getImageLocation(objective, gameVersion);
     if (!img_location) {
       return <></>;
@@ -120,7 +112,7 @@ export function ItemTable({ category }: ItemTableProps) {
       <div className="relative flex items-center justify-center">
         <img src={img_location} className="max-w-20 max-h-20" />
         <div
-          className="absolute  left-0 right-0 text-center text-lg"
+          className="absolute left-0 right-0 text-center text-lg"
           style={{
             textShadow: "2px 2px 4px rgba(0, 0, 0)", // Text shadow for better readability
           }}
@@ -131,7 +123,7 @@ export function ItemTable({ category }: ItemTableProps) {
     );
   };
 
-  const badgeClass = (objective: ScoreObjective, teamID: number) => {
+  const badgeClass = (objective: ExtendedScoreObjective, teamID: number) => {
     let className = "badge gap-2 w-full font-semibold py-3 ring-2";
     if (objective.team_score[teamID].finished) {
       className += " bg-success text-success-content";
@@ -153,174 +145,140 @@ export function ItemTable({ category }: ItemTableProps) {
     return a.name.localeCompare(b.name);
   };
 
-  const completionRows = (objective: ScoreObjective) => {
-    return isMobile ? (
-      <td
-        key={`${category.id}-${objective.id}`}
-        className="grid grid-cols-1 sm:grid-cols-2 gap-2 "
-      >
-        {currentEvent.teams.sort(teamSort).map((team) => (
-          <div
-            key={`badge-${category.id}-${team.id}-${objective.id}`}
-            className={badgeClass(objective, team.id)}
-          >
-            {team.name}
-          </div>
-        ))}
-      </td>
-    ) : (
-      currentEvent.teams.sort(teamSort).map((team) => {
-        const finished = objective.team_score[team.id]?.finished || false;
-        const user =
-          finished &&
-          users?.find((u) => objective.team_score[team.id]?.user_id === u.id);
-        let entry: JSX.Element | string = "❌";
-        if (user) {
-          entry = (
-            <div
-              className="tooltip cursor-help tooltip-bottom"
-              data-tip={`scored by ${user.display_name}`}
-            >
-              ✅
+  const columns = useMemo<ColumnDef<ExtendedScoreObjective, any>[]>(() => {
+    const teams = currentEvent.teams.sort(teamSort);
+    let columns: ColumnDef<ExtendedScoreObjective, any>[] = [];
+    if (windowWidth < 768) {
+      columns = [
+        {
+          accessorKey: "name",
+          header: "Name",
+          size: 200,
+          enableSorting: false,
+          cell: (info) => (
+            <div className="w-full">
+              {" "}
+              {imageOverlayedWithText(info.row.original, gameVersion)}
             </div>
-          );
-        } else if (finished) {
-          entry = "✅";
-        }
-        return (
-          <td
-            key={category.id + "-" + objective.id + "-" + team.id}
-            className={`text-center text-2xl`}
-          >
-            {entry}
-          </td>
-        );
-      })
-    );
-  };
+          ),
+        },
+        {
+          header: "Completion",
+          size: 250,
+          cell: (info) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {teams.map((team) => (
+                <div
+                  key={`badge-${category.id}-${team.id}-${info.row.original.id}`}
+                  className={badgeClass(info.row.original, team.id)}
+                >
+                  {team.name}
+                </div>
+              ))}
+            </div>
+          ),
+        },
+      ];
+    } else {
+      columns = [
+        {
+          accessorKey: "icon",
+          header: "",
+          cell: (info: CellContext<ExtendedScoreObjective, any>) =>
+            info.row.original.isVariant ? null : (
+              <div className="w-full">
+                <ObjectiveIcon
+                  objective={info.row.original}
+                  gameVersion={gameVersion}
+                />
+              </div>
+            ),
+          enableSorting: false,
+          enableColumnFilter: false,
+          size: 100,
+        },
+        {
+          accessorKey: "name",
+          header: "",
+          enableSorting: false,
+          size: Math.min(windowWidth, 1440) - 200 - teams.length * 200, // take up remaining space
+          cell: (info: CellContext<ExtendedScoreObjective, any>) => {
+            return objectNameRender(info.row.original);
+          },
+          filterFn: "includesString",
+          meta: {
+            filterVariant: "string",
+            filterPlaceholder: "Name",
+          },
+        },
+        ...teams.map((team) => ({
+          accessorKey: `team_score.${team.id}.finished`,
+          header: () => (
+            <div>
+              <div>{team.name || "Team"}</div>
+              <div className="text-sm text-info">
+                {" "}
+                {category.objectives.filter(
+                  (o) => o.team_score[team.id]?.finished
+                )?.length || 0}{" "}
+                / {category.objectives.length}
+              </div>
+            </div>
+          ),
+          enableSorting: false,
+          size: 200,
+          cell: (info: CellContext<ExtendedScoreObjective, any>) => {
+            const finished =
+              info.row.original.team_score[team.id]?.finished || false;
+            const user =
+              finished &&
+              users?.find(
+                (u) => info.row.original.team_score[team.id]?.user_id === u.id
+              );
+            let entry: JSX.Element | string = "❌";
+            if (user) {
+              entry = (
+                <div
+                  className="tooltip cursor-help tooltip-bottom z-1000"
+                  data-tip={`scored by ${user.display_name}`}
+                >
+                  ✅
+                </div>
+              );
+            } else if (finished) {
+              entry = "✅";
+            }
+            return <div className="text-center text-2xl w-full">{entry}</div>;
+          },
+          meta: {
+            filterVariant: "boolean",
+          },
+        })),
+      ];
+    }
+    return columns;
+  }, [currentEvent, category, variantMap, showVariants, windowWidth]);
   return (
     <>
-      <div className=" max-h-[70vh] overflow-auto">
-        <table className="table bg-base-300 table-md">
-          <thead className="bg-base-200 sticky top-0 z-10">
-            <tr className="text-lg">
-              {isMobile ? null : <th></th>}
-              <th>
-                {!isMobile && (
-                  <input
-                    type="text"
-                    placeholder="Name"
-                    className="input text-lg w-full max-w-xs focus:outline-0 focus:border-primary"
-                    onChange={(e) => setNameFilter(e.target.value)}
-                  />
-                )}
-              </th>
-              {isMobile ? (
-                <th className="text-center">Completion</th>
-              ) : (
-                currentEvent.teams.sort(teamSort).map((team) => (
-                  <th
-                    key={`${category.id}-${team.name}`}
-                    className={
-                      userTeamID === team.id
-                        ? "bg-base-300/15 text-base-content"
-                        : ""
-                    }
-                  >
-                    <div className="flex flex-row items-center">
-                      <div>
-                        <TeamName className="font-semibold" team={team} />
-
-                        <p className="text-accent text-sm">
-                          {category.objectives.reduce(
-                            (acc: number, objective) =>
-                              acc +
-                              (objective.team_score[team.id]?.finished ? 1 : 0),
-                            0
-                          )}
-                          / {category.objectives.length}
-                        </p>
-                      </div>
-                      <button
-                        className="btn w-8 h-8  bg-base-300 ml-2 select-none text-center align-middle border-1 border-primary/50"
-                        onClick={(e) => {
-                          setCompletionFilter({
-                            ...completionFilter,
-                            [team.id]: (completionFilter[team.id] + 1) % 3,
-                          });
-                          e.stopPropagation();
-                        }}
-                      >
-                        {[null, "❌", "✅"][completionFilter[team.id]]}
-                      </button>
-                    </div>
-                  </th>
-                ))
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {category.objectives.filter(rowFilter).flatMap((objective) => {
-              const objRow = (
-                <tr
-                  key={`${category.id}-${objective.id}`}
-                  className={"hover:bg-base-200/50"}
-                  onClick={() => {
-                    if (!variantMap[objective.name]) {
-                      return;
-                    }
-                    setShowVariants({
-                      ...showVariants,
-                      [objective.name]: !showVariants[objective.name],
-                    });
-                  }}
-                >
-                  {isMobile ? (
-                    <td>{imageOverlayedWithText(objective, gameVersion)}</td>
-                  ) : (
-                    <>
-                      <td>
-                        <ObjectiveIcon
-                          objective={objective}
-                          gameVersion={currentEvent.game_version}
-                        />
-                      </td>
-                      <td>{objectNameRender(objective)}</td>
-                    </>
-                  )}
-                  {completionRows(objective)}
-                </tr>
-              );
-
-              const variantRows = variantMap[objective.name]?.map((variant) => {
-                return (
-                  <tr
-                    key={`${category.id}-${variant.id}`}
-                    className="bg-base-200 hover:bg-base-100/50 m-0 p-0"
-                  >
-                    <>
-                      {isMobile ? null : <td></td>}
-                      <td
-                        className={`text-primary ${
-                          isMobile ? "text-center" : ""
-                        }`}
-                      >
-                        {variant.extra}
-                      </td>
-                    </>
-                    {completionRows(variant)}
-                  </tr>
-                );
-              });
-              const rows = [
-                objRow,
-                ...(showVariants[objective.name] ? variantRows : []),
-              ];
-              return rows;
-            })}
-          </tbody>
-        </table>
-      </div>
+      <Table
+        columns={columns}
+        data={
+          category.objectives.flatMap((objective) => {
+            const variantRows = variantMap[objective.name]?.map((variant) => {
+              return { ...variant, isVariant: true };
+            });
+            return [
+              objective,
+              ...(showVariants[objective.name] ? variantRows : []),
+            ];
+          }) as ExtendedScoreObjective[]
+        }
+        rowClassName={(row) =>
+          "hover:bg-base-200/50 " +
+          (row.original.isVariant ? "bg-base-200" : "")
+        }
+        className="h-[70vh]"
+      />
     </>
   );
 }
