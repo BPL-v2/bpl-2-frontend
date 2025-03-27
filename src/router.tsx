@@ -13,6 +13,7 @@ import ScoringCategoryPage from "./pages/admin/scoring-categories";
 import ScoringPresetsPage from "./pages/admin/scoring-presets";
 import TeamPage from "./pages/admin/teams";
 import EventPage from "./pages/admin/event";
+import { TeamSuggestionsPage } from "./pages/team-suggestions";
 
 export const router = createBrowserRouter([
   {
@@ -74,5 +75,9 @@ export const router = createBrowserRouter([
   {
     path: "/recurring-jobs",
     element: <RecurringJobsPage />,
+  },
+  {
+    path: "/team-suggestions",
+    element: <TeamSuggestionsPage />,
   },
 ]);

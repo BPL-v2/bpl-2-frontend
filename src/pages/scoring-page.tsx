@@ -1,5 +1,5 @@
 import UniqueTab from "../scoring-tabs/uniques";
-import { JSX, useContext, useEffect, useState } from "react";
+import { JSX, useContext, useEffect, useMemo, useState } from "react";
 import { SubmissionTab } from "../scoring-tabs/submissions";
 import { CollectionTab } from "../scoring-tabs/collections";
 import { LadderTab } from "../scoring-tabs/ladder";
@@ -20,71 +20,12 @@ import { HeistTabRules } from "../rules/heist";
 import { GemTabRules } from "../rules/gems";
 import BookOpenIcon from "@heroicons/react/24/outline/BookOpenIcon";
 import { DelveTabRules } from "../rules/delve";
-export const scoringTabs: {
-  key: string;
-  tab: JSX.Element;
-  gameVersions: GameVersion[];
-  rules?: JSX.Element;
-}[] = [
-  {
-    key: "Ladder",
-    tab: <LadderTab />,
-    gameVersions: [GameVersion.poe1, GameVersion.poe2],
-  },
-  {
-    key: "Uniques",
-    tab: <UniqueTab />,
-    gameVersions: [GameVersion.poe1, GameVersion.poe2],
-    rules: <UniqueTabRules />,
-  },
-  {
-    key: "Races",
-    tab: <SubmissionTab categoryName="Races" />,
-    gameVersions: [GameVersion.poe1, GameVersion.poe2],
-    rules: <RaceTabRules />,
-  },
-  {
-    key: "Bounties",
-    tab: <SubmissionTab categoryName="Bounties" />,
-    gameVersions: [GameVersion.poe1, GameVersion.poe2],
-    rules: <BountyTabRules />,
-  },
-  {
-    key: "Collections",
-    tab: <CollectionTab />,
-    gameVersions: [GameVersion.poe1, GameVersion.poe2],
-    rules: <CollectionTabRules />,
-  },
-  {
-    key: "Dailies",
-    tab: <DailyTab />,
-    gameVersions: [GameVersion.poe1, GameVersion.poe2],
-    rules: <DailyTabRules />,
-  },
-  {
-    key: "Heist",
-    tab: <HeistTab />,
-    gameVersions: [GameVersion.poe1],
-    rules: <HeistTabRules />,
-  },
-  {
-    key: "Gems",
-    tab: <GemTab />,
-    gameVersions: [GameVersion.poe1],
-    rules: <GemTabRules />,
-  },
-  {
-    key: "Delve",
-    tab: <DelveTab />,
-    gameVersions: [GameVersion.poe1],
-    rules: <DelveTabRules />,
-  },
-];
-
+import { ForYouTab } from "../scoring-tabs/for-you";
 type ScoringPageProps = { tabKey?: string };
 
 const ScoringPage = ({ tabKey }: ScoringPageProps) => {
-  const { currentEvent } = useContext(GlobalStateContext);
+  const { currentEvent, gameVersion, eventStatus } =
+    useContext(GlobalStateContext);
   const [searchParams] = useSearchParams();
   const [selectedTabKey, setSelectedTabKey] = useState<string>(
     tabKey || "Ladder"
@@ -97,6 +38,74 @@ const ScoringPage = ({ tabKey }: ScoringPageProps) => {
     }
   }, [searchParams]);
 
+  const scoringTabs: {
+    key: string;
+    tab: JSX.Element;
+    visible: boolean;
+    rules?: JSX.Element;
+  }[] = useMemo(() => {
+    return [
+      {
+        key: "Ladder",
+        tab: <LadderTab />,
+        visible: true,
+      },
+      {
+        key: "For You",
+        tab: <ForYouTab />,
+        visible: !!eventStatus?.team_id,
+      },
+      {
+        key: "Uniques",
+        tab: <UniqueTab />,
+        rules: <UniqueTabRules />,
+        visible: true,
+      },
+      {
+        key: "Races",
+        tab: <SubmissionTab categoryName="Races" />,
+        rules: <RaceTabRules />,
+        visible: true,
+      },
+      {
+        key: "Bounties",
+        tab: <SubmissionTab categoryName="Bounties" />,
+        rules: <BountyTabRules />,
+        visible: true,
+      },
+      {
+        key: "Collections",
+        tab: <CollectionTab />,
+        rules: <CollectionTabRules />,
+        visible: true,
+      },
+      {
+        key: "Dailies",
+        tab: <DailyTab />,
+        rules: <DailyTabRules />,
+        visible: true,
+      },
+      {
+        key: "Heist",
+        tab: <HeistTab />,
+        rules: <HeistTabRules />,
+        visible: gameVersion === GameVersion.poe1,
+      },
+      {
+        key: "Gems",
+        tab: <GemTab />,
+        rules: <GemTabRules />,
+        visible: gameVersion === GameVersion.poe1,
+      },
+      {
+        key: "Delve",
+        tab: <DelveTab />,
+        rules: <DelveTabRules />,
+        visible: gameVersion === GameVersion.poe1,
+      },
+    ];
+  }, [gameVersion, eventStatus]);
+
   if (!currentEvent) {
     return <div>Event not found</div>;
   }
@@ -106,9 +115,7 @@ const ScoringPage = ({ tabKey }: ScoringPageProps) => {
       <div className="flex items-center justify-between bg-base-200 mb-4 w-full">
         <ul className="menu menu-horizontal gap-0 md:gap-2">
           {scoringTabs
-            .filter((tab) =>
-              tab.gameVersions.includes(currentEvent.game_version)
-            )
+            .filter((tab) => tab.visible)
             .map((tab) => (
               <li key={tab.key}>
                 <a

@@ -1,8 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { GlobalStateContext } from "../../utils/context-provider";
 import { sortUsers } from "../../utils/usersort";
 import { ExpectedPlayTime, Permission, Signup } from "../../client";
 import { signupApi, teamApi } from "../../client/client";
+import Table from "../../components/table";
+import { ColumnDef } from "@tanstack/react-table";
 
 type TeamRow = {
   key: number;
@@ -28,14 +30,7 @@ const UserSortPage = () => {
     if (!currentEvent) {
       return;
     }
-    signupApi.getEventSignups(currentEvent.id).then((data) => {
-      const signups = Object.entries(data)
-        .map(([key, value]) =>
-          value.map((value) => {
-            return { ...value, team_id: parseInt(key) };
-          })
-        )
-        .flat();
+    signupApi.getEventSignups(currentEvent.id).then((signups) => {
       setSignups(signups);
       if (!eventStatus) {
         return;
@@ -55,6 +50,89 @@ const UserSortPage = () => {
   useEffect(() => setSuggestions(signups), [signups]);
 
   useEffect(updateSignups, [currentEvent]);
+  const sortColumns = useMemo(() => {
+    const columns: ColumnDef<Signup, any>[] = [
+      {
+        header: "Name",
+        accessorKey: "user.display_name",
+        size: 200,
+      },
+      {
+        header: "PoE Name",
+        accessorKey: "user.account_name",
+        size: 200,
+      },
+      {
+        header: "Expected Playtime",
+        accessorKey: "expected_playtime",
+        size: 250,
+      },
+      {
+        header: "Lead",
+        accessorKey: "team_lead",
+        cell: ({ row }) => (
+          <input
+            className="checkbox checkbox-primary"
+            type="checkbox"
+            defaultChecked={row.original.team_lead}
+            onChange={(e) => {
+              setSuggestions(
+                suggestions.map((signup) =>
+                  signup.user.id === row.original.user.id
+                    ? { ...signup, team_lead: e.target.checked }
+                    : signup
+                )
+              );
+              teamApi
+                .addUsersToTeams(currentEvent?.id || 0, [
+                  {
+                    user_id: row.original.user.id,
+                    team_id: row.original.team_id,
+                    is_team_lead: e.target.checked,
+                  },
+                ])
+                .then(updateSignups);
+            }}
+          />
+        ),
+        size: 200,
+      },
+      {
+        header: "Assign Team",
+        size: 600,
+        cell: ({ row }) => {
+          return currentEvent?.teams.map((team) => (
+            <button
+              key={team.id + "-" + row.original.user.id}
+              className={
+                row.original.team_id !== team.id
+                  ? "btn btn-dash"
+                  : "btn btn-primary"
+              }
+              style={{ marginRight: "5px" }}
+              onClick={() => {
+                setSuggestions(
+                  suggestions.map((signup) =>
+                    signup.user.id === row.original.user.id
+                      ? {
+                          ...signup,
+                          team_id: team.id,
+                          team_lead: row.original.team_lead,
+                        }
+                      : signup
+                  )
+                );
+              }}
+            >
+              {team.name.slice()}
+            </button>
+          ));
+        },
+      },
+    ];
+    return columns;
+  }, [currentEvent, suggestions]);
+
   if (!user || !user.permissions.includes(Permission.admin) || !currentEvent) {
     return <div>You do not have permission to view this page</div>;
   }
@@ -170,7 +248,11 @@ const UserSortPage = () => {
               .addUsersToTeams(
                 currentEvent.id,
                 suggestions.map((s) => {
-                  return { user_id: s.user.id, team_id: s.team_id || 0 };
+                  return {
+                    user_id: s.user.id,
+                    team_id: s.team_id || 0,
+                    is_team_lead: s.team_lead,
+                  };
                 })
               )
               .then(updateSignups)
@@ -179,53 +261,14 @@ const UserSortPage = () => {
           Submit Assignments
         </button>
       </div>
-      <table className="table table-md">
-        <thead className="bg-base-200">
-          <tr>
-            <th>Name</th>
-            <th>PoE Name</th>
-            <th>Expected Playtime</th>
-            <th>Assign Team</th>
-          </tr>
-        </thead>
-        <tbody className="bg-base-300">
-          {suggestions
-            .filter((s) =>
-              s.user.display_name.toLowerCase().includes(nameFilter)
-            )
-            .map((s, index) => (
-              <tr key={index}>
-                <td>{s.user.display_name}</td>
-                <td>{s.user.account_name}</td>
-                <td>{ExpectedPlayTime[s.expected_playtime]}</td>
-                <td>
-                  {currentEvent.teams.map((team) => (
-                    <button
-                      key={team.id + "-" + s.user.id}
-                      className={
-                        s.team_id !== team.id
-                          ? "btn btn-dash"
-                          : "btn btn-primary"
-                      }
-                      style={{ marginRight: "5px" }}
-                      onClick={() => {
-                        setSuggestions(
-                          suggestions.map((signup) =>
-                            signup.user.id === s.user.id
-                              ? { ...signup, team_id: team.id }
-                              : signup
-                          )
-                        );
-                      }}
-                    >
-                      {team.name.slice()}
-                    </button>
-                  ))}
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+      <Table
+        data={suggestions.filter(
+          (signup) =>
+            signup.user.display_name.toLowerCase().includes(nameFilter) ||
+            signup.user.account_name?.toLowerCase().includes(nameFilter)
+        )}
+        columns={sortColumns}
+      />
     </div>
   );
 };

@@ -68,7 +68,7 @@ function Table<T>({
   return (
     <div ref={tableContainerRef} className={"overflow-auto " + className}>
       <table className="table table-md">
-        <thead className="bg-base-300 sticky top-0 z-1000 font-bold text-lg">
+        <thead className="bg-base-300 sticky top-0 z-2 font-bold text-lg">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr
               key={headerGroup.id}

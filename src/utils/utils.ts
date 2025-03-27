@@ -170,7 +170,7 @@ export function getPotentialPoints(category: ScoreCategory) {
   return points;
 }
 
-function getPotentialPointsForCategory(category: ScoreCategory) {
+export function getPotentialPointsForCategory(category: ScoreCategory) {
   const points: { [teamId: number]: number } = {};
   for (const [teamId, teamScore] of Object.entries(category.team_score)) {
     if (teamScore.points != 0) {
@@ -221,7 +221,7 @@ function getPoints(numbers: number[], index: number): number {
   return numbers[numbers.length - 1];
 }
 
-function getPotentialPointsForObjective(objective: ScoreObjective) {
+export function getPotentialPointsForObjective(objective: ScoreObjective) {
   const points: { [teamId: number]: number } = {};
   for (const [teamId, teamScore] of Object.entries(objective.team_score)) {
     if (teamScore.points > 0) {

@@ -42,3 +42,11 @@ export function getRootCategoryNames(gameVersion: "poe1" | "poe2"): string[] {
   }
   return ["Uniques", "Races", "Bounties", "Collections", "Dailies"];
 }
+
+export function flattenCategories(category: ScoreCategory): ScoreCategory[] {
+  let categories = [category];
+  for (const sub_category of category.sub_categories) {
+    categories = categories.concat(flattenCategories(sub_category));
+  }
+  return categories;
+}
