@@ -70,10 +70,7 @@ function Table<T>({
       <table className="table table-md">
         <thead className="bg-base-300 sticky top-0 z-2 font-bold text-lg">
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr
-              key={headerGroup.id}
-              className="flex w-full bg-base-200 text-contrast"
-            >
+            <tr key={headerGroup.id} className="flex w-full bg-base-200">
               {headerGroup.headers.map((header) => {
                 return (
                   <th

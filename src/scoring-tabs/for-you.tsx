@@ -72,7 +72,7 @@ export function ForYouTab() {
     );
     return (
       <div className="card bg-base-300" key={cat.id}>
-        <div className="card-body p-2">
+        <div className="card-body">
           <div tabIndex={0} className="collapse bg-base-200 items-start">
             <div className="card-title collapse-title flex justify-between text-lg pe-px-4 px-4">
               <div>{cat.name}</div>{" "}
@@ -139,7 +139,7 @@ export function ForYouTab() {
         </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-1 ">
           <div
-            className={`card bg-base-300  border-2 ${
+            className={`card bg-base-300 border-2 ${
               userPOs.level >= 80 ? "border-success" : "border-error"
             }`}
           >
@@ -160,7 +160,7 @@ export function ForYouTab() {
             ></progress>
           </div>
           <div
-            className={`card bg-base-300  border-2 ${
+            className={`card bg-base-300 border-2 ${
               userPOs.ascencion_points >= 8 ? "border-success" : "border-error"
             }`}
           >
@@ -187,13 +187,13 @@ export function ForYouTab() {
             ></progress>
           </div>
           <div
-            className={`card col-span-2 border-2 ${
+            className={`card col-span-2 bg-base-300 rounded-box border-2 ${
               userPOs.atlas_passives >= 40 || userPOs.level >= 90
                 ? "border-success"
                 : "border-error"
             }`}
           >
-            <div className="card-body bg-base-300 rounded-box">
+            <div className="card-body ">
               <div className="flex flex-row items-center gap-2">
                 <div
                   className={`card bg-base-200  border-2 ${
