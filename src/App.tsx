@@ -27,6 +27,7 @@ import {
   BookOpenIcon,
   ChartBarIcon,
   Cog6ToothIcon,
+  WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
 import { TwitchFilled } from "./icons/twitch";
 import { YoutubeFilled } from "./icons/youtube";
@@ -41,7 +42,7 @@ type MenuItem = {
   key: string;
   icon?: JSX.Element;
   extra?: "left" | "right";
-  rolerequired?: Permission[];
+  visible?: boolean;
   children?: MenuItem[];
   url?: string;
   external?: boolean;
@@ -121,52 +122,67 @@ function App() {
     });
   }, []);
 
-  const menu: MenuItem[] = [
-    {
-      label: "Admin",
-      icon: <Cog6ToothIcon className="h-6 w-6" />,
-      key: "admin",
-      rolerequired: [Permission.admin],
-      children: [
-        { label: "Events", url: "/events", key: "events" },
-        { label: "Manage users", url: "/users", key: "users" },
-        {
-          label: "Sort users",
-          url: `/events/${currentEvent?.id}/users/sort`,
-          key: "sort-users",
-        },
-        {
-          label: "Monitoring",
-          url: "/monitoring",
-          key: "monitoring",
-          external: true,
-        },
-        {
-          label: "Recurring Jobs",
-          url: "/recurring-jobs",
-          key: "recurring-jobs",
-        },
-      ],
-    },
-    {
-      label: "Scoring",
-      icon: <ChartBarIcon className="h-6 w-6" />,
-      url: "/scores",
-      key: "scores",
-    },
-    {
-      label: "Streams",
-      icon: <TwitchFilled className="h-6 w-6" />,
-      url: "/streams",
-      key: "streams",
-    },
-    {
-      label: "Rules",
-      icon: <BookOpenIcon className="h-6 w-6" />,
-      url: "/rules",
-      key: "rules",
-    },
-  ];
+  const menu: MenuItem[] = useMemo(() => {
+    const menu: MenuItem[] = [
+      {
+        label: "Admin",
+        icon: <Cog6ToothIcon className="h-6 w-6" />,
+        key: "admin",
+        visible: user?.permissions?.includes(Permission.admin),
+        children: [
+          { label: "Events", url: "/events", key: "events" },
+          { label: "Manage users", url: "/users", key: "users" },
+          {
+            label: "Sort users",
+            url: `/events/${currentEvent?.id}/users/sort`,
+            key: "sort-users",
+          },
+          {
+            label: "Monitoring",
+            url: "/monitoring",
+            key: "monitoring",
+            external: true,
+          },
+          {
+            label: "Recurring Jobs",
+            url: "/recurring-jobs",
+            key: "recurring-jobs",
+          },
+        ],
+      },
+      {
+        label: "TeamAdmin",
+        icon: <WrenchScrewdriverIcon className="h-6 w-6" />,
+        key: "teamleads",
+        visible: user?.permissions?.includes(Permission.admin),
+        children: [
+          { label: "Focus", url: "/team-suggestions", key: "team-suggestions" },
+        ],
+      },
+      {
+        label: "Scoring",
+        icon: <ChartBarIcon className="h-6 w-6" />,
+        url: "/scores",
+        key: "scores",
+        visible: true,
+      },
+      {
+        label: "Streams",
+        icon: <TwitchFilled className="h-6 w-6" />,
+        url: "/streams",
+        key: "streams",
+        visible: true,
+      },
+      {
+        label: "Rules",
+        icon: <BookOpenIcon className="h-6 w-6" />,
+        url: "/rules",
+        key: "rules",
+        visible: true,
+      },
+    ];
+    return menu.filter((item) => item.visible);
+  }, [currentEvent, eventStatus]);
   useEffect(() => {
     setCurrentNav(router.state.location.pathname.split("/")[1]);
   }, []);
@@ -272,88 +288,78 @@ function App() {
                 </button>
               </a>{" "}
               <div className="flex flex-1 justify-left gap-0">
-                {menu
-                  .filter((item) =>
-                    item.rolerequired
-                      ? item.rolerequired.some((role) =>
-                          user?.permissions?.includes(role)
-                        )
-                      : true
-                  )
-                  .map((item) => (
-                    <li
-                      className={`m-0 sm:mx-2 ${
-                        currentNav === item.key
-                          ? "bg-primary text-primary-content rounded-field hover:bg-primary"
-                          : ""
-                      }`}
-                      onClick={(e) => {
-                        if (!e.metaKey && !e.ctrlKey && e.button === 0) {
-                          e.preventDefault();
-                          setCurrentNav(item.key);
-                          route(item);
-                        }
-                      }}
-                      key={item.key}
-                    >
-                      <a href={item.url} className="h-full">
-                        {item.children ? (
-                          <div className="dropdown h-full">
-                            <div
-                              tabIndex={0}
-                              role="button"
-                              className="btn btn-ghost hover:btn-primary text-xl h-full rounded-field flex items-center"
-                            >
-                              {item.icon}
-                              <div className="hidden lg:block">
-                                {item.label}
-                              </div>
-                            </div>
-                            <ul
-                              tabIndex={0}
-                              className="dropdown-content menu bg-base-300  z-1 w-52 p-2 shadow-sm text-base-content text-lg rounded-field"
-                              onClick={() => {
-                                if (
-                                  document.activeElement instanceof HTMLElement
-                                ) {
-                                  document.activeElement?.blur();
-                                }
-                              }}
-                            >
-                              {item.children.map((child) => (
-                                <li
-                                  className={`${
-                                    currentNav === child.key
-                                      ? "bg-primary text-primary-content"
-                                      : ""
-                                  }`}
-                                  key={child.key}
-                                >
-                                  <div
-                                    onClick={() => {
-                                      setCurrentNav(item.key);
-                                      route(child);
-                                    }}
-                                  >
-                                    {child.label}
-                                  </div>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        ) : (
+                {menu.map((item) => (
+                  <li
+                    className={`m-0 sm:mx-2 ${
+                      currentNav === item.key
+                        ? "bg-primary text-primary-content rounded-field hover:bg-primary"
+                        : ""
+                    }`}
+                    onClick={(e) => {
+                      if (!e.metaKey && !e.ctrlKey && e.button === 0) {
+                        e.preventDefault();
+                        setCurrentNav(item.key);
+                        route(item);
+                      }
+                    }}
+                    key={item.key}
+                  >
+                    <a href={item.url} className="h-full">
+                      {item.children ? (
+                        <div className="dropdown h-full">
                           <div
                             tabIndex={0}
                             role="button"
-                            className=" text-xl flex items-center h-15 p-4 gap-2"
+                            className="btn btn-ghost hover:btn-primary text-xl h-full rounded-field flex items-center"
                           >
                             {item.icon}
                             <div className="hidden lg:block">{item.label}</div>
                           </div>
-                        )}
-                      </a>
-                    </li>
-                  ))}
+                          <ul
+                            tabIndex={0}
+                            className="dropdown-content menu bg-base-300 border-2 border-base-100 z-1 w-52 p-2 shadow-sm text-base-content text-lg rounded-field"
+                            onClick={() => {
+                              if (
+                                document.activeElement instanceof HTMLElement
+                              ) {
+                                document.activeElement?.blur();
+                              }
+                            }}
+                          >
+                            {item.children.map((child) => (
+                              <li
+                                className={`${
+                                  currentNav === child.key
+                                    ? "bg-primary text-primary-content"
+                                    : ""
+                                }`}
+                                key={child.key}
+                              >
+                                <div
+                                  onClick={() => {
+                                    setCurrentNav(item.key);
+                                    route(child);
+                                  }}
+                                >
+                                  {child.label}
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ) : (
+                        <div
+                          tabIndex={0}
+                          role="button"
+                          className=" text-xl flex items-center h-15 p-4 gap-2"
+                        >
+                          {item.icon}
+                          <div className="hidden lg:block">{item.label}</div>
+                        </div>
+                      )}
+                    </a>
+                  </li>
+                ))}
               </div>
               {isMobile ? null : (
                 <>

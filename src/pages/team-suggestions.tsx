@@ -248,7 +248,7 @@ export function TeamSuggestionsPage() {
 
   return (
     <div>
-      s
+      <div className="divider divider-primary">Categories</div>
       <Table
         columns={categoryColumns}
         data={relevantCategories}
