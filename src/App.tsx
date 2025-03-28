@@ -286,7 +286,7 @@ function App() {
                   <img className="h-10" src="/assets/app-logos/bpl-logo.png" />
                   <div className="text-4xl font-bold hidden sm:block">BPL</div>
                 </button>
-              </a>{" "}
+              </a>
               <div className="flex flex-1 justify-left gap-0">
                 {menu.map((item) => (
                   <li

@@ -1,11 +1,12 @@
 import { ScoreCategory, ScoreObjective } from "../types/score";
 import { getImageLocation } from "../types/scoring-objective";
 import { GlobalStateContext } from "../utils/context-provider";
-import { JSX, useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { ObjectiveIcon } from "./objective-icon";
 import { GameVersion, Team } from "../client";
 import { CellContext, ColumnDef } from "@tanstack/react-table";
 import Table from "./table";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
 
 export type ItemTableProps = {
   category: ScoreCategory;
@@ -110,7 +111,10 @@ export function ItemTable({ category }: ItemTableProps) {
     }
     return (
       <div className="relative flex items-center justify-center">
-        <img src={img_location} className="max-w-20 max-h-20" />
+        <img
+          src={img_location}
+          className="max-w-20 max-h-20 sm:max-w-16 sm:max-h-16"
+        />
         <div
           className="absolute left-0 right-0 text-center text-lg"
           style={{
@@ -148,7 +152,7 @@ export function ItemTable({ category }: ItemTableProps) {
   const columns = useMemo<ColumnDef<ExtendedScoreObjective, any>[]>(() => {
     const teams = currentEvent.teams.sort(teamSort);
     let columns: ColumnDef<ExtendedScoreObjective, any>[] = [];
-    if (windowWidth < 768) {
+    if (windowWidth < 1200) {
       columns = [
         {
           accessorKey: "name",
@@ -157,16 +161,15 @@ export function ItemTable({ category }: ItemTableProps) {
           enableSorting: false,
           cell: (info) => (
             <div className="w-full">
-              {" "}
               {imageOverlayedWithText(info.row.original, gameVersion)}
             </div>
           ),
         },
         {
           header: "Completion",
-          size: 250,
+          size: windowWidth - 200,
           cell: (info) => (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 gap-2">
               {teams.map((team) => (
                 <div
                   key={`badge-${category.id}-${team.id}-${info.row.original.id}`}
@@ -217,7 +220,6 @@ export function ItemTable({ category }: ItemTableProps) {
             <div>
               <div>{team.name || "Team"}</div>
               <div className="text-sm text-info">
-                {" "}
                 {category.objectives.filter(
                   (o) => o.team_score[team.id]?.finished
                 )?.length || 0}{" "}
@@ -235,20 +237,27 @@ export function ItemTable({ category }: ItemTableProps) {
               users?.find(
                 (u) => info.row.original.team_score[team.id]?.user_id === u.id
               );
-            let entry: JSX.Element | string = "❌";
             if (user) {
-              entry = (
+              return (
                 <div
-                  className="tooltip cursor-help tooltip-bottom z-1000"
+                  className="tooltip cursor-help tooltip-bottom z-1000 flex justify-center w-full"
                   data-tip={`scored by ${user.display_name}`}
                 >
-                  ✅
+                  <CheckCircleIcon className="h-6 w-6 text-success" />
                 </div>
               );
             } else if (finished) {
-              entry = "✅";
+              return (
+                <div className="flex justify-center w-full">
+                  <CheckCircleIcon className="h-6 w-6 text-success" />{" "}
+                </div>
+              );
             }
-            return <div className="text-center text-2xl w-full">{entry}</div>;
+            return (
+              <div className="flex justify-center w-full">
+                <XCircleIcon className="h-6 w-6 text-error" />{" "}
+              </div>
+            );
           },
           meta: {
             filterVariant: "boolean",

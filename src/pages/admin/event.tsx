@@ -4,6 +4,7 @@ import { router } from "../../router";
 import { GlobalStateContext } from "../../utils/context-provider";
 import { EventCreate, Event, Permission } from "../../client/api";
 import { eventApi, scoringApi } from "../../client/client";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
 
 const columns: CrudColumn<Event>[] = [
   {
@@ -84,7 +85,12 @@ const columns: CrudColumn<Event>[] = [
     key: "is_current",
     type: "checkbox",
     editable: true,
-    render: (_, event) => (event.is_current ? "✅" : "❌"),
+    render: (_, event) =>
+      event.is_current ? (
+        <CheckCircleIcon className="h-6 w-6 text-success" />
+      ) : (
+        <XCircleIcon className="h-6 w-6 text-error" />
+      ),
   },
   {
     title: "Public",
@@ -92,7 +98,12 @@ const columns: CrudColumn<Event>[] = [
     key: "is_public",
     type: "checkbox",
     editable: true,
-    render: (_, event) => (event.is_public ? "✅" : "❌"),
+    render: (_, event) =>
+      event.is_public ? (
+        <CheckCircleIcon className="h-6 w-6 text-success" />
+      ) : (
+        <XCircleIcon className="h-6 w-6 text-error" />
+      ),
   },
   {
     title: "Locked",
@@ -100,7 +111,12 @@ const columns: CrudColumn<Event>[] = [
     key: "is_locked",
     type: "checkbox",
     editable: true,
-    render: (_, event) => (event.is_locked ? "✅" : "❌"),
+    render: (_, event) =>
+      event.is_locked ? (
+        <CheckCircleIcon className="h-6 w-6 text-success" />
+      ) : (
+        <XCircleIcon className="h-6 w-6 text-error" />
+      ),
   },
 ];
 

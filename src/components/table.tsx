@@ -15,6 +15,7 @@ import {
 } from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { TableSortIcon } from "../icons/table-sort";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
 
 function Table<T>({
   data,
@@ -94,7 +95,7 @@ function Table<T>({
                             sort={sorting.find((sort) => sort.id === header.id)}
                           ></TableSortIcon>
                         </div>
-                      ) : null}{" "}
+                      ) : null}
                       <div
                         className="flex items-center flex-row"
                         onClick={header.column.getToggleSortingHandler()}
@@ -102,7 +103,7 @@ function Table<T>({
                         {flexRender(
                           header.column.columnDef.header,
                           header.getContext()
-                        )}{" "}
+                        )}
                         {header.column.getCanFilter() ? (
                           <div onClick={(e) => e.stopPropagation()}>
                             <Filter column={header.column} />
@@ -209,8 +210,8 @@ function Filter({ column }: { column: Column<any, unknown> }) {
 
   if (filterVariant === "boolean") {
     return (
-      <button
-        className="btn w-8 h-8 bg-base-300 ml-2 select-none text-center align-middle border-1 border-primary/50"
+      <div
+        className="w-8 h-8 bg-base-300 ml-2 border-1 border-primary rounded-full cursor-pointer select-none"
         onClick={(e) => {
           const currentValue = column.getFilterValue();
           if (currentValue === undefined) {
@@ -225,12 +226,13 @@ function Filter({ column }: { column: Column<any, unknown> }) {
           e.stopPropagation();
         }}
       >
-        {column.getFilterValue() === undefined
-          ? undefined
-          : column.getFilterValue() === false
-          ? "❌"
-          : "✅"}
-      </button>
+        {column.getFilterValue() ===
+        undefined ? undefined : column.getFilterValue() === false ? (
+          <XCircleIcon className="h-full w-full text-error" />
+        ) : (
+          <CheckCircleIcon className="h-full w-full text-success" />
+        )}
+      </div>
     );
   }
 }

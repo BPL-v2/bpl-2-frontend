@@ -75,7 +75,7 @@ export function ForYouTab() {
         <div className="card-body">
           <div tabIndex={0} className="collapse bg-base-200 items-start">
             <div className="card-title collapse-title flex justify-between text-lg pe-px-4 px-4">
-              <div>{cat.name}</div>{" "}
+              <div>{cat.name}</div>
               <div className="text-primary whitespace-nowrap">
                 {totalObjectives - unfinishedObjectives.length} /{" "}
                 {totalObjectives}
@@ -107,7 +107,7 @@ export function ForYouTab() {
       <div className="card bg-base-300" key={obj.id}>
         <div className="card-body">
           <div className="card-title flex justify-between text-lg">
-            <div>{obj.name}</div>{" "}
+            <div>{obj.name}</div>
             <div className="text-primary whitespace-nowrap">
               {obj.team_score[teamId]?.number} / {obj.required_number}
             </div>
@@ -227,7 +227,7 @@ export function ForYouTab() {
                     <div className="card-title text-3xl">
                       {"Gain 40 Atlas Passives"}
                     </div>
-                  </div>{" "}
+                  </div>
                   <progress
                     className={`progress w-full rounded-b-box rounded-t-none  ${
                       userPOs.atlas_passives >= 40
@@ -254,7 +254,7 @@ export function ForYouTab() {
             ></progress>
           </div>
         </div>
-      </div>{" "}
+      </div>
       <div>
         <h2>Team lead suggestions</h2>
         <p>

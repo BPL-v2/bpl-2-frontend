@@ -22,8 +22,8 @@ export function LadderPortrait({ entry, teamName }: Props) {
         <div className="flex items-center gap-1">
           lvl
           <ExperienceBar experience={entry.experience} level={entry.level} />
-        </div>{" "}
-      </div>{" "}
+        </div>
+      </div>
     </div>
   );
 }
