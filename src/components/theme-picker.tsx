@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function ThemePicker() {
   const [theme, setTheme] = useState<"light" | "dark">(
-    document.cookie.includes("theme=light") ? "light" : "dark"
+    JSON.parse(localStorage.getItem("theme") || '"dark"')
   );
+  useEffect(() => {
+    localStorage.setItem("theme", JSON.stringify(theme));
+    document.querySelector("html")?.setAttribute("data-theme", theme);
+  }, [theme]);
 
   return (
     <label className="swap swap-rotate">
@@ -12,10 +16,7 @@ export function ThemePicker() {
         className="theme-controller"
         defaultChecked={theme === "light"}
         value={theme}
-        onChange={(e) => {
-          setTheme(e.target.checked ? "light" : "dark");
-          document.cookie = `theme=${e.target.checked ? "light" : "dark"}`;
-        }}
+        onChange={(e) => setTheme(e.target.checked ? "light" : "dark")}
       />
       <svg
         className="swap-on h-10 w-10 fill-current"

@@ -112,7 +112,7 @@ const ScoringPage = ({ tabKey }: ScoringPageProps) => {
   const tab = scoringTabs.find((tab) => tab.key === selectedTabKey);
   return (
     <>
-      <div className="flex items-center justify-between bg-base-200 mb-4 w-full">
+      <div className="flex items-center justify-between bg-base-200 mb-4 rounded-b-box">
         <ul className="menu menu-horizontal gap-0 md:gap-2">
           {scoringTabs
             .filter((tab) => tab.visible)
@@ -120,7 +120,7 @@ const ScoringPage = ({ tabKey }: ScoringPageProps) => {
               <li key={tab.key}>
                 <a
                   href={`/scores?tab=${tab.key}`}
-                  className={`px-2 md:px-4 ${
+                  className={`px-2 md:px-4 hover:bg-primary hover:text-primary-content ${
                     selectedTabKey === tab.key
                       ? "bg-primary text-primary-content"
                       : ""
@@ -138,7 +138,7 @@ const ScoringPage = ({ tabKey }: ScoringPageProps) => {
             ))}
         </ul>
         <button
-          className={`btn btn-secondary ${showRules ? "" : "btn-outline"}`}
+          className={`btn btn-secondary w-36 ${showRules ? "" : "btn-outline"}`}
           onClick={() => {
             setShowRules(!showRules);
           }}

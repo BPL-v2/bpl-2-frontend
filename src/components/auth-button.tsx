@@ -31,19 +31,19 @@ const AuthButton = () => {
 
   if (user) {
     return (
-      <div className="dropdown dropdown-bottom dropdown-end h-full">
-        <button
+      <div className="dropdown">
+        <div
           tabIndex={0}
-          className={`btn bg-base-300 h-full hover:text-primary hover:border-primary rounded-none`}
+          className={`btn btn-lg py-8 border-0 hover:text-primary-content hover:bg-primary`}
         >
           <UserIcon className="h-6 w-6" />
           <div className="hidden sm:block">
             {user ? user.display_name : "Login"}
           </div>
-        </button>
+        </div>
         <ul
           tabIndex={0}
-          className="dropdown-content menu bg-base-300 min-w-[100%] z-1 shadow-sm text-base-content"
+          className="dropdown-content menu bg-base-300 border-2 border-base-100 z-1 shadow-2xl text-lg rounded-field"
           onClick={() => {
             if (document.activeElement instanceof HTMLElement) {
               document.activeElement?.blur();
@@ -78,7 +78,7 @@ const AuthButton = () => {
   }
   return (
     <button
-      className={`btn bg-base-300 h-full hover:text-primary hover:border-primary rounded-none`}
+      className={`btn btn-lg py-8 border-0 hover:text-primary-content hover:bg-primary`}
       onClick={() => {
         window.open(import.meta.env.VITE_BACKEND_URL + "/oauth2/discord", "");
       }}

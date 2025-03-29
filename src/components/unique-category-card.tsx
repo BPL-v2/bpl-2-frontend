@@ -36,7 +36,7 @@ export const UniqueCategoryCard = ({
         return acc + subCategory.team_score[teamId].number;
       }, 0)
     : 0;
-  const bgColor = selected ? "bg-highlight" : "bg-base-300 ";
+  const bgColor = selected ? "bg-highlight content-highlight" : "bg-base-300 ";
   const headerColor = selected ? "bg-base-300" : "bg-base-200";
   const ring = selected ? "ring-3 ring-primary" : "";
 
