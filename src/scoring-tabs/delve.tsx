@@ -138,7 +138,6 @@ export function DelveTab() {
               teamName={userToTeam[info.row.original.user_id]?.name}
             />
           ),
-          size: 400,
         },
       ];
     }
