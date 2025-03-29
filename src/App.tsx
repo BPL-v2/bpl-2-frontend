@@ -244,6 +244,14 @@ function App() {
     // );
   }, [updates]);
 
+  useEffect(() => {
+    document
+      .querySelector("html")
+      ?.setAttribute(
+        "data-theme",
+        JSON.parse(localStorage.getItem("theme") || '"dark"')
+      );
+  }, []);
   return (
     <>
       <ContextProvider
@@ -272,53 +280,50 @@ function App() {
       >
         <div className="max-w-[1440px] text-center mx-auto ">
           {notifications}
-          <div className="text-2xl p-0 flex items-center justify-between h-18">
-            <ul className="navbar bg-base-200 w-full  h-full text-xl gap-0 p-0">
-              <a href="/" target="_self" className="h-full">
-                <button
-                  className="btn btn-ghost h-full rounded-none bg-base-200 hover:bg-base-300"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setCurrentNav("/");
-                    router.navigate("/");
-                  }}
-                >
-                  <img className="h-10" src="/assets/app-logos/bpl-logo.png" />
-                  <div className="text-4xl font-bold hidden sm:block">BPL</div>
-                </button>
+          <div className="text-xl p-0 flex items-center ">
+            <ul
+              className={`navbar bg-base-200 ${
+                currentNav === "scores" ? "" : "rounded-b-box"
+              }`}
+            >
+              <a
+                href="/"
+                target="_self"
+                className="btn py-8 hover:bg-primary hover:text-primary-content"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setCurrentNav("/");
+                  router.navigate("/");
+                }}
+              >
+                <img className="h-10" src="/assets/app-logos/bpl-logo.png" />
+                <div className="text-4xl font-bold hidden sm:block">BPL</div>
               </a>
               <div className="flex flex-1 justify-left gap-0">
                 {menu.map((item) => (
                   <li
-                    className={`m-0 sm:mx-2 ${
+                    className={`m-0 sm:mx-2  rounded-field hover:bg-primary hover:text-primary-content ${
                       currentNav === item.key
-                        ? "bg-primary text-primary-content rounded-field hover:bg-primary"
+                        ? "bg-primary text-primary-content "
                         : ""
                     }`}
-                    onClick={(e) => {
-                      if (!e.metaKey && !e.ctrlKey && e.button === 0) {
-                        e.preventDefault();
-                        setCurrentNav(item.key);
-                        route(item);
-                      }
-                    }}
                     key={item.key}
                   >
-                    <a href={item.url} className="h-full">
+                    <a href={item.url} className="font-semibold">
                       {item.children ? (
-                        <div className="dropdown h-full">
-                          <div
-                            tabIndex={0}
-                            role="button"
-                            className="btn btn-ghost hover:btn-primary text-xl h-full rounded-field flex items-center"
-                          >
+                        <div
+                          tabIndex={0}
+                          className="dropdown cursor-pointer select-none"
+                          role="button"
+                        >
+                          <div className="flex flex-row gap-2 m-4">
                             {item.icon}
                             <div className="hidden lg:block">{item.label}</div>
-                          </div>
+                          </div>{" "}
                           <ul
                             tabIndex={0}
                             className="dropdown-content menu bg-base-300 border-2 border-base-100 z-1 w-52 p-2 shadow-sm text-base-content text-lg rounded-field"
-                            onClick={() => {
+                            onClick={(e) => {
                               if (
                                 document.activeElement instanceof HTMLElement
                               ) {
@@ -349,6 +354,13 @@ function App() {
                         </div>
                       ) : (
                         <div
+                          onClick={(e) => {
+                            if (!e.metaKey && !e.ctrlKey && e.button === 0) {
+                              e.preventDefault();
+                              setCurrentNav(item.key);
+                              route(item);
+                            }
+                          }}
                           tabIndex={0}
                           role="button"
                           className=" text-xl flex items-center h-15 p-4 gap-2"
@@ -363,11 +375,10 @@ function App() {
               </div>
               {isMobile ? null : (
                 <>
-                  <ThemePicker />
                   <EventPicker />
                 </>
               )}
-              <div tabIndex={0} className="h-full flex items-center">
+              <div tabIndex={0} className=" flex items-center">
                 {isMobile ? null : <ApplicationButton />}
                 <AuthButton />
               </div>

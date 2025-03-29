@@ -4,6 +4,7 @@ import { OauthCard } from "../components/oauth-card";
 import { userApi } from "../client/client";
 import { TwitchFilled } from "../icons/twitch";
 import { DiscordFilled } from "../icons/discord";
+import { ThemePicker } from "../components/theme-picker";
 
 export function ProfilePage() {
   const { user, setUser } = useContext(GlobalStateContext);
@@ -16,12 +17,15 @@ export function ProfilePage() {
   //     setSelectedTab(tab);
   //   }
   // }, [searchParams]);
+
   if (!user) {
     return <></>;
   }
 
   return (
     <div>
+      <ThemePicker />
+
       <div className="card bg-base-200 mt-4">
         <div className="card-body">
           <h2 className="card-title text-2xl font-bold">Profile</h2>

@@ -28,26 +28,22 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
     return null;
   }
   if (userTeam) {
-    return (
-      <button
-        className={`btn bg-base-100 h-full hover:text-primary hover:border-primary rounded-none`}
-      >
-        {userTeam.name}
-      </button>
-    );
+    return <button className={`text-lg p-4 `}>{userTeam.name}</button>;
   }
   if (eventStatus?.application_status === ApplicationStatus.applied) {
     return (
-      <div className="dropdown dropdown-bottom dropdown-end h-full">
+      <div className="dropdown">
         <button
-          className={`btn bg-base-100 h-full hover:text-primary hover:border-primary rounded-none`}
+          className={`btn btn-lg py-8 border-0 text-base-content hover:text-primary-content hover:bg-primary`}
         >
           Application Pending
         </button>
 
         <ul
           tabIndex={0}
-          className="dropdown-content menu bg-base-300 min-w-[100%] z-1 shadow-sm text-base-content"
+          // className={`btn btn-lg py-8 border-0 text-base-content hover:text-primary-content hover:bg-primary`}
+
+          className="dropdown-content menu bg-base-300 border-2 border-base-100 z-1 shadow-2xl text-lg rounded-field"
           onClick={() => {
             if (document.activeElement instanceof HTMLElement) {
               document.activeElement?.blur();
@@ -103,7 +99,7 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
                 });
             }}
           >
-            <fieldset className="fieldset bg-base-300 p-4 rounded-box">
+            <fieldset className="fieldset bg-base-300 p-4 rounded-box gap-4">
               <label className="fieldset-label">
                 How many hours will you be able to play per day?
               </label>
@@ -131,7 +127,6 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
                   rules
                 </a>
               </label>
-              <legend className="fieldset-legend">Login options</legend>
             </fieldset>
           </form>
           {user.discord_id ? null : (
@@ -174,7 +169,7 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
           </div>
         </Dialog>
         <button
-          className={`btn bg-base-100 h-full hover:text-primary hover:border-primary rounded-none`}
+          className={`btn btn-lg py-8 border-0 text-base-content hover:text-primary-content hover:bg-primary`}
           onClick={() => {
             setModalOpen(true);
           }}

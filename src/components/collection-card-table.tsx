@@ -61,7 +61,9 @@ export function CollectionCardTable({
               <tr
                 className={
                   "px-4 " +
-                  (teamId === eventStatus?.team_id ? "bg-white/10" : "")
+                  (teamId === eventStatus?.team_id
+                    ? "bg-highlight content-highlight"
+                    : "")
                 }
                 key={teamId}
               >
