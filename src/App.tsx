@@ -34,7 +34,6 @@ import { YoutubeFilled } from "./icons/youtube";
 import { TwitterFilled } from "./icons/twitter";
 import { GithubFilled } from "./icons/github";
 import { DiscordFilled } from "./icons/discord";
-import { ThemePicker } from "./components/theme-picker";
 import { EventPicker } from "./components/event-picker";
 
 type MenuItem = {
