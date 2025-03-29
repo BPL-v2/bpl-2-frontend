@@ -138,7 +138,9 @@ const ScoringPage = ({ tabKey }: ScoringPageProps) => {
             ))}
         </ul>
         <button
-          className={`btn btn-secondary w-36 ${showRules ? "" : "btn-outline"}`}
+          className={`btn w-14 md:w-36 border-1 border-secondary ${
+            showRules ? "bg-secondary text-secondary-content" : "text-secondary"
+          }`}
           onClick={() => {
             setShowRules(!showRules);
           }}
