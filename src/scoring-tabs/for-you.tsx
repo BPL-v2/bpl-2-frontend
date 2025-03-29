@@ -193,10 +193,10 @@ export function ForYouTab() {
                 : "border-error"
             }`}
           >
-            <div className="card-body ">
-              <div className="flex flex-row items-center gap-2">
+            <div className="card-body">
+              <div className="flex flex-col sm:flex-row items-center gap-2">
                 <div
-                  className={`card bg-base-200  border-2 ${
+                  className={`card bg-base-200 w-full border-2 ${
                     userPOs.level >= 90 ? "border-success" : "border-error"
                   }`}
                 >
@@ -213,11 +213,11 @@ export function ForYouTab() {
                     max={90}
                   ></progress>
                 </div>
-                <div className="divider divider-horizontal text-2xl font-semibold">
+                <div className="divider divider-vertical sm:divider-horizontal text-2xl font-semibold">
                   OR
                 </div>
                 <div
-                  className={`card bg-base-200 border-2 ${
+                  className={`card bg-base-200 w-full border-2 ${
                     userPOs.atlas_passives >= 40
                       ? "border-success"
                       : "border-error"
