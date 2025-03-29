@@ -150,10 +150,10 @@ function App() {
         ],
       },
       {
-        label: "TeamAdmin",
+        label: "Team",
         icon: <WrenchScrewdriverIcon className="h-6 w-6" />,
         key: "teamleads",
-        visible: user?.permissions?.includes(Permission.admin),
+        visible: eventStatus?.is_team_lead,
         children: [
           { label: "Focus", url: "/team-suggestions", key: "team-suggestions" },
         ],
