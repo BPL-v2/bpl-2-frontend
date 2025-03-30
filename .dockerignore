@@ -6,4 +6,5 @@ Dockerfile
 icon-generation
 .github
 .env
+.venv
 tsconfig.tsbuildinfo

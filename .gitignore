@@ -22,7 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
+.venv
 .env
 icon-generation/temp
 */__pycache__
