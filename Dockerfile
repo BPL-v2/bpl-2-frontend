@@ -7,7 +7,6 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 
 # Copy package.json and package-lock.json to install dependencies
-COPY deno.lock ./
 COPY package*.json ./
 
 # Install dependencies
