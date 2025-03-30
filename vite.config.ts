@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { config } from "dotenv";
 import tailwindcss from "@tailwindcss/vite";
-import { splitVendorChunkPlugin } from "vite";
 
 // Load environment variables from .env file
 config();
@@ -10,7 +9,7 @@ config();
 // https://vite.dev/config/
 export default defineConfig({
   // @ts-ignore
-  plugins: [react(), tailwindcss(), splitVendorChunkPlugin()],
+  plugins: [react(), tailwindcss()],
   preview: {
     port: 3001,
   },
@@ -33,6 +32,9 @@ export default defineConfig({
           }
           if (id.includes("heroicons")) {
             return "@heroicons";
+          }
+          if (id.includes("node_modules")) {
+            return "@vendor";
           }
         },
       },
