@@ -7,6 +7,7 @@ import {
   UserIcon,
   ArrowLeftStartOnRectangleIcon,
   ArrowRightEndOnRectangleIcon,
+  Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
 
 const AuthButton = () => {
@@ -51,6 +52,13 @@ const AuthButton = () => {
           }}
         >
           <li>
+            <div
+              onClick={() => {
+                router.navigate("/settings");
+              }}
+            >
+              <Cog6ToothIcon className="h-6 w-6" /> Settings
+            </div>
             <div
               onClick={() => {
                 router.navigate("/profile");

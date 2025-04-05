@@ -30,6 +30,8 @@ export type GlobalState = {
   setGameVersion: (c: GameVersion) => void;
   ladder: LadderEntry[];
   setLadder: (c: LadderEntry[]) => void;
+  darkMode: boolean;
+  setDarkMode: (c: boolean) => void;
 };
 
 export const GlobalStateContext = createContext<GlobalState>({
@@ -53,6 +55,8 @@ export const GlobalStateContext = createContext<GlobalState>({
   setGameVersion: () => {},
   ladder: [],
   setLadder: () => {},
+  darkMode: false,
+  setDarkMode: () => {},
 });
 
 export const ContextProvider = GlobalStateContext.Provider;

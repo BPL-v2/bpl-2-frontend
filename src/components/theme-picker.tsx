@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { GlobalStateContext } from "../utils/context-provider";
 
 export function ThemePicker() {
+  const { setDarkMode } = useContext(GlobalStateContext);
   const [theme, setTheme] = useState<"light" | "dark">(
     JSON.parse(localStorage.getItem("theme") || '"dark"')
   );
@@ -16,7 +18,10 @@ export function ThemePicker() {
         className="theme-controller"
         defaultChecked={theme === "light"}
         value={theme}
-        onChange={(e) => setTheme(e.target.checked ? "light" : "dark")}
+        onChange={(e) => {
+          setTheme(e.target.checked ? "light" : "dark");
+          setDarkMode(!e.target.checked);
+        }}
       />
       <svg
         className="swap-on h-10 w-10 fill-current"

@@ -1934,7 +1934,7 @@ export class AtlasApi extends BaseAPI {
 export const CharactersApiFetchParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Get all characters for an event for a user
+         * Get all character data for an event for a user
          * @param {number} event_id Event ID
          * @param {number} user_id User ID
          * @param {*} [options] Override http request option.
@@ -1949,7 +1949,7 @@ export const CharactersApiFetchParamCreator = function (configuration?: Configur
             if (user_id === null || user_id === undefined) {
                 throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling getCharacterEventHistoryForUser.');
             }
-            const localVarPath = `/events/{event_id}/characters/{user_id}`
+            const localVarPath = `/characters/{user_id}/{event_id}`
                 .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
                 .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
@@ -1995,6 +1995,34 @@ export const CharactersApiFetchParamCreator = function (configuration?: Configur
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Fetches all event characters for a user
+         * @param {number} userId User Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserCharacters(userId: number, options: any = {}): FetchArgs {
+            // verify required parameter 'userId' is not null or undefined
+            if (userId === null || userId === undefined) {
+                throw new RequiredError('userId','Required parameter userId was null or undefined when calling getUserCharacters.');
+            }
+            const localVarPath = `/characters/{userId}`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -2005,7 +2033,7 @@ export const CharactersApiFetchParamCreator = function (configuration?: Configur
 export const CharactersApiFp = function(configuration?: Configuration) {
     return {
         /**
-         * Get all characters for an event for a user
+         * Get all character data for an event for a user
          * @param {number} event_id Event ID
          * @param {number} user_id User ID
          * @param {*} [options] Override http request option.
@@ -2041,6 +2069,24 @@ export const CharactersApiFp = function(configuration?: Configuration) {
                 });
             };
         },
+        /**
+         * Fetches all event characters for a user
+         * @param {number} userId User Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserCharacters(userId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Character>> {
+            const localVarFetchArgs = CharactersApiFetchParamCreator(configuration).getUserCharacters(userId, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
     }
 };
 
@@ -2051,7 +2097,7 @@ export const CharactersApiFp = function(configuration?: Configuration) {
 export const CharactersApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
     return {
         /**
-         * Get all characters for an event for a user
+         * Get all character data for an event for a user
          * @param {number} event_id Event ID
          * @param {number} user_id User ID
          * @param {*} [options] Override http request option.
@@ -2069,6 +2115,15 @@ export const CharactersApiFactory = function (configuration?: Configuration, fet
         getCharactersForEvent(event_id: number, options?: any) {
             return CharactersApiFp(configuration).getCharactersForEvent(event_id, options)(fetch, basePath);
         },
+        /**
+         * Fetches all event characters for a user
+         * @param {number} userId User Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserCharacters(userId: number, options?: any) {
+            return CharactersApiFp(configuration).getUserCharacters(userId, options)(fetch, basePath);
+        },
     };
 };
 
@@ -2080,7 +2135,7 @@ export const CharactersApiFactory = function (configuration?: Configuration, fet
  */
 export class CharactersApi extends BaseAPI {
     /**
-     * Get all characters for an event for a user
+     * Get all character data for an event for a user
      * @param {number} event_id Event ID
      * @param {number} user_id User ID
      * @param {*} [options] Override http request option.
@@ -2100,6 +2155,17 @@ export class CharactersApi extends BaseAPI {
      */
     public getCharactersForEvent(event_id: number, options?: any) {
         return CharactersApiFp(this.configuration).getCharactersForEvent(event_id, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Fetches all event characters for a user
+     * @param {number} userId User Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CharactersApi
+     */
+    public getUserCharacters(userId: number, options?: any) {
+        return CharactersApiFp(this.configuration).getUserCharacters(userId, options)(this.fetch, this.basePath);
     }
 
 }
@@ -6027,34 +6093,6 @@ export const UserApiFetchParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * Fetches all event characters for a user
-         * @param {number} userId User Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserCharacters(userId: number, options: any = {}): FetchArgs {
-            // verify required parameter 'userId' is not null or undefined
-            if (userId === null || userId === undefined) {
-                throw new RequiredError('userId','Required parameter userId was null or undefined when calling getUserCharacters.');
-            }
-            const localVarPath = `/users/{userId}/characters`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Fetches all users for an event
          * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
@@ -6248,24 +6286,6 @@ export const UserApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         * Fetches all event characters for a user
-         * @param {number} userId User Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserCharacters(userId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Character>> {
-            const localVarFetchArgs = UserApiFetchParamCreator(configuration).getUserCharacters(userId, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
          * Fetches all users for an event
          * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
@@ -6382,15 +6402,6 @@ export const UserApiFactory = function (configuration?: Configuration, fetch?: F
             return UserApiFp(configuration).getUser(options)(fetch, basePath);
         },
         /**
-         * Fetches all event characters for a user
-         * @param {number} userId User Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserCharacters(userId: number, options?: any) {
-            return UserApiFp(configuration).getUserCharacters(userId, options)(fetch, basePath);
-        },
-        /**
          * Fetches all users for an event
          * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
@@ -6477,17 +6488,6 @@ export class UserApi extends BaseAPI {
      */
     public getUser(options?: any) {
         return UserApiFp(this.configuration).getUser(options)(this.fetch, this.basePath);
-    }
-
-    /**
-     * Fetches all event characters for a user
-     * @param {number} userId User Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public getUserCharacters(userId: number, options?: any) {
-        return UserApiFp(this.configuration).getUserCharacters(userId, options)(this.fetch, this.basePath);
     }
 
     /**
