@@ -77,6 +77,9 @@ function App() {
   const [gameVersion, setGameVersion] = useState<GameVersion>(GameVersion.poe1);
   const [updates, setUpdates] = useState<ScoreDiffWithKey[]>([]);
   const [ladder, setLadder] = useState<LadderEntry[]>([]);
+  const [darkMode, setDarkMode] = useState(
+    localStorage.getItem("theme") === '"dark"'
+  );
   const [websocket, setWebsocket] = useState<WebSocket>();
 
   useEffect(() => {
@@ -275,6 +278,8 @@ function App() {
           setGameVersion: setGameVersion,
           ladder: ladder,
           setLadder: setLadder,
+          darkMode: darkMode,
+          setDarkMode: setDarkMode,
         }}
       >
         <div className="max-w-[1440px] text-center mx-auto ">

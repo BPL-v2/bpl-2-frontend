@@ -1,116 +1,200 @@
-import { useContext } from "react";
+import uPlot, { AlignedData } from "uplot";
+// Removed incorrect import of AlignedData
+import "uplot/dist/uPlot.min.css";
+
+import UplotReact from "uplot-react";
+import { useContext, useEffect, useState } from "react";
+import { Character, GameVersion } from "../client";
+import { characterApi } from "../client/client";
 import { GlobalStateContext } from "../utils/context-provider";
-import { OauthCard } from "../components/oauth-card";
-import { userApi } from "../client/client";
-import { TwitchFilled } from "../icons/twitch";
-import { DiscordFilled } from "../icons/discord";
-import { ThemePicker } from "../components/theme-picker";
+import { ascendancies, poe2Mapping } from "../types/ascendancy";
+import { useParams } from "react-router-dom";
 
 export function ProfilePage() {
-  const { user, setUser } = useContext(GlobalStateContext);
-  // const [searchParams] = useSearchParams();
-  // const { isMobile } = useContext(GlobalStateContext);
-  // const [profileUserName, setProfileUserName] = useState<User | null>(null);
-  // useEffect(() => {
-  //   const tab = searchParams.get("user");
-  //   if (tab) {
-  //     setSelectedTab(tab);
-  //   }
-  // }, [searchParams]);
-
-  if (!user) {
-    return <></>;
+  const { darkMode, events, currentEvent, user } =
+    useContext(GlobalStateContext);
+  const [eventId, setEventId] = useState<number>(currentEvent?.id || 0);
+  const [eventCharacters, setEventCharacters] = useState<Character[]>([]);
+  const [characterTimeseries, setCharacterTimeseries] = useState<Character[]>(
+    []
+  );
+  let { userId } = useParams();
+  const user_id = userId ? Number(userId) : user?.id;
+  if (!user_id) {
+    return <div>Loading...</div>;
   }
+  const fontColor = darkMode ? "white" : "black";
+  useEffect(() => {
+    characterApi.getUserCharacters(user_id).then((res) => {
+      setEventCharacters(res);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (currentEvent) {
+      setEventId(currentEvent.id);
+    }
+  }, [currentEvent]);
+
+  useEffect(() => {
+    characterApi
+      .getCharacterEventHistoryForUser(eventId, user_id)
+      .then((res) => {
+        setCharacterTimeseries(
+          res.sort(
+            (a, b) =>
+              new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+          )
+        );
+      });
+  }, [eventId]);
+
+  function drawVerticalLine(u: uPlot, timestamp: number, label: string) {
+    const ctx = u.ctx;
+    const xPos = u.valToPos(timestamp, "x") * window.devicePixelRatio;
+    ctx.beginPath();
+    ctx.moveTo(u.bbox.left + xPos, u.bbox.top);
+    ctx.lineTo(u.bbox.left + xPos, u.bbox.top + u.bbox.height);
+    ctx.strokeStyle = "blue";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "bottom";
+    ctx.textRendering = "optimizeLegibility";
+    ctx.fillStyle = fontColor;
+    ctx.fillText(label, u.bbox.left + xPos, u.bbox.top);
+    ctx.closePath();
+  }
+  const verticalLinePlugin = (): uPlot.Plugin => ({
+    hooks: {
+      draw: (u: uPlot) => {
+        for (const points of [2, 4, 6, 8]) {
+          const xVal = characterTimeseries.find(
+            (c) => c.ascendancy_points === points
+          )?.timestamp;
+          if (!xVal) {
+            continue;
+          }
+          drawVerticalLine(
+            u,
+            new Date(xVal).getTime() / 1000,
+            `Asc${points / 2}`
+          );
+        }
+      },
+    },
+  });
+
+  const data: AlignedData = [
+    // xValues: A number array or TypedArray
+    new Float64Array(
+      characterTimeseries.map((c) => new Date(c.timestamp).getTime() / 1000)
+    ),
+    new Float64Array(characterTimeseries.map((c) => c.level)),
+  ];
+  const options: uPlot.Options = {
+    title: "Level Progression",
+    width: 800,
+    height: 400,
+    legend: {
+      show: true,
+    },
+    axes: [
+      {
+        side: 2,
+        stroke: fontColor,
+        ticks: { size: 0 },
+      },
+      {
+        label: "Level",
+        side: 3,
+        stroke: fontColor,
+      },
+    ],
+    series: [
+      {
+        label: "",
+        points: { show: false },
+      },
+      {
+        label: "lvl",
+        stroke: "green",
+      },
+    ],
+    scales: { x: { time: true } },
+    plugins: [verticalLinePlugin()],
+  };
+  const state = {
+    options: options,
+    data: data,
+  };
 
   return (
-    <div>
-      <ThemePicker />
-
-      <div className="card bg-base-200 mt-4">
-        <div className="card-body">
-          <h2 className="card-title text-2xl font-bold">Profile</h2>
-          <p className="text-left">
-            You can change your username here. Your username will be used to
-            display your score on the leaderboard.
-          </p>
-          <form
-            className="flex"
-            onSubmit={(e) => {
-              e.preventDefault();
-              userApi
-                .updateUser({
-                  display_name: new FormData(e.target as HTMLFormElement).get(
-                    "display_name"
-                  ) as string,
-                })
-                .then(setUser);
-            }}
-          >
-            <div className="join gap-0 ">
-              <input
-                type="text"
-                name="display_name"
-                defaultValue={user.display_name}
-                className="input rounded-l-field focus:border-r-transparent focus:outline-transparent"
-                required
-              />
-              <button
-                type="submit"
-                className="btn btn-primary btn-outline rounded-r-field"
-              >
-                Save
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-      <div className="card bg-base-200 mt-4">
-        <div className="card-body">
-          <h2 className="card-title text-2xl font-bold">OAuth Accounts</h2>
-          <div style={{ textAlign: "left" }}>
-            <p>
-              At least one account needs to stay connected at all times. When
-              connecting, you might automatically be connecting with the account
-              that you currently are logged into with your browser, so make sure
-              it is the correct one.
-            </p>
-            <p style={{ fontWeight: "bold" }}>
-              Both PoE and Discord accounts are required to participate in the
-              event.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 mb-4 justify-items-center">
-            <OauthCard
-              title="Path of Exile"
-              provider="poe"
-              description="We need permission to request your Path of Exile character information on your behalf."
-              connected={!!user?.account_name}
-              required={true}
-              logo={
-                <img
-                  src="/assets/app-logos/poe2.png"
-                  alt="Path of Exile logo"
-                />
+    <>
+      <div className="card bg-base-300 shadow-xl m-4">
+        <div className="card-body ">
+          <h2 className="card-title text-3xl">Event Characters</h2>
+          <div className="flex flex-row flex-wrap justify-center">
+            {eventCharacters.map((character) => {
+              const event = events.find((e) => e.id == character.event_id);
+              if (!event) {
+                return null;
               }
-            ></OauthCard>
-            <OauthCard
-              title="Discord"
-              provider="discord"
-              description="We need your discord id to identify you in the discord server."
-              connected={!!user?.discord_id}
-              required={true}
-              logo={<DiscordFilled className="text-[#5865f2]"></DiscordFilled>}
-            ></OauthCard>
-            <OauthCard
-              title="Twitch"
-              provider="twitch"
-              description="If you connect your Twitch account, we will display your stream during the event."
-              connected={!!user?.twitch_id}
-              logo={<TwitchFilled className="text-[#9146ff]"></TwitchFilled>}
-            ></OauthCard>
+              let ascName = character.ascendancy;
+              if (event.game_version === GameVersion.poe2) {
+                ascName =
+                  poe2Mapping[character.ascendancy] || character.ascendancy;
+              }
+              const asc = ascendancies[event.game_version][ascName];
+              return (
+                <div
+                  key={character.event_id + character.name}
+                  className={`card w-80 h-100 bg-base-200 m-2 shadow-xl cursor-pointer select-none ${
+                    event.id === eventId ? "outline-2 outline-primary" : ""
+                  }`}
+                  onClick={() => setEventId(character.event_id)}
+                >
+                  <figure className="h-full">
+                    <img
+                      src={asc.image}
+                      alt="Shoes"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover", // Ensures the image covers the container
+                        transform:
+                          event.game_version === GameVersion.poe2
+                            ? "scale(1.5)"
+                            : "",
+                      }}
+                    />
+                  </figure>
+                  <div className="card-body">
+                    <h2 className="card-title text-2xl">{event.name}</h2>
+                    <div className="text-lg text-left">
+                      <p> {character.name}</p>
+                      <p>
+                        <span>{character.main_skill}</span>{" "}
+                        <span className={`font-bold ${asc.classColor}`}>
+                          {ascName}
+                        </span>
+                      </p>
+                      <p>Level {character.level}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
-    </div>
+      <div className="flex flex-col items-center bg-base-300 m-4 rounded-box">
+        <UplotReact
+          className="bg-base-200 rounded-box m-4 p-4 flex justify-center"
+          options={state.options}
+          data={state.data}
+        />
+      </div>
+    </>
   );
 }

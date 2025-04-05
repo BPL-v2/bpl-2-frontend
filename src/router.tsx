@@ -14,6 +14,7 @@ import ScoringPresetsPage from "./pages/admin/scoring-presets";
 import TeamPage from "./pages/admin/teams";
 import EventPage from "./pages/admin/event";
 import { TeamSuggestionsPage } from "./pages/team-suggestions";
+import { SettingsPage } from "./pages/settings";
 
 export const router = createBrowserRouter([
   {
@@ -63,6 +64,14 @@ export const router = createBrowserRouter([
   {
     path: "/profile",
     element: <ProfilePage />,
+  },
+  {
+    path: "/profile/:userId",
+    element: <ProfilePage />,
+  },
+  {
+    path: "/settings",
+    element: <SettingsPage />,
   },
   // {
   //   path: "/scoring-readme",

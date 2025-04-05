@@ -1,5 +1,6 @@
 import { Configuration } from ".";
 import {
+  CharactersApiFactory,
   ConditionApiFactory,
   EventApiFactory,
   JobsApiFactory,
@@ -33,3 +34,4 @@ export const oauthApi = OauthApiFactory(config, fetch, baseUrl);
 export const streamApi = StreamsApiFactory(config, fetch, baseUrl);
 export const jobApi = JobsApiFactory(config, fetch, baseUrl);
 export const ladderApi = LadderApiFactory(config, fetch, baseUrl);
+export const characterApi = CharactersApiFactory(config, fetch, baseUrl);
