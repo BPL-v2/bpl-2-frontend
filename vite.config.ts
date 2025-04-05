@@ -33,9 +33,6 @@ export default defineConfig({
           if (id.includes("heroicons")) {
             return "@heroicons";
           }
-          if (id.includes("uplot")) {
-            return "@uplot";
-          }
           if (id.includes("node_modules")) {
             return "@vendor";
           }
