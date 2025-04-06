@@ -1,11 +1,5 @@
 import { useContext } from "react";
-import { GameVersion } from "../client";
-import {
-  ascendancies,
-  ClassDef,
-  phreciaMapping,
-  poe2Mapping,
-} from "../types/ascendancy";
+import { ascendancies, phreciaMapping, poe2Mapping } from "../types/ascendancy";
 import { GlobalStateContext } from "../utils/context-provider";
 
 interface AscendancyProps {
@@ -14,24 +8,18 @@ interface AscendancyProps {
 
 export function Ascendancy({ character_class }: AscendancyProps) {
   const { gameVersion } = useContext(GlobalStateContext);
-  let classObj: ClassDef;
-  let className = "";
-  if (gameVersion === GameVersion.poe1) {
-    classObj =
-      ascendancies[gameVersion][
-        phreciaMapping[character_class as keyof typeof phreciaMapping]
-      ];
-    className = character_class;
-  } else {
-    className =
-      poe2Mapping[
-        character_class as keyof (typeof ascendancies)[GameVersion.poe2]
-      ];
-
-    classObj = ascendancies[gameVersion][className];
-  }
-  if (!classObj) {
+  const class_name =
+    phreciaMapping[character_class] ||
+    poe2Mapping[character_class] ||
+    character_class;
+  const ascendancy = ascendancies[gameVersion];
+  if (!ascendancy || !ascendancy[class_name]) {
     return character_class;
   }
-  return <p className={`font-bold ${classObj.classColor}`}>{className}</p>;
+
+  return (
+    <p className={`font-bold ${ascendancy[class_name].classColor}`}>
+      {class_name}
+    </p>
+  );
 }
