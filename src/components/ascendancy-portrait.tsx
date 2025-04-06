@@ -20,16 +20,15 @@ export function AscendancyPortrait({
   const { gameVersion } = useContext(GlobalStateContext);
   let classObj: ClassDef;
   if (gameVersion === GameVersion.poe1) {
-    classObj =
-      ascendancies[gameVersion][
-        phreciaMapping[character_class as keyof typeof phreciaMapping]
-      ];
+    const char =
+      phreciaMapping[character_class as keyof typeof phreciaMapping] ||
+      character_class;
+    classObj = ascendancies[gameVersion][char];
   } else {
     const className =
       poe2Mapping[
         character_class as keyof (typeof ascendancies)[GameVersion.poe2]
-      ];
-
+      ] || character_class;
     classObj = ascendancies[gameVersion][className];
   }
   if (!classObj) {

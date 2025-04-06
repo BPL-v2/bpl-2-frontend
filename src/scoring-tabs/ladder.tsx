@@ -75,6 +75,18 @@ export function LadderTab() {
             filterVariant: "string",
             filterPlaceholder: "Account",
           },
+          cell: (info) => {
+            const accountName = info.getValue<string>();
+            return (
+              <a
+                href={`/profile/${info.row.original.user_id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {accountName}
+              </a>
+            );
+          },
         },
         {
           accessorFn: (row) => userToTeam[row.user_id] || "Cartographers",
