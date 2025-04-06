@@ -61,7 +61,7 @@ const AuthButton = () => {
             </div>
             <div
               onClick={() => {
-                router.navigate("/profile");
+                router.navigate("/profile/" + user.id);
               }}
             >
               <UserIcon className="h-6 w-6" /> Profile

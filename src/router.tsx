@@ -62,10 +62,6 @@ export const router = createBrowserRouter([
     element: <RulePage />,
   },
   {
-    path: "/profile",
-    element: <ProfilePage />,
-  },
-  {
     path: "/profile/:userId",
     element: <ProfilePage />,
   },

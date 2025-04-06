@@ -1,35 +1,35 @@
 import uPlot, { AlignedData } from "uplot";
-// Removed incorrect import of AlignedData
 import "uplot/dist/uPlot.min.css";
 
 import UplotReact from "uplot-react";
 import { useContext, useEffect, useState } from "react";
-import { Character, GameVersion } from "../client";
-import { characterApi } from "../client/client";
+import { Character, GameVersion, User } from "../client";
+import { characterApi, userApi } from "../client/client";
 import { GlobalStateContext } from "../utils/context-provider";
 import { ascendancies, poe2Mapping } from "../types/ascendancy";
 import { useParams } from "react-router-dom";
 
 export function ProfilePage() {
-  const { darkMode, events, currentEvent, user } =
-    useContext(GlobalStateContext);
+  const { darkMode, events, currentEvent } = useContext(GlobalStateContext);
+  const [user, setUser] = useState<User>();
   const [eventId, setEventId] = useState<number>(currentEvent?.id || 0);
   const [eventCharacters, setEventCharacters] = useState<Character[]>([]);
   const [characterTimeseries, setCharacterTimeseries] = useState<Character[]>(
     []
   );
   let { userId } = useParams();
-  const user_id = userId ? Number(userId) : user?.id;
+  const user_id = userId ? Number(userId) : undefined;
 
   const fontColor = darkMode ? "white" : "black";
   useEffect(() => {
     if (!user_id) {
       return;
     }
+    userApi.getUserById(user_id).then(setUser);
     characterApi.getUserCharacters(user_id).then((res) => {
       setEventCharacters(res);
     });
-  }, []);
+  }, [user_id]);
 
   useEffect(() => {
     if (!user_id || !currentEvent) {
@@ -52,7 +52,7 @@ export function ProfilePage() {
           )
         );
       });
-  }, [eventId]);
+  }, [eventId, user_id]);
 
   function drawVerticalLine(u: uPlot, timestamp: number, label: string) {
     const ctx = u.ctx;
@@ -133,11 +133,14 @@ export function ProfilePage() {
     options: options,
     data: data,
   };
-  if (!user_id) {
+  if (!user_id || !user) {
     return <div>Loading...</div>;
   }
   return (
     <>
+      <h1 className="text-4xl text-center font-bold m-4">
+        {user.display_name}'s Profile
+      </h1>
       <div className="card bg-base-300 shadow-xl m-4">
         <div className="card-body ">
           <h2 className="card-title text-3xl">Event Characters</h2>
@@ -195,13 +198,15 @@ export function ProfilePage() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-center bg-base-300 m-4 rounded-box">
-        <UplotReact
-          className="bg-base-200 rounded-box m-4 p-4 flex justify-center"
-          options={state.options}
-          data={state.data}
-        />
-      </div>
+      {state.data[0].length > 0 ? (
+        <div className="flex flex-col items-center bg-base-300 m-4 rounded-box">
+          <UplotReact
+            className="bg-base-200 rounded-box m-4 p-4 flex justify-center"
+            options={state.options}
+            data={state.data}
+          />
+        </div>
+      ) : null}
     </>
   );
 }
