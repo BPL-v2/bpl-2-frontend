@@ -7,7 +7,7 @@ import { HeartIcon } from "@heroicons/react/24/solid";
 import { AscendancyPortrait } from "../components/ascendancy-portrait";
 
 export function MainPage() {
-  const { currentEvent, gameVersion } = useContext(GlobalStateContext);
+  const { currentEvent } = useContext(GlobalStateContext);
 
   const now = Date.now();
   const hasStarted =
