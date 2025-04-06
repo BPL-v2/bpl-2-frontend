@@ -1,11 +1,5 @@
 import { useContext } from "react";
-import { GameVersion } from "../client";
-import {
-  ascendancies,
-  ClassDef,
-  phreciaMapping,
-  poe2Mapping,
-} from "../types/ascendancy";
+import { ascendancies, phreciaMapping, poe2Mapping } from "../types/ascendancy";
 import { GlobalStateContext } from "../utils/context-provider";
 
 interface AscendancyProps {
@@ -18,21 +12,16 @@ export function AscendancyPortrait({
   className,
 }: AscendancyProps) {
   const { gameVersion } = useContext(GlobalStateContext);
-  let classObj: ClassDef;
-  if (gameVersion === GameVersion.poe1) {
-    const char =
-      phreciaMapping[character_class as keyof typeof phreciaMapping] ||
-      character_class;
-    classObj = ascendancies[gameVersion][char];
-  } else {
-    const className =
-      poe2Mapping[
-        character_class as keyof (typeof ascendancies)[GameVersion.poe2]
-      ] || character_class;
-    classObj = ascendancies[gameVersion][className];
+  const asc = ascendancies[gameVersion];
+  if (!asc) {
+    return null;
   }
-  if (!classObj) {
-    return character_class;
+  const char =
+    phreciaMapping[character_class] ||
+    poe2Mapping[character_class] ||
+    character_class;
+  if (!asc[char]) {
+    return null;
   }
-  return <img src={classObj.thumbnail} className={className} />;
+  return <img src={asc[char].thumbnail} className={className} />;
 }
