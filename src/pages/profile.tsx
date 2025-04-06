@@ -20,23 +20,28 @@ export function ProfilePage() {
   );
   let { userId } = useParams();
   const user_id = userId ? Number(userId) : user?.id;
-  if (!user_id) {
-    return <div>Loading...</div>;
-  }
+
   const fontColor = darkMode ? "white" : "black";
   useEffect(() => {
+    if (!user_id) {
+      return;
+    }
     characterApi.getUserCharacters(user_id).then((res) => {
       setEventCharacters(res);
     });
   }, []);
 
   useEffect(() => {
-    if (currentEvent) {
-      setEventId(currentEvent.id);
+    if (!user_id || !currentEvent) {
+      return;
     }
+    setEventId(currentEvent.id);
   }, [currentEvent]);
 
   useEffect(() => {
+    if (!user_id) {
+      return;
+    }
     characterApi
       .getCharacterEventHistoryForUser(eventId, user_id)
       .then((res) => {
@@ -128,7 +133,9 @@ export function ProfilePage() {
     options: options,
     data: data,
   };
-
+  if (!user_id) {
+    return <div>Loading...</div>;
+  }
   return (
     <>
       <div className="card bg-base-300 shadow-xl m-4">
