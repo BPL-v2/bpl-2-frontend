@@ -4,6 +4,7 @@ import { VideoEmbed } from "../components/video-embed";
 import { Countdown } from "../components/countdown";
 import { DiscordFilled } from "../icons/discord";
 import { HeartIcon } from "@heroicons/react/24/solid";
+import { AscendancyPortrait } from "../components/ascendancy-portrait";
 
 export function MainPage() {
   const { currentEvent, gameVersion } = useContext(GlobalStateContext);
@@ -119,21 +120,17 @@ export function MainPage() {
                           className="w-full"
                         />
                         <div>
-                          <div className="grid grid-cols-4  sm:grid-cols-3  lg:grid-cols-4 xl:grid-cols-4 gap-2 mt-8">
-                            {team.allowed_classes.map((className) => (
+                          <div className="grid grid-cols-4  sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-2 mt-8">
+                            {team.allowed_classes.map((character_class) => (
                               <div
-                                key={team.id + className}
+                                key={team.id + character_class}
                                 className="tooltip tooltip-primary"
-                                data-tip={className}
+                                data-tip={character_class}
                               >
-                                <img
-                                  src={`/assets/${gameVersion}/ascendancies/thumbnails/${className.replaceAll(
-                                    " ",
-                                    "_"
-                                  )}.png`}
-                                  alt={className}
-                                  className="avatar w-15 h-15 sm:w-16 sm:h-16 xl:w-20 xl:h-20 rounded-full "
-                                />
+                                <AscendancyPortrait
+                                  character_class={character_class}
+                                  className="avatar w-15 h-15 sm:w-16 sm:h-16 xl:w-20 xl:h-20 rounded-full"
+                                ></AscendancyPortrait>
                               </div>
                             ))}
                           </div>
