@@ -17,6 +17,13 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { TableSortIcon } from "../icons/table-sort";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
 
+type Option =
+  | {
+      label: string;
+      value: string;
+    }
+  | string;
+
 function Table<T>({
   data,
   columns,
@@ -199,11 +206,23 @@ function Filter({ column }: { column: Column<any, unknown> }) {
           {filterPlaceholder}
         </option>
         <option value="">All</option>
-        {options?.map((option: string) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
+        {options?.map((option: Option) => {
+          let label = "";
+          let value = "";
+          if (typeof option === "string") {
+            label = option;
+            value = option;
+          } else {
+            label = option.label;
+            value = option.value;
+          }
+
+          return (
+            <option key={label} value={value}>
+              {label}
+            </option>
+          );
+        })}
       </select>
     );
   }

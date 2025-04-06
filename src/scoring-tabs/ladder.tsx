@@ -5,7 +5,7 @@ import {
   getSubCategory,
 } from "../types/scoring-category";
 import { getTotalPoints } from "../utils/utils";
-import { LadderEntry, Team } from "../client";
+import { GameVersion, LadderEntry, Team } from "../client";
 import { ColumnDef, sortingFns } from "@tanstack/react-table";
 
 import { Ascendancy } from "../components/ascendancy";
@@ -14,7 +14,7 @@ import { TeamName } from "../components/team-name";
 import { LadderPortrait } from "../components/ladder-portrait";
 import { AscendancyPortrait } from "../components/ascendancy-portrait";
 import Table from "../components/table";
-import { phreciaMapping } from "../types/ascendancy";
+import { phreciaMapping, poe2Mapping } from "../types/ascendancy";
 import { calcPersonalPoints } from "../utils/personal-points";
 type RowDef = {
   default: number;
@@ -28,7 +28,7 @@ type RowDef = {
 };
 
 export function LadderTab() {
-  const { scores, currentEvent, isMobile, users, ladder } =
+  const { scores, currentEvent, isMobile, users, ladder, gameVersion } =
     useContext(GlobalStateContext);
   const teamMap =
     currentEvent?.teams?.reduce((acc: { [teamId: number]: Team }, team) => {
@@ -89,7 +89,7 @@ export function LadderTab() {
           },
         },
         {
-          accessorFn: (row) => userToTeam[row.user_id] || "Cartographers",
+          accessorFn: (row) => userToTeam[row.user_id]?.name,
           header: " ",
           cell: (info) => (
             <TeamName team={userToTeam[info.row.original.user_id]} />
@@ -121,10 +121,13 @@ export function LadderTab() {
           meta: {
             filterVariant: "enum",
             filterPlaceholder: "Ascendancy",
-            // options: Object.keys(
-            //   ascendancies[currentEvent.game_version] || {}
-            // ).map((ascendancy) => ascendancy),
-            options: Object.keys(phreciaMapping),
+            options:
+              gameVersion === GameVersion.poe1
+                ? Object.keys(phreciaMapping)
+                : Object.entries(poe2Mapping).map(([key, value]) => ({
+                    label: value,
+                    value: key,
+                  })),
           },
         },
         {
