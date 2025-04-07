@@ -112,7 +112,10 @@ function Table<T>({
                           header.getContext()
                         )}
                         {header.column.getCanFilter() ? (
-                          <div onClick={(e) => e.stopPropagation()}>
+                          <div
+                            onClick={(e) => e.stopPropagation()}
+                            className="select-none"
+                          >
                             <Filter column={header.column} />
                           </div>
                         ) : null}
@@ -195,7 +198,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
   if (filterVariant === "enum") {
     return (
       <select
-        className="select text-lg"
+        className="select text-lg select-none"
         onChange={(e) => {
           column.setFilterValue(e.target.value);
           e.stopPropagation();
