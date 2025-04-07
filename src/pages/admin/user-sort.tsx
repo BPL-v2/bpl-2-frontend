@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { GlobalStateContext } from "../../utils/context-provider";
 import { sortUsers } from "../../utils/usersort";
-import { ExpectedPlayTime, Permission, Signup } from "../../client";
+import { Permission, Signup } from "../../client";
 import { signupApi, teamApi } from "../../client/client";
 import Table from "../../components/table";
 import { ColumnDef } from "@tanstack/react-table";
@@ -10,14 +10,28 @@ type TeamRow = {
   key: number;
   team: string;
   members: number;
-  [ExpectedPlayTime.VERY_LOW]: number;
-  [ExpectedPlayTime.LOW]: number;
-  [ExpectedPlayTime.MEDIUM]: number;
-  [ExpectedPlayTime.HIGH]: number;
-  [ExpectedPlayTime.VERY_HIGH]: number;
-  [ExpectedPlayTime.EXTREME]: number;
-  [ExpectedPlayTime.NO_LIFE]: number;
+  "0-3": number;
+  "4-6": number;
+  "7-9": number;
+  "10-12": number;
+  "13+": number;
 };
+
+function toExpectedPlayTime(
+  expectedPlaytime: number
+): "0-3" | "4-6" | "7-9" | "10-12" | "13+" {
+  if (expectedPlaytime < 4) {
+    return "0-3";
+  } else if (expectedPlaytime < 7) {
+    return "4-6";
+  } else if (expectedPlaytime < 10) {
+    return "7-9";
+  } else if (expectedPlaytime < 13) {
+    return "10-12";
+  } else {
+    return "13+";
+  }
+}
 
 const UserSortPage = () => {
   const { user, currentEvent, setEventStatus, eventStatus } =
@@ -143,10 +157,13 @@ const UserSortPage = () => {
         .filter((signup) => signup.team_id === team.id)
         .reduce(
           (acc, signup) => {
-            if (!acc[signup.expected_playtime]) {
-              acc[signup.expected_playtime] = 0;
+            const expectedPlaytime = toExpectedPlayTime(
+              signup.expected_playtime
+            );
+            if (!acc[expectedPlaytime]) {
+              acc[expectedPlaytime] = 0;
             }
-            acc[signup.expected_playtime] += 1;
+            acc[expectedPlaytime] += 1;
             return acc;
           },
           {
@@ -160,12 +177,11 @@ const UserSortPage = () => {
 
   const totalRow = teamRows.reduce(
     (acc, row) => {
-      (Object.keys(ExpectedPlayTime) as ExpectedPlayTime[]).forEach((key) => {
-        if (!acc[key]) {
-          acc[key] = 0;
-        }
-        acc[key] += row[key] ?? 0;
-      });
+      acc["0-3"] = (row["0-3"] ?? 0) + (acc["0-3"] ?? 0);
+      acc["4-6"] = (row["4-6"] ?? 0) + (acc["4-6"] ?? 0);
+      acc["7-9"] = (row["7-9"] ?? 0) + (acc["7-9"] ?? 0);
+      acc["10-12"] = (row["10-12"] ?? 0) + (acc["10-12"] ?? 0);
+      acc["13+"] = (row["13+"] ?? 0) + (acc["13+"] ?? 0);
       acc.members += row.members;
       return acc;
     },
@@ -185,17 +201,16 @@ const UserSortPage = () => {
           <tr>
             <th rowSpan={2}>Team</th>
             <th rowSpan={2}>Members</th>
-            <th
-              colSpan={Object.values(ExpectedPlayTime).length}
-              className="text-center"
-            >
+            <th colSpan={5} className="text-center">
               Playtime in hours per day
             </th>
           </tr>
           <tr>
-            {Object.values(ExpectedPlayTime).map((time) => (
-              <th key={time}>{time}</th>
-            ))}
+            <th>0-3</th>
+            <th>4-6</th>
+            <th>7-9</th>
+            <th>10-12</th>
+            <th>13+</th>
           </tr>
         </thead>
         <tbody className="bg-base-300">
@@ -203,10 +218,11 @@ const UserSortPage = () => {
             <tr key={row.key}>
               <td>{row.team}</td>
               <td>{row.members}</td>
-              {Object.keys(ExpectedPlayTime).map((key) => (
-                // @ts-ignore
-                <td key={key}>{row[key]}</td>
-              ))}
+              <td>{row["0-3"]}</td>
+              <td>{row["4-6"]}</td>
+              <td>{row["7-9"]}</td>
+              <td>{row["10-12"]}</td>
+              <td>{row["13+"]}</td>
             </tr>
           ))}
         </tbody>

@@ -593,21 +593,6 @@ export interface EventStatus {
  * @export
  * @enum {string}
  */
-export enum ExpectedPlayTime {
-    VERY_LOW = 'VERY_LOW',
-    LOW = 'LOW',
-    MEDIUM = 'MEDIUM',
-    HIGH = 'HIGH',
-    VERY_HIGH = 'VERY_HIGH',
-    EXTREME = 'EXTREME',
-    NO_LIFE = 'NO_LIFE'
-}
-
-/**
- * 
- * @export
- * @enum {string}
- */
 export enum FieldType {
     string = 'string',
     int = 'int',
@@ -1326,10 +1311,10 @@ export enum ScoringPresetType {
 export interface Signup {
     /**
      * 
-     * @type {ExpectedPlayTime}
+     * @type {number}
      * @memberof Signup
      */
-    expected_playtime: ExpectedPlayTime;
+    expected_playtime: number;
     /**
      * 
      * @type {number}
@@ -1370,10 +1355,10 @@ export interface Signup {
 export interface SignupCreate {
     /**
      * 
-     * @type {ExpectedPlayTime}
+     * @type {number}
      * @memberof SignupCreate
      */
-    expected_playtime: ExpectedPlayTime;
+    expected_playtime: number;
 }
 
 /**
@@ -6013,22 +5998,22 @@ export const UserApiFetchParamCreator = function (configuration?: Configuration)
         },
         /**
          * Changes the permissions of a user
-         * @param {number} userId User Id
+         * @param {number} user_id User Id
          * @param {Array<Permission>} permissions Permissions
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        changePermissions(userId: number, permissions: Array<Permission>, options: any = {}): FetchArgs {
-            // verify required parameter 'userId' is not null or undefined
-            if (userId === null || userId === undefined) {
-                throw new RequiredError('userId','Required parameter userId was null or undefined when calling changePermissions.');
+        changePermissions(user_id: number, permissions: Array<Permission>, options: any = {}): FetchArgs {
+            // verify required parameter 'user_id' is not null or undefined
+            if (user_id === null || user_id === undefined) {
+                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling changePermissions.');
             }
             // verify required parameter 'permissions' is not null or undefined
             if (permissions === null || permissions === undefined) {
                 throw new RequiredError('permissions','Required parameter permissions was null or undefined when calling changePermissions.');
             }
-            const localVarPath = `/users/{userId}`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+            const localVarPath = `/users/{user_id}`
+                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'PATCH' }, options);
             const localVarHeaderParameter = {} as any;
@@ -6094,17 +6079,17 @@ export const UserApiFetchParamCreator = function (configuration?: Configuration)
         },
         /**
          * Fetches a user by ID
-         * @param {number} userId User Id
+         * @param {number} user_id User Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserById(userId: number, options: any = {}): FetchArgs {
-            // verify required parameter 'userId' is not null or undefined
-            if (userId === null || userId === undefined) {
-                throw new RequiredError('userId','Required parameter userId was null or undefined when calling getUserById.');
+        getUserById(user_id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'user_id' is not null or undefined
+            if (user_id === null || user_id === undefined) {
+                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling getUserById.');
             }
-            const localVarPath = `/users/{userId}`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+            const localVarPath = `/users/{user_id}`
+                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
             const localVarHeaderParameter = {} as any;
@@ -6262,13 +6247,13 @@ export const UserApiFp = function(configuration?: Configuration) {
         },
         /**
          * Changes the permissions of a user
-         * @param {number} userId User Id
+         * @param {number} user_id User Id
          * @param {Array<Permission>} permissions Permissions
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        changePermissions(userId: number, permissions: Array<Permission>, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
-            const localVarFetchArgs = UserApiFetchParamCreator(configuration).changePermissions(userId, permissions, options);
+        changePermissions(user_id: number, permissions: Array<Permission>, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
+            const localVarFetchArgs = UserApiFetchParamCreator(configuration).changePermissions(user_id, permissions, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -6315,12 +6300,12 @@ export const UserApiFp = function(configuration?: Configuration) {
         },
         /**
          * Fetches a user by ID
-         * @param {number} userId User Id
+         * @param {number} user_id User Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserById(userId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
-            const localVarFetchArgs = UserApiFetchParamCreator(configuration).getUserById(userId, options);
+        getUserById(user_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
+            const localVarFetchArgs = UserApiFetchParamCreator(configuration).getUserById(user_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -6423,13 +6408,13 @@ export const UserApiFactory = function (configuration?: Configuration, fetch?: F
         },
         /**
          * Changes the permissions of a user
-         * @param {number} userId User Id
+         * @param {number} user_id User Id
          * @param {Array<Permission>} permissions Permissions
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        changePermissions(userId: number, permissions: Array<Permission>, options?: any) {
-            return UserApiFp(configuration).changePermissions(userId, permissions, options)(fetch, basePath);
+        changePermissions(user_id: number, permissions: Array<Permission>, options?: any) {
+            return UserApiFp(configuration).changePermissions(user_id, permissions, options)(fetch, basePath);
         },
         /**
          * Fetches all users
@@ -6449,12 +6434,12 @@ export const UserApiFactory = function (configuration?: Configuration, fetch?: F
         },
         /**
          * Fetches a user by ID
-         * @param {number} userId User Id
+         * @param {number} user_id User Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserById(userId: number, options?: any) {
-            return UserApiFp(configuration).getUserById(userId, options)(fetch, basePath);
+        getUserById(user_id: number, options?: any) {
+            return UserApiFp(configuration).getUserById(user_id, options)(fetch, basePath);
         },
         /**
          * Fetches all users for an event
@@ -6515,14 +6500,14 @@ export class UserApi extends BaseAPI {
 
     /**
      * Changes the permissions of a user
-     * @param {number} userId User Id
+     * @param {number} user_id User Id
      * @param {Array<Permission>} permissions Permissions
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public changePermissions(userId: number, permissions: Array<Permission>, options?: any) {
-        return UserApiFp(this.configuration).changePermissions(userId, permissions, options)(this.fetch, this.basePath);
+    public changePermissions(user_id: number, permissions: Array<Permission>, options?: any) {
+        return UserApiFp(this.configuration).changePermissions(user_id, permissions, options)(this.fetch, this.basePath);
     }
 
     /**
@@ -6547,13 +6532,13 @@ export class UserApi extends BaseAPI {
 
     /**
      * Fetches a user by ID
-     * @param {number} userId User Id
+     * @param {number} user_id User Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getUserById(userId: number, options?: any) {
-        return UserApiFp(this.configuration).getUserById(userId, options)(this.fetch, this.basePath);
+    public getUserById(user_id: number, options?: any) {
+        return UserApiFp(this.configuration).getUserById(user_id, options)(this.fetch, this.basePath);
     }
 
     /**

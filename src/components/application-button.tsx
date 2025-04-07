@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { GlobalStateContext } from "../utils/context-provider";
-import { ApplicationStatus, ExpectedPlayTime, Team } from "../client";
+import { ApplicationStatus, Team } from "../client";
 import { signupApi } from "../client/client";
 import { DiscordFilled } from "../icons/discord";
 import { Dialog } from "./dialog";
@@ -13,6 +13,7 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
   const formRef = React.useRef<HTMLFormElement>(null);
   const [userTeam, setUserTeam] = React.useState<Team | undefined>(undefined);
   const [isServerMember, setIsServerMember] = React.useState(true);
+  const [hourValue, setHourValue] = React.useState(1);
   useEffect(() => {
     setUserTeam(
       user
@@ -78,12 +79,9 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
             ref={formRef}
             onSubmit={(e) => {
               e.preventDefault();
-              const formData = new FormData(e.target as HTMLFormElement);
               signupApi
                 .createSignup(currentEvent.id, {
-                  expected_playtime: formData.get(
-                    "expected_playtime"
-                  ) as ExpectedPlayTime,
+                  expected_playtime: hourValue,
                 })
                 .then(() => {
                   setEventStatus({
@@ -99,21 +97,28 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
                 });
             }}
           >
-            <fieldset className="fieldset bg-base-300 p-4 rounded-box gap-4">
+            <fieldset className="fieldset bg-base-300 p-4 rounded-box gap-4  w-full">
               <label className="fieldset-label">
                 How many hours will you be able to play per day?
               </label>
-              <select
-                className="select"
-                id="expected_playtime"
-                name="expected_playtime"
-              >
-                {Object.entries(ExpectedPlayTime).map((entry) => (
-                  <option key={entry[0]} value={entry[0]}>
-                    {entry[1]}
-                  </option>
-                ))}
-              </select>
+              <div className="flex items-center gap-2">
+                <span className="text-lg text-base-content w-6">
+                  {hourValue}
+                </span>
+                <div className=" w-full">
+                  <input
+                    type="range"
+                    min={1}
+                    max="24"
+                    defaultValue={hourValue}
+                    className="range range-primary w-full"
+                    step="1"
+                    onChange={(e) => {
+                      setHourValue(parseInt(e.target.value));
+                    }}
+                  />
+                </div>
+              </div>
               <label className="fieldset-label">
                 <input
                   type="checkbox"
