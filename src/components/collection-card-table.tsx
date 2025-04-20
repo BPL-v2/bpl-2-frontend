@@ -1,8 +1,8 @@
-import { ScoreObjective } from "../types/score";
+import { ScoreObjective } from "@mytypes/score";
 import { useContext } from "react";
-import { GlobalStateContext } from "../utils/context-provider";
+import { GlobalStateContext } from "@utils/context-provider";
 import { ProgressBar } from "./progress-bar";
-import { Score } from "../client";
+import { Score } from "@client/api";
 
 type CollectionCardTableProps = {
   objective: ScoreObjective;

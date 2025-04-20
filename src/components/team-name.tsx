@@ -1,4 +1,4 @@
-import { Team } from "../client";
+import { Team } from "@client/api";
 
 interface TeamNameProps {
   team?: Team;

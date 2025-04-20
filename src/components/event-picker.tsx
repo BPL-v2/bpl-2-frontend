@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { GlobalStateContext } from "../utils/context-provider";
+import { GlobalStateContext } from "@utils/context-provider";
 
 export function EventPicker() {
   const { setCurrentEvent, events } = useContext(GlobalStateContext);

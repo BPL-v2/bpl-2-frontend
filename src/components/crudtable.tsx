@@ -1,5 +1,5 @@
 import { JSX, useEffect, useMemo, useState } from "react";
-import { sendWarning } from "../utils/notifications";
+import { sendWarning } from "@utils/notifications";
 import ArrayInput from "./arrayinput";
 import dayjs from "dayjs";
 import { DateTimePicker } from "./datetime-picker";
@@ -36,10 +36,10 @@ export interface CrudColumn<T> {
 
 export type action = {
   name: string;
-  func: (data: any) => Promise<any>;
+  func?: (data: any) => Promise<any>;
   visible?: (data: any) => boolean;
   reload?: boolean;
-  icon?: JSX.Element;
+  render?: (data: any) => React.ReactNode;
 };
 
 type CrudTableProps<T> = {
@@ -410,6 +410,9 @@ const CrudTable = <T,>({
                               key={action.name}
                               className="btn btn-soft btn-sm"
                               onClick={() => {
+                                if (!action.func) {
+                                  return;
+                                }
                                 setCurrentData(entry);
                                 action.func(entry).then(() => {
                                   if (action.reload) {
@@ -420,7 +423,9 @@ const CrudTable = <T,>({
                                 });
                               }}
                             >
-                              {action.icon ? action.icon : action.name}
+                              {action.render
+                                ? action.render(data)
+                                : action.name}
                             </button>
                           ) : null;
                         })}

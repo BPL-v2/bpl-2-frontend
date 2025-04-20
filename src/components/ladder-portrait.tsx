@@ -1,4 +1,4 @@
-import { LadderEntry } from "../client";
+import { LadderEntry } from "@client/api";
 import { Ascendancy } from "./ascendancy";
 import { AscendancyPortrait } from "./ascendancy-portrait";
 import { ExperienceBar } from "./experience-bar";

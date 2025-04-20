@@ -1,4 +1,4 @@
-import { TwitchStream } from "../client";
+import { TwitchStream } from "@client/api";
 
 export type TwitchStreamEmbedProps = {
   stream: TwitchStream;

@@ -1,5 +1,5 @@
 import { JSX, useContext } from "react";
-import { GlobalStateContext } from "../utils/context-provider";
+import { GlobalStateContext } from "@utils/context-provider";
 
 function convertArrayToText(points: number[]): JSX.Element[] {
   const textParts = points.map((point, index) => {

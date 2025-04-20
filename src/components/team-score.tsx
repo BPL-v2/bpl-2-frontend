@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { GlobalStateContext } from "../utils/context-provider";
-import { ScoreCategory } from "../types/score";
-import { getPotentialPoints, getTotalPoints } from "../utils/utils";
+import { GlobalStateContext } from "@utils/context-provider";
+import { ScoreCategory } from "@mytypes/score";
+import { getPotentialPoints, getTotalPoints } from "@utils/utils";
 import { TeamName } from "./team-name";
 
 export type TeamScoreProps = {

@@ -1,6 +1,6 @@
 import { JSX, useContext } from "react";
-import { GlobalStateContext } from "../utils/context-provider";
-import { pointsToGroup } from "../utils/text-utils";
+import { GlobalStateContext } from "@utils/context-provider";
+import { pointsToGroup } from "@utils/text-utils";
 
 function bpUniquePointsToText(points: number[] | undefined): JSX.Element[] {
   const groups = pointsToGroup(points || []);

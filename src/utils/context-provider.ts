@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { ScoreCategory } from "../types/score";
+import { ScoreCategory } from "@mytypes/score";
 import {
   Category,
   Event,
@@ -7,8 +7,8 @@ import {
   EventStatus,
   GameVersion,
   LadderEntry,
-} from "../client";
-import { MinimalTeamUser } from "../types/user";
+} from "@client/api";
+import { MinimalTeamUser } from "@mytypes/user";
 export type GlobalState = {
   user: User | undefined;
   setUser: (c: User | undefined) => void;

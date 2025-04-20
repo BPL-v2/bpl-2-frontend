@@ -1,8 +1,8 @@
 import React, { CSSProperties } from "react";
-import { getEmbedUrl, getThumbnailUrl } from "../utils/video-utils";
+import { getEmbedUrl, getThumbnailUrl } from "@utils/video-utils";
 import { PlayCircleIcon } from "@heroicons/react/24/outline";
-import { YoutubeFilled } from "../icons/youtube";
-import { TwitchFilled } from "../icons/twitch";
+import { YoutubeFilled } from "@icons/youtube";
+import { TwitchFilled } from "@icons/twitch";
 export interface VideoEmbedProps {
   url: string;
   title?: string;

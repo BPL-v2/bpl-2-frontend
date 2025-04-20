@@ -1,6 +1,6 @@
 // @ts-nocheck - This is way too annoying to typecheck. Sue me i dont care
-import { Signup } from "../client";
-import { BPLEvent } from "../types/event";
+import { Signup } from "@client/api";
+import { BPLEvent } from "@mytypes/event";
 
 export function sortUsers(currentEvent: BPLEvent, signups: Signup[]): Signup[] {
   let suggestion = getSortSuggestion(currentEvent, signups);
@@ -51,16 +51,19 @@ function getTeamCounts(
 export function getSortSuggestion(currentEvent: BPLEvent, signups: Signup[]) {
   const buckets: {
     [key: string]: { [teamId: number]: number };
-  } = ["0-3", "4-6", "7-9", "10-12", "13+"].reduce((buckets, playtime) => {
-    buckets[playtime] = currentEvent.teams.reduce((teamNumbers, team) => {
-      teamNumbers[team.id] = signups.filter(
-        (signup) =>
-          signup.team_id === team.id && signup.expected_playtime === playtime
-      ).length;
-      return teamNumbers;
-    }, {});
-    return buckets;
-  }, {} as { [key in keyof typeof PlayTime]: { [teamId: number]: number } });
+  } = ["0-3", "4-6", "7-9", "10-12", "13+"].reduce(
+    (buckets, playtime) => {
+      buckets[playtime] = currentEvent.teams.reduce((teamNumbers, team) => {
+        teamNumbers[team.id] = signups.filter(
+          (signup) =>
+            signup.team_id === team.id && signup.expected_playtime === playtime
+        ).length;
+        return teamNumbers;
+      }, {});
+      return buckets;
+    },
+    {} as { [key in keyof typeof PlayTime]: { [teamId: number]: number } }
+  );
   buckets["total"] = currentEvent.teams.reduce((teamNumbers, team) => {
     teamNumbers[team.id] = signups.filter(
       (signup) => signup.team_id === team.id

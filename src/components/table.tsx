@@ -14,7 +14,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { TableSortIcon } from "../icons/table-sort";
+import { TableSortIcon } from "@icons/table-sort";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
 
 type Option =
