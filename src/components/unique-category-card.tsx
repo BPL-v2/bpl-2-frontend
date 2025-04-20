@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { ScoreCategory } from "../types/score";
-import { getPotentialPoints, getTotalPoints } from "../utils/utils";
-import { GlobalStateContext } from "../utils/context-provider";
-import { Medal } from "../icons/medal";
+import { ScoreCategory } from "@mytypes/score";
+import { getPotentialPoints, getTotalPoints } from "@utils/utils";
+import { GlobalStateContext } from "@utils/context-provider";
+import { Medal } from "@icons/medal";
 
 type UniqueCategoryCardProps = {
   category: ScoreCategory;

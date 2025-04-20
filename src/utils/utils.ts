@@ -5,8 +5,8 @@ import {
   ScoreMap,
   ScoringMethod,
   ScoringPreset,
-} from "../client";
-import { ScoreCategory, ScoreObjective } from "../types/score";
+} from "@client/api";
+import { ScoreCategory, ScoreObjective } from "@mytypes/score";
 
 type TeamScores = { [teamId: number]: Score };
 

@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { GlobalStateContext } from "../utils/context-provider";
-import { Score } from "../client";
-import { rank2text } from "../utils/utils";
+import { GlobalStateContext } from "@utils/context-provider";
+import { Score } from "@client/api";
+import { rank2text } from "@utils/utils";
 
 interface RankingProps {
   objective: { team_score: Record<string, Score> };

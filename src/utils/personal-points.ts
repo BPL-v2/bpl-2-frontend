@@ -1,4 +1,4 @@
-import { LadderEntry } from "../client";
+import { LadderEntry } from "@client/api";
 
 export function calcPersonalPoints(ladderEntry: LadderEntry) {
   let points = 0;

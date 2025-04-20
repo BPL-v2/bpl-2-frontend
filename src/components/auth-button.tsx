@@ -1,14 +1,14 @@
 /// <reference types="vite/client" />
 import { useContext, useEffect } from "react";
-import { GlobalStateContext } from "../utils/context-provider";
-import { router } from "../router";
-import { userApi } from "../client/client";
+import { GlobalStateContext } from "@utils/context-provider";
+import { userApi } from "@client/client";
 import {
   UserIcon,
   ArrowLeftStartOnRectangleIcon,
   ArrowRightEndOnRectangleIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
+import { Link } from "@tanstack/react-router";
 
 const AuthButton = () => {
   const { user, setUser } = useContext(GlobalStateContext);
@@ -52,20 +52,16 @@ const AuthButton = () => {
           }}
         >
           <li>
-            <div
-              onClick={() => {
-                router.navigate("/settings");
-              }}
-            >
+            <Link to={`/settings`} className="flex flex-row gap-2">
               <Cog6ToothIcon className="h-6 w-6" /> Settings
-            </div>
-            <div
-              onClick={() => {
-                router.navigate("/profile/" + user.id);
-              }}
+            </Link>
+            <Link
+              to={`/profile/$userId`}
+              params={{ userId: user.id }}
+              className="flex flex-row gap-2"
             >
               <UserIcon className="h-6 w-6" /> Profile
-            </div>
+            </Link>
           </li>
           <li className="text-error">
             <div

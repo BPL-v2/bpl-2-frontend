@@ -1,9 +1,9 @@
-import { ScoreCategory, ScoreObjective } from "../types/score";
-import { getImageLocation } from "../types/scoring-objective";
-import { GlobalStateContext } from "../utils/context-provider";
+import { ScoreCategory, ScoreObjective } from "@mytypes/score";
+import { getImageLocation } from "@mytypes/scoring-objective";
+import { GlobalStateContext } from "@utils/context-provider";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { ObjectiveIcon } from "./objective-icon";
-import { GameVersion, Team } from "../client";
+import { GameVersion, Team } from "@client/api";
 import { CellContext, ColumnDef } from "@tanstack/react-table";
 import Table from "./table";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";

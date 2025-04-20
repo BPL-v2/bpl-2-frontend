@@ -1,5 +1,5 @@
 import { JSX, useContext } from "react";
-import { GlobalStateContext } from "../utils/context-provider";
+import { GlobalStateContext } from "@utils/context-provider";
 
 function convertArrayToText(points: number[]): JSX.Element[] {
   const textParts = points.map((point, index) => {
@@ -36,7 +36,7 @@ export function CollectionTabRules() {
   );
 
   const racePoints =
-    collectionCategory?.objectives[0].scoring_preset?.points || [];
+    collectionCategory?.objectives[0]?.scoring_preset?.points || [];
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { getLevelProgress } from "../types/level-info";
+import { getLevelProgress } from "@mytypes/level-info";
 
 interface ExperienceBarProps {
   experience: number;

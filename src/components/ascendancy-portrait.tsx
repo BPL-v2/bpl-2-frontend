@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { ascendancies, phreciaMapping, poe2Mapping } from "../types/ascendancy";
-import { GlobalStateContext } from "../utils/context-provider";
+import { ascendancies, phreciaMapping, poe2Mapping } from "@mytypes/ascendancy";
+import { GlobalStateContext } from "@utils/context-provider";
 
 interface AscendancyProps {
   character_class: string;

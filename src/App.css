@@ -73,6 +73,7 @@
   --depth: 0;
   --noise: 0;
 }
+
 @utility input {
   @apply border-2 focus:outline-none;
 }
@@ -83,7 +84,7 @@
 
 [data-theme="light"] {
   .bg-highlight {
-    background-color: oklch(100% 0.05 255);
+    background-color: oklch(94% 0.05 255);
   }
   .content-highlight {
     color: oklch(0% 0 0);
@@ -97,10 +98,9 @@
     color: oklch(100% 0 0);
   }
 }
+
 html {
   scrollbar-gutter: stable;
-}
-html {
   padding-left: calc(100vw - 100%);
 }
 
@@ -114,6 +114,7 @@ html {
 .bg-twitch {
   background-color: #9146ff;
 }
+
 .twitch-viewer-count {
   position: absolute;
   bottom: 10px;

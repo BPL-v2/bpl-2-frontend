@@ -1,9 +1,10 @@
 import React, { useContext, useEffect } from "react";
-import { GlobalStateContext } from "../utils/context-provider";
-import { ApplicationStatus, Team } from "../client";
-import { signupApi } from "../client/client";
-import { DiscordFilled } from "../icons/discord";
+import { GlobalStateContext } from "@utils/context-provider";
+import { ApplicationStatus, Team } from "@client/api";
+import { signupApi } from "@client/client";
+import { DiscordFilled } from "@icons/discord";
 import { Dialog } from "./dialog";
+import { Link } from "@tanstack/react-router";
 
 type ApplicationButtonProps = {};
 const ApplicationButton = ({}: ApplicationButtonProps) => {
@@ -128,9 +129,9 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
                   required
                 />
                 I've read the
-                <a href="/rules" target="_blank" className="link link-info">
+                <Link to="/rules" target="_blank" className="link link-info">
                   rules
-                </a>
+                </Link>
               </label>
             </fieldset>
           </form>

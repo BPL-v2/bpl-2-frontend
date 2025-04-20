@@ -2,6 +2,8 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { config } from "dotenv";
 import tailwindcss from "@tailwindcss/vite";
+import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
+import path from "path";
 
 // Load environment variables from .env file
 config();
@@ -9,7 +11,14 @@ config();
 // https://vite.dev/config/
 export default defineConfig({
   // @ts-ignore
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    TanStackRouterVite({
+      target: "react",
+      autoCodeSplitting: true,
+    }),
+    react(),
+    tailwindcss(),
+  ],
   preview: {
     port: 3001,
   },
@@ -20,13 +29,21 @@ export default defineConfig({
   define: {
     "process.env": process.env,
   },
+  resolve: {
+    alias: {
+      "@client": path.resolve(__dirname, "./src/client"),
+      "@utils": path.resolve(__dirname, "./src/utils"),
+      "@components": path.resolve(__dirname, "./src/components"),
+      "@mytypes": path.resolve(__dirname, "./src/mytypes"),
+      "@icons": path.resolve(__dirname, "./src/icons"),
+      "@rules": path.resolve(__dirname, "./src/rules"),
+    },
+  },
+
   build: {
     rollupOptions: {
       output: {
         manualChunks(id: string) {
-          if (id.includes("react-router-dom") || id.includes("react-router")) {
-            return "@react-router";
-          }
           if (id.includes("tanstack")) {
             return "@tanstack";
           }

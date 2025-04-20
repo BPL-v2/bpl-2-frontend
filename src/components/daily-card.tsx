@@ -1,9 +1,9 @@
 import { useContext } from "react";
-import { GlobalStateContext } from "../utils/context-provider";
+import { GlobalStateContext } from "@utils/context-provider";
 import { CollectionCardTable } from "./collection-card-table";
-import { Daily } from "../types/scoring-objective";
+import { Daily } from "@mytypes/scoring-objective";
 import { ObjectiveIcon } from "./objective-icon";
-import { scoringApi } from "../client/client";
+import { scoringApi } from "@client/client";
 import { Countdown } from "./countdown";
 
 export type DailyCardProps = {
@@ -76,7 +76,7 @@ export function DailyCard({ daily }: DailyCardProps) {
         >
           <h3 className="flex-grow text-center mt-4 text-xl font-medium mx-4">
             {objective.name}
-            {objective.extra ? <a className="text-error">*</a> : null}
+            {objective.extra ? <i className="text-error">*</i> : null}
           </h3>
         </div>
       </div>

@@ -1,6 +1,6 @@
-import { Objective, GameVersion } from "../client";
-import { ScoreObjective } from "../types/score";
-import { getImageLocation, getItemName } from "../types/scoring-objective";
+import { Objective, GameVersion } from "@client/api";
+import { ScoreObjective } from "@mytypes/score";
+import { getImageLocation, getItemName } from "@mytypes/scoring-objective";
 
 export type ObjectiveIconProps = {
   objective: ScoreObjective | Objective;

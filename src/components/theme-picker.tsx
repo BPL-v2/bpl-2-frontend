@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { GlobalStateContext } from "../utils/context-provider";
+import { GlobalStateContext } from "@utils/context-provider";
 
 export function ThemePicker() {
   const { setDarkMode } = useContext(GlobalStateContext);

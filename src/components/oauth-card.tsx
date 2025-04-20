@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { GlobalStateContext } from "../utils/context-provider";
-import { userApi } from "../client/client";
+import { GlobalStateContext } from "@utils/context-provider";
+import { userApi } from "@client/client";
 
 type OauthCardProps = {
   required?: boolean;

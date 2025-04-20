@@ -1,5 +1,16 @@
-import { createRoot } from "react-dom/client";
+import ReactDOM from "react-dom/client";
+import { RouterProvider } from "@tanstack/react-router";
+import "./App.css";
+import ContextWrapper from "./components/app-context";
+import { router } from "./router";
 
-import App from "./App.tsx";
+const rootElement = document.getElementById("root")!;
 
-createRoot(document.getElementById("root")!).render(<App />);
+if (!rootElement.innerHTML) {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <ContextWrapper>
+      <RouterProvider router={router} />
+    </ContextWrapper>
+  );
+}

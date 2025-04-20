@@ -17,6 +17,15 @@
     "strict": true,
     "noUnusedLocals": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@client/*": ["src/client/*"],
+      "@utils/*": ["src/utils/*"],
+      "@components/*": ["src/components/*"],
+      "@mytypes/*": ["src/mytypes/*"],
+      "@icons/*": ["src/icons/*"],
+      "@rules/*": ["src/rules/*"]
+    }
   }
 }
