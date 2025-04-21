@@ -12,9 +12,10 @@ import {
 } from "@client/api";
 import { scoringApi } from "@client/client";
 import { useParams } from "@tanstack/react-router";
+import { requiresAdmin } from "@utils/token";
 
 export const Route = createFileRoute("/admin/events/$eventId/scoring-presets")({
-  component: ScoringPresetsPage,
+  component: requiresAdmin(ScoringPresetsPage),
   params: {
     parse: (params) => ({
       eventId: Number(params.eventId),

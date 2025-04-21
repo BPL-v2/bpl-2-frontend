@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/admin/team-sort")({
-  component: UserSortPage,
+  component: requiresAdmin(UserSortPage),
 });
 
 import { useContext, useEffect, useMemo, useState } from "react";
@@ -11,6 +11,7 @@ import { Permission, Signup } from "@client/api";
 import { signupApi, teamApi } from "@client/client";
 import Table from "@components/table";
 import { ColumnDef } from "@tanstack/react-table";
+import { requiresAdmin } from "@utils/token";
 
 type TeamRow = {
   key: number;

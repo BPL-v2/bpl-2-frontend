@@ -16,6 +16,7 @@ import {
 } from "@client/api";
 import { MinimalTeamUser } from "@mytypes/user";
 import { eventApi, ladderApi, scoringApi, userApi } from "@client/client";
+import { isLoggedIn } from "@utils/token";
 
 function ContextWrapper({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User>();
@@ -46,7 +47,9 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
     if (currentEvent.ignoreRefetch) {
       return;
     }
-    userApi.getUser().then(setUser);
+    if (isLoggedIn()) {
+      userApi.getUser().then(setUser);
+    }
     websocket?.close(1000, "eventChange");
     setGameVersion(currentEvent.game_version);
     establishScoreSocket(

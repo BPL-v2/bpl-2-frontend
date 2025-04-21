@@ -80,7 +80,7 @@ async function createBulkItemObjectives(
     objectives.map((obj) => objectiveApi.createObjective(eventId, obj))
   );
 }
-function ScoringCategoryPage() {
+export function ScoringCategoryPage() {
   let { user, events } = useContext(GlobalStateContext);
   let { eventId, categoryId } = useParams({ strict: false });
   let [categoryName, setCategoryName] = React.useState("");

@@ -20,6 +20,11 @@ import "isomorphic-fetch";
 const baseUrl = process.env.VITE_BACKEND_URL;
 const config: Configuration = {
   basePath: baseUrl,
+  apiKey: (_: string) => {
+    return localStorage.getItem("auth")
+      ? "Bearer " + localStorage.getItem("auth")
+      : "";
+  },
 };
 
 export const eventApi = EventApiFactory(config, fetch, baseUrl);

@@ -5,9 +5,10 @@ import { GlobalStateContext } from "@utils/context-provider";
 import CrudTable, { CrudColumn } from "@components/crudtable";
 import { teamApi } from "@client/client";
 import { GameVersion, Permission, Team } from "@client/api";
+import { requiresAdmin } from "@utils/token";
 
 export const Route = createFileRoute("/admin/events/$eventId/teams")({
-  component: TeamPage,
+  component: requiresAdmin(TeamPage),
   params: {
     parse: (params) => ({
       eventId: Number(params.eventId),
@@ -111,8 +112,6 @@ function TeamPage() {
 
   return (
     <>
-      <input type="color" className="input" />
-
       <CrudTable<Team>
         resourceName="Team"
         columns={columns}

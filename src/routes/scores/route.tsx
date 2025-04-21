@@ -1,4 +1,4 @@
-import { JSX, useContext, useMemo, useState } from "react";
+import { JSX, useContext, useEffect, useMemo, useState } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { GameVersion } from "@client/api";
 import { UniqueTabRules } from "@rules/uniques";
@@ -16,6 +16,7 @@ import {
   Outlet,
   useRouterState,
 } from "@tanstack/react-router";
+import { router } from "../../router";
 
 type scoringTabKey =
   | "ladder"
@@ -41,6 +42,14 @@ function ScoringPage() {
   const selected = useRouterState({
     select: (state) => state.location.pathname.split("/").slice(-1)[0],
   });
+  useEffect(() => {
+    if (selected === "scores") {
+      router.navigate({
+        to: `/scores/ladder`,
+      });
+    }
+  }, [selected]);
+
   const scoringTabs: {
     key: scoringTabKey;
     name: string;
@@ -116,16 +125,19 @@ function ScoringPage() {
   return (
     <>
       <div className="flex items-center justify-between bg-base-200 mb-4 rounded-b-box">
-        <ul className="menu menu-horizontal gap-0 md:gap-2">
+        <ul className="menu menu-horizontal gap-1 md:gap-2">
           {scoringTabs
             .filter((tab) => tab.visible)
             .map((tab) => (
               <li key={tab.key}>
                 <Link
                   to={`/scores/${tab.key}`}
-                  className={`px-2 md:px-4 hover:bg-primary hover:text-primary-content`}
+                  className={`btn`}
                   activeProps={{
-                    className: "bg-primary text-primary-content",
+                    className: "btn-primary",
+                  }}
+                  inactiveProps={{
+                    className: "btn-ghost hover:btn-primary",
                   }}
                 >
                   {tab.name}
@@ -141,7 +153,7 @@ function ScoringPage() {
             setShowRules(!showRules);
           }}
         >
-          <BookOpenIcon className="h-6 w-6" />{" "}
+          <BookOpenIcon className="h-6 w-6" />
           <span className="hidden md:block">
             {showRules ? "Hide" : "Show"} Rules
           </span>
