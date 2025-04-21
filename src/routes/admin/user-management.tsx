@@ -7,9 +7,10 @@ import { userApi } from "@client/client";
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 import { ColumnDef, sortingFns } from "@tanstack/react-table";
 import Table from "@components/table";
+import { requiresAdmin } from "@utils/token";
 
 export const Route = createFileRoute("/admin/user-management")({
-  component: UserPage,
+  component: requiresAdmin(UserPage),
 });
 
 const columns: ColumnDef<User, any>[] = [

@@ -15,6 +15,7 @@ import { Route as SubmissionsImport } from './routes/submissions'
 import { Route as StreamsImport } from './routes/streams'
 import { Route as SettingsImport } from './routes/settings'
 import { Route as RulesImport } from './routes/rules'
+import { Route as RedirectImport } from './routes/redirect'
 import { Route as ScoresRouteImport } from './routes/scores/route'
 import { Route as IndexImport } from './routes/index'
 import { Route as AdminIndexImport } from './routes/admin/index'
@@ -60,6 +61,12 @@ const SettingsRoute = SettingsImport.update({
 const RulesRoute = RulesImport.update({
   id: '/rules',
   path: '/rules',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const RedirectRoute = RedirectImport.update({
+  id: '/redirect',
+  path: '/redirect',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -207,6 +214,13 @@ declare module '@tanstack/react-router' {
       path: '/scores'
       fullPath: '/scores'
       preLoaderRoute: typeof ScoresRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/redirect': {
+      id: '/redirect'
+      path: '/redirect'
+      fullPath: '/redirect'
+      preLoaderRoute: typeof RedirectImport
       parentRoute: typeof rootRoute
     }
     '/rules': {
@@ -408,6 +422,7 @@ const ScoresRouteRouteWithChildren = ScoresRouteRoute._addFileChildren(
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/scores': typeof ScoresRouteRouteWithChildren
+  '/redirect': typeof RedirectRoute
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
   '/streams': typeof StreamsRoute
@@ -436,6 +451,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/scores': typeof ScoresRouteRouteWithChildren
+  '/redirect': typeof RedirectRoute
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
   '/streams': typeof StreamsRoute
@@ -465,6 +481,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/scores': typeof ScoresRouteRouteWithChildren
+  '/redirect': typeof RedirectRoute
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
   '/streams': typeof StreamsRoute
@@ -495,6 +512,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/scores'
+    | '/redirect'
     | '/rules'
     | '/settings'
     | '/streams'
@@ -522,6 +540,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/scores'
+    | '/redirect'
     | '/rules'
     | '/settings'
     | '/streams'
@@ -549,6 +568,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/scores'
+    | '/redirect'
     | '/rules'
     | '/settings'
     | '/streams'
@@ -578,6 +598,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ScoresRouteRoute: typeof ScoresRouteRouteWithChildren
+  RedirectRoute: typeof RedirectRoute
   RulesRoute: typeof RulesRoute
   SettingsRoute: typeof SettingsRoute
   StreamsRoute: typeof StreamsRoute
@@ -596,6 +617,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ScoresRouteRoute: ScoresRouteRouteWithChildren,
+  RedirectRoute: RedirectRoute,
   RulesRoute: RulesRoute,
   SettingsRoute: SettingsRoute,
   StreamsRoute: StreamsRoute,
@@ -624,6 +646,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/scores",
+        "/redirect",
         "/rules",
         "/settings",
         "/streams",
@@ -656,6 +679,9 @@ export const routeTree = rootRoute
         "/scores/races",
         "/scores/uniques"
       ]
+    },
+    "/redirect": {
+      "filePath": "redirect.tsx"
     },
     "/rules": {
       "filePath": "rules.tsx"

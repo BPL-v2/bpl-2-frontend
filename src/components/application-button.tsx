@@ -35,16 +35,12 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
   if (eventStatus?.application_status === ApplicationStatus.applied) {
     return (
       <div className="dropdown">
-        <button
-          className={`btn btn-lg py-8 border-0 text-base-content hover:text-primary-content hover:bg-primary`}
-        >
+        <button className={`btn btn-lg py-8 hover:btn-primary`}>
           Application Pending
         </button>
 
         <ul
           tabIndex={0}
-          // className={`btn btn-lg py-8 border-0 text-base-content hover:text-primary-content hover:bg-primary`}
-
           className="dropdown-content menu bg-base-300 border-2 border-base-100 z-1 shadow-2xl text-lg rounded-field"
           onClick={() => {
             if (document.activeElement instanceof HTMLElement) {

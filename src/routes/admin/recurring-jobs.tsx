@@ -7,9 +7,10 @@ import { jobApi } from "@client/client";
 import React from "react";
 import dayjs from "dayjs";
 import { Dialog } from "@components/dialog";
+import { requiresAdmin } from "@utils/token";
 
 export const Route = createFileRoute("/admin/recurring-jobs")({
-  component: RecurringJobsPage,
+  component: requiresAdmin(RecurringJobsPage),
 });
 
 const formatDateForInput = (date: Date | null) => {

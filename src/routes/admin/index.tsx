@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { requiresAdmin } from "@utils/token";
 
 export const Route = createFileRoute("/admin/")({
-  component: RouteComponent,
+  component: requiresAdmin(RouteComponent),
 });
 
 function RouteComponent() {
