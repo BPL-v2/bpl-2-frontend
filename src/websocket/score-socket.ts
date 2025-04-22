@@ -7,16 +7,16 @@ export const establishScoreSocket = (
   setWebsocket: (ws: WebSocket) => void,
   appendUpdates: (updates: ScoreDiffWithKey[]) => void
 ) => {
+  if (!import.meta.env.VITE_BACKEND_URL) {
+    console.error("VITE_BACKEND_URL is not defined");
+    return;
+  }
   const url =
     import.meta.env.VITE_BACKEND_URL.replace("https", "wss").replace(
       "http",
       "ws"
     ) + `/events/${eventId}/scores/ws`;
   const ws = new WebSocket(url);
-  if (!ws) {
-    console.error("Failed to create WebSocket");
-    return;
-  }
   ws.onopen = () => {
     console.log("WebSocket connection established", new Date());
   };
