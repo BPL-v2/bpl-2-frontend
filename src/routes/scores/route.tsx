@@ -30,15 +30,38 @@ type scoringTabKey =
   | "gems"
   | "delve";
 
+export type ScoreQueryParams = {
+  rules: boolean;
+};
+
+export function ruleWrapper(tab: () => JSX.Element, tabRules?: JSX.Element) {
+  const { rules } = Route.useSearch();
+  return (
+    <>
+      {rules && tabRules ? (
+        <article className="prose text-left max-w-4xl my-4 bg-base-200 p-8 rounded-box">
+          {tabRules}
+        </article>
+      ) : null}
+      {tab()}
+    </>
+  );
+}
+
 export const Route = createFileRoute("/scores")({
   component: ScoringPage,
+  validateSearch: (search: Record<string, boolean>): ScoreQueryParams => {
+    return {
+      rules: search.rules,
+    };
+  },
 });
 
 function ScoringPage() {
   const { currentEvent, gameVersion, eventStatus } =
     useContext(GlobalStateContext);
+  const { rules } = Route.useSearch();
 
-  const [showRules, setShowRules] = useState<boolean>(false);
   const selected = useRouterState({
     select: (state) => state.location.pathname.split("/").slice(-1)[0],
   });
@@ -46,6 +69,9 @@ function ScoringPage() {
     if (selected === "scores") {
       router.navigate({
         to: `/scores/ladder`,
+        search: {
+          rules: rules,
+        },
       });
     }
   }, [selected]);
@@ -132,7 +158,8 @@ function ScoringPage() {
               <li key={tab.key}>
                 <Link
                   to={`/scores/${tab.key}`}
-                  className={`btn`}
+                  search={{ rules: rules }}
+                  className={`btn btn-sm text-base`}
                   activeProps={{
                     className: "btn-primary",
                   }}
@@ -145,26 +172,19 @@ function ScoringPage() {
               </li>
             ))}
         </ul>
-        <button
-          className={`btn w-14 md:w-36 border-1 border-secondary ${
-            showRules ? "bg-secondary text-secondary-content" : "text-secondary"
+        <Link
+          to={"/scores/" + selected}
+          className={`btn w-14 md:w-36 border-1 border-secondary mx-2 ${
+            rules ? "bg-secondary text-secondary-content" : "text-secondary"
           }`}
-          onClick={() => {
-            setShowRules(!showRules);
-          }}
+          search={{ rules: !rules }}
         >
           <BookOpenIcon className="h-6 w-6" />
           <span className="hidden md:block">
-            {showRules ? "Hide" : "Show"} Rules
+            {rules ? "Hide" : "Show"} Rules
           </span>
-        </button>
+        </Link>
       </div>
-
-      {showRules && tab?.rules !== undefined ? (
-        <article className="prose text-left max-w-4xl my-4 bg-base-200 p-8 rounded-box">
-          {tab.rules || null}
-        </article>
-      ) : null}
       <Outlet />
     </>
   );
