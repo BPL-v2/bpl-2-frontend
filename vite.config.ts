@@ -14,7 +14,7 @@ export default defineConfig({
   plugins: [
     TanStackRouterVite({
       target: "react",
-      autoCodeSplitting: true,
+      // autoCodeSplitting: true,
     }),
     react(),
     tailwindcss(),
@@ -40,21 +40,21 @@ export default defineConfig({
     },
   },
 
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id: string) {
-          if (id.includes("tanstack")) {
-            return "@tanstack";
-          }
-          if (id.includes("heroicons")) {
-            return "@heroicons";
-          }
-          if (id.includes("node_modules")) {
-            return "@vendor";
-          }
-        },
-      },
-    },
-  },
+  // build: {
+  //   rollupOptions: {
+  //     output: {
+  //       manualChunks(id: string) {
+  //         if (id.includes("tanstack")) {
+  //           return "@tanstack";
+  //         }
+  //         if (id.includes("heroicons")) {
+  //           return "@heroicons";
+  //         }
+  //         if (id.includes("node_modules")) {
+  //           return "@vendor";
+  //         }
+  //       },
+  //     },
+  //   },
+  // },
 });
