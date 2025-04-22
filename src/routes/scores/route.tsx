@@ -1,4 +1,4 @@
-import { JSX, useContext, useEffect, useMemo, useState } from "react";
+import { JSX, useContext, useEffect, useMemo } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { GameVersion } from "@client/api";
 import { UniqueTabRules } from "@rules/uniques";
@@ -147,7 +147,6 @@ function ScoringPage() {
   if (!currentEvent) {
     return <div>Event not found</div>;
   }
-  const tab = scoringTabs.find((tab) => tab.key === selected);
   return (
     <>
       <div className="flex items-center justify-between bg-base-200 mb-4 rounded-b-box">
