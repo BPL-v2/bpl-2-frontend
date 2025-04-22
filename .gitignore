@@ -28,3 +28,5 @@ icon-generation/temp
 */__pycache__
 swagger-codegen*
 tsconfig.tsbuildinfo
+# Local Netlify folder
+.netlify
