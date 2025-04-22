@@ -13,6 +13,10 @@ export const establishScoreSocket = (
       "ws"
     ) + `/events/${eventId}/scores/ws`;
   const ws = new WebSocket(url);
+  if (!ws) {
+    console.error("Failed to create WebSocket");
+    return;
+  }
   ws.onopen = () => {
     console.log("WebSocket connection established", new Date());
   };
