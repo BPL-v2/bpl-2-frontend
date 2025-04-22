@@ -5,9 +5,11 @@ import { ItemTable } from "@components/item-table";
 import { GameVersion } from "@client/api";
 import { Ranking } from "@components/ranking";
 import { createFileRoute } from "@tanstack/react-router";
+import { ruleWrapper } from "./route";
+import { HeistTabRules } from "@rules/heist";
 
 export const Route = createFileRoute("/scores/heist")({
-  component: HeistTab,
+  component: () => ruleWrapper(HeistTab, <HeistTabRules />),
 });
 
 export function HeistTab() {
