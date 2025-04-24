@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
-import { oauthApi, userApi } from "@client/client";
+import { userApi } from "@client/client";
 import { useRouterState } from "@tanstack/react-router";
 import { redirectOauth } from "@utils/oauth";
 
