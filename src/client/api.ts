@@ -163,6 +163,12 @@ export interface CallbackBody {
      * @type {string}
      * @memberof CallbackBody
      */
+    redirect_url: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CallbackBody
+     */
     state: string;
 }
 
@@ -3218,11 +3224,12 @@ export const OauthApiFetchParamCreator = function (configuration?: Configuration
         /**
          * Redirects to an oauth provider
          * @param {'poe' | 'twitch' | 'discord'} provider Provider name
-         * @param {string} [last_url] Last URL to redirect to after oauth
+         * @param {string} [redirect_url] Redirect URL for oauth provider
+         * @param {string} [last_url] Last URL to redirect to after oauth is finished
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        oauthRedirect(provider: 'poe' | 'twitch' | 'discord', last_url?: string, options: any = {}): FetchArgs {
+        oauthRedirect(provider: 'poe' | 'twitch' | 'discord', redirect_url?: string, last_url?: string, options: any = {}): FetchArgs {
             // verify required parameter 'provider' is not null or undefined
             if (provider === null || provider === undefined) {
                 throw new RequiredError('provider','Required parameter provider was null or undefined when calling oauthRedirect.');
@@ -3240,6 +3247,10 @@ export const OauthApiFetchParamCreator = function (configuration?: Configuration
 					? configuration.apiKey("Authorization")
 					: configuration.apiKey;
                 localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            if (redirect_url !== undefined) {
+                localVarQueryParameter['redirect_url'] = redirect_url;
             }
 
             if (last_url !== undefined) {
@@ -3304,12 +3315,13 @@ export const OauthApiFp = function(configuration?: Configuration) {
         /**
          * Redirects to an oauth provider
          * @param {'poe' | 'twitch' | 'discord'} provider Provider name
-         * @param {string} [last_url] Last URL to redirect to after oauth
+         * @param {string} [redirect_url] Redirect URL for oauth provider
+         * @param {string} [last_url] Last URL to redirect to after oauth is finished
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        oauthRedirect(provider: 'poe' | 'twitch' | 'discord', last_url?: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<string> {
-            const localVarFetchArgs = OauthApiFetchParamCreator(configuration).oauthRedirect(provider, last_url, options);
+        oauthRedirect(provider: 'poe' | 'twitch' | 'discord', redirect_url?: string, last_url?: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<string> {
+            const localVarFetchArgs = OauthApiFetchParamCreator(configuration).oauthRedirect(provider, redirect_url, last_url, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -3350,12 +3362,13 @@ export const OauthApiFactory = function (configuration?: Configuration, fetch?: 
         /**
          * Redirects to an oauth provider
          * @param {'poe' | 'twitch' | 'discord'} provider Provider name
-         * @param {string} [last_url] Last URL to redirect to after oauth
+         * @param {string} [redirect_url] Redirect URL for oauth provider
+         * @param {string} [last_url] Last URL to redirect to after oauth is finished
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        oauthRedirect(provider: 'poe' | 'twitch' | 'discord', last_url?: string, options?: any) {
-            return OauthApiFp(configuration).oauthRedirect(provider, last_url, options)(fetch, basePath);
+        oauthRedirect(provider: 'poe' | 'twitch' | 'discord', redirect_url?: string, last_url?: string, options?: any) {
+            return OauthApiFp(configuration).oauthRedirect(provider, redirect_url, last_url, options)(fetch, basePath);
         },
     };
 };
@@ -3392,13 +3405,14 @@ export class OauthApi extends BaseAPI {
     /**
      * Redirects to an oauth provider
      * @param {'poe' | 'twitch' | 'discord'} provider Provider name
-     * @param {string} [last_url] Last URL to redirect to after oauth
+     * @param {string} [redirect_url] Redirect URL for oauth provider
+     * @param {string} [last_url] Last URL to redirect to after oauth is finished
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OauthApi
      */
-    public oauthRedirect(provider: 'poe' | 'twitch' | 'discord', last_url?: string, options?: any) {
-        return OauthApiFp(this.configuration).oauthRedirect(provider, last_url, options)(this.fetch, this.basePath);
+    public oauthRedirect(provider: 'poe' | 'twitch' | 'discord', redirect_url?: string, last_url?: string, options?: any) {
+        return OauthApiFp(this.configuration).oauthRedirect(provider, redirect_url, last_url, options)(this.fetch, this.basePath);
     }
 
 }

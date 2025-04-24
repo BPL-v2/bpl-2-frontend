@@ -2,6 +2,7 @@ import { oauthApi, userApi } from "@client/client";
 import { useContext, useEffect } from "react";
 import { router } from "../router";
 import { GlobalStateContext } from "@utils/context-provider";
+import { getCallbackUrl } from "@utils/oauth";
 
 type CallbackProps = {
   state: string;
@@ -24,6 +25,7 @@ export function Callback({ state, code, provider }: CallbackProps) {
     }
     oauthApi
       .oauthCallback(provider, {
+        redirect_url: getCallbackUrl(provider),
         state: state,
         code: code,
       })
