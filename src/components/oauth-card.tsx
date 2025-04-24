@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
-import { userApi } from "@client/client";
+import { oauthApi, userApi } from "@client/client";
+import { useRouterState } from "@tanstack/react-router";
 
 type OauthCardProps = {
   required?: boolean;
   connected: boolean;
-  provider: string;
+  provider: "discord" | "twitch" | "poe";
   title: string;
   description: string;
   logo: React.ReactNode;
@@ -20,6 +21,7 @@ export function OauthCard({
   logo,
 }: OauthCardProps) {
   const { setUser } = useContext(GlobalStateContext);
+  const state = useRouterState();
   const connectionButton = connected ? (
     <button
       className={`btn btn-error btn-outline`}
@@ -31,30 +33,21 @@ export function OauthCard({
     <button
       className={`btn btn-success btn-outline`}
       onClick={() => {
-        window.open(
-          import.meta.env.VITE_BACKEND_URL + "/oauth2/" + provider,
-          ""
-        );
+        oauthApi.oauthRedirect(provider, state.location.href).then((url) => {
+          window.open(url, "_self");
+        });
       }}
     >
       Connect
     </button>
   );
-  let borderColour = "border-base-100";
-  if (connected) {
-    borderColour = "border-success";
-  } else if (required) {
-    borderColour = "border-error";
-  }
-  const bodyColour = connected ? "bg-base-300" : "bg-base-200";
-  const headerColour = connected ? "bg-base-200" : "bg-base-100";
 
   const card = (
     <div
-      className={`card border-2 max-h-100 max-w-120 ${borderColour} ${bodyColour}`}
+      className={`card border-2 max-h-100 max-w-120 ${connected ? "border-sucess" : required ? "border-error" : "border-base-100"} ${connected ? "bg-base-300" : "bg-base-200"}`}
     >
       <div
-        className={`rounded-t-box px-8 py-4 items-center justify-between flex ${headerColour}`}
+        className={`rounded-t-box px-8 py-4 items-center justify-between flex ${connected ? "bg-base-200" : "bg-base-100"}`}
       >
         <h1 className="text-2xl font-bold text-center">{title}</h1>
         {connectionButton}

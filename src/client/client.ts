@@ -17,7 +17,7 @@ import {
 
 import "isomorphic-fetch";
 
-const baseUrl = process.env.VITE_BACKEND_URL;
+const baseUrl = process.env.VITE_PUBLIC_BPL_BACKEND_URL;
 const config: Configuration = {
   basePath: baseUrl,
   apiKey: (_: string) => {
