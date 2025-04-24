@@ -7,7 +7,6 @@ import {
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { oauthApi } from "@client/client";
 import { redirectOauth } from "@utils/oauth";
 
 const AuthButton = () => {
