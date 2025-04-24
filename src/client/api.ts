@@ -160,12 +160,6 @@ export interface CallbackBody {
     code: string;
     /**
      * 
-     * @type {Provider}
-     * @memberof CallbackBody
-     */
-    provider: Provider;
-    /**
-     * 
      * @type {string}
      * @memberof CallbackBody
      */
@@ -456,20 +450,6 @@ export enum Difftype {
     Removed = 'Removed',
     Changed = 'Changed',
     Unchanged = 'Unchanged'
-}
-
-/**
- * 
- * @export
- * @interface DiscordBotLoginBody
- */
-export interface DiscordBotLoginBody {
-    /**
-     * 
-     * @type {string}
-     * @memberof DiscordBotLoginBody
-     */
-    token: string;
 }
 
 /**
@@ -1128,17 +1108,6 @@ export enum Permission {
     command_team = 'command_team',
     objective_designer = 'objective_designer',
     judge = 'judge'
-}
-
-/**
- * 
- * @export
- * @enum {string}
- */
-export enum Provider {
-    poe = 'poe',
-    twitch = 'twitch',
-    discord = 'discord'
 }
 
 /**
@@ -3189,66 +3158,13 @@ export const OauthApiFetchParamCreator = function (configuration?: Configuration
     return {
         /**
          * Logs in the discord bot (only for internal use)
-         * @param {DiscordBotLoginBody} body Discord bot login body
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        loginDiscordBot(body: DiscordBotLoginBody, options: any = {}): FetchArgs {
-            // verify required parameter 'body' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling loginDiscordBot.');
-            }
+        loginDiscordBot(options: any = {}): FetchArgs {
             const localVarPath = `/oauth2/discord/bot-login`;
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"DiscordBotLoginBody" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Redirects to discord oauth
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        oauth2DiscordGet(options: any = {}): FetchArgs {
-            const localVarPath = `/oauth2/discord`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Redirects to twitch oauth
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        oauth2TwitchGet(options: any = {}): FetchArgs {
-            const localVarPath = `/oauth2/twitch`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -3264,16 +3180,22 @@ export const OauthApiFetchParamCreator = function (configuration?: Configuration
         },
         /**
          * Callback handler for oauth
+         * @param {'poe' | 'twitch' | 'discord'} provider Provider name
          * @param {CallbackBody} body Callback body
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        oauthCallback(body: CallbackBody, options: any = {}): FetchArgs {
+        oauthCallback(provider: 'poe' | 'twitch' | 'discord', body: CallbackBody, options: any = {}): FetchArgs {
+            // verify required parameter 'provider' is not null or undefined
+            if (provider === null || provider === undefined) {
+                throw new RequiredError('provider','Required parameter provider was null or undefined when calling oauthCallback.');
+            }
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body','Required parameter body was null or undefined when calling oauthCallback.');
             }
-            const localVarPath = `/oauth2/callback`;
+            const localVarPath = `/oauth2/{provider}/callback`
+                .replace(`{${"provider"}}`, encodeURIComponent(String(provider)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
             const localVarHeaderParameter = {} as any;
@@ -3293,6 +3215,47 @@ export const OauthApiFetchParamCreator = function (configuration?: Configuration
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Redirects to an oauth provider
+         * @param {'poe' | 'twitch' | 'discord'} provider Provider name
+         * @param {string} [last_url] Last URL to redirect to after oauth
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        oauthRedirect(provider: 'poe' | 'twitch' | 'discord', last_url?: string, options: any = {}): FetchArgs {
+            // verify required parameter 'provider' is not null or undefined
+            if (provider === null || provider === undefined) {
+                throw new RequiredError('provider','Required parameter provider was null or undefined when calling oauthRedirect.');
+            }
+            const localVarPath = `/oauth2/{provider}/redirect`
+                .replace(`{${"provider"}}`, encodeURIComponent(String(provider)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            if (last_url !== undefined) {
+                localVarQueryParameter['last_url'] = last_url;
+            }
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -3304,12 +3267,11 @@ export const OauthApiFp = function(configuration?: Configuration) {
     return {
         /**
          * Logs in the discord bot (only for internal use)
-         * @param {DiscordBotLoginBody} body Discord bot login body
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        loginDiscordBot(body: DiscordBotLoginBody, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<string> {
-            const localVarFetchArgs = OauthApiFetchParamCreator(configuration).loginDiscordBot(body, options);
+        loginDiscordBot(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<string> {
+            const localVarFetchArgs = OauthApiFetchParamCreator(configuration).loginDiscordBot(options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -3321,47 +3283,33 @@ export const OauthApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         * Redirects to discord oauth
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        oauth2DiscordGet(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = OauthApiFetchParamCreator(configuration).oauth2DiscordGet(options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Redirects to twitch oauth
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        oauth2TwitchGet(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = OauthApiFetchParamCreator(configuration).oauth2TwitchGet(options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
          * Callback handler for oauth
+         * @param {'poe' | 'twitch' | 'discord'} provider Provider name
          * @param {CallbackBody} body Callback body
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        oauthCallback(body: CallbackBody, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<CallbackResponse> {
-            const localVarFetchArgs = OauthApiFetchParamCreator(configuration).oauthCallback(body, options);
+        oauthCallback(provider: 'poe' | 'twitch' | 'discord', body: CallbackBody, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<CallbackResponse> {
+            const localVarFetchArgs = OauthApiFetchParamCreator(configuration).oauthCallback(provider, body, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * Redirects to an oauth provider
+         * @param {'poe' | 'twitch' | 'discord'} provider Provider name
+         * @param {string} [last_url] Last URL to redirect to after oauth
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        oauthRedirect(provider: 'poe' | 'twitch' | 'discord', last_url?: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<string> {
+            const localVarFetchArgs = OauthApiFetchParamCreator(configuration).oauthRedirect(provider, last_url, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -3383,37 +3331,31 @@ export const OauthApiFactory = function (configuration?: Configuration, fetch?: 
     return {
         /**
          * Logs in the discord bot (only for internal use)
-         * @param {DiscordBotLoginBody} body Discord bot login body
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        loginDiscordBot(body: DiscordBotLoginBody, options?: any) {
-            return OauthApiFp(configuration).loginDiscordBot(body, options)(fetch, basePath);
-        },
-        /**
-         * Redirects to discord oauth
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        oauth2DiscordGet(options?: any) {
-            return OauthApiFp(configuration).oauth2DiscordGet(options)(fetch, basePath);
-        },
-        /**
-         * Redirects to twitch oauth
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        oauth2TwitchGet(options?: any) {
-            return OauthApiFp(configuration).oauth2TwitchGet(options)(fetch, basePath);
+        loginDiscordBot(options?: any) {
+            return OauthApiFp(configuration).loginDiscordBot(options)(fetch, basePath);
         },
         /**
          * Callback handler for oauth
+         * @param {'poe' | 'twitch' | 'discord'} provider Provider name
          * @param {CallbackBody} body Callback body
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        oauthCallback(body: CallbackBody, options?: any) {
-            return OauthApiFp(configuration).oauthCallback(body, options)(fetch, basePath);
+        oauthCallback(provider: 'poe' | 'twitch' | 'discord', body: CallbackBody, options?: any) {
+            return OauthApiFp(configuration).oauthCallback(provider, body, options)(fetch, basePath);
+        },
+        /**
+         * Redirects to an oauth provider
+         * @param {'poe' | 'twitch' | 'discord'} provider Provider name
+         * @param {string} [last_url] Last URL to redirect to after oauth
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        oauthRedirect(provider: 'poe' | 'twitch' | 'discord', last_url?: string, options?: any) {
+            return OauthApiFp(configuration).oauthRedirect(provider, last_url, options)(fetch, basePath);
         },
     };
 };
@@ -3427,44 +3369,36 @@ export const OauthApiFactory = function (configuration?: Configuration, fetch?: 
 export class OauthApi extends BaseAPI {
     /**
      * Logs in the discord bot (only for internal use)
-     * @param {DiscordBotLoginBody} body Discord bot login body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OauthApi
      */
-    public loginDiscordBot(body: DiscordBotLoginBody, options?: any) {
-        return OauthApiFp(this.configuration).loginDiscordBot(body, options)(this.fetch, this.basePath);
-    }
-
-    /**
-     * Redirects to discord oauth
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof OauthApi
-     */
-    public oauth2DiscordGet(options?: any) {
-        return OauthApiFp(this.configuration).oauth2DiscordGet(options)(this.fetch, this.basePath);
-    }
-
-    /**
-     * Redirects to twitch oauth
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof OauthApi
-     */
-    public oauth2TwitchGet(options?: any) {
-        return OauthApiFp(this.configuration).oauth2TwitchGet(options)(this.fetch, this.basePath);
+    public loginDiscordBot(options?: any) {
+        return OauthApiFp(this.configuration).loginDiscordBot(options)(this.fetch, this.basePath);
     }
 
     /**
      * Callback handler for oauth
+     * @param {'poe' | 'twitch' | 'discord'} provider Provider name
      * @param {CallbackBody} body Callback body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OauthApi
      */
-    public oauthCallback(body: CallbackBody, options?: any) {
-        return OauthApiFp(this.configuration).oauthCallback(body, options)(this.fetch, this.basePath);
+    public oauthCallback(provider: 'poe' | 'twitch' | 'discord', body: CallbackBody, options?: any) {
+        return OauthApiFp(this.configuration).oauthCallback(provider, body, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Redirects to an oauth provider
+     * @param {'poe' | 'twitch' | 'discord'} provider Provider name
+     * @param {string} [last_url] Last URL to redirect to after oauth
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OauthApi
+     */
+    public oauthRedirect(provider: 'poe' | 'twitch' | 'discord', last_url?: string, options?: any) {
+        return OauthApiFp(this.configuration).oauthRedirect(provider, last_url, options)(this.fetch, this.basePath);
     }
 
 }

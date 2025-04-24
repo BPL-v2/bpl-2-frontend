@@ -15,7 +15,6 @@ import { Route as SubmissionsImport } from './routes/submissions'
 import { Route as StreamsImport } from './routes/streams'
 import { Route as SettingsImport } from './routes/settings'
 import { Route as RulesImport } from './routes/rules'
-import { Route as RedirectImport } from './routes/redirect'
 import { Route as ScoresRouteImport } from './routes/scores/route'
 import { Route as IndexImport } from './routes/index'
 import { Route as AdminIndexImport } from './routes/admin/index'
@@ -34,6 +33,9 @@ import { Route as AdminUserManagementImport } from './routes/admin/user-manageme
 import { Route as AdminTeamSortImport } from './routes/admin/team-sort'
 import { Route as AdminRecurringJobsImport } from './routes/admin/recurring-jobs'
 import { Route as AdminEventsIndexImport } from './routes/admin/events/index'
+import { Route as AuthTwitchCallbackImport } from './routes/auth/twitch.callback'
+import { Route as AuthPoeCallbackImport } from './routes/auth/poe.callback'
+import { Route as AuthDiscordCallbackImport } from './routes/auth/discord.callback'
 import { Route as AdminEventsEventIdTeamsImport } from './routes/admin/events/$eventId/teams'
 import { Route as AdminEventsEventIdScoringPresetsImport } from './routes/admin/events/$eventId/scoring-presets'
 import { Route as AdminEventsEventIdCategoriesCategoryIdImport } from './routes/admin/events/$eventId/categories.$categoryId'
@@ -61,12 +63,6 @@ const SettingsRoute = SettingsImport.update({
 const RulesRoute = RulesImport.update({
   id: '/rules',
   path: '/rules',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const RedirectRoute = RedirectImport.update({
-  id: '/redirect',
-  path: '/redirect',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -178,6 +174,24 @@ const AdminEventsIndexRoute = AdminEventsIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AuthTwitchCallbackRoute = AuthTwitchCallbackImport.update({
+  id: '/auth/twitch/callback',
+  path: '/auth/twitch/callback',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthPoeCallbackRoute = AuthPoeCallbackImport.update({
+  id: '/auth/poe/callback',
+  path: '/auth/poe/callback',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthDiscordCallbackRoute = AuthDiscordCallbackImport.update({
+  id: '/auth/discord/callback',
+  path: '/auth/discord/callback',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AdminEventsEventIdTeamsRoute = AdminEventsEventIdTeamsImport.update({
   id: '/admin/events/$eventId/teams',
   path: '/admin/events/$eventId/teams',
@@ -214,13 +228,6 @@ declare module '@tanstack/react-router' {
       path: '/scores'
       fullPath: '/scores'
       preLoaderRoute: typeof ScoresRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/redirect': {
-      id: '/redirect'
-      path: '/redirect'
-      fullPath: '/redirect'
-      preLoaderRoute: typeof RedirectImport
       parentRoute: typeof rootRoute
     }
     '/rules': {
@@ -356,6 +363,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexImport
       parentRoute: typeof rootRoute
     }
+    '/auth/discord/callback': {
+      id: '/auth/discord/callback'
+      path: '/auth/discord/callback'
+      fullPath: '/auth/discord/callback'
+      preLoaderRoute: typeof AuthDiscordCallbackImport
+      parentRoute: typeof rootRoute
+    }
+    '/auth/poe/callback': {
+      id: '/auth/poe/callback'
+      path: '/auth/poe/callback'
+      fullPath: '/auth/poe/callback'
+      preLoaderRoute: typeof AuthPoeCallbackImport
+      parentRoute: typeof rootRoute
+    }
+    '/auth/twitch/callback': {
+      id: '/auth/twitch/callback'
+      path: '/auth/twitch/callback'
+      fullPath: '/auth/twitch/callback'
+      preLoaderRoute: typeof AuthTwitchCallbackImport
+      parentRoute: typeof rootRoute
+    }
     '/admin/events/': {
       id: '/admin/events/'
       path: '/admin/events'
@@ -422,7 +450,6 @@ const ScoresRouteRouteWithChildren = ScoresRouteRoute._addFileChildren(
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/scores': typeof ScoresRouteRouteWithChildren
-  '/redirect': typeof RedirectRoute
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
   '/streams': typeof StreamsRoute
@@ -442,6 +469,9 @@ export interface FileRoutesByFullPath {
   '/scores/races': typeof ScoresRacesRoute
   '/scores/uniques': typeof ScoresUniquesRoute
   '/admin': typeof AdminIndexRoute
+  '/auth/discord/callback': typeof AuthDiscordCallbackRoute
+  '/auth/poe/callback': typeof AuthPoeCallbackRoute
+  '/auth/twitch/callback': typeof AuthTwitchCallbackRoute
   '/admin/events': typeof AdminEventsIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
@@ -451,7 +481,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/scores': typeof ScoresRouteRouteWithChildren
-  '/redirect': typeof RedirectRoute
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
   '/streams': typeof StreamsRoute
@@ -471,6 +500,9 @@ export interface FileRoutesByTo {
   '/scores/races': typeof ScoresRacesRoute
   '/scores/uniques': typeof ScoresUniquesRoute
   '/admin': typeof AdminIndexRoute
+  '/auth/discord/callback': typeof AuthDiscordCallbackRoute
+  '/auth/poe/callback': typeof AuthPoeCallbackRoute
+  '/auth/twitch/callback': typeof AuthTwitchCallbackRoute
   '/admin/events': typeof AdminEventsIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
@@ -481,7 +513,6 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/scores': typeof ScoresRouteRouteWithChildren
-  '/redirect': typeof RedirectRoute
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
   '/streams': typeof StreamsRoute
@@ -501,6 +532,9 @@ export interface FileRoutesById {
   '/scores/races': typeof ScoresRacesRoute
   '/scores/uniques': typeof ScoresUniquesRoute
   '/admin/': typeof AdminIndexRoute
+  '/auth/discord/callback': typeof AuthDiscordCallbackRoute
+  '/auth/poe/callback': typeof AuthPoeCallbackRoute
+  '/auth/twitch/callback': typeof AuthTwitchCallbackRoute
   '/admin/events/': typeof AdminEventsIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
@@ -512,7 +546,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/scores'
-    | '/redirect'
     | '/rules'
     | '/settings'
     | '/streams'
@@ -532,6 +565,9 @@ export interface FileRouteTypes {
     | '/scores/races'
     | '/scores/uniques'
     | '/admin'
+    | '/auth/discord/callback'
+    | '/auth/poe/callback'
+    | '/auth/twitch/callback'
     | '/admin/events'
     | '/admin/events/$eventId/scoring-presets'
     | '/admin/events/$eventId/teams'
@@ -540,7 +576,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/scores'
-    | '/redirect'
     | '/rules'
     | '/settings'
     | '/streams'
@@ -560,6 +595,9 @@ export interface FileRouteTypes {
     | '/scores/races'
     | '/scores/uniques'
     | '/admin'
+    | '/auth/discord/callback'
+    | '/auth/poe/callback'
+    | '/auth/twitch/callback'
     | '/admin/events'
     | '/admin/events/$eventId/scoring-presets'
     | '/admin/events/$eventId/teams'
@@ -568,7 +606,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/scores'
-    | '/redirect'
     | '/rules'
     | '/settings'
     | '/streams'
@@ -588,6 +625,9 @@ export interface FileRouteTypes {
     | '/scores/races'
     | '/scores/uniques'
     | '/admin/'
+    | '/auth/discord/callback'
+    | '/auth/poe/callback'
+    | '/auth/twitch/callback'
     | '/admin/events/'
     | '/admin/events/$eventId/scoring-presets'
     | '/admin/events/$eventId/teams'
@@ -598,7 +638,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ScoresRouteRoute: typeof ScoresRouteRouteWithChildren
-  RedirectRoute: typeof RedirectRoute
   RulesRoute: typeof RulesRoute
   SettingsRoute: typeof SettingsRoute
   StreamsRoute: typeof StreamsRoute
@@ -608,6 +647,9 @@ export interface RootRouteChildren {
   AdminUserManagementRoute: typeof AdminUserManagementRoute
   ProfileUserIdRoute: typeof ProfileUserIdRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AuthDiscordCallbackRoute: typeof AuthDiscordCallbackRoute
+  AuthPoeCallbackRoute: typeof AuthPoeCallbackRoute
+  AuthTwitchCallbackRoute: typeof AuthTwitchCallbackRoute
   AdminEventsIndexRoute: typeof AdminEventsIndexRoute
   AdminEventsEventIdScoringPresetsRoute: typeof AdminEventsEventIdScoringPresetsRoute
   AdminEventsEventIdTeamsRoute: typeof AdminEventsEventIdTeamsRoute
@@ -617,7 +659,6 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ScoresRouteRoute: ScoresRouteRouteWithChildren,
-  RedirectRoute: RedirectRoute,
   RulesRoute: RulesRoute,
   SettingsRoute: SettingsRoute,
   StreamsRoute: StreamsRoute,
@@ -627,6 +668,9 @@ const rootRouteChildren: RootRouteChildren = {
   AdminUserManagementRoute: AdminUserManagementRoute,
   ProfileUserIdRoute: ProfileUserIdRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AuthDiscordCallbackRoute: AuthDiscordCallbackRoute,
+  AuthPoeCallbackRoute: AuthPoeCallbackRoute,
+  AuthTwitchCallbackRoute: AuthTwitchCallbackRoute,
   AdminEventsIndexRoute: AdminEventsIndexRoute,
   AdminEventsEventIdScoringPresetsRoute: AdminEventsEventIdScoringPresetsRoute,
   AdminEventsEventIdTeamsRoute: AdminEventsEventIdTeamsRoute,
@@ -646,7 +690,6 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/scores",
-        "/redirect",
         "/rules",
         "/settings",
         "/streams",
@@ -656,6 +699,9 @@ export const routeTree = rootRoute
         "/admin/user-management",
         "/profile/$userId",
         "/admin/",
+        "/auth/discord/callback",
+        "/auth/poe/callback",
+        "/auth/twitch/callback",
         "/admin/events/",
         "/admin/events/$eventId/scoring-presets",
         "/admin/events/$eventId/teams",
@@ -679,9 +725,6 @@ export const routeTree = rootRoute
         "/scores/races",
         "/scores/uniques"
       ]
-    },
-    "/redirect": {
-      "filePath": "redirect.tsx"
     },
     "/rules": {
       "filePath": "rules.tsx"
@@ -749,6 +792,15 @@ export const routeTree = rootRoute
     },
     "/admin/": {
       "filePath": "admin/index.tsx"
+    },
+    "/auth/discord/callback": {
+      "filePath": "auth/discord.callback.tsx"
+    },
+    "/auth/poe/callback": {
+      "filePath": "auth/poe.callback.tsx"
+    },
+    "/auth/twitch/callback": {
+      "filePath": "auth/twitch.callback.tsx"
     },
     "/admin/events/": {
       "filePath": "admin/events/index.tsx"

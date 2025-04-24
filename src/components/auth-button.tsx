@@ -7,6 +7,7 @@ import {
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
 import { Link, useRouterState } from "@tanstack/react-router";
+import { oauthApi } from "@client/client";
 
 const AuthButton = () => {
   const { user, setUser } = useContext(GlobalStateContext);
@@ -62,17 +63,17 @@ const AuthButton = () => {
     );
   }
   return (
-    <a
-      href={
-        import.meta.env.VITE_BACKEND_URL +
-        "/oauth2/discord?last_url=" +
-        state.location.href
-      }
+    <button
       className="btn btn-lg py-8 border-0 hover:text-primary-content hover:bg-primary"
+      onClick={() => {
+        oauthApi.oauthRedirect("discord", state.location.href).then((url) => {
+          window.open(url, "_self");
+        });
+      }}
     >
       <ArrowRightEndOnRectangleIcon className="h-6 w-6" />
       <div className="hidden sm:block">Login</div>
-    </a>
+    </button>
   );
 };
 

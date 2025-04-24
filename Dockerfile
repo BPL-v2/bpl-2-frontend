@@ -18,8 +18,8 @@ COPY . .
 # RUN ./generate_file_structure.sh
 
 # Build the application
-ARG VITE_BACKEND_URL
-ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
+ARG VITE_PUBLIC_BPL_BACKEND_URL
+ENV VITE_PUBLIC_BPL_BACKEND_URL=${VITE_PUBLIC_BPL_BACKEND_URL}
 RUN npm run build
 # RUN apk add python3
 # RUN python3 crazy-hackzz.py

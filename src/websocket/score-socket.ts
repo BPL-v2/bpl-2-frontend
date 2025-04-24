@@ -7,12 +7,12 @@ export const establishScoreSocket = (
   setWebsocket: (ws: WebSocket) => void,
   appendUpdates: (updates: ScoreDiffWithKey[]) => void
 ) => {
-  if (!import.meta.env.VITE_BACKEND_URL) {
-    console.error("VITE_BACKEND_URL is not defined");
+  if (!import.meta.env.VITE_PUBLIC_BPL_BACKEND_URL) {
+    console.error("VITE_PUBLIC_BPL_BACKEND_URL is not defined");
     return;
   }
   const url =
-    import.meta.env.VITE_BACKEND_URL.replace("https", "wss").replace(
+    import.meta.env.VITE_PUBLIC_BPL_BACKEND_URL.replace("https", "wss").replace(
       "http",
       "ws"
     ) + `/events/${eventId}/scores/ws`;

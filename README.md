@@ -6,7 +6,7 @@ Install node v23 and npm, run
 
 ```
 touch .env
-echo "VITE_BACKEND_URL = http://localhost/api" > .env
+echo "VITE_PUBLIC_BPL_BACKEND_URL = http://localhost/api" > .env
 npm install
 ```
 
