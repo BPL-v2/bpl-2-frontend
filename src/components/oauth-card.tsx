@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { oauthApi, userApi } from "@client/client";
 import { useRouterState } from "@tanstack/react-router";
+import { redirectOauth } from "@utils/oauth";
 
 type OauthCardProps = {
   required?: boolean;
@@ -32,11 +33,7 @@ export function OauthCard({
   ) : (
     <button
       className={`btn btn-success btn-outline`}
-      onClick={() => {
-        oauthApi.oauthRedirect(provider, state.location.href).then((url) => {
-          window.open(url, "_self");
-        });
-      }}
+      onClick={redirectOauth(provider, state.location.href)}
     >
       Connect
     </button>
