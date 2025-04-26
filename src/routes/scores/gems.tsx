@@ -4,9 +4,11 @@ import TeamScore from "@components/team-score";
 import { ItemTable } from "@components/item-table";
 import { GameVersion } from "@client/api";
 import { createFileRoute } from "@tanstack/react-router";
+import { HeistTabRules } from "@rules/heist";
+import { ruleWrapper } from "./route";
 
 export const Route = createFileRoute("/scores/gems")({
-  component: GemTab,
+  component: () => ruleWrapper(<GemTab />, <HeistTabRules />),
 });
 
 export function GemTab() {

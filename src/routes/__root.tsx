@@ -15,6 +15,7 @@ import AuthButton from "@components/auth-button";
 
 import { TwitchFilled } from "@icons/twitch";
 import { Footer } from "@components/footer";
+import { isAdmin } from "@utils/token";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -100,7 +101,7 @@ function RootComponent() {
                 </li>
               ))}
             </div>
-            {isMobile ? null : <EventPicker />}
+            {isAdmin() ? <EventPicker /> : null}
             <div tabIndex={0} className=" flex items-center">
               {isMobile ? null : <ApplicationButton />}
               <AuthButton />

@@ -15,7 +15,6 @@ export type SubmissionTabProps = {
 };
 
 function SubmissionTab({ categoryName }: SubmissionTabProps) {
-  console.log("renderer");
   const { eventStatus, scores, currentEvent } = useContext(GlobalStateContext);
   const category = getSubCategory(scores, categoryName);
   const [showModal, setShowModal] = useState(false);

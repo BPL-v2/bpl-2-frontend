@@ -34,7 +34,7 @@ export type ScoreQueryParams = {
   rules: boolean;
 };
 
-export function ruleWrapper(tab: () => JSX.Element, tabRules?: JSX.Element) {
+export function ruleWrapper(tab: JSX.Element, tabRules?: JSX.Element) {
   const { rules } = Route.useSearch();
   return (
     <>
@@ -43,7 +43,7 @@ export function ruleWrapper(tab: () => JSX.Element, tabRules?: JSX.Element) {
           {tabRules}
         </article>
       ) : null}
-      {tab()}
+      {tab}
     </>
   );
 }

@@ -5,6 +5,12 @@ import { getSubCategory } from "@mytypes/scoring-category";
 import TeamScore from "@components/team-score";
 import { DailyCard } from "@components/daily-card";
 import { createFileRoute } from "@tanstack/react-router";
+import { DailyTabRules } from "@rules/dailies";
+import { ruleWrapper } from "./route";
+
+export const Route = createFileRoute("/scores/dailies")({
+  component: () => ruleWrapper(<DailyTab />, <DailyTabRules />),
+});
 
 function sortByReleaseDate(dailyA: Daily, dailyB: Daily) {
   const a = dailyA.baseObjective;
@@ -13,10 +19,6 @@ function sortByReleaseDate(dailyA: Daily, dailyB: Daily) {
   const releaseB = b.valid_from ? new Date(b.valid_from) : new Date();
   return releaseA.getTime() - releaseB.getTime();
 }
-export const Route = createFileRoute("/scores/dailies")({
-  component: DailyTab,
-});
-
 export function DailyTab() {
   const { scores, currentEvent } = useContext(GlobalStateContext);
   const category = getSubCategory(scores, "Dailies");

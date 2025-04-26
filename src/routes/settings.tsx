@@ -19,44 +19,49 @@ export function SettingsPage() {
 
   return (
     <div>
-      <ThemePicker />
-
       <div className="card bg-base-200 mt-4">
         <div className="card-body">
-          <h2 className="card-title text-2xl font-bold">Profile</h2>
-          <p className="text-left">
-            You can change your username here. Your username will be used to
-            display your score on the leaderboard.
-          </p>
-          <form
-            className="flex"
-            onSubmit={(e) => {
-              e.preventDefault();
-              userApi
-                .updateUser({
-                  display_name: new FormData(e.target as HTMLFormElement).get(
-                    "display_name"
-                  ) as string,
-                })
-                .then(setUser);
-            }}
-          >
-            <div className="join gap-0 ">
-              <input
-                type="text"
-                name="display_name"
-                defaultValue={user.display_name}
-                className="input rounded-l-field focus:border-r-transparent focus:outline-transparent"
-                required
-              />
-              <button
-                type="submit"
-                className="btn btn-primary btn-outline rounded-r-field"
-              >
-                Save
-              </button>
+          <fieldset className="fieldset bg-base-200 border-base-300  p-4">
+            <legend className="fieldset-legend text-2xl font-bold text-left">
+              Settings
+            </legend>
+
+            <label className="label">Your displayed username</label>
+            <form
+              className="flex"
+              onSubmit={(e) => {
+                e.preventDefault();
+                userApi
+                  .updateUser({
+                    display_name: new FormData(e.target as HTMLFormElement).get(
+                      "display_name"
+                    ) as string,
+                  })
+                  .then(setUser);
+              }}
+            >
+              <div className="join gap-0 ">
+                <input
+                  type="text"
+                  name="display_name"
+                  defaultValue={user.display_name}
+                  className="input rounded-l-field focus:border-r-transparent focus:outline-transparent"
+                  required
+                />
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-outline rounded-r-field"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+
+            <label className="label">Theme</label>
+            <div className="flex flex-row gap-2">
+              <ThemePicker />
             </div>
-          </form>
+          </fieldset>
         </div>
       </div>
       <div className="card bg-base-200 mt-4">

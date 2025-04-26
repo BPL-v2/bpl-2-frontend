@@ -5,9 +5,11 @@ import TeamScore from "@components/team-score";
 import { CollectionCardTable } from "@components/collection-card-table";
 import { ObjectiveIcon } from "@components/objective-icon";
 import { createFileRoute } from "@tanstack/react-router";
+import { ruleWrapper } from "./route";
+import { CollectionTabRules } from "@rules/collections";
 
 export const Route = createFileRoute("/scores/collections")({
-  component: CollectionTab,
+  component: () => ruleWrapper(<CollectionTab />, <CollectionTabRules />),
 });
 
 export function CollectionTab() {
