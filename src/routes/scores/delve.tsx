@@ -14,9 +14,11 @@ import { AscendancyPortrait } from "@components/ascendancy-portrait";
 import { phreciaMapping } from "@mytypes/ascendancy";
 import Table from "@components/table";
 import { createFileRoute } from "@tanstack/react-router";
+import { DelveTabRules } from "@rules/delve";
+import { ruleWrapper } from "./route";
 
 export const Route = createFileRoute("/scores/delve")({
-  component: DelveTab,
+  component: () => ruleWrapper(<DelveTab />, <DelveTabRules />),
 });
 
 export function DelveTab() {

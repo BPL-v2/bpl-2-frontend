@@ -5,12 +5,14 @@ import { ItemTable } from "@components/item-table";
 import { isFinished, isWinnable, ScoreCategory } from "@mytypes/score";
 import { UniqueCategoryCard } from "@components/unique-category-card";
 import { createFileRoute } from "@tanstack/react-router";
+import { UniqueTabRules } from "@rules/uniques";
+import { ruleWrapper } from "./route";
 
 export const Route = createFileRoute("/scores/uniques")({
-  component: UniqueTab,
+  component: () => ruleWrapper(<UniqueTab />, <UniqueTabRules />),
 });
 
-export function UniqueTab() {
+function UniqueTab() {
   const { currentEvent, eventStatus, scores } = useContext(GlobalStateContext);
   const [uniqueCategory, setUniqueCategory] = useState<ScoreCategory>();
   const [selectedCategory, setSelectedCategory] = useState<ScoreCategory>();
@@ -187,5 +189,3 @@ export function UniqueTab() {
     </>
   );
 }
-
-export default UniqueTab;

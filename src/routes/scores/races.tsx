@@ -4,9 +4,6 @@ import { RaceTabRules } from "@rules/races";
 import { ruleWrapper } from "./route";
 
 export const Route = createFileRoute("/scores/races")({
-  component: () => ruleWrapper(RouteComponent, <RaceTabRules />),
+  component: () =>
+    ruleWrapper(<SubmissionTab categoryName="Races" />, <RaceTabRules />),
 });
-
-function RouteComponent() {
-  return <SubmissionTab categoryName="Races" />;
-}

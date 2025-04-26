@@ -9,7 +9,7 @@ import { ruleWrapper } from "./route";
 import { HeistTabRules } from "@rules/heist";
 
 export const Route = createFileRoute("/scores/heist")({
-  component: () => ruleWrapper(HeistTab, <HeistTabRules />),
+  component: () => ruleWrapper(<HeistTab />, <HeistTabRules />),
 });
 
 export function HeistTab() {
