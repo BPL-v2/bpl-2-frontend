@@ -22,6 +22,7 @@ type TeamRow = {
   "7-9": number;
   "10-12": number;
   "13+": number;
+  total: number;
 };
 
 function toExpectedPlayTime(
@@ -53,6 +54,7 @@ function UserSortPage() {
     }
     signupApi.getEventSignups(currentEvent.id).then((signups) => {
       setSignups(signups);
+      setSuggestions(signups);
       if (!eventStatus) {
         return;
       }
@@ -68,9 +70,8 @@ function UserSortPage() {
     });
   }
 
-  useEffect(() => setSuggestions(signups), [signups]);
-
   useEffect(updateSignups, [currentEvent]);
+
   const sortColumns = useMemo(() => {
     const columns: ColumnDef<Signup, any>[] = [
       {
@@ -158,7 +159,7 @@ function UserSortPage() {
     return <div>You do not have permission to view this page</div>;
   }
 
-  let teamRows = [...currentEvent.teams, { id: 0, name: "No team" }].map(
+  let teamRows = [...currentEvent.teams, { id: null, name: "No team" }].map(
     (team) =>
       suggestions
         .filter((signup) => signup.team_id === team.id)
@@ -171,6 +172,8 @@ function UserSortPage() {
               acc[expectedPlaytime] = 0;
             }
             acc[expectedPlaytime] += 1;
+            acc.total += signup.expected_playtime;
+
             return acc;
           },
           {
@@ -178,18 +181,22 @@ function UserSortPage() {
             team: team.name,
             members: suggestions.filter((signup) => signup.team_id === team.id)
               .length,
+            total: 0,
           } as TeamRow
         )
   );
 
   const totalRow = teamRows.reduce(
     (acc, row) => {
-      acc["0-3"] = (row["0-3"] ?? 0) + (acc["0-3"] ?? 0);
-      acc["4-6"] = (row["4-6"] ?? 0) + (acc["4-6"] ?? 0);
-      acc["7-9"] = (row["7-9"] ?? 0) + (acc["7-9"] ?? 0);
-      acc["10-12"] = (row["10-12"] ?? 0) + (acc["10-12"] ?? 0);
-      acc["13+"] = (row["13+"] ?? 0) + (acc["13+"] ?? 0);
-      acc.members += row.members;
+      for (const key of ["0-3", "4-6", "7-9", "10-12", "13+", "members"]) {
+        // @ts-ignore
+        if (!acc[key]) {
+          // @ts-ignore
+          acc[key] = 0;
+        }
+        // @ts-ignore
+        acc[key] += row[key] || 0;
+      }
       return acc;
     },
     {
@@ -211,6 +218,7 @@ function UserSortPage() {
             <th colSpan={5} className="text-center">
               Playtime in hours per day
             </th>
+            <th rowSpan={2}>Total</th>
           </tr>
           <tr>
             <th>0-3</th>
@@ -230,6 +238,7 @@ function UserSortPage() {
               <td>{row["7-9"]}</td>
               <td>{row["10-12"]}</td>
               <td>{row["13+"]}</td>
+              <td>{row.total}</td>
             </tr>
           ))}
         </tbody>
@@ -259,7 +268,8 @@ function UserSortPage() {
         <button
           className="btn"
           onClick={() => {
-            setSignups(signups.map((s) => ({ ...s, team_id: 0 })));
+            setSignups(signups.map((s) => ({ ...s, team_id: undefined })));
+            setSuggestions(signups.map((s) => ({ ...s, team_id: undefined })));
           }}
         >
           Reset Everything
@@ -285,11 +295,13 @@ function UserSortPage() {
         </button>
       </div>
       <Table
-        data={suggestions.filter(
-          (signup) =>
-            signup.user.display_name.toLowerCase().includes(nameFilter) ||
-            signup.user.account_name?.toLowerCase().includes(nameFilter)
-        )}
+        data={suggestions
+          .sort((a, b) => a.id - b.id)
+          .filter(
+            (signup) =>
+              signup.user.display_name.toLowerCase().includes(nameFilter) ||
+              signup.user.account_name?.toLowerCase().includes(nameFilter)
+          )}
         columns={sortColumns}
       />
     </div>
