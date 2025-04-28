@@ -1,8 +1,9 @@
-import { useContext } from "react";
+// import { useContext } from "react";
 import { ScoreCategory } from "@mytypes/score";
 import { getPotentialPoints, getTotalPoints } from "@utils/utils";
-import { GlobalStateContext } from "@utils/context-provider";
+// import { GlobalStateContext } from "@utils/context-provider";
 import { Medal } from "@icons/medal";
+import { CategoryIcon } from "../icons/category-icons";
 
 type UniqueCategoryCardProps = {
   category: ScoreCategory;
@@ -17,7 +18,7 @@ export const UniqueCategoryCard = ({
   teamId,
   onClick,
 }: UniqueCategoryCardProps) => {
-  const { gameVersion } = useContext(GlobalStateContext);
+  // const { gameVersion } = useContext(GlobalStateContext);
   const totalItems = category.objectives.length;
   const totalVariants = category.sub_categories.reduce(
     (acc, subCategory) => acc + subCategory.objectives.length,
@@ -84,10 +85,7 @@ export const UniqueCategoryCard = ({
               </div>
             ) : null}
             <div className="hidden sm:block col-start-2 row-span-2 row-start-1 self-center justify-self-end select-none">
-              <img
-                className="size-16 m-2"
-                src={`/assets/${gameVersion}/icons/${category.name}.svg`}
-              />
+              <CategoryIcon name={category.name} />
             </div>
           </div>
         </div>
