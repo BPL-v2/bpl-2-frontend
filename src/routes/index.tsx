@@ -68,20 +68,19 @@ function Home() {
               <div className="card-title text-4xl">Save the Date!</div>
               <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 items-center">
                 <div className="text-2xl mt-4 grid grid-cols-2 text-left">
+                  <p>Applications start: </p>
+                  <p>
+                    {new Date(
+                      currentEvent.application_start_time
+                    ).toLocaleString()}
+                  </p>
                   <p>Start time: </p>
                   <p>
                     {new Date(currentEvent.event_start_time).toLocaleString()}
                   </p>
                   <p>End time: </p>
                   <p>
-                    {new Date(currentEvent.event_end_time).toLocaleString()}.
-                  </p>
-                  <p>Applications start: </p>
-                  <p>
-                    {new Date(
-                      currentEvent.application_start_time
-                    ).toLocaleString()}
-                    .
+                    {new Date(currentEvent.event_end_time).toLocaleString()}
                   </p>
                 </div>
 
