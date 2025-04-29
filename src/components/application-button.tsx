@@ -4,12 +4,14 @@ import { ApplicationStatus, Team } from "@client/api";
 import { signupApi } from "@client/client";
 import { DiscordFilled } from "@icons/discord";
 import { Dialog } from "./dialog";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { redirectOauth } from "@utils/oauth";
 
 type ApplicationButtonProps = {};
 const ApplicationButton = ({}: ApplicationButtonProps) => {
   let { user, eventStatus, currentEvent, setEventStatus } =
     useContext(GlobalStateContext);
+  const state = useRouterState();
   const [modalOpen, setModalOpen] = React.useState(false);
   const formRef = React.useRef<HTMLFormElement>(null);
   const [userTeam, setUserTeam] = React.useState<Team | undefined>(undefined);
@@ -136,10 +138,13 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
               <p>
                 You need a linked discord account and join our server to apply.
               </p>
-              <button className="btn btn-lg bg-discord text-white text-xl mt-4">
+              <a
+                className="btn btn-lg bg-discord text-white text-xl mt-4"
+                onClick={redirectOauth("discord", state.location.href)}
+              >
                 <DiscordFilled className="w-6 h-6" />
                 Link Discord account
-              </button>
+              </a>
             </div>
           )}
           {isServerMember ? null : (
