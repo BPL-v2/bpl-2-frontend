@@ -25,7 +25,7 @@ const TeamScore = ({
   return (
     <>
       <div
-        className={`grid grid-cols-2 gap-2 md:grid-cols-2 xl:grid-cols-${Object.keys(teamScores).length} px-1 2xl:px-0`}
+        className={`grid grid-cols-2 gap-2 md:grid-cols-2 xl:flex px-1 2xl:px-0`}
       >
         {currentEvent.teams.map((team) => {
           const bgColor =
@@ -36,7 +36,7 @@ const TeamScore = ({
             team.id === selectedTeam ? "ring-primary" : "ring-transparent";
           return (
             <div
-              className={`card ring-4  ${bgColor} ${borderColor} ${interactive}`}
+              className={`card grow ring-4  ${bgColor} ${borderColor} ${interactive}`}
               key={team.id}
               onClick={() =>
                 setSelectedTeam ? setSelectedTeam(team.id) : null
