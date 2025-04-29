@@ -65,7 +65,7 @@ const AuthButton = () => {
   return (
     <button
       className="btn btn-lg py-8 border-0 hover:text-primary-content hover:bg-primary"
-      onClick={redirectOauth("discord", state.location.href)}
+      onClick={redirectOauth("poe", state.location.href)}
     >
       <ArrowRightEndOnRectangleIcon className="h-6 w-6" />
       <div className="hidden sm:block">Login</div>
