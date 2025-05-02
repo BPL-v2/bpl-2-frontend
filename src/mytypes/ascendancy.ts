@@ -126,10 +126,20 @@ export const ascendancies: Record<GameVersion, Record<string, ClassDef>> = {
     },
   },
   [GameVersion.poe1]: {
+    Scion: {
+      thumbnail: "/assets/poe1/ascendancies/thumbnails/Scion.png",
+      image: "/assets/poe1/ascendancies/Scion.png",
+      classColor: "text-white",
+    },
     Ascendant: {
       thumbnail: "/assets/poe1/ascendancies/thumbnails/Ascendant.png",
       image: "/assets/poe1/ascendancies/Ascendant.jpg",
       classColor: "text-white",
+    },
+    Shadow: {
+      thumbnail: "/assets/poe1/ascendancies/thumbnails/Shadow.png",
+      image: "/assets/poe1/ascendancies/Shadow.png",
+      classColor: "text-cyan-500",
     },
     Assassin: {
       thumbnail: "/assets/poe1/ascendancies/thumbnails/Assassin.png",
@@ -146,6 +156,11 @@ export const ascendancies: Record<GameVersion, Record<string, ClassDef>> = {
       image: "/assets/poe1/ascendancies/Trickster.png",
       classColor: "text-cyan-400",
     },
+    Marauder: {
+      thumbnail: "/assets/poe1/ascendancies/thumbnails/Marauder.png",
+      image: "/assets/poe1/ascendancies/Marauder.png",
+      classColor: "text-red-500",
+    },
     Berserker: {
       thumbnail: "/assets/poe1/ascendancies/thumbnails/Berserker.png",
       image: "/assets/poe1/ascendancies/Berserker.png",
@@ -161,6 +176,11 @@ export const ascendancies: Record<GameVersion, Record<string, ClassDef>> = {
       image: "/assets/poe1/ascendancies/Juggernaut.png",
       classColor: "text-red-400",
     },
+    Duelist: {
+      thumbnail: "/assets/poe1/ascendancies/thumbnails/Duelist.png",
+      image: "/assets/poe1/ascendancies/Duelist.png",
+      classColor: "text-orange-500",
+    },
     Champion: {
       thumbnail: "/assets/poe1/ascendancies/thumbnails/Champion.png",
       image: "/assets/poe1/ascendancies/Champion.png",
@@ -175,6 +195,11 @@ export const ascendancies: Record<GameVersion, Record<string, ClassDef>> = {
       thumbnail: "/assets/poe1/ascendancies/thumbnails/Slayer.png",
       image: "/assets/poe1/ascendancies/Slayer.png",
       classColor: "text-orange-400",
+    },
+    Ranger: {
+      thumbnail: "/assets/poe1/ascendancies/thumbnails/Ranger.png",
+      image: "/assets/poe1/ascendancies/Ranger.png",
+      classColor: "text-green-500",
     },
     Deadeye: {
       thumbnail: "/assets/poe1/ascendancies/thumbnails/Deadeye.png",
@@ -196,6 +221,11 @@ export const ascendancies: Record<GameVersion, Record<string, ClassDef>> = {
       image: "/assets/poe1/ascendancies/Warden.png",
       classColor: "text-green-400",
     },
+    Witch: {
+      thumbnail: "/assets/poe1/ascendancies/thumbnails/Witch.png",
+      image: "/assets/poe1/ascendancies/Witch.png",
+      classColor: "text-blue-500",
+    },
     Elementalist: {
       thumbnail: "/assets/poe1/ascendancies/thumbnails/Elementalist.png",
       image: "/assets/poe1/ascendancies/Elementalist.png",
@@ -210,6 +240,11 @@ export const ascendancies: Record<GameVersion, Record<string, ClassDef>> = {
       thumbnail: "/assets/poe1/ascendancies/thumbnails/Occultist.png",
       image: "/assets/poe1/ascendancies/Occultist.png",
       classColor: "text-blue-400",
+    },
+    Templar: {
+      thumbnail: "/assets/poe1/ascendancies/thumbnails/Templar.png",
+      image: "/assets/poe1/ascendancies/Templar.png",
+      classColor: "text-purple-500",
     },
     Guardian: {
       thumbnail: "/assets/poe1/ascendancies/thumbnails/Guardian.png",
