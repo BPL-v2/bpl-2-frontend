@@ -72,6 +72,19 @@ export function LadderTab() {
             filterVariant: "string",
             filterPlaceholder: "Character",
           },
+          cell: (info) => (
+            <a
+              className="cursor-pointer"
+              target="_blank"
+              rel="noreferrer"
+              href={`https://www.pathofexile.com/account/view-profile/${info.row.original.account_name.replace(
+                "#",
+                "-"
+              )}/characters?characterName=${info.row.original.character_name}`}
+            >
+              {info.row.original.character_name}
+            </a>
+          ),
         },
         {
           accessorKey: "account_name",
@@ -85,7 +98,8 @@ export function LadderTab() {
           },
           cell: (info) => {
             const accountName = info.getValue<string>();
-            return (
+
+            return info.row.original.user_id ? (
               <Link
                 to={`/profile/$userId`}
                 params={{ userId: info.row.original.user_id }}
@@ -94,6 +108,8 @@ export function LadderTab() {
               >
                 {accountName}
               </Link>
+            ) : (
+              accountName
             );
           },
         },
