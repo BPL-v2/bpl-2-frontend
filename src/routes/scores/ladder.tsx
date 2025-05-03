@@ -98,12 +98,10 @@ export function LadderTab() {
           },
           cell: (info) => {
             const accountName = info.getValue<string>();
-
             return info.row.original.user_id ? (
               <Link
                 to={`/profile/$userId`}
                 params={{ userId: info.row.original.user_id }}
-                target="_blank"
                 rel="noopener noreferrer"
               >
                 {accountName}
