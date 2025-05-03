@@ -163,15 +163,18 @@ export function ProfilePage() {
               if (!event) {
                 return null;
               }
-              let ascName = character.ascendancy;
+              let ascendancyName = character.ascendancy;
+              let ascendancyObj;
               if (event.game_version === GameVersion.poe2) {
-                ascName =
+                ascendancyName =
                   poe2Mapping[character.ascendancy] || character.ascendancy;
+                ascendancyObj = ascendancies[GameVersion.poe2][ascendancyName];
               } else {
-                ascName =
-                  phreciaMapping[character.ascendancy] || character.ascendancy;
+                ascendancyObj =
+                  ascendancies[GameVersion.poe1][
+                    phreciaMapping[character.ascendancy] || character.ascendancy
+                  ];
               }
-              const asc = ascendancies[event.game_version][ascName];
               return (
                 <div
                   key={character.event_id + character.name}
@@ -182,7 +185,7 @@ export function ProfilePage() {
                 >
                   <figure className="h-full">
                     <img
-                      src={asc.image}
+                      src={ascendancyObj.image}
                       style={{
                         width: "100%",
                         height: "100%",
@@ -200,8 +203,10 @@ export function ProfilePage() {
                       <p> {character.name}</p>
                       <p>
                         <span>{character.main_skill}</span>{" "}
-                        <span className={`font-bold ${asc.classColor}`}>
-                          {ascName}
+                        <span
+                          className={`font-bold ${ascendancyObj.classColor}`}
+                        >
+                          {ascendancyName}
                         </span>
                       </p>
                       <p>Level {character.level}</p>
