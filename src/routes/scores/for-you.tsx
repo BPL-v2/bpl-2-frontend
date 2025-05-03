@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from "react";
-import { teamApi } from "@client/client";
-import { ScoringMethod, Suggestions } from "@client/api";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { characterApi, teamApi } from "@client/client";
+import { Character, ScoringMethod, Suggestions } from "@client/api";
 import { GlobalStateContext } from "@utils/context-provider";
 import { flattenCategories } from "@mytypes/scoring-category";
 import { ScoreCategory, ScoreObjective } from "@mytypes/score";
@@ -11,11 +11,13 @@ export const Route = createFileRoute("/scores/for-you")({
 });
 
 export function ForYouTab() {
-  const { currentEvent, scores, eventStatus } = useContext(GlobalStateContext);
+  const { currentEvent, scores, eventStatus, user } =
+    useContext(GlobalStateContext);
   const [teamGoals, setTeamGoals] = useState<Suggestions>({
     category_ids: [],
     objective_ids: [],
   });
+  const [character, setCharacter] = useState<Character>();
 
   useEffect(() => {
     if (!currentEvent) {
@@ -24,7 +26,26 @@ export function ForYouTab() {
     teamApi.getTeamSuggestions(currentEvent.id).then(setTeamGoals);
   }, [currentEvent]);
 
-  if (!scores) {
+  useEffect(() => {
+    if (!currentEvent || !user) {
+      return;
+    }
+    characterApi
+      .getCharacterEventHistoryForUser(currentEvent.id, user.id)
+      .then((characters) => {
+        if (characters.length === 0) {
+          return;
+        }
+        setCharacter(
+          characters.sort(
+            (a, b) =>
+              new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+          )[0]
+        );
+      });
+  }, [currentEvent, user]);
+
+  if (!scores || !user) {
     return <div>Loading...</div>;
   }
   const teamId = eventStatus?.team_id!;
@@ -126,16 +147,14 @@ export function ForYouTab() {
       </div>
     );
   }
-  const userPOs = {
-    level: 81,
-    ascencion_points: 8,
-    atlas_passives: 40,
-  };
 
-  const x = Math.max(userPOs.level / 90, userPOs.atlas_passives / 40) * 100;
-
-  return (
-    <div className="prose prose-xl text-left max-w-max flex flex-col px-4 2xl:px-0">
+  const personalObjectiveRender = useMemo(() => {
+    if (!character) {
+      return null;
+    }
+    const lastPointsProgress =
+      Math.max(character.level / 90, character.atlas_node_count / 40) * 100;
+    return (
       <div>
         <h2 className="mt-4">Personal Objectives</h2>
         <p>
@@ -145,12 +164,12 @@ export function ForYouTab() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-1 ">
           <div
             className={`card bg-base-300 border-2 ${
-              userPOs.level >= 80 ? "border-success" : "border-error"
+              character.level >= 80 ? "border-success" : "border-error"
             }`}
           >
             <div className="card-body">
               <div className="card-title text-3xl">{"Reach lvl 80"}</div>
-              {userPOs.level >= 80 ? (
+              {character.level >= 80 ? (
                 <div className="text-lg text-left text-success">
                   {"+3 Points"}
                 </div>
@@ -158,20 +177,22 @@ export function ForYouTab() {
             </div>
             <progress
               className={`progress w-full rounded-b-box rounded-t-none  ${
-                userPOs.level >= 80 ? "progress-success" : "progress-error"
+                character.level >= 80 ? "progress-success" : "progress-error"
               }`}
-              value={userPOs.level}
+              value={character.level}
               max={80}
             ></progress>
           </div>
           <div
             className={`card bg-base-300 border-2 ${
-              userPOs.ascencion_points >= 8 ? "border-success" : "border-error"
+              character.ascendancy_points >= 8
+                ? "border-success"
+                : "border-error"
             }`}
           >
             <div className="card-body">
               <div className="card-title text-3xl">{"Fully Ascend"}</div>
-              {userPOs.ascencion_points >= 8 ? (
+              {character.ascendancy_points >= 8 ? (
                 <div className="text-lg text-left text-success">
                   {"+3 Points"}
                 </div>
@@ -183,17 +204,17 @@ export function ForYouTab() {
             </div>
             <progress
               className={`progress w-full rounded-b-box rounded-t-none  ${
-                userPOs.ascencion_points >= 8
+                character.ascendancy_points >= 8
                   ? "progress-success"
                   : "progress-error"
               }`}
-              value={userPOs.ascencion_points}
+              value={character.ascendancy_points}
               max={8}
             ></progress>
           </div>
           <div
             className={`card col-span-2 bg-base-300 rounded-box border-2 ${
-              userPOs.atlas_passives >= 40 || userPOs.level >= 90
+              character.atlas_node_count >= 40 || character.level >= 90
                 ? "border-success"
                 : "border-error"
             }`}
@@ -202,7 +223,7 @@ export function ForYouTab() {
               <div className="flex flex-col sm:flex-row items-center gap-2">
                 <div
                   className={`card bg-base-200 w-full border-2 ${
-                    userPOs.level >= 90 ? "border-success" : "border-error"
+                    character.level >= 90 ? "border-success" : "border-error"
                   }`}
                 >
                   <div className="card-body">
@@ -210,11 +231,11 @@ export function ForYouTab() {
                   </div>
                   <progress
                     className={`progress w-full rounded-b-box rounded-t-none  ${
-                      userPOs.level >= 90
+                      character.level >= 90
                         ? "progress-success"
                         : "progress-error"
                     }`}
-                    value={userPOs.level}
+                    value={character.level}
                     max={90}
                   ></progress>
                 </div>
@@ -223,7 +244,7 @@ export function ForYouTab() {
                 </div>
                 <div
                   className={`card bg-base-200 w-full border-2 ${
-                    userPOs.atlas_passives >= 40
+                    character.atlas_node_count >= 40
                       ? "border-success"
                       : "border-error"
                   }`}
@@ -235,16 +256,16 @@ export function ForYouTab() {
                   </div>
                   <progress
                     className={`progress w-full rounded-b-box rounded-t-none  ${
-                      userPOs.atlas_passives >= 40
+                      character.atlas_node_count >= 40
                         ? "progress-success"
                         : "progress-error"
                     }`}
-                    value={userPOs.atlas_passives}
+                    value={character.atlas_node_count}
                     max={40}
                   ></progress>
                 </div>
               </div>
-              {userPOs.atlas_passives >= 40 || userPOs.level >= 90 ? (
+              {character.atlas_node_count >= 40 || character.level >= 90 ? (
                 <div className="text-lg text-left text-success">
                   {"+3 Points"}
                 </div>
@@ -252,14 +273,22 @@ export function ForYouTab() {
             </div>
             <progress
               className={`progress w-full rounded-b-box rounded-t-none  ${
-                x >= 100 ? "progress-success" : "progress-error"
+                lastPointsProgress >= 100
+                  ? "progress-success"
+                  : "progress-error"
               }`}
-              value={x}
+              value={lastPointsProgress}
               max={100}
             ></progress>
           </div>
         </div>
       </div>
+    );
+  }, [character]);
+
+  return (
+    <div className="prose prose-xl text-left max-w-max flex flex-col px-4 2xl:px-0">
+      {personalObjectiveRender}
       <div>
         <h2>Team lead suggestions</h2>
         <p>
