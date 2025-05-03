@@ -7,7 +7,7 @@ import { useContext, useEffect, useState } from "react";
 import { Character, GameVersion, User } from "@client/api";
 import { characterApi, userApi } from "@client/client";
 import { GlobalStateContext } from "@utils/context-provider";
-import { ascendancies, poe2Mapping } from "@mytypes/ascendancy";
+import { ascendancies, phreciaMapping, poe2Mapping } from "@mytypes/ascendancy";
 import { useParams } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/profile/$userId")({
@@ -167,6 +167,9 @@ export function ProfilePage() {
               if (event.game_version === GameVersion.poe2) {
                 ascName =
                   poe2Mapping[character.ascendancy] || character.ascendancy;
+              } else {
+                ascName =
+                  phreciaMapping[character.ascendancy] || character.ascendancy;
               }
               const asc = ascendancies[event.game_version][ascName];
               return (
@@ -180,7 +183,6 @@ export function ProfilePage() {
                   <figure className="h-full">
                     <img
                       src={asc.image}
-                      alt="Shoes"
                       style={{
                         width: "100%",
                         height: "100%",
