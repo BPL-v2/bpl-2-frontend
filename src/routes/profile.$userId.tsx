@@ -178,22 +178,19 @@ export function ProfilePage() {
               return (
                 <div
                   key={character.event_id + character.name}
-                  className={`card w-80 h-100 bg-base-200 m-2 shadow-xl cursor-pointer select-none ${
+                  className={`card w-80 h-130 bg-base-200 m-2 shadow-xl cursor-pointer select-none ${
                     event.id === eventId ? "outline-2 outline-primary" : ""
                   }`}
                   onClick={() => setEventId(character.event_id)}
                 >
-                  <figure className="h-full">
+                  <figure className="h-80">
                     <img
                       src={ascendancyObj.image}
+                      className="h-50"
                       style={{
                         width: "100%",
                         height: "100%",
-                        objectFit: "cover", // Ensures the image covers the container
-                        transform:
-                          event.game_version === GameVersion.poe2
-                            ? "scale(1.5)"
-                            : "",
+                        objectFit: "cover",
                       }}
                     />
                   </figure>
