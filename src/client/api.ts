@@ -382,10 +382,10 @@ export interface Condition {
 export interface ConditionCreate {
     /**
      * 
-     * @type {ConditionCreateField}
+     * @type {ItemField}
      * @memberof ConditionCreate
      */
-    field: ConditionCreateField;
+    field: ItemField;
     /**
      * 
      * @type {number}
@@ -400,24 +400,16 @@ export interface ConditionCreate {
     objective_id: number;
     /**
      * 
-     * @type {ConditionCreateField}
+     * @type {Operator}
      * @memberof ConditionCreate
      */
-    operator: ConditionCreateField;
+    operator: Operator;
     /**
      * 
      * @type {string}
      * @memberof ConditionCreate
      */
     value: string;
-}
-
-/**
- * 
- * @export
- * @interface ConditionCreateField
- */
-export interface ConditionCreateField {
 }
 
 /**
@@ -673,6 +665,7 @@ export enum ItemField {
     INCUBATOR_KILLS = 'INCUBATOR_KILLS',
     IS_CORRUPTED = 'IS_CORRUPTED',
     IS_VAAL = 'IS_VAAL',
+    IS_SPLIT = 'IS_SPLIT',
     SANCTUM_AFFLICTIONS = 'SANCTUM_AFFLICTIONS',
     TEMPLE_ROOMS = 'TEMPLE_ROOMS',
     RITUAL_VESSEL_BOSSES = 'RITUAL_VESSEL_BOSSES',
@@ -969,10 +962,10 @@ export interface Objective {
 export interface ObjectiveConditionCreate {
     /**
      * 
-     * @type {ConditionCreateField}
+     * @type {ObjectiveConditionCreateField}
      * @memberof ObjectiveConditionCreate
      */
-    field: ConditionCreateField;
+    field: ObjectiveConditionCreateField;
     /**
      * 
      * @type {number}
@@ -981,16 +974,24 @@ export interface ObjectiveConditionCreate {
     id?: number;
     /**
      * 
-     * @type {ConditionCreateField}
+     * @type {ObjectiveConditionCreateField}
      * @memberof ObjectiveConditionCreate
      */
-    operator: ConditionCreateField;
+    operator: ObjectiveConditionCreateField;
     /**
      * 
      * @type {string}
      * @memberof ObjectiveConditionCreate
      */
     value: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface ObjectiveConditionCreateField
+ */
+export interface ObjectiveConditionCreateField {
 }
 
 /**
@@ -1525,10 +1526,10 @@ export interface SubmissionCreate {
 export interface SubmissionReview {
     /**
      * 
-     * @type {ConditionCreateField}
+     * @type {ObjectiveConditionCreateField}
      * @memberof SubmissionReview
      */
-    approval_status: ConditionCreateField;
+    approval_status: ObjectiveConditionCreateField;
     /**
      * 
      * @type {string}
