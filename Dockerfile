@@ -4,7 +4,7 @@ FROM node:23-alpine3.20 AS builder
 WORKDIR /app
 
 # Add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
+ENV PATH=/app/node_modules/.bin:$PATH
 
 # Copy package.json and package-lock.json to install dependencies
 COPY package*.json ./
