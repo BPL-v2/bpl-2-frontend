@@ -177,17 +177,18 @@ export function RulePage() {
       <div className="divider divider-primary" id="mods">
         Private League Modifiers
       </div>
+      <p>The Private League will have the following modifiers:</p>
+      <ul className="list font-bold text-base bg-base-200 rounded-lg my-2">
+        <li className="list-row">Settlers</li>
+        <li className="list-row">Alternative Ascendancies</li>
+        <li className="list-row">Sentinel</li>
+      </ul>
       <p>
-        The Private League will have the following modifiers:
-        <ul className="list-disc list-inside">
-          <li>Settlers</li>
-          <li>Alternative Ascendancies</li>
-          <li>Sentinel</li>
-        </ul>
         Due to the unbalanced nature of the alternative ascendancies, we will
         not impose any team restrictions on any of the ascendancies and you may
         choose to play any ascendancy you like.
       </p>
+
       <div className="divider divider-primary" id="earning-points">
         Earning Points
       </div>

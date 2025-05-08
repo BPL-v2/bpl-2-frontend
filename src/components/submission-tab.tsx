@@ -120,76 +120,78 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
           .filter(
             (objective) => objective.objective_type == ObjectiveType.SUBMISSION
           )
-          .map((objective) => (
-            <div className="card bg-base-300" key={objective.id}>
-              <div className="h-22 flex items-center justify-between bg-base-200 rounded-t-box px-4">
-                <div
-                  className={objective.extra ? "tooltip  text-2xl " : undefined}
-                  data-tip={objective.extra}
-                ></div>
-                <h3 className="flex-grow text-center m-4 text-xl font-medium mr-4">
-                  {`${objective.name}`}
-                  {objective.extra ? <i className="text-error">*</i> : null}
-                </h3>
-
-                {eventStatus?.team_id ? (
-                  <div className="tooltip" data-tip="Submit Bounty">
-                    <button
-                      className="rounded-full"
-                      onClick={() => {
-                        setSelectedObjective(objective);
-                        setShowModal(true);
-                      }}
-                    >
-                      <PlusCircleIcon className="h-8 w-8 cursor-pointer" />
-                    </button>
+          .map((objective) => {
+            return (
+              <div className="card bg-base-300" key={objective.id}>
+                <div className="h-22 flex items-center justify-between bg-base-200 rounded-t-box px-4">
+                  <div
+                    className={"w-full " + (objective.extra ? "tooltip" : "")}
+                    data-tip={objective.extra}
+                  >
+                    <h3 className="flex-grow text-center m-4 text-xl font-medium mr-4 ">
+                      {`${objective.name}`}
+                      {objective.extra ? <i className="text-error">*</i> : null}
+                    </h3>
                   </div>
-                ) : null}
-              </div>
-              <div className="pb-4 mb-0 rounded-b-box">
-                <table
-                  key={objective.id}
-                  className="w-full border-collapse mt-4"
-                >
-                  <tbody>
-                    {Object.entries(objective.team_score)
-                      .map(([teamId, score]) => {
-                        return [parseInt(teamId), score] as [number, Score];
-                      })
-                      .sort(
-                        ([, scoreA], [, scoreB]) =>
-                          scoreB.points - scoreA.points
-                      )
-                      .map(([teamId, score]) => {
-                        return (
-                          <tr
-                            key={teamId}
-                            className={
-                              eventStatus?.team_id === teamId
-                                ? "bg-highlight content-highlight"
-                                : "bg-base-300"
-                            }
-                          >
-                            <td
-                              className={`pl-4 py-1 text-left ${
-                                score.points == 0
-                                  ? "text-error"
-                                  : "text-success"
-                              }`}
+                  {eventStatus?.team_id ? (
+                    <div className="tooltip" data-tip="Submit Bounty">
+                      <button
+                        className="rounded-full"
+                        onClick={() => {
+                          setSelectedObjective(objective);
+                          setShowModal(true);
+                        }}
+                      >
+                        <PlusCircleIcon className="h-8 w-8 cursor-pointer" />
+                      </button>
+                    </div>
+                  ) : null}
+                </div>
+                <div className="pb-4 mb-0 rounded-b-box">
+                  <table
+                    key={objective.id}
+                    className="w-full border-collapse mt-4"
+                  >
+                    <tbody>
+                      {Object.entries(objective.team_score)
+                        .map(([teamId, score]) => {
+                          return [parseInt(teamId), score] as [number, Score];
+                        })
+                        .sort(
+                          ([, scoreA], [, scoreB]) =>
+                            scoreB.points - scoreA.points
+                        )
+                        .map(([teamId, score]) => {
+                          return (
+                            <tr
+                              key={teamId}
+                              className={
+                                eventStatus?.team_id === teamId
+                                  ? "bg-highlight content-highlight"
+                                  : "bg-base-300"
+                              }
                             >
-                              {score ? score.points : 0}
-                            </td>
-                            <td className="pr-4 text-right">
-                              {teamMap[teamId]?.name}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                  </tbody>
-                </table>
+                              <td
+                                className={`pl-4 py-1 text-left ${
+                                  score.points == 0
+                                    ? "text-error"
+                                    : "text-success"
+                                }`}
+                              >
+                                {score ? score.points : 0}
+                              </td>
+                              <td className="pr-4 text-right">
+                                {teamMap[teamId]?.name}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         {category.objectives
           .filter(
             (objective) => objective.objective_type != ObjectiveType.SUBMISSION
