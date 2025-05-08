@@ -3,12 +3,13 @@ import { GlobalStateContext } from "@utils/context-provider";
 import { getSubCategory } from "@mytypes/scoring-category";
 import { ScoreObjective } from "@mytypes/score";
 import TeamScore from "./team-score";
-import { Score, SubmissionCreate, Team } from "@client/api";
+import { ObjectiveType, Score, SubmissionCreate, Team } from "@client/api";
 import { submissionApi } from "@client/client";
 import { DateTimePicker } from "./datetime-picker";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { Dialog } from "./dialog";
 import { Link } from "@tanstack/react-router";
+import { CollectionCardTable } from "./collection-card-table";
 
 export type SubmissionTabProps = {
   categoryName: string;
@@ -115,8 +116,11 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
       </h1>
       <div className="divider divider-primary">{category.name}</div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-        {category.objectives.map((objective) => {
-          return (
+        {category.objectives
+          .filter(
+            (objective) => objective.objective_type == ObjectiveType.SUBMISSION
+          )
+          .map((objective) => (
             <div className="card bg-base-300" key={objective.id}>
               <div className="h-22 flex items-center justify-between bg-base-200 rounded-t-box px-4">
                 <div
@@ -143,8 +147,11 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
                 ) : null}
               </div>
               <div className="pb-4 mb-0 rounded-b-box">
-                <table key={objective.id} className="w-full border-collapse">
-                  <tbody className="">
+                <table
+                  key={objective.id}
+                  className="w-full border-collapse mt-4"
+                >
+                  <tbody>
                     {Object.entries(objective.team_score)
                       .map(([teamId, score]) => {
                         return [parseInt(teamId), score] as [number, Score];
@@ -157,14 +164,14 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
                         return (
                           <tr
                             key={teamId}
-                            className={`px-4 ${
+                            className={
                               eventStatus?.team_id === teamId
                                 ? "bg-highlight content-highlight"
-                                : "bg-base-300 "
-                            }`}
+                                : "bg-base-300"
+                            }
                           >
                             <td
-                              className={`pl-8 text-left ${
+                              className={`pl-4 py-1 text-left ${
                                 score.points == 0
                                   ? "text-error"
                                   : "text-success"
@@ -172,7 +179,9 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
                             >
                               {score ? score.points : 0}
                             </td>
-                            <td>{teamMap[teamId]?.name}</td>
+                            <td className="pr-4 text-right">
+                              {teamMap[teamId]?.name}
+                            </td>
                           </tr>
                         );
                       })}
@@ -180,8 +189,28 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
                 </table>
               </div>
             </div>
-          );
-        })}
+          ))}
+        {category.objectives
+          .filter(
+            (objective) => objective.objective_type != ObjectiveType.SUBMISSION
+          )
+          .map((objective) => (
+            <div className="card bg-base-300" key={objective.id}>
+              <div className="h-22 flex items-center justify-between bg-base-200 rounded-t-box px-4">
+                <div
+                  className={objective.extra ? "tooltip  text-2xl " : undefined}
+                  data-tip={objective.extra}
+                ></div>
+                <h3 className="flex-grow text-center m-4 text-xl font-medium mr-4">
+                  {`${objective.name}`}
+                  {objective.extra ? <i className="text-error">*</i> : null}
+                </h3>
+              </div>
+              <div className="pb-4 mb-0 bg-base-300 rounded-b-box mt-2">
+                <CollectionCardTable objective={objective} />
+              </div>
+            </div>
+          ))}
       </div>
     </>
   );
