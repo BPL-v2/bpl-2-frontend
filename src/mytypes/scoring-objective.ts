@@ -374,7 +374,7 @@ const classToBaseType: Record<string, string> = {
   "Support Skill Gem": "Added Chaos Damage Support",
   Jewel: "Cobalt Jewel",
   AbyssJewel: "Ghastly Eye Jewel",
-  Map: "Abomination Map",
+  Map: "DeliriusMap",
   MapFragment: "Abyss Scarab",
   Breachstone: "Chayula's Breachstone",
   VaultKey: "Ancient Reliquary Key",
@@ -401,6 +401,7 @@ const classToBaseType: Record<string, string> = {
   AnimalCharm: "Corvine Charm",
   ItemisedCorpse: "Blasphemer",
   NecropolisPack: "Allflame Ember of Abyss",
+  TransfiguredGem: "Lightning Arrow of Electrocution",
 };
 
 export const anomalousBaseTypes: {
@@ -506,9 +507,14 @@ export function getImageLocation(
       )}.webp`;
     }
     if (attributes.item_class) {
-      return `/assets/${gameVersion}/items/basetypes/${
-        classToBaseType[attributes.item_class]
-      }.webp`;
+      const baseType = classToBaseType[attributes.item_class];
+      if (!baseType) {
+        return null;
+      }
+      return `/assets/${gameVersion}/items/basetypes/${baseType.replaceAll(
+        " ",
+        "_"
+      )}.webp`;
     }
   }
   return null;
