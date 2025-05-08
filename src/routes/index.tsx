@@ -56,7 +56,7 @@ function Home() {
               </div>
             </div>
             <div className="w-full aspect-video">
-              <VideoEmbed url="https://www.youtube.com/watch?v=DH-QifEtQtM" />
+              <VideoEmbed url="https://www.youtube.com/watch?v=44WUYiLdeQ4" />
             </div>
           </div>
         </div>
@@ -104,7 +104,8 @@ function Home() {
               </div>
             </div>
           </div>
-          <div className="card bg-base-300">
+          {/* TODO: Re-enable once teams have ascendancy splits again */}
+          {/* <div className="card bg-base-300">
             <div className="card-body p-12">
               <div className="card-title text-4xl">Meet the Teams</div>
               <p className="text-2xl mt-4">
@@ -145,7 +146,7 @@ function Home() {
                 ))}
               </div>
             </div>
-          </div>
+          </div> */}
         </>
       ) : null}
     </div>

@@ -114,9 +114,49 @@ export function RulePage() {
     },
   ];
 
+  const itemStashCollapse: CollapseItems[] = [
+    {
+      label: "The stash tab must be public",
+      children: <>This excludes guild stash tabs.</>,
+    },
+    {
+      label: "The item must remain in the possession of the team",
+      children: (
+        <>
+          It can remain in the stash of any team member until the end of the
+          event, and it can be traded between players. Items worn by your
+          character can also not be tracked.
+        </>
+      ),
+    },
+    {
+      label: "Collection goals must be completed in a single stash tab",
+      children: (
+        <>
+          To prevent exploitation, any objective that requires more than one
+          item must be completed in a single stash tab and cannot be split
+          across multiple player's tabs. For this reason it makes sense to trade
+          these items to your team lead.
+        </>
+      ),
+    },
+    {
+      label: "A dedicated tab for scoring items should be used",
+      children: (
+        <>
+          There is a 5 minute delay before the item will show up for us. This
+          timer will reset every time you change anything in the stash tab, so
+          if you want something to show up asap for us, make sure have a
+          dedicated stash tab that does not change too much.
+        </>
+      ),
+    },
+  ];
   return (
     <div className="text-left">
-      <div className="divider divider-primary">Gameplay Rules</div>
+      <div className="divider divider-primary" id="gameplay">
+        Gameplay Rules
+      </div>
       <p>
         Below are the major rules you should follow when playing in BPL. If
         there is a discrepancy between the information listed here and in the
@@ -134,18 +174,44 @@ export function RulePage() {
           </div>
         ))}
       </div>
-      <div className="divider divider-primary">Earning Points</div>
+      <div className="divider divider-primary" id="mods">
+        Private League Modifiers
+      </div>
       <p>
-        In BPL 15.5, One team that attempts to 100% complete BPL in 7 days.
-        Dailies, bounty board, and collection goals have been adjusted to
-        compensate. In categories that require you to submit an item, only items
-        in team lead's stashes count.
+        The Private League will have the following modifiers:
+        <ul className="list-disc list-inside">
+          <li>Settlers</li>
+          <li>Alternative Ascendancies</li>
+          <li>Sentinel</li>
+        </ul>
+        Due to the unbalanced nature of the alternative ascendancies, we will
+        not impose any team restrictions on any of the ascendancies and you may
+        choose to play any ascendancy you like.
       </p>
+      <div className="divider divider-primary" id="earning-points">
+        Earning Points
+      </div>
       <p>
-        The follow private league mods have been enabled: "Monsters fire 2
-        additional projectiles" and "Monsters have 35% increased area of effect"
+        In BPL 16, three teams compete to earn as manay points as possible in 4
+        days. Compared to previous seasons items can be scored from anyones
+        stash in the league - not just the team leads. There are some
+        intricacies to scoring items that you should be aware of though:
       </p>
-      <div className="divider divider-primary">Frequently Asked Questions</div>
+      <div className="flex flex-col gap-2 mt-4">
+        {itemStashCollapse.map((rule, index) => (
+          <div
+            key={rule.label + index}
+            tabIndex={index}
+            className="bg-base-200 focus:bg-base-300 collapse"
+          >
+            <div className="collapse-title font-semibold">{rule.label}</div>
+            <div className="collapse-content text-sm">{rule.children}</div>
+          </div>
+        ))}
+      </div>
+      <div className="divider divider-primary" id="faq">
+        Frequently Asked Questions
+      </div>
       <div className="flex flex-col gap-1 mt-4">
         {faqCollapse.map((faq, index) => (
           <div
