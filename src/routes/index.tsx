@@ -5,7 +5,7 @@ import { VideoEmbed } from "@components/video-embed";
 import { Countdown } from "@components/countdown";
 import { DiscordFilled } from "@icons/discord";
 import { HeartIcon } from "@heroicons/react/24/solid";
-import { AscendancyPortrait } from "@components/ascendancy-portrait";
+// import { AscendancyPortrait } from "@components/ascendancy-portrait";
 
 export const Route = createFileRoute("/")({
   component: Home,
