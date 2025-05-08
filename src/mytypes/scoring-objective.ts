@@ -335,6 +335,74 @@ const beasts = [
   "Chrome-touched Croaker",
   "Chrome-infused Croaker",
 ];
+
+const classToBaseType: Record<string, string> = {
+  StackableCurrency: "Chaos Orb",
+  DelveSocketableCurrency: "Potent Alchemical Resonator",
+  DelveStackableSocketableCurrency: "Potent Alchemical Resonator",
+  GiftBox: "Wrapped Gift",
+  "Two Hand Sword": "Banishing Blade",
+  Wand: "Accumulator Wand",
+  Dagger: "Ambusher",
+  "Rune Dagger": "Boot Blade",
+  Claw: "Awl",
+  "One Hand Axe": "Arming Axe",
+  "One Hand Sword": "Anarchic Spiritblade",
+  "Thrusting One Hand Sword": "Antique Rapier",
+  "One Hand Mace": "Ancestral Club",
+  Sceptre: "Abyssal Sceptre",
+  Bow: "Assassin Bow",
+  Staff: "Battery Staff",
+  Warstaff: "Capacity Rod",
+  "Two Hand Axe": "Abyssal Axe",
+  "Two Hand Mace": "Blunt Force Condenser",
+  FishingRod: "Fishing Rod",
+  Ring: "Amethyst Ring",
+  Amulet: "Agate Amulet",
+  Belt: "Chain Belt",
+  Shield: "Alder Spiked Shield",
+  Helmet: "Ancient Mask",
+  "Body Armour": "Arcane Vestment",
+  Boots: "Ambush Boots",
+  Gloves: "Aetherwind Gloves",
+  LifeFlask: "Colossal Life Flask",
+  ManaFlask: "Colossal Mana Flask",
+  HybridFlask: "Colossal Hybrid Flask",
+  UtilityFlask: "Amethyst Flask",
+  Quiver: "Artillery Quiver",
+  "Active Skill Gem": "Absolution",
+  "Support Skill Gem": "Added Chaos Damage Support",
+  Jewel: "Cobalt Jewel",
+  AbyssJewel: "Ghastly Eye Jewel",
+  Map: "Abomination Map",
+  MapFragment: "Abyss Scarab",
+  Breachstone: "Chayula's Breachstone",
+  VaultKey: "Ancient Reliquary Key",
+  InstanceLocalItem: "Agility Contract",
+  DivinationCard: "A Chilling Wind",
+  Currency: "Mystery Leaguestone",
+  IncubatorStackable: "Abyssal Incubator",
+  AtlasUpgradeItem: "Ceremonial Voidstone",
+  HeistContract: "Contract: Bunker",
+  HeistBlueprint: "Blueprint: Bunker",
+  HeistEquipmentUtility: "Hooded Cloak",
+  HeistEquipmentReward: "Enamel Brooch",
+  HeistEquipmentTool: "Azurite Flashpowder",
+  HeistEquipmentWeapon: "Aggregator Charm",
+  ExpeditionLogbook: "Expedition Logbook",
+  SentinelDrone: "Ancient Apex Sentinel",
+  Relic: "Candlestick Relic",
+  SanctumSpecialRelic: "Sanctified Relic",
+  AtlasRelic: "Burial Idol",
+  MemoryLine: "Alva's Memory",
+  Gold: "Gold",
+  ItemisedSanctum: "Forbidden Tome",
+  Tincture: "Ashbark Tincture",
+  AnimalCharm: "Corvine Charm",
+  ItemisedCorpse: "Blasphemer",
+  NecropolisPack: "Allflame Ember of Abyss",
+};
+
 export const anomalousBaseTypes: {
   [gameVersion: string]: Record<string, string>;
 } = {
@@ -387,10 +455,12 @@ export function getImageLocation(
     return null;
   }
   // has to be this complicated because we want to privilege the name over the base type
-  const attributes: { name?: string; base_type?: string } = {
-    name: undefined,
-    base_type: undefined,
-  };
+  const attributes: { name?: string; base_type?: string; item_class?: string } =
+    {
+      name: undefined,
+      base_type: undefined,
+      item_class: undefined,
+    };
   for (const condition of objective.conditions) {
     if (condition.field === ItemField.NAME) {
       if (condition.operator === Operator.EQ) {
@@ -404,30 +474,42 @@ export function getImageLocation(
       } else if (condition.operator === Operator.IN) {
         attributes.base_type = condition.value.split(",")[0];
       }
+    } else if (condition.field === ItemField.ITEM_CLASS) {
+      if (condition.operator === Operator.EQ) {
+        attributes.item_class = condition.value;
+      } else if (condition.operator === Operator.IN) {
+        attributes.item_class = condition.value.split(",")[0];
+      }
     }
-  }
-  if (attributes.name) {
-    const anomaly = anomalousUniques[gameVersion][attributes.name];
-    if (anomaly) {
-      return `/assets/${gameVersion}/items/uniques/${
-        anomaly[objective.extra] || Object.values(anomaly)[0]
-      }.webp`;
+
+    if (attributes.name) {
+      const anomaly = anomalousUniques[gameVersion][attributes.name];
+      if (anomaly) {
+        return `/assets/${gameVersion}/items/uniques/${
+          anomaly[objective.extra] || Object.values(anomaly)[0]
+        }.webp`;
+      }
+      return `/assets/${gameVersion}/items/uniques/${attributes.name.replaceAll(
+        " ",
+        "_"
+      )}.webp`;
     }
-    return `/assets/${gameVersion}/items/uniques/${attributes.name.replaceAll(
-      " ",
-      "_"
-    )}.webp`;
-  }
-  if (attributes.base_type) {
-    if (anomalousBaseTypes[gameVersion][attributes.base_type]) {
+    if (attributes.base_type) {
+      if (anomalousBaseTypes[gameVersion][attributes.base_type]) {
+        return `/assets/${gameVersion}/items/basetypes/${
+          anomalousBaseTypes[gameVersion][attributes.base_type]
+        }.webp`;
+      }
+      return `/assets/${gameVersion}/items/basetypes/${attributes.base_type.replaceAll(
+        " ",
+        "_"
+      )}.webp`;
+    }
+    if (attributes.item_class) {
       return `/assets/${gameVersion}/items/basetypes/${
-        anomalousBaseTypes[gameVersion][attributes.base_type]
+        classToBaseType[attributes.item_class]
       }.webp`;
     }
-    return `/assets/${gameVersion}/items/basetypes/${attributes.base_type.replaceAll(
-      " ",
-      "_"
-    )}.webp`;
   }
   return null;
 }

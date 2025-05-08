@@ -648,6 +648,7 @@ export enum GameVersion {
 export enum ItemField {
     BASE_TYPE = 'BASE_TYPE',
     NAME = 'NAME',
+    ITEM_CLASS = 'ITEM_CLASS',
     TYPE_LINE = 'TYPE_LINE',
     QUALITY = 'QUALITY',
     LEVEL = 'LEVEL',
@@ -660,6 +661,7 @@ export enum ItemField {
     IMPLICIT_MODS = 'IMPLICIT_MODS',
     CRAFTED_MODS = 'CRAFTED_MODS',
     FRACTURED_MODS = 'FRACTURED_MODS',
+    INFLUENCES = 'INFLUENCES',
     MAX_LINKS = 'MAX_LINKS',
     SOCKETS = 'SOCKETS',
     INCUBATOR_KILLS = 'INCUBATOR_KILLS',
