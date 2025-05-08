@@ -43,7 +43,7 @@ export function CollectionCardTable({
   const { eventStatus, currentEvent } = useContext(GlobalStateContext);
 
   return (
-    <table key={objective.id} className="w-full">
+    <table key={objective.id} className="w-full mt-2">
       <tbody className="bg-base-300">
         {Object.entries(objective.team_score)
           .map(([teamId, score]) => {
@@ -60,21 +60,20 @@ export function CollectionCardTable({
             return (
               <tr
                 className={
-                  "px-4 " +
-                  (teamId === eventStatus?.team_id
+                  teamId === eventStatus?.team_id
                     ? "bg-highlight content-highlight"
-                    : "")
+                    : ""
                 }
                 key={teamId}
               >
                 {showPoints ? (
-                  <td>
+                  <td className="py-1 px-2">
                     <div
                       className="tooltip"
                       data-tip={finishTooltip(objective, score)}
                     >
                       <div
-                        className={`pt-1 pb-1 pl-2 pr-2 text-left ${
+                        className={`text-left px-2 ${
                           percent < 100 ? "text-error" : "text-success"
                         }`}
                       >
@@ -83,14 +82,14 @@ export function CollectionCardTable({
                     </div>
                   </td>
                 ) : null}
-                <td className="pl-4">
+                <td className="px-2">
                   <ProgressBar
                     style={{ width: "180px" }}
                     value={score.number}
                     maxVal={objective.required_number}
                   />
                 </td>
-                <td className="text-left">
+                <td className="text-left px-2">
                   {currentEvent?.teams.find((team) => team.id === teamId)?.name}
                 </td>
               </tr>
