@@ -6,6 +6,7 @@ import { DiscordFilled } from "@icons/discord";
 import { Dialog } from "./dialog";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { redirectOauth } from "@utils/oauth";
+import { TeamName } from "./team-name";
 
 type ApplicationButtonProps = {};
 const ApplicationButton = ({}: ApplicationButtonProps) => {
@@ -34,7 +35,7 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
     return null;
   }
   if (userTeam) {
-    return <button className={`text-lg p-4 `}>{userTeam.name}</button>;
+    return <TeamName team={userTeam} className="text-lg p-4 " />;
   }
   if (eventStatus?.application_status === ApplicationStatus.applied) {
     return (
