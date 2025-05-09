@@ -57,7 +57,7 @@ export function HeistTab() {
       )}
       {rogueGearCategory && (
         <div className="flex flex-col gap-4">
-          <div className="divider divider-primary">Rogue Gear</div>
+          <div className="divider divider-primary">Rogue Gear Race</div>
           <Ranking
             objective={rogueGearCategory}
             maximum={rogueGearCategory.objectives.length}
