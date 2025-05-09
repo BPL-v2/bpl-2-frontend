@@ -130,8 +130,9 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
                   className="checkbox"
                   onChange={(e) => {
                     setNeedHelp(e.target.checked);
+                    setWantToHelp(!e.target.checked);
                   }}
-                  defaultChecked={needHelp}
+                  checked={needHelp}
                 />
                 I'm new and would like to have help
               </label>
@@ -143,8 +144,9 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
                   className="checkbox"
                   onChange={(e) => {
                     setWantToHelp(e.target.checked);
+                    setNeedHelp(!e.target.checked);
                   }}
-                  defaultChecked={wantToHelp}
+                  checked={wantToHelp}
                 />
                 I'm experienced and would like to help others
               </label>
