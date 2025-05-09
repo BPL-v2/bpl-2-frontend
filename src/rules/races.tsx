@@ -63,6 +63,12 @@ export function RaceTabRules() {
         if there are questions about a race condition please confirm with a BPL
         Admin or Manager prior to beginning the map/fight.
       </p>
+      <h3 className="text-warning">Notes</h3>
+      <p className="text-warning">
+        Races that include killing a boss need to be completed deathless. This
+        means your character can't die during the boss fight, but you are
+        allowed to die anytime beforehand.
+      </p>
     </>
   );
 }
