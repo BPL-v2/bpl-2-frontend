@@ -193,7 +193,7 @@ export function RulePage() {
         Earning Points
       </div>
       <p>
-        In BPL 16, three teams compete to earn as manay points as possible in 4
+        In BPL 16, three teams compete to earn as many points as possible in 4
         days. Compared to previous seasons items can be scored from anyones
         stash in the league - not just the team leads. There are some
         intricacies to scoring items that you should be aware of though:
