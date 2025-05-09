@@ -52,8 +52,7 @@ function racePointsToText(points: number[]): JSX.Element[] {
     } else {
       return (
         <span key={index}>
-          {" "}
-          the next team will get <b className="text-info">{point}</b> points
+          , the next team will get <b className="text-info">{point}</b> points
         </span>
       );
     }
@@ -80,18 +79,23 @@ export function HeistTabRules() {
     (c) => c.name === "Experimental Bases"
   );
 
+  const echantingOrbObjective = heistCategory?.objectives.find(
+    (c) => c.name === "Enchanting Orb Race"
+  );
+
   return (
     <>
-      {rogueGearCategory ? (
+      {rogueGearCategory && (
         <>
           <h3>Rogue Gear Race</h3>
           <p>
             The teams race to finish the rogue gear collection.{" "}
-            {racePointsToText(rogueGearCategory.scoring_preset?.points || [])}
+            {racePointsToText(rogueGearCategory.scoring_preset?.points || [])}.
+            The rogue gear pieces themselves do not award points.
           </p>
         </>
-      ) : null}
-      {experimentalItemsCategory ? (
+      )}
+      {experimentalItemsCategory && (
         <>
           <h3>Experimental Bases</h3>
           <p>
@@ -110,8 +114,8 @@ export function HeistTabRules() {
               : "Collecting all bases does not award additional points."}
           </p>
         </>
-      ) : null}
-      {uniqueCategory ? (
+      )}
+      {uniqueCategory && (
         <>
           <h3>Heist Uniques</h3>
           <p>
@@ -122,7 +126,21 @@ export function HeistTabRules() {
             Collecting all uniques does not award additional points.
           </p>
         </>
-      ) : null}
+      )}
+      {echantingOrbObjective && (
+        <>
+          <h3>Enchanting Orb Race </h3>
+          <p>
+            The teams are racing to find {echantingOrbObjective.required_number}{" "}
+            Tailoring or Tempering Orbs in total, for example{" "}
+            {echantingOrbObjective.required_number - 2} Tempering Orbs and 2
+            Tailoring Orbs would count.{" "}
+            {racePointsToText(
+              echantingOrbObjective.scoring_preset?.points || []
+            )}
+          </p>
+        </>
+      )}
     </>
   );
 }
