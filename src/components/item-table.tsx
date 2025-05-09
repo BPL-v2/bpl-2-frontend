@@ -129,7 +129,7 @@ export function ItemTable({ category }: ItemTableProps) {
 
   const badgeClass = (objective: ExtendedScoreObjective, teamID: number) => {
     let className = "badge gap-2 w-full font-semibold py-3 ring-2";
-    if (objective.team_score[teamID].finished) {
+    if (objective.team_score[teamID]?.finished) {
       className += " bg-success text-success-content";
     } else {
       className += " bg-error text-error-content";
