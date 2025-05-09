@@ -701,7 +701,9 @@ export function ScoringCategoryPage() {
           editFunction={(data) =>
             scoringApi.createCategory(eventId, {
               ...data,
-              scoring_preset_id: Number(data.scoring_preset_id),
+              scoring_preset_id: data.scoring_preset_id
+                ? Number(data.scoring_preset_id)
+                : null,
               parent_id: categoryId,
             })
           }

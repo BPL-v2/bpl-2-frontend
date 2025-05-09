@@ -272,15 +272,17 @@ export function ItemTable({ category }: ItemTableProps) {
       <Table
         columns={columns}
         data={
-          category.objectives.flatMap((objective) => {
-            const variantRows = variantMap[objective.name]?.map((variant) => {
-              return { ...variant, isVariant: true };
-            });
-            return [
-              objective,
-              ...(showVariants[objective.name] ? variantRows : []),
-            ];
-          }) as ExtendedScoreObjective[]
+          category.objectives
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .flatMap((objective) => {
+              const variantRows = variantMap[objective.name]?.map((variant) => {
+                return { ...variant, isVariant: true };
+              });
+              return [
+                objective,
+                ...(showVariants[objective.name] ? variantRows : []),
+              ];
+            }) as ExtendedScoreObjective[]
         }
         rowClassName={(row) =>
           "hover:bg-base-200/50 " +
