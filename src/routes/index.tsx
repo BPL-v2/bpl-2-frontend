@@ -139,7 +139,7 @@ function Home() {
                         <img
                           src={`/assets/teams/${
                             currentEvent.id
-                          }/${team.name.toLowerCase()}/logo-w-name.svg`}
+                          }/${team.name.toLowerCase()}/logo-w-name.png`}
                           alt={team.name}
                           className="w-full"
                         />

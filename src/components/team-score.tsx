@@ -53,7 +53,7 @@ const TeamScore = ({
                       <img
                         src={`/assets/teams/${
                           currentEvent.id
-                        }/${team.name.toLowerCase()}/logo-w-name.svg`}
+                        }/${team.name.toLowerCase()}/logo-w-name.png`}
                       ></img>
                     </div>
                   </div>
@@ -70,7 +70,7 @@ const TeamScore = ({
                     className=""
                         src={`/assets/teams/${
                           currentEvent.id
-                        }/${team.name.toLowerCase()}/logo-w-name.svg`}
+                        }/${team.name.toLowerCase()}/logo-w-name.png`}
                   ></img>
                 </div>
                 <div className="flex flex-col justify-center">
