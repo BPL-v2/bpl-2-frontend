@@ -34,15 +34,15 @@ export function GemTabRules() {
   const gemCategory = scores?.sub_categories.find(
     (category) => category.name === "Gems"
   );
-  const racePoints = gemCategory?.objectives[0].scoring_preset?.points || [];
+  const racePoints = gemCategory?.scoring_preset?.points || [];
   const gemPoints = gemCategory?.objectives[1].scoring_preset?.points[0];
   return (
     <>
       <h3>Points</h3>
       <p>
         Every team tries to collect all transfigured gems as fast as possible.{" "}
-        {convertArrayToText(racePoints)}. Every transfigured gem collected will
-        award <b className="text-info">{gemPoints}</b> points.
+        <p> {convertArrayToText(racePoints)}</p> Every transfigured gem
+        collected will award <b className="text-info">{gemPoints}</b> points.
       </p>
     </>
   );

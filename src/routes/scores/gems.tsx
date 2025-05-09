@@ -4,11 +4,12 @@ import TeamScore from "@components/team-score";
 import { ItemTable } from "@components/item-table";
 import { GameVersion } from "@client/api";
 import { createFileRoute } from "@tanstack/react-router";
-import { HeistTabRules } from "@rules/heist";
 import { ruleWrapper } from "./route";
+import { Ranking } from "@components/ranking";
+import { GemTabRules } from "@rules/gems";
 
 export const Route = createFileRoute("/scores/gems")({
-  component: () => ruleWrapper(<GemTab />, <HeistTabRules />),
+  component: () => ruleWrapper(<GemTab />, <GemTabRules />),
 });
 
 export function GemTab() {
@@ -32,7 +33,18 @@ export function GemTab() {
     <>
       <TeamScore category={gemCategory} />
       <div className="divider divider-primary">{gemCategory.name}</div>
-      <ItemTable category={gemCategory} />
+      <div className="flex flex-col gap-4">
+        <Ranking
+          objective={gemCategory}
+          maximum={gemCategory.objectives.length}
+          actual={(teamId: number) =>
+            gemCategory.objectives.filter((o) => o.team_score[teamId]?.finished)
+              .length
+          }
+          description="Gems:"
+        />
+        <ItemTable category={gemCategory} />
+      </div>
     </>
   );
 }
