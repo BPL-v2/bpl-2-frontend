@@ -12,7 +12,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const { currentEvent } = useContext(GlobalStateContext);
+  const { currentEvent, eventStatus } = useContext(GlobalStateContext);
 
   const now = Date.now();
   const hasStarted =
@@ -22,6 +22,24 @@ function Home() {
 
   return (
     <div className="flex flex-col gap-8 mt-8 mx-auto ">
+      <div className="card max-w-full bg-base-300">
+        <div className="card-body p-12 text-2xl flex flex-col text-left gap-4">
+          <div>
+            Signups: {eventStatus?.number_of_signups || 0} /{" "}
+            {currentEvent?.max_size || 0}
+          </div>
+          <div>
+            Waitlist:{" "}
+            {Math.max(
+              (eventStatus?.number_of_signups || 0) -
+                (currentEvent?.max_size || 0),
+              0
+            )}{" "}
+            / {currentEvent?.waitlist_size || 0}
+          </div>
+        </div>
+      </div>
+
       <div className="card max-w-full bg-base-300">
         <div className="card-body p-12">
           <div className="card-title text-4xl ">What is BPL?</div>

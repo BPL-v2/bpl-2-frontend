@@ -522,6 +522,12 @@ export interface Event {
      * @memberof Event
      */
     teams: Array<Team>;
+    /**
+     * 
+     * @type {number}
+     * @memberof Event
+     */
+    waitlist_size: number;
 }
 
 /**
@@ -590,6 +596,12 @@ export interface EventCreate {
      * @memberof EventCreate
      */
     name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof EventCreate
+     */
+    waitlist_size: number;
 }
 
 /**
@@ -610,6 +622,12 @@ export interface EventStatus {
      * @memberof EventStatus
      */
     is_team_lead: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof EventStatus
+     */
+    number_of_signups: number;
     /**
      * 
      * @type {number}
@@ -2638,15 +2656,15 @@ export const EventApiFetchParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Gets the users application status for an event
+         * Gets the status for an event including the user's application status
          * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getEventStatusForUser(event_id: number, options: any = {}): FetchArgs {
+        getEventStatus(event_id: number, options: any = {}): FetchArgs {
             // verify required parameter 'event_id' is not null or undefined
             if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getEventStatusForUser.');
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getEventStatus.');
             }
             const localVarPath = `/events/{event_id}/status`
                 .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
@@ -2786,13 +2804,13 @@ export const EventApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         * Gets the users application status for an event
+         * Gets the status for an event including the user's application status
          * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getEventStatusForUser(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<EventStatus> {
-            const localVarFetchArgs = EventApiFetchParamCreator(configuration).getEventStatusForUser(event_id, options);
+        getEventStatus(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<EventStatus> {
+            const localVarFetchArgs = EventApiFetchParamCreator(configuration).getEventStatus(event_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -2867,13 +2885,13 @@ export const EventApiFactory = function (configuration?: Configuration, fetch?: 
             return EventApiFp(configuration).getEvent(event_id, options)(fetch, basePath);
         },
         /**
-         * Gets the users application status for an event
+         * Gets the status for an event including the user's application status
          * @param {number} event_id Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getEventStatusForUser(event_id: number, options?: any) {
-            return EventApiFp(configuration).getEventStatusForUser(event_id, options)(fetch, basePath);
+        getEventStatus(event_id: number, options?: any) {
+            return EventApiFp(configuration).getEventStatus(event_id, options)(fetch, basePath);
         },
         /**
          * Fetches all events
@@ -2939,14 +2957,14 @@ export class EventApi extends BaseAPI {
     }
 
     /**
-     * Gets the users application status for an event
+     * Gets the status for an event including the user's application status
      * @param {number} event_id Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EventApi
      */
-    public getEventStatusForUser(event_id: number, options?: any) {
-        return EventApiFp(this.configuration).getEventStatusForUser(event_id, options)(this.fetch, this.basePath);
+    public getEventStatus(event_id: number, options?: any) {
+        return EventApiFp(this.configuration).getEventStatus(event_id, options)(this.fetch, this.basePath);
     }
 
     /**
