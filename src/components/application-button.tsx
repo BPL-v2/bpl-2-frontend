@@ -17,6 +17,8 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
   const [userTeam, setUserTeam] = React.useState<Team | undefined>(undefined);
   const [isServerMember, setIsServerMember] = React.useState(true);
   const [hourValue, setHourValue] = React.useState(1);
+  const [needHelp, setNeedHelp] = React.useState(false);
+  const [wantToHelp, setWantToHelp] = React.useState(false);
   useEffect(() => {
     setUserTeam(
       user
@@ -81,6 +83,8 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
               signupApi
                 .createSignup(currentEvent.id, {
                   expected_playtime: hourValue,
+                  wants_to_help: wantToHelp,
+                  needs_help: needHelp,
                 })
                 .then(() => {
                   setEventStatus({
@@ -118,6 +122,32 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
                   />
                 </div>
               </div>
+              <label className="fieldset-label">
+                <input
+                  type="checkbox"
+                  id="need_help"
+                  name="need_help"
+                  className="checkbox"
+                  onChange={(e) => {
+                    setNeedHelp(e.target.checked);
+                  }}
+                  defaultChecked={needHelp}
+                />
+                I'm new and would like to have help
+              </label>
+              <label className="fieldset-label">
+                <input
+                  type="checkbox"
+                  id="want_to_help"
+                  name="want_to_help"
+                  className="checkbox"
+                  onChange={(e) => {
+                    setWantToHelp(e.target.checked);
+                  }}
+                  defaultChecked={wantToHelp}
+                />
+                I'm experienced and would like to help others
+              </label>
               <label className="fieldset-label">
                 <input
                   type="checkbox"
