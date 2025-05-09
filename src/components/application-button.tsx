@@ -40,9 +40,8 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
     return (
       <div className="dropdown">
         <button className={`btn btn-lg py-8 hover:btn-primary`}>
-          Application Pending
+          Signup Successful
         </button>
-
         <ul
           tabIndex={0}
           className="dropdown-content menu bg-base-300 border-2 border-base-100 z-1 shadow-2xl text-lg rounded-field"
