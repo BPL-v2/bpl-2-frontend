@@ -169,18 +169,20 @@ function UniqueTab() {
       </div>
       <div className="divider divider-primary">Categories</div>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 m-2">
-        {shownCategories.map((category) => {
-          return (
-            <div key={`unique-category-${category.id}`}>
-              <UniqueCategoryCard
-                category={category}
-                selected={category.id === selectedCategory?.id}
-                teamId={selectedTeam}
-                onClick={() => handleCategoryClick(category)}
-              />
-            </div>
-          );
-        })}
+        {shownCategories
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((category) => {
+            return (
+              <div key={`unique-category-${category.id}`}>
+                <UniqueCategoryCard
+                  category={category}
+                  selected={category.id === selectedCategory?.id}
+                  teamId={selectedTeam}
+                  onClick={() => handleCategoryClick(category)}
+                />
+              </div>
+            );
+          })}
       </div>
       <div ref={tableRef} className="divider divider-primary">
         Items
