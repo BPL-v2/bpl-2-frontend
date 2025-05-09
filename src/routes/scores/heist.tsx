@@ -35,10 +35,26 @@ export function HeistTab() {
   const heistUniquesCategory = heistCategory.sub_categories.find(
     (category) => category.name === "Blueprint Uniques"
   );
+  const enchantingOrbObjective = heistCategory.objectives.find(
+    (c) => c.name === "Enchanting Orb Race"
+  );
 
   return (
     <>
       <TeamScore category={heistCategory} />
+      {enchantingOrbObjective && (
+        <div className="flex flex-col gap-4">
+          <div className="divider divider-primary">Enchanting Orb Race</div>
+          <Ranking
+            objective={enchantingOrbObjective}
+            maximum={enchantingOrbObjective.required_number}
+            actual={(teamId: number) =>
+              enchantingOrbObjective.team_score[teamId]?.number || 0
+            }
+            description="Orbs:"
+          />
+        </div>
+      )}
       {rogueGearCategory && (
         <div className="flex flex-col gap-4">
           <div className="divider divider-primary">Rogue Gear</div>
