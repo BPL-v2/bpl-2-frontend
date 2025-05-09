@@ -1382,6 +1382,12 @@ export interface Signup {
     id: number;
     /**
      * 
+     * @type {boolean}
+     * @memberof Signup
+     */
+    needs_help?: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof Signup
      */
@@ -1404,6 +1410,12 @@ export interface Signup {
      * @memberof Signup
      */
     user: NonSensitiveUser;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Signup
+     */
+    wants_to_help?: boolean;
 }
 
 /**
@@ -1418,6 +1430,18 @@ export interface SignupCreate {
      * @memberof SignupCreate
      */
     expected_playtime: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SignupCreate
+     */
+    needs_help?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SignupCreate
+     */
+    wants_to_help?: boolean;
 }
 
 /**
