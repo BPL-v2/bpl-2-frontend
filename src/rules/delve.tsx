@@ -43,9 +43,13 @@ export function DelveTabRules() {
     (c) => c.name === "Culmulative Depth"
   );
 
+  const delveRace = delveCategory?.objectives.find(
+    (c) => c.name === "Delve Race"
+  );
+
   return (
     <>
-      {fossilRaceCategory ? (
+      {fossilRaceCategory && (
         <>
           <h3>Fossil Race</h3>
           <p>
@@ -55,8 +59,8 @@ export function DelveTabRules() {
             {racePointsToText(fossilRaceCategory.scoring_preset?.points || [])}
           </p>
         </>
-      ) : null}
-      {culmDepthObjective ? (
+      )}
+      {culmDepthObjective && (
         <>
           <h3>Culmulative Team Depth</h3>
           <p>
@@ -65,7 +69,21 @@ export function DelveTabRules() {
             point per 10 total team delve progress up to a cap of 500 points.
           </p>
         </>
-      ) : null}
+      )}
+      {delveRace && (
+        <>
+          <h3>Delve Race</h3>
+          <p>
+            Each team selects a member to be their racer. The racer will try to
+            delve from depth 300 to depth 600 as fast as possible. The race has
+            to be done solo.
+          </p>
+          <p className="text-warning">
+            Usage of "Mageblood" and "The Tides of Time" unique belts is not
+            allowed for the submission of the delve race.
+          </p>
+        </>
+      )}
     </>
   );
 }

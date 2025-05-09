@@ -13,7 +13,11 @@ const AuthButton = () => {
   const { user, setUser } = useContext(GlobalStateContext);
   const state = useRouterState();
 
-  if (user) {
+  if (
+    user &&
+    user.token_expiry_timestamp &&
+    new Date(user.token_expiry_timestamp) > new Date()
+  ) {
     return (
       <div className="dropdown">
         <div
