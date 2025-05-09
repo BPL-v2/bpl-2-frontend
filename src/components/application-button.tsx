@@ -130,7 +130,7 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
                   className="checkbox"
                   onChange={(e) => {
                     setNeedHelp(e.target.checked);
-                    setWantToHelp(!e.target.checked);
+                    setWantToHelp(false);
                   }}
                   checked={needHelp}
                 />
@@ -144,7 +144,7 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
                   className="checkbox"
                   onChange={(e) => {
                     setWantToHelp(e.target.checked);
-                    setNeedHelp(!e.target.checked);
+                    setNeedHelp(false);
                   }}
                   checked={wantToHelp}
                 />
