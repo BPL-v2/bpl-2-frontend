@@ -39,8 +39,7 @@ type MenuItem = {
 };
 
 function RootComponent() {
-  const { currentEvent, user, eventStatus, isMobile } =
-    useContext(GlobalStateContext);
+  const { currentEvent, user, eventStatus } = useContext(GlobalStateContext);
   const menu: MenuItem[] = useMemo(() => {
     const menu: MenuItem[] = [
       {
