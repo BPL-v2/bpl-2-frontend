@@ -47,7 +47,7 @@ function pointsRenderer(points: number[]) {
 
 function ScoringPresetsPage() {
   const { user, events } = useContext(GlobalStateContext);
-  let { eventId } = useParams({ strict: false });
+  let { eventId } = useParams({ from: Route.id });
   const event = events.find((event) => event.id === eventId);
 
   if (!eventId || !event) {
@@ -119,7 +119,7 @@ function ScoringPresetsPage() {
           const points = data.points
             .split(",")
             .map((point: string) => parseInt(point.trim()));
-          return scoringApi.createScoringPreset(Number(eventId), {
+          return scoringApi.createScoringPreset(eventId, {
             ...data,
             points: points,
             event_id: eventId,
@@ -129,14 +129,14 @@ function ScoringPresetsPage() {
           const points = data.points
             .split(",")
             .map((point: string) => parseInt(point.trim()));
-          return scoringApi.createScoringPreset(Number(eventId), {
+          return scoringApi.createScoringPreset(eventId, {
             ...data,
             points: points,
             event_id: eventId,
           });
         }}
         deleteFunction={(data) =>
-          scoringApi.deleteScoringPreset(Number(eventId), data.id)
+          scoringApi.deleteScoringPreset(eventId, data.id)
         }
       ></CrudTable>
     </>

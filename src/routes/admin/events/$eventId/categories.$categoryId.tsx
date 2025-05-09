@@ -82,7 +82,7 @@ async function createBulkItemObjectives(
 }
 export function ScoringCategoryPage() {
   let { user, events } = useContext(GlobalStateContext);
-  let { eventId, categoryId } = useParams({ strict: false });
+  let { eventId, categoryId } = useParams({ from: Route.id });
   let [categoryName, setCategoryName] = React.useState("");
   const [isObjectiveModalOpen, setIsObjectiveModalOpen] = useState(false);
   const [isBulkObjectiveModalOpen, setIsBulkObjectiveModalOpen] =
@@ -99,7 +99,7 @@ export function ScoringCategoryPage() {
     null
   );
 
-  const event = events.find((event) => event.id === Number(eventId));
+  const event = events.find((event) => event.id === eventId);
   const [operatorForField, setOperatorForField] = useState<{
     [key in ItemField]: Operator[];
   }>();
@@ -109,7 +109,7 @@ export function ScoringCategoryPage() {
     }>();
 
   useEffect(() => {
-    conditionApi.getValidMappings(Number(eventId)).then((data) => {
+    conditionApi.getValidMappings(eventId).then((data) => {
       setOperatorForField(
         Object.entries(data.field_to_type).reduce(
           (acc, [key, value]) => {
@@ -138,11 +138,9 @@ export function ScoringCategoryPage() {
     if (!categoryId) {
       return;
     }
-    scoringApi
-      .getScoringCategory(Number(eventId), Number(categoryId))
-      .then((data) => {
-        setCategoryName(data.name);
-      });
+    scoringApi.getScoringCategory(eventId, categoryId).then((data) => {
+      setCategoryName(data.name);
+    });
   }, [categoryId]);
 
   const categoryColumns: CrudColumn<Category>[] = useMemo(
@@ -425,7 +423,7 @@ export function ScoringCategoryPage() {
 
       const objectiveCreate: ObjectiveCreate = {
         aggregation: data.get("aggregation") as AggregationType,
-        category_id: Number(categoryId),
+        category_id: categoryId,
         conditions: conditions,
         extra: data.get("extra") as string,
         name: data.get("name") as string,
@@ -447,12 +445,10 @@ export function ScoringCategoryPage() {
       if (currentObjective.id) {
         objectiveCreate.id = currentObjective.id;
       }
-      objectiveApi
-        .createObjective(Number(eventId), objectiveCreate)
-        .then(() => {
-          setRefreshObjectives((prev) => !prev);
-          setIsObjectiveModalOpen(false);
-        });
+      objectiveApi.createObjective(eventId, objectiveCreate).then(() => {
+        setRefreshObjectives((prev) => !prev);
+        setIsObjectiveModalOpen(false);
+      });
     }
 
     return (
@@ -585,7 +581,7 @@ export function ScoringCategoryPage() {
                         className="h-4 w-4 cursor-pointer"
                         onClick={(event) => {
                           conditionApi
-                            .deleteCondition(Number(eventId), condition.id)
+                            .deleteCondition(eventId, condition.id)
                             .then(() => {
                               event.stopPropagation();
                               setRefreshObjectives((prev) => !prev);
@@ -635,7 +631,7 @@ export function ScoringCategoryPage() {
             return { ...condition, id: undefined, objective_id: undefined };
           }),
         };
-        objectiveApi.createObjective(Number(eventId), newObjective).then(() => {
+        objectiveApi.createObjective(eventId, newObjective).then(() => {
           setRefreshObjectives((prev) => !prev);
         });
       },
@@ -652,11 +648,11 @@ export function ScoringCategoryPage() {
           columns={objectiveColumns}
           fetchFunction={() =>
             scoringApi
-              .getScoringCategory(Number(eventId), Number(categoryId))
+              .getScoringCategory(eventId, categoryId)
               .then((data) => data.objectives)
           }
           deleteFunction={(obj) =>
-            objectiveApi.deleteObjective(Number(eventId), obj.id)
+            objectiveApi.deleteObjective(eventId, obj.id)
           }
           addtionalActions={addtionalObjectiveActions}
         />
@@ -689,31 +685,27 @@ export function ScoringCategoryPage() {
           resourceName="Scoring Category"
           columns={categoryColumns}
           fetchFunction={() =>
-            scoringApi
-              .getScoringCategory(Number(eventId), Number(categoryId))
-              .then((data) => {
-                return data.sub_categories;
-              })
+            scoringApi.getScoringCategory(eventId, categoryId).then((data) => {
+              return data.sub_categories;
+            })
           }
           createFunction={(data) =>
-            scoringApi.createCategory(Number(eventId), {
+            scoringApi.createCategory(eventId, {
               ...data,
               scoring_preset_id: data.scoring_preset_id
                 ? Number(data.scoring_preset_id)
                 : null,
-              parent_id: Number(categoryId),
+              parent_id: categoryId,
             })
           }
           editFunction={(data) =>
-            scoringApi.createCategory(Number(eventId), {
+            scoringApi.createCategory(eventId, {
               ...data,
               scoring_preset_id: Number(data.scoring_preset_id),
-              parent_id: Number(categoryId),
+              parent_id: categoryId,
             })
           }
-          deleteFunction={(data) =>
-            scoringApi.deleteCategory(Number(eventId), data.id)
-          }
+          deleteFunction={(data) => scoringApi.deleteCategory(eventId, data.id)}
         />
       </>
     );
@@ -733,8 +725,8 @@ export function ScoringCategoryPage() {
               const form = e.currentTarget;
               const data = new FormData(form);
               createBulkItemObjectives(
-                Number(eventId),
-                Number(categoryId),
+                eventId,
+                categoryId,
                 data.get("name_list") as string,
                 Number(data.get("scoring_method")),
                 data.get("aggregation_method") as AggregationType,
@@ -834,12 +826,10 @@ export function ScoringCategoryPage() {
               value: data.get("value") as string,
               objective_id: currentObjective.id,
             };
-            conditionApi
-              .createCondition(Number(eventId), conditionCreate)
-              .then(() => {
-                setIsConditionModalOpen(false);
-                setRefreshObjectives((prev) => !prev);
-              });
+            conditionApi.createCondition(eventId, conditionCreate).then(() => {
+              setIsConditionModalOpen(false);
+              setRefreshObjectives((prev) => !prev);
+            });
           }}
         >
           <fieldset className="fieldset bg-base-300 p-4 rounded-box mb-4">

@@ -30,33 +30,32 @@ export function ProfilePage() {
   const [characterTimeseries, setCharacterTimeseries] = useState<Character[]>(
     []
   );
-  let { userId } = useParams({ strict: false });
-  const user_id = userId ? Number(userId) : undefined;
+  let { userId } = useParams({ from: Route.id });
 
   const fontColor = darkMode ? "white" : "black";
   useEffect(() => {
-    if (!user_id) {
+    if (!userId) {
       return;
     }
-    userApi.getUserById(user_id).then(setUser);
-    characterApi.getUserCharacters(user_id).then((res) => {
+    userApi.getUserById(userId).then(setUser);
+    characterApi.getUserCharacters(userId).then((res) => {
       setEventCharacters(res);
     });
-  }, [user_id]);
+  }, [userId]);
 
   useEffect(() => {
-    if (!user_id || !currentEvent) {
+    if (!userId || !currentEvent) {
       return;
     }
     setEventId(currentEvent.id);
   }, [currentEvent]);
 
   useEffect(() => {
-    if (!user_id) {
+    if (!userId) {
       return;
     }
     characterApi
-      .getCharacterEventHistoryForUser(eventId, user_id)
+      .getCharacterEventHistoryForUser(eventId, userId)
       .then((res) => {
         setCharacterTimeseries(
           res.sort(
@@ -65,7 +64,7 @@ export function ProfilePage() {
           )
         );
       });
-  }, [eventId, user_id]);
+  }, [eventId, userId]);
 
   function drawVerticalLine(u: uPlot, timestamp: number, label: string) {
     const ctx = u.ctx;
@@ -146,7 +145,7 @@ export function ProfilePage() {
     options: options,
     data: data,
   };
-  if (!user_id || !user) {
+  if (!userId || !user) {
     return <div>Loading...</div>;
   }
   return (

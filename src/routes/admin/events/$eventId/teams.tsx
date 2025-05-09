@@ -21,7 +21,7 @@ export const Route = createFileRoute("/admin/events/$eventId/teams")({
 
 function TeamPage() {
   const { events, user } = useContext(GlobalStateContext);
-  let { eventId } = useParams({ strict: false });
+  let { eventId } = useParams({ from: Route.id });
 
   const event = events.find((event) => event.id === eventId);
   const columns: CrudColumn<Team>[] = useMemo(
