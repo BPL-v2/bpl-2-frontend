@@ -414,6 +414,7 @@ export const anomalousBaseTypes: {
     },
     {} as Record<string, string>
   ),
+  poe2: {},
 };
 
 export function getItemName(
