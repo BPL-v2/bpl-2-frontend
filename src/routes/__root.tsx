@@ -103,7 +103,7 @@ function RootComponent() {
             </div>
             {isAdmin() ? <EventPicker /> : null}
             <div tabIndex={0} className=" flex items-center">
-              {isMobile ? null : <ApplicationButton />}
+              <ApplicationButton />
               <AuthButton />
             </div>
           </ul>
