@@ -84,6 +84,14 @@ const columns: CrudColumn<Event>[] = [
     required: true,
   },
   {
+    title: "WaitSize",
+    dataIndex: "waitlist_size",
+    key: "waitlist_size",
+    type: "number",
+    editable: true,
+    required: true,
+  },
+  {
     title: "Current",
     dataIndex: "is_current",
     key: "is_current",

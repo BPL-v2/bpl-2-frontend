@@ -380,7 +380,7 @@ const CrudTable = <T,>({
                       return <td key={String(column.dataIndex)}>{value}</td>;
                     })}
                   <td>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                       {editFunction && (
                         <button
                           className="btn btn-warning btn-sm"

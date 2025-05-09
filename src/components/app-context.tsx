@@ -3,7 +3,6 @@ import { ContextProvider } from "@utils/context-provider";
 import { establishScoreSocket } from "../websocket/score-socket";
 import { ScoreCategory, ScoreDiffWithKey } from "@mytypes/score";
 import { mergeScores } from "@utils/utils";
-
 import {
   Category,
   EventStatus,
@@ -21,11 +20,10 @@ import { isLoggedIn } from "@utils/token";
 function ContextWrapper({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User>();
   // initialize with a dummy event so that we can start making api calls
-  const ev = {
+  const [currentEvent, setCurrentEvent] = useState<Event>({
     id: "current",
     teams: [],
-  } as unknown as Event;
-  const [currentEvent, setCurrentEvent] = useState<Event>(ev);
+  } as unknown as Event);
   const [events, setEvents] = useState<Event[]>([]);
   const [eventStatus, setEventStatus] = useState<EventStatus>();
   const [rules, setRules] = useState<Category>();
@@ -52,6 +50,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
     }
     websocket?.close(1000, "eventChange");
     setGameVersion(currentEvent.game_version);
+    eventApi.getEventStatus(currentEvent.id).then(setEventStatus);
     establishScoreSocket(
       currentEvent.id,
       setScoreData,
@@ -106,12 +105,6 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
       );
     }
   }, [rules, scoreData, currentEvent, scoringPresets]);
-
-  useEffect(() => {
-    if (currentEvent && user) {
-      eventApi.getEventStatusForUser(currentEvent.id).then(setEventStatus);
-    }
-  }, [currentEvent, user]);
 
   useEffect(() => {
     document
