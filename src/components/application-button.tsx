@@ -7,6 +7,7 @@ import { Dialog } from "./dialog";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { redirectOauth } from "@utils/oauth";
 import { TeamName } from "./team-name";
+import { c } from "node_modules/vite/dist/node/moduleRunnerTransport.d-DJ_mE5sf";
 
 type ApplicationButtonProps = {};
 const ApplicationButton = ({}: ApplicationButtonProps) => {
@@ -22,11 +23,10 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
   const [wantToHelp, setWantToHelp] = React.useState(false);
   useEffect(() => {
     setUserTeam(
-      user
-        ? currentEvent?.teams.find((team) => team.id === eventStatus?.team_id)
-        : undefined
+      user &&
+        currentEvent?.teams.find((team) => team.id === eventStatus?.team_id)
     );
-  }, [eventStatus, user]);
+  }, [eventStatus, user, currentEvent]);
   if (
     !user ||
     !currentEvent ||
