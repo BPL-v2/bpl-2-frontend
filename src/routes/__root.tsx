@@ -52,7 +52,7 @@ function RootComponent() {
         label: "Admin",
         icon: <Cog6ToothIcon className="h-6 w-6" />,
         url: "/admin",
-        visible: user?.permissions?.includes(Permission.admin),
+        visible: (user?.permissions?.length || 0) > 0,
       },
       {
         label: "Scoring",
