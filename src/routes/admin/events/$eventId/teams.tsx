@@ -5,10 +5,14 @@ import { GlobalStateContext } from "@utils/context-provider";
 import CrudTable, { CrudColumn } from "@components/crudtable";
 import { teamApi } from "@client/client";
 import { GameVersion, Permission, Team } from "@client/api";
-import { requiresAdmin } from "@utils/token";
+import { renderConditionally } from "@utils/token";
 
 export const Route = createFileRoute("/admin/events/$eventId/teams")({
-  component: requiresAdmin(TeamPage),
+  component: renderConditionally(TeamPage, [
+    Permission.admin,
+    Permission.objective_designer,
+  ]),
+
   params: {
     parse: (params) => ({
       eventId: Number(params.eventId),

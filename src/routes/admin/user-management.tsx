@@ -7,10 +7,10 @@ import { userApi } from "@client/client";
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 import { ColumnDef, sortingFns } from "@tanstack/react-table";
 import Table from "@components/table";
-import { requiresAdmin } from "@utils/token";
+import { renderConditionally } from "@utils/token";
 
 export const Route = createFileRoute("/admin/user-management")({
-  component: requiresAdmin(UserPage),
+  component: renderConditionally(UserPage, [Permission.admin]),
 });
 
 const columns: ColumnDef<User, any>[] = [

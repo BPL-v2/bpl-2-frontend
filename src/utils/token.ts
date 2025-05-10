@@ -41,10 +41,20 @@ export function isAdmin() {
   );
 }
 
-export function requiresAdmin(
-  component: () => JSX.Element
+export function hasPermission(permissions: Permission[]): boolean {
+  const payload = getJwtPayload();
+  return (
+    payload != null &&
+    isValidJwt(payload) &&
+    permissions.some((permission) => payload.permissions.includes(permission))
+  );
+}
+
+export function renderConditionally(
+  component: () => JSX.Element,
+  permissions: Permission[]
 ): () => JSX.Element | undefined {
-  if (isAdmin()) {
+  if (hasPermission(permissions)) {
     return component;
   } else {
     return () => {

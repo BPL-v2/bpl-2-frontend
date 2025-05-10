@@ -1,9 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-
-export const Route = createFileRoute("/admin/team-sort")({
-  component: requiresAdmin(UserSortPage),
-});
-
 import { useContext, useEffect, useMemo, useState } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { sortUsers } from "@utils/usersort";
@@ -11,7 +6,14 @@ import { Permission, Signup } from "@client/api";
 import { signupApi, teamApi } from "@client/client";
 import Table from "@components/table";
 import { ColumnDef } from "@tanstack/react-table";
-import { requiresAdmin } from "@utils/token";
+import { renderConditionally } from "@utils/token";
+
+export const Route = createFileRoute("/admin/team-sort")({
+  component: renderConditionally(UserSortPage, [
+    Permission.admin,
+    Permission.manager,
+  ]),
+});
 
 type TeamRow = {
   key: number;
