@@ -25,7 +25,7 @@ const formatDateForInput = (date: Date | null) => {
 };
 
 function RecurringJobsPage() {
-  const { events, user } = useContext(GlobalStateContext);
+  const { events } = useContext(GlobalStateContext);
   const [jobs, setJobs] = React.useState<RecurringJob[]>([]);
   const [showModal, setShowModal] = React.useState(false);
   const [selectedEvent, setSelectedEvent] = React.useState<Event | null>(null);
@@ -58,9 +58,6 @@ function RecurringJobsPage() {
     }
   }, [selectedEvent]);
 
-  if (!user || !user.permissions.includes(Permission.admin)) {
-    return <div>You do not have permission to view this page</div>;
-  }
   return (
     <>
       <Dialog

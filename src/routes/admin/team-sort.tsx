@@ -168,8 +168,8 @@ function UserSortPage() {
     return columns;
   }, [currentEvent, suggestions]);
 
-  if (!user || !user.permissions.includes(Permission.admin) || !currentEvent) {
-    return <div>You do not have permission to view this page</div>;
+  if (!currentEvent) {
+    return <div>Loading</div>;
   }
 
   let teamRows = [...currentEvent.teams, { id: null, name: "No team" }].map(

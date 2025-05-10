@@ -50,15 +50,12 @@ function pointsRenderer(points: number[]) {
 }
 
 function ScoringPresetsPage() {
-  const { user, events } = useContext(GlobalStateContext);
+  const { events } = useContext(GlobalStateContext);
   let { eventId } = useParams({ from: Route.id });
   const event = events.find((event) => event.id === eventId);
 
   if (!eventId || !event) {
     return <div>Event not found</div>;
-  }
-  if (!user || !user.permissions.includes(Permission.admin)) {
-    return <div>You do not have permission to view this page</div>;
   }
 
   const scoringPresetsColumns: CrudColumn<ScoringPreset>[] = [

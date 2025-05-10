@@ -85,7 +85,7 @@ async function createBulkItemObjectives(
   );
 }
 export function ScoringCategoryPage(): JSX.Element {
-  let { user, events } = useContext(GlobalStateContext);
+  let { events } = useContext(GlobalStateContext);
   let { eventId, categoryId } = useParams({ from: Route.id });
   let [categoryName, setCategoryName] = React.useState("");
   const [isObjectiveModalOpen, setIsObjectiveModalOpen] = useState(false);
@@ -897,9 +897,6 @@ export function ScoringCategoryPage(): JSX.Element {
 
   if (!categoryId) {
     return <></>;
-  }
-  if (!user || !user.permissions.includes(Permission.admin)) {
-    return <div>You do not have permission to view this page</div>;
   }
 
   return (
