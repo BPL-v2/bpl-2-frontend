@@ -44,110 +44,6 @@ export function ForYouTab() {
         );
       });
   }, [currentEvent, user]);
-
-  if (!scores || !user) {
-    return <div>Loading...</div>;
-  }
-  const teamId = eventStatus?.team_id!;
-  if (!teamId) {
-    return;
-  }
-
-  const categories = flattenCategories(scores);
-
-  const relevantCategories = categories
-    .filter(
-      (category) =>
-        category.scoring_preset?.scoring_method ===
-          ScoringMethod.RANKED_COMPLETION_TIME &&
-        eventStatus.team_id !== undefined &&
-        !category.team_score[eventStatus.team_id]?.finished
-    )
-    .sort((a, b) => {
-      return (
-        a.objectives.filter(
-          (objective) => !objective.team_score[teamId]?.finished
-        ).length /
-          a.objectives.length -
-        b.objectives.filter(
-          (objective) => !objective.team_score[teamId]?.finished
-        ).length /
-          b.objectives.length
-      );
-    });
-
-  const relevantObjectives = categories.flatMap((category) =>
-    category.objectives
-      .filter(
-        (objective) =>
-          objective.scoring_preset?.scoring_method ===
-            ScoringMethod.RANKED_TIME &&
-          !objective.team_score[eventStatus.team_id!]?.finished
-      )
-      .sort((a, b) => {
-        return (
-          (b.team_score[teamId]?.number || 0) / b.required_number -
-          (a.team_score[teamId]?.number || 0) / a.required_number
-        );
-      })
-  );
-  function catRender(cat: ScoreCategory) {
-    const totalObjectives = cat.objectives.length;
-    const unfinishedObjectives = cat.objectives.filter(
-      (obj) => !obj.team_score[teamId]?.finished
-    );
-    return (
-      <div className="card bg-base-300" key={cat.id}>
-        <div className="card-body">
-          <div tabIndex={0} className="collapse bg-base-200 items-start">
-            <div className="card-title collapse-title flex justify-between text-lg pe-px-4 px-4">
-              <div>{cat.name}</div>
-              <div className="text-primary whitespace-nowrap">
-                {totalObjectives - unfinishedObjectives.length} /{" "}
-                {totalObjectives}
-              </div>
-            </div>
-            <ul className="collapse-content list not-prose">
-              <li className="p-4 pb-2 text-xs opacity-60 tracking-wide ">
-                Missing Items
-              </li>
-              {unfinishedObjectives.map((obj) => (
-                <li className="list-row" key={obj.id}>
-                  {obj.name}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-        <progress
-          className="progress progress-primary w-full rounded-b-box rounded-t-none"
-          value={totalObjectives - unfinishedObjectives.length}
-          max={totalObjectives}
-        ></progress>
-      </div>
-    );
-  }
-
-  function objRender(obj: ScoreObjective) {
-    return (
-      <div className="card bg-base-300" key={obj.id}>
-        <div className="card-body">
-          <div className="card-title flex justify-between text-lg">
-            <div>{obj.name}</div>
-            <div className="text-primary whitespace-nowrap">
-              {obj.team_score[teamId]?.number} / {obj.required_number}
-            </div>
-          </div>
-        </div>
-        <progress
-          className="progress progress-primary w-full rounded-b-box rounded-t-none"
-          value={obj.team_score[teamId]?.number}
-          max={obj.required_number}
-        ></progress>
-      </div>
-    );
-  }
-
   const personalObjectiveRender = useMemo(() => {
     if (!character) {
       return null;
@@ -285,6 +181,109 @@ export function ForYouTab() {
       </div>
     );
   }, [character]);
+  if (!scores || !user) {
+    return <div>Loading...</div>;
+  }
+  const teamId = eventStatus?.team_id!;
+  if (!teamId) {
+    return;
+  }
+
+  const categories = flattenCategories(scores);
+
+  const relevantCategories = categories
+    .filter(
+      (category) =>
+        category.scoring_preset?.scoring_method ===
+          ScoringMethod.RANKED_COMPLETION_TIME &&
+        eventStatus.team_id !== undefined &&
+        !category.team_score[eventStatus.team_id]?.finished
+    )
+    .sort((a, b) => {
+      return (
+        a.objectives.filter(
+          (objective) => !objective.team_score[teamId]?.finished
+        ).length /
+          a.objectives.length -
+        b.objectives.filter(
+          (objective) => !objective.team_score[teamId]?.finished
+        ).length /
+          b.objectives.length
+      );
+    });
+
+  const relevantObjectives = categories.flatMap((category) =>
+    category.objectives
+      .filter(
+        (objective) =>
+          objective.scoring_preset?.scoring_method ===
+            ScoringMethod.RANKED_TIME &&
+          !objective.team_score[eventStatus.team_id!]?.finished &&
+          (!objective.valid_from || new Date(objective.valid_from) < new Date())
+      )
+      .sort((a, b) => {
+        return (
+          (b.team_score[teamId]?.number || 0) / b.required_number -
+          (a.team_score[teamId]?.number || 0) / a.required_number
+        );
+      })
+  );
+  function catRender(cat: ScoreCategory) {
+    const totalObjectives = cat.objectives.length;
+    const unfinishedObjectives = cat.objectives.filter(
+      (obj) => !obj.team_score[teamId]?.finished
+    );
+    return (
+      <div className="card bg-base-300" key={cat.id}>
+        <div className="card-body">
+          <div tabIndex={0} className="collapse bg-base-200 items-start">
+            <div className="card-title collapse-title flex justify-between text-lg pe-px-4 px-4">
+              <div>{cat.name}</div>
+              <div className="text-primary whitespace-nowrap">
+                {totalObjectives - unfinishedObjectives.length} /{" "}
+                {totalObjectives}
+              </div>
+            </div>
+            <ul className="collapse-content list not-prose">
+              <li className="p-4 pb-2 text-xs opacity-60 tracking-wide ">
+                Missing Items
+              </li>
+              {unfinishedObjectives.map((obj) => (
+                <li className="list-row" key={obj.id}>
+                  {obj.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <progress
+          className="progress progress-primary w-full rounded-b-box rounded-t-none"
+          value={totalObjectives - unfinishedObjectives.length}
+          max={totalObjectives}
+        ></progress>
+      </div>
+    );
+  }
+
+  function objRender(obj: ScoreObjective) {
+    return (
+      <div className="card bg-base-300" key={obj.id}>
+        <div className="card-body">
+          <div className="card-title flex justify-between text-lg">
+            <div>{obj.name}</div>
+            <div className="text-primary whitespace-nowrap">
+              {obj.team_score[teamId]?.number} / {obj.required_number}
+            </div>
+          </div>
+        </div>
+        <progress
+          className="progress progress-primary w-full rounded-b-box rounded-t-none"
+          value={obj.team_score[teamId]?.number}
+          max={obj.required_number}
+        ></progress>
+      </div>
+    );
+  }
 
   return (
     <div className="prose prose-xl text-left max-w-max flex flex-col px-4 2xl:px-0">
