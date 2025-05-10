@@ -1132,9 +1132,9 @@ export enum Operator {
  */
 export enum Permission {
     admin = 'admin',
-    command_team = 'command_team',
+    manager = 'manager',
     objective_designer = 'objective_designer',
-    judge = 'judge'
+    submission_judge = 'submission_judge'
 }
 
 /**
@@ -2628,6 +2628,14 @@ export const EventApiFetchParamCreator = function (configuration?: Configuration
             const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
 
             localVarHeaderParameter['Content-Type'] = 'application/json';
 

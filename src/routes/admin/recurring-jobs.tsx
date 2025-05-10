@@ -7,10 +7,10 @@ import { jobApi } from "@client/client";
 import React from "react";
 import dayjs from "dayjs";
 import { Dialog } from "@components/dialog";
-import { requiresAdmin } from "@utils/token";
+import { renderConditionally } from "@utils/token";
 
 export const Route = createFileRoute("/admin/recurring-jobs")({
-  component: requiresAdmin(RecurringJobsPage),
+  component: renderConditionally(RecurringJobsPage, [Permission.admin]),
 });
 
 const formatDateForInput = (date: Date | null) => {

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { JSX, useContext, useEffect, useMemo, useState } from "react";
 import CrudTable, { CrudColumn } from "@components/crudtable";
 
 import { GlobalStateContext } from "@utils/context-provider";
@@ -33,11 +33,15 @@ import {
   availableAggregationTypes,
   operatorToString,
 } from "@mytypes/scoring-objective";
+import { renderConditionally } from "@utils/token";
 
 export const Route = createFileRoute(
   "/admin/events/$eventId/categories/$categoryId"
 )({
-  component: ScoringCategoryPage,
+  component: renderConditionally(ScoringCategoryPage, [
+    Permission.admin,
+    Permission.objective_designer,
+  ]),
   params: {
     parse: (params) => ({
       eventId: Number(params.eventId),
@@ -80,7 +84,7 @@ async function createBulkItemObjectives(
     objectives.map((obj) => objectiveApi.createObjective(eventId, obj))
   );
 }
-export function ScoringCategoryPage() {
+export function ScoringCategoryPage(): JSX.Element {
   let { user, events } = useContext(GlobalStateContext);
   let { eventId, categoryId } = useParams({ from: Route.id });
   let [categoryName, setCategoryName] = React.useState("");

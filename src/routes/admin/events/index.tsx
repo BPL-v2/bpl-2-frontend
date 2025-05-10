@@ -6,9 +6,13 @@ import { EventCreate, Event, Permission } from "@client/api";
 import { eventApi, scoringApi } from "@client/client";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
 import { useNavigate } from "@tanstack/react-router";
+import { renderConditionally } from "@utils/token";
 
 export const Route = createFileRoute("/admin/events/")({
-  component: EventPage,
+  component: renderConditionally(EventPage, [
+    Permission.admin,
+    Permission.objective_designer,
+  ]),
 });
 const columns: CrudColumn<Event>[] = [
   {
