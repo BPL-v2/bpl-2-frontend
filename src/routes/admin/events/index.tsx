@@ -137,12 +137,8 @@ const columns: CrudColumn<Event>[] = [
 ];
 
 function EventPage() {
-  const { user, events, setEvents } = useContext(GlobalStateContext);
+  const { events, setEvents } = useContext(GlobalStateContext);
   const navigate = useNavigate();
-
-  if (!user || !user.permissions.includes(Permission.admin)) {
-    return <div>You do not have permission to view this page</div>;
-  }
 
   const createEventWrapper = async (data: EventCreate) => {
     return eventApi.createEvent(data).then((res) => {

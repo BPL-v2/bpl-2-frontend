@@ -24,7 +24,7 @@ export const Route = createFileRoute("/admin/events/$eventId/teams")({
 });
 
 function TeamPage() {
-  const { events, user } = useContext(GlobalStateContext);
+  const { events } = useContext(GlobalStateContext);
   let { eventId } = useParams({ from: Route.id });
 
   const event = events.find((event) => event.id === eventId);
@@ -108,10 +108,6 @@ function TeamPage() {
   );
   if (!event || !eventId) {
     return <></>;
-  }
-
-  if (!user || !user.permissions.includes(Permission.admin)) {
-    return <div>You do not have permission to view this page</div>;
   }
 
   return (

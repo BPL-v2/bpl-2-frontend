@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import React, { useContext, useEffect } from "react";
-import { GlobalStateContext } from "@utils/context-provider";
+import React, { useEffect } from "react";
 import { Permission, User } from "@client/api";
 import { userApi } from "@client/client";
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
@@ -21,7 +20,6 @@ function copyDiscordId(value: string | undefined) {
 }
 
 function UserPage() {
-  const { user } = useContext(GlobalStateContext);
   const [nameFilter, setNameFilter] = React.useState<string>("");
   const [roleFilter, setRoleFilter] = React.useState<Permission | "">("");
   const [users, setUsers] = React.useState<User[]>([]);
@@ -114,9 +112,6 @@ function UserPage() {
     },
   ];
 
-  if (!user || !user.permissions.includes(Permission.admin)) {
-    return <div>You do not have permission to view this page</div>;
-  }
   return (
     <div style={{ marginTop: "20px" }}>
       <h1>Users</h1>
