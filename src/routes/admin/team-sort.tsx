@@ -274,7 +274,7 @@ function UserSortPage() {
                 new FormData(e.currentTarget)
                   .get("nameList")
                   ?.toString()
-                  .split(",") || []
+                  .split(" ") || []
               );
             }}
           >
@@ -337,10 +337,10 @@ function UserSortPage() {
               (signup.user.display_name.toLowerCase().includes(nameFilter) ||
                 signup.user.account_name?.toLowerCase().includes(nameFilter)) &&
               (nameListFilter.length === 0 ||
-                nameListFilter.some((name) =>
-                  signup.user.display_name
-                    .toLowerCase()
-                    .includes(name.toLowerCase())
+                nameListFilter.some(
+                  (name) =>
+                    signup.user.account_name?.toLowerCase().split("#")[0] ===
+                    name.toLowerCase().split("#")[0]
                 ))
             );
           })}

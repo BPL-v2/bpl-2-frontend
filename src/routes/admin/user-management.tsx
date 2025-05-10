@@ -13,56 +13,6 @@ export const Route = createFileRoute("/admin/user-management")({
   component: renderConditionally(UserPage, [Permission.admin]),
 });
 
-const columns: ColumnDef<User, any>[] = [
-  {
-    accessorKey: "id",
-    header: "ID",
-    sortingFn: sortingFns.basic,
-    size: 100,
-  },
-  {
-    accessorKey: "display_name",
-    header: "Name",
-    sortingFn: sortingFns.text,
-    size: 200,
-  },
-  {
-    accessorKey: "account_name",
-    header: "PoE Name",
-    sortingFn: sortingFns.text,
-    size: 200,
-  },
-  {
-    accessorKey: "discord_name",
-    header: "Discord Name",
-    sortingFn: sortingFns.text,
-    size: 200,
-  },
-  {
-    accessorKey: "discord_id",
-    header: "Discord ID",
-    sortingFn: sortingFns.basic,
-    cell: (info) => (
-      <a
-        onClick={() => copyDiscordId(info.row.original.discord_id)}
-        className="flex gap-2"
-      >
-        <ClipboardDocumentCheckIcon className="cursor-pointer h-6 w-6" />
-        {info.row.original.discord_id}
-      </a>
-    ),
-    size: 200,
-  },
-  {
-    accessorKey: "permissions",
-    header: "Permissions",
-    sortingFn: (a, b) =>
-      a.original.permissions.length - b.original.permissions.length,
-    cell: (info) => info.row.original.permissions.join(", "),
-    size: 200,
-  },
-];
-
 function copyDiscordId(value: string | undefined) {
   if (!value) {
     return;
@@ -78,6 +28,91 @@ function UserPage() {
   useEffect(() => {
     userApi.getAllUsers().then((users) => setUsers(users));
   }, []);
+  const columns: ColumnDef<User, any>[] = [
+    {
+      accessorKey: "id",
+      header: "ID",
+      sortingFn: sortingFns.basic,
+      size: 100,
+    },
+    {
+      accessorKey: "display_name",
+      header: "Name",
+      sortingFn: sortingFns.text,
+      size: 200,
+    },
+    {
+      accessorKey: "account_name",
+      header: "PoE Name",
+      sortingFn: sortingFns.text,
+      size: 200,
+    },
+    {
+      accessorKey: "discord_name",
+      header: "Discord Name",
+      sortingFn: sortingFns.text,
+      size: 200,
+    },
+    {
+      accessorKey: "discord_id",
+      header: "Discord ID",
+      sortingFn: sortingFns.basic,
+      cell: (info) => (
+        <a
+          onClick={() => copyDiscordId(info.row.original.discord_id)}
+          className="flex gap-2"
+        >
+          <ClipboardDocumentCheckIcon className="cursor-pointer h-6 w-6" />
+          {info.row.original.discord_id}
+        </a>
+      ),
+      size: 200,
+    },
+    {
+      accessorKey: "permissions",
+      header: "Permissions",
+      sortingFn: (a, b) =>
+        a.original.permissions.length - b.original.permissions.length,
+      cell: (info) => (
+        <div className="flex gap-1">
+          {Object.values(Permission).map((permission) => (
+            <button
+              key={permission}
+              className={
+                "btn btn-xs" +
+                (info.row.original.permissions.includes(permission)
+                  ? " btn-success"
+                  : " btn-error")
+              }
+              onClick={() => {
+                const newPermissions = info.row.original.permissions.slice();
+                if (newPermissions.includes(permission)) {
+                  newPermissions.splice(newPermissions.indexOf(permission), 1);
+                } else {
+                  newPermissions.push(permission);
+                }
+                userApi
+                  .changePermissions(info.row.original.id, newPermissions)
+                  .then(() => {
+                    setUsers((prev) =>
+                      prev.map((user) =>
+                        user.id === info.row.original.id
+                          ? { ...user, permissions: newPermissions }
+                          : user
+                      )
+                    );
+                  });
+              }}
+            >
+              {permission}
+            </button>
+          ))}{" "}
+        </div>
+      ),
+
+      size: 200,
+    },
+  ];
 
   if (!user || !user.permissions.includes(Permission.admin)) {
     return <div>You do not have permission to view this page</div>;
