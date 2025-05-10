@@ -49,6 +49,7 @@ function UserSortPage() {
   const [nameFilter, setNameFilter] = useState<string>("");
   const [signups, setSignups] = useState<Signup[]>([]);
   const [suggestions, setSuggestions] = useState<Signup[]>([]);
+  const [nameListFilter, setNameListFilter] = useState<string[]>([]);
 
   function updateSignups() {
     if (!currentEvent) {
@@ -135,17 +136,27 @@ function UserSortPage() {
               }
               style={{ marginRight: "5px" }}
               onClick={() => {
-                setSuggestions(
-                  suggestions.map((signup) =>
-                    signup.user.id === row.original.user.id
-                      ? {
-                          ...signup,
-                          team_id: team.id,
-                          team_lead: row.original.team_lead,
-                        }
-                      : signup
-                  )
-                );
+                if (row.original.team_id) {
+                  setSuggestions(
+                    suggestions.map((signup) =>
+                      signup.user.id === row.original.user.id
+                        ? { ...signup, team_id: undefined, team_lead: false }
+                        : signup
+                    )
+                  );
+                } else {
+                  setSuggestions(
+                    suggestions.map((signup) =>
+                      signup.user.id === row.original.user.id
+                        ? {
+                            ...signup,
+                            team_id: team.id,
+                            team_lead: row.original.team_lead,
+                          }
+                        : signup
+                    )
+                  );
+                }
               }}
             >
               {team.name.slice()}
@@ -208,7 +219,7 @@ function UserSortPage() {
     } as TeamRow
   );
   teamRows = [totalRow, ...teamRows];
-
+  console.log("nameListFilter: ", nameListFilter);
   return (
     <div style={{ marginTop: "20px" }}>
       <h1>Sort</h1> <div className="divider divider-primary">Teams</div>
@@ -254,8 +265,24 @@ function UserSortPage() {
             onChange={(e) => setNameFilter(e.target.value.toLowerCase())}
           />
         </label>
+        <label className="input">
+          <span className="label">Multifilter</span>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              setNameListFilter(
+                new FormData(e.currentTarget)
+                  .get("nameList")
+                  ?.toString()
+                  .split(",") || []
+              );
+            }}
+          >
+            <input type="text" name="nameList" />
+          </form>
+        </label>
         <button
-          className="btn"
+          className="btn btn-outline"
           onClick={() => {
             const time = new Date().getTime();
             setSuggestions(sortUsers(currentEvent, signups));
@@ -264,11 +291,14 @@ function UserSortPage() {
         >
           Get Sort Suggestions
         </button>
-        <button className="btn" onClick={() => setSuggestions(signups)}>
+        <button
+          className="btn btn-outline"
+          onClick={() => setSuggestions(signups)}
+        >
           Reset Suggestions
         </button>
         <button
-          className="btn"
+          className="btn btn-outline"
           onClick={() => {
             setSignups(signups.map((s) => ({ ...s, team_id: undefined })));
             setSuggestions(signups.map((s) => ({ ...s, team_id: undefined })));
@@ -299,12 +329,23 @@ function UserSortPage() {
       <Table
         data={suggestions
           .sort((a, b) => a.id - b.id)
-          .filter(
-            (signup) =>
-              signup.user.display_name.toLowerCase().includes(nameFilter) ||
-              signup.user.account_name?.toLowerCase().includes(nameFilter)
-          )}
+          .filter((signup) => {
+            if (nameFilter === "" && nameListFilter.length === 0) {
+              return true;
+            }
+            return (
+              (signup.user.display_name.toLowerCase().includes(nameFilter) ||
+                signup.user.account_name?.toLowerCase().includes(nameFilter)) &&
+              (nameListFilter.length === 0 ||
+                nameListFilter.some((name) =>
+                  signup.user.display_name
+                    .toLowerCase()
+                    .includes(name.toLowerCase())
+                ))
+            );
+          })}
         columns={sortColumns}
+        className="h-[70vh]"
       />
     </div>
   );
