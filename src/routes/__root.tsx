@@ -2,7 +2,6 @@ import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
 import "../App.css";
 import { JSX, useContext, useMemo } from "react";
 
-import { Permission } from "@client/api";
 import {
   BookOpenIcon,
   ChartBarIcon,
