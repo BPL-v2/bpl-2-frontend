@@ -7,7 +7,6 @@ import { Dialog } from "./dialog";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { redirectOauth } from "@utils/oauth";
 import { TeamName } from "./team-name";
-import { c } from "node_modules/vite/dist/node/moduleRunnerTransport.d-DJ_mE5sf";
 
 type ApplicationButtonProps = {};
 const ApplicationButton = ({}: ApplicationButtonProps) => {
