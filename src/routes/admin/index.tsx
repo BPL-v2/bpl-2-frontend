@@ -42,7 +42,7 @@ function AdminRouteCard({
 function RouteComponent() {
   const { eventStatus } = useContext(GlobalStateContext);
   const permissions = getPermissions();
-  if (permissions.length === 0 || !eventStatus?.is_team_lead) {
+  if (permissions.length === 0 && !eventStatus?.is_team_lead) {
     return "You do not have permission to view this page.";
   }
   return (
