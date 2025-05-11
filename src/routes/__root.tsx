@@ -51,7 +51,8 @@ function RootComponent() {
         label: "Admin",
         icon: <Cog6ToothIcon className="h-6 w-6" />,
         url: "/admin",
-        visible: (user?.permissions?.length || 0) > 0,
+        visible:
+          (user?.permissions?.length || 0) > 0 || eventStatus?.is_team_lead,
       },
       {
         label: "Scoring",

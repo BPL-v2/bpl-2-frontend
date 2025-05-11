@@ -45,6 +45,8 @@ function AdminRouteCard({
 }
 
 function RouteComponent() {
+  const { eventStatus } = useContext(GlobalStateContext);
+
   return (
     <div className="mt-4 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
       <AdminRouteCard
@@ -77,6 +79,20 @@ function RouteComponent() {
         link="https://v2202503259898322516.goodsrv.de/monitoring"
         permissions={[Permission.admin]}
       />
+      {eventStatus && eventStatus.is_team_lead && (
+        <Link
+          to={"/admin/team-suggestions"}
+          className="card bg-base-300 hover:bg-base-200 border-2 border-base-content"
+        >
+          <div className="card-body">
+            <h2 className="card-title">Team Content Suggestions</h2>
+            <p className="text-left">
+              Team leaders can suggest content for their team to focus on that
+              will show on their member's for-you pages.
+            </p>
+          </div>
+        </Link>
+      )}
     </div>
   );
 }

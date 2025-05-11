@@ -30,6 +30,7 @@ import { Route as ScoresCollectionsImport } from './routes/scores/collections'
 import { Route as ScoresBountiesImport } from './routes/scores/bounties'
 import { Route as ProfileUserIdImport } from './routes/profile.$userId'
 import { Route as AdminUserManagementImport } from './routes/admin/user-management'
+import { Route as AdminTeamSuggestionsImport } from './routes/admin/team-suggestions'
 import { Route as AdminTeamSortImport } from './routes/admin/team-sort'
 import { Route as AdminRecurringJobsImport } from './routes/admin/recurring-jobs'
 import { Route as AdminEventsIndexImport } from './routes/admin/events/index'
@@ -156,6 +157,12 @@ const AdminUserManagementRoute = AdminUserManagementImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AdminTeamSuggestionsRoute = AdminTeamSuggestionsImport.update({
+  id: '/admin/team-suggestions',
+  path: '/admin/team-suggestions',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AdminTeamSortRoute = AdminTeamSortImport.update({
   id: '/admin/team-sort',
   path: '/admin/team-sort',
@@ -270,6 +277,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/team-sort'
       fullPath: '/admin/team-sort'
       preLoaderRoute: typeof AdminTeamSortImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/team-suggestions': {
+      id: '/admin/team-suggestions'
+      path: '/admin/team-suggestions'
+      fullPath: '/admin/team-suggestions'
+      preLoaderRoute: typeof AdminTeamSuggestionsImport
       parentRoute: typeof rootRoute
     }
     '/admin/user-management': {
@@ -456,6 +470,7 @@ export interface FileRoutesByFullPath {
   '/submissions': typeof SubmissionsRoute
   '/admin/recurring-jobs': typeof AdminRecurringJobsRoute
   '/admin/team-sort': typeof AdminTeamSortRoute
+  '/admin/team-suggestions': typeof AdminTeamSuggestionsRoute
   '/admin/user-management': typeof AdminUserManagementRoute
   '/profile/$userId': typeof ProfileUserIdRoute
   '/scores/bounties': typeof ScoresBountiesRoute
@@ -487,6 +502,7 @@ export interface FileRoutesByTo {
   '/submissions': typeof SubmissionsRoute
   '/admin/recurring-jobs': typeof AdminRecurringJobsRoute
   '/admin/team-sort': typeof AdminTeamSortRoute
+  '/admin/team-suggestions': typeof AdminTeamSuggestionsRoute
   '/admin/user-management': typeof AdminUserManagementRoute
   '/profile/$userId': typeof ProfileUserIdRoute
   '/scores/bounties': typeof ScoresBountiesRoute
@@ -519,6 +535,7 @@ export interface FileRoutesById {
   '/submissions': typeof SubmissionsRoute
   '/admin/recurring-jobs': typeof AdminRecurringJobsRoute
   '/admin/team-sort': typeof AdminTeamSortRoute
+  '/admin/team-suggestions': typeof AdminTeamSuggestionsRoute
   '/admin/user-management': typeof AdminUserManagementRoute
   '/profile/$userId': typeof ProfileUserIdRoute
   '/scores/bounties': typeof ScoresBountiesRoute
@@ -552,6 +569,7 @@ export interface FileRouteTypes {
     | '/submissions'
     | '/admin/recurring-jobs'
     | '/admin/team-sort'
+    | '/admin/team-suggestions'
     | '/admin/user-management'
     | '/profile/$userId'
     | '/scores/bounties'
@@ -582,6 +600,7 @@ export interface FileRouteTypes {
     | '/submissions'
     | '/admin/recurring-jobs'
     | '/admin/team-sort'
+    | '/admin/team-suggestions'
     | '/admin/user-management'
     | '/profile/$userId'
     | '/scores/bounties'
@@ -612,6 +631,7 @@ export interface FileRouteTypes {
     | '/submissions'
     | '/admin/recurring-jobs'
     | '/admin/team-sort'
+    | '/admin/team-suggestions'
     | '/admin/user-management'
     | '/profile/$userId'
     | '/scores/bounties'
@@ -644,6 +664,7 @@ export interface RootRouteChildren {
   SubmissionsRoute: typeof SubmissionsRoute
   AdminRecurringJobsRoute: typeof AdminRecurringJobsRoute
   AdminTeamSortRoute: typeof AdminTeamSortRoute
+  AdminTeamSuggestionsRoute: typeof AdminTeamSuggestionsRoute
   AdminUserManagementRoute: typeof AdminUserManagementRoute
   ProfileUserIdRoute: typeof ProfileUserIdRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -665,6 +686,7 @@ const rootRouteChildren: RootRouteChildren = {
   SubmissionsRoute: SubmissionsRoute,
   AdminRecurringJobsRoute: AdminRecurringJobsRoute,
   AdminTeamSortRoute: AdminTeamSortRoute,
+  AdminTeamSuggestionsRoute: AdminTeamSuggestionsRoute,
   AdminUserManagementRoute: AdminUserManagementRoute,
   ProfileUserIdRoute: ProfileUserIdRoute,
   AdminIndexRoute: AdminIndexRoute,
@@ -696,6 +718,7 @@ export const routeTree = rootRoute
         "/submissions",
         "/admin/recurring-jobs",
         "/admin/team-sort",
+        "/admin/team-suggestions",
         "/admin/user-management",
         "/profile/$userId",
         "/admin/",
@@ -743,6 +766,9 @@ export const routeTree = rootRoute
     },
     "/admin/team-sort": {
       "filePath": "admin/team-sort.tsx"
+    },
+    "/admin/team-suggestions": {
+      "filePath": "admin/team-suggestions.tsx"
     },
     "/admin/user-management": {
       "filePath": "admin/user-management.tsx"

@@ -119,7 +119,7 @@ function ScoringPresetsPage() {
         createFunction={(data) => {
           const points = data.points
             .split(",")
-            .map((point: string) => parseInt(point.trim()));
+            .map((point: string) => parseFloat(point.trim()));
           return scoringApi.createScoringPreset(eventId, {
             ...data,
             points: points,
@@ -129,7 +129,7 @@ function ScoringPresetsPage() {
         editFunction={(data) => {
           const points = data.points
             .split(",")
-            .map((point: string) => parseInt(point.trim()));
+            .map((point: string) => parseFloat(point.trim()));
           return scoringApi.createScoringPreset(eventId, {
             ...data,
             points: points,

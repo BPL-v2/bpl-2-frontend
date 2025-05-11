@@ -881,7 +881,8 @@ export interface NonSensitiveUser {
 export enum NumberField {
     STACK_SIZE = 'STACK_SIZE',
     PLAYER_LEVEL = 'PLAYER_LEVEL',
-    DELVE_DEPTH = 'DELVE_DEPTH',
+    CULMULATIVE_DEPTH = 'CULMULATIVE_DEPTH',
+    DELVE_DEPTH_PAST_100 = 'DELVE_DEPTH_PAST_100',
     PANTHEON = 'PANTHEON',
     ASCENDANCY = 'ASCENDANCY',
     PLAYER_SCORE = 'PLAYER_SCORE',
@@ -1102,6 +1103,7 @@ export interface ObjectiveCreate {
 export enum ObjectiveType {
     ITEM = 'ITEM',
     PLAYER = 'PLAYER',
+    TEAM = 'TEAM',
     SUBMISSION = 'SUBMISSION'
 }
 
