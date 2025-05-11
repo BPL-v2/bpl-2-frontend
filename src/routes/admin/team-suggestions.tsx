@@ -245,7 +245,8 @@ export function TeamSuggestionsPage() {
       (objective) =>
         objective.scoring_preset?.scoring_method ===
           ScoringMethod.RANKED_TIME &&
-        !objective.team_score[eventStatus.team_id!]?.finished
+        !objective.team_score[eventStatus.team_id!]?.finished &&
+        (!objective.valid_from || new Date(objective.valid_from) < new Date())
     )
   );
 
