@@ -3,7 +3,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
 import { getPermissions } from "@utils/token";
 import { useContext } from "react";
-import { router } from "../../router";
 
 export const Route = createFileRoute("/admin/")({
   component: RouteComponent,
@@ -44,8 +43,7 @@ function RouteComponent() {
   const { eventStatus } = useContext(GlobalStateContext);
   const permissions = getPermissions();
   if (permissions.length === 0 || !eventStatus?.is_team_lead) {
-    router.navigate({ to: "/" });
-    return null;
+    return "You do not have permission to view this page.";
   }
   return (
     <div className="mt-4 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
