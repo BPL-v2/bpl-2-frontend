@@ -24,6 +24,14 @@ export function getJwtPayload(): TokenPayload | null {
   }
 }
 
+export function getPermissions(): Permission[] {
+  const payload = getJwtPayload();
+  if (payload == null) {
+    return [];
+  }
+  return payload.permissions;
+}
+
 export function isValidJwt(payload: TokenPayload | null): boolean {
   return payload != null && payload.exp * 1000 > Date.now();
 }
