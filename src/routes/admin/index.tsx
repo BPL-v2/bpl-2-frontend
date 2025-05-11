@@ -1,16 +1,12 @@
 import { Permission } from "@client/api";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
-import { renderConditionally } from "@utils/token";
+import { getPermissions } from "@utils/token";
 import { useContext } from "react";
+import { router } from "../../router";
 
 export const Route = createFileRoute("/admin/")({
-  component: renderConditionally(RouteComponent, [
-    Permission.admin,
-    Permission.manager,
-    Permission.objective_designer,
-    Permission.submission_judge,
-  ]),
+  component: RouteComponent,
 });
 
 function AdminRouteCard({
@@ -46,7 +42,11 @@ function AdminRouteCard({
 
 function RouteComponent() {
   const { eventStatus } = useContext(GlobalStateContext);
-
+  const permissions = getPermissions();
+  if (permissions.length === 0 || !eventStatus?.is_team_lead) {
+    router.navigate({ to: "/" });
+    return null;
+  }
   return (
     <div className="mt-4 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
       <AdminRouteCard
