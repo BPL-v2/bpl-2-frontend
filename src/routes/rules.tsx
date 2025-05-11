@@ -199,7 +199,7 @@ export function RulePage() {
         intricacies to scoring items that you should be aware of though:
       </p>
       <div className="flex flex-col gap-2 mt-4">
-        {itemStashCollapse.map((rule, index) => (
+        {/* {itemStashCollapse.map((rule, index) => (
           <div
             key={rule.label + index}
             tabIndex={index}
@@ -208,7 +208,7 @@ export function RulePage() {
             <div className="collapse-title font-semibold">{rule.label}</div>
             <div className="collapse-content text-sm">{rule.children}</div>
           </div>
-        ))}
+        ))} */}
       </div>
       <div className="divider divider-primary" id="faq">
         Frequently Asked Questions
