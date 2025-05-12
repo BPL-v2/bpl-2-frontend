@@ -87,8 +87,16 @@ function ScoringPresetsPage() {
       key: "points",
       type: "text",
       editable: true,
-      render: (value) => <p>{pointsRenderer(value)}</p>,
+      render: pointsRenderer,
       required: true,
+    },
+    {
+      title: "Cap",
+      dataIndex: "point_cap",
+      key: "point_cap",
+      type: "number",
+      editable: true,
+      required: false,
     },
     {
       title: "Scoring Method",

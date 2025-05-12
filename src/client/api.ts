@@ -1293,6 +1293,12 @@ export interface ScoringPreset {
     name: string;
     /**
      * 
+     * @type {number}
+     * @memberof ScoringPreset
+     */
+    point_cap?: number;
+    /**
+     * 
      * @type {Array<number>}
      * @memberof ScoringPreset
      */
@@ -1335,6 +1341,12 @@ export interface ScoringPresetCreate {
      * @memberof ScoringPresetCreate
      */
     name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ScoringPresetCreate
+     */
+    point_cap?: number;
     /**
      * 
      * @type {Array<number>}

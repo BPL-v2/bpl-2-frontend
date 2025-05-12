@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
-import TeamScore from "@components/team-score";
+import TeamScoreDisplay from "@components/team-score";
 import { ItemTable } from "@components/item-table";
 import { isFinished, isWinnable, ScoreCategory } from "@mytypes/score";
 import { UniqueCategoryCard } from "@components/unique-category-card";
@@ -123,7 +123,7 @@ function UniqueTab() {
 
   return (
     <>
-      <TeamScore
+      <TeamScoreDisplay
         category={uniqueCategory}
         selectedTeam={selectedTeam}
         setSelectedTeam={setSelectedTeam}

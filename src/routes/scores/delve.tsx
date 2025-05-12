@@ -1,11 +1,11 @@
 import { useContext, useMemo } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
-import TeamScore from "@components/team-score";
+import TeamScoreDisplay from "@components/team-score";
 import { ObjectiveIcon } from "@components/objective-icon";
 import { CollectionCardTable } from "@components/collection-card-table";
 import { Ranking } from "@components/ranking";
 import { ColumnDef, sortingFns } from "@tanstack/react-table";
-import { LadderEntry, Team } from "@client/api";
+import { LadderEntry, Score, Team } from "@client/api";
 import { Ascendancy } from "@components/ascendancy";
 import { ExperienceBar } from "@components/experience-bar";
 import { TeamName } from "@components/team-name";
@@ -16,6 +16,7 @@ import Table from "@components/table";
 import { createFileRoute } from "@tanstack/react-router";
 import { DelveTabRules } from "@rules/delve";
 import { ruleWrapper } from "./route";
+import { ScoreObjective, TeamScore } from "@mytypes/score";
 
 export const Route = createFileRoute("/scores/delve")({
   component: () => ruleWrapper(<DelveTab />, <DelveTabRules />),
@@ -242,13 +243,36 @@ export function DelveTab() {
   const fossilRaceCategory = category.sub_categories.find(
     (c) => c.name === "Fossil Race"
   );
-  const culmulativeDepthObjective = category.objectives.find(
+  const culmulativeDepthTotal = category.objectives.find(
     (o) => o.name === "Culmulative Depth"
   );
 
+  const culmulativeDepthRace = category.objectives.find(
+    (o) => o.name === "Culmulative Depth Race"
+  );
+
+  const culmulativeDepthObj = {
+    team_score: {} as TeamScore,
+  } as ScoreObjective;
+
+  for (const teamId in category.team_score) {
+    const score = {} as Score;
+    score.number = culmulativeDepthTotal?.team_score[teamId].number || 0;
+    score.rank = culmulativeDepthRace?.team_score[teamId].rank || 0;
+
+    score.finished = culmulativeDepthRace?.team_score[teamId].finished || false;
+    score.points =
+      (culmulativeDepthTotal?.team_score[teamId].points || 0) +
+      (culmulativeDepthRace?.team_score[teamId].points || 0);
+    score.timestamp =
+      culmulativeDepthTotal?.team_score[teamId].timestamp ||
+      new Date().toISOString();
+    score.user_id = culmulativeDepthTotal?.team_score[teamId].user_id || 0;
+    culmulativeDepthObj.team_score[teamId] = score;
+  }
   return (
     <>
-      <TeamScore category={category} />
+      <TeamScoreDisplay category={category} />
       {fossilRaceCategory ? (
         <>
           <div className="divider divider-primary">Fossil Race</div>
@@ -298,19 +322,19 @@ export function DelveTab() {
           </div>
         </>
       ) : null}
-      {culmulativeDepthObjective ? (
+      {culmulativeDepthTotal && culmulativeDepthRace ? (
         <>
           <div className="divider divider-primary">
             {"Culmulative Team Depth"}
           </div>
           <div className="flex flex-col gap-4">
             <Ranking
-              objective={culmulativeDepthObjective}
-              maximum={culmulativeDepthObjective.required_number}
+              objective={culmulativeDepthObj}
+              maximum={culmulativeDepthRace.required_number}
               actual={(teamId: number) =>
-                culmulativeDepthObjective.team_score[teamId].number
+                culmulativeDepthObj.team_score[teamId].number
               }
-              description="Delve:"
+              description="Depth:"
             />
             <Table
               columns={delveLadderColumns}

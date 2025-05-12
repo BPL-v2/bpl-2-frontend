@@ -224,6 +224,10 @@ function getPoints(numbers: number[], index: number): number {
 export function getPotentialPointsForObjective(objective: ScoreObjective) {
   const points: { [teamId: number]: number } = {};
   for (const [teamId, teamScore] of Object.entries(objective.team_score)) {
+    if (objective.scoring_preset?.point_cap) {
+      points[parseInt(teamId)] = objective.scoring_preset.point_cap;
+      continue;
+    }
     if (teamScore.points > 0) {
       points[parseInt(teamId)] = teamScore.points;
     } else {

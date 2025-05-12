@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { Daily } from "@mytypes/scoring-objective";
 import { getSubCategory } from "@mytypes/scoring-category";
-import TeamScore from "@components/team-score";
+import TeamScoreDisplay from "@components/team-score";
 import { DailyCard } from "@components/daily-card";
 import { createFileRoute } from "@tanstack/react-router";
 import { DailyTabRules } from "@rules/dailies";
@@ -43,7 +43,7 @@ export function DailyTab() {
 
   return (
     <>
-      <TeamScore category={category}></TeamScore>
+      <TeamScoreDisplay category={category}></TeamScoreDisplay>
       <div className="divider divider-primary">Dailies</div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {Object.values(dailies)

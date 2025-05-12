@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
-import TeamScore from "@components/team-score";
+import TeamScoreDisplay from "@components/team-score";
 import { ItemTable } from "@components/item-table";
 import { GameVersion } from "@client/api";
 import { createFileRoute } from "@tanstack/react-router";
@@ -31,7 +31,7 @@ export function GemTab() {
   }
   return (
     <>
-      <TeamScore category={gemCategory} />
+      <TeamScoreDisplay category={gemCategory} />
       <div className="divider divider-primary">{gemCategory.name}</div>
       <div className="flex flex-col gap-4">
         <Ranking

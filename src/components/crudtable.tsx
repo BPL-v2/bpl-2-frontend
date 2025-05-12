@@ -199,7 +199,7 @@ const CrudTable = <T,>({
                     name={String(key)}
                     className="select w-full"
                     defaultValue={defaultVal}
-                    key={defaultVal}
+                    key={"input-" + defaultVal}
                   >
                     {column.required ? null : <option value={""}>None</option>}
                     {column.options?.map((option) => {
@@ -220,7 +220,7 @@ const CrudTable = <T,>({
                   <ArrayInput
                     value={currentData[key] as string[]}
                     label={String(column.title)}
-                    key={String(currentData[key])}
+                    key={"input-" + String(currentData[key])}
                   />
                 );
               } else if (column.type === "multiselect") {
@@ -228,7 +228,7 @@ const CrudTable = <T,>({
                   <select
                     multiple
                     className="select h-40 w-full"
-                    key={String(currentData[key])}
+                    key={"input-" + String(currentData[key])}
                     name={String(key)}
                   >
                     {column.options?.map((option) => {
@@ -259,21 +259,23 @@ const CrudTable = <T,>({
                     name={String(key)}
                     className="input w-full"
                     defaultValue={currentData[key] as string}
-                    key={String(currentData[key])}
+                    key={"input-" + String(currentData[key])}
                   />
                 );
               } else {
                 return;
               }
               return (
-                <>
-                  <label className="fieldset-label" key={String(column.title)}>
+                <div key={"input" + idx}>
+                  <label
+                    className="fieldset-label"
+                    key={"label" + idx + "-" + String(column.title)}
+                  >
                     {String(column.title)}
                   </label>
                   {input}
-                </>
+                </div>
               );
-              // return input;
             })
             .filter((element) => element !== undefined)}
         </fieldset>
