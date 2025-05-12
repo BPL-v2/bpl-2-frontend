@@ -7,6 +7,7 @@ import { signupApi, teamApi } from "@client/client";
 import Table from "@components/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { renderConditionally } from "@utils/token";
+import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
 
 export const Route = createFileRoute("/admin/team-sort")({
   component: renderConditionally(UserSortPage, [
@@ -218,8 +219,54 @@ function UserSortPage() {
       key: -1,
     } as TeamRow
   );
+  const exportToCSV = () => {
+    if (!signups.length) return;
+    const headers = [
+      "Team",
+      "Display Name",
+      "Account Name",
+      "Expected Playtime",
+      "Needs Help",
+      "Wants to Help",
+      "Team Lead",
+    ];
+    const teamMap = currentEvent.teams.reduce(
+      (acc, team) => {
+        acc[team.id] = team.name;
+        return acc;
+      },
+      {} as Record<number, string>
+    );
+    const rows = signups
+      .sort((a, b) => (a.team_id || 0) - (b.team_id || 0))
+      .map((signup) => [
+        teamMap[signup.team_id || 0] || "No team",
+        signup.user.display_name,
+        signup.user.account_name || "",
+        signup.expected_playtime,
+        signup.needs_help ? "X" : "",
+        signup.wants_to_help ? "X" : "",
+        signup.team_lead ? "X" : "",
+      ]);
+
+    const csvContent = [headers, ...rows]
+      .map((row) => row.map((cell) => `"${cell}"`).join(","))
+      .join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute(
+      "download",
+      `Signups_${(currentEvent?.name || "event").replaceAll(" ", "-")}.csv`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   teamRows = [totalRow, ...teamRows];
-  console.log("nameListFilter: ", nameListFilter);
   return (
     <div style={{ marginTop: "20px" }}>
       <h1>Sort</h1> <div className="divider divider-primary">Teams</div>
@@ -258,6 +305,11 @@ function UserSortPage() {
       </table>
       <div className="divider divider-primary">Users</div>
       <div className="flex gap-2 bg-base-300 p-4 wrap mb-2">
+        <button className="btn btn-primary " onClick={exportToCSV}>
+          <ArrowDownTrayIcon className="w-4 h-4 mr-2" />
+          CSV
+        </button>
+
         <label className="input">
           <span className="label">Filter by name:</span>
           <input
