@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { getSubCategory } from "@mytypes/scoring-category";
-import TeamScore from "@components/team-score";
+import TeamScoreDisplay from "@components/team-score";
 import { CollectionCardTable } from "@components/collection-card-table";
 import { ObjectiveIcon } from "@components/objective-icon";
 import { createFileRoute } from "@tanstack/react-router";
@@ -21,7 +21,7 @@ export function CollectionTab() {
   }
   return (
     <>
-      <TeamScore category={category}></TeamScore>
+      <TeamScoreDisplay category={category}></TeamScoreDisplay>
       <div className="divider divider-primary">Collection Goals</div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {category.objectives.map((objective) => {

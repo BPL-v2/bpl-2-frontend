@@ -2,7 +2,7 @@ import { useContext, useRef, useState } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { getSubCategory } from "@mytypes/scoring-category";
 import { ScoreObjective } from "@mytypes/score";
-import TeamScore from "./team-score";
+import TeamScoreDisplay from "./team-score";
 import { ObjectiveType, Score, SubmissionCreate, Team } from "@client/api";
 import { submissionApi } from "@client/client";
 import { DateTimePicker } from "./datetime-picker";
@@ -104,7 +104,7 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
           </button>
         </div>
       </Dialog>
-      <TeamScore category={category}></TeamScore>
+      <TeamScoreDisplay category={category}></TeamScoreDisplay>
       <h1 className="text-xl mt-4">
         Click to see all{" "}
         <Link

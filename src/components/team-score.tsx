@@ -10,7 +10,7 @@ export type TeamScoreProps = {
   category: ScoreCategory;
 };
 
-const TeamScore = ({
+const TeamScoreDisplay = ({
   category,
   selectedTeam,
   setSelectedTeam,
@@ -90,4 +90,4 @@ const TeamScore = ({
   );
 };
 
-export default TeamScore;
+export default TeamScoreDisplay;

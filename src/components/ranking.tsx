@@ -70,7 +70,6 @@ export function Ranking({
     >
       {Object.entries(objective.team_score)
         .sort(sort)
-
         .map(([teamIdstr, score]) => {
           const teamId = parseInt(teamIdstr);
           return (

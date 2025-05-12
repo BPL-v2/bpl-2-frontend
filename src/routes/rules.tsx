@@ -114,44 +114,44 @@ export function RulePage() {
     },
   ];
 
-  const itemStashCollapse: CollapseItems[] = [
-    {
-      label: "The stash tab must be public",
-      children: <>This excludes guild stash tabs.</>,
-    },
-    {
-      label: "The item must remain in the possession of the team",
-      children: (
-        <>
-          It can remain in the stash of any team member until the end of the
-          event, and it can be traded between players. Items worn by your
-          character can also not be tracked.
-        </>
-      ),
-    },
-    {
-      label: "Collection goals must be completed in a single stash tab",
-      children: (
-        <>
-          To prevent exploitation, any objective that requires more than one
-          item must be completed in a single stash tab and cannot be split
-          across multiple player's tabs. For this reason it makes sense to trade
-          these items to your team lead.
-        </>
-      ),
-    },
-    {
-      label: "A dedicated tab for scoring items should be used",
-      children: (
-        <>
-          There is a 5 minute delay before the item will show up for us. This
-          timer will reset every time you change anything in the stash tab, so
-          if you want something to show up asap for us, make sure have a
-          dedicated stash tab that does not change too much.
-        </>
-      ),
-    },
-  ];
+  // const itemStashCollapse: CollapseItems[] = [
+  //   {
+  //     label: "The stash tab must be public",
+  //     children: <>This excludes guild stash tabs.</>,
+  //   },
+  //   {
+  //     label: "The item must remain in the possession of the team",
+  //     children: (
+  //       <>
+  //         It can remain in the stash of any team member until the end of the
+  //         event, and it can be traded between players. Items worn by your
+  //         character can also not be tracked.
+  //       </>
+  //     ),
+  //   },
+  //   {
+  //     label: "Collection goals must be completed in a single stash tab",
+  //     children: (
+  //       <>
+  //         To prevent exploitation, any objective that requires more than one
+  //         item must be completed in a single stash tab and cannot be split
+  //         across multiple player's tabs. For this reason it makes sense to trade
+  //         these items to your team lead.
+  //       </>
+  //     ),
+  //   },
+  //   {
+  //     label: "A dedicated tab for scoring items should be used",
+  //     children: (
+  //       <>
+  //         There is a 5 minute delay before the item will show up for us. This
+  //         timer will reset every time you change anything in the stash tab, so
+  //         if you want something to show up asap for us, make sure have a
+  //         dedicated stash tab that does not change too much.
+  //       </>
+  //     ),
+  //   },
+  // ];
   return (
     <div className="text-left">
       <div className="divider divider-primary" id="gameplay">

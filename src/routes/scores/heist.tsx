@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
-import TeamScore from "@components/team-score";
+import TeamScoreDisplay from "@components/team-score";
 import { ItemTable } from "@components/item-table";
 import { GameVersion } from "@client/api";
 import { Ranking } from "@components/ranking";
@@ -41,7 +41,7 @@ export function HeistTab() {
 
   return (
     <>
-      <TeamScore category={heistCategory} />
+      <TeamScoreDisplay category={heistCategory} />
       {enchantingOrbObjective && (
         <div className="flex flex-col gap-4">
           <div className="divider divider-primary">Enchanting Orb Race</div>
