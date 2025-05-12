@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { OauthCard } from "@components/oauth-card";
 import { userApi } from "@client/client";
-import { TwitchFilled } from "@icons/twitch";
+// import { TwitchFilled } from "@icons/twitch";
 import { DiscordFilled } from "@icons/discord";
 import { ThemePicker } from "@components/theme-picker";
 import { createFileRoute } from "@tanstack/react-router";
@@ -79,7 +79,7 @@ export function SettingsPage() {
               event.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 mb-4 justify-items-center">
+          <div className="flex flex-wrap gap-4 mt-4 mb-4 justify-items-center">
             <OauthCard
               title="Path of Exile"
               provider="poe"
@@ -101,13 +101,13 @@ export function SettingsPage() {
               required={true}
               logo={<DiscordFilled className="text-[#5865f2]"></DiscordFilled>}
             ></OauthCard>
-            <OauthCard
+            {/* <OauthCard
               title="Twitch"
               provider="twitch"
               description="If you connect your Twitch account, we will display your stream during the event."
               connected={!!user?.twitch_id}
               logo={<TwitchFilled className="text-[#9146ff]"></TwitchFilled>}
-            ></OauthCard>
+            ></OauthCard> */}
           </div>
         </div>
       </div>
