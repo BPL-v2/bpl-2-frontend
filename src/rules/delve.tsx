@@ -43,6 +43,10 @@ export function DelveTabRules() {
     (c) => c.name === "Culmulative Depth"
   );
 
+  const culmDepthRace = delveCategory?.objectives.find(
+    (c) => c.name === "Culmulative Depth Race"
+  );
+
   const delveRace = delveCategory?.objectives.find(
     (c) => c.name === "Delve Race"
   );
@@ -65,9 +69,13 @@ export function DelveTabRules() {
           <h3>Culmulative Team Depth</h3>
           <p>
             Total team delve progress is equal to a sum of everyone&apos;s
-            individual solo depth progress past 100 depth. Each team gets 1
-            point per 10 total team delve progress up to a cap of 500 points.
+            individual solo depth progress past 100 depth. Each team gets{" "}
+            <b className="text-info">1 point per 10</b> total team delve
+            progress up to a cap of <b className="text-info">500</b> points.
           </p>
+          {culmDepthRace &&<p>
+            The firtst team to reach the cap will be awarded{" "}
+          </p>}
         </>
       )}
       {delveRace && (
