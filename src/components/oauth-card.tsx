@@ -41,7 +41,7 @@ export function OauthCard({
 
   const card = (
     <div
-      className={`card border-2 max-h-100 max-w-120 ${connected ? "border-sucess" : required ? "border-error" : "border-base-100"} ${connected ? "bg-base-300" : "bg-base-200"}`}
+      className={`card border-2 max-h-100 max-w-110 ${connected ? "border-sucess" : required ? "border-error" : "border-base-100"} ${connected ? "bg-base-300" : "bg-base-200"}`}
     >
       <div
         className={`rounded-t-box px-8 py-4 items-center justify-between flex ${connected ? "bg-base-200" : "bg-base-100"}`}
