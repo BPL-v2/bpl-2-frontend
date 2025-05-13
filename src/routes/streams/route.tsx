@@ -1,10 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { useContext, useEffect, useState } from "react";
 import { TwitchStreamEmbed } from "@components/twitch-stream";
 import { GlobalStateContext } from "@utils/context-provider";
 import { EventStatus, Team, TwitchStream } from "@client/api";
 import { streamApi } from "@client/client";
-import TwitchEmbed from "@components/twitch-emberd";
 
 export const Route = createFileRoute("/streams")({
   component: TwitchPage,
@@ -28,14 +27,13 @@ function teamSort(
 
 export function TwitchPage() {
   const [twitchStreams, setTwitchStreams] = useState<TwitchStream[]>([]);
-  const [selectedChannel, setSelectedChannel] = useState<string | null>(null);
   const { eventStatus, users, currentEvent } = useContext(GlobalStateContext);
   useEffect(() => {
-    streamApi.getStreams().then((data) => setTwitchStreams(data));
+    streamApi.getStreams().then(setTwitchStreams);
   }, []);
   return (
-    <div key="twitch-page">
-      {selectedChannel && <TwitchEmbed channel={selectedChannel} />}
+    <div className="flex flex-col gap-4 mt-4">
+      <Outlet />
       <h1 className="text-4xl mt-4">Twitch Streams by Team</h1>
       {currentEvent?.teams.sort(teamSort(eventStatus)).map((team) => (
         <div key={`team-video-thumbnails-${team.id}`}>
@@ -51,17 +49,15 @@ export function TwitchPage() {
               )
               .sort((a, b) => (b.viewer_count || 0) - (a.viewer_count || 0))
               .map((stream) => (
-                <div
-                  key={`stream-${stream.id}`}
-                  onClick={() => setSelectedChannel(stream.user_login || null)}
-                  className={`cursor-pointer border-2 rounded-8 ${
-                    stream.user_login == selectedChannel
-                      ? "border-primary"
-                      : "border-transparent"
-                  }`}
+                <Link
+                  to={`/streams/$twitchAccount`}
+                  params={{ twitchAccount: stream.user_login ?? "" }}
+                  className="cursor-pointer rounded-lg border-2"
+                  activeProps={{ className: "border-primary" }}
+                  inactiveProps={{ className: "border-transparent" }}
                 >
                   <TwitchStreamEmbed stream={stream} width={360} height={180} />
-                </div>
+                </Link>
               ))}
           </div>
         </div>

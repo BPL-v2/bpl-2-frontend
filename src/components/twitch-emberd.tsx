@@ -10,6 +10,7 @@ interface TwitchEmbedProps {
 const TwitchEmbed: React.FC<TwitchEmbedProps> = ({
   channel,
   parent = ["bpl-poe.com"],
+  // parent = ["localhost"],
 }) => {
   const embedRef = useRef<HTMLDivElement>(null);
   const embedInstanceRef = useRef<any>(null); // To store the Twitch Embed instance

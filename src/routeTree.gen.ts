@@ -12,12 +12,13 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as SubmissionsImport } from './routes/submissions'
-import { Route as StreamsImport } from './routes/streams'
 import { Route as SettingsImport } from './routes/settings'
 import { Route as RulesImport } from './routes/rules'
+import { Route as StreamsRouteImport } from './routes/streams/route'
 import { Route as ScoresRouteImport } from './routes/scores/route'
 import { Route as IndexImport } from './routes/index'
 import { Route as AdminIndexImport } from './routes/admin/index'
+import { Route as StreamsTwitchAccountImport } from './routes/streams/$twitchAccount'
 import { Route as ScoresUniquesImport } from './routes/scores/uniques'
 import { Route as ScoresRacesImport } from './routes/scores/races'
 import { Route as ScoresLadderImport } from './routes/scores/ladder'
@@ -49,12 +50,6 @@ const SubmissionsRoute = SubmissionsImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const StreamsRoute = StreamsImport.update({
-  id: '/streams',
-  path: '/streams',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const SettingsRoute = SettingsImport.update({
   id: '/settings',
   path: '/settings',
@@ -64,6 +59,12 @@ const SettingsRoute = SettingsImport.update({
 const RulesRoute = RulesImport.update({
   id: '/rules',
   path: '/rules',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const StreamsRouteRoute = StreamsRouteImport.update({
+  id: '/streams',
+  path: '/streams',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -83,6 +84,12 @@ const AdminIndexRoute = AdminIndexImport.update({
   id: '/admin/',
   path: '/admin/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const StreamsTwitchAccountRoute = StreamsTwitchAccountImport.update({
+  id: '/$twitchAccount',
+  path: '/$twitchAccount',
+  getParentRoute: () => StreamsRouteRoute,
 } as any)
 
 const ScoresUniquesRoute = ScoresUniquesImport.update({
@@ -237,6 +244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScoresRouteImport
       parentRoute: typeof rootRoute
     }
+    '/streams': {
+      id: '/streams'
+      path: '/streams'
+      fullPath: '/streams'
+      preLoaderRoute: typeof StreamsRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/rules': {
       id: '/rules'
       path: '/rules'
@@ -249,13 +263,6 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsImport
-      parentRoute: typeof rootRoute
-    }
-    '/streams': {
-      id: '/streams'
-      path: '/streams'
-      fullPath: '/streams'
-      preLoaderRoute: typeof StreamsImport
       parentRoute: typeof rootRoute
     }
     '/submissions': {
@@ -370,6 +377,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScoresUniquesImport
       parentRoute: typeof ScoresRouteImport
     }
+    '/streams/$twitchAccount': {
+      id: '/streams/$twitchAccount'
+      path: '/$twitchAccount'
+      fullPath: '/streams/$twitchAccount'
+      preLoaderRoute: typeof StreamsTwitchAccountImport
+      parentRoute: typeof StreamsRouteImport
+    }
     '/admin/': {
       id: '/admin/'
       path: '/admin'
@@ -461,12 +475,24 @@ const ScoresRouteRouteWithChildren = ScoresRouteRoute._addFileChildren(
   ScoresRouteRouteChildren,
 )
 
+interface StreamsRouteRouteChildren {
+  StreamsTwitchAccountRoute: typeof StreamsTwitchAccountRoute
+}
+
+const StreamsRouteRouteChildren: StreamsRouteRouteChildren = {
+  StreamsTwitchAccountRoute: StreamsTwitchAccountRoute,
+}
+
+const StreamsRouteRouteWithChildren = StreamsRouteRoute._addFileChildren(
+  StreamsRouteRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/scores': typeof ScoresRouteRouteWithChildren
+  '/streams': typeof StreamsRouteRouteWithChildren
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
-  '/streams': typeof StreamsRoute
   '/submissions': typeof SubmissionsRoute
   '/admin/recurring-jobs': typeof AdminRecurringJobsRoute
   '/admin/team-sort': typeof AdminTeamSortRoute
@@ -483,6 +509,7 @@ export interface FileRoutesByFullPath {
   '/scores/ladder': typeof ScoresLadderRoute
   '/scores/races': typeof ScoresRacesRoute
   '/scores/uniques': typeof ScoresUniquesRoute
+  '/streams/$twitchAccount': typeof StreamsTwitchAccountRoute
   '/admin': typeof AdminIndexRoute
   '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/auth/poe/callback': typeof AuthPoeCallbackRoute
@@ -496,9 +523,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/scores': typeof ScoresRouteRouteWithChildren
+  '/streams': typeof StreamsRouteRouteWithChildren
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
-  '/streams': typeof StreamsRoute
   '/submissions': typeof SubmissionsRoute
   '/admin/recurring-jobs': typeof AdminRecurringJobsRoute
   '/admin/team-sort': typeof AdminTeamSortRoute
@@ -515,6 +542,7 @@ export interface FileRoutesByTo {
   '/scores/ladder': typeof ScoresLadderRoute
   '/scores/races': typeof ScoresRacesRoute
   '/scores/uniques': typeof ScoresUniquesRoute
+  '/streams/$twitchAccount': typeof StreamsTwitchAccountRoute
   '/admin': typeof AdminIndexRoute
   '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/auth/poe/callback': typeof AuthPoeCallbackRoute
@@ -529,9 +557,9 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/scores': typeof ScoresRouteRouteWithChildren
+  '/streams': typeof StreamsRouteRouteWithChildren
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
-  '/streams': typeof StreamsRoute
   '/submissions': typeof SubmissionsRoute
   '/admin/recurring-jobs': typeof AdminRecurringJobsRoute
   '/admin/team-sort': typeof AdminTeamSortRoute
@@ -548,6 +576,7 @@ export interface FileRoutesById {
   '/scores/ladder': typeof ScoresLadderRoute
   '/scores/races': typeof ScoresRacesRoute
   '/scores/uniques': typeof ScoresUniquesRoute
+  '/streams/$twitchAccount': typeof StreamsTwitchAccountRoute
   '/admin/': typeof AdminIndexRoute
   '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/auth/poe/callback': typeof AuthPoeCallbackRoute
@@ -563,9 +592,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/scores'
+    | '/streams'
     | '/rules'
     | '/settings'
-    | '/streams'
     | '/submissions'
     | '/admin/recurring-jobs'
     | '/admin/team-sort'
@@ -582,6 +611,7 @@ export interface FileRouteTypes {
     | '/scores/ladder'
     | '/scores/races'
     | '/scores/uniques'
+    | '/streams/$twitchAccount'
     | '/admin'
     | '/auth/discord/callback'
     | '/auth/poe/callback'
@@ -594,9 +624,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/scores'
+    | '/streams'
     | '/rules'
     | '/settings'
-    | '/streams'
     | '/submissions'
     | '/admin/recurring-jobs'
     | '/admin/team-sort'
@@ -613,6 +643,7 @@ export interface FileRouteTypes {
     | '/scores/ladder'
     | '/scores/races'
     | '/scores/uniques'
+    | '/streams/$twitchAccount'
     | '/admin'
     | '/auth/discord/callback'
     | '/auth/poe/callback'
@@ -625,9 +656,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/scores'
+    | '/streams'
     | '/rules'
     | '/settings'
-    | '/streams'
     | '/submissions'
     | '/admin/recurring-jobs'
     | '/admin/team-sort'
@@ -644,6 +675,7 @@ export interface FileRouteTypes {
     | '/scores/ladder'
     | '/scores/races'
     | '/scores/uniques'
+    | '/streams/$twitchAccount'
     | '/admin/'
     | '/auth/discord/callback'
     | '/auth/poe/callback'
@@ -658,9 +690,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ScoresRouteRoute: typeof ScoresRouteRouteWithChildren
+  StreamsRouteRoute: typeof StreamsRouteRouteWithChildren
   RulesRoute: typeof RulesRoute
   SettingsRoute: typeof SettingsRoute
-  StreamsRoute: typeof StreamsRoute
   SubmissionsRoute: typeof SubmissionsRoute
   AdminRecurringJobsRoute: typeof AdminRecurringJobsRoute
   AdminTeamSortRoute: typeof AdminTeamSortRoute
@@ -680,9 +712,9 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ScoresRouteRoute: ScoresRouteRouteWithChildren,
+  StreamsRouteRoute: StreamsRouteRouteWithChildren,
   RulesRoute: RulesRoute,
   SettingsRoute: SettingsRoute,
-  StreamsRoute: StreamsRoute,
   SubmissionsRoute: SubmissionsRoute,
   AdminRecurringJobsRoute: AdminRecurringJobsRoute,
   AdminTeamSortRoute: AdminTeamSortRoute,
@@ -712,9 +744,9 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/scores",
+        "/streams",
         "/rules",
         "/settings",
-        "/streams",
         "/submissions",
         "/admin/recurring-jobs",
         "/admin/team-sort",
@@ -749,14 +781,17 @@ export const routeTree = rootRoute
         "/scores/uniques"
       ]
     },
+    "/streams": {
+      "filePath": "streams/route.tsx",
+      "children": [
+        "/streams/$twitchAccount"
+      ]
+    },
     "/rules": {
       "filePath": "rules.tsx"
     },
     "/settings": {
       "filePath": "settings.tsx"
-    },
-    "/streams": {
-      "filePath": "streams.tsx"
     },
     "/submissions": {
       "filePath": "submissions.tsx"
@@ -815,6 +850,10 @@ export const routeTree = rootRoute
     "/scores/uniques": {
       "filePath": "scores/uniques.tsx",
       "parent": "/scores"
+    },
+    "/streams/$twitchAccount": {
+      "filePath": "streams/$twitchAccount.tsx",
+      "parent": "/streams"
     },
     "/admin/": {
       "filePath": "admin/index.tsx"
