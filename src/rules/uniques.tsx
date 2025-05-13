@@ -121,14 +121,14 @@ export function UniqueTabRules() {
           </p>
         </>
       ) : null}
-      <h3 className="text-warning">Notes</h3>
+      {/* <h3 className="text-warning">Notes</h3>
       <p className="text-warning">
         Once a unique item has been scored it has to remain in the stash tab of
         a team member to ensure that no trading between teams takes place. The
         time of first discovery is used to determine the order of completion, so
         don't worry about trading it to a team lead to hold on to it for you
         after its scored
-      </p>
+      </p> */}
     </>
   );
 }
