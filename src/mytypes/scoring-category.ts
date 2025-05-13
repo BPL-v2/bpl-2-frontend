@@ -31,6 +31,7 @@ export function getSubCategory(
 export function getRootCategoryNames(gameVersion: "poe1" | "poe2"): string[] {
   if (gameVersion === "poe1") {
     return [
+      "Personal Objectives",
       "Uniques",
       "Races",
       "Bounties",
@@ -40,7 +41,14 @@ export function getRootCategoryNames(gameVersion: "poe1" | "poe2"): string[] {
       "Gems",
     ];
   }
-  return ["Uniques", "Races", "Bounties", "Collections", "Dailies"];
+  return [
+    "Personal Objectives",
+    "Uniques",
+    "Races",
+    "Bounties",
+    "Collections",
+    "Dailies",
+  ];
 }
 
 export function flattenCategories(category: ScoreCategory): ScoreCategory[] {

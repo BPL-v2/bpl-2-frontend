@@ -17,10 +17,14 @@ import Table from "@components/table";
 import { phreciaMapping, poe2Mapping } from "@mytypes/ascendancy";
 import { calcPersonalPoints } from "@utils/personal-points";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ruleWrapper } from "./route";
+import { POPointRules } from "@rules/po-points";
+import POProgressBar from "@components/po-progress";
 type RowDef = {
   default: number;
   team: Team;
   key: string;
+  "Personal Objectives": number;
   Collections: number;
   Uniques: number;
   Bounties: number;
@@ -29,7 +33,7 @@ type RowDef = {
 };
 
 export const Route = createFileRoute("/scores/ladder")({
-  component: LadderTab,
+  component: () => ruleWrapper(LadderTab(), POPointRules()),
 });
 
 export function LadderTab() {
@@ -287,7 +291,13 @@ export function LadderTab() {
       sorter: (a: any, b: any) => a[categoryName] - b[categoryName],
     }));
   }
-
+  const objs = scores?.sub_categories.find(
+    (category) => category.name === "Personal Objectives"
+  )?.objectives;
+  const totalObjective = objs?.find(
+    (obj) => obj.scoring_preset?.point_cap || 0 > 0
+  );
+  const checkPoints = objs?.filter((obj) => !obj.scoring_preset?.point_cap);
   return (
     <>
       <div className="divider divider-primary ">Team Scores</div>
@@ -295,12 +305,7 @@ export function LadderTab() {
         <thead className="bg-base-200">
           <tr>
             {scoreColumns.map((column) => (
-              <th key={`header-${column.key}`}>
-                {
-                  // @ts-ignore
-                  column.title
-                }
-              </th>
+              <th key={`header-${column.key}`}>{column.title}</th>
             ))}
           </tr>
         </thead>
@@ -321,7 +326,50 @@ export function LadderTab() {
             ))}
         </tbody>
       </table>
-
+      <div className="divider divider-primary">Personal Objective Points</div>
+      {totalObjective && checkPoints && (
+        <div className="card bg-base-300">
+          <div className="card-body">
+            <div className="flex flex-col gap-4">
+              {currentEvent.teams.map((team) => {
+                const values = [];
+                const extra = [];
+                let total = 0;
+                for (const obj of checkPoints) {
+                  const teamScore = obj.team_score[team.id];
+                  if (!teamScore) {
+                    continue;
+                  }
+                  const number = teamScore.number;
+                  total += teamScore.points;
+                  values.push(number);
+                  extra.push(teamScore.points);
+                }
+                const cap = totalObjective?.scoring_preset?.point_cap || 0;
+                const current = Math.min(
+                  totalObjective?.team_score[team.id]?.number || 0,
+                  cap
+                );
+                total += current;
+                return (
+                  <div className="flex flex-row gap-2" key={team.id}>
+                    <div className="flex flex-row justify-between w-40 text-lg">
+                      <TeamName className="font-semibold" team={team} />
+                      <div>{total}</div>
+                    </div>
+                    <POProgressBar
+                      checkpoints={values}
+                      extra={extra}
+                      max={cap}
+                      current={current}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
       <div className="divider divider-primary">Ladder</div>
       <Table
         data={ladder.sort((a, b) => a.rank - b.rank)}
