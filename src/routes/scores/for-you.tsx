@@ -45,11 +45,13 @@ export function ForYouTab() {
       });
   }, [currentEvent, user]);
   const personalObjectiveRender = useMemo(() => {
-    if (!character) {
-      return null;
-    }
+    const char = {
+      level: character?.level || 0,
+      atlas_node_count: character?.atlas_node_count || 0,
+      ascendancy_points: character?.ascendancy_points || 0,
+    };
     const lastPointsProgress =
-      Math.max(character.level / 90, character.atlas_node_count / 40) * 100;
+      Math.max(char.level / 90, char.atlas_node_count / 40) * 100;
     return (
       <div>
         <h2 className="mt-4">Personal Objectives</h2>
@@ -60,12 +62,12 @@ export function ForYouTab() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-1 ">
           <div
             className={`card bg-base-300 border-2 ${
-              character.level >= 80 ? "border-success" : "border-error"
+              char.level >= 80 ? "border-success" : "border-error"
             }`}
           >
             <div className="card-body">
               <div className="card-title text-3xl">{"Reach lvl 80"}</div>
-              {character.level >= 80 ? (
+              {char.level >= 80 ? (
                 <div className="text-lg text-left text-success">
                   {"+3 Points"}
                 </div>
@@ -73,22 +75,20 @@ export function ForYouTab() {
             </div>
             <progress
               className={`progress w-full rounded-b-box rounded-t-none  ${
-                character.level >= 80 ? "progress-success" : "progress-error"
+                char.level >= 80 ? "progress-success" : "progress-error"
               }`}
-              value={character.level}
+              value={char.level}
               max={80}
             ></progress>
           </div>
           <div
             className={`card bg-base-300 border-2 ${
-              character.ascendancy_points >= 8
-                ? "border-success"
-                : "border-error"
+              char.ascendancy_points >= 8 ? "border-success" : "border-error"
             }`}
           >
             <div className="card-body">
               <div className="card-title text-3xl">{"Fully Ascend"}</div>
-              {character.ascendancy_points >= 8 ? (
+              {char.ascendancy_points >= 8 ? (
                 <div className="text-lg text-left text-success">
                   {"+3 Points"}
                 </div>
@@ -100,17 +100,17 @@ export function ForYouTab() {
             </div>
             <progress
               className={`progress w-full rounded-b-box rounded-t-none  ${
-                character.ascendancy_points >= 8
+                char.ascendancy_points >= 8
                   ? "progress-success"
                   : "progress-error"
               }`}
-              value={character.ascendancy_points}
+              value={char.ascendancy_points}
               max={8}
             ></progress>
           </div>
           <div
             className={`card col-span-2 bg-base-300 rounded-box border-2 ${
-              character.atlas_node_count >= 40 || character.level >= 90
+              char.atlas_node_count >= 40 || char.level >= 90
                 ? "border-success"
                 : "border-error"
             }`}
@@ -119,7 +119,7 @@ export function ForYouTab() {
               <div className="flex flex-col sm:flex-row items-center gap-2">
                 <div
                   className={`card bg-base-200 w-full border-2 ${
-                    character.level >= 90 ? "border-success" : "border-error"
+                    char.level >= 90 ? "border-success" : "border-error"
                   }`}
                 >
                   <div className="card-body">
@@ -127,11 +127,9 @@ export function ForYouTab() {
                   </div>
                   <progress
                     className={`progress w-full rounded-b-box rounded-t-none  ${
-                      character.level >= 90
-                        ? "progress-success"
-                        : "progress-error"
+                      char.level >= 90 ? "progress-success" : "progress-error"
                     }`}
-                    value={character.level}
+                    value={char.level}
                     max={90}
                   ></progress>
                 </div>
@@ -140,7 +138,7 @@ export function ForYouTab() {
                 </div>
                 <div
                   className={`card bg-base-200 w-full border-2 ${
-                    character.atlas_node_count >= 40
+                    char.atlas_node_count >= 40
                       ? "border-success"
                       : "border-error"
                   }`}
@@ -152,16 +150,16 @@ export function ForYouTab() {
                   </div>
                   <progress
                     className={`progress w-full rounded-b-box rounded-t-none  ${
-                      character.atlas_node_count >= 40
+                      char.atlas_node_count >= 40
                         ? "progress-success"
                         : "progress-error"
                     }`}
-                    value={character.atlas_node_count}
+                    value={char.atlas_node_count}
                     max={40}
                   ></progress>
                 </div>
               </div>
-              {character.atlas_node_count >= 40 || character.level >= 90 ? (
+              {char.atlas_node_count >= 40 || char.level >= 90 ? (
                 <div className="text-lg text-left text-success">
                   {"+3 Points"}
                 </div>
