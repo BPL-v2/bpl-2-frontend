@@ -9,7 +9,7 @@ interface TwitchEmbedProps {
 
 const TwitchEmbed: React.FC<TwitchEmbedProps> = ({
   channel,
-  parent = ["https://bpl-poe.com/"],
+  parent = ["bpl-poe.com"],
 }) => {
   const embedRef = useRef<HTMLDivElement>(null);
   const embedInstanceRef = useRef<any>(null); // To store the Twitch Embed instance
@@ -35,7 +35,6 @@ const TwitchEmbed: React.FC<TwitchEmbedProps> = ({
     if (dimensions.width === 0 || dimensions.height === 0) {
       return;
     }
-    console.log(dimensions);
     // Dynamically load the Twitch Embed script
     const script = document.createElement("script");
     script.src = "https://embed.twitch.tv/embed/v1.js";
