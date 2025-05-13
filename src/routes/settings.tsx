@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { OauthCard } from "@components/oauth-card";
 import { userApi } from "@client/client";
-// import { TwitchFilled } from "@icons/twitch";
+import { TwitchFilled } from "@icons/twitch";
 import { DiscordFilled } from "@icons/discord";
 import { ThemePicker } from "@components/theme-picker";
 import { createFileRoute } from "@tanstack/react-router";
@@ -101,13 +101,13 @@ export function SettingsPage() {
               required={true}
               logo={<DiscordFilled className="text-[#5865f2]"></DiscordFilled>}
             ></OauthCard>
-            {/* <OauthCard
+            <OauthCard
               title="Twitch"
               provider="twitch"
               description="If you connect your Twitch account, we will display your stream during the event."
               connected={!!user?.twitch_id}
               logo={<TwitchFilled className="text-[#9146ff]"></TwitchFilled>}
-            ></OauthCard> */}
+            ></OauthCard>
           </div>
         </div>
       </div>

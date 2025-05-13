@@ -4,6 +4,7 @@ import { TwitchStreamEmbed } from "@components/twitch-stream";
 import { GlobalStateContext } from "@utils/context-provider";
 import { EventStatus, Team, TwitchStream } from "@client/api";
 import { streamApi } from "@client/client";
+import TwitchEmbed from "@components/twitch-emberd";
 
 export const Route = createFileRoute("/streams")({
   component: TwitchPage,
@@ -34,9 +35,7 @@ export function TwitchPage() {
   }, []);
   return (
     <div key="twitch-page">
-      {/* {selectedChannel ? (
-        <TwitchEmbed key="video" channel={selectedChannel} width={"100%"} />
-      ) : null} */}
+      {selectedChannel && <TwitchEmbed channel={selectedChannel} />}
       <h1 className="text-4xl mt-4">Twitch Streams by Team</h1>
       {currentEvent?.teams.sort(teamSort(eventStatus)).map((team) => (
         <div key={`team-video-thumbnails-${team.id}`}>

@@ -78,9 +78,6 @@ function RootComponent() {
 
   const userIsMissingDiscord = user && !user.discord_id;
   const userIsMissingPoE = user && !user.account_name;
-  console.log("user", user);
-  console.log("userIsMissingDiscord", userIsMissingDiscord);
-  console.log("userIsMissingPoE", userIsMissingPoE);
   return (
     <>
       <div className="max-w-[1440px] text-center mx-auto ">
