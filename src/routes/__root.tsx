@@ -76,6 +76,11 @@ function RootComponent() {
     return menu.filter((item) => item.visible);
   }, [currentEvent, eventStatus]);
 
+  const userIsMissingDiscord = user && !user.discord_id;
+  const userIsMissingPoE = user && !user.account_name;
+  console.log("user", user);
+  console.log("userIsMissingDiscord", userIsMissingDiscord);
+  console.log("userIsMissingPoE", userIsMissingPoE);
   return (
     <>
       <div className="max-w-[1440px] text-center mx-auto ">
@@ -108,6 +113,19 @@ function RootComponent() {
           </ul>
         </div>
         <div className="min-h-[79vh] mb-4">
+          {(userIsMissingPoE || userIsMissingDiscord) && (
+            <div className="alert alert-error text-lg">
+              <p>
+                We messed up and somehow you dont have your discord or poe
+                account linked, sorry! Please make sure to head over to{" "}
+                <Link to="/settings" className="link">
+                  settings
+                </Link>{" "}
+                and link your accounts so that we can track you during the event
+                and give you roles on discord.
+              </p>
+            </div>
+          )}
           <Outlet />
         </div>
         <Footer></Footer>
