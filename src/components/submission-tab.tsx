@@ -3,7 +3,13 @@ import { GlobalStateContext } from "@utils/context-provider";
 import { getSubCategory } from "@mytypes/scoring-category";
 import { ScoreObjective } from "@mytypes/score";
 import TeamScoreDisplay from "./team-score";
-import { ObjectiveType, Score, SubmissionCreate, Team } from "@client/api";
+import {
+  AggregationType,
+  ObjectiveType,
+  Score,
+  SubmissionCreate,
+  Team,
+} from "@client/api";
 import { submissionApi } from "@client/client";
 import { DateTimePicker } from "./datetime-picker";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
@@ -74,13 +80,18 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
               label="Time (in your timezone)"
               name="timestamp"
             ></DateTimePicker>
-            {/* <label className="label">Value</label>
-            <input
-              type="number"
-              className="input w-full"
-              required
-              name="number"
-            /> */}
+            {/* TODO: generalize this  */}
+            {selectedObjective?.aggregation == AggregationType.MAXIMUM && (
+              <>
+                <label className="label">Amount of Jewels dropped</label>
+                <input
+                  type="number"
+                  className="input w-full"
+                  required
+                  name="number"
+                />
+              </>
+            )}
             <label className="label">Link to proof</label>
             <input type="text" className="input w-full" required name="proof" />
             <label className="label">Comment</label>

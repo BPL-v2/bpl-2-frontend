@@ -75,6 +75,12 @@ export function RaceTabRules() {
         of your completion in case there are disputes as the tracking can be off
         about a minute.
       </p>
+      <p className="text-warning">
+        The endless chase race can be submitted multiple times per team with
+        different numbers of Timeless Jewels dropped. If two teams have the same
+        amount of jewels dropped, the team that submitted first will get more
+        points.
+      </p>
     </>
   );
 }
