@@ -19,7 +19,7 @@ const AuthButton = () => {
     new Date(user.token_expiry_timestamp) > new Date()
   ) {
     return (
-      <div className="dropdown">
+      <div className="dropdown dropdown-end">
         <div
           tabIndex={0}
           className={`btn btn-lg py-8 border-0 hover:text-primary-content hover:bg-primary`}

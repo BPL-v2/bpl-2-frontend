@@ -7,7 +7,7 @@ export function EventPicker() {
   return (
     <select
       defaultValue="Pick an event"
-      className="select w-35 "
+      className="select w-2 lg:w-35"
       onChange={(e) =>
         setCurrentEvent(
           events.find((event) => String(event.id) === e.target.value)!

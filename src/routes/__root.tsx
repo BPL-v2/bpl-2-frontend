@@ -88,7 +88,7 @@ function RootComponent() {
                 <li key={item.url}>
                   <Link
                     to={item.url}
-                    className="btn flex items-center gap-2 h-16 font-semibold text-xl"
+                    className="btn flex items-center gap-2 h-16 font-semibold text-xl btn-sm lg:btn-md"
                     activeProps={{
                       className: "btn-primary",
                     }}
