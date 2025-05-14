@@ -150,7 +150,7 @@ function ScoringPage() {
   return (
     <>
       <div className="flex items-center justify-between bg-base-200 mb-4 rounded-b-box">
-        <ul className="menu menu-horizontal gap-1 md:gap-2">
+        <ul className="menu menu-horizontal md:gap-2">
           {scoringTabs
             .filter((tab) => tab.visible)
             .map((tab) => (
