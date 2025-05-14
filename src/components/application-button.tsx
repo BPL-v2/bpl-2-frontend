@@ -79,6 +79,10 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
             ref={formRef}
             onSubmit={(e) => {
               e.preventDefault();
+              if (!user.discord_id) {
+                alert("You need to link your Discord account to apply.");
+                return;
+              }
               signupApi
                 .createSignup(currentEvent.id, {
                   expected_playtime: hourValue,
