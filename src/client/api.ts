@@ -462,6 +462,12 @@ export interface Event {
      * @type {string}
      * @memberof Event
      */
+    application_end_time: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Event
+     */
     application_start_time: string;
     /**
      * 
@@ -537,6 +543,12 @@ export interface Event {
  * @interface EventCreate
  */
 export interface EventCreate {
+    /**
+     * 
+     * @type {string}
+     * @memberof EventCreate
+     */
+    application_end_time: string;
     /**
      * 
      * @type {string}
@@ -797,6 +809,12 @@ export interface LadderEntry {
      * @memberof LadderEntry
      */
     rank: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof LadderEntry
+     */
+    twitch_account?: string;
     /**
      * 
      * @type {number}

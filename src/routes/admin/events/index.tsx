@@ -45,6 +45,8 @@ const columns: CrudColumn<Event>[] = [
       <div className="grid grid-cols-2 gap-2">
         <div>Application Start: </div>
         <div>{new Date(event.application_start_time).toLocaleString()}</div>
+        <div>Application End: </div>
+        <div>{new Date(event.application_end_time).toLocaleString()}</div>
         <div>Event Start: </div>
         <div>{new Date(event.event_start_time).toLocaleString()}</div>
         <div>Event End: </div>
@@ -56,6 +58,15 @@ const columns: CrudColumn<Event>[] = [
     title: "Application Start",
     dataIndex: "application_start_time",
     key: "application_start_time",
+    type: "date",
+    editable: true,
+    required: true,
+    hidden: true,
+  },
+  {
+    title: "Application End",
+    dataIndex: "application_end_time",
+    key: "application_end_time",
     type: "date",
     editable: true,
     required: true,
