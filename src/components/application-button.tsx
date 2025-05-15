@@ -33,6 +33,7 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
   ) {
     return null;
   }
+
   if (userTeam) {
     return <TeamName team={userTeam} className="text-lg p-4 " />;
   }
@@ -70,9 +71,10 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
       </div>
     );
   }
+
   if (
     new Date() > new Date(currentEvent.application_end_time) ||
-    new Date() < new Date(currentEvent.event_start_time)
+    new Date() < new Date(currentEvent.application_start_time)
   ) {
     return;
   }
