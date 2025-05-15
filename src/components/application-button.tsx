@@ -70,7 +70,12 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
       </div>
     );
   }
-
+  if (
+    new Date() > new Date(currentEvent.application_end_time) ||
+    new Date() < new Date(currentEvent.event_start_time)
+  ) {
+    return;
+  }
   if (eventStatus?.application_status === ApplicationStatus.none) {
     return (
       <>

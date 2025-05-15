@@ -81,7 +81,7 @@ export function UniqueTabRules() {
       </strong>
       . Collecting both of these would award{" "}
       <b className="text-info">
-        {uniquePoints}+{variantPoints}
+        {uniquePoints} + 2x{variantPoints} = {uniquePoints + 2 * variantPoints}
       </b>{" "}
       points
     </p>
