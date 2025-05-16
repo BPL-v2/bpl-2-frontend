@@ -72,6 +72,12 @@ function RouteComponent() {
         permissions={[Permission.admin]}
       />
       <AdminRouteCard
+        title="Submission Management"
+        description="Manage race/bounty submissions."
+        link="/admin/submissions"
+        permissions={[Permission.admin, Permission.submission_judge]}
+      />
+      <AdminRouteCard
         title="Monitoring"
         description="View the status of the server and its components."
         link="https://v2202503259898322516.goodsrv.de/monitoring"

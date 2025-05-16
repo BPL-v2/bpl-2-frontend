@@ -1724,6 +1724,26 @@ export interface TeamCreate {
 /**
  * 
  * @export
+ * @interface TeamSubmissionCreate
+ */
+export interface TeamSubmissionCreate {
+    /**
+     * 
+     * @type {number}
+     * @memberof TeamSubmissionCreate
+     */
+    objective_id: number;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof TeamSubmissionCreate
+     */
+    team_ids: Array<number>;
+}
+
+/**
+ * 
+ * @export
  * @interface TeamUserCreate
  */
 export interface TeamUserCreate {
@@ -5279,6 +5299,51 @@ export const SubmissionApiFetchParamCreator = function (configuration?: Configur
             };
         },
         /**
+         * Sets submissions for teams
+         * @param {number} event_id Event Id
+         * @param {TeamSubmissionCreate} body Submissions to create
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setBulkSubmissionForAdmin(event_id: number, body: TeamSubmissionCreate, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling setBulkSubmissionForAdmin.');
+            }
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling setBulkSubmissionForAdmin.');
+            }
+            const localVarPath = `/events/{event_id}/submissions/admin`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"TeamSubmissionCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Submits a bounty for an event
          * @param {number} event_id Event Id
          * @param {SubmissionCreate} body Submission to create
@@ -5390,6 +5455,25 @@ export const SubmissionApiFp = function(configuration?: Configuration) {
             };
         },
         /**
+         * Sets submissions for teams
+         * @param {number} event_id Event Id
+         * @param {TeamSubmissionCreate} body Submissions to create
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setBulkSubmissionForAdmin(event_id: number, body: TeamSubmissionCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Submission>> {
+            const localVarFetchArgs = SubmissionApiFetchParamCreator(configuration).setBulkSubmissionForAdmin(event_id, body, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
          * Submits a bounty for an event
          * @param {number} event_id Event Id
          * @param {SubmissionCreate} body Submission to create
@@ -5448,6 +5532,16 @@ export const SubmissionApiFactory = function (configuration?: Configuration, fet
             return SubmissionApiFp(configuration).reviewSubmission(event_id, submission_id, submission, options)(fetch, basePath);
         },
         /**
+         * Sets submissions for teams
+         * @param {number} event_id Event Id
+         * @param {TeamSubmissionCreate} body Submissions to create
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setBulkSubmissionForAdmin(event_id: number, body: TeamSubmissionCreate, options?: any) {
+            return SubmissionApiFp(configuration).setBulkSubmissionForAdmin(event_id, body, options)(fetch, basePath);
+        },
+        /**
          * Submits a bounty for an event
          * @param {number} event_id Event Id
          * @param {SubmissionCreate} body Submission to create
@@ -5501,6 +5595,18 @@ export class SubmissionApi extends BaseAPI {
      */
     public reviewSubmission(event_id: number, submission_id: number, submission: SubmissionReview, options?: any) {
         return SubmissionApiFp(this.configuration).reviewSubmission(event_id, submission_id, submission, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Sets submissions for teams
+     * @param {number} event_id Event Id
+     * @param {TeamSubmissionCreate} body Submissions to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SubmissionApi
+     */
+    public setBulkSubmissionForAdmin(event_id: number, body: TeamSubmissionCreate, options?: any) {
+        return SubmissionApiFp(this.configuration).setBulkSubmissionForAdmin(event_id, body, options)(this.fetch, this.basePath);
     }
 
     /**

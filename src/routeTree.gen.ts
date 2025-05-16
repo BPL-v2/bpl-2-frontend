@@ -33,6 +33,7 @@ import { Route as ProfileUserIdImport } from './routes/profile.$userId'
 import { Route as AdminUserManagementImport } from './routes/admin/user-management'
 import { Route as AdminTeamSuggestionsImport } from './routes/admin/team-suggestions'
 import { Route as AdminTeamSortImport } from './routes/admin/team-sort'
+import { Route as AdminSubmissionsImport } from './routes/admin/submissions'
 import { Route as AdminRecurringJobsImport } from './routes/admin/recurring-jobs'
 import { Route as AdminEventsIndexImport } from './routes/admin/events/index'
 import { Route as AuthTwitchCallbackImport } from './routes/auth/twitch.callback'
@@ -176,6 +177,12 @@ const AdminTeamSortRoute = AdminTeamSortImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AdminSubmissionsRoute = AdminSubmissionsImport.update({
+  id: '/admin/submissions',
+  path: '/admin/submissions',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AdminRecurringJobsRoute = AdminRecurringJobsImport.update({
   id: '/admin/recurring-jobs',
   path: '/admin/recurring-jobs',
@@ -277,6 +284,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/recurring-jobs'
       fullPath: '/admin/recurring-jobs'
       preLoaderRoute: typeof AdminRecurringJobsImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/submissions': {
+      id: '/admin/submissions'
+      path: '/admin/submissions'
+      fullPath: '/admin/submissions'
+      preLoaderRoute: typeof AdminSubmissionsImport
       parentRoute: typeof rootRoute
     }
     '/admin/team-sort': {
@@ -495,6 +509,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/submissions': typeof SubmissionsRoute
   '/admin/recurring-jobs': typeof AdminRecurringJobsRoute
+  '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/team-sort': typeof AdminTeamSortRoute
   '/admin/team-suggestions': typeof AdminTeamSuggestionsRoute
   '/admin/user-management': typeof AdminUserManagementRoute
@@ -528,6 +543,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/submissions': typeof SubmissionsRoute
   '/admin/recurring-jobs': typeof AdminRecurringJobsRoute
+  '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/team-sort': typeof AdminTeamSortRoute
   '/admin/team-suggestions': typeof AdminTeamSuggestionsRoute
   '/admin/user-management': typeof AdminUserManagementRoute
@@ -562,6 +578,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/submissions': typeof SubmissionsRoute
   '/admin/recurring-jobs': typeof AdminRecurringJobsRoute
+  '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/team-sort': typeof AdminTeamSortRoute
   '/admin/team-suggestions': typeof AdminTeamSuggestionsRoute
   '/admin/user-management': typeof AdminUserManagementRoute
@@ -597,6 +614,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/submissions'
     | '/admin/recurring-jobs'
+    | '/admin/submissions'
     | '/admin/team-sort'
     | '/admin/team-suggestions'
     | '/admin/user-management'
@@ -629,6 +647,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/submissions'
     | '/admin/recurring-jobs'
+    | '/admin/submissions'
     | '/admin/team-sort'
     | '/admin/team-suggestions'
     | '/admin/user-management'
@@ -661,6 +680,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/submissions'
     | '/admin/recurring-jobs'
+    | '/admin/submissions'
     | '/admin/team-sort'
     | '/admin/team-suggestions'
     | '/admin/user-management'
@@ -695,6 +715,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   SubmissionsRoute: typeof SubmissionsRoute
   AdminRecurringJobsRoute: typeof AdminRecurringJobsRoute
+  AdminSubmissionsRoute: typeof AdminSubmissionsRoute
   AdminTeamSortRoute: typeof AdminTeamSortRoute
   AdminTeamSuggestionsRoute: typeof AdminTeamSuggestionsRoute
   AdminUserManagementRoute: typeof AdminUserManagementRoute
@@ -717,6 +738,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   SubmissionsRoute: SubmissionsRoute,
   AdminRecurringJobsRoute: AdminRecurringJobsRoute,
+  AdminSubmissionsRoute: AdminSubmissionsRoute,
   AdminTeamSortRoute: AdminTeamSortRoute,
   AdminTeamSuggestionsRoute: AdminTeamSuggestionsRoute,
   AdminUserManagementRoute: AdminUserManagementRoute,
@@ -749,6 +771,7 @@ export const routeTree = rootRoute
         "/settings",
         "/submissions",
         "/admin/recurring-jobs",
+        "/admin/submissions",
         "/admin/team-sort",
         "/admin/team-suggestions",
         "/admin/user-management",
@@ -798,6 +821,9 @@ export const routeTree = rootRoute
     },
     "/admin/recurring-jobs": {
       "filePath": "admin/recurring-jobs.tsx"
+    },
+    "/admin/submissions": {
+      "filePath": "admin/submissions.tsx"
     },
     "/admin/team-sort": {
       "filePath": "admin/team-sort.tsx"
