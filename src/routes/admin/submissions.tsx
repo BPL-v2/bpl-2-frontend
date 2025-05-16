@@ -213,7 +213,7 @@ function SubmissionPage() {
                   .then(() => setReloadTable(!reloadTable));
             },
             visible: () =>
-              user?.permissions.includes(Permission.admin) ?? false,
+              user?.permissions.includes(Permission.submission_judge) ?? false,
           },
           {
             name: "Reject",
@@ -226,7 +226,18 @@ function SubmissionPage() {
                   .then(() => setReloadTable(!reloadTable));
             },
             visible: () =>
-              user?.permissions.includes(Permission.admin) ?? false,
+              user?.permissions.includes(Permission.submission_judge) ?? false,
+          },
+          {
+            name: "Delete",
+            func: async (submission: Partial<Submission>) => {
+              submission.id &&
+                submissionApi
+                  .deleteSubmission(currentEvent.id, submission.id)
+                  .then(() => setReloadTable(!reloadTable));
+            },
+            visible: () =>
+              user?.permissions.includes(Permission.submission_judge) ?? false,
           },
         ]}
       />

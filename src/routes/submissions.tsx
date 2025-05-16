@@ -131,7 +131,7 @@ function SubmissionPage() {
                   .then(() => setReloadTable(!reloadTable));
             },
             visible: () =>
-              user?.permissions.includes(Permission.admin) ?? false,
+              user?.permissions.includes(Permission.submission_judge) ?? false,
           },
           {
             name: "Reject",
@@ -144,7 +144,7 @@ function SubmissionPage() {
                   .then(() => setReloadTable(!reloadTable));
             },
             visible: () =>
-              user?.permissions.includes(Permission.admin) ?? false,
+              user?.permissions.includes(Permission.submission_judge) ?? false,
           },
         ]}
       />
