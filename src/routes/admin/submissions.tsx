@@ -50,6 +50,15 @@ function SubmissionPage() {
   const submissionObjectives = getAllObjectives(rules).filter(
     (objective) => objective.objective_type === ObjectiveType.SUBMISSION
   );
+  if (!user?.permissions.includes(Permission.submission_judge)) {
+    return (
+      <div className="alert alert-error shadow-lg">
+        <div>
+          <span>You do not have permission to view this page</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className=" mt-4 flex flex-col">
