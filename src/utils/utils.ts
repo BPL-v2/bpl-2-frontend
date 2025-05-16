@@ -283,3 +283,14 @@ export function rank2text(rank: number) {
   }
   return `${rank}th place`;
 }
+
+export function getAllObjectives(category: Category): Objective[] {
+  const objectives: Objective[] = [];
+  for (const objective of category.objectives) {
+    objectives.push(objective);
+  }
+  for (const subcategory of category.sub_categories) {
+    objectives.push(...getAllObjectives(subcategory));
+  }
+  return objectives;
+}
