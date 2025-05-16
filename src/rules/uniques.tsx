@@ -122,7 +122,10 @@ export function UniqueTabRules() {
         </>
       ) : null}
       <h3 className="text-warning">Notes</h3>
-      <p className="text-warning">Foiled unique items are not counted.</p>
+      <p className="text-warning">
+        Foiled unique items from Voidborn Keys or Valdo maps are not counted.
+        Foiled items from Uber Drop Reliquary keys do count, however.
+      </p>
       <p className="text-warning">
         Items need to be identified in order to be counted.
       </p>
