@@ -38,7 +38,9 @@ export function DailyTabRules() {
     dailyCategory?.objectives?.find((objective) => objective.valid_to === null)
       ?.scoring_preset?.points || [];
 
-  const racePoints = dailyCategory?.objectives[0]?.scoring_preset?.points || [];
+  const racePoints =
+    dailyCategory?.objectives?.find((objective) => objective.valid_to !== null)
+      ?.scoring_preset?.points || [];
 
   return (
     <>
