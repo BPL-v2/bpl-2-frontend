@@ -1,9 +1,6 @@
 import { useContext, useMemo } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
-import {
-  getRootCategoryNames,
-  getSubCategory,
-} from "@mytypes/scoring-category";
+import { getRootCategoryNames } from "@mytypes/scoring-category";
 import { getTotalPoints } from "@utils/utils";
 import { GameVersion, LadderEntry, Team } from "@client/api";
 import { ColumnDef, sortingFns } from "@tanstack/react-table";
