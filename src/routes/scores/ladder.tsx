@@ -298,6 +298,7 @@ export function LadderTab() {
     (obj) => obj.scoring_preset?.point_cap || 0 > 0
   );
   const checkPoints = objs?.filter((obj) => !obj.scoring_preset?.point_cap);
+  console.log(objs);
   return (
     <>
       <div className="divider divider-primary ">Team Scores</div>
@@ -337,7 +338,7 @@ export function LadderTab() {
                 let total = 0;
                 for (const obj of checkPoints) {
                   const teamScore = obj.team_score[team.id];
-                  if (!teamScore) {
+                  if (!teamScore || !teamScore.points) {
                     continue;
                   }
                   const number = teamScore.number;
