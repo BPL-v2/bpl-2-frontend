@@ -239,12 +239,12 @@ export function ItemTable({ category }: ItemTableProps) {
               );
             if (user) {
               return (
-                <div
-                  className="tooltip cursor-help tooltip-bottom z-1000 flex justify-center w-full"
-                  data-tip={`scored by ${user.display_name}`}
-                >
-                  <CheckCircleIcon className="h-6 w-6 text-success" />
-                </div>
+                // <div
+                //   className="tooltip cursor-help tooltip-bottom z-1000 flex justify-center w-full"
+                //   data-tip={`scored by ${user.display_name}`}
+                // >
+                <CheckCircleIcon className="h-6 w-6 text-success" />
+                // </div>
               );
             } else if (finished) {
               return (
