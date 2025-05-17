@@ -209,11 +209,10 @@ export function LadderTab() {
     return <></>;
   }
   const categoryNames = getRootCategoryNames(currentEvent.game_version);
-  const categories = categoryNames.map((categoryName) =>
-    getSubCategory(scores, categoryName)
+  const categories = scores.sub_categories.filter((category) =>
+    categoryNames.includes(category.name)
   );
   categories.push(scores);
-
   const points = categories.reduce(
     (acc, category) => {
       if (!category) {
@@ -298,7 +297,6 @@ export function LadderTab() {
     (obj) => obj.scoring_preset?.point_cap || 0 > 0
   );
   const checkPoints = objs?.filter((obj) => !obj.scoring_preset?.point_cap);
-  console.log(objs);
   return (
     <>
       <div className="divider divider-primary ">Team Scores</div>
