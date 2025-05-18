@@ -189,7 +189,8 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
                                     : "text-success"
                                 }`}
                               >
-                                {score ? score.points : 0}
+                                {score ? score.points : 0}{" "}
+                                {score.number > 1 ? `(${score.number})` : ""}
                               </td>
                               <td className="pr-4 text-right">
                                 {teamMap[teamId]?.name}
