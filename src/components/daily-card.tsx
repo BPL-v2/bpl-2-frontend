@@ -81,6 +81,11 @@ export function DailyCard({ daily }: DailyCardProps) {
           data-tip={objective.extra}
         >
           <h3 className="flex-grow text-center mt-4 text-xl font-medium mx-4">
+            {daily.raceObjective ? (
+              <b className="font-extrabold">Race: </b>
+            ) : (
+              ""
+            )}
             {objective.name}
             {objective.extra ? <i className="text-error">*</i> : null}
           </h3>
