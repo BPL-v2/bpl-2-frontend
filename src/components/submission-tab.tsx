@@ -92,6 +92,19 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
                 />
               </>
             )}
+            {selectedObjective?.aggregation == AggregationType.MINIMUM && (
+              <>
+                <label className="label">
+                  Time taken for completion in seconds
+                </label>
+                <input
+                  type="number"
+                  className="input w-full"
+                  required
+                  name="number"
+                />
+              </>
+            )}
             <label className="label">Link to proof</label>
             <input type="text" className="input w-full" required name="proof" />
             <label className="label">Comment</label>
