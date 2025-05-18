@@ -18,11 +18,11 @@ function bonusAvailableCounter(
     return null;
   }
   if (new Date(valid_to) < new Date()) {
-    return <p className="text-lg"> Bonus no longer available</p>;
+    return <p className="text-lg"> Daily no longer available</p>;
   }
   return (
-    <div className="flex flex-row justify-center gap-2 p-2">
-      <p className="text-center text-lg">Bonus available for</p>
+    <div className="flex flex-row justify-center gap-4 p-2">
+      <p className="text-center text-lg">Daily available for</p>
       <div className="flex justify-center">
         <Countdown target={new Date(valid_to)} size="small" />
       </div>
@@ -83,7 +83,7 @@ export function DailyCard({ daily }: DailyCardProps) {
 
       <CollectionCardTable objective={objective} />
       <div className="py-4 mb-0 rounded-b-box">
-        {bonusAvailableCounter(daily.raceObjective?.valid_to, () => {
+        {bonusAvailableCounter(daily.valid_to, () => {
           scoringApi.getRulesForEvent(currentEvent.id).then(setRules);
         })}
       </div>

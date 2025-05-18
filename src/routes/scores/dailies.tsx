@@ -7,6 +7,7 @@ import { DailyCard } from "@components/daily-card";
 import { createFileRoute } from "@tanstack/react-router";
 import { DailyTabRules } from "@rules/dailies";
 import { ruleWrapper } from "./route";
+import { ScoringMethod } from "@client/api";
 
 export const Route = createFileRoute("/scores/dailies")({
   component: () => ruleWrapper(<DailyTab />, <DailyTabRules />),
@@ -32,10 +33,15 @@ export function DailyTab() {
       dailies[objective.name] = {
         baseObjective: objective,
         raceObjective: undefined,
+        valid_from: objective.valid_from!,
+        valid_to: objective.valid_to,
       };
     }
-    if (objective.valid_to) {
+    if (
+      objective.scoring_preset?.scoring_method === ScoringMethod.RANKED_TIME
+    ) {
       dailies[objective.name].raceObjective = objective;
+      dailies[objective.name].valid_to = objective.valid_to;
     } else {
       dailies[objective.name].baseObjective = objective;
     }
