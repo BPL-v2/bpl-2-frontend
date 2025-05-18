@@ -167,15 +167,15 @@ export function getPotentialPoints(category: ScoreCategory) {
       points[parseInt(teamId)] += teamScore;
     }
   }
+
   return points;
 }
 
 export function getPotentialPointsForCategory(category: ScoreCategory) {
   const points: { [teamId: number]: number } = {};
   for (const [teamId, teamScore] of Object.entries(category.team_score)) {
-    if (teamScore.points != 0) {
-      points[parseInt(teamId)] = teamScore.points;
-    } else {
+    points[parseInt(teamId)] = teamScore.points;
+    if (!teamScore.finished) {
       if (!category.scoring_preset) {
         continue;
       }
@@ -208,7 +208,7 @@ export function getPotentialPointsForCategory(category: ScoreCategory) {
           );
         }
       }
-      points[parseInt(teamId)] = maximumReachablePoints;
+      points[parseInt(teamId)] += maximumReachablePoints;
     }
   }
   return points;
