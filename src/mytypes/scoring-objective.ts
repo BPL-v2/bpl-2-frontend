@@ -524,4 +524,6 @@ export function getImageLocation(
 export type Daily = {
   baseObjective: ScoreObjective;
   raceObjective?: ScoreObjective;
+  valid_from: string;
+  valid_to?: string;
 };
