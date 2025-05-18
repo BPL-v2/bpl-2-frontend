@@ -73,9 +73,12 @@ export function DelveTabRules() {
             <b className="text-info">1 point per 10</b> total team delve
             progress up to a cap of <b className="text-info">500</b> points.
           </p>
-          {culmDepthRace &&<p>
-            The firtst team to reach the cap will be awarded{" "}
-          </p>}
+          {culmDepthRace && (
+            <p>
+              The first team to reach the cap will be awarded{" "}
+              {racePointsToText(culmDepthRace.scoring_preset?.points || [])}
+            </p>
+          )}
         </>
       )}
       {delveRace && (
