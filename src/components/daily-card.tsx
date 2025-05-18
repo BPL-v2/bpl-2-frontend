@@ -63,6 +63,12 @@ export function DailyCard({ daily }: DailyCardProps) {
       </div>
     );
   }
+  objective.valid_to = daily.valid_to;
+  const finished = Object.values(daily.baseObjective.team_score).reduce(
+    (acc, score) => score.finished && acc,
+    true
+  );
+
   return (
     <div className="card bg-base-200" key={objective.id}>
       <div className="card-title rounded-t-box flex items-center m-0 px-4 bg-base-200 h-25">
@@ -82,11 +88,13 @@ export function DailyCard({ daily }: DailyCardProps) {
       </div>
 
       <CollectionCardTable objective={objective} />
-      <div className="py-4 mb-0 rounded-b-box">
-        {bonusAvailableCounter(daily.valid_to, () => {
-          scoringApi.getRulesForEvent(currentEvent.id).then(setRules);
-        })}
-      </div>
+      {!finished && (
+        <div className="py-4 mb-0 rounded-b-box">
+          {bonusAvailableCounter(daily.valid_to, () => {
+            scoringApi.getRulesForEvent(currentEvent.id).then(setRules);
+          })}
+        </div>
+      )}
     </div>
   );
 }
