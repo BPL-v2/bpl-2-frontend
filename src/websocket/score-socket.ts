@@ -23,7 +23,7 @@ export const establishScoreSocket = (
 
   const previousScores: ScoreMap = {};
   ws.onmessage = (event) => {
-    console.log("Received new scores");
+    console.log("Received new scores", new Date());
     const updates: ScoreDiffWithKey[] = [];
     Object.entries(JSON.parse(event.data) as ScoreMap).forEach(
       ([key, value]) => {
