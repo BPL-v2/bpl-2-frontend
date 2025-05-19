@@ -75,7 +75,6 @@ export function DelveTabRules() {
           </p>
           {culmDepthRace && (
             <p>
-              The first team to reach the cap will be awarded{" "}
               {racePointsToText(culmDepthRace.scoring_preset?.points || [])}
             </p>
           )}

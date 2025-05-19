@@ -18,7 +18,6 @@ export const UniqueCategoryCard = ({
   teamId,
   onClick,
 }: UniqueCategoryCardProps) => {
-  // const { gameVersion } = useContext(GlobalStateContext);
   const totalItems = category.objectives.length;
   const totalVariants = category.sub_categories.reduce(
     (acc, subCategory) => acc + subCategory.objectives.length,
@@ -31,17 +30,22 @@ export const UniqueCategoryCard = ({
       : 0;
   const numVariants = teamId
     ? category.sub_categories.reduce((acc, subCategory) => {
-        if (!subCategory.team_score[teamId]) {
-          return acc;
-        }
-        return acc + subCategory.team_score[teamId].number;
+        return (
+          acc +
+          subCategory.objectives.reduce((numVariants, objective) => {
+            if (objective.team_score[teamId].finished) {
+              return numVariants + 1;
+            }
+            return numVariants;
+          }, 0)
+        );
       }, 0)
     : 0;
   const bgColor = selected ? "bg-highlight content-highlight" : "bg-base-300 ";
   const headerColor = selected ? "bg-base-300" : "bg-base-200";
   const ring = selected ? "ring-3 ring-primary" : "";
 
-  const hover = selected ? "" : "hover:scale-103  transition duration-200 ";
+  const hover = selected ? "" : "hover:scale-103 transition duration-200 ";
   const points = teamId
     ? `${getTotalPoints(category)[teamId]} / ${
         getPotentialPoints(category)[teamId]
