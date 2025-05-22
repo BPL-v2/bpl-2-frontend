@@ -39,6 +39,7 @@ export function getRootCategoryNames(gameVersion: "poe1" | "poe2"): string[] {
       "Dailies",
       "Heist",
       "Gems",
+      "Delve",
     ];
   }
   return [

@@ -30,8 +30,24 @@ export type GlobalState = {
   setGameVersion: (c: GameVersion) => void;
   ladder: LadderEntry[];
   setLadder: (c: LadderEntry[]) => void;
-  darkMode: boolean;
-  setDarkMode: (c: boolean) => void;
+  preferences: Preferences;
+  setPreferences: (c: Preferences) => void;
+};
+
+type Preferences = {
+  theme: string;
+  uniqueSets: {
+    showCompleted: boolean;
+    showFirstAvailable: boolean;
+  };
+};
+
+export const defaultPreferences: Preferences = {
+  theme: "dark",
+  uniqueSets: {
+    showCompleted: true,
+    showFirstAvailable: true,
+  },
 };
 
 export const GlobalStateContext = createContext<GlobalState>({
@@ -55,8 +71,8 @@ export const GlobalStateContext = createContext<GlobalState>({
   setGameVersion: () => {},
   ladder: [],
   setLadder: () => {},
-  darkMode: false,
-  setDarkMode: () => {},
+  preferences: defaultPreferences,
+  setPreferences: () => {},
 });
 
 export const ContextProvider = GlobalStateContext.Provider;

@@ -13,13 +13,12 @@ export const Route = createFileRoute("/scores/uniques")({
 });
 
 function UniqueTab() {
-  const { currentEvent, eventStatus, scores } = useContext(GlobalStateContext);
+  const { currentEvent, eventStatus, scores, preferences, setPreferences } =
+    useContext(GlobalStateContext);
   const [uniqueCategory, setUniqueCategory] = useState<ScoreCategory>();
   const [selectedCategory, setSelectedCategory] = useState<ScoreCategory>();
   const [selectedTeam, setSelectedTeam] = useState<number | undefined>();
   const [categoryFilter, setCategoryFilter] = useState<string>("");
-  const [showFinished, setShowFinished] = useState<boolean>(true);
-  const [showUncontested, setShowWinnable] = useState<boolean>(true);
   const [shownCategories, setShownCategories] = useState<ScoreCategory[]>([]);
   const tableRef = useRef<HTMLDivElement>(null);
 
@@ -75,20 +74,15 @@ function UniqueTab() {
     const shownCategories = uniqueCategory.sub_categories.filter(
       (category) =>
         category.name.toLowerCase().includes(categoryFilter.toLowerCase()) &&
-        (showFinished || !isFinished(category, selectedTeam)) &&
-        (showUncontested || isWinnable(category))
+        (preferences.uniqueSets.showCompleted ||
+          !isFinished(category, selectedTeam)) &&
+        (preferences.uniqueSets.showFirstAvailable || isWinnable(category))
     );
     if (shownCategories.length === 1) {
       setSelectedCategory(shownCategories[0]);
     }
     setShownCategories(shownCategories);
-  }, [
-    uniqueCategory,
-    categoryFilter,
-    showFinished,
-    showUncontested,
-    selectedTeam,
-  ]);
+  }, [uniqueCategory, categoryFilter, preferences, selectedTeam]);
 
   const table = useMemo(() => {
     if (!uniqueCategory) {
@@ -144,9 +138,17 @@ function UniqueTab() {
             <label className="fieldset-label">
               <input
                 type="checkbox"
-                checked={showFinished}
+                checked={preferences.uniqueSets.showCompleted}
                 className="toggle toggle-lg"
-                onChange={(e) => setShowFinished(e.target.checked)}
+                onChange={(e) =>
+                  setPreferences({
+                    ...preferences,
+                    uniqueSets: {
+                      ...preferences.uniqueSets,
+                      showCompleted: e.target.checked,
+                    },
+                  })
+                }
               />
             </label>
           </div>
@@ -157,10 +159,16 @@ function UniqueTab() {
             <label className="fieldset-label">
               <input
                 type="checkbox"
-                checked={showUncontested}
+                checked={preferences.uniqueSets.showFirstAvailable}
                 className="toggle toggle-lg"
                 onChange={(e) => {
-                  setShowWinnable(e.target.checked);
+                  setPreferences({
+                    ...preferences,
+                    uniqueSets: {
+                      ...preferences.uniqueSets,
+                      showFirstAvailable: e.target.checked,
+                    },
+                  });
                 }}
               />
             </label>
