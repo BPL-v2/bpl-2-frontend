@@ -23,7 +23,7 @@ export const Route = createFileRoute("/profile/$userId")({
 });
 
 export function ProfilePage() {
-  const { darkMode, events, currentEvent } = useContext(GlobalStateContext);
+  const { preferences, events, currentEvent } = useContext(GlobalStateContext);
   const [user, setUser] = useState<User>();
   const [eventId, setEventId] = useState<number>(currentEvent?.id || 0);
   const [eventCharacters, setEventCharacters] = useState<Character[]>([]);
@@ -32,7 +32,7 @@ export function ProfilePage() {
   );
   let { userId } = useParams({ from: Route.id });
 
-  const fontColor = darkMode ? "white" : "black";
+  const fontColor = preferences.theme === "dark" ? "white" : "black";
   useEffect(() => {
     if (!userId) {
       return;

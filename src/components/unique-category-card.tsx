@@ -33,7 +33,7 @@ export const UniqueCategoryCard = ({
         return (
           acc +
           subCategory.objectives.reduce((numVariants, objective) => {
-            if (objective.team_score[teamId].finished) {
+            if (objective.team_score[teamId]?.finished) {
               return numVariants + 1;
             }
             return numVariants;

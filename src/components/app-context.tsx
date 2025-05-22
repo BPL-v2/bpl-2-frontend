@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ContextProvider } from "@utils/context-provider";
+import { ContextProvider, defaultPreferences } from "@utils/context-provider";
 import { establishScoreSocket } from "../websocket/score-socket";
 import { ScoreCategory, ScoreDiffWithKey } from "@mytypes/score";
 import { mergeScores } from "@utils/utils";
@@ -35,8 +35,10 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
   const [gameVersion, setGameVersion] = useState<GameVersion>(GameVersion.poe1);
   const [_, setUpdates] = useState<ScoreDiffWithKey[]>([]);
   const [ladder, setLadder] = useState<LadderEntry[]>([]);
-  const [darkMode, setDarkMode] = useState(
-    localStorage.getItem("theme") === '"dark"'
+  const [preferences, setPreferences] = useState(
+    JSON.parse(
+      localStorage.getItem("preferences") || JSON.stringify(defaultPreferences)
+    )
   );
   const [websocket, setWebsocket] = useState<WebSocket>();
 
@@ -109,11 +111,12 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     document
       .querySelector("html")
-      ?.setAttribute(
-        "data-theme",
-        JSON.parse(localStorage.getItem("theme") || '"dark"')
-      );
+      ?.setAttribute("data-theme", preferences.theme);
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("preferences", JSON.stringify(preferences));
+  }, [preferences]);
   return (
     <>
       <ContextProvider
@@ -138,8 +141,8 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
           setGameVersion: setGameVersion,
           ladder: ladder,
           setLadder: setLadder,
-          darkMode: darkMode,
-          setDarkMode: setDarkMode,
+          preferences: preferences,
+          setPreferences: setPreferences,
         }}
       >
         {children}

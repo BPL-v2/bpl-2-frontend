@@ -1,26 +1,26 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 
 export function ThemePicker() {
-  const { setDarkMode } = useContext(GlobalStateContext);
-  const [theme, setTheme] = useState<"light" | "dark">(
-    JSON.parse(localStorage.getItem("theme") || '"dark"')
-  );
-  useEffect(() => {
-    localStorage.setItem("theme", JSON.stringify(theme));
-    document.querySelector("html")?.setAttribute("data-theme", theme);
-  }, [theme]);
+  const { preferences, setPreferences } = useContext(GlobalStateContext);
 
   return (
     <label className="swap swap-rotate">
       <input
         type="checkbox"
         className="theme-controller"
-        defaultChecked={theme === "light"}
-        value={theme}
+        defaultChecked={preferences.theme === "light"}
+        value={preferences.theme}
         onChange={(e) => {
-          setTheme(e.target.checked ? "light" : "dark");
-          setDarkMode(!e.target.checked);
+          const newPreferences = {
+            ...preferences,
+            theme: e.target.checked ? "light" : "dark",
+          };
+          setPreferences(newPreferences);
+          localStorage.setItem("preferences", JSON.stringify(newPreferences));
+          document
+            .querySelector("html")
+            ?.setAttribute("data-theme", newPreferences.theme);
         }}
       />
       <svg
