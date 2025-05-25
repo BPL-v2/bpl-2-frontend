@@ -59,10 +59,10 @@ export type ScoreObjective = Omit<Objective, "children"> & {
 };
 
 export function isWinnable(category: ScoreObjective): boolean {
-  if (category.scoring_preset?.scoring_method === "BONUS_PER_COMPLETION") {
-    return false;
-  }
-  if (category.children.length === 0) {
+  if (
+    category.scoring_preset?.scoring_method === "BONUS_PER_COMPLETION" ||
+    category.children.length === 0
+  ) {
     return false;
   }
   for (const teamId in category.team_score) {
@@ -81,7 +81,7 @@ export function isFinished(objective: ScoreObjective, teamId: number): boolean {
     return finishedObjectives === objective.children.length;
   }
   for (const child of objective.children) {
-    if (!child.team_score[teamId].finished) {
+    if (child.children.length == 0 && !child.team_score[teamId].finished) {
       return false;
     }
   }
