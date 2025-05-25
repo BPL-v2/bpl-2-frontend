@@ -1,6 +1,5 @@
 import { useContext, useRef, useState } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
-import { getSubCategory } from "@mytypes/scoring-category";
 import { ScoreObjective } from "@mytypes/score";
 import TeamScoreDisplay from "./team-score";
 import {
@@ -23,7 +22,8 @@ export type SubmissionTabProps = {
 
 function SubmissionTab({ categoryName }: SubmissionTabProps) {
   const { eventStatus, scores, currentEvent } = useContext(GlobalStateContext);
-  const category = getSubCategory(scores, categoryName);
+
+  const category = scores?.children.find((cat) => cat.name === categoryName);
   const [showModal, setShowModal] = useState(false);
   const [selectedObjective, setSelectedObjective] = useState<ScoreObjective>();
   const formRef = useRef<HTMLFormElement>(null);
@@ -128,7 +128,7 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
           </button>
         </div>
       </Dialog>
-      <TeamScoreDisplay category={category}></TeamScoreDisplay>
+      <TeamScoreDisplay objective={category}></TeamScoreDisplay>
       <h1 className="text-xl mt-4">
         Click to see all{" "}
         <Link
@@ -140,7 +140,7 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
       </h1>
       <div className="divider divider-primary">{category.name}</div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-        {category.objectives
+        {category.children
           .filter(
             (objective) => objective.objective_type == ObjectiveType.SUBMISSION
           )
@@ -217,7 +217,7 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
               </div>
             );
           })}
-        {category.objectives
+        {category.children
           .filter(
             (objective) => objective.objective_type != ObjectiveType.SUBMISSION
           )

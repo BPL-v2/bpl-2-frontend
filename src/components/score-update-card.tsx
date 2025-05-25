@@ -1,11 +1,12 @@
 import { JSX, useContext } from "react";
-import { getMetaInfo, ScoreDiffWithKey } from "@mytypes/score";
+import { getMetaInfo } from "@mytypes/score";
 import { GlobalStateContext } from "@utils/context-provider";
 import { ObjectiveIcon } from "./objective-icon";
+import { ScoreDiff } from "@client/api";
 
 type ScoreUpdateCardProps = {
-  update: ScoreDiffWithKey;
-  close: (update: ScoreDiffWithKey) => void;
+  update: ScoreDiff;
+  close: (update: ScoreDiff) => void;
   closeAll?: () => void;
 };
 
@@ -26,7 +27,7 @@ export const ScoreUpdateCard = ({
         {meta.objective.extra ? (
           <text className="text-primary">{` [${meta.objective.extra}]`}</text>
         ) : null}
-        {meta.category?.name ? ` in "${meta.category?.name}"` : null}
+        {meta.parent?.name ? ` in "${meta.parent?.name}"` : null}
       </div>
     );
     body = (
@@ -43,15 +44,15 @@ export const ScoreUpdateCard = ({
       </div>
     );
     title = meta.teamName + " +" + meta.points;
-  } else if (meta.category) {
-    const img_location = `assets/${gameVersion}/icons/${meta.category.name}.svg`;
+  } else if (meta.parent) {
+    const img_location = `assets/${gameVersion}/icons/${meta.parent.name}.svg`;
     body = (
       <div className="card-body flex gap-2 flex-row">
         <div className="h-20 w-20">
           <img className="h-full w-full object-contain" src={img_location} />
         </div>
         <p className="text-lg text-left">
-          {meta.category?.name} was finished in {meta.rank}. place
+          {meta.parent?.name} was finished in {meta.rank}. place
         </p>
       </div>
     );

@@ -31,11 +31,11 @@ function convertArrayToText(points: number[]): JSX.Element[] {
 export function GemTabRules() {
   const { scores } = useContext(GlobalStateContext);
 
-  const gemCategory = scores?.sub_categories.find(
+  const gemCategory = scores?.children.find(
     (category) => category.name === "Gems"
   );
   const racePoints = gemCategory?.scoring_preset?.points || [];
-  const gemPoints = gemCategory?.objectives[1].scoring_preset?.points[0];
+  const gemPoints = gemCategory?.children[1].scoring_preset?.points[0];
   return (
     <>
       <h3>Points</h3>

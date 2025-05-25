@@ -18,7 +18,7 @@ import {
   EyeSlashIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
-import { getAllObjectives } from "@utils/utils";
+import { flatMap } from "@utils/utils";
 dayjs.extend(customParseFormat);
 
 function renderStringWithUrl(string: string) {
@@ -47,7 +47,7 @@ function SubmissionPage() {
     return <div>No event selected</div>;
   }
 
-  const submissionObjectives = getAllObjectives(rules).filter(
+  const submissionObjectives = flatMap(rules).filter(
     (objective) => objective.objective_type === ObjectiveType.SUBMISSION
   );
   if (!user?.permissions.includes(Permission.submission_judge)) {

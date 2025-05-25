@@ -5,7 +5,6 @@ import CrudTable, { CrudColumn } from "@components/crudtable";
 import { GlobalStateContext } from "@utils/context-provider";
 import { ObjectiveIcon } from "@components/objective-icon";
 import {
-  Category,
   Condition,
   ObjectiveCreate,
   Objective,
@@ -28,9 +27,10 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 import { Dialog } from "@components/dialog";
-import { Link, useParams } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 import {
   availableAggregationTypes,
+  getSubObjective,
   operatorToString,
 } from "@mytypes/scoring-objective";
 import { renderConditionally } from "@utils/token";
@@ -70,7 +70,7 @@ async function createBulkItemObjectives(
       aggregation: aggregation_method,
       number_field: NumberField.STACK_SIZE,
       scoring_preset_id: scoring_preset_id,
-      category_id: categoryId,
+      parent_id: categoryId,
       conditions: [
         {
           field: field,
@@ -87,7 +87,6 @@ async function createBulkItemObjectives(
 export function ScoringCategoryPage(): JSX.Element {
   let { events } = useContext(GlobalStateContext);
   let { eventId, categoryId } = useParams({ from: Route.id });
-  let [categoryName, setCategoryName] = React.useState("");
   const [isObjectiveModalOpen, setIsObjectiveModalOpen] = useState(false);
   const [isBulkObjectiveModalOpen, setIsBulkObjectiveModalOpen] =
     useState(false);
@@ -142,79 +141,76 @@ export function ScoringCategoryPage(): JSX.Element {
     if (!categoryId) {
       return;
     }
-    scoringApi.getScoringCategory(eventId, categoryId).then((data) => {
-      setCategoryName(data.name);
-    });
   }, [categoryId]);
 
-  const categoryColumns: CrudColumn<Category>[] = useMemo(
-    () => [
-      {
-        title: "ID",
-        dataIndex: "id",
-        key: "id",
-        type: "number",
-      },
-      {
-        title: "Name",
-        dataIndex: "name",
-        key: "name",
-        type: "text",
-        required: true,
-        editable: true,
-        render: (name: string, data: Category) => {
-          return (
-            <Link
-              className="btn btn-primary m-1"
-              to={`/admin/events/$eventId/categories/$categoryId`}
-              params={{ eventId: eventId!, categoryId: data.id }}
-            >
-              {name}
-            </Link>
-          );
-        },
-      },
-      {
-        title: "Sub Categories",
-        dataIndex: "sub_categories",
-        key: "sub_categories",
-        render: (data: Category[]) => {
-          return (
-            <div>
-              {data.map((category) => {
-                return (
-                  <Link
-                    className="btn btn-dash m-1"
-                    key={category.id}
-                    to={`/admin/events/$eventId/categories/$categoryId`}
-                    params={{ eventId: eventId!, categoryId: category.id }}
-                  >
-                    {category.name}
-                  </Link>
-                );
-              })}
-            </div>
-          );
-        },
-      },
-      {
-        title: "Scoring Method",
-        dataIndex: "scoring_preset_id",
-        key: "scoring_preset_id",
-        type: "select",
-        options: scoringPresets
-          .filter((preset) => preset.type == ScoringPresetType.CATEGORY)
-          .map((preset) => {
-            return { label: preset.name, value: preset.id };
-          }),
-        editable: true,
-        render: (id) => {
-          return scoringPresets.find((preset) => preset.id === id)?.name;
-        },
-      },
-    ],
-    [scoringPresets]
-  );
+  // const categoryColumns: CrudColumn<Category>[] = useMemo(
+  //   () => [
+  //     {
+  //       title: "ID",
+  //       dataIndex: "id",
+  //       key: "id",
+  //       type: "number",
+  //     },
+  //     {
+  //       title: "Name",
+  //       dataIndex: "name",
+  //       key: "name",
+  //       type: "text",
+  //       required: true,
+  //       editable: true,
+  //       render: (name: string, data: Category) => {
+  //         return (
+  //           <Link
+  //             className="btn btn-primary m-1"
+  //             to={`/admin/events/$eventId/categories/$categoryId`}
+  //             params={{ eventId: eventId!, categoryId: data.id }}
+  //           >
+  //             {name}
+  //           </Link>
+  //         );
+  //       },
+  //     },
+  //     {
+  //       title: "Sub Categories",
+  //       dataIndex: "children",
+  //       key: "children",
+  //       render: (data: Category[]) => {
+  //         return (
+  //           <div>
+  //             {data.map((category) => {
+  //               return (
+  //                 <Link
+  //                   className="btn btn-dash m-1"
+  //                   key={category.id}
+  //                   to={`/admin/events/$eventId/categories/$categoryId`}
+  //                   params={{ eventId: eventId!, categoryId: category.id }}
+  //                 >
+  //                   {category.name}
+  //                 </Link>
+  //               );
+  //             })}
+  //           </div>
+  //         );
+  //       },
+  //     },
+  //     {
+  //       title: "Scoring Method",
+  //       dataIndex: "scoring_preset_id",
+  //       key: "scoring_preset_id",
+  //       type: "select",
+  //       options: scoringPresets
+  //         .filter((preset) => preset.type == ScoringPresetType.CATEGORY)
+  //         .map((preset) => {
+  //           return { label: preset.name, value: preset.id };
+  //         }),
+  //       editable: true,
+  //       render: (id) => {
+  //         return scoringPresets.find((preset) => preset.id === id)?.name;
+  //       },
+  //     },
+  //   ],
+  //   [scoringPresets]
+  // );
 
   const objectiveForm = useMemo(() => {
     const nameInput = (
@@ -427,7 +423,7 @@ export function ScoringCategoryPage(): JSX.Element {
 
       const objectiveCreate: ObjectiveCreate = {
         aggregation: data.get("aggregation") as AggregationType,
-        category_id: categoryId,
+        parent_id: categoryId,
         conditions: conditions,
         extra: data.get("extra") as string,
         name: data.get("name") as string,
@@ -651,9 +647,10 @@ export function ScoringCategoryPage(): JSX.Element {
           resourceName="Objective"
           columns={objectiveColumns}
           fetchFunction={() =>
-            scoringApi
-              .getScoringCategory(eventId, categoryId)
-              .then((data) => data.objectives)
+            objectiveApi.getObjectivesForEvent(eventId).then((data) => {
+              const obj = getSubObjective(data, categoryId);
+              return obj?.children || [];
+            })
           }
           deleteFunction={(obj) =>
             objectiveApi.deleteObjective(eventId, obj.id)
@@ -680,42 +677,6 @@ export function ScoringCategoryPage(): JSX.Element {
       </>
     );
   }, [objectiveColumns, categoryId, refreshObjectives]);
-
-  let categoryTable = useMemo(() => {
-    return (
-      <>
-        <h3>{"Sub-Categories"}</h3>
-        <CrudTable<Category>
-          resourceName="Scoring Category"
-          columns={categoryColumns}
-          fetchFunction={() =>
-            scoringApi.getScoringCategory(eventId, categoryId).then((data) => {
-              return data.sub_categories;
-            })
-          }
-          createFunction={(data) =>
-            scoringApi.createCategory(eventId, {
-              ...data,
-              scoring_preset_id: data.scoring_preset_id
-                ? Number(data.scoring_preset_id)
-                : null,
-              parent_id: categoryId,
-            })
-          }
-          editFunction={(data) =>
-            scoringApi.createCategory(eventId, {
-              ...data,
-              scoring_preset_id: data.scoring_preset_id
-                ? Number(data.scoring_preset_id)
-                : null,
-              parent_id: categoryId,
-            })
-          }
-          deleteFunction={(data) => scoringApi.deleteCategory(eventId, data.id)}
-        />
-      </>
-    );
-  }, [categoryColumns, categoryId]);
 
   let bulkObjeciveModal = useMemo(
     () => (
@@ -904,8 +865,8 @@ export function ScoringCategoryPage(): JSX.Element {
       {objectiveModal}
       {bulkObjeciveModal}
       {conditionModal}
-      <h1>{"Category " + categoryName} </h1>
-      {categoryTable}
+      {/* <h1>{"Category " + categoryName} </h1>
+      {categoryTable} */}
       {objectiveTable}
     </>
   );

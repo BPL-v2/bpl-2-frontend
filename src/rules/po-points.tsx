@@ -30,9 +30,9 @@ function convertArrayToText(points: number[]): JSX.Element[] {
 
 export function POPointRules() {
   const { scores } = useContext(GlobalStateContext);
-  const objs = scores?.sub_categories.find(
+  const objs = scores?.children.find(
     (category) => category.name === "Personal Objectives"
-  )?.objectives;
+  )?.children;
   if (!objs) {
     return <></>;
   }

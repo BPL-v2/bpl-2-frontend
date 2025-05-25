@@ -3,7 +3,7 @@ import { GlobalStateContext } from "@utils/context-provider";
 import { CollectionCardTable } from "./collection-card-table";
 import { Daily } from "@mytypes/scoring-objective";
 import { ObjectiveIcon } from "./objective-icon";
-import { scoringApi } from "@client/client";
+import { objectiveApi } from "@client/client";
 import { Countdown } from "./countdown";
 
 export type DailyCardProps = {
@@ -96,7 +96,7 @@ export function DailyCard({ daily }: DailyCardProps) {
       {!finished && (
         <div className="py-4 mb-0 rounded-b-box">
           {bonusAvailableCounter(daily.valid_to, () => {
-            scoringApi.getRulesForEvent(currentEvent.id).then(setRules);
+            objectiveApi.getObjectivesForEvent(currentEvent.id).then(setRules);
           })}
         </div>
       )}

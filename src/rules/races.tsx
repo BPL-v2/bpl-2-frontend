@@ -31,17 +31,17 @@ function convertArrayToText(points: number[]): JSX.Element[] {
 export function RaceTabRules() {
   const { scores } = useContext(GlobalStateContext);
 
-  const raceCategory = scores?.sub_categories.find(
+  const raceCategory = scores?.children.find(
     (category) => category.name === "Races"
   );
   // const scoringPresets = Object.entries(
-  //   raceCategory?.objectives.reduce((acc, objective) => {
+  //   raceCategory?.children.reduce((acc, objective) => {
   //     if (objective.scoring_preset)
   //       acc[objective.scoring_preset.name] = objective.scoring_preset;
   //     return acc;
   //   }, {} as Record<string, ScoringPreset | undefined>) || {}
   // );
-  const racePoints = raceCategory?.objectives[0].scoring_preset?.points || [];
+  const racePoints = raceCategory?.children[0].scoring_preset?.points || [];
   return (
     <>
       <h3>Points</h3>

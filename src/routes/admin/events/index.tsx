@@ -3,7 +3,7 @@ import { useContext } from "react";
 import CrudTable, { CrudColumn } from "@components/crudtable";
 import { GlobalStateContext } from "@utils/context-provider";
 import { EventCreate, Event, Permission } from "@client/api";
-import { eventApi, scoringApi } from "@client/client";
+import { eventApi, objectiveApi } from "@client/client";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
 import { useNavigate } from "@tanstack/react-router";
 import { renderConditionally } from "@utils/token";
@@ -202,7 +202,7 @@ function EventPage() {
           {
             name: "Scoring Categories",
             func: async (data) =>
-              scoringApi.getRulesForEvent(data.id).then((rules) => {
+              objectiveApi.getObjectivesForEvent(data.id).then((rules) => {
                 navigate({
                   to: "/admin/events/$eventId/categories/$categoryId",
                   params: { eventId: data.id, categoryId: rules.id },

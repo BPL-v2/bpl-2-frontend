@@ -22,7 +22,7 @@ export function GemTab() {
   if (!currentEvent || !scores) {
     return <></>;
   }
-  const gemCategory = scores.sub_categories.find(
+  const gemCategory = scores.children.find(
     (category) => category.name === "Gems"
   );
 
@@ -31,19 +31,19 @@ export function GemTab() {
   }
   return (
     <>
-      <TeamScoreDisplay category={gemCategory} />
+      <TeamScoreDisplay objective={gemCategory} />
       <div className="divider divider-primary">{gemCategory.name}</div>
       <div className="flex flex-col gap-4">
         <Ranking
           objective={gemCategory}
-          maximum={gemCategory.objectives.length}
+          maximum={gemCategory.children.length}
           actual={(teamId: number) =>
-            gemCategory.objectives.filter((o) => o.team_score[teamId]?.finished)
+            gemCategory.children.filter((o) => o.team_score[teamId]?.finished)
               .length
           }
           description="Gems:"
         />
-        <ItemTable category={gemCategory} />
+        <ItemTable objective={gemCategory} />
       </div>
     </>
   );

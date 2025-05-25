@@ -1,11 +1,11 @@
-import { ScoreMap } from "@client/api";
-import { ScoreDiffWithKey } from "@mytypes/score";
+import { ScoreDiff } from "@client/api";
+import { ScoreMap } from "@utils/utils";
 
 export const establishScoreSocket = (
   eventId: number,
   setScores: (scores: ScoreMap) => void,
   setWebsocket: (ws: WebSocket) => void,
-  appendUpdates: (updates: ScoreDiffWithKey[]) => void
+  appendUpdates: (updates: ScoreDiff[]) => void
 ) => {
   if (!import.meta.env.VITE_PUBLIC_BPL_BACKEND_URL) {
     console.error("VITE_PUBLIC_BPL_BACKEND_URL is not defined");
@@ -24,25 +24,27 @@ export const establishScoreSocket = (
   const previousScores: ScoreMap = {};
   ws.onmessage = (event) => {
     console.log("Received new scores", new Date());
-    const updates: ScoreDiffWithKey[] = [];
-    Object.entries(JSON.parse(event.data) as ScoreMap).forEach(
-      ([key, value]) => {
-        if (value.diff_type !== "Unchanged" && value.score.finished) {
-          console.log("key", key, value);
-          if (
-            value.diff_type === "Added" ||
-            (value.field_diff?.includes("Finished") && value.score.finished)
-          ) {
-            updates.push({ ...value, key: key });
-          }
-        }
-        if (value.diff_type === "Removed") {
-          delete previousScores[key];
-        } else {
-          previousScores[key] = value;
+    const updates: ScoreDiff[] = [];
+    Object.values(JSON.parse(event.data) as ScoreDiff[]).forEach((diff) => {
+      if (diff.diff_type !== "Unchanged" && diff.score.finished) {
+        if (
+          diff.diff_type === "Added" ||
+          (diff.field_diff?.includes("Finished") && diff.score.finished)
+        ) {
+          updates.push(diff);
         }
       }
-    );
+      if (diff.diff_type === "Removed") {
+        if (previousScores[diff.team_id]) {
+          delete previousScores[diff.team_id][diff.objective_id];
+        }
+      } else {
+        if (!previousScores[diff.team_id]) {
+          previousScores[diff.team_id] = {};
+        }
+        previousScores[diff.team_id][diff.objective_id] = diff.score;
+      }
+    });
     appendUpdates(updates);
     setScores({ ...previousScores });
   };

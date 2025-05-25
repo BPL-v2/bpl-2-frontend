@@ -1,10 +1,10 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { characterApi, teamApi } from "@client/client";
-import { Character, ScoringMethod, Suggestions } from "@client/api";
+import { Character, ScoringMethod } from "@client/api";
 import { GlobalStateContext } from "@utils/context-provider";
-import { flattenCategories } from "@mytypes/scoring-category";
-import { ScoreCategory, ScoreObjective } from "@mytypes/score";
 import { createFileRoute } from "@tanstack/react-router";
+import { ScoreObjective } from "@mytypes/score";
+import { flatMap } from "@utils/utils";
 
 export const Route = createFileRoute("/scores/for-you")({
   component: ForYouTab,
@@ -13,10 +13,7 @@ export const Route = createFileRoute("/scores/for-you")({
 export function ForYouTab() {
   const { currentEvent, scores, eventStatus, user } =
     useContext(GlobalStateContext);
-  const [teamGoals, setTeamGoals] = useState<Suggestions>({
-    category_ids: [],
-    objective_ids: [],
-  });
+  const [teamGoals, setTeamGoals] = useState<number[]>([]);
   const [character, setCharacter] = useState<Character>();
 
   useEffect(() => {
@@ -187,9 +184,8 @@ export function ForYouTab() {
     return;
   }
 
-  const categories = flattenCategories(scores);
-
-  const relevantCategories = categories
+  const objectives = flatMap(scores);
+  const relevantCategories = objectives
     .filter(
       (category) =>
         category.scoring_preset?.scoring_method ===
@@ -199,44 +195,38 @@ export function ForYouTab() {
     )
     .sort((a, b) => {
       return (
-        a.objectives.filter(
+        a.children.filter(
           (objective) => !objective.team_score[teamId]?.finished
         ).length /
-          a.objectives.length -
-        b.objectives.filter(
+          a.children.length -
+        b.children.filter(
           (objective) => !objective.team_score[teamId]?.finished
         ).length /
-          b.objectives.length
+          b.children.length
       );
     });
 
-  const relevantObjectives = categories.flatMap((category) =>
-    category.objectives
-      .filter(
-        (objective) =>
-          objective.scoring_preset?.scoring_method ===
-            ScoringMethod.RANKED_TIME &&
-          !objective.team_score[eventStatus.team_id!]?.finished &&
-          (!objective.valid_from || new Date(objective.valid_from) < new Date())
-      )
-      .sort((a, b) => {
-        return (
-          (b.team_score[teamId]?.number || 0) / b.required_number -
-          (a.team_score[teamId]?.number || 0) / a.required_number
-        );
-      })
+  const relevantObjectives = objectives.filter(
+    (objective) =>
+      objective.scoring_preset?.scoring_method === ScoringMethod.RANKED_TIME &&
+      !objective.team_score[eventStatus.team_id!]?.finished &&
+      (!objective.valid_from || new Date(objective.valid_from) < new Date())
   );
-  function catRender(cat: ScoreCategory) {
-    const totalObjectives = cat.objectives.length;
-    const unfinishedObjectives = cat.objectives.filter(
+
+  function categoryRender(category: ScoreObjective) {
+    const childLeaves = category.children.filter(
+      (obj) => obj.children.length === 0
+    );
+    const totalObjectives = childLeaves.length;
+    const unfinishedObjectives = childLeaves.filter(
       (obj) => !obj.team_score[teamId]?.finished
     );
     return (
-      <div className="card bg-base-300" key={cat.id}>
+      <div className="card bg-base-300" key={category.id}>
         <div className="card-body">
           <div tabIndex={0} className="collapse bg-base-200 items-start">
             <div className="card-title collapse-title flex justify-between text-lg pe-px-4 px-4">
-              <div>{cat.name}</div>
+              <div>{category.name}</div>
               <div className="text-primary whitespace-nowrap">
                 {totalObjectives - unfinishedObjectives.length} /{" "}
                 {totalObjectives}
@@ -294,11 +284,8 @@ export function ForYouTab() {
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
           {relevantCategories
-            .filter((category) => teamGoals.category_ids.includes(category.id))
-            .map(catRender)}
-          {relevantObjectives
-            .filter((obj) => teamGoals.objective_ids.includes(obj.id))
-            .map(objRender)}
+            .filter((category) => teamGoals.includes(category.id))
+            .map(categoryRender)}
         </div>
       </div>
       <div>
@@ -306,11 +293,9 @@ export function ForYouTab() {
         <p>Other objectives that are time sensitive for you to do.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
           {relevantCategories
-            .filter((category) => !teamGoals.category_ids.includes(category.id))
-            .map(catRender)}
-          {relevantObjectives
-            .filter((obj) => !teamGoals.objective_ids.includes(obj.id))
-            .map(objRender)}
+            .filter((category) => !teamGoals.includes(category.id))
+            .map(categoryRender)}
+          {relevantObjectives.map(objRender)}
         </div>
       </div>
     </div>

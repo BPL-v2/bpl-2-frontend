@@ -1,39 +1,40 @@
 // import { useContext } from "react";
-import { ScoreCategory } from "@mytypes/score";
+import { ScoreObjective } from "@mytypes/score";
 import { getPotentialPoints, getTotalPoints } from "@utils/utils";
 // import { GlobalStateContext } from "@utils/context-provider";
 import { Medal } from "@icons/medal";
 import { CategoryIcon } from "../icons/category-icons";
 
 type UniqueCategoryCardProps = {
-  category: ScoreCategory;
+  objective: ScoreObjective;
   selected: boolean;
   teamId: number;
   onClick: () => void;
 };
 
 export const UniqueCategoryCard = ({
-  category,
+  objective,
   selected,
   teamId,
   onClick,
 }: UniqueCategoryCardProps) => {
-  const totalItems = category.objectives.length;
-  const totalVariants = category.sub_categories.reduce(
-    (acc, subCategory) => acc + subCategory.objectives.length,
+  const totalItems = objective.children.filter(
+    (objective) => objective.children.length === 0
+  ).length;
+  const totalVariants = objective.children.reduce(
+    (acc, variantCategory) => acc + variantCategory.children.length,
     0
   );
-
   const numItems =
-    teamId && category.team_score[teamId]
-      ? category.team_score[teamId].number
+    teamId && objective.team_score[teamId]
+      ? objective.team_score[teamId].number
       : 0;
   const numVariants = teamId
-    ? category.sub_categories.reduce((acc, subCategory) => {
+    ? objective.children.reduce((acc, subCategory) => {
         return (
           acc +
-          subCategory.objectives.reduce((numVariants, objective) => {
-            if (objective.team_score[teamId]?.finished) {
+          subCategory.children.reduce((numVariants, child) => {
+            if (child.team_score[teamId]?.finished) {
               return numVariants + 1;
             }
             return numVariants;
@@ -47,25 +48,25 @@ export const UniqueCategoryCard = ({
 
   const hover = selected ? "" : "hover:scale-103 transition duration-200 ";
   const points = teamId
-    ? `${getTotalPoints(category)[teamId]} / ${
-        getPotentialPoints(category)[teamId]
+    ? `${getTotalPoints(objective)[teamId]} / ${
+        getPotentialPoints(objective)[teamId]
       }`
     : null;
 
   return (
     <div
       className={`card cursor-pointer ${bgColor} ${ring} ${hover}`}
-      key={`unique-card-${category.id}`}
+      key={`unique-card-${objective.id}`}
       onClick={onClick}
     >
       <div
         className={`card-title rounded-t-box m-0 p-2 flex items-center justify-center sm:justify-between ${headerColor}`}
       >
         <div className="flex-shrink-0">
-          <Medal rank={category.team_score[teamId]?.rank} size={28} />
+          <Medal rank={objective.team_score[teamId]?.rank} size={28} />
         </div>
         <h1 className="text-xl text-center text-base-content font-extrabold">
-          {category.name}
+          {objective.name}
         </h1>
         <div className="hidden sm:block flex-shrink-0 text-sm"> {points} </div>
       </div>
@@ -89,7 +90,7 @@ export const UniqueCategoryCard = ({
               </div>
             ) : null}
             <div className="hidden sm:block col-start-2 row-span-2 row-start-1 self-center justify-self-end select-none">
-              <CategoryIcon name={category.name} />
+              <CategoryIcon name={objective.name} />
             </div>
           </div>
         </div>

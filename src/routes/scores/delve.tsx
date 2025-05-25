@@ -25,7 +25,7 @@ export const Route = createFileRoute("/scores/delve")({
 export function DelveTab() {
   const { scores, currentEvent, users, ladder, isMobile } =
     useContext(GlobalStateContext);
-  const category = scores?.sub_categories.find((c) => c.name === "Delve");
+  const category = scores?.children.find((c) => c.name === "Delve");
   const teamMap =
     currentEvent?.teams?.reduce((acc: { [teamId: number]: Team }, team) => {
       acc[team.id] = team;
@@ -240,14 +240,14 @@ export function DelveTab() {
   if (!category || !currentEvent) {
     return <></>;
   }
-  const fossilRaceCategory = category.sub_categories.find(
+  const fossilRaceCategory = category.children.find(
     (c) => c.name === "Fossil Race"
   );
-  const culmulativeDepthTotal = category.objectives.find(
+  const culmulativeDepthTotal = category.children.find(
     (o) => o.name === "Culmulative Depth"
   );
 
-  const culmulativeDepthRace = category.objectives.find(
+  const culmulativeDepthRace = category.children.find(
     (o) => o.name === "Culmulative Depth Race"
   );
 
@@ -272,7 +272,7 @@ export function DelveTab() {
   }
   return (
     <>
-      <TeamScoreDisplay category={category} />
+      <TeamScoreDisplay objective={category} />
       {fossilRaceCategory ? (
         <>
           <div className="divider divider-primary">Fossil Race</div>
@@ -280,7 +280,7 @@ export function DelveTab() {
             objective={fossilRaceCategory}
             description="Fossils:"
             actual={(teamId) =>
-              fossilRaceCategory.objectives.reduce(
+              fossilRaceCategory.children.reduce(
                 (acc, objective) =>
                   acc +
                   Math.min(
@@ -290,13 +290,13 @@ export function DelveTab() {
                 0
               )
             }
-            maximum={fossilRaceCategory.objectives.reduce(
+            maximum={fossilRaceCategory.children.reduce(
               (acc, objective) => acc + objective.required_number,
               0
             )}
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-4">
-            {fossilRaceCategory.objectives.map((objective) => {
+            {fossilRaceCategory.children.map((objective) => {
               return (
                 <div className="card bg-base-300" key={objective.id}>
                   <div className=" rounded-t-box flex  m-0 px-4 bg-base-200 p-2 ">

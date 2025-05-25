@@ -63,23 +63,23 @@ function racePointsToText(points: number[]): JSX.Element[] {
 export function HeistTabRules() {
   const { scores } = useContext(GlobalStateContext);
 
-  const heistCategory = scores?.sub_categories.find(
+  const heistCategory = scores?.children.find(
     (category) => category.name === "Heist"
   );
 
-  const rogueGearCategory = heistCategory?.sub_categories.find(
+  const rogueGearCategory = heistCategory?.children.find(
     (c) => c.name === "Rogue Gear"
   );
 
-  const uniqueCategory = heistCategory?.sub_categories.find(
+  const uniqueCategory = heistCategory?.children.find(
     (c) => c.name === "Blueprint Uniques"
   );
 
-  const experimentalItemsCategory = heistCategory?.sub_categories.find(
+  const experimentalItemsCategory = heistCategory?.children.find(
     (c) => c.name === "Experimental Bases"
   );
 
-  const echantingOrbObjective = heistCategory?.objectives.find(
+  const echantingOrbObjective = heistCategory?.children.find(
     (c) => c.name === "Enchanting Orb Race"
   );
 
@@ -101,10 +101,7 @@ export function HeistTabRules() {
           <p>
             Every experimental base found awards{" "}
             <b className="text-info">
-              {
-                experimentalItemsCategory.objectives[0].scoring_preset
-                  ?.points[0]
-              }
+              {experimentalItemsCategory.children[0].scoring_preset?.points[0]}
             </b>{" "}
             points.{" "}
             {experimentalItemsCategory.scoring_preset
