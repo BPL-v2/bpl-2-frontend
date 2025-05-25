@@ -1,21 +1,27 @@
 import { useEffect, useState } from "react";
 import { ContextProvider, defaultPreferences } from "@utils/context-provider";
 import { establishScoreSocket } from "../websocket/score-socket";
-import { ScoreCategory, ScoreDiffWithKey } from "@mytypes/score";
-import { mergeScores } from "@utils/utils";
+import { mergeScores, ScoreMap } from "@utils/utils";
 import {
-  Category,
   EventStatus,
   ScoringPreset,
   User,
   Event,
   GameVersion,
-  ScoreMap,
   LadderEntry,
+  Objective,
+  ScoreDiff,
 } from "@client/api";
 import { MinimalTeamUser } from "@mytypes/user";
-import { eventApi, ladderApi, scoringApi, userApi } from "@client/client";
+import {
+  eventApi,
+  ladderApi,
+  objectiveApi,
+  scoringApi,
+  userApi,
+} from "@client/client";
 import { isLoggedIn } from "@utils/token";
+import { ScoreObjective } from "@mytypes/score";
 
 function ContextWrapper({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User>();
@@ -26,14 +32,14 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
   } as unknown as Event);
   const [events, setEvents] = useState<Event[]>([]);
   const [eventStatus, setEventStatus] = useState<EventStatus>();
-  const [rules, setRules] = useState<Category>();
+  const [rules, setRules] = useState<Objective>();
   const [scoreData, setScoreData] = useState<ScoreMap>({});
-  const [scores, setScores] = useState<ScoreCategory>();
+  const [scores, setScores] = useState<ScoreObjective>();
   const [scoringPresets, setScoringPresets] = useState<ScoringPreset[]>();
   const [users, setUsers] = useState<MinimalTeamUser[]>([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
   const [gameVersion, setGameVersion] = useState<GameVersion>(GameVersion.poe1);
-  const [_, setUpdates] = useState<ScoreDiffWithKey[]>([]);
+  const [_, setUpdates] = useState<ScoreDiff[]>([]);
   const [ladder, setLadder] = useState<LadderEntry[]>([]);
   const [preferences, setPreferences] = useState(
     JSON.parse(
@@ -60,7 +66,8 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
       (newUpdates) =>
         setUpdates((prevUpdates) => [...newUpdates, ...prevUpdates])
     );
-    scoringApi.getRulesForEvent(currentEvent.id).then(setRules);
+    objectiveApi.getObjectivesForEvent(currentEvent.id).then(setRules);
+    // scoringApi.getRulesForEvent(currentEvent.id).then(setRules);
     scoringApi
       .getScoringPresetsForEvent(currentEvent.id)
       .then(setScoringPresets);
@@ -102,7 +109,13 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
           rules,
           scoreData,
           currentEvent?.teams.map((team) => team.id),
-          scoringPresets
+          scoringPresets.reduce(
+            (acc, preset) => {
+              acc[preset.id] = preset;
+              return acc;
+            },
+            {} as Record<number, ScoringPreset>
+          )
         )
       );
     }

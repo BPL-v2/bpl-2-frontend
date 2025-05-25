@@ -20,7 +20,7 @@ function convertArrayToText(points: number[] | undefined): string {
 export function UniqueTabRules() {
   const { scores, gameVersion } = useContext(GlobalStateContext);
 
-  const uniqueCategory = scores?.sub_categories.find(
+  const uniqueCategory = scores?.children.find(
     (category) => category.name === "Uniques"
   );
   const variantPoints = 5;
@@ -29,7 +29,7 @@ export function UniqueTabRules() {
   if (!uniqueCategory) {
     return <></>;
   }
-  // const categoryScoringMethods = uniqueCategory.sub_categories.reduce(
+  // const categoryScoringMethods = uniqueCategory.children.reduce(
   //   (acc, category) => {
   //     if (category.scoring_preset)
   //       acc[category.scoring_preset.name] = category.scoring_preset;
@@ -37,8 +37,8 @@ export function UniqueTabRules() {
   //   },
   //   {} as Record<string, ScoringPreset | undefined>
   // );
-  // const objectiveScoringMethods = uniqueCategory.sub_categories
-  //   .flatMap((c) => c.objectives)
+  // const objectiveScoringMethods = uniqueCategory.children
+  //   .flatMap((c) => c.children)
   //   .reduce((acc, objective) => {
   //     if (objective.scoring_preset)
   //       acc[objective.scoring_preset.name] = objective.scoring_preset;
@@ -49,11 +49,11 @@ export function UniqueTabRules() {
     gameVersion === "poe1"
       ? "https://www.poewiki.net/wiki/"
       : "https://www.poe2wiki.net/wiki/";
-  const variantExample = uniqueCategory.sub_categories
-    .flatMap((c) => c.sub_categories)
-    .find((c) => c.name.includes("Variants") && c.objectives.length >= 2);
+  const variantExample = uniqueCategory.children
+    .flatMap((c) => c.children)
+    .find((c) => c.name.includes("Variants") && c.children.length >= 2);
 
-  const ubersCategory = uniqueCategory.sub_categories.find(
+  const ubersCategory = uniqueCategory.children.find(
     (c) =>
       c.scoring_preset?.scoring_method === ScoringMethod.BONUS_PER_COMPLETION
   );
@@ -63,21 +63,21 @@ export function UniqueTabRules() {
       For example{" "}
       <a
         className="text-orange-500 no-underline cursor-pointer text-nowrap"
-        href={`${wikiBaseUrl}${variantExample.objectives[0].name.replaceAll(
+        href={`${wikiBaseUrl}${variantExample.children[0].name.replaceAll(
           " ",
           "_"
         )}`}
         target="_blank"
       >
-        {variantExample.objectives[0].name}
+        {variantExample.children[0].name}
       </a>{" "}
       is a distinct unique item with variants such as{" "}
       <strong className="text-info text-nowrap">
-        [{variantExample.objectives[0].extra}]
+        [{variantExample.children[0].extra}]
       </strong>{" "}
       or{" "}
       <strong className="text-info text-nowrap">
-        [{variantExample.objectives[1].extra}]
+        [{variantExample.children[1].extra}]
       </strong>
       . Collecting both of these would award{" "}
       <b className="text-info">

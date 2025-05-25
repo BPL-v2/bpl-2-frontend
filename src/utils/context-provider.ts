@@ -1,12 +1,12 @@
 import { createContext } from "react";
-import { ScoreCategory } from "@mytypes/score";
+import { ScoreObjective } from "@mytypes/score";
 import {
-  Category,
   Event,
   User,
   EventStatus,
   GameVersion,
   LadderEntry,
+  Objective,
 } from "@client/api";
 import { MinimalTeamUser } from "@mytypes/user";
 export type GlobalState = {
@@ -16,12 +16,12 @@ export type GlobalState = {
   setCurrentEvent: (c: Event) => void;
   events: Event[];
   setEvents: (c: Event[]) => void;
-  rules: Category | undefined;
-  setRules: (c: Category | undefined) => void;
+  rules: Objective | undefined;
+  setRules: (c: Objective | undefined) => void;
   eventStatus: EventStatus | undefined;
   setEventStatus: (c: EventStatus | undefined) => void;
-  scores: ScoreCategory | undefined;
-  setScores: (c: ScoreCategory | undefined) => void;
+  scores: ScoreObjective | undefined;
+  setScores: (c: ScoreObjective | undefined) => void;
   users: MinimalTeamUser[];
   setUsers: (c: MinimalTeamUser[]) => void;
   isMobile: boolean;

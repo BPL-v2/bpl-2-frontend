@@ -31,12 +31,12 @@ function convertArrayToText(points: number[]): JSX.Element[] {
 export function CollectionTabRules() {
   const { scores } = useContext(GlobalStateContext);
 
-  const collectionCategory = scores?.sub_categories.find(
+  const collectionCategory = scores?.children.find(
     (category) => category.name === "Collections"
   );
 
   const racePoints =
-    collectionCategory?.objectives[0]?.scoring_preset?.points || [];
+    collectionCategory?.children[0]?.scoring_preset?.points || [];
 
   return (
     <>

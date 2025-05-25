@@ -1,22 +1,22 @@
 import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
-import { ScoreCategory } from "@mytypes/score";
 import { getPotentialPoints, getTotalPoints } from "@utils/utils";
 import { TeamName } from "./team-name";
+import { ScoreObjective } from "@mytypes/score";
 
 export type TeamScoreProps = {
   selectedTeam?: number;
   setSelectedTeam?: (teamId: number) => void;
-  category: ScoreCategory;
+  objective: ScoreObjective;
 };
 
 const TeamScoreDisplay = ({
-  category,
+  objective,
   selectedTeam,
   setSelectedTeam,
 }: TeamScoreProps) => {
-  const teamScores = getTotalPoints(category);
-  const potentialScores = getPotentialPoints(category);
+  const teamScores = getTotalPoints(objective);
+  const potentialScores = getPotentialPoints(objective);
   const { currentEvent, eventStatus } = useContext(GlobalStateContext);
   if (!currentEvent || !currentEvent.teams) {
     return <></>;

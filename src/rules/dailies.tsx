@@ -31,29 +31,33 @@ function convertArrayToText(points: number[]): JSX.Element[] {
 export function DailyTabRules() {
   const { scores } = useContext(GlobalStateContext);
 
-  const dailyCategory = scores?.sub_categories.find(
+  const dailyCategory = scores?.children.find(
     (category) => category.name === "Dailies"
   );
   const basePoints =
-    dailyCategory?.objectives?.find((objective) => objective.valid_to === null)
+    dailyCategory?.children?.find((objective) => objective.valid_to === null)
       ?.scoring_preset?.points || [];
 
   const racePoints =
-    dailyCategory?.objectives?.find((objective) => objective.valid_to !== null)
+    dailyCategory?.children?.find((objective) => objective.valid_to !== null)
       ?.scoring_preset?.points || [];
 
   return (
     <>
-      <h3>Daily Quest Releases </h3>
+      <h3> Releases </h3>
       <p>
         Dailies are released periodically (see the countdowns). These are
         objectives that require the participation of the entire team.
       </p>
+      <h3> Expiry </h3>
+      <p>
+        After their release, the dailies will be completable for 24 hours (see
+        countdowns). After that, they will grant no more points.
+      </p>
       <h3>Points</h3>
       <p>
         Every daily grants <b className="text-info">{basePoints[0]}</b> points
-        on completion. If the daily shows that a bonus is available,{" "}
-        {convertArrayToText(racePoints)} as long as the bonus is available.
+        on completion. If it is a race daily, {convertArrayToText(racePoints)}.
       </p>
       <h3 className="text-warning">Notes </h3>
       <p className="text-warning">

@@ -1,4 +1,3 @@
-import { ScoreCategory, ScoreObjective } from "@mytypes/score";
 import { getImageLocation } from "@mytypes/scoring-objective";
 import { GlobalStateContext } from "@utils/context-provider";
 import { useContext, useEffect, useMemo, useState } from "react";
@@ -7,23 +6,25 @@ import { GameVersion, Team } from "@client/api";
 import { CellContext, ColumnDef } from "@tanstack/react-table";
 import Table from "./table";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
+import { ScoreObjective } from "@mytypes/score";
+import {
+  ExtendedScoreObjective,
+  flatMapUniques,
+  getVariantMap,
+} from "@utils/utils";
 
 export type ItemTableProps = {
-  category: ScoreCategory;
+  objective: ScoreObjective;
 };
 
-export type ExtendedScoreObjective = ScoreObjective & {
-  isVariant?: boolean;
-};
-
-export function ItemTable({ category }: ItemTableProps) {
+export function ItemTable({ objective }: ItemTableProps) {
   const { currentEvent, gameVersion, eventStatus, users } =
     useContext(GlobalStateContext);
   const [showVariants, setShowVariants] = useState<{
     [objectiveName: string]: boolean;
   }>({});
   const [variantMap, setVariantMap] = useState<{
-    [objectiveName: string]: ExtendedScoreObjective[];
+    [objectiveName: string]: ScoreObjective[];
   }>({});
   const userTeamID = eventStatus?.team_id || -1;
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -38,29 +39,20 @@ export function ItemTable({ category }: ItemTableProps) {
   }, []);
 
   useEffect(() => {
-    const map = category.sub_categories
-      .filter((subCategory) => subCategory.name.includes("Variants"))
-      .reduce(
-        (acc: { [name: string]: ExtendedScoreObjective[] }, subCategory) => {
-          const name = subCategory.name.split("Variants")[0].trim();
-          acc[name] = subCategory.objectives;
-          return acc;
-        },
-        {}
-      );
-    setVariantMap(map);
+    const variantMap = getVariantMap(objective);
+    setVariantMap(variantMap);
     setShowVariants(
-      category.objectives.reduce(
-        (acc: { [objectiveName: string]: boolean }, objective) => {
-          acc[objective.name] = false;
+      Object.keys(variantMap).reduce(
+        (acc: { [objectiveName: string]: boolean }, objectiveName) => {
+          acc[objectiveName] = false;
           return acc;
         },
         {}
       )
     );
-  }, [category]);
+  }, [objective]);
 
-  if (!currentEvent || !category) {
+  if (!currentEvent || !objective) {
     return <></>;
   }
 
@@ -172,7 +164,7 @@ export function ItemTable({ category }: ItemTableProps) {
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 gap-2">
               {teams.map((team) => (
                 <div
-                  key={`badge-${category.id}-${team.id}-${info.row.original.id}`}
+                  key={`badge-${objective.id}-${team.id}-${info.row.original.id}`}
                   className={badgeClass(info.row.original, team.id)}
                 >
                   {team.name}
@@ -216,17 +208,19 @@ export function ItemTable({ category }: ItemTableProps) {
         },
         ...teams.map((team) => ({
           accessorKey: `team_score.${team.id}.finished`,
-          header: () => (
-            <div>
-              <div>{team.name || "Team"}</div>
-              <div className="text-sm text-info">
-                {category.objectives.filter(
-                  (o) => o.team_score[team.id]?.finished
-                )?.length || 0}{" "}
-                / {category.objectives.length}
+          header: () => {
+            const objectives = flatMapUniques(objective);
+            return (
+              <div>
+                <div>{team.name || "Team"}</div>
+                <div className="text-sm text-info">
+                  {objectives.filter((o) => o.team_score[team.id]?.finished)
+                    ?.length || 0}{" "}
+                  / {objectives.length}
+                </div>
               </div>
-            </div>
-          ),
+            );
+          },
           enableSorting: false,
           size: 200,
           cell: (info: CellContext<ExtendedScoreObjective, any>) => {
@@ -267,13 +261,13 @@ export function ItemTable({ category }: ItemTableProps) {
       ];
     }
     return columns;
-  }, [currentEvent, category, variantMap, showVariants, windowWidth]);
+  }, [currentEvent, objective, variantMap, showVariants, windowWidth]);
   return (
     <>
       <Table
         columns={columns}
         data={
-          category.objectives
+          flatMapUniques(objective)
             .sort((a, b) => a.name.localeCompare(b.name))
             .flatMap((objective) => {
               const variantRows = variantMap[objective.name]?.map((variant) => {

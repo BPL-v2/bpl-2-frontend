@@ -1,16 +1,11 @@
-import {
-  Category,
-  Objective,
-  Score,
-  ScoreMap,
-  ScoringMethod,
-  ScoringPreset,
-} from "@client/api";
-import { ScoreCategory, ScoreObjective } from "@mytypes/score";
+import { Objective, Score, ScoringMethod, ScoringPreset } from "@client/api";
+import { ScoreObjective } from "@mytypes/score";
 
 type TeamScores = { [teamId: number]: Score };
 
 type TeamScoreMap = { [scoreId: number]: TeamScores };
+
+export type ScoreMap = { [teamId: number]: { [objectiveId: number]: Score } };
 
 function getEmptyScore(): Score {
   return {
@@ -48,162 +43,183 @@ export function getTotalTeamScores(
 }
 
 export function mergeScores(
-  category: Category,
-  scores: ScoreMap,
-  teamIds: number[],
-  scoringPresets: ScoringPreset[]
-): ScoreCategory {
-  return mergeScoringCategory(
-    category,
-    scores,
-    teamIds,
-    scoringPresets.reduce(
-      (acc: { [presetId: number]: ScoringPreset }, preset) => {
-        acc[preset.id] = preset;
-        return acc;
-      },
-      {}
-    )
-  );
-}
-
-export function mergeScoringCategory(
-  category: Category,
-  scores: ScoreMap,
-  teamsIds: number[],
-  scoringPresets: { [presetId: number]: ScoringPreset }
-): ScoreCategory {
-  return {
-    id: category.id,
-    name: category.name,
-    scoring_preset: category.scoring_preset_id
-      ? scoringPresets[category.scoring_preset_id]
-      : undefined,
-    sub_categories: category.sub_categories.map((subcategory) =>
-      mergeScoringCategory(subcategory, scores, teamsIds, scoringPresets)
-    ),
-    objectives: category.objectives.map((objective) =>
-      mergeScoringObjective(objective, scores, teamsIds, scoringPresets)
-    ),
-    team_score: teamsIds.reduce((acc: TeamScores, teamId) => {
-      const key = "C-" + category.id + "-" + teamId;
-      acc[teamId] = scores[key]?.score || getEmptyScore();
-      return acc;
-    }, {}),
-  };
-}
-
-export function mergeScoringObjective(
   objective: Objective,
   scores: ScoreMap,
   teamsIds: number[],
-  scoringPresets: { [presetId: number]: ScoringPreset }
+  scoringPresets: Record<number, ScoringPreset>
 ): ScoreObjective {
   return {
-    id: objective.id,
-    name: objective.name,
-    extra: objective.extra,
-    required_number: objective.required_number,
-    conditions: objective.conditions,
-    objective_type: objective.objective_type,
-    valid_from: objective.valid_from,
-    valid_to: objective.valid_to,
-    aggregation: objective.aggregation,
-    number_field: objective.number_field,
+    ...objective,
     scoring_preset: objective.scoring_preset_id
       ? scoringPresets[objective.scoring_preset_id]
       : undefined,
-    category_id: objective.category_id,
+    children: objective.children.map((subObjective) =>
+      mergeScores(subObjective, scores, teamsIds, scoringPresets)
+    ),
     team_score: teamsIds.reduce((acc: TeamScores, teamId) => {
-      const key = "O-" + objective.id + "-" + teamId;
-      acc[teamId] = scores[key]?.score || getEmptyScore();
+      acc[teamId] = scores[teamId]?.[objective.id] || getEmptyScore();
       return acc;
     }, {}),
   };
 }
 
-export function getTotalPoints(category: ScoreCategory): {
+export function getTotalPoints(objective: ScoreObjective): {
   [teamId: number]: number;
 } {
   const points: { [teamId: number]: number } = {};
-  for (const [teamId, teamScore] of Object.entries(category.team_score)) {
+  for (const [teamId, teamScore] of Object.entries(objective.team_score)) {
     points[parseInt(teamId)] = teamScore.points;
   }
-  for (const subCategory of category.sub_categories) {
-    const subCategoryPoints = getTotalPoints(subCategory);
-    for (const [teamId, teamPoints] of Object.entries(subCategoryPoints)) {
+  for (const child of objective.children) {
+    const childPoints = getTotalPoints(child);
+    for (const [teamId, teamPoints] of Object.entries(childPoints)) {
       points[parseInt(teamId)] += teamPoints;
-    }
-  }
-  for (const objective of category.objectives) {
-    for (const [teamId, teamScore] of Object.entries(objective.team_score)) {
-      points[parseInt(teamId)] += teamScore.points;
     }
   }
   return points;
 }
 
-export function getPotentialPoints(category: ScoreCategory) {
-  const points: { [teamId: number]: number } = {};
-  for (const entry of Object.entries(getPotentialPointsForCategory(category))) {
-    points[parseInt(entry[0])] = entry[1];
+type PotentialPoints = { [teamId: number]: number };
+
+export function getPotentialPoints(objective: ScoreObjective): PotentialPoints {
+  const points: PotentialPoints = {};
+
+  for (const [team_id, teamPoints] of Object.entries(
+    getPotentialPoints2(objective)
+  )) {
+    points[parseInt(team_id)] = teamPoints;
   }
-  for (const subCategory of category.sub_categories) {
-    const subCategoryPoints = getPotentialPoints(subCategory);
-    for (const [teamId, teamPoints] of Object.entries(subCategoryPoints)) {
+  for (const child of objective.children) {
+    const childPoints = getPotentialPoints(child);
+    for (const [teamId, teamPoints] of Object.entries(childPoints)) {
       if (!points[parseInt(teamId)]) {
         points[parseInt(teamId)] = 0;
       }
       points[parseInt(teamId)] += teamPoints;
     }
   }
-  for (const objective of category.objectives) {
-    for (const [teamId, teamScore] of Object.entries(
-      getPotentialPointsForObjective(objective)
-    )) {
-      if (!points[parseInt(teamId)]) {
-        points[parseInt(teamId)] = 0;
-      }
-      points[parseInt(teamId)] += teamScore;
-    }
-  }
-
   return points;
 }
 
-export function getPotentialPointsForCategory(category: ScoreCategory) {
+function getPotentialPoints2(objective: ScoreObjective): PotentialPoints {
+  switch (objective.scoring_preset?.scoring_method) {
+    case ScoringMethod.PRESENCE:
+      return potentialPointsPresence(objective);
+    case ScoringMethod.RANKED_COMPLETION_TIME:
+      return getPotentialPointsRanked(objective);
+    case ScoringMethod.RANKED_TIME:
+      return getPotentialPointsRanked(objective);
+    case ScoringMethod.RANKED_REVERSE:
+      return getPotentialPointsRanked(objective);
+    case ScoringMethod.RANKED_VALUE:
+      return getPotentialPointsRanked(objective);
+    case ScoringMethod.POINTS_FROM_VALUE:
+      return getPotentialPointsValue(objective);
+    case ScoringMethod.BONUS_PER_COMPLETION:
+      return getPotentialBonusPointsPerChild(objective);
+    default:
+      return {};
+  }
+}
+
+export function potentialPointsPresence(
+  objective: ScoreObjective
+): PotentialPoints {
+  const presencePoints = objective.scoring_preset!.points[0];
+  return Object.keys(objective.team_score).reduce((acc, team_id) => {
+    acc[parseInt(team_id)] = presencePoints;
+    return acc;
+  }, {} as PotentialPoints);
+}
+
+export function getPotentialPointsValue(
+  objective: ScoreObjective
+): PotentialPoints {
+  const maximum = objective.scoring_preset!.point_cap!;
+  return Object.keys(objective.team_score).reduce((acc, team_id) => {
+    acc[parseInt(team_id)] = maximum;
+    return acc;
+  }, {} as PotentialPoints);
+}
+
+export function getPotentialPointsRanked(
+  objective: ScoreObjective
+): PotentialPoints {
+  let rankPossible = 0;
+  for (const teamScore of Object.values(objective.team_score)) {
+    if (teamScore.finished) {
+      rankPossible += 1;
+    }
+  }
+  const presetPoints = objective.scoring_preset!.points;
+  const possiblePointsForFinishing =
+    rankPossible < presetPoints.length
+      ? presetPoints[rankPossible]
+      : presetPoints[presetPoints.length - 1];
+  return Object.entries(objective.team_score).reduce(
+    (acc, [team_id, score]) => {
+      acc[parseInt(team_id)] = score.finished
+        ? score.points
+        : possiblePointsForFinishing;
+      return acc;
+    },
+    {} as PotentialPoints
+  );
+}
+
+function getPotentialBonusPointsPerChild(
+  objective: ScoreObjective
+): PotentialPoints {
+  const presetPoints = objective.scoring_preset!.points;
+  const childCount = objective.children.filter(
+    (child) => child.children.length === 0
+  ).length;
+  let potential = 0;
+  for (let i = 0; i < childCount; i++) {
+    potential +=
+      i < presetPoints.length
+        ? presetPoints[i]
+        : presetPoints[presetPoints.length - 1];
+  }
+  return Object.keys(objective.team_score).reduce((acc, team_id) => {
+    acc[parseInt(team_id)] = potential;
+    return acc;
+  }, {} as PotentialPoints);
+}
+
+export function getPotentialPointsForCategory(objective: ScoreObjective) {
   const points: { [teamId: number]: number } = {};
-  for (const [teamId, teamScore] of Object.entries(category.team_score)) {
+  for (const [teamId, teamScore] of Object.entries(objective.team_score)) {
     points[parseInt(teamId)] = teamScore.points;
     if (!teamScore.finished) {
-      if (!category.scoring_preset) {
+      if (!objective.scoring_preset) {
         continue;
       }
       var maximumReachablePoints = 0;
       if (
-        category.scoring_preset.scoring_method ===
+        objective.scoring_preset.scoring_method ===
         ScoringMethod.RANKED_COMPLETION_TIME
       ) {
-        const maxRank = Object.values(category.team_score).reduce(
+        const maxRank = Object.values(objective.team_score).reduce(
           (acc, score) => Math.max(acc, score.rank),
           0
         );
         maximumReachablePoints = Math.max(
-          ...category.scoring_preset.points.slice(
+          ...objective.scoring_preset.points.slice(
             maxRank,
-            category.scoring_preset.points.length
+            objective.scoring_preset.points.length
           ),
-          category.scoring_preset.points[
-            category.scoring_preset.points.length - 1
+          objective.scoring_preset.points[
+            objective.scoring_preset.points.length - 1
           ]
         );
       } else if (
-        category.scoring_preset.scoring_method ===
+        objective.scoring_preset.scoring_method ===
         ScoringMethod.BONUS_PER_COMPLETION
       ) {
-        for (var i = teamScore.number; i < category.objectives.length; i++) {
+        for (var i = teamScore.number; i < objective.children.length; i++) {
           maximumReachablePoints += getPoints(
-            category.scoring_preset.points,
+            objective.scoring_preset.points,
             i
           );
         }
@@ -284,13 +300,49 @@ export function rank2text(rank: number) {
   return `${rank}th place`;
 }
 
-export function getAllObjectives(category: Category): Objective[] {
-  const objectives: Objective[] = [];
-  for (const objective of category.objectives) {
-    objectives.push(objective);
-  }
-  for (const subcategory of category.sub_categories) {
-    objectives.push(...getAllObjectives(subcategory));
+export function flatMap<T extends Objective | ScoreObjective>(
+  objective: T
+): T[] {
+  const objectives: T[] = [objective];
+  for (const child of objective.children) {
+    objectives.push(...flatMap(child as T));
   }
   return objectives;
+}
+
+export type ExtendedScoreObjective = ScoreObjective & {
+  isVariant?: boolean;
+};
+
+export function flatMapUniques(objective: ScoreObjective): ScoreObjective[] {
+  const flatObjs: ScoreObjective[] = [];
+  if (objective.children.length === 0) {
+    flatObjs.push(objective);
+  } else if (!objective.name.includes("Variants")) {
+    for (const child of objective.children) {
+      flatObjs.push(...flatMapUniques(child));
+    }
+  }
+  return flatObjs;
+}
+
+export function getVariantMap(objective: ScoreObjective): {
+  [objectiveName: string]: ScoreObjective[];
+} {
+  const map: { [objectiveName: string]: ScoreObjective[] } = {};
+  if (objective.name.includes("Variants")) {
+    const name = objective.name.split("Variants")[0].trim();
+    map[name] = objective.children;
+    return map;
+  }
+  for (const child of objective.children) {
+    const childMap = getVariantMap(child);
+    Object.entries(childMap).forEach(([key, value]) => {
+      if (!map[key]) {
+        map[key] = [];
+      }
+      map[key].push(...value);
+    });
+  }
+  return map;
 }

@@ -14,7 +14,7 @@ export const Route = createFileRoute("/scores/heist")({
 
 export function HeistTab() {
   const { scores, gameVersion } = useContext(GlobalStateContext);
-  const heistCategory = scores?.sub_categories.find(
+  const heistCategory = scores?.children.find(
     (category) => category.name === "Heist"
   );
   useEffect(() => {
@@ -26,22 +26,22 @@ export function HeistTab() {
     return <></>;
   }
 
-  const rogueGearCategory = heistCategory.sub_categories.find(
+  const rogueGearCategory = heistCategory.children.find(
     (category) => category.name === "Rogue Gear"
   );
-  const experimentalBasesCategory = heistCategory.sub_categories.find(
+  const experimentalBasesCategory = heistCategory.children.find(
     (category) => category.name === "Experimental Bases"
   );
-  const heistUniquesCategory = heistCategory.sub_categories.find(
+  const heistUniquesCategory = heistCategory.children.find(
     (category) => category.name === "Blueprint Uniques"
   );
-  const enchantingOrbObjective = heistCategory.objectives.find(
+  const enchantingOrbObjective = heistCategory.children.find(
     (c) => c.name === "Enchanting Orb Race"
   );
 
   return (
     <>
-      <TeamScoreDisplay category={heistCategory} />
+      <TeamScoreDisplay objective={heistCategory} />
       {enchantingOrbObjective && (
         <div className="flex flex-col gap-4">
           <div className="divider divider-primary">Enchanting Orb Race</div>
@@ -60,27 +60,27 @@ export function HeistTab() {
           <div className="divider divider-primary">Rogue Gear Race</div>
           <Ranking
             objective={rogueGearCategory}
-            maximum={rogueGearCategory.objectives.length}
+            maximum={rogueGearCategory.children.length}
             actual={(teamId: number) =>
-              rogueGearCategory.objectives.filter(
+              rogueGearCategory.children.filter(
                 (o) => o.team_score[teamId]?.finished
               ).length
             }
             description="Gear:"
           />
-          <ItemTable category={rogueGearCategory} />
+          <ItemTable objective={rogueGearCategory} />
         </div>
       )}
       {experimentalBasesCategory && (
         <>
           <div className="divider divider-primary">Experimental Bases</div>
-          <ItemTable category={experimentalBasesCategory} />
+          <ItemTable objective={experimentalBasesCategory} />
         </>
       )}
       {heistUniquesCategory && (
         <>
           <div className="divider divider-primary">Heist Uniques</div>
-          <ItemTable category={heistUniquesCategory} />
+          <ItemTable objective={heistUniquesCategory} />
         </>
       )}
     </>

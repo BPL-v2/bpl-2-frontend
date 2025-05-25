@@ -2,7 +2,7 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import TeamScoreDisplay from "@components/team-score";
 import { ItemTable } from "@components/item-table";
-import { isFinished, isWinnable, ScoreCategory } from "@mytypes/score";
+import { isFinished, isWinnable, ScoreObjective } from "@mytypes/score";
 import { UniqueCategoryCard } from "@components/unique-category-card";
 import { createFileRoute } from "@tanstack/react-router";
 import { UniqueTabRules } from "@rules/uniques";
@@ -15,19 +15,18 @@ export const Route = createFileRoute("/scores/uniques")({
 function UniqueTab() {
   const { currentEvent, eventStatus, scores, preferences, setPreferences } =
     useContext(GlobalStateContext);
-  const [uniqueCategory, setUniqueCategory] = useState<ScoreCategory>();
-  const [selectedCategory, setSelectedCategory] = useState<ScoreCategory>();
+  const [uniqueCategory, setUniqueCategory] = useState<ScoreObjective>();
+  const [selectedCategory, setSelectedCategory] = useState<ScoreObjective>();
   const [selectedTeam, setSelectedTeam] = useState<number | undefined>();
   const [categoryFilter, setCategoryFilter] = useState<string>("");
-  const [shownCategories, setShownCategories] = useState<ScoreCategory[]>([]);
+  const [shownCategories, setShownCategories] = useState<ScoreObjective[]>([]);
   const tableRef = useRef<HTMLDivElement>(null);
-
-  const handleCategoryClick = (category: ScoreCategory) => {
-    if (category.id === selectedCategory?.id) {
+  const handleCategoryClick = (objective: ScoreObjective) => {
+    if (objective.id === selectedCategory?.id) {
       setSelectedCategory(undefined);
       return;
     }
-    setSelectedCategory(category);
+    setSelectedCategory(objective);
     if (!tableRef.current) {
       return;
     }
@@ -50,7 +49,7 @@ function UniqueTab() {
     if (!scores) {
       return;
     }
-    const uniques = scores.sub_categories.find(
+    const uniques = scores.children.find(
       (category) => category.name === "Uniques"
     );
     if (!uniques) {
@@ -61,9 +60,7 @@ function UniqueTab() {
       return;
     }
     setSelectedCategory(
-      uniques.sub_categories.find(
-        (category) => category.id === selectedCategory.id
-      )
+      uniques.children.find((category) => category.id === selectedCategory.id)
     );
   }, [scores]);
 
@@ -71,7 +68,7 @@ function UniqueTab() {
     if (!uniqueCategory || !selectedTeam) {
       return;
     }
-    const shownCategories = uniqueCategory.sub_categories.filter(
+    const shownCategories = uniqueCategory.children.filter(
       (category) =>
         category.name.toLowerCase().includes(categoryFilter.toLowerCase()) &&
         (preferences.uniqueSets.showCompleted ||
@@ -89,26 +86,9 @@ function UniqueTab() {
       return <></>;
     }
     if (!selectedCategory) {
-      const objectives =
-        uniqueCategory?.sub_categories.flatMap(
-          (category) => category.objectives
-        ) || [];
-      const subCategories =
-        uniqueCategory?.sub_categories.flatMap(
-          (category) => category.sub_categories
-        ) || [];
-
-      return (
-        <ItemTable
-          category={{
-            ...uniqueCategory,
-            objectives: objectives,
-            sub_categories: subCategories,
-          }}
-        />
-      );
+      return <ItemTable objective={uniqueCategory} />;
     }
-    return <ItemTable category={selectedCategory}></ItemTable>;
+    return <ItemTable objective={selectedCategory}></ItemTable>;
   }, [selectedCategory, selectedTeam, uniqueCategory]);
 
   if (!uniqueCategory || !currentEvent || !scores || !selectedTeam) {
@@ -118,7 +98,7 @@ function UniqueTab() {
   return (
     <>
       <TeamScoreDisplay
-        category={uniqueCategory}
+        objective={uniqueCategory}
         selectedTeam={selectedTeam}
         setSelectedTeam={setSelectedTeam}
       />
@@ -183,7 +163,7 @@ function UniqueTab() {
             return (
               <div key={`unique-category-${category.id}`}>
                 <UniqueCategoryCard
-                  category={category}
+                  objective={category}
                   selected={category.id === selectedCategory?.id}
                   teamId={selectedTeam}
                   onClick={() => handleCategoryClick(category)}

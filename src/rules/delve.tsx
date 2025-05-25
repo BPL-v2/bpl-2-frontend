@@ -31,23 +31,23 @@ function racePointsToText(points: number[]): JSX.Element[] {
 export function DelveTabRules() {
   const { scores } = useContext(GlobalStateContext);
 
-  const delveCategory = scores?.sub_categories.find(
+  const delveCategory = scores?.children.find(
     (category) => category.name === "Delve"
   );
 
-  const fossilRaceCategory = delveCategory?.sub_categories.find(
+  const fossilRaceCategory = delveCategory?.children.find(
     (c) => c.name === "Fossil Race"
   );
 
-  const culmDepthObjective = delveCategory?.objectives.find(
+  const culmDepthObjective = delveCategory?.children.find(
     (c) => c.name === "Culmulative Depth"
   );
 
-  const culmDepthRace = delveCategory?.objectives.find(
+  const culmDepthRace = delveCategory?.children.find(
     (c) => c.name === "Culmulative Depth Race"
   );
 
-  const delveRace = delveCategory?.objectives.find(
+  const delveRace = delveCategory?.children.find(
     (c) => c.name === "Delve Race"
   );
 
@@ -58,7 +58,7 @@ export function DelveTabRules() {
           <h3>Fossil Race</h3>
           <p>
             The teams race to finish the fossil collection, where the required
-            amount of each of the {fossilRaceCategory.objectives.length} Fossils
+            amount of each of the {fossilRaceCategory.children.length} Fossils
             has to be collected.{" "}
             {racePointsToText(fossilRaceCategory.scoring_preset?.points || [])}
           </p>

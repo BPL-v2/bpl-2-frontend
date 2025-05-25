@@ -89,7 +89,8 @@ export enum AggregationType {
     EARLIEST_FRESH_ITEM = 'EARLIEST_FRESH_ITEM',
     MAXIMUM = 'MAXIMUM',
     MINIMUM = 'MINIMUM',
-    DIFFERENCE_BETWEEN = 'DIFFERENCE_BETWEEN'
+    DIFFERENCE_BETWEEN = 'DIFFERENCE_BETWEEN',
+    NONE = 'NONE'
 }
 
 /**
@@ -197,82 +198,6 @@ export interface CallbackResponse {
      * @memberof CallbackResponse
      */
     user: User;
-}
-
-/**
- * 
- * @export
- * @interface Category
- */
-export interface Category {
-    /**
-     * 
-     * @type {number}
-     * @memberof Category
-     */
-    id: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof Category
-     */
-    name: string;
-    /**
-     * 
-     * @type {Array<Objective>}
-     * @memberof Category
-     */
-    objectives: Array<Objective>;
-    /**
-     * 
-     * @type {ScoringPreset}
-     * @memberof Category
-     */
-    scoring_preset?: ScoringPreset;
-    /**
-     * 
-     * @type {number}
-     * @memberof Category
-     */
-    scoring_preset_id?: number;
-    /**
-     * 
-     * @type {Array<Category>}
-     * @memberof Category
-     */
-    sub_categories: Array<Category>;
-}
-
-/**
- * 
- * @export
- * @interface CategoryCreate
- */
-export interface CategoryCreate {
-    /**
-     * 
-     * @type {number}
-     * @memberof CategoryCreate
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof CategoryCreate
-     */
-    name: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof CategoryCreate
-     */
-    parent_id: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof CategoryCreate
-     */
-    scoring_preset_id?: number;
 }
 
 /**
@@ -907,7 +832,8 @@ export enum NumberField {
     PANTHEON = 'PANTHEON',
     ASCENDANCY = 'ASCENDANCY',
     PLAYER_SCORE = 'PLAYER_SCORE',
-    SUBMISSION_VALUE = 'SUBMISSION_VALUE'
+    SUBMISSION_VALUE = 'SUBMISSION_VALUE',
+    FINISHED_OBJECTIVES = 'FINISHED_OBJECTIVES'
 }
 
 /**
@@ -924,10 +850,10 @@ export interface Objective {
     aggregation: AggregationType;
     /**
      * 
-     * @type {number}
+     * @type {Array<Objective>}
      * @memberof Objective
      */
-    category_id: number;
+    children: Array<Objective>;
     /**
      * 
      * @type {Array<Condition>}
@@ -964,6 +890,12 @@ export interface Objective {
      * @memberof Objective
      */
     objective_type: ObjectiveType;
+    /**
+     * 
+     * @type {number}
+     * @memberof Objective
+     */
+    parent_id: number;
     /**
      * 
      * @type {number}
@@ -1050,12 +982,6 @@ export interface ObjectiveCreate {
     aggregation: AggregationType;
     /**
      * 
-     * @type {number}
-     * @memberof ObjectiveCreate
-     */
-    category_id: number;
-    /**
-     * 
      * @type {Array<ObjectiveConditionCreate>}
      * @memberof ObjectiveCreate
      */
@@ -1095,6 +1021,12 @@ export interface ObjectiveCreate {
      * @type {number}
      * @memberof ObjectiveCreate
      */
+    parent_id: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ObjectiveCreate
+     */
     required_number: number;
     /**
      * 
@@ -1125,7 +1057,8 @@ export enum ObjectiveType {
     ITEM = 'ITEM',
     PLAYER = 'PLAYER',
     TEAM = 'TEAM',
-    SUBMISSION = 'SUBMISSION'
+    SUBMISSION = 'SUBMISSION',
+    CATEGORY = 'CATEGORY'
 }
 
 /**
@@ -1257,20 +1190,22 @@ export interface ScoreDiff {
     field_diff: Array<string>;
     /**
      * 
+     * @type {number}
+     * @memberof ScoreDiff
+     */
+    objective_id: number;
+    /**
+     * 
      * @type {Score}
      * @memberof ScoreDiff
      */
     score: Score;
-}
-
-/**
- * 
- * @export
- * @interface ScoreMap
- */
-export interface ScoreMap {
-    [key: string]: ScoreDiff;
-
+    /**
+     * 
+     * @type {number}
+     * @memberof ScoreDiff
+     */
+    team_id: number;
 }
 
 /**
@@ -1616,40 +1551,6 @@ export interface SubmissionReview {
      * @memberof SubmissionReview
      */
     review_comment?: string;
-}
-
-/**
- * 
- * @export
- * @interface SuggestionCreate
- */
-export interface SuggestionCreate {
-    /**
-     * 
-     * @type {number}
-     * @memberof SuggestionCreate
-     */
-    id: number;
-}
-
-/**
- * 
- * @export
- * @interface Suggestions
- */
-export interface Suggestions {
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof Suggestions
-     */
-    category_ids: Array<number>;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof Suggestions
-     */
-    objective_ids: Array<number>;
 }
 
 /**
@@ -3743,6 +3644,34 @@ export const ObjectiveApiFetchParamCreator = function (configuration?: Configura
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Gets all objectives for an event
+         * @param {number} event_id Event Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getObjectivesForEvent(event_id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getObjectivesForEvent.');
+            }
+            const localVarPath = `/events/{event_id}/objectives`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -3809,6 +3738,24 @@ export const ObjectiveApiFp = function(configuration?: Configuration) {
                 });
             };
         },
+        /**
+         * Gets all objectives for an event
+         * @param {number} event_id Event Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getObjectivesForEvent(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Objective> {
+            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).getObjectivesForEvent(event_id, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
     }
 };
 
@@ -3847,6 +3794,15 @@ export const ObjectiveApiFactory = function (configuration?: Configuration, fetc
          */
         getObjective(event_id: number, id: number, options?: any) {
             return ObjectiveApiFp(configuration).getObjective(event_id, id, options)(fetch, basePath);
+        },
+        /**
+         * Gets all objectives for an event
+         * @param {number} event_id Event Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getObjectivesForEvent(event_id: number, options?: any) {
+            return ObjectiveApiFp(configuration).getObjectivesForEvent(event_id, options)(fetch, basePath);
         },
     };
 };
@@ -3892,6 +3848,17 @@ export class ObjectiveApi extends BaseAPI {
      */
     public getObjective(event_id: number, id: number, options?: any) {
         return ObjectiveApiFp(this.configuration).getObjective(event_id, id, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Gets all objectives for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ObjectiveApi
+     */
+    public getObjectivesForEvent(event_id: number, options?: any) {
+        return ObjectiveApiFp(this.configuration).getObjectivesForEvent(event_id, options)(this.fetch, this.basePath);
     }
 
 }
@@ -4017,7 +3984,7 @@ export const ScoresApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getLatestScoresForEvent(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ScoreMap> {
+        getLatestScoresForEvent(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<ScoreDiff>> {
             const localVarFetchArgs = ScoresApiFetchParamCreator(configuration).getLatestScoresForEvent(event_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
@@ -4153,51 +4120,6 @@ export class ScoresApi extends BaseAPI {
 export const ScoringApiFetchParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Creates a new scoring category
-         * @param {number} event_id Event Id
-         * @param {CategoryCreate} body Category to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCategory(event_id: number, body: CategoryCreate, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createCategory.');
-            }
-            // verify required parameter 'body' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling createCategory.');
-            }
-            const localVarPath = `/events/{event_id}/categories`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"CategoryCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Creates a new scoring preset
          * @param {number} event_id Event Id
          * @param {ScoringPresetCreate} body Preset to create
@@ -4243,48 +4165,6 @@ export const ScoringApiFetchParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * Deletes a scoring category
-         * @param {number} event_id Event Id
-         * @param {number} id Category Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCategory(event_id: number, id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling deleteCategory.');
-            }
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteCategory.');
-            }
-            const localVarPath = `/events/{event_id}/categories/{id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Deletes a scoring preset by id
          * @param {number} event_id Event Id
          * @param {number} id Preset Id
@@ -4305,76 +4185,6 @@ export const ScoringApiFetchParamCreator = function (configuration?: Configurati
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches the rules for the current event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getRulesForEvent(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getRulesForEvent.');
-            }
-            const localVarPath = `/events/{event_id}/categories`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches a scoring category by id
-         * @param {number} event_id Event Id
-         * @param {number} id Category Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getScoringCategory(event_id: number, id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getScoringCategory.');
-            }
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getScoringCategory.');
-            }
-            const localVarPath = `/events/{event_id}/categories/{id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -4434,25 +4244,6 @@ export const ScoringApiFetchParamCreator = function (configuration?: Configurati
 export const ScoringApiFp = function(configuration?: Configuration) {
     return {
         /**
-         * Creates a new scoring category
-         * @param {number} event_id Event Id
-         * @param {CategoryCreate} body Category to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCategory(event_id: number, body: CategoryCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Category> {
-            const localVarFetchArgs = ScoringApiFetchParamCreator(configuration).createCategory(event_id, body, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
          * Creates a new scoring preset
          * @param {number} event_id Event Id
          * @param {ScoringPresetCreate} body Preset to create
@@ -4472,25 +4263,6 @@ export const ScoringApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         * Deletes a scoring category
-         * @param {number} event_id Event Id
-         * @param {number} id Category Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCategory(event_id: number, id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = ScoringApiFetchParamCreator(configuration).deleteCategory(event_id, id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
          * Deletes a scoring preset by id
          * @param {number} event_id Event Id
          * @param {number} id Preset Id
@@ -4503,43 +4275,6 @@ export const ScoringApiFp = function(configuration?: Configuration) {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
                         return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches the rules for the current event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getRulesForEvent(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Category> {
-            const localVarFetchArgs = ScoringApiFetchParamCreator(configuration).getRulesForEvent(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches a scoring category by id
-         * @param {number} event_id Event Id
-         * @param {number} id Category Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getScoringCategory(event_id: number, id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Category> {
-            const localVarFetchArgs = ScoringApiFetchParamCreator(configuration).getScoringCategory(event_id, id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
                     } else {
                         throw response;
                     }
@@ -4574,16 +4309,6 @@ export const ScoringApiFp = function(configuration?: Configuration) {
 export const ScoringApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
     return {
         /**
-         * Creates a new scoring category
-         * @param {number} event_id Event Id
-         * @param {CategoryCreate} body Category to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCategory(event_id: number, body: CategoryCreate, options?: any) {
-            return ScoringApiFp(configuration).createCategory(event_id, body, options)(fetch, basePath);
-        },
-        /**
          * Creates a new scoring preset
          * @param {number} event_id Event Id
          * @param {ScoringPresetCreate} body Preset to create
@@ -4594,16 +4319,6 @@ export const ScoringApiFactory = function (configuration?: Configuration, fetch?
             return ScoringApiFp(configuration).createScoringPreset(event_id, body, options)(fetch, basePath);
         },
         /**
-         * Deletes a scoring category
-         * @param {number} event_id Event Id
-         * @param {number} id Category Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCategory(event_id: number, id: number, options?: any) {
-            return ScoringApiFp(configuration).deleteCategory(event_id, id, options)(fetch, basePath);
-        },
-        /**
          * Deletes a scoring preset by id
          * @param {number} event_id Event Id
          * @param {number} id Preset Id
@@ -4612,25 +4327,6 @@ export const ScoringApiFactory = function (configuration?: Configuration, fetch?
          */
         deleteScoringPreset(event_id: number, id: number, options?: any) {
             return ScoringApiFp(configuration).deleteScoringPreset(event_id, id, options)(fetch, basePath);
-        },
-        /**
-         * Fetches the rules for the current event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getRulesForEvent(event_id: number, options?: any) {
-            return ScoringApiFp(configuration).getRulesForEvent(event_id, options)(fetch, basePath);
-        },
-        /**
-         * Fetches a scoring category by id
-         * @param {number} event_id Event Id
-         * @param {number} id Category Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getScoringCategory(event_id: number, id: number, options?: any) {
-            return ScoringApiFp(configuration).getScoringCategory(event_id, id, options)(fetch, basePath);
         },
         /**
          * Fetches the scoring presets for the current event
@@ -4652,18 +4348,6 @@ export const ScoringApiFactory = function (configuration?: Configuration, fetch?
  */
 export class ScoringApi extends BaseAPI {
     /**
-     * Creates a new scoring category
-     * @param {number} event_id Event Id
-     * @param {CategoryCreate} body Category to create
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ScoringApi
-     */
-    public createCategory(event_id: number, body: CategoryCreate, options?: any) {
-        return ScoringApiFp(this.configuration).createCategory(event_id, body, options)(this.fetch, this.basePath);
-    }
-
-    /**
      * Creates a new scoring preset
      * @param {number} event_id Event Id
      * @param {ScoringPresetCreate} body Preset to create
@@ -4676,18 +4360,6 @@ export class ScoringApi extends BaseAPI {
     }
 
     /**
-     * Deletes a scoring category
-     * @param {number} event_id Event Id
-     * @param {number} id Category Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ScoringApi
-     */
-    public deleteCategory(event_id: number, id: number, options?: any) {
-        return ScoringApiFp(this.configuration).deleteCategory(event_id, id, options)(this.fetch, this.basePath);
-    }
-
-    /**
      * Deletes a scoring preset by id
      * @param {number} event_id Event Id
      * @param {number} id Preset Id
@@ -4697,29 +4369,6 @@ export class ScoringApi extends BaseAPI {
      */
     public deleteScoringPreset(event_id: number, id: number, options?: any) {
         return ScoringApiFp(this.configuration).deleteScoringPreset(event_id, id, options)(this.fetch, this.basePath);
-    }
-
-    /**
-     * Fetches the rules for the current event
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ScoringApi
-     */
-    public getRulesForEvent(event_id: number, options?: any) {
-        return ScoringApiFp(this.configuration).getRulesForEvent(event_id, options)(this.fetch, this.basePath);
-    }
-
-    /**
-     * Fetches a scoring category by id
-     * @param {number} event_id Event Id
-     * @param {number} id Category Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ScoringApi
-     */
-    public getScoringCategory(event_id: number, id: number, options?: any) {
-        return ScoringApiFp(this.configuration).getScoringCategory(event_id, id, options)(this.fetch, this.basePath);
     }
 
     /**
@@ -5676,68 +5325,24 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * Creates a suggestion for a category for your team for an event
-         * @param {number} event_id Event Id
-         * @param {SuggestionCreate} body Suggestion to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCategoryTeamSuggestion(event_id: number, body: SuggestionCreate, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createCategoryTeamSuggestion.');
-            }
-            // verify required parameter 'body' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling createCategoryTeamSuggestion.');
-            }
-            const localVarPath = `/events/{event_id}/suggestions/categories`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"SuggestionCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Creates a suggestion for an objective for your team for an event
          * @param {number} event_id Event Id
-         * @param {SuggestionCreate} body Suggestion to create
+         * @param {number} objective_id Objective Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createObjectiveTeamSuggestion(event_id: number, body: SuggestionCreate, options: any = {}): FetchArgs {
+        createObjectiveTeamSuggestion(event_id: number, objective_id: number, options: any = {}): FetchArgs {
             // verify required parameter 'event_id' is not null or undefined
             if (event_id === null || event_id === undefined) {
                 throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createObjectiveTeamSuggestion.');
             }
-            // verify required parameter 'body' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling createObjectiveTeamSuggestion.');
+            // verify required parameter 'objective_id' is not null or undefined
+            if (objective_id === null || objective_id === undefined) {
+                throw new RequiredError('objective_id','Required parameter objective_id was null or undefined when calling createObjectiveTeamSuggestion.');
             }
-            const localVarPath = `/events/{event_id}/suggestions/objectives`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
+            const localVarPath = `/events/{event_id}/suggestions/{objective_id}`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+                .replace(`{${"objective_id"}}`, encodeURIComponent(String(objective_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
             const localVarHeaderParameter = {} as any;
@@ -5751,14 +5356,10 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
                 localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
             }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             localVarUrlObj.search = null;
             localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"SuggestionCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -5811,48 +5412,6 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * Deletes a suggestion for a category for your team for an event
-         * @param {number} event_id Event Id
-         * @param {number} category_id Category Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCategoryTeamSuggestion(event_id: number, category_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling deleteCategoryTeamSuggestion.');
-            }
-            // verify required parameter 'category_id' is not null or undefined
-            if (category_id === null || category_id === undefined) {
-                throw new RequiredError('category_id','Required parameter category_id was null or undefined when calling deleteCategoryTeamSuggestion.');
-            }
-            const localVarPath = `/events/{event_id}/suggestions/categories/{category_id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"category_id"}}`, encodeURIComponent(String(category_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Deletes a suggestion for an objective for your team for an event
          * @param {number} event_id Event Id
          * @param {number} objective_id Objective Id
@@ -5868,7 +5427,7 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
             if (objective_id === null || objective_id === undefined) {
                 throw new RequiredError('objective_id','Required parameter objective_id was null or undefined when calling deleteObjectiveTeamSuggestion.');
             }
-            const localVarPath = `/events/{event_id}/suggestions/objectives/{objective_id}`
+            const localVarPath = `/events/{event_id}/suggestions/{objective_id}`
                 .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
                 .replace(`{${"objective_id"}}`, encodeURIComponent(String(objective_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
@@ -6063,33 +5622,14 @@ export const TeamApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         * Creates a suggestion for a category for your team for an event
-         * @param {number} event_id Event Id
-         * @param {SuggestionCreate} body Suggestion to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCategoryTeamSuggestion(event_id: number, body: SuggestionCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).createCategoryTeamSuggestion(event_id, body, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
          * Creates a suggestion for an objective for your team for an event
          * @param {number} event_id Event Id
-         * @param {SuggestionCreate} body Suggestion to create
+         * @param {number} objective_id Objective Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createObjectiveTeamSuggestion(event_id: number, body: SuggestionCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).createObjectiveTeamSuggestion(event_id, body, options);
+        createObjectiveTeamSuggestion(event_id: number, objective_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).createObjectiveTeamSuggestion(event_id, objective_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -6113,25 +5653,6 @@ export const TeamApiFp = function(configuration?: Configuration) {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
                         return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Deletes a suggestion for a category for your team for an event
-         * @param {number} event_id Event Id
-         * @param {number} category_id Category Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCategoryTeamSuggestion(event_id: number, category_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).deleteCategoryTeamSuggestion(event_id, category_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
                     } else {
                         throw response;
                     }
@@ -6201,7 +5722,7 @@ export const TeamApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTeamSuggestions(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Suggestions> {
+        getTeamSuggestions(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<number>> {
             const localVarFetchArgs = TeamApiFetchParamCreator(configuration).getTeamSuggestions(event_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
@@ -6251,24 +5772,14 @@ export const TeamApiFactory = function (configuration?: Configuration, fetch?: F
             return TeamApiFp(configuration).addUsersToTeams(event_id, body, options)(fetch, basePath);
         },
         /**
-         * Creates a suggestion for a category for your team for an event
-         * @param {number} event_id Event Id
-         * @param {SuggestionCreate} body Suggestion to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCategoryTeamSuggestion(event_id: number, body: SuggestionCreate, options?: any) {
-            return TeamApiFp(configuration).createCategoryTeamSuggestion(event_id, body, options)(fetch, basePath);
-        },
-        /**
          * Creates a suggestion for an objective for your team for an event
          * @param {number} event_id Event Id
-         * @param {SuggestionCreate} body Suggestion to create
+         * @param {number} objective_id Objective Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createObjectiveTeamSuggestion(event_id: number, body: SuggestionCreate, options?: any) {
-            return TeamApiFp(configuration).createObjectiveTeamSuggestion(event_id, body, options)(fetch, basePath);
+        createObjectiveTeamSuggestion(event_id: number, objective_id: number, options?: any) {
+            return TeamApiFp(configuration).createObjectiveTeamSuggestion(event_id, objective_id, options)(fetch, basePath);
         },
         /**
          * Creates a team for an event
@@ -6279,16 +5790,6 @@ export const TeamApiFactory = function (configuration?: Configuration, fetch?: F
          */
         createTeam(event_id: number, body: TeamCreate, options?: any) {
             return TeamApiFp(configuration).createTeam(event_id, body, options)(fetch, basePath);
-        },
-        /**
-         * Deletes a suggestion for a category for your team for an event
-         * @param {number} event_id Event Id
-         * @param {number} category_id Category Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCategoryTeamSuggestion(event_id: number, category_id: number, options?: any) {
-            return TeamApiFp(configuration).deleteCategoryTeamSuggestion(event_id, category_id, options)(fetch, basePath);
         },
         /**
          * Deletes a suggestion for an objective for your team for an event
@@ -6361,27 +5862,15 @@ export class TeamApi extends BaseAPI {
     }
 
     /**
-     * Creates a suggestion for a category for your team for an event
-     * @param {number} event_id Event Id
-     * @param {SuggestionCreate} body Suggestion to create
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TeamApi
-     */
-    public createCategoryTeamSuggestion(event_id: number, body: SuggestionCreate, options?: any) {
-        return TeamApiFp(this.configuration).createCategoryTeamSuggestion(event_id, body, options)(this.fetch, this.basePath);
-    }
-
-    /**
      * Creates a suggestion for an objective for your team for an event
      * @param {number} event_id Event Id
-     * @param {SuggestionCreate} body Suggestion to create
+     * @param {number} objective_id Objective Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TeamApi
      */
-    public createObjectiveTeamSuggestion(event_id: number, body: SuggestionCreate, options?: any) {
-        return TeamApiFp(this.configuration).createObjectiveTeamSuggestion(event_id, body, options)(this.fetch, this.basePath);
+    public createObjectiveTeamSuggestion(event_id: number, objective_id: number, options?: any) {
+        return TeamApiFp(this.configuration).createObjectiveTeamSuggestion(event_id, objective_id, options)(this.fetch, this.basePath);
     }
 
     /**
@@ -6394,18 +5883,6 @@ export class TeamApi extends BaseAPI {
      */
     public createTeam(event_id: number, body: TeamCreate, options?: any) {
         return TeamApiFp(this.configuration).createTeam(event_id, body, options)(this.fetch, this.basePath);
-    }
-
-    /**
-     * Deletes a suggestion for a category for your team for an event
-     * @param {number} event_id Event Id
-     * @param {number} category_id Category Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TeamApi
-     */
-    public deleteCategoryTeamSuggestion(event_id: number, category_id: number, options?: any) {
-        return TeamApiFp(this.configuration).deleteCategoryTeamSuggestion(event_id, category_id, options)(this.fetch, this.basePath);
     }
 
     /**

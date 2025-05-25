@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { Daily } from "@mytypes/scoring-objective";
-import { getSubCategory } from "@mytypes/scoring-category";
 import TeamScoreDisplay from "@components/team-score";
 import { DailyCard } from "@components/daily-card";
 import { createFileRoute } from "@tanstack/react-router";
@@ -22,13 +21,13 @@ function sortByReleaseDate(dailyA: Daily, dailyB: Daily) {
 }
 export function DailyTab() {
   const { scores, currentEvent } = useContext(GlobalStateContext);
-  const category = getSubCategory(scores, "Dailies");
+  const dailyCategory = scores?.children.find((cat) => cat.name === "Dailies");
 
-  if (!category || !currentEvent) {
+  if (!dailyCategory || !currentEvent) {
     return <></>;
   }
   const dailies: Record<string, Daily> = {};
-  for (const objective of category.objectives) {
+  for (const objective of dailyCategory.children) {
     if (!dailies[objective.name]) {
       dailies[objective.name] = {
         baseObjective: objective,
@@ -49,7 +48,7 @@ export function DailyTab() {
 
   return (
     <>
-      <TeamScoreDisplay category={category}></TeamScoreDisplay>
+      <TeamScoreDisplay objective={dailyCategory}></TeamScoreDisplay>
       <div className="divider divider-primary">Dailies</div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {Object.values(dailies)

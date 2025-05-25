@@ -206,8 +206,8 @@ export function LadderTab() {
     return <></>;
   }
   const categoryNames = getRootCategoryNames(currentEvent.game_version);
-  const categories = scores.sub_categories.filter((category) =>
-    categoryNames.includes(category.name)
+  const categories = scores.children.filter((child) =>
+    categoryNames.includes(child.name)
   );
   categories.push(scores);
   const points = categories.reduce(
@@ -287,9 +287,9 @@ export function LadderTab() {
       sorter: (a: any, b: any) => a[categoryName] - b[categoryName],
     }));
   }
-  const objs = scores?.sub_categories.find(
+  const objs = scores?.children.find(
     (category) => category.name === "Personal Objectives"
-  )?.objectives;
+  )?.children;
   const totalObjective = objs?.find(
     (obj) => obj.scoring_preset?.point_cap || 0 > 0
   );
@@ -327,41 +327,47 @@ export function LadderTab() {
         <div className="card bg-base-300">
           <div className="card-body">
             <div className="flex flex-col gap-4">
-              {currentEvent.teams.map((team) => {
-                const values = [];
-                const extra = [];
-                let total = 0;
-                for (const obj of checkPoints) {
-                  const teamScore = obj.team_score[team.id];
-                  if (!teamScore || !teamScore.points) {
-                    continue;
+              {currentEvent.teams
+                .sort((a, b) => {
+                  const aScore = totalObjective.team_score[a.id]?.number || 0;
+                  const bScore = totalObjective.team_score[b.id]?.number || 0;
+                  return bScore - aScore;
+                })
+                .map((team) => {
+                  const values = [];
+                  const extra = [];
+                  let total = 0;
+                  for (const obj of checkPoints) {
+                    const teamScore = obj.team_score[team.id];
+                    if (!teamScore || !teamScore.points) {
+                      continue;
+                    }
+                    const number = teamScore.number;
+                    total += teamScore.points;
+                    values.push(number);
+                    extra.push(teamScore.points);
                   }
-                  const number = teamScore.number;
-                  total += teamScore.points;
-                  values.push(number);
-                  extra.push(teamScore.points);
-                }
-                const cap = totalObjective?.scoring_preset?.point_cap || 0;
-                const current = Math.min(
-                  totalObjective?.team_score[team.id]?.number || 0,
-                  cap
-                );
-                total += current;
-                return (
-                  <div className="flex flex-row gap-2" key={team.id}>
-                    <div className="flex flex-row justify-between w-40 text-lg">
-                      <TeamName className="font-semibold" team={team} />
-                      <div>{total}</div>
+                  const cap = totalObjective?.scoring_preset?.point_cap || 0;
+                  const current = Math.min(
+                    totalObjective?.team_score[team.id]?.number || 0,
+                    cap
+                  );
+                  total += current;
+                  return (
+                    <div className="flex flex-row gap-2" key={team.id}>
+                      <div className="flex flex-row justify-between w-40 text-lg">
+                        <TeamName className="font-semibold" team={team} />
+                        <div>{total}</div>
+                      </div>
+                      <POProgressBar
+                        checkpoints={values}
+                        extra={extra}
+                        max={cap}
+                        current={current}
+                      />
                     </div>
-                    <POProgressBar
-                      checkpoints={values}
-                      extra={extra}
-                      max={cap}
-                      current={current}
-                    />
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
           </div>
         </div>

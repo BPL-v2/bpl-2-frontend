@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
-import { getSubCategory } from "@mytypes/scoring-category";
 import TeamScoreDisplay from "@components/team-score";
 import { CollectionCardTable } from "@components/collection-card-table";
 import { ObjectiveIcon } from "@components/objective-icon";
@@ -14,17 +13,17 @@ export const Route = createFileRoute("/scores/collections")({
 
 export function CollectionTab() {
   const { scores, currentEvent } = useContext(GlobalStateContext);
-  const category = getSubCategory(scores, "Collections");
+  const category = scores?.children.find((cat) => cat.name === "Collections");
 
   if (!category || !currentEvent) {
     return <></>;
   }
   return (
     <>
-      <TeamScoreDisplay category={category}></TeamScoreDisplay>
+      <TeamScoreDisplay objective={category}></TeamScoreDisplay>
       <div className="divider divider-primary">Collection Goals</div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-        {category.objectives.map((objective) => {
+        {category.children.map((objective) => {
           return (
             <div className="card bg-base-300" key={objective.id}>
               <div className="card-title rounded-t-box flex items-center m-0 px-4 bg-base-200 h-25  ">
