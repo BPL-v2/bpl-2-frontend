@@ -219,3 +219,16 @@ export function getVariantMap(objective: ScoreObjective): {
   }
   return map;
 }
+
+export function iterateObjectives(
+  objective: ScoreObjective | Objective | undefined,
+  callback: (obj: ScoreObjective | Objective) => void
+): void {
+  if (!objective) {
+    return;
+  }
+  callback(objective);
+  for (const child of objective.children) {
+    iterateObjectives(child, callback);
+  }
+}

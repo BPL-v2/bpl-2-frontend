@@ -647,7 +647,7 @@ export function ScoringCategoryPage(): JSX.Element {
           resourceName="Objective"
           columns={objectiveColumns}
           fetchFunction={() =>
-            objectiveApi.getObjectivesForEvent(eventId).then((data) => {
+            objectiveApi.getObjectiveTreeForEvent(eventId).then((data) => {
               const obj = getSubObjective(data, categoryId);
               return obj?.children || [];
             })

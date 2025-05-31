@@ -746,7 +746,7 @@ export interface LadderEntry {
      * @type {number}
      * @memberof LadderEntry
      */
-    user_id: number;
+    user_id?: number;
 }
 
 /**
@@ -1447,10 +1447,10 @@ export interface Submission {
     number: number;
     /**
      * 
-     * @type {Objective}
+     * @type {number}
      * @memberof Submission
      */
-    objective?: Objective;
+    objective_id?: number;
     /**
      * 
      * @type {string}
@@ -1483,10 +1483,10 @@ export interface Submission {
     timestamp: string;
     /**
      * 
-     * @type {NonSensitiveUser}
+     * @type {number}
      * @memberof Submission
      */
-    user?: NonSensitiveUser;
+    user_id?: number;
 }
 
 /**
@@ -3650,10 +3650,10 @@ export const ObjectiveApiFetchParamCreator = function (configuration?: Configura
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getObjectivesForEvent(event_id: number, options: any = {}): FetchArgs {
+        getObjectiveTreeForEvent(event_id: number, options: any = {}): FetchArgs {
             // verify required parameter 'event_id' is not null or undefined
             if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getObjectivesForEvent.');
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getObjectiveTreeForEvent.');
             }
             const localVarPath = `/events/{event_id}/objectives`
                 .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
@@ -3744,8 +3744,8 @@ export const ObjectiveApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getObjectivesForEvent(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Objective> {
-            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).getObjectivesForEvent(event_id, options);
+        getObjectiveTreeForEvent(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Objective> {
+            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).getObjectiveTreeForEvent(event_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -3801,8 +3801,8 @@ export const ObjectiveApiFactory = function (configuration?: Configuration, fetc
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getObjectivesForEvent(event_id: number, options?: any) {
-            return ObjectiveApiFp(configuration).getObjectivesForEvent(event_id, options)(fetch, basePath);
+        getObjectiveTreeForEvent(event_id: number, options?: any) {
+            return ObjectiveApiFp(configuration).getObjectiveTreeForEvent(event_id, options)(fetch, basePath);
         },
     };
 };
@@ -3857,8 +3857,8 @@ export class ObjectiveApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ObjectiveApi
      */
-    public getObjectivesForEvent(event_id: number, options?: any) {
-        return ObjectiveApiFp(this.configuration).getObjectivesForEvent(event_id, options)(this.fetch, this.basePath);
+    public getObjectiveTreeForEvent(event_id: number, options?: any) {
+        return ObjectiveApiFp(this.configuration).getObjectiveTreeForEvent(event_id, options)(this.fetch, this.basePath);
     }
 
 }

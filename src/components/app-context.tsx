@@ -66,7 +66,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
       (newUpdates) =>
         setUpdates((prevUpdates) => [...newUpdates, ...prevUpdates])
     );
-    objectiveApi.getObjectivesForEvent(currentEvent.id).then(setRules);
+    objectiveApi.getObjectiveTreeForEvent(currentEvent.id).then(setRules);
     // scoringApi.getRulesForEvent(currentEvent.id).then(setRules);
     scoringApi
       .getScoringPresetsForEvent(currentEvent.id)
