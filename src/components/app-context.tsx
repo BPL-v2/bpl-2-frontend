@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ContextProvider, defaultPreferences } from "@utils/context-provider";
+import { ContextProvider } from "@utils/context-provider";
 import { establishScoreSocket } from "../websocket/score-socket";
 import { mergeScores, ScoreMap } from "@utils/utils";
 import {
@@ -22,6 +22,7 @@ import {
 } from "@client/client";
 import { isLoggedIn } from "@utils/token";
 import { ScoreObjective } from "@mytypes/score";
+import { initPreferences } from "@mytypes/preferences";
 
 function ContextWrapper({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User>();
@@ -41,11 +42,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
   const [gameVersion, setGameVersion] = useState<GameVersion>(GameVersion.poe1);
   const [_, setUpdates] = useState<ScoreDiff[]>([]);
   const [ladder, setLadder] = useState<LadderEntry[]>([]);
-  const [preferences, setPreferences] = useState(
-    JSON.parse(
-      localStorage.getItem("preferences") || JSON.stringify(defaultPreferences)
-    )
-  );
+  const [preferences, setPreferences] = useState(initPreferences());
   const [websocket, setWebsocket] = useState<WebSocket>();
 
   useEffect(() => {

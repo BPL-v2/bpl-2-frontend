@@ -9,6 +9,7 @@ import {
   Objective,
 } from "@client/api";
 import { MinimalTeamUser } from "@mytypes/user";
+import { initPreferences, Preferences } from "@mytypes/preferences";
 export type GlobalState = {
   user: User | undefined;
   setUser: (c: User | undefined) => void;
@@ -34,22 +35,6 @@ export type GlobalState = {
   setPreferences: (c: Preferences) => void;
 };
 
-type Preferences = {
-  theme: string;
-  uniqueSets: {
-    showCompleted: boolean;
-    showFirstAvailable: boolean;
-  };
-};
-
-export const defaultPreferences: Preferences = {
-  theme: "dark",
-  uniqueSets: {
-    showCompleted: true,
-    showFirstAvailable: true,
-  },
-};
-
 export const GlobalStateContext = createContext<GlobalState>({
   user: undefined,
   setUser: () => {},
@@ -71,7 +56,7 @@ export const GlobalStateContext = createContext<GlobalState>({
   setGameVersion: () => {},
   ladder: [],
   setLadder: () => {},
-  preferences: defaultPreferences,
+  preferences: initPreferences(),
   setPreferences: () => {},
 });
 
