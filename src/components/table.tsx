@@ -35,7 +35,7 @@ function Table<T>({
   rowClassName?: (row: Row<T>) => string;
   className?: string;
 }) {
-  const tableContainerRef = React.useRef<HTMLDivElement>(null);
+  const tableRef = React.useRef<HTMLDivElement>(null);
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const options: TableOptions<T> = {
@@ -69,12 +69,12 @@ function Table<T>({
 
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
-    estimateSize: () => 33,
-    getScrollElement: () => tableContainerRef.current,
+    estimateSize: () => 80,
+    getScrollElement: () => tableRef.current,
     overscan: 5,
   });
   return (
-    <div ref={tableContainerRef} className={"overflow-auto " + className}>
+    <div ref={tableRef} className={"overflow-auto " + className}>
       <table className="table table-md">
         <thead className="bg-base-300 sticky top-0 z-2 font-bold text-lg">
           {table.getHeaderGroups().map((headerGroup) => (

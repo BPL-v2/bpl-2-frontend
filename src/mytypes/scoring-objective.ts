@@ -5,6 +5,7 @@ import {
   ObjectiveType,
   AggregationType,
   ItemField,
+  Condition,
 } from "@client/api";
 import { ScoreObjective } from "./score";
 
@@ -444,10 +445,18 @@ export function getItemName(
   }
   return null;
 }
+function getFirstConditionValue(condition: Condition): string {
+  if (condition.operator === Operator.EQ) {
+    return condition.value;
+  } else if (condition.operator === Operator.IN) {
+    return condition.value.split(",")[0];
+  }
+  return "";
+}
 
 export function getImageLocation(
   objective: ScoreObjective | Objective,
-  gameVersion: GameVersion
+  gameVersion: GameVersion = GameVersion.poe1
 ): string | null {
   if (
     !objective ||
@@ -463,25 +472,14 @@ export function getImageLocation(
       base_type: undefined,
       item_class: undefined,
     };
+
   for (const condition of objective.conditions) {
     if (condition.field === ItemField.NAME) {
-      if (condition.operator === Operator.EQ) {
-        attributes.name = condition.value;
-      } else if (condition.operator === Operator.IN) {
-        attributes.name = condition.value.split(",")[0];
-      }
+      attributes.name = getFirstConditionValue(condition);
     } else if (condition.field === ItemField.BASE_TYPE) {
-      if (condition.operator === Operator.EQ) {
-        attributes.base_type = condition.value;
-      } else if (condition.operator === Operator.IN) {
-        attributes.base_type = condition.value.split(",")[0];
-      }
+      attributes.base_type = getFirstConditionValue(condition);
     } else if (condition.field === ItemField.ITEM_CLASS) {
-      if (condition.operator === Operator.EQ) {
-        attributes.item_class = condition.value;
-      } else if (condition.operator === Operator.IN) {
-        attributes.item_class = condition.value.split(",")[0];
-      }
+      attributes.item_class = getFirstConditionValue(condition);
     }
 
     if (attributes.name) {
