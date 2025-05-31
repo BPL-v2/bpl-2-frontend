@@ -72,13 +72,25 @@ export function Ranking({
         .sort(sort)
         .map(([teamIdstr, score]) => {
           const teamId = parseInt(teamIdstr);
+          const team = currentEvent?.teams?.find((t) => t.id === teamId);
           return (
             <div
-              className={"card " + getCardColor(score)}
+              className={"card text-black/70  " + getCardColor(score)}
               key={"score-" + teamId}
             >
               <div className="card-body">
-                <div className="flex flex-row items-center justify-between">
+                <div className="flex flex-row items-center justify-between ">
+                  <div className="stat-figure text-secondary row-span-2 hidden 2xl:block">
+                    <div className="avatar online">
+                      <div className="w-20">
+                        <img
+                          src={`/assets/teams/${
+                            currentEvent?.id
+                          }/${team?.name.toLowerCase()}/logo-w-name.png`}
+                        ></img>
+                      </div>
+                    </div>
+                  </div>
                   <div className="flex flex-col px-4">
                     <div className="card-title flex items-center text-2xl ">
                       {
@@ -86,7 +98,7 @@ export function Ranking({
                           ?.name
                       }
                     </div>
-                    <div className="text-left text-lg">
+                    <div className="text-left text-lg bg-blend-normal font-extrabold">
                       {description} {actual(teamId)} / {maximum}
                     </div>
                   </div>

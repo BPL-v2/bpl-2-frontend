@@ -180,7 +180,6 @@ html {
 }
 
 .bg-silver-metallic {
-  color: #000000;
   background: linear-gradient(
     60deg,
     #e7e7e7 5%,
@@ -194,7 +193,6 @@ html {
 }
 
 .bg-gold-metallic {
-  color: #000000;
   background: linear-gradient(
     60deg,
     #edaf10 5%,
@@ -208,7 +206,6 @@ html {
 }
 
 .bg-bronze-metallic {
-  color: #000000;
   background: linear-gradient(
     60deg,
     #e79038 5%,
