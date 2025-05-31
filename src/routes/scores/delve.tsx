@@ -31,14 +31,22 @@ export function DelveTab() {
       acc[team.id] = team;
       return acc;
     }, {}) || {};
-  const userToTeam =
-    users?.reduce(
-      (acc, user) => {
-        acc[user.id] = teamMap[user.team_id];
-        return acc;
-      },
-      {} as { [userId: number]: Team }
-    ) || {};
+  const getTeam = useMemo(() => {
+    const userToTeam =
+      users?.reduce(
+        (acc, user) => {
+          acc[user.id] = teamMap[user.team_id];
+          return acc;
+        },
+        {} as { [userId: number]: Team }
+      ) || {};
+    return (userId: number | undefined): Team | undefined => {
+      if (userId === undefined) {
+        return undefined;
+      }
+      return userToTeam[userId];
+    };
+  }, [users]);
   const delveLadderColumns = useMemo(() => {
     if (!currentEvent) {
       return [];
@@ -75,10 +83,10 @@ export function DelveTab() {
           },
         },
         {
-          accessorFn: (row) => userToTeam[row.user_id] || "Cartographers",
+          accessorFn: (row) => getTeam(row.user_id),
           header: " ",
           cell: (info) => (
-            <TeamName team={userToTeam[info.row.original.user_id]} />
+            <TeamName team={getTeam(info.row.original.user_id)} />
           ),
           enableSorting: false,
           size: 250,
@@ -146,7 +154,7 @@ export function DelveTab() {
           cell: (info) => (
             <LadderPortrait
               entry={info.row.original}
-              teamName={userToTeam[info.row.original.user_id]?.name}
+              teamName={getTeam(info.row.original.user_id)?.name}
             />
           ),
         },

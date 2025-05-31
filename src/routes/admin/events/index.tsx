@@ -202,7 +202,7 @@ function EventPage() {
           {
             name: "Scoring Categories",
             func: async (data) =>
-              objectiveApi.getObjectivesForEvent(data.id).then((rules) => {
+              objectiveApi.getObjectiveTreeForEvent(data.id).then((rules) => {
                 navigate({
                   to: "/admin/events/$eventId/categories/$categoryId",
                   params: { eventId: data.id, categoryId: rules.id },

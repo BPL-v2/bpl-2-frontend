@@ -6,19 +6,14 @@ import { GlobalStateContext } from "@utils/context-provider";
 
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import {
-  NonSensitiveUser,
-  ObjectiveType,
-  Permission,
-  Submission,
-} from "@client/api";
+import { Objective, ObjectiveType, Permission, Submission } from "@client/api";
 import { submissionApi } from "@client/client";
 import {
   CheckCircleIcon,
   EyeSlashIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
-import { flatMap } from "@utils/utils";
+import { flatMap, iterateObjectives } from "@utils/utils";
 dayjs.extend(customParseFormat);
 
 function renderStringWithUrl(string: string) {
@@ -40,9 +35,17 @@ export const Route = createFileRoute("/admin/submissions")({
 });
 
 function SubmissionPage() {
-  const { user, currentEvent, rules } = useContext(GlobalStateContext);
+  const { user, currentEvent, rules, users } = useContext(GlobalStateContext);
   const [reloadTable, setReloadTable] = React.useState(false);
-
+  if (!currentEvent || !rules) {
+    return <div>No event selected</div>;
+  }
+  const objectiveMap: Record<number, Objective> = {};
+  iterateObjectives(rules, (objective) => {
+    if (objective.objective_type === ObjectiveType.SUBMISSION) {
+      objectiveMap[objective.id] = objective;
+    }
+  });
   if (!currentEvent || !rules) {
     return <div>No event selected</div>;
   }
@@ -139,16 +142,21 @@ function SubmissionPage() {
         columns={[
           {
             title: "Objective",
-            dataIndex: "objective",
-            key: "objective",
-            render: (objective) => objective.name,
+            dataIndex: "objective_id",
+            key: "objective_id",
+            render: (objective_id: number) => {
+              console.log(objective_id);
+              return objectiveMap[objective_id]?.name ?? "Unknown";
+            },
           },
           {
             title: "Submitter",
-            dataIndex: "user",
-            key: "user",
-            render: (user: NonSensitiveUser) =>
-              user.display_name ? user.display_name : user.discord_name,
+            dataIndex: "user_id",
+            key: "user_id",
+            render: (user_id: number) => {
+              const user = users.find((u) => u.id === user_id);
+              return user ? user.display_name : "Unknown User";
+            },
           },
           {
             title: "Value*",

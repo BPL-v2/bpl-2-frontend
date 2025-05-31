@@ -96,7 +96,9 @@ export function DailyCard({ daily }: DailyCardProps) {
       {!finished && (
         <div className="py-4 mb-0 rounded-b-box">
           {bonusAvailableCounter(daily.valid_to, () => {
-            objectiveApi.getObjectivesForEvent(currentEvent.id).then(setRules);
+            objectiveApi
+              .getObjectiveTreeForEvent(currentEvent.id)
+              .then(setRules);
           })}
         </div>
       )}

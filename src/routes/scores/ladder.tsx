@@ -41,14 +41,23 @@ export function LadderTab() {
       acc[team.id] = team;
       return acc;
     }, {}) || {};
-  const userToTeam =
-    users?.reduce(
-      (acc, user) => {
-        acc[user.id] = teamMap[user.team_id];
-        return acc;
-      },
-      {} as { [userId: number]: Team }
-    ) || {};
+
+  const getTeam = useMemo(() => {
+    const userToTeam =
+      users?.reduce(
+        (acc, user) => {
+          acc[user.id] = teamMap[user.team_id];
+          return acc;
+        },
+        {} as { [userId: number]: Team }
+      ) || {};
+    return (userId: number | undefined): Team | undefined => {
+      if (userId === undefined) {
+        return undefined;
+      }
+      return userToTeam[userId];
+    };
+  }, [users]);
 
   const ladderColumns = useMemo(() => {
     if (!currentEvent) {
@@ -113,10 +122,10 @@ export function LadderTab() {
           },
         },
         {
-          accessorFn: (row) => userToTeam[row.user_id]?.name,
+          accessorFn: (row) => getTeam(row.user_id)?.name,
           header: " ",
           cell: (info) => (
-            <TeamName team={userToTeam[info.row.original.user_id]} />
+            <TeamName team={getTeam(info.row.original.user_id)} />
           ),
           enableSorting: false,
           size: 250,
@@ -193,7 +202,7 @@ export function LadderTab() {
           cell: (info) => (
             <LadderPortrait
               entry={info.row.original}
-              teamName={userToTeam[info.row.original.user_id]?.name}
+              teamName={getTeam(info.row.original.user_id)?.name}
             />
           ),
         },
