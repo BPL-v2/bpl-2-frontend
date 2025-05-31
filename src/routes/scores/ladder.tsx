@@ -17,6 +17,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ruleWrapper } from "./route";
 import { POPointRules } from "@rules/po-points";
 import POProgressBar from "@components/po-progress";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
 type RowDef = {
   default: number;
   team: Team;
@@ -34,14 +35,22 @@ export const Route = createFileRoute("/scores/ladder")({
 });
 
 export function LadderTab() {
-  const { scores, currentEvent, isMobile, users, ladder, gameVersion } =
-    useContext(GlobalStateContext);
+  const {
+    scores,
+    currentEvent,
+    isMobile,
+    users,
+    ladder,
+    gameVersion,
+    preferences,
+    setPreferences,
+  } = useContext(GlobalStateContext);
+
   const teamMap =
     currentEvent?.teams?.reduce((acc: { [teamId: number]: Team }, team) => {
       acc[team.id] = team;
       return acc;
     }, {}) || {};
-
   const getTeam = useMemo(() => {
     const userToTeam =
       users?.reduce(
@@ -57,7 +66,7 @@ export function LadderTab() {
       }
       return userToTeam[userId];
     };
-  }, [users]);
+  }, [users, teamMap]);
 
   const ladderColumns = useMemo(() => {
     if (!currentEvent) {
@@ -175,13 +184,78 @@ export function LadderTab() {
           sortingFn: sortingFns.basic,
           size: 150,
         },
-        {
-          accessorFn: (row) => calcPersonalPoints(row),
-          header: "PO Points",
-          sortingFn: sortingFns.basic,
-          size: 100,
-        },
       ];
+      if (preferences.ladder?.showPoPoints) {
+        columns.push({
+          header: "P.O. Finished",
+          accessorFn: (row) => calcPersonalPoints(row) == 9,
+          cell: (info) =>
+            info.getValue() ? (
+              <CheckCircleIcon className="h-6 w-6 text-success" />
+            ) : (
+              <XCircleIcon className="h-6 w-6 text-error" />
+            ),
+          enableSorting: false,
+          meta: {
+            filterVariant: "boolean",
+          },
+          size: 170,
+        });
+        columns.push({
+          header: "Pantheon",
+          accessorFn: (row) => row.extra?.pantheon,
+          cell: (info) =>
+            info.row.original.extra?.pantheon ? (
+              <CheckCircleIcon className="h-6 w-6 text-success" />
+            ) : (
+              <XCircleIcon className="h-6 w-6 text-error" />
+            ),
+          enableSorting: false,
+          meta: {
+            filterVariant: "boolean",
+          },
+        });
+        columns.push({
+          accessorFn: (row) => (row.extra?.ascendancy_points || 0) > 6,
+          cell: (info) =>
+            (info.row.original.extra?.ascendancy_points || 0) > 6 ? (
+              <CheckCircleIcon className="h-6 w-6 text-success" />
+            ) : (
+              <XCircleIcon className="h-6 w-6 text-error" />
+            ),
+          enableSorting: false,
+          header: "Uber Lab",
+          meta: {
+            filterVariant: "boolean",
+          },
+        });
+        columns.push({
+          accessorFn: (row) => row.extra?.atlas_node_count || 0,
+          header: "Atlas Points",
+          sortingFn: sortingFns.basic,
+        });
+      }
+      columns.push({
+        // @ts-ignore
+        header: (
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              setPreferences({
+                ...preferences,
+                ladder: {
+                  ...preferences.ladder,
+                  showPoPoints: !preferences.ladder.showPoPoints,
+                },
+              });
+            }}
+          >
+            {preferences.ladder.showPoPoints ? "Hide" : "Show"} P.O.
+          </button>
+        ),
+        width: 50,
+        id: "showPoPoints",
+      });
     } else {
       columns = [
         {
@@ -209,7 +283,7 @@ export function LadderTab() {
       ];
     }
     return columns;
-  }, [isMobile, currentEvent]);
+  }, [isMobile, currentEvent, preferences]);
 
   if (!scores || !currentEvent || !currentEvent.teams) {
     return <></>;
