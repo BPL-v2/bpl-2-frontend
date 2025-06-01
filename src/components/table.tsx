@@ -16,13 +16,7 @@ import {
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { TableSortIcon } from "@icons/table-sort";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
-
-type Option =
-  | {
-      label: string;
-      value: string;
-    }
-  | string;
+import Select from "./select";
 
 function Table<T>({
   data,
@@ -197,36 +191,13 @@ function Filter({ column }: { column: Column<any, unknown> }) {
   }
   if (filterVariant === "enum") {
     return (
-      <select
-        className="select text-lg select-none"
-        onChange={(e) => {
-          column.setFilterValue(e.target.value);
-          e.stopPropagation();
-        }}
+      <Select
+        onChange={column.setFilterValue}
         value={(columnFilterValue ?? "") as string}
-      >
-        <option value="" disabled>
-          {filterPlaceholder}
-        </option>
-        <option value="">All</option>
-        {options?.map((option: Option) => {
-          let label = "";
-          let value = "";
-          if (typeof option === "string") {
-            label = option;
-            value = option;
-          } else {
-            label = option.label;
-            value = option.value;
-          }
-
-          return (
-            <option key={label} value={value}>
-              {label}
-            </option>
-          );
-        })}
-      </select>
+        options={options}
+        fontSize="text-lg"
+        placeholder={filterPlaceholder}
+      ></Select>
     );
   }
 

@@ -8,6 +8,7 @@ import React from "react";
 import dayjs from "dayjs";
 import { Dialog } from "@components/dialog";
 import { renderConditionally } from "@utils/token";
+import Select from "@components/select";
 
 export const Route = createFileRoute("/admin/recurring-jobs")({
   component: renderConditionally(RecurringJobsPage, [Permission.admin]),
@@ -86,55 +87,37 @@ function RecurringJobsPage() {
           }}
           ref={formRef}
         >
-          <fieldset className="fieldset rounded-box bg-base-300">
-            <legend className="fieldset-legend">Event</legend>
-            <select
-              id="event"
+          <fieldset className="fieldset bg-base-300 rounded-box p-4">
+            <label className="label">Event</label>
+            <Select
               name="event"
-              defaultValue=""
-              className="select"
               required
-              onChange={(e) =>
+              onChange={(value) =>
                 setSelectedEvent(
-                  events.find(
-                    (event) => event.id === parseInt(e.target.value)
-                  ) || null
+                  events.find((event) => event.id === parseInt(value)) || null
                 )
               }
-            >
-              <option disabled value="">
-                Pick an event
-              </option>
-              {events.map((event) => (
-                <option key={event.id} value={event.id}>
-                  {event.name}
-                </option>
-              ))}
-            </select>
-
-            <legend className="fieldset-legend">Job Type</legend>
-            <select
-              id="jobType"
+              className="w-full"
+              placeholder="Pick an event"
+              options={events.map((event) => ({
+                label: event.name,
+                value: String(event.id),
+              }))}
+            ></Select>
+            <label className="label">Job Type</label>
+            <Select
               name="jobType"
-              defaultValue=""
-              className="select"
+              placeholder="Pick a job type"
+              className="w-full"
               required
-            >
-              <option disabled value="">
-                Pick a job type
-              </option>
-              {Object.values(JobType).map((jobType) => (
-                <option key={jobType} value={jobType}>
-                  {jobType}
-                </option>
-              ))}
-            </select>
-            <legend className="fieldset-legend">End Date</legend>
+              options={Object.values(JobType)}
+            ></Select>
+            <label className="label">End Date</label>
             <input
               id="endDate"
               name="endDate"
               type="datetime-local"
-              className="input"
+              className="input w-full"
               defaultValue={formatDateForInput(selectedEndDate)}
               required
             />
