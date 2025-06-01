@@ -34,6 +34,7 @@ import {
   operatorToString,
 } from "@mytypes/scoring-objective";
 import { renderConditionally } from "@utils/token";
+import Select from "@components/select";
 
 export const Route = createFileRoute(
   "/admin/events/$eventId/categories/$categoryId"
@@ -251,80 +252,58 @@ export function ScoringCategoryPage(): JSX.Element {
     const objectiveTypeInput = (
       <>
         <label className="label">Objective Type</label>
-        <select
+        <Select
           name="objective_type"
-          className="select"
           required
-          defaultValue={currentObjective.objective_type}
-          onChange={(e) => {
-            setObjectiveType(e.target.value as ObjectiveType);
+          value={currentObjective.objective_type}
+          onChange={(value) => {
+            setObjectiveType(value as ObjectiveType);
           }}
-        >
-          <option value=""></option>
-          {Object.values(ObjectiveType).map((type) => (
-            <option key={type} value={type}>
-              {type}
-            </option>
-          ))}
-        </select>
+          options={Object.values(ObjectiveType)}
+        ></Select>
       </>
     );
     const numberfieldInput = objectiveType ? (
       <>
         <label className="label">Number Field</label>
-        <select
+        <Select
           name="number_field"
-          className="select"
           required
-          defaultValue={currentObjective.number_field}
-        >
-          {numberFieldsForObjectiveType
-            ? numberFieldsForObjectiveType[objectiveType].map((field) => (
-                <option key={field} value={field}>
-                  {field}
-                </option>
-              ))
-            : null}
-        </select>
+          value={currentObjective.number_field}
+          options={
+            numberFieldsForObjectiveType
+              ? numberFieldsForObjectiveType[objectiveType]
+              : []
+          }
+        ></Select>
       </>
     ) : null;
     const aggregationInput = objectiveType ? (
       <>
         <label className="label">Aggregation Method</label>
-        <select
+        <Select
           name="aggregation"
-          className="select"
           required
-          defaultValue={currentObjective.aggregation}
+          value={currentObjective.aggregation}
           key={"aggregation-" + objectiveType}
-        >
-          <option value=""></option>
-          {availableAggregationTypes(objectiveType).map((type) => (
-            <option key={type} value={type}>
-              {type}
-            </option>
-          ))}
-        </select>
+          options={availableAggregationTypes(objectiveType)}
+        ></Select>
       </>
     ) : null;
 
     const scoringMethodInput = (
       <>
         <label className="label">Scoring Method</label>
-        <select
+        <Select
           name="scoring_preset_id"
-          className="select"
-          defaultValue={currentObjective.scoring_preset_id}
-        >
-          <option value=""></option>
-          {scoringPresets
+          value={String(currentObjective.scoring_preset_id)}
+          options={scoringPresets
             .filter((preset) => preset.type == ScoringPresetType.OBJECTIVE)
-            .map((preset) => (
-              <option key={preset.id} value={preset.id}>
-                {preset.name}
-              </option>
-            ))}
-        </select>
+            .map((preset) => ({
+              label: preset.name,
+              value: String(preset.id),
+            }))}
+        ></Select>
       </>
     );
     const validFromInput = (
@@ -713,34 +692,33 @@ export function ScoringCategoryPage(): JSX.Element {
                 required
               />
               <label className="label">Identifier</label>
-              <select name="identifier" className="select w-full">
-                <option value="NAME">NAME</option>
-                <option value="BASE_TYPE">BASE_TYPE</option>
-              </select>
+              <Select
+                className="w-full"
+                name="identifier"
+                required
+                options={["NAME", "BASE_TYPE"]}
+              ></Select>
               <label className="label">Scoring Method</label>
-              <select name="scoring_method" className="select w-full">
-                {scoringPresets
+              <Select
+                className="w-full"
+                name="scoring_method"
+                required
+                options={scoringPresets
                   .filter(
                     (preset) => preset.type == ScoringPresetType.OBJECTIVE
                   )
-                  .map((preset) => {
-                    return (
-                      <option key={preset.id} value={preset.id}>
-                        {preset.name}
-                      </option>
-                    );
-                  })}
-              </select>
+                  .map((preset) => ({
+                    label: preset.name,
+                    value: String(preset.id),
+                  }))}
+              ></Select>
               <label className="label">Aggregation Method</label>
-              <select name="aggregation_method" className="select w-full">
-                {Object.values(AggregationType).map((type) => {
-                  return (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  );
-                })}
-              </select>
+              <Select
+                name="aggregation_method"
+                required
+                className="w-full"
+                options={Object.values(AggregationType)}
+              ></Select>
             </fieldset>
             <div className="flex gap-2 justify-end ">
               <button
@@ -801,37 +779,25 @@ export function ScoringCategoryPage(): JSX.Element {
         >
           <fieldset className="fieldset bg-base-300 p-4 rounded-box mb-4">
             <label className="label">Field</label>
-            <select
-              name="field"
-              className="select w-full"
-              required
-              onChange={(e) => {
-                setConditionField(e.target.value as ItemField);
+            <Select
+              className="w-full"
+              name="condition-field"
+              options={Object.values(ItemField)}
+              onChange={(value) => {
+                setConditionField(value as ItemField);
               }}
-            >
-              <option value=""></option>
-              {Object.values(ItemField).map((field) => {
-                return (
-                  <option key={field} value={field}>
-                    {field}
-                  </option>
-                );
-              })}
-            </select>
+            ></Select>
             {conditionField !== undefined ? (
               <>
                 <label className="label">Operator</label>
-                <select name="operator" className="select w-full" required>
-                  {operatorForField
-                    ? operatorForField[conditionField].map((operator) => {
-                        return (
-                          <option key={operator} value={operator}>
-                            {operator}
-                          </option>
-                        );
-                      })
-                    : null}
-                </select>
+                <Select
+                  name="operator"
+                  className="w-full"
+                  required
+                  options={
+                    operatorForField ? operatorForField[conditionField] : []
+                  }
+                ></Select>
               </>
             ) : null}
             <label className="label">Value</label>

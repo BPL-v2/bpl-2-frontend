@@ -5,11 +5,7 @@ import dayjs from "dayjs";
 import { DateTimePicker } from "./datetime-picker";
 import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import { Dialog } from "./dialog";
-
-type Option = {
-  label: string;
-  value: any;
-};
+import Select, { SelectOption } from "./select";
 
 export interface CrudColumn<T> {
   dataIndex?: keyof T;
@@ -29,7 +25,7 @@ export interface CrudColumn<T> {
     | "number[]"
     | "color";
   defaultValue?: string;
-  options?: any[] | Option[];
+  options?: string[] | SelectOption[];
   render?: (value: any, record: T, index: number) => React.ReactNode;
   inputRenderer?: (record: any, dataSetter: (data: any) => void) => JSX.Element;
 }
@@ -195,25 +191,14 @@ const CrudTable = <T,>({
               } else if (column.type === "select") {
                 const defaultVal = currentData[key] as string;
                 input = (
-                  <select
+                  <Select
                     name={String(key)}
-                    className="select w-full"
-                    defaultValue={defaultVal}
+                    value={defaultVal}
                     key={"input-" + defaultVal}
-                  >
-                    {column.required ? null : <option value={""}>None</option>}
-                    {column.options?.map((option) => {
-                      let label =
-                        typeof option === "string" ? option : option.label;
-                      let value =
-                        typeof option === "string" ? option : option.value;
-                      return (
-                        <option key={value} id={value} value={value}>
-                          {label}
-                        </option>
-                      );
-                    })}
-                  </select>
+                    className="w-full"
+                    options={column.options!}
+                    required={column.required}
+                  ></Select>
                 );
               } else if (column.type === "text[]") {
                 input = (

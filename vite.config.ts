@@ -50,6 +50,13 @@ export default defineConfig({
           if (id.includes("heroicons")) {
             return "@heroicons";
           }
+          if (
+            id.includes("headlessui") ||
+            id.includes("react-aria") ||
+            id.includes("floating-ui")
+          ) {
+            return "@headlessui";
+          }
           if (id.includes("node_modules")) {
             return "@vendor";
           }

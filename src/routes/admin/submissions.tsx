@@ -14,6 +14,7 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 import { flatMap, iterateObjectives } from "@utils/utils";
+import Select from "@components/select";
 dayjs.extend(customParseFormat);
 
 function renderStringWithUrl(string: string) {
@@ -97,44 +98,37 @@ function SubmissionPage() {
             });
         }}
       >
-        <fieldset className="fieldset mb-4 ">
+        <fieldset className="fieldset mb-4 m-4 w-md bg-base-300 rounded-box p-4">
           <label className="label">Objective</label>
-          <select
-            className="select select-bordered w-full max-w-xs"
-            defaultValue=""
+          <Select
+            className="w-full"
+            placeholder="Select an objective"
             name="objective"
             required
-          >
-            <option disabled value=""></option>
-            {submissionObjectives.map((objective) => (
-              <option key={objective.id} value={objective.id}>
-                {objective.name}
-              </option>
-            ))}{" "}
-          </select>
-
+            options={submissionObjectives.map((objective) => ({
+              label: objective.name,
+              value: String(objective.id),
+            }))}
+          ></Select>
           {currentEvent.teams.map((team, idx) => (
             <>
               <label className="label">{idx + 1}. Place</label>
-              <select
+              <Select
                 required
                 name={"place-" + idx}
-                className="select select-bordered w-full max-w-xs"
-                defaultValue=""
-              >
-                <option disabled value=""></option>
-                {currentEvent.teams.map((team) => (
-                  <option key={team.id} value={team.id}>
-                    {team.name}
-                  </option>
-                ))}
-              </select>
+                className="w-full"
+                placeholder="Select a team"
+                options={currentEvent.teams.map((team) => ({
+                  label: team.name,
+                  value: String(team.id),
+                }))}
+              ></Select>
             </>
           ))}
+          <button className="btn btn-primary mt-2" type="submit">
+            Submit
+          </button>
         </fieldset>
-        <button className="btn btn-primary mt-4" type="submit">
-          Submit
-        </button>
       </form>
 
       <CrudTable<Submission>

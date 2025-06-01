@@ -7,6 +7,7 @@ import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 import { ColumnDef, sortingFns } from "@tanstack/react-table";
 import Table from "@components/table";
 import { renderConditionally } from "@utils/token";
+import Select from "@components/select";
 
 export const Route = createFileRoute("/admin/user-management")({
   component: renderConditionally(UserPage, [Permission.admin]),
@@ -124,20 +125,12 @@ function UserPage() {
             onChange={(e) => setNameFilter(e.target.value.toLowerCase())}
           />
         </label>
-        <label className="select">
-          <span className="label">Filter by role</span>
-          <select
-            value={roleFilter}
-            onChange={(e) => setRoleFilter(e.target.value as Permission)}
-          >
-            <option value="">All</option>
-            {Object.values(Permission).map((role) => (
-              <option key={role} value={role}>
-                {role}
-              </option>
-            ))}
-          </select>
-        </label>
+        <Select
+          placeholder="Filter by role"
+          value={roleFilter}
+          onChange={(value) => setRoleFilter(value as Permission)}
+          options={Object.values(Permission)}
+        ></Select>
       </div>
       <Table<User>
         data={users.filter(
