@@ -1450,7 +1450,7 @@ export interface Submission {
      * @type {number}
      * @memberof Submission
      */
-    objective_id?: number;
+    objective_id: number;
     /**
      * 
      * @type {string}
@@ -1486,7 +1486,7 @@ export interface Submission {
      * @type {number}
      * @memberof Submission
      */
-    user_id?: number;
+    user_id: number;
 }
 
 /**

@@ -5,7 +5,6 @@ import {
   ComboboxOption,
   ComboboxOptions,
 } from "@headlessui/react";
-import { CheckIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -88,7 +87,7 @@ export default function Select({
           {selected && (
             <ComboboxOption
               value={null}
-              className="group cursor-pointer rounded-lg px-9 py-2 select-none text-error data-focus:bg-error data-focus:text-error-content"
+              className="group cursor-pointer rounded-lg px-3 py-2 select-none text-error data-focus:bg-error data-focus:text-error-content"
             >
               Clear Selection
             </ComboboxOption>
@@ -97,9 +96,8 @@ export default function Select({
             <ComboboxOption
               key={option.value}
               value={option.value}
-              className="group flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 select-none data-selected:bg-primary data-selected:text-primary-content hover:bg-base-300"
+              className="group cursor-pointer rounded-lg px-3 py-2 select-none data-selected:bg-primary data-selected:text-primary-content hover:bg-base-300"
             >
-              <CheckIcon className="invisible size-4 group-data-selected:visible fill-white" />
               {option.label}
             </ComboboxOption>
           ))}
