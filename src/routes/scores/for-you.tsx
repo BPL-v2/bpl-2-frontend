@@ -1,52 +1,52 @@
-import { useContext, useEffect, useMemo, useState } from "react";
-import { characterApi, teamApi } from "@client/client";
-import { Character, ScoringMethod } from "@client/api";
+import { useContext, useMemo } from "react";
+import { ScoringMethod } from "@client/api";
 import { GlobalStateContext } from "@utils/context-provider";
 import { createFileRoute } from "@tanstack/react-router";
 import { ScoreObjective } from "@mytypes/score";
 import { flatMap } from "@utils/utils";
+import {
+  useGetCharacterEventHistory,
+  useGetEventStatus,
+  useGetTeamGoals,
+  useGetUser,
+} from "@client/query";
 
 export const Route = createFileRoute("/scores/for-you")({
   component: ForYouTab,
 });
 
 export function ForYouTab() {
-  const { currentEvent, scores, eventStatus, user } =
-    useContext(GlobalStateContext);
-  const [teamGoals, setTeamGoals] = useState<number[]>([]);
-  const [character, setCharacter] = useState<Character>();
+  const { currentEvent, scores } = useContext(GlobalStateContext);
+  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
+  const { data: user } = useGetUser();
+  const { data: characterStats } = useGetCharacterEventHistory(
+    currentEvent.id,
+    user?.id
+  );
+  const { data: teamGoals } = useGetTeamGoals(currentEvent.id);
 
-  useEffect(() => {
-    if (!currentEvent) {
-      return;
-    }
-    teamApi.getTeamSuggestions(currentEvent.id).then(setTeamGoals);
-  }, [currentEvent]);
-
-  useEffect(() => {
-    if (!currentEvent || !user) {
-      return;
-    }
-    characterApi
-      .getCharacterEventHistoryForUser(currentEvent.id, user.id)
-      .then((characters) => {
-        if (characters.length === 0) {
-          return;
-        }
-        setCharacter(
-          characters.sort(
-            (a, b) =>
-              new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-          )[0]
+  const personalObjectiveRender = useMemo(() => {
+    characterStats?.sort((a, b) => {
+      return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+    });
+    const char = {
+      level: 0,
+      atlas_node_count: 0,
+      ascendancy_points: 0,
+    };
+    if (characterStats && characterStats.length > 0) {
+      characterStats.forEach((stat) => {
+        char.level = Math.max(char.level, stat.level || 0);
+        char.atlas_node_count = Math.max(
+          char.atlas_node_count,
+          stat.atlas_node_count || 0
+        );
+        char.ascendancy_points = Math.max(
+          char.ascendancy_points,
+          stat.ascendancy_points || 0
         );
       });
-  }, [currentEvent, user]);
-  const personalObjectiveRender = useMemo(() => {
-    const char = {
-      level: character?.level || 0,
-      atlas_node_count: character?.atlas_node_count || 0,
-      ascendancy_points: character?.ascendancy_points || 0,
-    };
+    }
     const lastPointsProgress =
       Math.max(char.level / 90, char.atlas_node_count / 40) * 100;
     return (
@@ -175,7 +175,7 @@ export function ForYouTab() {
         </div>
       </div>
     );
-  }, [character]);
+  }, [characterStats]);
   if (!scores || !user) {
     return <div>Loading...</div>;
   }
@@ -276,24 +276,26 @@ export function ForYouTab() {
   return (
     <div className="prose prose-xl text-left max-w-max flex flex-col px-4 2xl:px-0">
       {personalObjectiveRender}
-      <div>
-        <h2>Team lead suggestions</h2>
-        <p>
-          Your team leads have selected objectives that are urgent for you to
-          do.
-        </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-          {relevantCategories
-            .filter((category) => teamGoals.includes(category.id))
-            .map(categoryRender)}
+      {teamGoals && (
+        <div>
+          <h2>Team lead suggestions</h2>
+          <p>
+            Your team leads have selected objectives that are urgent for you to
+            do.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+            {relevantCategories
+              .filter((category) => teamGoals?.includes(category.id))
+              .map(categoryRender)}
+          </div>
         </div>
-      </div>
+      )}
       <div>
-        <h2>Remaining</h2>
+        <h2>{teamGoals ? "Remaining" : "To do"}</h2>
         <p>Other objectives that are time sensitive for you to do.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
           {relevantCategories
-            .filter((category) => !teamGoals.includes(category.id))
+            .filter((category) => !teamGoals?.includes(category.id))
             .map(categoryRender)}
           {relevantObjectives.map(objRender)}
         </div>

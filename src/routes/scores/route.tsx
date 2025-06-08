@@ -17,6 +17,7 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { router } from "../../router";
+import { useGetEventStatus } from "@client/query";
 
 type scoringTabKey =
   | "ladder"
@@ -58,8 +59,8 @@ export const Route = createFileRoute("/scores")({
 });
 
 function ScoringPage() {
-  const { currentEvent, gameVersion, eventStatus } =
-    useContext(GlobalStateContext);
+  const { currentEvent, gameVersion } = useContext(GlobalStateContext);
+  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
   const { rules } = Route.useSearch();
 
   const selected = useRouterState({

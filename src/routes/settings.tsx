@@ -1,18 +1,20 @@
-import { useContext } from "react";
-import { GlobalStateContext } from "@utils/context-provider";
 import { OauthCard } from "@components/oauth-card";
-import { userApi } from "@client/client";
 import { TwitchFilled } from "@icons/twitch";
 import { DiscordFilled } from "@icons/discord";
 import { ThemePicker } from "@components/theme-picker";
 import { createFileRoute } from "@tanstack/react-router";
+import { useChangeUserDisplayName, useGetUser } from "@client/query";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/settings")({
   component: SettingsPage,
 });
 
 export function SettingsPage() {
-  const { user, setUser } = useContext(GlobalStateContext);
+  const queryClient = useQueryClient();
+  const { data: user } = useGetUser();
+  const { mutate: setUser } = useChangeUserDisplayName(queryClient);
+
   if (!user) {
     return <></>;
   }
@@ -31,13 +33,7 @@ export function SettingsPage() {
               className="flex"
               onSubmit={(e) => {
                 e.preventDefault();
-                userApi
-                  .updateUser({
-                    display_name: new FormData(e.target as HTMLFormElement).get(
-                      "display_name"
-                    ) as string,
-                  })
-                  .then(setUser);
+                setUser(e.currentTarget.display_name.value);
               }}
             >
               <div className="join gap-0 ">

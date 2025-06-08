@@ -1,9 +1,19 @@
 import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import Select from "./select";
+import { useGetEvents } from "@client/query";
 
 export function EventPicker() {
-  const { setCurrentEvent, events } = useContext(GlobalStateContext);
+  const { setCurrentEvent } = useContext(GlobalStateContext);
+  const { data: events, isPending, isError } = useGetEvents();
+
+  if (isPending) {
+    return <div>Loading events...</div>;
+  }
+  if (isError || !events) {
+    return <div>Error loading events</div>;
+  }
+
   return (
     <Select
       placeholder="Pick an event"

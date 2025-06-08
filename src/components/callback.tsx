@@ -1,8 +1,8 @@
-import { oauthApi, userApi } from "@client/client";
-import { useContext, useEffect } from "react";
+import { oauthApi } from "@client/client";
+import { useEffect } from "react";
 import { router } from "../router";
-import { GlobalStateContext } from "@utils/context-provider";
 import { getCallbackUrl } from "@utils/oauth";
+import { useQueryClient } from "@tanstack/react-query";
 
 type CallbackProps = {
   state: string;
@@ -15,7 +15,8 @@ export type OauthQueryParams = {
 };
 
 export function Callback({ state, code, provider }: CallbackProps) {
-  const { setUser } = useContext(GlobalStateContext);
+  const queryClient = useQueryClient();
+
   useEffect(() => {
     if (!state || !code || !provider) {
       router.navigate({
@@ -31,8 +32,8 @@ export function Callback({ state, code, provider }: CallbackProps) {
       })
       .then((resp) => {
         localStorage.setItem("auth", resp.auth_token);
-        userApi.getUser().then((data) => {
-          setUser(data);
+        queryClient.invalidateQueries({
+          queryKey: ["user"],
         });
         router.navigate({
           to: resp.last_path,

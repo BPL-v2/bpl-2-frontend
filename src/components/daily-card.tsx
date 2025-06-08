@@ -3,8 +3,8 @@ import { GlobalStateContext } from "@utils/context-provider";
 import { CollectionCardTable } from "./collection-card-table";
 import { Daily } from "@mytypes/scoring-objective";
 import { ObjectiveIcon } from "./objective-icon";
-import { objectiveApi } from "@client/client";
 import { Countdown } from "./countdown";
+import { useQueryClient } from "@tanstack/react-query";
 
 export type DailyCardProps = {
   daily: Daily;
@@ -31,7 +31,9 @@ function bonusAvailableCounter(
 }
 
 export function DailyCard({ daily }: DailyCardProps) {
-  const { currentEvent, setRules } = useContext(GlobalStateContext);
+  const { currentEvent } = useContext(GlobalStateContext);
+  const queryClient = useQueryClient();
+
   if (!currentEvent || !daily.baseObjective) {
     return <></>;
   }
@@ -96,9 +98,9 @@ export function DailyCard({ daily }: DailyCardProps) {
       {!finished && (
         <div className="py-4 mb-0 rounded-b-box">
           {bonusAvailableCounter(daily.valid_to, () => {
-            objectiveApi
-              .getObjectiveTreeForEvent(currentEvent.id)
-              .then(setRules);
+            queryClient.refetchQueries({
+              queryKey: ["rules", currentEvent.id],
+            });
           })}
         </div>
       )}

@@ -1,5 +1,3 @@
-import { useContext } from "react";
-import { GlobalStateContext } from "@utils/context-provider";
 import {
   UserIcon,
   ArrowLeftStartOnRectangleIcon,
@@ -8,10 +6,13 @@ import {
 } from "@heroicons/react/24/outline";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { redirectOauth } from "@utils/oauth";
+import { useGetUser } from "@client/query";
+import { useQueryClient } from "@tanstack/react-query";
 
 const AuthButton = () => {
-  const { user, setUser } = useContext(GlobalStateContext);
+  const queryClient = useQueryClient();
   const state = useRouterState();
+  const { data: user } = useGetUser();
 
   if (
     user &&
@@ -55,7 +56,7 @@ const AuthButton = () => {
               className="hover:bg-error hover:text-error-content"
               onClick={() => {
                 localStorage.removeItem("auth");
-                setUser(undefined);
+                queryClient.setQueryData(["user"], null);
               }}
             >
               <ArrowLeftStartOnRectangleIcon className="h-6 w-6" />
@@ -69,8 +70,8 @@ const AuthButton = () => {
   return (
     <button
       className="btn btn-lg py-8 border-0 hover:text-primary-content hover:bg-primary"
-      // onClick={redirectOauth("poe", state.location.href)}
-      onClick={redirectOauth("discord", state.location.href)}
+      onClick={redirectOauth("poe", state.location.href)}
+      // onClick={redirectOauth("discord", state.location.href)}
     >
       <ArrowRightEndOnRectangleIcon className="h-6 w-6" />
       <div className="hidden sm:block">Login</div>

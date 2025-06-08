@@ -1,8 +1,7 @@
-import { useContext } from "react";
-import { GlobalStateContext } from "@utils/context-provider";
-import { userApi } from "@client/client";
 import { useRouterState } from "@tanstack/react-router";
 import { redirectOauth } from "@utils/oauth";
+import { removeOauthProvider } from "@client/query";
+import { useQueryClient } from "@tanstack/react-query";
 
 type OauthCardProps = {
   required?: boolean;
@@ -21,12 +20,13 @@ export function OauthCard({
   title,
   logo,
 }: OauthCardProps) {
-  const { setUser } = useContext(GlobalStateContext);
   const state = useRouterState();
+  const queryClient = useQueryClient();
+  const { mutate: removeAuth } = removeOauthProvider(queryClient);
   const connectionButton = connected ? (
     <button
       className={`btn btn-error btn-outline`}
-      onClick={() => userApi.removeAuth(provider).then(setUser)}
+      onClick={() => removeAuth(provider)}
     >
       Disconnect
     </button>

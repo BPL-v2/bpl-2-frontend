@@ -1,4 +1,5 @@
 import { Permission } from "@client/api";
+import { useGetEventStatus, useGetUser } from "@client/query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
 import { getPermissions } from "@utils/token";
@@ -19,7 +20,7 @@ function AdminRouteCard({
   link: string;
   permissions: Permission[];
 }) {
-  const { user } = useContext(GlobalStateContext);
+  const { data: user } = useGetUser();
   const hasPermission = permissions.some((permission) =>
     user?.permissions.includes(permission)
   );
@@ -40,8 +41,9 @@ function AdminRouteCard({
 }
 
 function RouteComponent() {
-  const { eventStatus } = useContext(GlobalStateContext);
   const permissions = getPermissions();
+  const { currentEvent } = useContext(GlobalStateContext);
+  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
   if (permissions.length === 0 && !eventStatus?.is_team_lead) {
     return "You do not have permission to view this page.";
   }

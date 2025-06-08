@@ -15,6 +15,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { flatMap, iterateObjectives } from "@utils/utils";
 import Select from "@components/select";
+import { useGetRules, useGetUser, useGetUsers } from "@client/query";
 dayjs.extend(customParseFormat);
 
 function renderStringWithUrl(string: string) {
@@ -36,7 +37,10 @@ export const Route = createFileRoute("/admin/submissions")({
 });
 
 function SubmissionPage() {
-  const { user, currentEvent, rules, users } = useContext(GlobalStateContext);
+  const { currentEvent } = useContext(GlobalStateContext);
+  const { data: rules } = useGetRules(currentEvent.id);
+  const { data: user } = useGetUser();
+  const { data: users } = useGetUsers(currentEvent.id);
   const [reloadTable, setReloadTable] = React.useState(false);
   if (!currentEvent || !rules) {
     return <div>No event selected</div>;
@@ -148,7 +152,7 @@ function SubmissionPage() {
             dataIndex: "user_id",
             key: "user_id",
             render: (user_id: number) => {
-              const user = users.find((u) => u.id === user_id);
+              const user = users?.find((u) => u.id === user_id);
               return user ? user.display_name : "Unknown User";
             },
           },

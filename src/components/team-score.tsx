@@ -3,6 +3,7 @@ import { GlobalStateContext } from "@utils/context-provider";
 import { getPotentialPoints, getTotalPoints } from "@utils/utils";
 import { TeamName } from "./team-name";
 import { ScoreObjective } from "@mytypes/score";
+import { useGetEventStatus } from "@client/query";
 
 export type TeamScoreProps = {
   selectedTeam?: number;
@@ -17,7 +18,8 @@ const TeamScoreDisplay = ({
 }: TeamScoreProps) => {
   const teamScores = getTotalPoints(objective);
   const potentialScores = getPotentialPoints(objective);
-  const { currentEvent, eventStatus } = useContext(GlobalStateContext);
+  const { currentEvent } = useContext(GlobalStateContext);
+  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
   if (!currentEvent || !currentEvent.teams) {
     return <></>;
   }

@@ -2,60 +2,44 @@ import { useEffect, useState } from "react";
 import { ContextProvider } from "@utils/context-provider";
 import { establishScoreSocket } from "../websocket/score-socket";
 import { mergeScores, ScoreMap } from "@utils/utils";
-import {
-  EventStatus,
-  ScoringPreset,
-  User,
-  Event,
-  GameVersion,
-  LadderEntry,
-  Objective,
-  ScoreDiff,
-} from "@client/api";
-import { MinimalTeamUser } from "@mytypes/user";
-import {
-  eventApi,
-  ladderApi,
-  objectiveApi,
-  scoringApi,
-  userApi,
-} from "@client/client";
-import { isLoggedIn } from "@utils/token";
+import { ScoringPreset, Event, GameVersion, ScoreDiff } from "@client/api";
 import { ScoreObjective } from "@mytypes/score";
 import { initPreferences } from "@mytypes/preferences";
+import { useGetEvents, useGetRules, useGetScoringPresets } from "@client/query";
 
 function ContextWrapper({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User>();
   // initialize with a dummy event so that we can start making api calls
   const [currentEvent, setCurrentEvent] = useState<Event>({
     id: "current",
+    gameVersion: GameVersion.poe1,
     teams: [],
   } as unknown as Event);
-  const [events, setEvents] = useState<Event[]>([]);
-  const [eventStatus, setEventStatus] = useState<EventStatus>();
-  const [rules, setRules] = useState<Objective>();
   const [scoreData, setScoreData] = useState<ScoreMap>({});
   const [scores, setScores] = useState<ScoreObjective>();
-  const [scoringPresets, setScoringPresets] = useState<ScoringPreset[]>();
-  const [users, setUsers] = useState<MinimalTeamUser[]>([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
   const [gameVersion, setGameVersion] = useState<GameVersion>(GameVersion.poe1);
   const [_, setUpdates] = useState<ScoreDiff[]>([]);
-  const [ladder, setLadder] = useState<LadderEntry[]>([]);
   const [preferences, setPreferences] = useState(initPreferences());
   const [websocket, setWebsocket] = useState<WebSocket>();
+  const { data: events } = useGetEvents();
+  const { data: rules } = useGetRules(currentEvent.id);
+  const { data: scoringPresets } = useGetScoringPresets(currentEvent.id);
+
+  useEffect(() => {
+    if (events) {
+      const currentEvent = events.find((event) => event.is_current);
+      if (!currentEvent) return;
+      setCurrentEvent(currentEvent);
+    }
+  }, [events]);
 
   useEffect(() => {
     // @ts-ignore just a manual flag to avoid refetching on initial load
     if (currentEvent.ignoreRefetch) {
       return;
     }
-    if (isLoggedIn()) {
-      userApi.getUser().then(setUser);
-    }
     websocket?.close(1000, "eventChange");
     setGameVersion(currentEvent.game_version);
-    eventApi.getEventStatus(currentEvent.id).then(setEventStatus);
     establishScoreSocket(
       currentEvent.id,
       setScoreData,
@@ -63,33 +47,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
       (newUpdates) =>
         setUpdates((prevUpdates) => [...newUpdates, ...prevUpdates])
     );
-    objectiveApi.getObjectiveTreeForEvent(currentEvent.id).then(setRules);
-    // scoringApi.getRulesForEvent(currentEvent.id).then(setRules);
-    scoringApi
-      .getScoringPresetsForEvent(currentEvent.id)
-      .then(setScoringPresets);
-    userApi.getUsersForEvent(currentEvent.id).then((users) => {
-      setUsers(
-        Object.entries(users)
-          .map(([teamId, user]) => {
-            return user.map((u) => ({ ...u, team_id: parseInt(teamId) }));
-          })
-          .flat()
-      );
-    });
-    ladderApi.getLadder(currentEvent.id).then(setLadder);
   }, [currentEvent]);
-
-  useEffect(() => {
-    eventApi.getEvents().then((events) => {
-      setEvents(events);
-      const event = events.find((event) => event.is_current);
-      if (!event) return;
-      // @ts-ignore just a manual flag to avoid refetching on initial load
-      setCurrentEvent({ ...event, ignoreRefetch: true });
-      setGameVersion(event.game_version);
-    });
-  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -131,26 +89,14 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
     <>
       <ContextProvider
         value={{
-          user: user,
-          setUser: setUser,
           currentEvent: currentEvent,
           setCurrentEvent: setCurrentEvent,
-          events: events,
-          setEvents: setEvents,
-          rules: rules,
-          setRules: setRules,
-          eventStatus: eventStatus,
-          setEventStatus: setEventStatus,
           scores: scores,
           setScores: setScores,
-          users: users,
-          setUsers: setUsers,
           isMobile: isMobile,
           setIsMobile: setIsMobile,
           gameVersion: gameVersion,
           setGameVersion: setGameVersion,
-          ladder: ladder,
-          setLadder: setLadder,
           preferences: preferences,
           setPreferences: setPreferences,
         }}

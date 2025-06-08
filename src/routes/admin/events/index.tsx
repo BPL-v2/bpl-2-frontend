@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useContext } from "react";
 import CrudTable, { CrudColumn } from "@components/crudtable";
-import { GlobalStateContext } from "@utils/context-provider";
 import { EventCreate, Event, Permission } from "@client/api";
 import { eventApi, objectiveApi } from "@client/client";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
@@ -148,27 +146,29 @@ const columns: CrudColumn<Event>[] = [
 ];
 
 function EventPage() {
-  const { events, setEvents } = useContext(GlobalStateContext);
+  // const { events, setEvents } = useContext(GlobalStateContext);
+  // const { data: events } = useGetEvents();
+
   const navigate = useNavigate();
 
   const createEventWrapper = async (data: EventCreate) => {
     return eventApi.createEvent(data).then((res) => {
-      setEvents([...events, res]);
+      // setEvents([...events, res]);
       return res;
     });
   };
 
   const deleteEventWrapper = async (data: Event) => {
     return eventApi.deleteEvent(data.id).then(() => {
-      setEvents(events.filter((event) => event.id !== data.id));
+      // setEvents(events.filter((event) => event.id !== data.id));
     });
   };
 
   const editEventWrapper = async (data: Event) => {
     return eventApi.createEvent(data).then((newEvent) => {
-      setEvents(
-        events.map((event) => (event.id === newEvent.id ? newEvent : event))
-      );
+      // setEvents(
+      //   events.map((event) => (event.id === newEvent.id ? newEvent : event))
+      // );
       return newEvent;
     });
   };
@@ -185,10 +185,7 @@ function EventPage() {
         addtionalActions={[
           {
             name: "Duplicate Config",
-            func: async (data) =>
-              eventApi
-                .duplicateEvent(data.id, data)
-                .then((res) => setEvents([...events, res])),
+            func: async (data) => eventApi.duplicateEvent(data.id, data).then(),
             reload: true,
           },
           {
