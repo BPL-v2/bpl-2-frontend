@@ -1,25 +1,36 @@
 import React, { useContext, useEffect } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { ApplicationStatus, Team } from "@client/api";
-import { signupApi } from "@client/client";
 import { DiscordFilled } from "@icons/discord";
 import { Dialog } from "./dialog";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { redirectOauth } from "@utils/oauth";
 import { TeamName } from "./team-name";
+import {
+  useCreateSignup,
+  useDeleteSignup,
+  useGetEventStatus,
+  useGetUser,
+} from "@client/query";
+import { useQueryClient } from "@tanstack/react-query";
 
 type ApplicationButtonProps = {};
 const ApplicationButton = ({}: ApplicationButtonProps) => {
-  let { user, eventStatus, currentEvent, setEventStatus } =
-    useContext(GlobalStateContext);
+  let { currentEvent } = useContext(GlobalStateContext);
   const state = useRouterState();
   const [modalOpen, setModalOpen] = React.useState(false);
   const formRef = React.useRef<HTMLFormElement>(null);
   const [userTeam, setUserTeam] = React.useState<Team | undefined>(undefined);
-  const [isServerMember, setIsServerMember] = React.useState(true);
   const [hourValue, setHourValue] = React.useState(1);
   const [needHelp, setNeedHelp] = React.useState(false);
   const [wantToHelp, setWantToHelp] = React.useState(false);
+  const queryClient = useQueryClient();
+  const { data: user } = useGetUser();
+  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
+  const { mutate: deleteSignup } = useDeleteSignup(queryClient);
+  const { mutate: createSignup, isError: signupError } =
+    useCreateSignup(queryClient);
+
   useEffect(() => {
     setUserTeam(
       user &&
@@ -55,14 +66,7 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
           <li>
             <div
               className={`text-error hover:bg-error hover:text-error-content`}
-              onClick={() => {
-                signupApi.deleteSignup(currentEvent.id).then(() => {
-                  setEventStatus({
-                    ...eventStatus,
-                    application_status: ApplicationStatus.none,
-                  });
-                });
-              }}
+              onClick={() => deleteSignup(currentEvent.id)}
             >
               Withdraw Application
             </div>
@@ -90,24 +94,14 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
                 alert("You need to link your Discord account to apply.");
                 return;
               }
-              signupApi
-                .createSignup(currentEvent.id, {
+              createSignup({
+                eventId: currentEvent.id,
+                body: {
                   expected_playtime: hourValue,
                   wants_to_help: wantToHelp,
                   needs_help: needHelp,
-                })
-                .then(() => {
-                  setEventStatus({
-                    ...eventStatus,
-                    application_status: ApplicationStatus.applied,
-                  });
-                  setModalOpen(false);
-                })
-                .catch((e) => {
-                  if (e.status === 403) {
-                    setIsServerMember(false);
-                  }
-                });
+                },
+              });
             }}
           >
             <fieldset className="fieldset bg-base-300 p-4 rounded-box gap-4  w-full">
@@ -189,7 +183,7 @@ const ApplicationButton = ({}: ApplicationButtonProps) => {
               </a>
             </div>
           )}
-          {isServerMember ? null : (
+          {signupError ? null : (
             <div className="mt-4">
               <p>Join our discord server to apply for the event.</p>
               <a href="https://discord.com/invite/3weG9JACgb" target="_blank">

@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { useContext } from "react";
-import { GlobalStateContext } from "@utils/context-provider";
 import { Event, JobType, Permission, RecurringJob } from "@client/api";
 import { jobApi } from "@client/client";
 import React from "react";
@@ -9,6 +7,7 @@ import dayjs from "dayjs";
 import { Dialog } from "@components/dialog";
 import { renderConditionally } from "@utils/token";
 import Select from "@components/select";
+import { useGetEvents } from "@client/query";
 
 export const Route = createFileRoute("/admin/recurring-jobs")({
   component: renderConditionally(RecurringJobsPage, [Permission.admin]),
@@ -26,13 +25,17 @@ const formatDateForInput = (date: Date | null) => {
 };
 
 function RecurringJobsPage() {
-  const { events } = useContext(GlobalStateContext);
   const [jobs, setJobs] = React.useState<RecurringJob[]>([]);
   const [showModal, setShowModal] = React.useState(false);
   const [selectedEvent, setSelectedEvent] = React.useState<Event | null>(null);
   const [selectedEndDate, setSelectedEndDate] = React.useState<Date | null>(
     null
   );
+  const {
+    data: events,
+    isPending: eventsPending,
+    isError: eventsError,
+  } = useGetEvents();
   const formRef = React.useRef<HTMLFormElement>(null);
 
   const stopJob = (job: RecurringJob) => {
@@ -58,7 +61,12 @@ function RecurringJobsPage() {
       );
     }
   }, [selectedEvent]);
-
+  if (eventsPending) {
+    return <div>Loading events...</div>;
+  }
+  if (eventsError) {
+    return <div>Error loading events</div>;
+  }
   return (
     <>
       <Dialog

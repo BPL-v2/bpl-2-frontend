@@ -12,14 +12,16 @@ import {
   flatMapUniques,
   getVariantMap,
 } from "@utils/utils";
+import { useGetEventStatus, useGetUsers } from "@client/query";
 
 export type ItemTableProps = {
   objective: ScoreObjective;
 };
 
 export function ItemTable({ objective }: ItemTableProps) {
-  const { currentEvent, gameVersion, eventStatus, users } =
-    useContext(GlobalStateContext);
+  const { currentEvent, gameVersion } = useContext(GlobalStateContext);
+  const { data: users } = useGetUsers(currentEvent.id);
+  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
   const [showVariants, setShowVariants] = useState<{
     [objectiveName: string]: boolean;
   }>({});

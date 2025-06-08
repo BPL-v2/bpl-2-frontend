@@ -1,9 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import CrudTable, { CrudColumn } from "@components/crudtable";
-
-import { useContext } from "react";
-import { GlobalStateContext } from "@utils/context-provider";
 import {
   Permission,
   ScoringMethod,
@@ -13,6 +10,7 @@ import {
 import { scoringApi } from "@client/client";
 import { useParams } from "@tanstack/react-router";
 import { renderConditionally } from "@utils/token";
+import { useGetEvents } from "@client/query";
 
 export const Route = createFileRoute("/admin/events/$eventId/scoring-presets")({
   component: renderConditionally(ScoringPresetsPage, [
@@ -50,9 +48,9 @@ function pointsRenderer(points: number[]) {
 }
 
 function ScoringPresetsPage() {
-  const { events } = useContext(GlobalStateContext);
   let { eventId } = useParams({ from: Route.id });
-  const event = events.find((event) => event.id === eventId);
+  const { data: events } = useGetEvents();
+  const event = events?.find((event) => event.id === eventId);
 
   if (!eventId || !event) {
     return <div>Event not found</div>;

@@ -16,6 +16,7 @@ import { iterateObjectives } from "@utils/utils";
 import Table from "@components/table";
 import { CellContext, ColumnDef } from "@tanstack/react-table";
 import { TeamName } from "@components/team-name";
+import { useGetRules, useGetUser, useGetUsers } from "@client/query";
 dayjs.extend(customParseFormat);
 
 function renderStringWithUrl(string: string) {
@@ -38,9 +39,12 @@ export const Route = createFileRoute("/submissions")({
 });
 
 function SubmissionPage() {
-  const { user, currentEvent, rules, users } = useContext(GlobalStateContext);
+  const { currentEvent } = useContext(GlobalStateContext);
   const [reloadTable, setReloadTable] = React.useState(false);
   const [submissions, setSubmissions] = React.useState<Submission[]>([]);
+  const { data: users } = useGetUsers(currentEvent.id);
+  const { data: rules } = useGetRules(currentEvent.id);
+  const { data: user } = useGetUser();
   const objectiveMap: Record<number, Objective> = {};
   iterateObjectives(rules, (objective) => {
     if (objective.objective_type === ObjectiveType.SUBMISSION) {
@@ -63,7 +67,7 @@ function SubmissionPage() {
   }, [rules, objectiveMap]);
 
   const columns = React.useMemo(() => {
-    if (!currentEvent || !rules) {
+    if (!currentEvent || !rules || !users) {
       return [];
     }
     const columns: ColumnDef<Submission>[] = [

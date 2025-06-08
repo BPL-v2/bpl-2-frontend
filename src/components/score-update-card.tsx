@@ -3,6 +3,7 @@ import { getMetaInfo } from "@mytypes/score";
 import { GlobalStateContext } from "@utils/context-provider";
 import { ObjectiveIcon } from "./objective-icon";
 import { ScoreDiff } from "@client/api";
+import { useGetUsers } from "@client/query";
 
 type ScoreUpdateCardProps = {
   update: ScoreDiff;
@@ -15,8 +16,8 @@ export const ScoreUpdateCard = ({
   close,
   closeAll,
 }: ScoreUpdateCardProps) => {
-  const { users, scores, currentEvent, gameVersion } =
-    useContext(GlobalStateContext);
+  const { scores, currentEvent, gameVersion } = useContext(GlobalStateContext);
+  const { data: users } = useGetUsers(currentEvent.id);
   const meta = getMetaInfo(update, users, scores, currentEvent?.teams);
   let body: JSX.Element | null = null;
   let title: string | null = null;

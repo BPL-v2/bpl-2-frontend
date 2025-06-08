@@ -9,6 +9,7 @@ import { characterApi, userApi } from "@client/client";
 import { GlobalStateContext } from "@utils/context-provider";
 import { ascendancies, phreciaMapping, poe2Mapping } from "@mytypes/ascendancy";
 import { useParams } from "@tanstack/react-router";
+import { useGetEvents } from "@client/query";
 
 export const Route = createFileRoute("/profile/$userId")({
   component: ProfilePage,
@@ -23,13 +24,14 @@ export const Route = createFileRoute("/profile/$userId")({
 });
 
 export function ProfilePage() {
-  const { preferences, events, currentEvent } = useContext(GlobalStateContext);
+  const { preferences, currentEvent } = useContext(GlobalStateContext);
   const [user, setUser] = useState<User>();
   const [eventId, setEventId] = useState<number>(currentEvent?.id || 0);
   const [eventCharacters, setEventCharacters] = useState<Character[]>([]);
   const [characterTimeseries, setCharacterTimeseries] = useState<Character[]>(
     []
   );
+  const { data: events } = useGetEvents();
   let { userId } = useParams({ from: Route.id });
 
   const fontColor = preferences.theme === "dark" ? "white" : "black";
@@ -158,7 +160,7 @@ export function ProfilePage() {
           <h2 className="card-title text-3xl">Event Characters</h2>
           <div className="flex flex-row flex-wrap justify-center">
             {eventCharacters.map((character) => {
-              const event = events.find((e) => e.id == character.event_id);
+              const event = events?.find((e) => e.id == character.event_id);
               if (!event) {
                 return null;
               }

@@ -17,14 +17,24 @@ import { createFileRoute } from "@tanstack/react-router";
 import { DelveTabRules } from "@rules/delve";
 import { ruleWrapper } from "./route";
 import { ScoreObjective, TeamScore } from "@mytypes/score";
+import { useGetLadder, useGetUsers } from "@client/query";
 
 export const Route = createFileRoute("/scores/delve")({
   component: () => ruleWrapper(<DelveTab />, <DelveTabRules />),
 });
 
 export function DelveTab() {
-  const { scores, currentEvent, users, ladder, isMobile } =
-    useContext(GlobalStateContext);
+  const { scores, currentEvent, isMobile } = useContext(GlobalStateContext);
+  const {
+    data: ladder,
+    isPending: ladderIsPending,
+    isError: ladderIsError,
+  } = useGetLadder(currentEvent.id);
+  const {
+    data: users,
+    isPending: usersIsPending,
+    isError: usersIsError,
+  } = useGetUsers(currentEvent.id);
   const category = scores?.children.find((c) => c.name === "Delve");
   const teamMap =
     currentEvent?.teams?.reduce((acc: { [teamId: number]: Team }, team) => {
@@ -278,6 +288,13 @@ export function DelveTab() {
     score.user_id = culmulativeDepthTotal?.team_score[teamId].user_id || 0;
     culmulativeDepthObj.team_score[teamId] = score;
   }
+  if (ladderIsPending || usersIsPending) {
+    return <div className="loading loading-spinner loading-lg"></div>;
+  }
+  if (ladderIsError || usersIsError) {
+    return <div className="alert alert-error">Failed to load ladder</div>;
+  }
+
   return (
     <>
       <TeamScoreDisplay objective={category} />

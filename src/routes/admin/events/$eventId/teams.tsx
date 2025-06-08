@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { useParams } from "@tanstack/react-router";
-import { GlobalStateContext } from "@utils/context-provider";
 import CrudTable, { CrudColumn } from "@components/crudtable";
 import { teamApi } from "@client/client";
 import { GameVersion, Permission, Team } from "@client/api";
 import { renderConditionally } from "@utils/token";
+import { useGetEvents } from "@client/query";
 
 export const Route = createFileRoute("/admin/events/$eventId/teams")({
   component: renderConditionally(TeamPage, [
@@ -24,9 +24,14 @@ export const Route = createFileRoute("/admin/events/$eventId/teams")({
 });
 
 function TeamPage() {
-  const { events } = useContext(GlobalStateContext);
   let { eventId } = useParams({ from: Route.id });
-
+  const { data: events, isPending, isError } = useGetEvents();
+  if (isPending) {
+    return <div className="loading loading-spinner loading-lg"></div>;
+  }
+  if (isError) {
+    return <div>Error loading events.</div>;
+  }
   const event = events.find((event) => event.id === eventId);
   const columns: CrudColumn<Team>[] = useMemo(
     () => [

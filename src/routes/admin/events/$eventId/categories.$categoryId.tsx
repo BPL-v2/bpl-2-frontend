@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import React, { JSX, useContext, useEffect, useMemo, useState } from "react";
+import React, { JSX, useEffect, useMemo, useState } from "react";
 import CrudTable, { CrudColumn } from "@components/crudtable";
 
-import { GlobalStateContext } from "@utils/context-provider";
 import { ObjectiveIcon } from "@components/objective-icon";
 import {
   Condition,
@@ -35,6 +34,7 @@ import {
 } from "@mytypes/scoring-objective";
 import { renderConditionally } from "@utils/token";
 import Select from "@components/select";
+import { useGetEvents } from "@client/query";
 
 export const Route = createFileRoute(
   "/admin/events/$eventId/categories/$categoryId"
@@ -86,7 +86,7 @@ async function createBulkItemObjectives(
   );
 }
 export function ScoringCategoryPage(): JSX.Element {
-  let { events } = useContext(GlobalStateContext);
+  const { data: events } = useGetEvents();
   let { eventId, categoryId } = useParams({ from: Route.id });
   const [isObjectiveModalOpen, setIsObjectiveModalOpen] = useState(false);
   const [isBulkObjectiveModalOpen, setIsBulkObjectiveModalOpen] =
@@ -103,7 +103,7 @@ export function ScoringCategoryPage(): JSX.Element {
     null
   );
 
-  const event = events.find((event) => event.id === eventId);
+  const event = events?.find((event) => event.id === eventId);
   const [operatorForField, setOperatorForField] = useState<{
     [key in ItemField]: Operator[];
   }>();

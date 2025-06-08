@@ -1,9 +1,9 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { TwitchStreamEmbed } from "@components/twitch-stream";
 import { GlobalStateContext } from "@utils/context-provider";
-import { EventStatus, Team, TwitchStream } from "@client/api";
-import { streamApi } from "@client/client";
+import { EventStatus, Team } from "@client/api";
+import { useGetEventStatus, useGetStreams, useGetUsers } from "@client/query";
 
 export const Route = createFileRoute("/streams")({
   component: TwitchPage,
@@ -26,11 +26,21 @@ function teamSort(
 }
 
 export function TwitchPage() {
-  const [twitchStreams, setTwitchStreams] = useState<TwitchStream[]>([]);
-  const { eventStatus, users, currentEvent } = useContext(GlobalStateContext);
-  useEffect(() => {
-    streamApi.getStreams().then(setTwitchStreams);
-  }, []);
+  const { currentEvent } = useContext(GlobalStateContext);
+  const { data: users } = useGetUsers(currentEvent.id);
+  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
+  const {
+    data: streams,
+    isPending: streamsPending,
+    isError: streamsError,
+  } = useGetStreams(currentEvent.id);
+  if (streamsPending) {
+    return <div className="loading loading-spinner loading-lg"></div>;
+  }
+  if (streamsError) {
+    return <div className="alert alert-error">Failed to load streams</div>;
+  }
+
   return (
     <div className="flex flex-col gap-4 mt-4">
       <Outlet />
@@ -39,9 +49,9 @@ export function TwitchPage() {
         <div key={`team-video-thumbnails-${team.id}`}>
           <div className="divider divider-primary">{team.name}</div>
           <div className="flex flex-wrap gap-4 justify-left">
-            {twitchStreams
+            {streams
               .filter((stream) =>
-                users.some(
+                users?.some(
                   (user) =>
                     user.id === stream.backend_user_id &&
                     user.team_id === team.id

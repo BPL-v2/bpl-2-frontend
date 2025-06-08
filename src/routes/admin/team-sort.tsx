@@ -8,6 +8,7 @@ import Table from "@components/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { renderConditionally } from "@utils/token";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+import { useGetEventStatus } from "@client/query";
 
 export const Route = createFileRoute("/admin/team-sort")({
   component: renderConditionally(UserSortPage, [
@@ -45,12 +46,12 @@ function toExpectedPlayTime(
 }
 
 function UserSortPage() {
-  const { user, currentEvent, setEventStatus, eventStatus } =
-    useContext(GlobalStateContext);
+  const { currentEvent } = useContext(GlobalStateContext);
   const [nameFilter, setNameFilter] = useState<string>("");
   const [signups, setSignups] = useState<Signup[]>([]);
   const [suggestions, setSuggestions] = useState<Signup[]>([]);
   const [nameListFilter, setNameListFilter] = useState<string[]>([]);
+  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
 
   function updateSignups() {
     if (!currentEvent) {
@@ -61,15 +62,6 @@ function UserSortPage() {
       setSuggestions(signups);
       if (!eventStatus) {
         return;
-      }
-      for (const signup of signups) {
-        if (signup.user.id == user?.id) {
-          setEventStatus({
-            ...eventStatus,
-            team_id: signup.team_id,
-          });
-          return;
-        }
       }
     });
   }

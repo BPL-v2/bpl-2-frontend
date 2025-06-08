@@ -7,19 +7,21 @@ import { UniqueCategoryCard } from "@components/unique-category-card";
 import { createFileRoute } from "@tanstack/react-router";
 import { UniqueTabRules } from "@rules/uniques";
 import { ruleWrapper } from "./route";
+import { useGetEventStatus } from "@client/query";
 
 export const Route = createFileRoute("/scores/uniques")({
   component: () => ruleWrapper(<UniqueTab />, <UniqueTabRules />),
 });
 
 function UniqueTab() {
-  const { currentEvent, eventStatus, scores, preferences, setPreferences } =
+  const { currentEvent, scores, preferences, setPreferences } =
     useContext(GlobalStateContext);
   const [uniqueCategory, setUniqueCategory] = useState<ScoreObjective>();
   const [selectedCategory, setSelectedCategory] = useState<ScoreObjective>();
   const [selectedTeam, setSelectedTeam] = useState<number | undefined>();
   const [categoryFilter, setCategoryFilter] = useState<string>("");
   const [shownCategories, setShownCategories] = useState<ScoreObjective[]>([]);
+  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
   const tableRef = useRef<HTMLDivElement>(null);
   const handleCategoryClick = (objective: ScoreObjective) => {
     if (objective.id === selectedCategory?.id) {

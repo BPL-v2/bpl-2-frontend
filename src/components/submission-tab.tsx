@@ -15,13 +15,15 @@ import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { Dialog } from "./dialog";
 import { Link } from "@tanstack/react-router";
 import { CollectionCardTable } from "./collection-card-table";
+import { useGetEventStatus } from "@client/query";
 
 export type SubmissionTabProps = {
   categoryName: string;
 };
 
 function SubmissionTab({ categoryName }: SubmissionTabProps) {
-  const { eventStatus, scores, currentEvent } = useContext(GlobalStateContext);
+  const { scores, currentEvent } = useContext(GlobalStateContext);
+  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
 
   const category = scores?.children.find((cat) => cat.name === categoryName);
   const [showModal, setShowModal] = useState(false);

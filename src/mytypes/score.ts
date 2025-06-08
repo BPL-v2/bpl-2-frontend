@@ -13,7 +13,7 @@ export type ScoreDiffMeta = {
 
 export function getMetaInfo(
   scoreDiff: ScoreDiff,
-  users: MinimalUser[],
+  users?: MinimalUser[],
   scores?: ScoreObjective,
   teams?: Team[]
 ): ScoreDiffMeta {
@@ -42,7 +42,7 @@ export function getMetaInfo(
 
   meta.teamName =
     teams?.find((team) => team.id === scoreDiff.team_id)?.name || "";
-  meta.userName = users.find(
+  meta.userName = users?.find(
     (user) => user.id === scoreDiff.score.user_id
   )?.display_name;
   meta.finished = scoreDiff.score.finished;

@@ -15,6 +15,7 @@ import AuthButton from "@components/auth-button";
 import { TwitchFilled } from "@icons/twitch";
 import { Footer } from "@components/footer";
 import { isAdmin } from "@utils/token";
+import { useGetEventStatus, useGetUser } from "@client/query";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -38,7 +39,9 @@ type MenuItem = {
 };
 
 function RootComponent() {
-  const { currentEvent, user, eventStatus } = useContext(GlobalStateContext);
+  const { currentEvent } = useContext(GlobalStateContext);
+  const { data: user } = useGetUser();
+  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
   const menu: MenuItem[] = useMemo(() => {
     const menu: MenuItem[] = [
       {

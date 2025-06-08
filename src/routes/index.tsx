@@ -5,6 +5,7 @@ import { VideoEmbed } from "@components/video-embed";
 import { Countdown } from "@components/countdown";
 import { DiscordFilled } from "@icons/discord";
 import { HeartIcon } from "@heroicons/react/24/solid";
+import { useGetEventStatus } from "@client/query";
 // import { AscendancyPortrait } from "@components/ascendancy-portrait";
 
 export const Route = createFileRoute("/")({
@@ -12,8 +13,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const { currentEvent, eventStatus } = useContext(GlobalStateContext);
-
+  const { currentEvent } = useContext(GlobalStateContext);
+  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
   const now = Date.now();
   const hasStarted =
     currentEvent && Date.parse(currentEvent.event_start_time) < now;

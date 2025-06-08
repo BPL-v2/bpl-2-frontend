@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { ProgressBar } from "./progress-bar";
 import { Score } from "@client/api";
+import { useGetEventStatus } from "@client/query";
 
 type CollectionCardTableProps = {
   objective: ScoreObjective;
@@ -40,7 +41,8 @@ export function CollectionCardTable({
   objective,
   showPoints = true,
 }: CollectionCardTableProps) {
-  const { eventStatus, currentEvent } = useContext(GlobalStateContext);
+  const { currentEvent } = useContext(GlobalStateContext);
+  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
 
   return (
     <table key={objective.id} className="w-full mt-2">

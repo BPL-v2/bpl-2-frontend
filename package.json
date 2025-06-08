@@ -12,7 +12,8 @@
   "dependencies": {
     "@headlessui/react": "^2.2.4",
     "@heroicons/react": "^2.2.0",
-    "@tanstack/react-router": "^1.120.13",
+    "@tanstack/react-query": "^5.80.6",
+    "@tanstack/react-router": "^1.120.18",
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.13.9",
     "dayjs": "^1.11.13",
@@ -29,13 +30,13 @@
     "@tailwindcss/postcss": "^4.1.8",
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.8",
-    "@tanstack/react-router-devtools": "^1.120.13",
-    "@tanstack/router-plugin": "^1.120.13",
+    "@tanstack/react-router-devtools": "^1.120.18",
+    "@tanstack/router-plugin": "^1.120.18",
     "@types/isomorphic-fetch": "^0.0.39",
-    "@types/node": "^22.15.29",
+    "@types/node": "^22.15.30",
     "@types/react": "^19.1.6",
-    "@types/react-dom": "^19.1.5",
-    "@vitejs/plugin-react": "^4.5.0",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.5.1",
     "autoprefixer": "^10.4.21",
     "daisyui": "^5.0.43",
     "dotenv": "^16.5.0",
@@ -46,7 +47,7 @@
     "npm-check-updates": "^18.0.1",
     "tailwindcss": "^4.1.8",
     "typescript": "~5.8.3",
-    "typescript-eslint": "^8.33.0",
+    "typescript-eslint": "^8.33.1",
     "vite": "^6.3.5"
   }
 }

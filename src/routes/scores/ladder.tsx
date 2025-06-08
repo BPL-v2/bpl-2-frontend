@@ -18,6 +18,7 @@ import { ruleWrapper } from "./route";
 import { POPointRules } from "@rules/po-points";
 import POProgressBar from "@components/po-progress";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
+import { useGetLadder, useGetUsers } from "@client/query";
 type RowDef = {
   default: number;
   team: Team;
@@ -39,18 +40,27 @@ export function LadderTab() {
     scores,
     currentEvent,
     isMobile,
-    users,
-    ladder,
     gameVersion,
     preferences,
     setPreferences,
   } = useContext(GlobalStateContext);
 
+  const {
+    data: ladder,
+    isPending: ladderIsPending,
+    isError: ladderIsError,
+  } = useGetLadder(currentEvent.id);
+  const {
+    data: users,
+    isPending: usersIsPending,
+    isError: usersIsError,
+  } = useGetUsers(currentEvent.id);
   const teamMap =
     currentEvent?.teams?.reduce((acc: { [teamId: number]: Team }, team) => {
       acc[team.id] = team;
       return acc;
     }, {}) || {};
+
   const getTeam = useMemo(() => {
     const userToTeam =
       users?.reduce(
@@ -284,6 +294,19 @@ export function LadderTab() {
     }
     return columns;
   }, [isMobile, currentEvent, preferences]);
+
+  if (ladderIsPending || usersIsPending) {
+    return <div className="loading loading-spinner loading-lg"></div>;
+  }
+  if (ladderIsError || usersIsError) {
+    return (
+      <div className="alert alert-error">
+        <div>
+          <span>Error loading ladder data.</span>
+        </div>
+      </div>
+    );
+  }
 
   if (!scores || !currentEvent || !currentEvent.teams) {
     return <></>;
