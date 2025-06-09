@@ -14,6 +14,14 @@ export const Route = createFileRoute("/auth/poe/callback")({
 });
 
 function RouteComponent() {
-  const { state, code } = Route.useSearch();
-  return <Callback state={state} code={code} provider="poe" />;
+  const { state, code, error, error_description } = Route.useSearch();
+  return (
+    <Callback
+      state={state}
+      code={code}
+      error={error}
+      error_description={error_description}
+      provider="poe"
+    />
+  );
 }
