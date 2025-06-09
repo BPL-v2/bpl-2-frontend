@@ -7,6 +7,8 @@ export const Route = createFileRoute("/auth/poe/callback")({
     return {
       state: search.state as string,
       code: search.code as string,
+      error: search.error as string | undefined,
+      error_description: search.error_description as string | undefined,
     };
   },
 });
