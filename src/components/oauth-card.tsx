@@ -1,6 +1,6 @@
 import { useRouterState } from "@tanstack/react-router";
 import { redirectOauth } from "@utils/oauth";
-import { removeOauthProvider } from "@client/query";
+import { useRemoveOauthProvider } from "@client/query";
 import { useQueryClient } from "@tanstack/react-query";
 
 type OauthCardProps = {
@@ -22,7 +22,7 @@ export function OauthCard({
 }: OauthCardProps) {
   const state = useRouterState();
   const queryClient = useQueryClient();
-  const { mutate: removeAuth } = removeOauthProvider(queryClient);
+  const { mutate: removeAuth } = useRemoveOauthProvider(queryClient);
   const connectionButton = connected ? (
     <button
       className={`btn btn-error btn-outline`}

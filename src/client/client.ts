@@ -3,6 +3,7 @@ import {
   CharactersApiFactory,
   ConditionApiFactory,
   EventApiFactory,
+  GuildStashApiFactory,
   JobsApiFactory,
   LadderApiFactory,
   OauthApiFactory,
@@ -40,3 +41,4 @@ export const streamApi = StreamsApiFactory(config, fetch, baseUrl);
 export const jobApi = JobsApiFactory(config, fetch, baseUrl);
 export const ladderApi = LadderApiFactory(config, fetch, baseUrl);
 export const characterApi = CharactersApiFactory(config, fetch, baseUrl);
+export const guildStashApi = GuildStashApiFactory(config, fetch, baseUrl);

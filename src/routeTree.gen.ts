@@ -35,10 +35,12 @@ import { Route as AdminTeamSuggestionsImport } from './routes/admin/team-suggest
 import { Route as AdminTeamSortImport } from './routes/admin/team-sort'
 import { Route as AdminSubmissionsImport } from './routes/admin/submissions'
 import { Route as AdminRecurringJobsImport } from './routes/admin/recurring-jobs'
+import { Route as AdminGuildStashesIndexImport } from './routes/admin/guild-stashes/index'
 import { Route as AdminEventsIndexImport } from './routes/admin/events/index'
 import { Route as AuthTwitchCallbackImport } from './routes/auth/twitch.callback'
 import { Route as AuthPoeCallbackImport } from './routes/auth/poe.callback'
 import { Route as AuthDiscordCallbackImport } from './routes/auth/discord.callback'
+import { Route as AdminGuildStashesStashIdImport } from './routes/admin/guild-stashes/$stashId'
 import { Route as AdminEventsEventIdTeamsImport } from './routes/admin/events/$eventId/teams'
 import { Route as AdminEventsEventIdScoringPresetsImport } from './routes/admin/events/$eventId/scoring-presets'
 import { Route as AdminEventsEventIdCategoriesCategoryIdImport } from './routes/admin/events/$eventId/categories.$categoryId'
@@ -189,6 +191,12 @@ const AdminRecurringJobsRoute = AdminRecurringJobsImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AdminGuildStashesIndexRoute = AdminGuildStashesIndexImport.update({
+  id: '/admin/guild-stashes/',
+  path: '/admin/guild-stashes/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AdminEventsIndexRoute = AdminEventsIndexImport.update({
   id: '/admin/events/',
   path: '/admin/events/',
@@ -210,6 +218,12 @@ const AuthPoeCallbackRoute = AuthPoeCallbackImport.update({
 const AuthDiscordCallbackRoute = AuthDiscordCallbackImport.update({
   id: '/auth/discord/callback',
   path: '/auth/discord/callback',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AdminGuildStashesStashIdRoute = AdminGuildStashesStashIdImport.update({
+  id: '/admin/guild-stashes/$stashId',
+  path: '/admin/guild-stashes/$stashId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -405,6 +419,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexImport
       parentRoute: typeof rootRoute
     }
+    '/admin/guild-stashes/$stashId': {
+      id: '/admin/guild-stashes/$stashId'
+      path: '/admin/guild-stashes/$stashId'
+      fullPath: '/admin/guild-stashes/$stashId'
+      preLoaderRoute: typeof AdminGuildStashesStashIdImport
+      parentRoute: typeof rootRoute
+    }
     '/auth/discord/callback': {
       id: '/auth/discord/callback'
       path: '/auth/discord/callback'
@@ -431,6 +452,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/events'
       fullPath: '/admin/events'
       preLoaderRoute: typeof AdminEventsIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/guild-stashes/': {
+      id: '/admin/guild-stashes/'
+      path: '/admin/guild-stashes'
+      fullPath: '/admin/guild-stashes'
+      preLoaderRoute: typeof AdminGuildStashesIndexImport
       parentRoute: typeof rootRoute
     }
     '/admin/events/$eventId/scoring-presets': {
@@ -526,10 +554,12 @@ export interface FileRoutesByFullPath {
   '/scores/uniques': typeof ScoresUniquesRoute
   '/streams/$twitchAccount': typeof StreamsTwitchAccountRoute
   '/admin': typeof AdminIndexRoute
+  '/admin/guild-stashes/$stashId': typeof AdminGuildStashesStashIdRoute
   '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/auth/poe/callback': typeof AuthPoeCallbackRoute
   '/auth/twitch/callback': typeof AuthTwitchCallbackRoute
   '/admin/events': typeof AdminEventsIndexRoute
+  '/admin/guild-stashes': typeof AdminGuildStashesIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
   '/admin/events/$eventId/categories/$categoryId': typeof AdminEventsEventIdCategoriesCategoryIdRoute
@@ -560,10 +590,12 @@ export interface FileRoutesByTo {
   '/scores/uniques': typeof ScoresUniquesRoute
   '/streams/$twitchAccount': typeof StreamsTwitchAccountRoute
   '/admin': typeof AdminIndexRoute
+  '/admin/guild-stashes/$stashId': typeof AdminGuildStashesStashIdRoute
   '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/auth/poe/callback': typeof AuthPoeCallbackRoute
   '/auth/twitch/callback': typeof AuthTwitchCallbackRoute
   '/admin/events': typeof AdminEventsIndexRoute
+  '/admin/guild-stashes': typeof AdminGuildStashesIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
   '/admin/events/$eventId/categories/$categoryId': typeof AdminEventsEventIdCategoriesCategoryIdRoute
@@ -595,10 +627,12 @@ export interface FileRoutesById {
   '/scores/uniques': typeof ScoresUniquesRoute
   '/streams/$twitchAccount': typeof StreamsTwitchAccountRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/guild-stashes/$stashId': typeof AdminGuildStashesStashIdRoute
   '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/auth/poe/callback': typeof AuthPoeCallbackRoute
   '/auth/twitch/callback': typeof AuthTwitchCallbackRoute
   '/admin/events/': typeof AdminEventsIndexRoute
+  '/admin/guild-stashes/': typeof AdminGuildStashesIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
   '/admin/events/$eventId/categories/$categoryId': typeof AdminEventsEventIdCategoriesCategoryIdRoute
@@ -631,10 +665,12 @@ export interface FileRouteTypes {
     | '/scores/uniques'
     | '/streams/$twitchAccount'
     | '/admin'
+    | '/admin/guild-stashes/$stashId'
     | '/auth/discord/callback'
     | '/auth/poe/callback'
     | '/auth/twitch/callback'
     | '/admin/events'
+    | '/admin/guild-stashes'
     | '/admin/events/$eventId/scoring-presets'
     | '/admin/events/$eventId/teams'
     | '/admin/events/$eventId/categories/$categoryId'
@@ -664,10 +700,12 @@ export interface FileRouteTypes {
     | '/scores/uniques'
     | '/streams/$twitchAccount'
     | '/admin'
+    | '/admin/guild-stashes/$stashId'
     | '/auth/discord/callback'
     | '/auth/poe/callback'
     | '/auth/twitch/callback'
     | '/admin/events'
+    | '/admin/guild-stashes'
     | '/admin/events/$eventId/scoring-presets'
     | '/admin/events/$eventId/teams'
     | '/admin/events/$eventId/categories/$categoryId'
@@ -697,10 +735,12 @@ export interface FileRouteTypes {
     | '/scores/uniques'
     | '/streams/$twitchAccount'
     | '/admin/'
+    | '/admin/guild-stashes/$stashId'
     | '/auth/discord/callback'
     | '/auth/poe/callback'
     | '/auth/twitch/callback'
     | '/admin/events/'
+    | '/admin/guild-stashes/'
     | '/admin/events/$eventId/scoring-presets'
     | '/admin/events/$eventId/teams'
     | '/admin/events/$eventId/categories/$categoryId'
@@ -721,10 +761,12 @@ export interface RootRouteChildren {
   AdminUserManagementRoute: typeof AdminUserManagementRoute
   ProfileUserIdRoute: typeof ProfileUserIdRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminGuildStashesStashIdRoute: typeof AdminGuildStashesStashIdRoute
   AuthDiscordCallbackRoute: typeof AuthDiscordCallbackRoute
   AuthPoeCallbackRoute: typeof AuthPoeCallbackRoute
   AuthTwitchCallbackRoute: typeof AuthTwitchCallbackRoute
   AdminEventsIndexRoute: typeof AdminEventsIndexRoute
+  AdminGuildStashesIndexRoute: typeof AdminGuildStashesIndexRoute
   AdminEventsEventIdScoringPresetsRoute: typeof AdminEventsEventIdScoringPresetsRoute
   AdminEventsEventIdTeamsRoute: typeof AdminEventsEventIdTeamsRoute
   AdminEventsEventIdCategoriesCategoryIdRoute: typeof AdminEventsEventIdCategoriesCategoryIdRoute
@@ -744,10 +786,12 @@ const rootRouteChildren: RootRouteChildren = {
   AdminUserManagementRoute: AdminUserManagementRoute,
   ProfileUserIdRoute: ProfileUserIdRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminGuildStashesStashIdRoute: AdminGuildStashesStashIdRoute,
   AuthDiscordCallbackRoute: AuthDiscordCallbackRoute,
   AuthPoeCallbackRoute: AuthPoeCallbackRoute,
   AuthTwitchCallbackRoute: AuthTwitchCallbackRoute,
   AdminEventsIndexRoute: AdminEventsIndexRoute,
+  AdminGuildStashesIndexRoute: AdminGuildStashesIndexRoute,
   AdminEventsEventIdScoringPresetsRoute: AdminEventsEventIdScoringPresetsRoute,
   AdminEventsEventIdTeamsRoute: AdminEventsEventIdTeamsRoute,
   AdminEventsEventIdCategoriesCategoryIdRoute:
@@ -777,10 +821,12 @@ export const routeTree = rootRoute
         "/admin/user-management",
         "/profile/$userId",
         "/admin/",
+        "/admin/guild-stashes/$stashId",
         "/auth/discord/callback",
         "/auth/poe/callback",
         "/auth/twitch/callback",
         "/admin/events/",
+        "/admin/guild-stashes/",
         "/admin/events/$eventId/scoring-presets",
         "/admin/events/$eventId/teams",
         "/admin/events/$eventId/categories/$categoryId"
@@ -884,6 +930,9 @@ export const routeTree = rootRoute
     "/admin/": {
       "filePath": "admin/index.tsx"
     },
+    "/admin/guild-stashes/$stashId": {
+      "filePath": "admin/guild-stashes/$stashId.tsx"
+    },
     "/auth/discord/callback": {
       "filePath": "auth/discord.callback.tsx"
     },
@@ -895,6 +944,9 @@ export const routeTree = rootRoute
     },
     "/admin/events/": {
       "filePath": "admin/events/index.tsx"
+    },
+    "/admin/guild-stashes/": {
+      "filePath": "admin/guild-stashes/index.tsx"
     },
     "/admin/events/$eventId/scoring-presets": {
       "filePath": "admin/events/$eventId/scoring-presets.tsx"

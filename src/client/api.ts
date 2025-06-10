@@ -379,6 +379,374 @@ export enum Difftype {
 /**
  * 
  * @export
+ * @interface DisplayItem
+ */
+export interface DisplayItem {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    abyssJewel?: boolean;
+    /**
+     * 
+     * @type {Array<ItemProperty>}
+     * @memberof DisplayItem
+     */
+    additionalProperties?: Array<ItemProperty>;
+    /**
+     * 
+     * @type {string}
+     * @memberof DisplayItem
+     */
+    baseType?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DisplayItem
+     */
+    colour?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    corrupted?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DisplayItem
+     */
+    cosmeticMods?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DisplayItem
+     */
+    craftedMods?: Array<string>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    delve?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    duplicated?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    elder?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DisplayItem
+     */
+    enchantMods?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DisplayItem
+     */
+    explicitMods?: Array<string>;
+    /**
+     * 
+     * @type {ItemExtended}
+     * @memberof DisplayItem
+     */
+    extended?: ItemExtended;
+    /**
+     * 
+     * @type {number}
+     * @memberof DisplayItem
+     */
+    foilVariation?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    foreseeing?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    fractured?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DisplayItem
+     */
+    fracturedMods?: Array<string>;
+    /**
+     * 
+     * @type {number}
+     * @memberof DisplayItem
+     */
+    frameType?: number;
+    /**
+     * 
+     * @type {Array<GemSocket>}
+     * @memberof DisplayItem
+     */
+    gemSockets?: Array<GemSocket>;
+    /**
+     * PoE2 only
+     * @type {Array<ItemProperty>}
+     * @memberof DisplayItem
+     */
+    grantedSkills?: Array<ItemProperty>;
+    /**
+     * 
+     * @type {number}
+     * @memberof DisplayItem
+     */
+    h?: number;
+    /**
+     * 
+     * @type {ItemHybrid}
+     * @memberof DisplayItem
+     */
+    hybrid?: ItemHybrid;
+    /**
+     * 
+     * @type {string}
+     * @memberof DisplayItem
+     */
+    icon?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    identified?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof DisplayItem
+     */
+    ilvl?: number;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DisplayItem
+     */
+    implicitMods?: Array<string>;
+    /**
+     * 
+     * @type {ItemIncubatedItem}
+     * @memberof DisplayItem
+     */
+    incubatedItem?: ItemIncubatedItem;
+    /**
+     * 
+     * @type {{ [key: string]: boolean; }}
+     * @memberof DisplayItem
+     */
+    influences?: { [key: string]: boolean; };
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    isRelic?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof DisplayItem
+     */
+    itemLevel?: number;
+    /**
+     * 
+     * @type {Array<ItemLogbookMod>}
+     * @memberof DisplayItem
+     */
+    logbookMods?: Array<ItemLogbookMod>;
+    /**
+     * 
+     * @type {string}
+     * @memberof DisplayItem
+     */
+    name?: string;
+    /**
+     * 
+     * @type {Array<ItemProperty>}
+     * @memberof DisplayItem
+     */
+    notableProperties?: Array<ItemProperty>;
+    /**
+     * 
+     * @type {Array<ItemProperty>}
+     * @memberof DisplayItem
+     */
+    properties?: Array<ItemProperty>;
+    /**
+     * 
+     * @type {string}
+     * @memberof DisplayItem
+     */
+    rarity?: string;
+    /**
+     * 
+     * @type {Array<ItemReward>}
+     * @memberof DisplayItem
+     */
+    rewards?: Array<ItemReward>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    ruthless?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DisplayItem
+     */
+    scourgeMods?: Array<string>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    searing?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    shaper?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof DisplayItem
+     */
+    socket?: number;
+    /**
+     * 
+     * @type {Array<DisplayItem>}
+     * @memberof DisplayItem
+     */
+    socketedItems?: Array<DisplayItem>;
+    /**
+     * 
+     * @type {Array<ItemSocket>}
+     * @memberof DisplayItem
+     */
+    sockets?: Array<ItemSocket>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    split?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof DisplayItem
+     */
+    stackSize?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    support?: boolean;
+    /**
+     * PoE2 only
+     * @type {Array<ItemProperty>}
+     * @memberof DisplayItem
+     */
+    supportGemRequirements?: Array<ItemProperty>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    synthesised?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof DisplayItem
+     */
+    talismanTier?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    tangled?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof DisplayItem
+     */
+    typeLine?: string;
+    /**
+     * 
+     * @type {Array<ItemUltimatumMod>}
+     * @memberof DisplayItem
+     */
+    ultimatumMods?: Array<ItemUltimatumMod>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    unmodifiable?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DisplayItem
+     */
+    utilityMods?: Array<string>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    veiled?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DisplayItem
+     */
+    veiledMods?: Array<string>;
+    /**
+     * 
+     * @type {number}
+     * @memberof DisplayItem
+     */
+    w?: number;
+    /**
+     * PoE2 only
+     * @type {Array<ItemProperty>}
+     * @memberof DisplayItem
+     */
+    weaponRequirements?: Array<ItemProperty>;
+    /**
+     * 
+     * @type {number}
+     * @memberof DisplayItem
+     */
+    x?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof DisplayItem
+     */
+    y?: number;
+}
+
+/**
+ * 
+ * @export
  * @interface Event
  */
 export interface Event {
@@ -601,6 +969,435 @@ export enum GameVersion {
  * @export
  * @enum {string}
  */
+export enum GemSocket {
+    W = 'W'
+}
+
+/**
+ * 
+ * @export
+ * @interface GuildStashTab
+ */
+export interface GuildStashTab {
+    /**
+     * 
+     * @type {string}
+     * @memberof GuildStashTab
+     */
+    color?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof GuildStashTab
+     */
+    fetch_enabled: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof GuildStashTab
+     */
+    id: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof GuildStashTab
+     */
+    index?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof GuildStashTab
+     */
+    last_fetch: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GuildStashTab
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GuildStashTab
+     */
+    parent_id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GuildStashTab
+     */
+    type: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface Item
+ */
+export interface Item {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    abyssJewel?: boolean;
+    /**
+     * 
+     * @type {Array<ItemProperty>}
+     * @memberof Item
+     */
+    additionalProperties?: Array<ItemProperty>;
+    /**
+     * 
+     * @type {string}
+     * @memberof Item
+     */
+    baseType?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Item
+     */
+    colour?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    corrupted?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof Item
+     */
+    cosmeticMods?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof Item
+     */
+    craftedMods?: Array<string>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    delve?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    duplicated?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    elder?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof Item
+     */
+    enchantMods?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof Item
+     */
+    explicitMods?: Array<string>;
+    /**
+     * 
+     * @type {ItemExtended}
+     * @memberof Item
+     */
+    extended?: ItemExtended;
+    /**
+     * 
+     * @type {number}
+     * @memberof Item
+     */
+    foilVariation?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    foreseeing?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    fractured?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof Item
+     */
+    fracturedMods?: Array<string>;
+    /**
+     * 
+     * @type {number}
+     * @memberof Item
+     */
+    frameType?: number;
+    /**
+     * 
+     * @type {Array<GemSocket>}
+     * @memberof Item
+     */
+    gemSockets?: Array<GemSocket>;
+    /**
+     * PoE2 only
+     * @type {Array<ItemProperty>}
+     * @memberof Item
+     */
+    grantedSkills?: Array<ItemProperty>;
+    /**
+     * 
+     * @type {ItemHybrid}
+     * @memberof Item
+     */
+    hybrid?: ItemHybrid;
+    /**
+     * 
+     * @type {number}
+     * @memberof Item
+     */
+    ilvl?: number;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof Item
+     */
+    implicitMods?: Array<string>;
+    /**
+     * 
+     * @type {ItemIncubatedItem}
+     * @memberof Item
+     */
+    incubatedItem?: ItemIncubatedItem;
+    /**
+     * 
+     * @type {{ [key: string]: boolean; }}
+     * @memberof Item
+     */
+    influences?: { [key: string]: boolean; };
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    isRelic?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof Item
+     */
+    itemLevel?: number;
+    /**
+     * 
+     * @type {Array<ItemLogbookMod>}
+     * @memberof Item
+     */
+    logbookMods?: Array<ItemLogbookMod>;
+    /**
+     * 
+     * @type {string}
+     * @memberof Item
+     */
+    name?: string;
+    /**
+     * 
+     * @type {Array<ItemProperty>}
+     * @memberof Item
+     */
+    notableProperties?: Array<ItemProperty>;
+    /**
+     * 
+     * @type {Array<ItemProperty>}
+     * @memberof Item
+     */
+    properties?: Array<ItemProperty>;
+    /**
+     * 
+     * @type {string}
+     * @memberof Item
+     */
+    rarity?: string;
+    /**
+     * 
+     * @type {Array<ItemReward>}
+     * @memberof Item
+     */
+    rewards?: Array<ItemReward>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    ruthless?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof Item
+     */
+    scourgeMods?: Array<string>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    searing?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    shaper?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof Item
+     */
+    socket?: number;
+    /**
+     * 
+     * @type {Array<Item>}
+     * @memberof Item
+     */
+    socketedItems?: Array<Item>;
+    /**
+     * 
+     * @type {Array<ItemSocket>}
+     * @memberof Item
+     */
+    sockets?: Array<ItemSocket>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    split?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof Item
+     */
+    stackSize?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    support?: boolean;
+    /**
+     * PoE2 only
+     * @type {Array<ItemProperty>}
+     * @memberof Item
+     */
+    supportGemRequirements?: Array<ItemProperty>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    synthesised?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof Item
+     */
+    talismanTier?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    tangled?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof Item
+     */
+    typeLine?: string;
+    /**
+     * 
+     * @type {Array<ItemUltimatumMod>}
+     * @memberof Item
+     */
+    ultimatumMods?: Array<ItemUltimatumMod>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    unmodifiable?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof Item
+     */
+    utilityMods?: Array<string>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    veiled?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof Item
+     */
+    veiledMods?: Array<string>;
+    /**
+     * PoE2 only
+     * @type {Array<ItemProperty>}
+     * @memberof Item
+     */
+    weaponRequirements?: Array<ItemProperty>;
+}
+
+/**
+ * 
+ * @export
+ * @interface ItemExtended
+ */
+export interface ItemExtended {
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemExtended
+     */
+    category?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemExtended
+     */
+    prefixes?: number;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ItemExtended
+     */
+    subcategories?: Array<string>;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemExtended
+     */
+    suffixes?: number;
+}
+
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
 export enum ItemField {
     BASE_TYPE = 'BASE_TYPE',
     NAME = 'NAME',
@@ -630,6 +1427,269 @@ export enum ItemField {
     RITUAL_VESSEL_BOSSES = 'RITUAL_VESSEL_BOSSES',
     RITUAL_VESSEL_MAP = 'RITUAL_VESSEL_MAP',
     FACETOR_LENS_EXP = 'FACETOR_LENS_EXP'
+}
+
+/**
+ * 
+ * @export
+ * @interface ItemHybrid
+ */
+export interface ItemHybrid {
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemHybrid
+     */
+    baseTypeName?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ItemHybrid
+     */
+    explicitMods?: Array<string>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ItemHybrid
+     */
+    isVaalGem?: boolean;
+    /**
+     * 
+     * @type {Array<ItemProperty>}
+     * @memberof ItemHybrid
+     */
+    properties?: Array<ItemProperty>;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemHybrid
+     */
+    secDescrText?: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface ItemIncubatedItem
+ */
+export interface ItemIncubatedItem {
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemIncubatedItem
+     */
+    level?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemIncubatedItem
+     */
+    name?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemIncubatedItem
+     */
+    progress?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemIncubatedItem
+     */
+    total?: number;
+}
+
+/**
+ * 
+ * @export
+ * @interface ItemLogbookMod
+ */
+export interface ItemLogbookMod {
+    /**
+     * 
+     * @type {ItemLogbookModFaction}
+     * @memberof ItemLogbookMod
+     */
+    faction?: ItemLogbookModFaction;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ItemLogbookMod
+     */
+    mods?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemLogbookMod
+     */
+    name?: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface ItemLogbookModFaction
+ */
+export interface ItemLogbookModFaction {
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemLogbookModFaction
+     */
+    id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemLogbookModFaction
+     */
+    name?: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface ItemProperty
+ */
+export interface ItemProperty {
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemProperty
+     */
+    displayMode?: number;
+    /**
+     * PoE2 only
+     * @type {string}
+     * @memberof ItemProperty
+     */
+    icon?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemProperty
+     */
+    name?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemProperty
+     */
+    progress?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemProperty
+     */
+    suffix?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemProperty
+     */
+    type?: number;
+    /**
+     * 
+     * @type {Array<Array<any>>}
+     * @memberof ItemProperty
+     */
+    values?: Array<Array<any>>;
+}
+
+/**
+ * 
+ * @export
+ * @interface ItemReward
+ */
+export interface ItemReward {
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemReward
+     */
+    label?: string;
+    /**
+     * 
+     * @type {{ [key: string]: number; }}
+     * @memberof ItemReward
+     */
+    rewards?: { [key: string]: number; };
+}
+
+/**
+ * 
+ * @export
+ * @interface ItemSocket
+ */
+export interface ItemSocket {
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemSocket
+     */
+    attr?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemSocket
+     */
+    group?: number;
+    /**
+     * 
+     * @type {ItemSocketItem}
+     * @memberof ItemSocket
+     */
+    item?: ItemSocketItem;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemSocket
+     */
+    sColour?: string;
+    /**
+     * 
+     * @type {ItemSocketItem}
+     * @memberof ItemSocket
+     */
+    type?: ItemSocketItem;
+}
+
+/**
+ * PoE2 only
+ * @export
+ * @interface ItemSocketItem
+ */
+export interface ItemSocketItem {
+}
+
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+export enum ItemSocketType {
+    gem = 'gem',
+    jewel = 'jewel',
+    rune = 'rune'
+}
+
+/**
+ * 
+ * @export
+ * @interface ItemUltimatumMod
+ */
+export interface ItemUltimatumMod {
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemUltimatumMod
+     */
+    tier?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemUltimatumMod
+     */
+    type?: string;
 }
 
 /**
@@ -678,7 +1738,8 @@ export interface JobCreate {
 export enum JobType {
     FetchStashChanges = 'FetchStashChanges',
     EvaluateStashChanges = 'EvaluateStashChanges',
-    FetchCharacterData = 'FetchCharacterData'
+    FetchCharacterData = 'FetchCharacterData',
+    FetchGuildStashes = 'FetchGuildStashes'
 }
 
 /**
@@ -2964,6 +4025,356 @@ export class EventApi extends BaseAPI {
      */
     public getEvents(options?: any) {
         return EventApiFp(this.configuration).getEvents(options)(this.fetch, this.basePath);
+    }
+
+}
+
+/**
+ * GuildStashApi - fetch parameter creator
+ * @export
+ */
+export const GuildStashApiFetchParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Fetches all guild stash tabs for a user
+         * @param {number} eventId Event Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getGuildStashForUser(eventId: number, options: any = {}): FetchArgs {
+            // verify required parameter 'eventId' is not null or undefined
+            if (eventId === null || eventId === undefined) {
+                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling getGuildStashForUser.');
+            }
+            const localVarPath = `/{eventId}/guild-stash`
+                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Fetches all items in a specific guild stash tab
+         * @param {number} eventId Event Id
+         * @param {string} stash_id Stash Tab Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getGuildStashTabItems(eventId: number, stash_id: string, options: any = {}): FetchArgs {
+            // verify required parameter 'eventId' is not null or undefined
+            if (eventId === null || eventId === undefined) {
+                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling getGuildStashTabItems.');
+            }
+            // verify required parameter 'stash_id' is not null or undefined
+            if (stash_id === null || stash_id === undefined) {
+                throw new RequiredError('stash_id','Required parameter stash_id was null or undefined when calling getGuildStashTabItems.');
+            }
+            const localVarPath = `/{eventId}/guild-stash/{stash_id}/items`
+                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
+                .replace(`{${"stash_id"}}`, encodeURIComponent(String(stash_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Enables fetching for a specific guild stash tab
+         * @param {number} eventId Event Id
+         * @param {string} stash_id Stash Tab Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        switchStashFetching(eventId: number, stash_id: string, options: any = {}): FetchArgs {
+            // verify required parameter 'eventId' is not null or undefined
+            if (eventId === null || eventId === undefined) {
+                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling switchStashFetching.');
+            }
+            // verify required parameter 'stash_id' is not null or undefined
+            if (stash_id === null || stash_id === undefined) {
+                throw new RequiredError('stash_id','Required parameter stash_id was null or undefined when calling switchStashFetching.');
+            }
+            const localVarPath = `/{eventId}/guild-stash/{stash_id}`
+                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
+                .replace(`{${"stash_id"}}`, encodeURIComponent(String(stash_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'PATCH' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Updates the guild stash tabs for a user
+         * @param {number} eventId Event Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateGuildStash(eventId: number, options: any = {}): FetchArgs {
+            // verify required parameter 'eventId' is not null or undefined
+            if (eventId === null || eventId === undefined) {
+                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling updateGuildStash.');
+            }
+            const localVarPath = `/{eventId}/guild-stash`
+                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * GuildStashApi - functional programming interface
+ * @export
+ */
+export const GuildStashApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * Fetches all guild stash tabs for a user
+         * @param {number} eventId Event Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getGuildStashForUser(eventId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<GuildStashTab>> {
+            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).getGuildStashForUser(eventId, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * Fetches all items in a specific guild stash tab
+         * @param {number} eventId Event Id
+         * @param {string} stash_id Stash Tab Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getGuildStashTabItems(eventId: number, stash_id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<DisplayItem>> {
+            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).getGuildStashTabItems(eventId, stash_id, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * Enables fetching for a specific guild stash tab
+         * @param {number} eventId Event Id
+         * @param {string} stash_id Stash Tab Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        switchStashFetching(eventId: number, stash_id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<GuildStashTab> {
+            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).switchStashFetching(eventId, stash_id, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * Updates the guild stash tabs for a user
+         * @param {number} eventId Event Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateGuildStash(eventId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<GuildStashTab>> {
+            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).updateGuildStash(eventId, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+    }
+};
+
+/**
+ * GuildStashApi - factory interface
+ * @export
+ */
+export const GuildStashApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+    return {
+        /**
+         * Fetches all guild stash tabs for a user
+         * @param {number} eventId Event Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getGuildStashForUser(eventId: number, options?: any) {
+            return GuildStashApiFp(configuration).getGuildStashForUser(eventId, options)(fetch, basePath);
+        },
+        /**
+         * Fetches all items in a specific guild stash tab
+         * @param {number} eventId Event Id
+         * @param {string} stash_id Stash Tab Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getGuildStashTabItems(eventId: number, stash_id: string, options?: any) {
+            return GuildStashApiFp(configuration).getGuildStashTabItems(eventId, stash_id, options)(fetch, basePath);
+        },
+        /**
+         * Enables fetching for a specific guild stash tab
+         * @param {number} eventId Event Id
+         * @param {string} stash_id Stash Tab Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        switchStashFetching(eventId: number, stash_id: string, options?: any) {
+            return GuildStashApiFp(configuration).switchStashFetching(eventId, stash_id, options)(fetch, basePath);
+        },
+        /**
+         * Updates the guild stash tabs for a user
+         * @param {number} eventId Event Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateGuildStash(eventId: number, options?: any) {
+            return GuildStashApiFp(configuration).updateGuildStash(eventId, options)(fetch, basePath);
+        },
+    };
+};
+
+/**
+ * GuildStashApi - object-oriented interface
+ * @export
+ * @class GuildStashApi
+ * @extends {BaseAPI}
+ */
+export class GuildStashApi extends BaseAPI {
+    /**
+     * Fetches all guild stash tabs for a user
+     * @param {number} eventId Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GuildStashApi
+     */
+    public getGuildStashForUser(eventId: number, options?: any) {
+        return GuildStashApiFp(this.configuration).getGuildStashForUser(eventId, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Fetches all items in a specific guild stash tab
+     * @param {number} eventId Event Id
+     * @param {string} stash_id Stash Tab Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GuildStashApi
+     */
+    public getGuildStashTabItems(eventId: number, stash_id: string, options?: any) {
+        return GuildStashApiFp(this.configuration).getGuildStashTabItems(eventId, stash_id, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Enables fetching for a specific guild stash tab
+     * @param {number} eventId Event Id
+     * @param {string} stash_id Stash Tab Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GuildStashApi
+     */
+    public switchStashFetching(eventId: number, stash_id: string, options?: any) {
+        return GuildStashApiFp(this.configuration).switchStashFetching(eventId, stash_id, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Updates the guild stash tabs for a user
+     * @param {number} eventId Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GuildStashApi
+     */
+    public updateGuildStash(eventId: number, options?: any) {
+        return GuildStashApiFp(this.configuration).updateGuildStash(eventId, options)(this.fetch, this.basePath);
     }
 
 }

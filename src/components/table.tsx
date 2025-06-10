@@ -22,11 +22,13 @@ function Table<T>({
   data,
   columns,
   rowClassName,
+  rowStyle,
   className,
 }: {
   data: T[];
   columns: ColumnDef<T>[];
   rowClassName?: (row: Row<T>) => string;
+  rowStyle?: (row: Row<T>) => React.CSSProperties;
   className?: string;
 }) {
   const tableRef = React.useRef<HTMLDivElement>(null);
@@ -135,12 +137,13 @@ function Table<T>({
                   "flex absolute w-full items-center " +
                   (rowClassName ? rowClassName(row) : " hover:bg-base-200/50")
                 }
+                style={{
+                  ...(rowStyle ? rowStyle(row) : {}),
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
                 data-index={virtualRow.index}
                 ref={(node) => rowVirtualizer.measureElement(node)}
                 key={row.id}
-                style={{
-                  transform: `translateY(${virtualRow.start}px)`,
-                }}
               >
                 {row.getVisibleCells().map((cell) => {
                   return (
