@@ -9,7 +9,7 @@ import {
   createFileRoute,
   Link,
   Outlet,
-  useParams,
+  useRouterState,
 } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
 import { useContext, useState } from "react";
@@ -24,7 +24,9 @@ export const Route = createFileRoute("/admin/guild-stashes")({
 
 function RouteComponent() {
   const { currentEvent, gameVersion } = useContext(GlobalStateContext);
-  const { stashId } = useParams({ from: Route.id });
+  const stashId = useRouterState({
+    select: (state) => state.location.pathname.split("/").slice(-1)[0],
+  });
   const queryClient = useQueryClient();
   const { data: guildStashes } = useGetGuildStash(currentEvent.id);
   const { mutate: updateGuildStashes } = useUpdateGuildStash(
