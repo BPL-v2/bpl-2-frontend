@@ -13,7 +13,6 @@ import {
 } from "./client";
 import {
   ApplicationStatus,
-  DisplayItem,
   EventStatus,
   GuildStashTab,
   SignupCreate,
