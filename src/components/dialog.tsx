@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 interface DialogProps {
-  title: string;
+  title: string | React.ReactNode;
   open: boolean;
   setOpen: (isOpen: boolean) => void;
   children: React.ReactNode;

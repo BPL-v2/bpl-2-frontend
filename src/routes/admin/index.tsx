@@ -86,18 +86,31 @@ function RouteComponent() {
         permissions={[Permission.admin]}
       />
       {eventStatus && eventStatus.is_team_lead && (
-        <Link
-          to={"/admin/team-suggestions"}
-          className="card bg-base-300 hover:bg-base-200 border-2 border-base-content"
-        >
-          <div className="card-body">
-            <h2 className="card-title">Team Content Suggestions</h2>
-            <p className="text-left">
-              Team leaders can suggest content for their team to focus on that
-              will show on their member's for-you pages.
-            </p>
-          </div>
-        </Link>
+        <>
+          <Link
+            to={"/admin/team-suggestions"}
+            className="card bg-base-300 hover:bg-base-200 border-2 border-base-content"
+          >
+            <div className="card-body">
+              <h2 className="card-title">Team Content Suggestions</h2>
+              <p className="text-left">
+                Team leaders can suggest content for their team to focus on that
+                will show on their member's for-you pages.
+              </p>
+            </div>
+          </Link>
+          <Link
+            to={"/admin/guild-stashes"}
+            className="card bg-base-300 hover:bg-base-200 border-2 border-base-content"
+          >
+            <div className="card-body">
+              <h2 className="card-title">Guild Stash</h2>
+              <p className="text-left">
+                Team leaders can monitor the fetch status of guild stash tabs.
+              </p>
+            </div>
+          </Link>
+        </>
       )}
     </div>
   );
