@@ -13,6 +13,7 @@ import {
 } from "./client";
 import {
   ApplicationStatus,
+  DisplayItem,
   EventStatus,
   GuildStashTab,
   SignupCreate,
@@ -184,12 +185,44 @@ export function useGetGuildStash(event_id: number) {
 export function useGetGuildStashItems(event_id: number, tabId: string) {
   return useQuery({
     queryKey: [
-      "guildStashes",
+      "guildStashItems",
       tabId,
       current !== event_id ? event_id : "current",
     ],
-    queryFn: async () => guildStashApi.getGuildStashTabItems(event_id, tabId),
+    queryFn: async ({ client }) =>
+      guildStashApi.getGuildStashTabItems(event_id, tabId),
     enabled: () => isLoggedIn(),
+  });
+}
+
+export function useUpdateGuildStashTab(
+  queryClient: QueryClient,
+  event_id: number
+) {
+  return useMutation({
+    mutationFn: (tabId: string) =>
+      guildStashApi.updateStashTab(event_id, tabId),
+    onSuccess: (data, tabId) => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          "guildStashItems",
+          tabId,
+          current !== event_id ? event_id : "current",
+        ],
+      });
+      queryClient.setQueryData(
+        ["guildStashes", current !== event_id ? event_id : "current"],
+        (old: GuildStashTab[] | undefined) => {
+          if (!old) return [];
+          return old.map((tab) => {
+            if (tab.id === tabId) {
+              tab.last_fetch = new Date().toISOString();
+            }
+            return tab;
+          });
+        }
+      );
+    },
   });
 }
 

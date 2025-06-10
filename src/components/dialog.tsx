@@ -1,13 +1,22 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 interface DialogProps {
   title: string | React.ReactNode;
   open: boolean;
   setOpen: (isOpen: boolean) => void;
   children: React.ReactNode;
+  closeOnOutsideClick?: boolean;
 }
 
-export function Dialog({ title, open, setOpen, children }: DialogProps) {
+export function Dialog({
+  title,
+  open,
+  setOpen,
+  children,
+  closeOnOutsideClick = false,
+}: DialogProps) {
+  const boxRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && open) {
@@ -18,10 +27,27 @@ export function Dialog({ title, open, setOpen, children }: DialogProps) {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [open]);
+  }, [open, setOpen]);
+
+  useEffect(() => {
+    if (!closeOnOutsideClick || !open) return;
+    const handleClick = (e: MouseEvent) => {
+      if (boxRef.current && !boxRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    window.addEventListener("mousedown", handleClick);
+    return () => {
+      window.removeEventListener("mousedown", handleClick);
+    };
+  }, [closeOnOutsideClick, open, setOpen]);
+
   return (
     <dialog open={open} className="modal">
-      <div className="modal-box bg-base-200 border-2 border-base-100">
+      <div
+        ref={boxRef}
+        className="modal-box bg-base-200 border-2 border-base-100"
+      >
         <h3 className="font-bold text-lg mb-8">{title}</h3>
         <div className="w-full">{children}</div>
       </div>
