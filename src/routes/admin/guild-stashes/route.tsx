@@ -45,7 +45,8 @@ function RouteComponent() {
   dayjs.extend(relativeTime);
 
   if (!stashId) {
-    const firstStashId = guildStashes?.find((s) => s.fetch_enabled)?.id;
+    // const firstStashId = guildStashes?.find((s) => s.fetch_enabled)?.id;
+    const firstStashId = "0d342fa97f";
     if (firstStashId) {
       router.navigate({
         to: "/admin/guild-stashes/$stashId",
@@ -55,6 +56,7 @@ function RouteComponent() {
     }
     return null;
   }
+
   return (
     <div>
       <button
@@ -72,7 +74,7 @@ function RouteComponent() {
         {hideDisabled ? "Show" : "Hide"} Disabled Tabs
       </button>{" "}
       <div className="flex flex-row gap-2 mt-2 justify-center">
-        <div className="flex flex-col gap-1 overflow-y-auto h-[90vh]">
+        <div className="flex flex-col gap-1 overflow-y-auto h-[75vh] w-[35vw]">
           {guildStashes
             ?.filter((stash) => !hideDisabled || stash.fetch_enabled)
             .filter((stash) => stash.type !== "Folder")
@@ -119,7 +121,9 @@ function RouteComponent() {
               </div>
             ))}
         </div>
-        <Outlet />
+        <div className="w-[65vw]">
+          <Outlet />
+        </div>
       </div>
     </div>
   );

@@ -570,6 +570,12 @@ export interface DisplayItem {
     logbookMods?: Array<ItemLogbookMod>;
     /**
      * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    memoryItem?: boolean;
+    /**
+     * 
      * @type {string}
      * @memberof DisplayItem
      */
@@ -1032,6 +1038,62 @@ export interface GuildStashTab {
 /**
  * 
  * @export
+ * @interface GuildStashTabGGG
+ */
+export interface GuildStashTabGGG {
+    /**
+     * 
+     * @type {Array<GuildStashTabGGG>}
+     * @memberof GuildStashTabGGG
+     */
+    children?: Array<GuildStashTabGGG>;
+    /**
+     * 
+     * @type {string}
+     * @memberof GuildStashTabGGG
+     */
+    id?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof GuildStashTabGGG
+     */
+    index?: number;
+    /**
+     * 
+     * @type {Array<DisplayItem>}
+     * @memberof GuildStashTabGGG
+     */
+    items?: Array<DisplayItem>;
+    /**
+     * 
+     * @type {StashTabMetadata}
+     * @memberof GuildStashTabGGG
+     */
+    metadata?: StashTabMetadata;
+    /**
+     * 
+     * @type {string}
+     * @memberof GuildStashTabGGG
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GuildStashTabGGG
+     */
+    parent?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GuildStashTabGGG
+     */
+    type?: string;
+}
+
+/**
+ * 
+ * @export
  * @interface Item
  */
 export interface Item {
@@ -1203,6 +1265,12 @@ export interface Item {
      * @memberof Item
      */
     logbookMods?: Array<ItemLogbookMod>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    memoryItem?: boolean;
     /**
      * 
      * @type {string}
@@ -2474,6 +2542,100 @@ export interface SignupCreate {
      * @memberof SignupCreate
      */
     wants_to_help?: boolean;
+}
+
+/**
+ * 
+ * @export
+ * @interface StashTab
+ */
+export interface StashTab {
+    /**
+     * 
+     * @type {Array<StashTab>}
+     * @memberof StashTab
+     */
+    children?: Array<StashTab>;
+    /**
+     * 
+     * @type {string}
+     * @memberof StashTab
+     */
+    id?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof StashTab
+     */
+    index?: number;
+    /**
+     * 
+     * @type {Array<Item>}
+     * @memberof StashTab
+     */
+    items?: Array<Item>;
+    /**
+     * 
+     * @type {StashTabMetadata}
+     * @memberof StashTab
+     */
+    metadata?: StashTabMetadata;
+    /**
+     * 
+     * @type {string}
+     * @memberof StashTab
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof StashTab
+     */
+    parent?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof StashTab
+     */
+    type?: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface StashTabMetadata
+ */
+export interface StashTabMetadata {
+    /**
+     * 
+     * @type {string}
+     * @memberof StashTabMetadata
+     */
+    colour?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof StashTabMetadata
+     */
+    folder?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof StashTabMetadata
+     */
+    items?: number;
+    /**
+     * 
+     * @type {any}
+     * @memberof StashTabMetadata
+     */
+    layout?: any;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof StashTabMetadata
+     */
+    _public?: boolean;
 }
 
 /**
@@ -4072,22 +4234,22 @@ export const GuildStashApiFetchParamCreator = function (configuration?: Configur
             };
         },
         /**
-         * Fetches all items in a specific guild stash tab
+         * Fetches a specific guild stash tab
          * @param {number} eventId Event Id
          * @param {string} stash_id Stash Tab Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getGuildStashTabItems(eventId: number, stash_id: string, options: any = {}): FetchArgs {
+        getGuildStashTab(eventId: number, stash_id: string, options: any = {}): FetchArgs {
             // verify required parameter 'eventId' is not null or undefined
             if (eventId === null || eventId === undefined) {
-                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling getGuildStashTabItems.');
+                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling getGuildStashTab.');
             }
             // verify required parameter 'stash_id' is not null or undefined
             if (stash_id === null || stash_id === undefined) {
-                throw new RequiredError('stash_id','Required parameter stash_id was null or undefined when calling getGuildStashTabItems.');
+                throw new RequiredError('stash_id','Required parameter stash_id was null or undefined when calling getGuildStashTab.');
             }
-            const localVarPath = `/{eventId}/guild-stash/{stash_id}/items`
+            const localVarPath = `/{eventId}/guild-stash/{stash_id}`
                 .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
                 .replace(`{${"stash_id"}}`, encodeURIComponent(String(stash_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
@@ -4261,14 +4423,14 @@ export const GuildStashApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         * Fetches all items in a specific guild stash tab
+         * Fetches a specific guild stash tab
          * @param {number} eventId Event Id
          * @param {string} stash_id Stash Tab Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getGuildStashTabItems(eventId: number, stash_id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<DisplayItem>> {
-            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).getGuildStashTabItems(eventId, stash_id, options);
+        getGuildStashTab(eventId: number, stash_id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<GuildStashTabGGG> {
+            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).getGuildStashTab(eventId, stash_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -4323,7 +4485,7 @@ export const GuildStashApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateStashTab(eventId: number, stash_id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<DisplayItem>> {
+        updateStashTab(eventId: number, stash_id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<GuildStashTabGGG> {
             const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).updateStashTab(eventId, stash_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
@@ -4354,14 +4516,14 @@ export const GuildStashApiFactory = function (configuration?: Configuration, fet
             return GuildStashApiFp(configuration).getGuildStashForUser(eventId, options)(fetch, basePath);
         },
         /**
-         * Fetches all items in a specific guild stash tab
+         * Fetches a specific guild stash tab
          * @param {number} eventId Event Id
          * @param {string} stash_id Stash Tab Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getGuildStashTabItems(eventId: number, stash_id: string, options?: any) {
-            return GuildStashApiFp(configuration).getGuildStashTabItems(eventId, stash_id, options)(fetch, basePath);
+        getGuildStashTab(eventId: number, stash_id: string, options?: any) {
+            return GuildStashApiFp(configuration).getGuildStashTab(eventId, stash_id, options)(fetch, basePath);
         },
         /**
          * Enables fetching for a specific guild stash tab
@@ -4414,15 +4576,15 @@ export class GuildStashApi extends BaseAPI {
     }
 
     /**
-     * Fetches all items in a specific guild stash tab
+     * Fetches a specific guild stash tab
      * @param {number} eventId Event Id
      * @param {string} stash_id Stash Tab Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GuildStashApi
      */
-    public getGuildStashTabItems(eventId: number, stash_id: string, options?: any) {
-        return GuildStashApiFp(this.configuration).getGuildStashTabItems(eventId, stash_id, options)(this.fetch, this.basePath);
+    public getGuildStashTab(eventId: number, stash_id: string, options?: any) {
+        return GuildStashApiFp(this.configuration).getGuildStashTab(eventId, stash_id, options)(this.fetch, this.basePath);
     }
 
     /**
