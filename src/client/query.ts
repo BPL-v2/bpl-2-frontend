@@ -181,15 +181,15 @@ export function useGetGuildStash(event_id: number) {
     refetchOnMount: false,
   });
 }
-export function useGetGuildStashItems(event_id: number, tabId: string) {
+export function useGetGuildStashTab(event_id: number, tabId: string) {
   return useQuery({
     queryKey: [
-      "guildStashItems",
+      "guildStashTab",
       tabId,
       current !== event_id ? event_id : "current",
     ],
     queryFn: async ({ client }) =>
-      guildStashApi.getGuildStashTabItems(event_id, tabId),
+      guildStashApi.getGuildStashTab(event_id, tabId),
     enabled: () => isLoggedIn(),
   });
 }

@@ -8,540 +8,209 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as SubmissionsRouteImport } from './routes/submissions'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as RulesRouteImport } from './routes/rules'
+import { Route as StreamsRouteRouteImport } from './routes/streams/route'
+import { Route as ScoresRouteRouteImport } from './routes/scores/route'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as StreamsTwitchAccountRouteImport } from './routes/streams/$twitchAccount'
+import { Route as ScoresUniquesRouteImport } from './routes/scores/uniques'
+import { Route as ScoresRacesRouteImport } from './routes/scores/races'
+import { Route as ScoresLadderRouteImport } from './routes/scores/ladder'
+import { Route as ScoresHeistRouteImport } from './routes/scores/heist'
+import { Route as ScoresGemsRouteImport } from './routes/scores/gems'
+import { Route as ScoresForYouRouteImport } from './routes/scores/for-you'
+import { Route as ScoresDelveRouteImport } from './routes/scores/delve'
+import { Route as ScoresDailiesRouteImport } from './routes/scores/dailies'
+import { Route as ScoresCollectionsRouteImport } from './routes/scores/collections'
+import { Route as ScoresBountiesRouteImport } from './routes/scores/bounties'
+import { Route as ProfileUserIdRouteImport } from './routes/profile.$userId'
+import { Route as AdminUserManagementRouteImport } from './routes/admin/user-management'
+import { Route as AdminTeamSuggestionsRouteImport } from './routes/admin/team-suggestions'
+import { Route as AdminTeamSortRouteImport } from './routes/admin/team-sort'
+import { Route as AdminSubmissionsRouteImport } from './routes/admin/submissions'
+import { Route as AdminRecurringJobsRouteImport } from './routes/admin/recurring-jobs'
+import { Route as AdminGuildStashesRouteRouteImport } from './routes/admin/guild-stashes/route'
+import { Route as AdminEventsIndexRouteImport } from './routes/admin/events/index'
+import { Route as AuthTwitchCallbackRouteImport } from './routes/auth/twitch.callback'
+import { Route as AuthPoeCallbackRouteImport } from './routes/auth/poe.callback'
+import { Route as AuthDiscordCallbackRouteImport } from './routes/auth/discord.callback'
+import { Route as AdminGuildStashesStashIdRouteImport } from './routes/admin/guild-stashes/$stashId'
+import { Route as AdminEventsEventIdTeamsRouteImport } from './routes/admin/events/$eventId/teams'
+import { Route as AdminEventsEventIdScoringPresetsRouteImport } from './routes/admin/events/$eventId/scoring-presets'
+import { Route as AdminEventsEventIdCategoriesCategoryIdRouteImport } from './routes/admin/events/$eventId/categories.$categoryId'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as SubmissionsImport } from './routes/submissions'
-import { Route as SettingsImport } from './routes/settings'
-import { Route as RulesImport } from './routes/rules'
-import { Route as StreamsRouteImport } from './routes/streams/route'
-import { Route as ScoresRouteImport } from './routes/scores/route'
-import { Route as IndexImport } from './routes/index'
-import { Route as AdminIndexImport } from './routes/admin/index'
-import { Route as StreamsTwitchAccountImport } from './routes/streams/$twitchAccount'
-import { Route as ScoresUniquesImport } from './routes/scores/uniques'
-import { Route as ScoresRacesImport } from './routes/scores/races'
-import { Route as ScoresLadderImport } from './routes/scores/ladder'
-import { Route as ScoresHeistImport } from './routes/scores/heist'
-import { Route as ScoresGemsImport } from './routes/scores/gems'
-import { Route as ScoresForYouImport } from './routes/scores/for-you'
-import { Route as ScoresDelveImport } from './routes/scores/delve'
-import { Route as ScoresDailiesImport } from './routes/scores/dailies'
-import { Route as ScoresCollectionsImport } from './routes/scores/collections'
-import { Route as ScoresBountiesImport } from './routes/scores/bounties'
-import { Route as ProfileUserIdImport } from './routes/profile.$userId'
-import { Route as AdminUserManagementImport } from './routes/admin/user-management'
-import { Route as AdminTeamSuggestionsImport } from './routes/admin/team-suggestions'
-import { Route as AdminTeamSortImport } from './routes/admin/team-sort'
-import { Route as AdminSubmissionsImport } from './routes/admin/submissions'
-import { Route as AdminRecurringJobsImport } from './routes/admin/recurring-jobs'
-import { Route as AdminGuildStashesRouteImport } from './routes/admin/guild-stashes/route'
-import { Route as AdminEventsIndexImport } from './routes/admin/events/index'
-import { Route as AuthTwitchCallbackImport } from './routes/auth/twitch.callback'
-import { Route as AuthPoeCallbackImport } from './routes/auth/poe.callback'
-import { Route as AuthDiscordCallbackImport } from './routes/auth/discord.callback'
-import { Route as AdminGuildStashesStashIdImport } from './routes/admin/guild-stashes/$stashId'
-import { Route as AdminEventsEventIdTeamsImport } from './routes/admin/events/$eventId/teams'
-import { Route as AdminEventsEventIdScoringPresetsImport } from './routes/admin/events/$eventId/scoring-presets'
-import { Route as AdminEventsEventIdCategoriesCategoryIdImport } from './routes/admin/events/$eventId/categories.$categoryId'
-
-// Create/Update Routes
-
-const SubmissionsRoute = SubmissionsImport.update({
+const SubmissionsRoute = SubmissionsRouteImport.update({
   id: '/submissions',
   path: '/submissions',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const SettingsRoute = SettingsImport.update({
+const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const RulesRoute = RulesImport.update({
+const RulesRoute = RulesRouteImport.update({
   id: '/rules',
   path: '/rules',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const StreamsRouteRoute = StreamsRouteImport.update({
+const StreamsRouteRoute = StreamsRouteRouteImport.update({
   id: '/streams',
   path: '/streams',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const ScoresRouteRoute = ScoresRouteImport.update({
+const ScoresRouteRoute = ScoresRouteRouteImport.update({
   id: '/scores',
   path: '/scores',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AdminIndexRoute = AdminIndexImport.update({
+const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const StreamsTwitchAccountRoute = StreamsTwitchAccountImport.update({
+const StreamsTwitchAccountRoute = StreamsTwitchAccountRouteImport.update({
   id: '/$twitchAccount',
   path: '/$twitchAccount',
   getParentRoute: () => StreamsRouteRoute,
 } as any)
-
-const ScoresUniquesRoute = ScoresUniquesImport.update({
+const ScoresUniquesRoute = ScoresUniquesRouteImport.update({
   id: '/uniques',
   path: '/uniques',
   getParentRoute: () => ScoresRouteRoute,
 } as any)
-
-const ScoresRacesRoute = ScoresRacesImport.update({
+const ScoresRacesRoute = ScoresRacesRouteImport.update({
   id: '/races',
   path: '/races',
   getParentRoute: () => ScoresRouteRoute,
 } as any)
-
-const ScoresLadderRoute = ScoresLadderImport.update({
+const ScoresLadderRoute = ScoresLadderRouteImport.update({
   id: '/ladder',
   path: '/ladder',
   getParentRoute: () => ScoresRouteRoute,
 } as any)
-
-const ScoresHeistRoute = ScoresHeistImport.update({
+const ScoresHeistRoute = ScoresHeistRouteImport.update({
   id: '/heist',
   path: '/heist',
   getParentRoute: () => ScoresRouteRoute,
 } as any)
-
-const ScoresGemsRoute = ScoresGemsImport.update({
+const ScoresGemsRoute = ScoresGemsRouteImport.update({
   id: '/gems',
   path: '/gems',
   getParentRoute: () => ScoresRouteRoute,
 } as any)
-
-const ScoresForYouRoute = ScoresForYouImport.update({
+const ScoresForYouRoute = ScoresForYouRouteImport.update({
   id: '/for-you',
   path: '/for-you',
   getParentRoute: () => ScoresRouteRoute,
 } as any)
-
-const ScoresDelveRoute = ScoresDelveImport.update({
+const ScoresDelveRoute = ScoresDelveRouteImport.update({
   id: '/delve',
   path: '/delve',
   getParentRoute: () => ScoresRouteRoute,
 } as any)
-
-const ScoresDailiesRoute = ScoresDailiesImport.update({
+const ScoresDailiesRoute = ScoresDailiesRouteImport.update({
   id: '/dailies',
   path: '/dailies',
   getParentRoute: () => ScoresRouteRoute,
 } as any)
-
-const ScoresCollectionsRoute = ScoresCollectionsImport.update({
+const ScoresCollectionsRoute = ScoresCollectionsRouteImport.update({
   id: '/collections',
   path: '/collections',
   getParentRoute: () => ScoresRouteRoute,
 } as any)
-
-const ScoresBountiesRoute = ScoresBountiesImport.update({
+const ScoresBountiesRoute = ScoresBountiesRouteImport.update({
   id: '/bounties',
   path: '/bounties',
   getParentRoute: () => ScoresRouteRoute,
 } as any)
-
-const ProfileUserIdRoute = ProfileUserIdImport.update({
+const ProfileUserIdRoute = ProfileUserIdRouteImport.update({
   id: '/profile/$userId',
   path: '/profile/$userId',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AdminUserManagementRoute = AdminUserManagementImport.update({
+const AdminUserManagementRoute = AdminUserManagementRouteImport.update({
   id: '/admin/user-management',
   path: '/admin/user-management',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AdminTeamSuggestionsRoute = AdminTeamSuggestionsImport.update({
+const AdminTeamSuggestionsRoute = AdminTeamSuggestionsRouteImport.update({
   id: '/admin/team-suggestions',
   path: '/admin/team-suggestions',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AdminTeamSortRoute = AdminTeamSortImport.update({
+const AdminTeamSortRoute = AdminTeamSortRouteImport.update({
   id: '/admin/team-sort',
   path: '/admin/team-sort',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AdminSubmissionsRoute = AdminSubmissionsImport.update({
+const AdminSubmissionsRoute = AdminSubmissionsRouteImport.update({
   id: '/admin/submissions',
   path: '/admin/submissions',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AdminRecurringJobsRoute = AdminRecurringJobsImport.update({
+const AdminRecurringJobsRoute = AdminRecurringJobsRouteImport.update({
   id: '/admin/recurring-jobs',
   path: '/admin/recurring-jobs',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AdminGuildStashesRouteRoute = AdminGuildStashesRouteImport.update({
+const AdminGuildStashesRouteRoute = AdminGuildStashesRouteRouteImport.update({
   id: '/admin/guild-stashes',
   path: '/admin/guild-stashes',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AdminEventsIndexRoute = AdminEventsIndexImport.update({
+const AdminEventsIndexRoute = AdminEventsIndexRouteImport.update({
   id: '/admin/events/',
   path: '/admin/events/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AuthTwitchCallbackRoute = AuthTwitchCallbackImport.update({
+const AuthTwitchCallbackRoute = AuthTwitchCallbackRouteImport.update({
   id: '/auth/twitch/callback',
   path: '/auth/twitch/callback',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AuthPoeCallbackRoute = AuthPoeCallbackImport.update({
+const AuthPoeCallbackRoute = AuthPoeCallbackRouteImport.update({
   id: '/auth/poe/callback',
   path: '/auth/poe/callback',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AuthDiscordCallbackRoute = AuthDiscordCallbackImport.update({
+const AuthDiscordCallbackRoute = AuthDiscordCallbackRouteImport.update({
   id: '/auth/discord/callback',
   path: '/auth/discord/callback',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AdminGuildStashesStashIdRoute = AdminGuildStashesStashIdImport.update({
-  id: '/$stashId',
-  path: '/$stashId',
-  getParentRoute: () => AdminGuildStashesRouteRoute,
-} as any)
-
-const AdminEventsEventIdTeamsRoute = AdminEventsEventIdTeamsImport.update({
+const AdminGuildStashesStashIdRoute =
+  AdminGuildStashesStashIdRouteImport.update({
+    id: '/$stashId',
+    path: '/$stashId',
+    getParentRoute: () => AdminGuildStashesRouteRoute,
+  } as any)
+const AdminEventsEventIdTeamsRoute = AdminEventsEventIdTeamsRouteImport.update({
   id: '/admin/events/$eventId/teams',
   path: '/admin/events/$eventId/teams',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
 const AdminEventsEventIdScoringPresetsRoute =
-  AdminEventsEventIdScoringPresetsImport.update({
+  AdminEventsEventIdScoringPresetsRouteImport.update({
     id: '/admin/events/$eventId/scoring-presets',
     path: '/admin/events/$eventId/scoring-presets',
-    getParentRoute: () => rootRoute,
+    getParentRoute: () => rootRouteImport,
   } as any)
-
 const AdminEventsEventIdCategoriesCategoryIdRoute =
-  AdminEventsEventIdCategoriesCategoryIdImport.update({
+  AdminEventsEventIdCategoriesCategoryIdRouteImport.update({
     id: '/admin/events/$eventId/categories/$categoryId',
     path: '/admin/events/$eventId/categories/$categoryId',
-    getParentRoute: () => rootRoute,
+    getParentRoute: () => rootRouteImport,
   } as any)
-
-// Populate the FileRoutesByPath interface
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/scores': {
-      id: '/scores'
-      path: '/scores'
-      fullPath: '/scores'
-      preLoaderRoute: typeof ScoresRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/streams': {
-      id: '/streams'
-      path: '/streams'
-      fullPath: '/streams'
-      preLoaderRoute: typeof StreamsRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/rules': {
-      id: '/rules'
-      path: '/rules'
-      fullPath: '/rules'
-      preLoaderRoute: typeof RulesImport
-      parentRoute: typeof rootRoute
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsImport
-      parentRoute: typeof rootRoute
-    }
-    '/submissions': {
-      id: '/submissions'
-      path: '/submissions'
-      fullPath: '/submissions'
-      preLoaderRoute: typeof SubmissionsImport
-      parentRoute: typeof rootRoute
-    }
-    '/admin/guild-stashes': {
-      id: '/admin/guild-stashes'
-      path: '/admin/guild-stashes'
-      fullPath: '/admin/guild-stashes'
-      preLoaderRoute: typeof AdminGuildStashesRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/admin/recurring-jobs': {
-      id: '/admin/recurring-jobs'
-      path: '/admin/recurring-jobs'
-      fullPath: '/admin/recurring-jobs'
-      preLoaderRoute: typeof AdminRecurringJobsImport
-      parentRoute: typeof rootRoute
-    }
-    '/admin/submissions': {
-      id: '/admin/submissions'
-      path: '/admin/submissions'
-      fullPath: '/admin/submissions'
-      preLoaderRoute: typeof AdminSubmissionsImport
-      parentRoute: typeof rootRoute
-    }
-    '/admin/team-sort': {
-      id: '/admin/team-sort'
-      path: '/admin/team-sort'
-      fullPath: '/admin/team-sort'
-      preLoaderRoute: typeof AdminTeamSortImport
-      parentRoute: typeof rootRoute
-    }
-    '/admin/team-suggestions': {
-      id: '/admin/team-suggestions'
-      path: '/admin/team-suggestions'
-      fullPath: '/admin/team-suggestions'
-      preLoaderRoute: typeof AdminTeamSuggestionsImport
-      parentRoute: typeof rootRoute
-    }
-    '/admin/user-management': {
-      id: '/admin/user-management'
-      path: '/admin/user-management'
-      fullPath: '/admin/user-management'
-      preLoaderRoute: typeof AdminUserManagementImport
-      parentRoute: typeof rootRoute
-    }
-    '/profile/$userId': {
-      id: '/profile/$userId'
-      path: '/profile/$userId'
-      fullPath: '/profile/$userId'
-      preLoaderRoute: typeof ProfileUserIdImport
-      parentRoute: typeof rootRoute
-    }
-    '/scores/bounties': {
-      id: '/scores/bounties'
-      path: '/bounties'
-      fullPath: '/scores/bounties'
-      preLoaderRoute: typeof ScoresBountiesImport
-      parentRoute: typeof ScoresRouteImport
-    }
-    '/scores/collections': {
-      id: '/scores/collections'
-      path: '/collections'
-      fullPath: '/scores/collections'
-      preLoaderRoute: typeof ScoresCollectionsImport
-      parentRoute: typeof ScoresRouteImport
-    }
-    '/scores/dailies': {
-      id: '/scores/dailies'
-      path: '/dailies'
-      fullPath: '/scores/dailies'
-      preLoaderRoute: typeof ScoresDailiesImport
-      parentRoute: typeof ScoresRouteImport
-    }
-    '/scores/delve': {
-      id: '/scores/delve'
-      path: '/delve'
-      fullPath: '/scores/delve'
-      preLoaderRoute: typeof ScoresDelveImport
-      parentRoute: typeof ScoresRouteImport
-    }
-    '/scores/for-you': {
-      id: '/scores/for-you'
-      path: '/for-you'
-      fullPath: '/scores/for-you'
-      preLoaderRoute: typeof ScoresForYouImport
-      parentRoute: typeof ScoresRouteImport
-    }
-    '/scores/gems': {
-      id: '/scores/gems'
-      path: '/gems'
-      fullPath: '/scores/gems'
-      preLoaderRoute: typeof ScoresGemsImport
-      parentRoute: typeof ScoresRouteImport
-    }
-    '/scores/heist': {
-      id: '/scores/heist'
-      path: '/heist'
-      fullPath: '/scores/heist'
-      preLoaderRoute: typeof ScoresHeistImport
-      parentRoute: typeof ScoresRouteImport
-    }
-    '/scores/ladder': {
-      id: '/scores/ladder'
-      path: '/ladder'
-      fullPath: '/scores/ladder'
-      preLoaderRoute: typeof ScoresLadderImport
-      parentRoute: typeof ScoresRouteImport
-    }
-    '/scores/races': {
-      id: '/scores/races'
-      path: '/races'
-      fullPath: '/scores/races'
-      preLoaderRoute: typeof ScoresRacesImport
-      parentRoute: typeof ScoresRouteImport
-    }
-    '/scores/uniques': {
-      id: '/scores/uniques'
-      path: '/uniques'
-      fullPath: '/scores/uniques'
-      preLoaderRoute: typeof ScoresUniquesImport
-      parentRoute: typeof ScoresRouteImport
-    }
-    '/streams/$twitchAccount': {
-      id: '/streams/$twitchAccount'
-      path: '/$twitchAccount'
-      fullPath: '/streams/$twitchAccount'
-      preLoaderRoute: typeof StreamsTwitchAccountImport
-      parentRoute: typeof StreamsRouteImport
-    }
-    '/admin/': {
-      id: '/admin/'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminIndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/admin/guild-stashes/$stashId': {
-      id: '/admin/guild-stashes/$stashId'
-      path: '/$stashId'
-      fullPath: '/admin/guild-stashes/$stashId'
-      preLoaderRoute: typeof AdminGuildStashesStashIdImport
-      parentRoute: typeof AdminGuildStashesRouteImport
-    }
-    '/auth/discord/callback': {
-      id: '/auth/discord/callback'
-      path: '/auth/discord/callback'
-      fullPath: '/auth/discord/callback'
-      preLoaderRoute: typeof AuthDiscordCallbackImport
-      parentRoute: typeof rootRoute
-    }
-    '/auth/poe/callback': {
-      id: '/auth/poe/callback'
-      path: '/auth/poe/callback'
-      fullPath: '/auth/poe/callback'
-      preLoaderRoute: typeof AuthPoeCallbackImport
-      parentRoute: typeof rootRoute
-    }
-    '/auth/twitch/callback': {
-      id: '/auth/twitch/callback'
-      path: '/auth/twitch/callback'
-      fullPath: '/auth/twitch/callback'
-      preLoaderRoute: typeof AuthTwitchCallbackImport
-      parentRoute: typeof rootRoute
-    }
-    '/admin/events/': {
-      id: '/admin/events/'
-      path: '/admin/events'
-      fullPath: '/admin/events'
-      preLoaderRoute: typeof AdminEventsIndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/admin/events/$eventId/scoring-presets': {
-      id: '/admin/events/$eventId/scoring-presets'
-      path: '/admin/events/$eventId/scoring-presets'
-      fullPath: '/admin/events/$eventId/scoring-presets'
-      preLoaderRoute: typeof AdminEventsEventIdScoringPresetsImport
-      parentRoute: typeof rootRoute
-    }
-    '/admin/events/$eventId/teams': {
-      id: '/admin/events/$eventId/teams'
-      path: '/admin/events/$eventId/teams'
-      fullPath: '/admin/events/$eventId/teams'
-      preLoaderRoute: typeof AdminEventsEventIdTeamsImport
-      parentRoute: typeof rootRoute
-    }
-    '/admin/events/$eventId/categories/$categoryId': {
-      id: '/admin/events/$eventId/categories/$categoryId'
-      path: '/admin/events/$eventId/categories/$categoryId'
-      fullPath: '/admin/events/$eventId/categories/$categoryId'
-      preLoaderRoute: typeof AdminEventsEventIdCategoriesCategoryIdImport
-      parentRoute: typeof rootRoute
-    }
-  }
-}
-
-// Create and export the route tree
-
-interface ScoresRouteRouteChildren {
-  ScoresBountiesRoute: typeof ScoresBountiesRoute
-  ScoresCollectionsRoute: typeof ScoresCollectionsRoute
-  ScoresDailiesRoute: typeof ScoresDailiesRoute
-  ScoresDelveRoute: typeof ScoresDelveRoute
-  ScoresForYouRoute: typeof ScoresForYouRoute
-  ScoresGemsRoute: typeof ScoresGemsRoute
-  ScoresHeistRoute: typeof ScoresHeistRoute
-  ScoresLadderRoute: typeof ScoresLadderRoute
-  ScoresRacesRoute: typeof ScoresRacesRoute
-  ScoresUniquesRoute: typeof ScoresUniquesRoute
-}
-
-const ScoresRouteRouteChildren: ScoresRouteRouteChildren = {
-  ScoresBountiesRoute: ScoresBountiesRoute,
-  ScoresCollectionsRoute: ScoresCollectionsRoute,
-  ScoresDailiesRoute: ScoresDailiesRoute,
-  ScoresDelveRoute: ScoresDelveRoute,
-  ScoresForYouRoute: ScoresForYouRoute,
-  ScoresGemsRoute: ScoresGemsRoute,
-  ScoresHeistRoute: ScoresHeistRoute,
-  ScoresLadderRoute: ScoresLadderRoute,
-  ScoresRacesRoute: ScoresRacesRoute,
-  ScoresUniquesRoute: ScoresUniquesRoute,
-}
-
-const ScoresRouteRouteWithChildren = ScoresRouteRoute._addFileChildren(
-  ScoresRouteRouteChildren,
-)
-
-interface StreamsRouteRouteChildren {
-  StreamsTwitchAccountRoute: typeof StreamsTwitchAccountRoute
-}
-
-const StreamsRouteRouteChildren: StreamsRouteRouteChildren = {
-  StreamsTwitchAccountRoute: StreamsTwitchAccountRoute,
-}
-
-const StreamsRouteRouteWithChildren = StreamsRouteRoute._addFileChildren(
-  StreamsRouteRouteChildren,
-)
-
-interface AdminGuildStashesRouteRouteChildren {
-  AdminGuildStashesStashIdRoute: typeof AdminGuildStashesStashIdRoute
-}
-
-const AdminGuildStashesRouteRouteChildren: AdminGuildStashesRouteRouteChildren =
-  {
-    AdminGuildStashesStashIdRoute: AdminGuildStashesStashIdRoute,
-  }
-
-const AdminGuildStashesRouteRouteWithChildren =
-  AdminGuildStashesRouteRoute._addFileChildren(
-    AdminGuildStashesRouteRouteChildren,
-  )
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -578,7 +247,6 @@ export interface FileRoutesByFullPath {
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
   '/admin/events/$eventId/categories/$categoryId': typeof AdminEventsEventIdCategoriesCategoryIdRoute
 }
-
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/scores': typeof ScoresRouteRouteWithChildren
@@ -614,9 +282,8 @@ export interface FileRoutesByTo {
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
   '/admin/events/$eventId/categories/$categoryId': typeof AdminEventsEventIdCategoriesCategoryIdRoute
 }
-
 export interface FileRoutesById {
-  __root__: typeof rootRoute
+  __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/scores': typeof ScoresRouteRouteWithChildren
   '/streams': typeof StreamsRouteRouteWithChildren
@@ -651,7 +318,6 @@ export interface FileRoutesById {
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
   '/admin/events/$eventId/categories/$categoryId': typeof AdminEventsEventIdCategoriesCategoryIdRoute
 }
-
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
@@ -760,7 +426,6 @@ export interface FileRouteTypes {
     | '/admin/events/$eventId/categories/$categoryId'
   fileRoutesById: FileRoutesById
 }
-
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ScoresRouteRoute: typeof ScoresRouteRouteWithChildren
@@ -784,6 +449,298 @@ export interface RootRouteChildren {
   AdminEventsEventIdTeamsRoute: typeof AdminEventsEventIdTeamsRoute
   AdminEventsEventIdCategoriesCategoryIdRoute: typeof AdminEventsEventIdCategoriesCategoryIdRoute
 }
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/submissions': {
+      id: '/submissions'
+      path: '/submissions'
+      fullPath: '/submissions'
+      preLoaderRoute: typeof SubmissionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rules': {
+      id: '/rules'
+      path: '/rules'
+      fullPath: '/rules'
+      preLoaderRoute: typeof RulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/streams': {
+      id: '/streams'
+      path: '/streams'
+      fullPath: '/streams'
+      preLoaderRoute: typeof StreamsRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/scores': {
+      id: '/scores'
+      path: '/scores'
+      fullPath: '/scores'
+      preLoaderRoute: typeof ScoresRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/streams/$twitchAccount': {
+      id: '/streams/$twitchAccount'
+      path: '/$twitchAccount'
+      fullPath: '/streams/$twitchAccount'
+      preLoaderRoute: typeof StreamsTwitchAccountRouteImport
+      parentRoute: typeof StreamsRouteRoute
+    }
+    '/scores/uniques': {
+      id: '/scores/uniques'
+      path: '/uniques'
+      fullPath: '/scores/uniques'
+      preLoaderRoute: typeof ScoresUniquesRouteImport
+      parentRoute: typeof ScoresRouteRoute
+    }
+    '/scores/races': {
+      id: '/scores/races'
+      path: '/races'
+      fullPath: '/scores/races'
+      preLoaderRoute: typeof ScoresRacesRouteImport
+      parentRoute: typeof ScoresRouteRoute
+    }
+    '/scores/ladder': {
+      id: '/scores/ladder'
+      path: '/ladder'
+      fullPath: '/scores/ladder'
+      preLoaderRoute: typeof ScoresLadderRouteImport
+      parentRoute: typeof ScoresRouteRoute
+    }
+    '/scores/heist': {
+      id: '/scores/heist'
+      path: '/heist'
+      fullPath: '/scores/heist'
+      preLoaderRoute: typeof ScoresHeistRouteImport
+      parentRoute: typeof ScoresRouteRoute
+    }
+    '/scores/gems': {
+      id: '/scores/gems'
+      path: '/gems'
+      fullPath: '/scores/gems'
+      preLoaderRoute: typeof ScoresGemsRouteImport
+      parentRoute: typeof ScoresRouteRoute
+    }
+    '/scores/for-you': {
+      id: '/scores/for-you'
+      path: '/for-you'
+      fullPath: '/scores/for-you'
+      preLoaderRoute: typeof ScoresForYouRouteImport
+      parentRoute: typeof ScoresRouteRoute
+    }
+    '/scores/delve': {
+      id: '/scores/delve'
+      path: '/delve'
+      fullPath: '/scores/delve'
+      preLoaderRoute: typeof ScoresDelveRouteImport
+      parentRoute: typeof ScoresRouteRoute
+    }
+    '/scores/dailies': {
+      id: '/scores/dailies'
+      path: '/dailies'
+      fullPath: '/scores/dailies'
+      preLoaderRoute: typeof ScoresDailiesRouteImport
+      parentRoute: typeof ScoresRouteRoute
+    }
+    '/scores/collections': {
+      id: '/scores/collections'
+      path: '/collections'
+      fullPath: '/scores/collections'
+      preLoaderRoute: typeof ScoresCollectionsRouteImport
+      parentRoute: typeof ScoresRouteRoute
+    }
+    '/scores/bounties': {
+      id: '/scores/bounties'
+      path: '/bounties'
+      fullPath: '/scores/bounties'
+      preLoaderRoute: typeof ScoresBountiesRouteImport
+      parentRoute: typeof ScoresRouteRoute
+    }
+    '/profile/$userId': {
+      id: '/profile/$userId'
+      path: '/profile/$userId'
+      fullPath: '/profile/$userId'
+      preLoaderRoute: typeof ProfileUserIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/user-management': {
+      id: '/admin/user-management'
+      path: '/admin/user-management'
+      fullPath: '/admin/user-management'
+      preLoaderRoute: typeof AdminUserManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/team-suggestions': {
+      id: '/admin/team-suggestions'
+      path: '/admin/team-suggestions'
+      fullPath: '/admin/team-suggestions'
+      preLoaderRoute: typeof AdminTeamSuggestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/team-sort': {
+      id: '/admin/team-sort'
+      path: '/admin/team-sort'
+      fullPath: '/admin/team-sort'
+      preLoaderRoute: typeof AdminTeamSortRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/submissions': {
+      id: '/admin/submissions'
+      path: '/admin/submissions'
+      fullPath: '/admin/submissions'
+      preLoaderRoute: typeof AdminSubmissionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/recurring-jobs': {
+      id: '/admin/recurring-jobs'
+      path: '/admin/recurring-jobs'
+      fullPath: '/admin/recurring-jobs'
+      preLoaderRoute: typeof AdminRecurringJobsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/guild-stashes': {
+      id: '/admin/guild-stashes'
+      path: '/admin/guild-stashes'
+      fullPath: '/admin/guild-stashes'
+      preLoaderRoute: typeof AdminGuildStashesRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/events/': {
+      id: '/admin/events/'
+      path: '/admin/events'
+      fullPath: '/admin/events'
+      preLoaderRoute: typeof AdminEventsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/twitch/callback': {
+      id: '/auth/twitch/callback'
+      path: '/auth/twitch/callback'
+      fullPath: '/auth/twitch/callback'
+      preLoaderRoute: typeof AuthTwitchCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/poe/callback': {
+      id: '/auth/poe/callback'
+      path: '/auth/poe/callback'
+      fullPath: '/auth/poe/callback'
+      preLoaderRoute: typeof AuthPoeCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/discord/callback': {
+      id: '/auth/discord/callback'
+      path: '/auth/discord/callback'
+      fullPath: '/auth/discord/callback'
+      preLoaderRoute: typeof AuthDiscordCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/guild-stashes/$stashId': {
+      id: '/admin/guild-stashes/$stashId'
+      path: '/$stashId'
+      fullPath: '/admin/guild-stashes/$stashId'
+      preLoaderRoute: typeof AdminGuildStashesStashIdRouteImport
+      parentRoute: typeof AdminGuildStashesRouteRoute
+    }
+    '/admin/events/$eventId/teams': {
+      id: '/admin/events/$eventId/teams'
+      path: '/admin/events/$eventId/teams'
+      fullPath: '/admin/events/$eventId/teams'
+      preLoaderRoute: typeof AdminEventsEventIdTeamsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/events/$eventId/scoring-presets': {
+      id: '/admin/events/$eventId/scoring-presets'
+      path: '/admin/events/$eventId/scoring-presets'
+      fullPath: '/admin/events/$eventId/scoring-presets'
+      preLoaderRoute: typeof AdminEventsEventIdScoringPresetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/events/$eventId/categories/$categoryId': {
+      id: '/admin/events/$eventId/categories/$categoryId'
+      path: '/admin/events/$eventId/categories/$categoryId'
+      fullPath: '/admin/events/$eventId/categories/$categoryId'
+      preLoaderRoute: typeof AdminEventsEventIdCategoriesCategoryIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+  }
+}
+
+interface ScoresRouteRouteChildren {
+  ScoresBountiesRoute: typeof ScoresBountiesRoute
+  ScoresCollectionsRoute: typeof ScoresCollectionsRoute
+  ScoresDailiesRoute: typeof ScoresDailiesRoute
+  ScoresDelveRoute: typeof ScoresDelveRoute
+  ScoresForYouRoute: typeof ScoresForYouRoute
+  ScoresGemsRoute: typeof ScoresGemsRoute
+  ScoresHeistRoute: typeof ScoresHeistRoute
+  ScoresLadderRoute: typeof ScoresLadderRoute
+  ScoresRacesRoute: typeof ScoresRacesRoute
+  ScoresUniquesRoute: typeof ScoresUniquesRoute
+}
+
+const ScoresRouteRouteChildren: ScoresRouteRouteChildren = {
+  ScoresBountiesRoute: ScoresBountiesRoute,
+  ScoresCollectionsRoute: ScoresCollectionsRoute,
+  ScoresDailiesRoute: ScoresDailiesRoute,
+  ScoresDelveRoute: ScoresDelveRoute,
+  ScoresForYouRoute: ScoresForYouRoute,
+  ScoresGemsRoute: ScoresGemsRoute,
+  ScoresHeistRoute: ScoresHeistRoute,
+  ScoresLadderRoute: ScoresLadderRoute,
+  ScoresRacesRoute: ScoresRacesRoute,
+  ScoresUniquesRoute: ScoresUniquesRoute,
+}
+
+const ScoresRouteRouteWithChildren = ScoresRouteRoute._addFileChildren(
+  ScoresRouteRouteChildren,
+)
+
+interface StreamsRouteRouteChildren {
+  StreamsTwitchAccountRoute: typeof StreamsTwitchAccountRoute
+}
+
+const StreamsRouteRouteChildren: StreamsRouteRouteChildren = {
+  StreamsTwitchAccountRoute: StreamsTwitchAccountRoute,
+}
+
+const StreamsRouteRouteWithChildren = StreamsRouteRoute._addFileChildren(
+  StreamsRouteRouteChildren,
+)
+
+interface AdminGuildStashesRouteRouteChildren {
+  AdminGuildStashesStashIdRoute: typeof AdminGuildStashesStashIdRoute
+}
+
+const AdminGuildStashesRouteRouteChildren: AdminGuildStashesRouteRouteChildren =
+  {
+    AdminGuildStashesStashIdRoute: AdminGuildStashesStashIdRoute,
+  }
+
+const AdminGuildStashesRouteRouteWithChildren =
+  AdminGuildStashesRouteRoute._addFileChildren(
+    AdminGuildStashesRouteRouteChildren,
+  )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -809,169 +766,6 @@ const rootRouteChildren: RootRouteChildren = {
   AdminEventsEventIdCategoriesCategoryIdRoute:
     AdminEventsEventIdCategoriesCategoryIdRoute,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/scores",
-        "/streams",
-        "/rules",
-        "/settings",
-        "/submissions",
-        "/admin/guild-stashes",
-        "/admin/recurring-jobs",
-        "/admin/submissions",
-        "/admin/team-sort",
-        "/admin/team-suggestions",
-        "/admin/user-management",
-        "/profile/$userId",
-        "/admin/",
-        "/auth/discord/callback",
-        "/auth/poe/callback",
-        "/auth/twitch/callback",
-        "/admin/events/",
-        "/admin/events/$eventId/scoring-presets",
-        "/admin/events/$eventId/teams",
-        "/admin/events/$eventId/categories/$categoryId"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/scores": {
-      "filePath": "scores/route.tsx",
-      "children": [
-        "/scores/bounties",
-        "/scores/collections",
-        "/scores/dailies",
-        "/scores/delve",
-        "/scores/for-you",
-        "/scores/gems",
-        "/scores/heist",
-        "/scores/ladder",
-        "/scores/races",
-        "/scores/uniques"
-      ]
-    },
-    "/streams": {
-      "filePath": "streams/route.tsx",
-      "children": [
-        "/streams/$twitchAccount"
-      ]
-    },
-    "/rules": {
-      "filePath": "rules.tsx"
-    },
-    "/settings": {
-      "filePath": "settings.tsx"
-    },
-    "/submissions": {
-      "filePath": "submissions.tsx"
-    },
-    "/admin/guild-stashes": {
-      "filePath": "admin/guild-stashes/route.tsx",
-      "children": [
-        "/admin/guild-stashes/$stashId"
-      ]
-    },
-    "/admin/recurring-jobs": {
-      "filePath": "admin/recurring-jobs.tsx"
-    },
-    "/admin/submissions": {
-      "filePath": "admin/submissions.tsx"
-    },
-    "/admin/team-sort": {
-      "filePath": "admin/team-sort.tsx"
-    },
-    "/admin/team-suggestions": {
-      "filePath": "admin/team-suggestions.tsx"
-    },
-    "/admin/user-management": {
-      "filePath": "admin/user-management.tsx"
-    },
-    "/profile/$userId": {
-      "filePath": "profile.$userId.tsx"
-    },
-    "/scores/bounties": {
-      "filePath": "scores/bounties.tsx",
-      "parent": "/scores"
-    },
-    "/scores/collections": {
-      "filePath": "scores/collections.tsx",
-      "parent": "/scores"
-    },
-    "/scores/dailies": {
-      "filePath": "scores/dailies.tsx",
-      "parent": "/scores"
-    },
-    "/scores/delve": {
-      "filePath": "scores/delve.tsx",
-      "parent": "/scores"
-    },
-    "/scores/for-you": {
-      "filePath": "scores/for-you.tsx",
-      "parent": "/scores"
-    },
-    "/scores/gems": {
-      "filePath": "scores/gems.tsx",
-      "parent": "/scores"
-    },
-    "/scores/heist": {
-      "filePath": "scores/heist.tsx",
-      "parent": "/scores"
-    },
-    "/scores/ladder": {
-      "filePath": "scores/ladder.tsx",
-      "parent": "/scores"
-    },
-    "/scores/races": {
-      "filePath": "scores/races.tsx",
-      "parent": "/scores"
-    },
-    "/scores/uniques": {
-      "filePath": "scores/uniques.tsx",
-      "parent": "/scores"
-    },
-    "/streams/$twitchAccount": {
-      "filePath": "streams/$twitchAccount.tsx",
-      "parent": "/streams"
-    },
-    "/admin/": {
-      "filePath": "admin/index.tsx"
-    },
-    "/admin/guild-stashes/$stashId": {
-      "filePath": "admin/guild-stashes/$stashId.tsx",
-      "parent": "/admin/guild-stashes"
-    },
-    "/auth/discord/callback": {
-      "filePath": "auth/discord.callback.tsx"
-    },
-    "/auth/poe/callback": {
-      "filePath": "auth/poe.callback.tsx"
-    },
-    "/auth/twitch/callback": {
-      "filePath": "auth/twitch.callback.tsx"
-    },
-    "/admin/events/": {
-      "filePath": "admin/events/index.tsx"
-    },
-    "/admin/events/$eventId/scoring-presets": {
-      "filePath": "admin/events/$eventId/scoring-presets.tsx"
-    },
-    "/admin/events/$eventId/teams": {
-      "filePath": "admin/events/$eventId/teams.tsx"
-    },
-    "/admin/events/$eventId/categories/$categoryId": {
-      "filePath": "admin/events/$eventId/categories.$categoryId.tsx"
-    }
-  }
-}
-ROUTE_MANIFEST_END */
