@@ -27,7 +27,7 @@ function getPlace(score: Score) {
 }
 
 function finishTooltip(objective: ScoreObjective, score: Score) {
-  let place = getPlace(score);
+  const place = getPlace(score);
   return `${place} ${
     objective.scoring_preset
       ? `${score.points}/${Math.max(

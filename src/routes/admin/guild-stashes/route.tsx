@@ -44,30 +44,21 @@ function RouteComponent() {
   const [hideDisabled, setHideDisabled] = useState(true);
   const [highlightScoring, setHighlightScoring] = useState(true);
   useEffect(() => {
-    router.navigate({
-      to: "/admin/guild-stashes/$stashId",
-      replace: true,
-      params: { stashId },
-      search: { highlightScoring },
-    });
-  }, [highlightScoring]);
-
-  const [stashSearch, setStashSearch] = useState("");
-  dayjs.extend(relativeTime);
-
-  if (!stashId) {
-    // const firstStashId = guildStashes?.find((s) => s.fetch_enabled)?.id;
-    const firstStashId = "0d342fa97f";
-    if (firstStashId) {
+    const firstStash = guildStashes?.find(
+      (stash) => stash.fetch_enabled && !stash.parent_id
+    );
+    if (stashId == "guild-stashes" && firstStash) {
       router.navigate({
         to: "/admin/guild-stashes/$stashId",
         replace: true,
-        params: { stashId: firstStashId },
+        params: { stashId: firstStash.id },
         search: { highlightScoring },
       });
     }
-    return null;
-  }
+  }, [stashId, guildStashes]);
+
+  const [stashSearch, setStashSearch] = useState("");
+  dayjs.extend(relativeTime);
 
   return (
     <div>
@@ -100,10 +91,9 @@ function RouteComponent() {
 
             router.navigate({
               to: "/admin/guild-stashes/$stashId",
-              replace: true,
               params: { stashId },
               search: { highlightScoring: !highlightScoring },
-            } as any);
+            });
           }}
         >
           {highlightScoring ? "Show" : "Hide"} Non-Objective Tabs
@@ -148,7 +138,7 @@ function RouteComponent() {
                   inactiveProps={{
                     className: "bg-base-100 border-dotted",
                   }}
-                  search={{ highlightScoring: highlightScoring }}
+                  search={{ highlightScoring }}
                 >
                   <img
                     src={`/assets/${gameVersion}/stashtabs/${stash.type.toLowerCase().replace("stash", "")}.png`}

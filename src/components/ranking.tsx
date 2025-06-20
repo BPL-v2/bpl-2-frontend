@@ -28,11 +28,11 @@ function getGridLayout(numTeams: number) {
 function getCardColor(score: Score) {
   switch (score.rank) {
     case 1:
-      return "bg-gold-metallic";
+      return "text-black/70 bg-gold-metallic";
     case 2:
-      return "bg-silver-metallic";
+      return "text-black/70 bg-silver-metallic";
     case 3:
-      return "bg-bronze-metallic";
+      return "text-black/70 bg-bronze-metallic";
     default:
       return "bg-base-300";
   }
@@ -75,7 +75,7 @@ export function Ranking({
           const team = currentEvent?.teams?.find((t) => t.id === teamId);
           return (
             <div
-              className={"card text-black/70  " + getCardColor(score)}
+              className={"card " + getCardColor(score)}
               key={"score-" + teamId}
             >
               <div className="card-body">

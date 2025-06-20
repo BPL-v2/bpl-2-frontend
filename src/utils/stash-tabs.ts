@@ -25,8 +25,8 @@ export type StashTabLayoutWrapper =
     };
 
 export function getLayout(
-  stashType: string,
-  layout: StashTabLayoutWrapper | undefined
+  stashType?: string,
+  layout?: StashTabLayoutWrapper
 ): StashTabLayout | undefined {
   if (!layout) return undefined;
   if (typeof layout === "boolean") {

@@ -16,7 +16,7 @@ import {
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { TableSortIcon } from "@icons/table-sort";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
-import Select from "./select";
+import Select, { SelectOption } from "./select";
 
 function Table<T>({
   data,
@@ -51,7 +51,7 @@ function Table<T>({
 
   const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
     setSorting(updater);
-    if (!!table.getRowModel().rows.length) {
+    if (table.getRowModel().rows.length) {
       rowVirtualizer.scrollToIndex?.(0);
     }
   };
@@ -172,11 +172,16 @@ function Table<T>({
 
 export default Table;
 
+type ColumnDefMeta = {
+  filterVariant?: "string" | "enum" | "boolean";
+  filterPlaceholder?: string;
+  options?: string[] | SelectOption[];
+};
+
 function Filter({ column }: { column: Column<any, unknown> }) {
   const columnFilterValue = column.getFilterValue();
-  // @ts-ignore
   const { filterVariant, filterPlaceholder, options } =
-    column.columnDef.meta ?? {};
+    (column.columnDef.meta as ColumnDefMeta) ?? {};
 
   if (filterVariant === "string") {
     return (
@@ -197,7 +202,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
       <Select
         onChange={column.setFilterValue}
         value={(columnFilterValue ?? "") as string}
-        options={options}
+        options={options!}
         fontSize="text-lg"
         placeholder={filterPlaceholder}
       ></Select>

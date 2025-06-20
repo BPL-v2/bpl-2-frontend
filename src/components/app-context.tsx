@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ContextProvider } from "@utils/context-provider";
 import { establishScoreSocket } from "../websocket/score-socket";
 import { mergeScores, ScoreMap } from "@utils/utils";
-import { ScoringPreset, Event, GameVersion, ScoreDiff } from "@client/api";
+import { ScoringPreset, Event, GameVersion } from "@client/api";
 import { ScoreObjective } from "@mytypes/score";
 import { initPreferences } from "@mytypes/preferences";
 import { useGetEvents, useGetRules, useGetScoringPresets } from "@client/query";
@@ -18,7 +18,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
   const [scores, setScores] = useState<ScoreObjective>();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
   const [gameVersion, setGameVersion] = useState<GameVersion>(GameVersion.poe1);
-  const [_, setUpdates] = useState<ScoreDiff[]>([]);
+  // const [_, setUpdates] = useState<ScoreDiff[]>([]);
   const [preferences, setPreferences] = useState(initPreferences());
   const [websocket, setWebsocket] = useState<WebSocket>();
   const { data: events } = useGetEvents();
@@ -44,10 +44,10 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
       currentEvent.id,
       setScoreData,
       setWebsocket,
-      (newUpdates) =>
-        setUpdates((prevUpdates) => [...newUpdates, ...prevUpdates])
+      (newUpdates) => {}
+      // setUpdates((prevUpdates) => [...newUpdates, ...prevUpdates])
     );
-  }, [currentEvent]);
+  }, [currentEvent]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const handleResize = () => {
@@ -80,7 +80,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
     document
       .querySelector("html")
       ?.setAttribute("data-theme", preferences.theme);
-  }, []);
+  }, [preferences.theme]);
 
   useEffect(() => {
     localStorage.setItem("preferences", JSON.stringify(preferences));

@@ -77,7 +77,7 @@ function RootComponent() {
       },
     ];
     return menu.filter((item) => item.visible);
-  }, [currentEvent, eventStatus]);
+  }, [eventStatus, user]);
 
   const userIsMissingDiscord = user && !user.discord_id;
   const userIsMissingPoE = user && !user.account_name;

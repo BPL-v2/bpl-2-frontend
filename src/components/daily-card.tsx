@@ -42,7 +42,6 @@ export function DailyCard({ daily }: DailyCardProps) {
   if (daily.raceObjective) {
     Object.entries(daily.raceObjective.team_score).forEach(
       ([teamId, score]) => {
-        // @ts-ignore
         objective.team_score[teamId].points += score.points;
       }
     );

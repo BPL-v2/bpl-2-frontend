@@ -10,7 +10,6 @@ config();
 
 // https://vite.dev/config/
 export default defineConfig({
-  // @ts-ignore
   plugins: [
     TanStackRouterVite({
       target: "react",

@@ -179,8 +179,8 @@ export function ForYouTab() {
   if (!scores || !user) {
     return <div>Loading...</div>;
   }
-  const teamId = eventStatus?.team_id!;
-  if (!teamId) {
+  const teamId = eventStatus?.team_id as number;
+  if (teamId === undefined || !eventStatus) {
     return;
   }
 

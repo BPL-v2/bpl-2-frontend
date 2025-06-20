@@ -19,7 +19,7 @@ export function getJwtPayload(): TokenPayload | null {
   }
   try {
     return JSON.parse(atob(parts[1]));
-  } catch (e) {
+  } catch (_) {
     return null;
   }
 }

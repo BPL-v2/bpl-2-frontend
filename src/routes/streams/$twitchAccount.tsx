@@ -1,4 +1,4 @@
-import TwitchEmbed from "@components/twitch-emberd";
+import TwitchEmbed from "@components/twitch-embed";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/streams/$twitchAccount")({

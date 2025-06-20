@@ -34,7 +34,7 @@ export function Countdown({ target, onEnd, size }: CountdownProps) {
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [target]);
+  }, [target, onEnd]);
   let numberSize = "text-3xl";
   let textSize = "text-md";
   switch (size) {

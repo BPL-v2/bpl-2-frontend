@@ -27,7 +27,7 @@ function UserPage() {
   useEffect(() => {
     userApi.getAllUsers().then((users) => setUsers(users));
   }, []);
-  const columns: ColumnDef<User, any>[] = [
+  const columns: ColumnDef<User>[] = [
     {
       accessorKey: "id",
       header: "ID",

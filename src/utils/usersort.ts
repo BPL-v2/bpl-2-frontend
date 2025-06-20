@@ -1,3 +1,4 @@
+// eslint-disable-next-line: shut up eslint, this is fine okay?!?
 // @ts-nocheck - This is way too annoying to typecheck. Sue me i dont care
 import { Signup } from "@client/api";
 import { BPLEvent } from "@mytypes/event";
@@ -6,7 +7,7 @@ export function sortUsers(currentEvent: BPLEvent, signups: Signup[]): Signup[] {
   const lockedSignups = signups
     .filter((signup) => signup.team_id)
     .map((signup) => signup.id);
-  let suggestion = getSortSuggestion(currentEvent, signups);
+  const suggestion = getSortSuggestion(currentEvent, signups);
   return improveFairness(suggestion, currentEvent, lockedSignups);
 }
 
@@ -110,8 +111,8 @@ export function getSortSuggestion(currentEvent: BPLEvent, signups: Signup[]) {
       continue;
     }
     const bucket = buckets[toBucket(signup.expected_playtime)];
-    let minval = Math.min(...Object.values(bucket));
-    let minteam = Object.keys(bucket)
+    const minval = Math.min(...Object.values(bucket));
+    const minteam = Object.keys(bucket)
       .filter((key) => bucket[parseInt(key)] === minval)
       .sort(randSort)
       .sort((a, b) => {

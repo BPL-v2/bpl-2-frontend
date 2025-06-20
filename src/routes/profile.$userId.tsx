@@ -32,7 +32,7 @@ export function ProfilePage() {
     []
   );
   const { data: events } = useGetEvents();
-  let { userId } = useParams({ from: Route.id });
+  const { userId } = useParams({ from: Route.id });
 
   const fontColor = preferences.theme === "dark" ? "white" : "black";
   useEffect(() => {
@@ -46,7 +46,7 @@ export function ProfilePage() {
   }, [userId]);
 
   useEffect(() => {
-    if (!userId || !currentEvent) {
+    if (!currentEvent) {
       return;
     }
     setEventId(currentEvent.id);

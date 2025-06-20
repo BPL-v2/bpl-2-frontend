@@ -36,11 +36,14 @@ export function DelveTab() {
     isError: usersIsError,
   } = useGetUsers(currentEvent.id);
   const category = scores?.children.find((c) => c.name === "Delve");
-  const teamMap =
-    currentEvent?.teams?.reduce((acc: { [teamId: number]: Team }, team) => {
-      acc[team.id] = team;
-      return acc;
-    }, {}) || {};
+  const teamMap = useMemo(
+    () =>
+      currentEvent?.teams?.reduce((acc: { [teamId: number]: Team }, team) => {
+        acc[team.id] = team;
+        return acc;
+      }, {}) || {},
+    [currentEvent]
+  );
   const getTeam = useMemo(() => {
     const userToTeam =
       users?.reduce(
@@ -56,12 +59,12 @@ export function DelveTab() {
       }
       return userToTeam[userId];
     };
-  }, [users]);
+  }, [users, teamMap]);
   const delveLadderColumns = useMemo(() => {
     if (!currentEvent) {
       return [];
     }
-    let columns: ColumnDef<LadderEntry, any>[] = [];
+    let columns: ColumnDef<LadderEntry>[] = [];
     if (!isMobile) {
       columns = [
         {
@@ -171,7 +174,7 @@ export function DelveTab() {
       ];
     }
     return columns;
-  }, [isMobile, currentEvent]);
+  }, [isMobile, currentEvent, getTeam]);
 
   // const delveLadderColumns = useMemo(() => {
   //   let columns: ColumnDef<LadderEntry, any>[] = [];

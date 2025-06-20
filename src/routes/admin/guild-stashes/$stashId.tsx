@@ -29,7 +29,6 @@ function RouteComponent() {
   const { highlightScoring } = useSearch({
     from: Route.id,
   });
-  console.log("highlightScoring", highlightScoring);
   const {
     data: currentTab,
     isPending,
@@ -47,8 +46,7 @@ function RouteComponent() {
     });
     observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [ref.current]);
-
+  }, [ref.current]); // eslint-disable-line
   if (isPending || isError || !currentTab) {
     return (
       <div
@@ -97,7 +95,7 @@ function RouteComponent() {
           <div className="divider m-0"></div>
 
           <div className="flex flex-col">
-            {selectedItem?.properties?.map((prop, idx) => {
+            {selectedItem?.properties?.map((prop) => {
               if (prop.displayMode === 3) {
                 const values = prop.values?.map((v) => v[0]);
                 let name = prop.name || "";

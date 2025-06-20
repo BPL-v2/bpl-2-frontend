@@ -1,4 +1,4 @@
-import { JSX, useEffect, useMemo, useState } from "react";
+import React, { JSX, useEffect, useMemo, useState } from "react";
 import { sendWarning } from "@utils/notifications";
 import ArrayInput from "./arrayinput";
 import dayjs from "dayjs";
@@ -217,9 +217,9 @@ const CrudTable = <T,>({
                     name={String(key)}
                   >
                     {column.options?.map((option) => {
-                      let label =
+                      const label =
                         typeof option === "string" ? option : option.label;
-                      let value =
+                      const value =
                         typeof option === "string" ? option : option.value;
 
                       return (
@@ -280,7 +280,15 @@ const CrudTable = <T,>({
         </div>
       </form>
     );
-  }, [currentData]);
+  }, [
+    currentData,
+    columns,
+    fetchFunction,
+    formValidator,
+    createFunction,
+    editFunction,
+    data,
+  ]);
 
   return (
     <>
@@ -350,7 +358,9 @@ const CrudTable = <T,>({
                   {columns
                     .filter((column) => !column.hidden)
                     .map((column, cid) => {
-                      const value = entry[column.dataIndex as keyof T] as any;
+                      const value = entry[
+                        column.dataIndex as keyof T
+                      ] as React.ReactNode;
                       if (column.render) {
                         return (
                           <td key={String(column.dataIndex) + cid}>

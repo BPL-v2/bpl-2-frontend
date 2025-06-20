@@ -13,7 +13,7 @@ const TwitchEmbed: React.FC<TwitchEmbedProps> = ({
   // parent = ["localhost"],
 }) => {
   const embedRef = useRef<HTMLDivElement>(null);
-  const embedInstanceRef = useRef<any>(null); // To store the Twitch Embed instance
+  const embedInstanceRef = useRef<any>(null); // eslint-disable-line
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   useEffect(() => {
     // Function to calculate dimensions based on the viewport width
@@ -41,11 +41,11 @@ const TwitchEmbed: React.FC<TwitchEmbedProps> = ({
     script.src = "https://embed.twitch.tv/embed/v1.js";
     script.async = true;
     script.onload = () => {
-      // @ts-ignore
+      // @ts-ignore: window.Twitch existst if the script is loaded
       if (window.Twitch && embedRef.current) {
         // Initialize the Twitch Embed instance only if it doesn't already exist
         if (!embedInstanceRef.current) {
-          // @ts-ignore
+          // @ts-ignore: window.Twitch existst if the script is loaded
           embedInstanceRef.current = new window.Twitch.Embed(
             embedRef.current.id,
             {

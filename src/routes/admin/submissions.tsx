@@ -220,12 +220,13 @@ function SubmissionPage() {
           {
             name: "Approve",
             func: async (submission: Partial<Submission>) => {
-              submission.id &&
+              if (submission.id) {
                 submissionApi
                   .reviewSubmission(currentEvent.id, submission.id, {
                     approval_status: "APPROVED",
                   })
                   .then(() => setReloadTable(!reloadTable));
+              }
             },
             visible: () =>
               user?.permissions.includes(Permission.submission_judge) ?? false,
@@ -233,12 +234,13 @@ function SubmissionPage() {
           {
             name: "Reject",
             func: async (submission: Partial<Submission>) => {
-              submission.id &&
+              if (submission.id) {
                 submissionApi
                   .reviewSubmission(currentEvent.id, submission.id, {
                     approval_status: "REJECTED",
                   })
                   .then(() => setReloadTable(!reloadTable));
+              }
             },
             visible: () =>
               user?.permissions.includes(Permission.submission_judge) ?? false,
@@ -246,10 +248,11 @@ function SubmissionPage() {
           {
             name: "Delete",
             func: async (submission: Partial<Submission>) => {
-              submission.id &&
+              if (submission.id) {
                 submissionApi
                   .deleteSubmission(currentEvent.id, submission.id)
                   .then(() => setReloadTable(!reloadTable));
+              }
             },
             visible: () =>
               user?.permissions.includes(Permission.submission_judge) ?? false,

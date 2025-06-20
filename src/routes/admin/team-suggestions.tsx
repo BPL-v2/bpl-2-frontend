@@ -131,7 +131,7 @@ export function TeamSuggestionsPage() {
       },
     ];
     return columns;
-  }, [teamGoals, eventStatus]);
+  }, [teamGoals, eventStatus, currentEvent]);
 
   const objectiveColumns = useMemo(() => {
     if (!eventStatus) {
@@ -211,7 +211,7 @@ export function TeamSuggestionsPage() {
       },
     ];
     return columns;
-  }, [teamGoals, eventStatus]);
+  }, [teamGoals, eventStatus, currentEvent]);
 
   if (!scores) {
     return <div>Loading...</div>;
