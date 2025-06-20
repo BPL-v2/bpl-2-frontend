@@ -45,22 +45,27 @@ def get_gem_dict() -> dict[str, list[Gem]]:
     response = request.urlopen("https://repoe-fork.github.io/gems.json")
     full_gems: dict = json.loads(response.read())
     gems: dict[str, list[Gem]] = {}
+    gem_colors = {"r": set(), "g": set(), "b": set(), "w": set()}
     for gem in full_gems.values():
         base_name = get_base_name(gem)
         if base_name is not None:
             if base_name not in gems:
                 gems[base_name] = []
+            if "color" in gem and gem["color"] is not None:
+                gem_colors[gem["color"]].add(gem["display_name"])
             gems[base_name].append({
                 "display_name": gem["display_name"],
                 "discriminator": gem.get("discriminator"),
                 "color": gem.get("color")
             })
+    with open(f"public/assets/poe1/items/gem_colors.json", "w") as file:
+        json.dump({k: sorted(v)
+                   for k, v in gem_colors.items()}, file, indent=4)
     return gems
 
 
 def download():
     gems = get_gem_dict()
-
     for version in ["poe1", "poe2"]:
         if not os.path.exists(f"public/assets/{version}/items/uniques"):
             os.makedirs(f"public/assets/{version}/items/uniques")
