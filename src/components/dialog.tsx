@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { twMerge } from "tailwind-merge";
 
 interface DialogProps {
   title: string | React.ReactNode;
@@ -6,6 +7,7 @@ interface DialogProps {
   setOpen: (isOpen: boolean) => void;
   children: React.ReactNode;
   closeOnOutsideClick?: boolean;
+  className?: string;
 }
 
 export function Dialog({
@@ -14,6 +16,7 @@ export function Dialog({
   setOpen,
   children,
   closeOnOutsideClick = false,
+  className = "",
 }: DialogProps) {
   const boxRef = useRef<HTMLDivElement>(null);
 
@@ -41,12 +44,14 @@ export function Dialog({
       window.removeEventListener("mousedown", handleClick);
     };
   }, [closeOnOutsideClick, open, setOpen]);
-
   return (
     <dialog open={open} className="modal">
       <div
         ref={boxRef}
-        className="modal-box bg-base-200 border-2 border-base-100"
+        className={twMerge(
+          "modal-box bg-base-200 border-2 border-base-100",
+          className
+        )}
       >
         <h3 className="font-bold text-lg mb-8">{title}</h3>
         <div className="w-full">{children}</div>

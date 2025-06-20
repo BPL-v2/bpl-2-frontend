@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { DisplayItem, GuildStashTabGGG } from "@client/api";
 import { getColor } from "@utils/item";
 
@@ -6,15 +6,27 @@ type Props = {
   tab: GuildStashTabGGG;
   size?: number;
   onItemClick?: (item: DisplayItem) => void;
+  highlightScoring?: boolean;
 };
 
 export const StashTabGrid: React.FC<Props> = ({
   tab,
   size = 1000,
   onItemClick,
+  highlightScoring,
 }) => {
   const occupied = new Set<string>();
   const gridNum = tab?.type === "PremiumStash" ? 12 : 24;
+  const items = useMemo(() => {
+    return (
+      tab.items?.filter((item) => {
+        if (highlightScoring && !item.objectiveId) {
+          return false;
+        }
+        return true;
+      }) || []
+    );
+  }, [tab.items, highlightScoring]);
   return (
     <div
       className={`grid gap-1 aspect-square h-[90vh]`}
@@ -28,8 +40,7 @@ export const StashTabGrid: React.FC<Props> = ({
       {[...Array(gridNum)].flatMap((_, i) =>
         [...Array(gridNum)].map((_, j) => {
           if (occupied.has(`${i}-${j}`)) return null;
-          const item = tab.items?.find((item) => item.x === i && item.y === j);
-
+          const item = items?.find((item) => item.x === i && item.y === j);
           if (item) {
             const width = item.w || 1;
             const height = item.h || 1;
