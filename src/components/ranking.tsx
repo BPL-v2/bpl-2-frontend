@@ -64,7 +64,7 @@ export function Ranking({
   const { currentEvent } = useContext(GlobalStateContext);
   return (
     <div
-      className={`grid gap-4 ${getGridLayout(
+      className={`w-full grid gap-4 ${getGridLayout(
         Object.keys(objective.team_score).length
       )}`}
     >
