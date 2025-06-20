@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 
 import { GlobalStateContext } from "@utils/context-provider";
 
@@ -14,7 +14,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { iterateObjectives } from "@utils/utils";
 import Table from "@components/table";
-import { CellContext, ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { TeamName } from "@components/team-name";
 import { useGetRules, useGetUser, useGetUsers } from "@client/query";
 dayjs.extend(customParseFormat);
@@ -45,7 +45,9 @@ function SubmissionPage() {
   const { data: users } = useGetUsers(currentEvent.id);
   const { data: rules } = useGetRules(currentEvent.id);
   const { data: user } = useGetUser();
-  const objectiveMap: Record<number, Objective> = {};
+  const objectiveMap: Record<number, Objective> = useMemo(() => {
+    return {};
+  }, []);
   iterateObjectives(rules, (objective) => {
     if (objective.objective_type === ObjectiveType.SUBMISSION) {
       objectiveMap[objective.id] = objective;
@@ -58,13 +60,6 @@ function SubmissionPage() {
       });
     }
   }, [currentEvent, reloadTable]);
-  const getObjective = React.useMemo(() => {
-    return (info: CellContext<Submission, unknown>) =>
-      objectiveMap[info.row.original.objective_id] || {
-        id: -1,
-        name: "Unknown Objective",
-      };
-  }, [rules, objectiveMap]);
 
   const columns = React.useMemo(() => {
     if (!currentEvent || !rules || !users) {
@@ -240,7 +235,7 @@ function SubmissionPage() {
       });
     }
     return columns;
-  }, [currentEvent, getObjective, users, user]);
+  }, [currentEvent, users, user, objectiveMap, reloadTable, rules]);
 
   if (!currentEvent || !rules) {
     return <div>No event selected</div>;

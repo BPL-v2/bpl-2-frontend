@@ -50,7 +50,7 @@ export function operatorToString(operator: Operator): string {
   return "";
 }
 
-var anomalousUniques: {
+const anomalousUniques: {
   [gameVersion: string]: Record<string, Record<string, string>>;
 } = {
   poe1: {

@@ -87,13 +87,13 @@ async function createBulkItemObjectives(
 }
 export function ScoringCategoryPage(): JSX.Element {
   const { data: events } = useGetEvents();
-  let { eventId, categoryId } = useParams({ from: Route.id });
+  const { eventId, categoryId } = useParams({ from: Route.id });
   const [isObjectiveModalOpen, setIsObjectiveModalOpen] = useState(false);
   const [isBulkObjectiveModalOpen, setIsBulkObjectiveModalOpen] =
     useState(false);
   const [isConditionModalOpen, setIsConditionModalOpen] = useState(false);
   const [scoringPresets, setScoringPresets] = useState<ScoringPreset[]>([]);
-  const [refreshObjectives, setRefreshObjectives] = useState(false);
+  const [_, setRefreshObjectives] = useState(false);
   const [conditionField, setConditionField] = useState<ItemField>();
   const [currentObjective, setCurrentObjective] = useState<
     Partial<ObjectiveCreate>
@@ -129,7 +129,7 @@ export function ScoringCategoryPage(): JSX.Element {
         }
       );
     });
-  }, []);
+  }, [eventId]);
 
   useEffect(() => {
     if (!event) {
@@ -364,7 +364,7 @@ export function ScoringCategoryPage(): JSX.Element {
       const data = new FormData(form);
       let baseTypeConditionExists = false;
       let nameConditionExists = false;
-      let conditions =
+      const conditions =
         currentObjective.conditions?.map((condition) => {
           if (
             condition.field === ItemField.BASE_TYPE &&
@@ -465,7 +465,14 @@ export function ScoringCategoryPage(): JSX.Element {
         </div>
       </form>
     );
-  }, [currentObjective, objectiveType, scoringPresets]);
+  }, [
+    currentObjective,
+    objectiveType,
+    scoringPresets,
+    categoryId,
+    eventId,
+    numberFieldsForObjectiveType,
+  ]);
 
   const objectiveColumns: CrudColumn<Objective>[] = useMemo(
     () => [
@@ -579,7 +586,7 @@ export function ScoringCategoryPage(): JSX.Element {
         },
       },
     ],
-    [scoringPresets, event]
+    [scoringPresets, event, eventId]
   );
 
   const addtionalObjectiveActions = [
@@ -618,7 +625,7 @@ export function ScoringCategoryPage(): JSX.Element {
     },
   ];
 
-  let objectiveTable = useMemo(() => {
+  const objectiveTable = useMemo(() => {
     return (
       <>
         <h3>{"Objectives"} </h3>
@@ -655,9 +662,9 @@ export function ScoringCategoryPage(): JSX.Element {
         </button>
       </>
     );
-  }, [objectiveColumns, categoryId, refreshObjectives]);
+  }, [objectiveColumns, categoryId, addtionalObjectiveActions, eventId]);
 
-  let bulkObjeciveModal = useMemo(
+  const bulkObjeciveModal = useMemo(
     () => (
       <Dialog
         title="Create Objectives in bulk"
@@ -738,9 +745,9 @@ export function ScoringCategoryPage(): JSX.Element {
         </div>
       </Dialog>
     ),
-    [isBulkObjectiveModalOpen]
+    [isBulkObjectiveModalOpen, categoryId, eventId, scoringPresets]
   );
-  let objectiveModal = (
+  const objectiveModal = (
     <Dialog
       title="Create Objective"
       open={isObjectiveModalOpen}
@@ -750,7 +757,7 @@ export function ScoringCategoryPage(): JSX.Element {
     </Dialog>
   );
 
-  let conditionModal = useMemo(() => {
+  const conditionModal = useMemo(() => {
     return (
       <Dialog
         title="Create Condition"
@@ -820,7 +827,13 @@ export function ScoringCategoryPage(): JSX.Element {
         </form>
       </Dialog>
     );
-  }, [currentObjective, isConditionModalOpen, conditionField]);
+  }, [
+    currentObjective,
+    isConditionModalOpen,
+    conditionField,
+    eventId,
+    operatorForField,
+  ]);
 
   if (!categoryId) {
     return <></>;

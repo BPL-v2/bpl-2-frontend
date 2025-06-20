@@ -12,7 +12,7 @@ function getIcon(url: string): React.ReactNode {
   let parsedUrl: URL;
   try {
     parsedUrl = new URL(url);
-  } catch (e) {
+  } catch (_) {
     return;
   }
 

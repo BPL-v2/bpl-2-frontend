@@ -44,29 +44,23 @@ export const StashTabSpecial: React.FC<Props> = ({
   onItemClick,
   highlightScoring,
 }) => {
-  if (!tab || !tab.metadata) {
-    console.warn("StashTabSpecial: No tab or metadata provided", tab);
-    return null;
-  }
   const layout = getLayout(
-    tab.type!,
+    tab?.type,
     tab?.metadata?.layout as StashTabLayoutWrapper
   );
-  if (!layout) return null;
 
   // Collect all unique sections from the layout, but only keep those with at least one non-hidden layout item
-  const sections = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          Object.values(layout)
-            .filter((mapping) => !mapping.hidden)
-            .map((mapping) => mapping.section)
-            .filter((section) => section !== undefined)
-        )
-      ) as string[],
-    [layout]
-  );
+  const sections = useMemo(() => {
+    if (!layout) return [];
+    return Array.from(
+      new Set(
+        Object.values(layout)
+          .filter((mapping) => !mapping.hidden)
+          .map((mapping) => mapping.section)
+          .filter((section) => section !== undefined)
+      )
+    );
+  }, [layout]);
   // Section state
   const [selectedSection, setSelectedSection] = useState<string>(
     sections.length > 0 ? sections[0] : ""
@@ -82,14 +76,15 @@ export const StashTabSpecial: React.FC<Props> = ({
   }, [sections]);
   const items = useMemo(() => {
     return (
-      tab.items?.filter((item) => {
+      tab?.items?.filter((item) => {
         if (highlightScoring && !item.objectiveId) {
           return false;
         }
         return true;
       }) || []
     );
-  }, [tab.items, highlightScoring]);
+  }, [tab?.items, highlightScoring]);
+  if (!tab || !tab.metadata || !layout) return null;
 
   // Filter layout by section if sections exist
   const filteredLayout =

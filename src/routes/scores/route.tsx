@@ -75,7 +75,7 @@ function ScoringPage() {
         },
       });
     }
-  }, [selected]);
+  }, [rules, selected]);
 
   const scoringTabs: {
     key: scoringTabKey;

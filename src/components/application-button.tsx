@@ -14,9 +14,8 @@ import {
 } from "@client/query";
 import { useQueryClient } from "@tanstack/react-query";
 
-type ApplicationButtonProps = {};
-const ApplicationButton = ({}: ApplicationButtonProps) => {
-  let { currentEvent } = useContext(GlobalStateContext);
+const ApplicationButton = () => {
+  const { currentEvent } = useContext(GlobalStateContext);
   const state = useRouterState();
   const [modalOpen, setModalOpen] = React.useState(false);
   const formRef = React.useRef<HTMLFormElement>(null);

@@ -64,7 +64,7 @@ function UniqueTab() {
     setSelectedCategory(
       uniques.children.find((category) => category.id === selectedCategory.id)
     );
-  }, [scores]);
+  }, [scores, selectedCategory]);
 
   useEffect(() => {
     if (!uniqueCategory || !selectedTeam) {
@@ -91,7 +91,7 @@ function UniqueTab() {
       return <ItemTable objective={uniqueCategory} />;
     }
     return <ItemTable objective={selectedCategory}></ItemTable>;
-  }, [selectedCategory, selectedTeam, uniqueCategory]);
+  }, [selectedCategory, uniqueCategory]);
 
   if (!uniqueCategory || !currentEvent || !scores || !selectedTeam) {
     return <></>;

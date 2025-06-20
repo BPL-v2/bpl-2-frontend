@@ -15,9 +15,6 @@ function fixCategoryName(name?: string): string {
     return "Flask";
   }
   name = name.replace("One Hand ", "").replace("Two Hand ", "");
-  // if (name[name.length - 1] !== "s") {
-  //   name += "s";
-  // }
   return name;
 }
 
@@ -67,8 +64,6 @@ export const StashTabUnique: React.FC<Props> = ({
           })
           .sort((a, b) => (b.h || 1) - (a.h || 1))
           .map((item, idx) => {
-            const width = item.w || 1;
-            const height = item.h || 1;
             return (
               <div
                 className={clsx(
@@ -77,7 +72,7 @@ export const StashTabUnique: React.FC<Props> = ({
                     ? "bg-base-300 border-2 border-primary"
                     : "bg-base-200"
                 )}
-                key={idx}
+                key={"item-" + idx}
                 onClick={() => onItemClick && onItemClick(item)}
               >
                 <div className="items-center card-body select-none rounded-box">
@@ -85,12 +80,8 @@ export const StashTabUnique: React.FC<Props> = ({
                     {item.name}
                   </span>
                   <img
-                    key={"item-" + idx}
+                    className="m-auto"
                     data-tip={`${item.name} ${item.typeLine}`}
-                    style={{
-                      width: `${50 * width}px`,
-                      height: `${50 * height}px`,
-                    }}
                     src={item.icon}
                     alt={item.name}
                   />

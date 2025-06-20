@@ -19,6 +19,20 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   const [time, setTime] = useState<string>("00:00");
 
   useEffect(() => {
+    const getTime = (date: Date | undefined) => {
+      if (!date) {
+        return "00:00";
+      }
+      return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    };
+    const getDate = (date: Date | undefined) => {
+      if (!date) {
+        return "";
+      }
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
+        date.getDate()
+      )}`;
+    };
     if (defaultValue) {
       const initialDate =
         typeof defaultValue === "string"
@@ -28,22 +42,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
       setTime(getTime(initialDate));
     }
   }, [defaultValue]);
-
-  const getTime = (date: Date | undefined) => {
-    if (!date) {
-      return "00:00";
-    }
-    return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
-  };
-
-  const getDate = (date: Date | undefined) => {
-    if (!date) {
-      return "";
-    }
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
-      date.getDate()
-    )}`;
-  };
 
   const toIsoString = (time: string, date?: string) => {
     if (!date || !time) {

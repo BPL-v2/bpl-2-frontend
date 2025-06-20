@@ -48,7 +48,7 @@ function pointsRenderer(points: number[]) {
 }
 
 function ScoringPresetsPage() {
-  let { eventId } = useParams({ from: Route.id });
+  const { eventId } = useParams({ from: Route.id });
   const { data: events } = useGetEvents();
   const event = events?.find((event) => event.id === eventId);
 

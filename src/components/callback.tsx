@@ -53,7 +53,7 @@ export function Callback({
           to: resp.last_path,
         });
       });
-  }, [state, code, provider, error]);
+  }, [state, code, provider, error, queryClient]);
   if (error) {
     return (
       <>

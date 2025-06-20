@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { sortUsers } from "@utils/usersort";
 import { Permission, Signup } from "@client/api";
@@ -8,7 +8,6 @@ import Table from "@components/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { renderConditionally } from "@utils/token";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
-import { useGetEventStatus } from "@client/query";
 
 export const Route = createFileRoute("/admin/team-sort")({
   component: renderConditionally(UserSortPage, [
@@ -51,25 +50,21 @@ function UserSortPage() {
   const [signups, setSignups] = useState<Signup[]>([]);
   const [suggestions, setSuggestions] = useState<Signup[]>([]);
   const [nameListFilter, setNameListFilter] = useState<string[]>([]);
-  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
 
-  function updateSignups() {
+  const updateSignups = useCallback(() => {
     if (!currentEvent) {
       return;
     }
     signupApi.getEventSignups(currentEvent.id).then((signups) => {
       setSignups(signups);
       setSuggestions(signups);
-      if (!eventStatus) {
-        return;
-      }
     });
-  }
+  }, [currentEvent]);
 
-  useEffect(updateSignups, [currentEvent]);
+  useEffect(updateSignups, [updateSignups, currentEvent]);
 
   const sortColumns = useMemo(() => {
-    const columns: ColumnDef<Signup, any>[] = [
+    const columns: ColumnDef<Signup>[] = [
       {
         header: "Name",
         accessorKey: "user.display_name",
@@ -159,7 +154,7 @@ function UserSortPage() {
       },
     ];
     return columns;
-  }, [currentEvent, suggestions]);
+  }, [currentEvent, suggestions, updateSignups]);
 
   if (!currentEvent) {
     return <div>Loading</div>;

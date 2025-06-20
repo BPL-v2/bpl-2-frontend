@@ -55,11 +55,14 @@ export function LadderTab() {
     isPending: usersIsPending,
     isError: usersIsError,
   } = useGetUsers(currentEvent.id);
-  const teamMap =
-    currentEvent?.teams?.reduce((acc: { [teamId: number]: Team }, team) => {
-      acc[team.id] = team;
-      return acc;
-    }, {}) || {};
+  const teamMap = useMemo(
+    () =>
+      currentEvent?.teams?.reduce((acc: { [teamId: number]: Team }, team) => {
+        acc[team.id] = team;
+        return acc;
+      }, {}) || {},
+    [currentEvent]
+  );
 
   const getTeam = useMemo(() => {
     const userToTeam =
@@ -293,7 +296,14 @@ export function LadderTab() {
       ];
     }
     return columns;
-  }, [isMobile, currentEvent, preferences]);
+  }, [
+    isMobile,
+    currentEvent,
+    preferences,
+    gameVersion,
+    getTeam,
+    setPreferences,
+  ]);
 
   if (ladderIsPending || usersIsPending) {
     return <div className="loading loading-spinner loading-lg"></div>;
@@ -419,7 +429,7 @@ export function LadderTab() {
                 {scoreColumns.map((column) => (
                   <td key={`column-${column.key}`}>
                     {
-                      // @ts-ignore
+                      // @ts-ignore: column.dataIndex can be used to access the row data
                       column.render ? column.render(row) : row[column.dataIndex]
                     }
                   </td>

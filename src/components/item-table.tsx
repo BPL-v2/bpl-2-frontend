@@ -54,10 +54,6 @@ export function ItemTable({ objective }: ItemTableProps) {
     );
   }, [objective]);
 
-  if (!currentEvent || !objective) {
-    return <></>;
-  }
-
   const objectNameRender = (objective: ExtendedScoreObjective) => {
     if (variantMap[objective.name] && !objective.isVariant) {
       return (
@@ -133,18 +129,17 @@ export function ItemTable({ objective }: ItemTableProps) {
     }
     return className;
   };
-  const teamSort = (a: Team, b: Team) => {
-    if (a.id === userTeamID) {
-      return -1;
-    }
-    if (b.id === userTeamID) {
-      return 1;
-    }
-    return a.name.localeCompare(b.name);
-  };
 
-  const columns = useMemo<ColumnDef<ExtendedScoreObjective, any>[]>(() => {
-    const teams = currentEvent.teams.sort(teamSort);
+  const columns = useMemo<ColumnDef<ExtendedScoreObjective>[]>(() => {
+    const teams = currentEvent.teams.sort((a: Team, b: Team) => {
+      if (a.id === userTeamID) {
+        return -1;
+      }
+      if (b.id === userTeamID) {
+        return 1;
+      }
+      return a.name.localeCompare(b.name);
+    });
     let columns: ColumnDef<ExtendedScoreObjective, any>[] = [];
     if (windowWidth < 1200) {
       columns = [
@@ -225,7 +220,7 @@ export function ItemTable({ objective }: ItemTableProps) {
           },
           enableSorting: false,
           size: 200,
-          cell: (info: CellContext<ExtendedScoreObjective, any>) => {
+          cell: (info: CellContext<ExtendedScoreObjective, string>) => {
             const finished =
               info.row.original.team_score[team.id]?.finished || false;
             const user =
@@ -263,7 +258,24 @@ export function ItemTable({ objective }: ItemTableProps) {
       ];
     }
     return columns;
-  }, [currentEvent, objective, variantMap, showVariants, windowWidth]);
+  }, [
+    currentEvent,
+    objective,
+    variantMap,
+    showVariants,
+    windowWidth,
+    badgeClass,
+    gameVersion,
+    imageOverlayedWithText,
+    objectNameRender,
+    userTeamID,
+    users,
+  ]);
+
+  if (!currentEvent || !objective) {
+    return <></>;
+  }
+
   return (
     <>
       <Table

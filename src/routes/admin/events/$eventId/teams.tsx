@@ -24,15 +24,9 @@ export const Route = createFileRoute("/admin/events/$eventId/teams")({
 });
 
 function TeamPage() {
-  let { eventId } = useParams({ from: Route.id });
+  const { eventId } = useParams({ from: Route.id });
   const { data: events, isPending, isError } = useGetEvents();
-  if (isPending) {
-    return <div className="loading loading-spinner loading-lg"></div>;
-  }
-  if (isError) {
-    return <div>Error loading events.</div>;
-  }
-  const event = events.find((event) => event.id === eventId);
+  const event = events?.find((event) => event.id === eventId);
   const columns: CrudColumn<Team>[] = useMemo(
     () => [
       {
@@ -111,6 +105,12 @@ function TeamPage() {
     ],
     [event]
   );
+  if (isPending) {
+    return <div className="loading loading-spinner loading-lg"></div>;
+  }
+  if (isError) {
+    return <div>Error loading events.</div>;
+  }
   if (!event || !eventId) {
     return <></>;
   }

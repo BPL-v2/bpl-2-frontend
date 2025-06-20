@@ -72,7 +72,7 @@ export default function Select({
           <ComboboxInput
             name={name}
             className={twMerge("select", fontSize, className)}
-            displayValue={(option: string | null) => selected?.label || ""}
+            displayValue={(_) => selected?.label || ""}
             onChange={(event) => {
               setQuery(event.target.value);
             }}
