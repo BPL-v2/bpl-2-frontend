@@ -263,3 +263,12 @@ export function useSwitchStashFetching(
     },
   });
 }
+
+export function useFile<T>(filePath: string) {
+  return useQuery({
+    queryKey: [filePath],
+    queryFn: async () =>
+      fetch(filePath).then((res) => res.json() as Promise<T>),
+    refetchOnMount: false,
+  });
+}

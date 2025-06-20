@@ -16,9 +16,10 @@ import { useGetEventStatus, useGetUsers } from "@client/query";
 
 export type ItemTableProps = {
   objective: ScoreObjective;
+  filter?: (obj: ScoreObjective) => boolean;
 };
 
-export function ItemTable({ objective }: ItemTableProps) {
+export function ItemTable({ objective, filter }: ItemTableProps) {
   const { currentEvent, gameVersion } = useContext(GlobalStateContext);
   const { data: users } = useGetUsers(currentEvent.id);
   const { data: eventStatus } = useGetEventStatus(currentEvent.id);
@@ -211,9 +212,12 @@ export function ItemTable({ objective }: ItemTableProps) {
               <div>
                 <div>{team.name || "Team"}</div>
                 <div className="text-sm text-info">
-                  {objectives.filter((o) => o.team_score[team.id]?.finished)
-                    ?.length || 0}{" "}
-                  / {objectives.length}
+                  {objectives
+                    .filter((o) => (filter ? filter(o) : true))
+                    .filter((o) => o.team_score[team.id]?.finished)?.length ||
+                    0}{" "}
+                  /{" "}
+                  {objectives.filter((o) => (filter ? filter(o) : true)).length}
                 </div>
               </div>
             );
@@ -282,6 +286,7 @@ export function ItemTable({ objective }: ItemTableProps) {
         columns={columns}
         data={
           flatMapUniques(objective)
+            .filter((obj) => (filter ? filter(obj) : true))
             .sort((a, b) => a.name.localeCompare(b.name))
             .flatMap((objective) => {
               const variantRows = variantMap[objective.name]?.map((variant) => {
@@ -297,7 +302,7 @@ export function ItemTable({ objective }: ItemTableProps) {
           "hover:bg-base-200/50 " +
           (row.original.isVariant ? "bg-base-200" : "")
         }
-        className="h-[70vh]"
+        className="w-full h-[70vh]"
       />
     </>
   );
