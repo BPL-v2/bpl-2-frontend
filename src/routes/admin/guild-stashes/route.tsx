@@ -12,7 +12,7 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
@@ -42,6 +42,17 @@ function RouteComponent() {
     currentEvent.id
   );
   const [hideDisabled, setHideDisabled] = useState(true);
+  const [highlightScoring, setHighlightScoring] = useState(true);
+  useEffect(() => {
+    router.navigate({
+      to: "/admin/guild-stashes/$stashId",
+      replace: true,
+      params: { stashId },
+      search: { highlightScoring },
+    });
+  }, [highlightScoring]);
+
+  const [stashSearch, setStashSearch] = useState("");
   dayjs.extend(relativeTime);
 
   if (!stashId) {
@@ -52,6 +63,7 @@ function RouteComponent() {
         to: "/admin/guild-stashes/$stashId",
         replace: true,
         params: { stashId: firstStashId },
+        search: { highlightScoring },
       });
     }
     return null;
@@ -59,25 +71,58 @@ function RouteComponent() {
 
   return (
     <div>
-      <button
-        className="btn btn-primary "
-        onClick={() => {
-          updateGuildStashes(); // Example stash ID
-        }}
-      >
-        Update Guild Stash
-      </button>{" "}
-      <button
-        className="btn btn-primary "
-        onClick={() => setHideDisabled(!hideDisabled)}
-      >
-        {hideDisabled ? "Show" : "Hide"} Disabled Tabs
-      </button>{" "}
+      <div className="flex flex-row gap-2 items-center justify-center mt-2">
+        <input
+          type="text"
+          placeholder="Search Stash Tabs"
+          className="input input-bordered w-full max-w-xs"
+          value={stashSearch}
+          onChange={(e) => setStashSearch(e.target.value)}
+        />
+        <button
+          className="btn btn-primary "
+          onClick={() => {
+            updateGuildStashes(); // Example stash ID
+          }}
+        >
+          Update Guild Stash
+        </button>
+        <button
+          className="btn btn-primary "
+          onClick={() => setHideDisabled(!hideDisabled)}
+        >
+          {hideDisabled ? "Show" : "Hide"} Disabled Tabs
+        </button>
+        <button
+          className="btn btn-primary "
+          onClick={() => {
+            setHighlightScoring(!highlightScoring);
+
+            router.navigate({
+              to: "/admin/guild-stashes/$stashId",
+              replace: true,
+              params: { stashId },
+              search: { highlightScoring: !highlightScoring },
+            } as any);
+          }}
+        >
+          {highlightScoring ? "Show" : "Hide"} Non-Objective Tabs
+        </button>
+      </div>
       <div className="flex flex-row gap-2 mt-2 justify-center">
-        <div className="flex flex-col gap-1 overflow-y-auto h-[75vh] w-[35vw]">
+        <div className="flex flex-col gap-1 overflow-y-auto h-[80vh] w-[35vw]">
           {guildStashes
-            ?.filter((stash) => !hideDisabled || stash.fetch_enabled)
-            .filter((stash) => stash.type !== "Folder")
+            ?.filter((stash) => {
+              if (stash.parent_id) return false; // Exclude child tabs
+              if (hideDisabled && !stash.fetch_enabled) return false;
+              if (stash.type === "Folder") return false;
+              if (!stashSearch) return true;
+              const search = stashSearch.toLowerCase();
+              return (
+                stash.name.toLowerCase().includes(search) ||
+                stash.type.toLowerCase().includes(search)
+              );
+            })
             .sort((a, b) => a.index || 0 - (b.index || 0))
             .map((stash) => (
               <div className="flex flex-row items-center gap-2" key={stash.id}>
@@ -103,6 +148,7 @@ function RouteComponent() {
                   inactiveProps={{
                     className: "bg-base-100 border-dotted",
                   }}
+                  search={{ highlightScoring: highlightScoring }}
                 >
                   <img
                     src={`/assets/${gameVersion}/stashtabs/${stash.type.toLowerCase().replace("stash", "")}.png`}

@@ -11,6 +11,7 @@ type Props = {
   tab?: GuildStashTabGGG;
   size?: number;
   onItemClick?: (item: DisplayItem) => void;
+  highlightScoring?: boolean;
 };
 
 function getMapping(
@@ -41,17 +42,16 @@ export const StashTabSpecial: React.FC<Props> = ({
   tab,
   size = 1000,
   onItemClick,
+  highlightScoring,
 }) => {
   if (!tab || !tab.metadata) {
     console.warn("StashTabSpecial: No tab or metadata provided", tab);
     return null;
   }
-  console.debug("Rendering StashTabSpecial", tab);
   const layout = getLayout(
     tab.type!,
     tab?.metadata?.layout as StashTabLayoutWrapper
   );
-  console.debug("Layout for StashTabSpecial", layout);
   if (!layout) return null;
 
   // Collect all unique sections from the layout, but only keep those with at least one non-hidden layout item
@@ -80,6 +80,16 @@ export const StashTabSpecial: React.FC<Props> = ({
       setSelectedSection("");
     }
   }, [sections]);
+  const items = useMemo(() => {
+    return (
+      tab.items?.filter((item) => {
+        if (highlightScoring && !item.objectiveId) {
+          return false;
+        }
+        return true;
+      }) || []
+    );
+  }, [tab.items, highlightScoring]);
 
   // Filter layout by section if sections exist
   const filteredLayout =
@@ -95,7 +105,7 @@ export const StashTabSpecial: React.FC<Props> = ({
   // Filter items by section if sections exist
   const filteredItems =
     sections.length > 0
-      ? tab.items?.filter((item) => {
+      ? items.filter((item) => {
           const mapping = getMapping(item, layout);
           return (
             mapping &&
@@ -104,19 +114,19 @@ export const StashTabSpecial: React.FC<Props> = ({
               mapping.section === undefined)
           );
         })
-      : tab.items?.filter((item) => {
+      : items.filter((item) => {
           const mapping = getMapping(item, layout);
           return mapping && !mapping.hidden;
         });
   return (
-    <div>
+    <div className="relative">
       {sections.length > 0 && (
-        <div className="join mb-4">
+        <div className="join mb-4 absolute top-2 left-1/2 -translate-x-1/2 z-10">
           {sections.map((section) => (
             <button
               key={section}
               className={`btn join-item btn-sm ${
-                selectedSection === section ? "btn-primary" : ""
+                selectedSection === section ? "btn-primary" : "bg-base-300"
               }`}
               onClick={() => setSelectedSection(section)}
               type="button"
@@ -156,7 +166,6 @@ export const StashTabSpecial: React.FC<Props> = ({
               style={getStyle(mapping, size)}
               onClick={() => onItemClick?.(item)}
             >
-              {" "}
               <div
                 className="tooltip tooltip-primary tooltip-bottom relative cursor-pointer"
                 data-tip={`${item.name} ${item.typeLine}`}

@@ -587,6 +587,12 @@ export interface DisplayItem {
      */
     notableProperties?: Array<ItemProperty>;
     /**
+     * field added by our backend
+     * @type {number}
+     * @memberof DisplayItem
+     */
+    objectiveId?: number;
+    /**
      * 
      * @type {Array<ItemProperty>}
      * @memberof DisplayItem
@@ -1807,7 +1813,8 @@ export enum JobType {
     FetchStashChanges = 'FetchStashChanges',
     EvaluateStashChanges = 'EvaluateStashChanges',
     FetchCharacterData = 'FetchCharacterData',
-    FetchGuildStashes = 'FetchGuildStashes'
+    FetchGuildStashes = 'FetchGuildStashes',
+    DetermineGuildStashAccess = 'DetermineGuildStashAccess'
 }
 
 /**
@@ -4485,12 +4492,12 @@ export const GuildStashApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateStashTab(eventId: number, stash_id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<GuildStashTabGGG> {
+        updateStashTab(eventId: number, stash_id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
             const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).updateStashTab(eventId, stash_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.json();
+                        return response;
                     } else {
                         throw response;
                     }
