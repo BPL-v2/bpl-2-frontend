@@ -64,7 +64,7 @@ export default function Select({
         value={selected?.value || null}
         onChange={(value) => {
           setSelected(options.find((o) => o.value === value) || null);
-          onChange && onChange(value || "");
+          if (onChange) onChange(value || "");
         }}
         onClose={() => setQuery("")}
       >

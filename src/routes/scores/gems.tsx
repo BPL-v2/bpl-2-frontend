@@ -113,7 +113,8 @@ export function GemTab() {
             const baseType = obj.conditions.find(
               (c) => c.field === "BASE_TYPE"
             );
-            return gemColors[color].includes(baseType?.value!);
+            if (!baseType) return false;
+            return gemColors[color].includes(baseType.value);
           }}
         />
       </div>

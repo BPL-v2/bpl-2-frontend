@@ -5,7 +5,7 @@ import { getTotalPoints } from "@utils/utils";
 import { GameVersion, LadderEntry, Team } from "@client/api";
 import { ColumnDef, sortingFns } from "@tanstack/react-table";
 
-import { Ascendancy } from "@components/ascendancy";
+import { AscendancyName } from "@components/ascendancy-name";
 import { ExperienceBar } from "@components/experience-bar";
 import { TeamName } from "@components/team-name";
 import { LadderPortrait } from "@components/ladder-portrait";
@@ -167,7 +167,7 @@ export function LadderTab() {
                 character_class={info.row.original.character_class}
                 className="w-8 h-8 rounded-full"
               />
-              <Ascendancy character_class={info.row.original.character_class} />
+              <AscendancyName character_class={info.row.original.character_class} />
             </div>
           ),
           size: 250,
@@ -180,9 +180,9 @@ export function LadderTab() {
               gameVersion === GameVersion.poe1
                 ? Object.keys(phreciaMapping)
                 : Object.entries(poe2Mapping).map(([key, value]) => ({
-                    label: value,
-                    value: key,
-                  })),
+                  label: value,
+                  value: key,
+                })),
           },
         },
         {

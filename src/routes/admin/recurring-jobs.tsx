@@ -1,13 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-
 import { Event, JobType, Permission, RecurringJob } from "@client/api";
-import { jobApi } from "@client/client";
 import React from "react";
+import { useGetEvents, useGetJobs, useStartJob } from "@client/query";
+import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { Dialog } from "@components/dialog";
 import { renderConditionally } from "@utils/token";
 import Select from "@components/select";
-import { useGetEvents } from "@client/query";
+
+dayjs.extend(customParseFormat);
 
 export const Route = createFileRoute("/admin/recurring-jobs")({
   component: renderConditionally(RecurringJobsPage, [Permission.admin]),
@@ -25,34 +27,24 @@ const formatDateForInput = (date: Date | null) => {
 };
 
 function RecurringJobsPage() {
-  const [jobs, setJobs] = React.useState<RecurringJob[]>([]);
+  const queryClient = useQueryClient();
+  const { data: events, isLoading: eventsLoading } = useGetEvents();
+  const { data: jobs = [], isLoading: jobsLoading } = useGetJobs();
+  const { mutate: startJob, isPending: startJobPending } = useStartJob(queryClient);
   const [showModal, setShowModal] = React.useState(false);
   const [selectedEvent, setSelectedEvent] = React.useState<Event | null>(null);
   const [selectedEndDate, setSelectedEndDate] = React.useState<Date | null>(
     null
   );
-  const {
-    data: events,
-    isPending: eventsPending,
-    isError: eventsError,
-  } = useGetEvents();
   const formRef = React.useRef<HTMLFormElement>(null);
 
   const stopJob = (job: RecurringJob) => {
-    jobApi
-      .startJob({
-        event_id: job.event_id,
-        job_type: job.job_type,
-        duration_in_seconds: 0,
-      })
-      .then(() => {
-        jobApi.getJobs().then(setJobs);
-      });
+    startJob({
+      eventId: job.event_id,
+      jobType: job.job_type,
+      durationInSeconds: 0,
+    });
   };
-
-  React.useEffect(() => {
-    jobApi.getJobs().then(setJobs);
-  }, []);
 
   React.useEffect(() => {
     if (selectedEvent) {
@@ -61,11 +53,21 @@ function RecurringJobsPage() {
       );
     }
   }, [selectedEvent]);
-  if (eventsPending) {
-    return <div>Loading events...</div>;
+
+  // Show loading state while any data is loading
+  if (eventsLoading || jobsLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="flex flex-col items-center gap-4">
+          <span className="loading loading-spinner loading-lg"></span>
+          <p className="text-lg">Loading jobs...</p>
+        </div>
+      </div>
+    );
   }
-  if (eventsError) {
-    return <div>Error loading events</div>;
+
+  if (!events) {
+    return <div>Loading events...</div>;
   }
   return (
     <>
@@ -79,19 +81,13 @@ function RecurringJobsPage() {
           onSubmit={(e) => {
             const values = new FormData(formRef.current!);
             e.preventDefault();
-            jobApi
-              .startJob({
-                event_id: Number(values.get("event")),
-                job_type: values.get("jobType") as JobType,
-                end_date: new Date(
-                  values.get("endDate") as string
-                ).toISOString(),
-              })
-              .then(() => {
-                jobApi.getJobs().then(setJobs);
-                setShowModal(false);
-                formRef.current?.reset();
-              });
+            startJob({
+              eventId: Number(values.get("event")),
+              jobType: values.get("jobType") as JobType,
+              durationInSeconds: 0,
+            });
+            setShowModal(false);
+            formRef.current?.reset();
           }}
           ref={formRef}
         >
@@ -144,7 +140,11 @@ function RecurringJobsPage() {
           <button
             className="btn btn-primary"
             onClick={() => formRef.current?.requestSubmit()}
+            disabled={startJobPending}
           >
+            {startJobPending ? (
+              <span className="loading loading-spinner loading-sm"></span>
+            ) : null}
             Submit
           </button>
         </div>
@@ -174,7 +174,11 @@ function RecurringJobsPage() {
                   <button
                     className="btn btn-secondary"
                     onClick={() => stopJob(job)}
+                    disabled={startJobPending}
                   >
+                    {startJobPending ? (
+                      <span className="loading loading-spinner loading-xs"></span>
+                    ) : null}
                     Stop
                   </button>
                 )}

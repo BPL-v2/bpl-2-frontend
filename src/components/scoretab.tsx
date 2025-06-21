@@ -1,5 +1,4 @@
 import React from "react";
-import { router } from "../router";
 
 type ScoreTabProps = {
   tab: () => React.ReactNode;
@@ -7,7 +6,6 @@ type ScoreTabProps = {
 };
 
 export function ScoreTab({ tab, rules }: ScoreTabProps) {
-  console.log(router.state.location.search.rules);
   return (
     <>
       <article className="prose text-left max-w-4xl my-4 bg-base-200 p-8 rounded-box">

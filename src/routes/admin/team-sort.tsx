@@ -1,13 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { sortUsers } from "@utils/usersort";
 import { Permission, Signup } from "@client/api";
-import { signupApi, teamApi } from "@client/client";
 import Table from "@components/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { renderConditionally } from "@utils/token";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+import { useAddUsersToTeams, useGetSignups } from "@client/query";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/admin/team-sort")({
   component: renderConditionally(UserSortPage, [
@@ -47,21 +48,17 @@ function toExpectedPlayTime(
 function UserSortPage() {
   const { currentEvent } = useContext(GlobalStateContext);
   const [nameFilter, setNameFilter] = useState<string>("");
-  const [signups, setSignups] = useState<Signup[]>([]);
-  const [suggestions, setSuggestions] = useState<Signup[]>([]);
   const [nameListFilter, setNameListFilter] = useState<string[]>([]);
-
-  const updateSignups = useCallback(() => {
-    if (!currentEvent) {
-      return;
+  const queryClient = useQueryClient();
+  const { data: signups = [], isLoading, isError } = useGetSignups(currentEvent.id || 0);
+  const { mutate: addUsersToTeams } = useAddUsersToTeams(queryClient);
+  const [suggestions, setSuggestions] = useState<Signup[]>([]);
+  useEffect(() => {
+    if (signups) {
+      setSuggestions([...signups]);
     }
-    signupApi.getEventSignups(currentEvent.id).then((signups) => {
-      setSignups(signups);
-      setSuggestions(signups);
-    });
-  }, [currentEvent]);
+  }, [signups]);
 
-  useEffect(updateSignups, [updateSignups, currentEvent]);
 
   const sortColumns = useMemo(() => {
     const columns: ColumnDef<Signup>[] = [
@@ -96,15 +93,14 @@ function UserSortPage() {
                     : signup
                 )
               );
-              teamApi
-                .addUsersToTeams(currentEvent?.id || 0, [
-                  {
-                    user_id: row.original.user.id,
-                    team_id: row.original.team_id,
-                    is_team_lead: e.target.checked,
-                  },
-                ])
-                .then(updateSignups);
+              addUsersToTeams({
+                event_id: currentEvent?.id || 0,
+                users: [{
+                  user_id: row.original.user.id,
+                  team_id: row.original.team_id,
+                  is_team_lead: e.target.checked,
+                }],
+              });
             }}
           />
         ),
@@ -137,10 +133,10 @@ function UserSortPage() {
                     suggestions.map((signup) =>
                       signup.user.id === row.original.user.id
                         ? {
-                            ...signup,
-                            team_id: team.id,
-                            team_lead: row.original.team_lead,
-                          }
+                          ...signup,
+                          team_id: team.id,
+                          team_lead: row.original.team_lead,
+                        }
                         : signup
                     )
                   );
@@ -154,10 +150,13 @@ function UserSortPage() {
       },
     ];
     return columns;
-  }, [currentEvent, suggestions, updateSignups]);
+  }, [currentEvent, suggestions]);
 
-  if (!currentEvent) {
-    return <div>Loading</div>;
+  if (isError) {
+    return <div>Error loading signups</div>;
+  }
+  if (isLoading) {
+    return <div className="loading loading-spinner loading-lg"></div>;
   }
 
   let teamRows = [...currentEvent.teams, { id: null, name: "No team" }].map(
@@ -206,7 +205,7 @@ function UserSortPage() {
       key: -1,
     } as TeamRow
   );
-  const exportToCSV = () => {
+  const exportToCSV = (signups: Signup[]) => {
     if (!signups.length) return;
     const headers = [
       "Team",
@@ -292,7 +291,7 @@ function UserSortPage() {
       </table>
       <div className="divider divider-primary">Users</div>
       <div className="flex gap-2 bg-base-300 p-4 wrap mb-2">
-        <button className="btn btn-primary " onClick={exportToCSV}>
+        <button className="btn btn-primary " onClick={() => exportToCSV(signups)}>
           <ArrowDownTrayIcon className="w-4 h-4 mr-2" />
           CSV
         </button>
@@ -339,7 +338,6 @@ function UserSortPage() {
         <button
           className="btn btn-outline"
           onClick={() => {
-            setSignups(signups.map((s) => ({ ...s, team_id: undefined })));
             setSuggestions(signups.map((s) => ({ ...s, team_id: undefined })));
           }}
         >
@@ -347,20 +345,18 @@ function UserSortPage() {
         </button>
         <button
           className="btn btn-warning"
-          onClick={() =>
-            teamApi
-              .addUsersToTeams(
-                currentEvent.id,
-                suggestions.map((s) => {
-                  return {
-                    user_id: s.user.id,
-                    team_id: s.team_id || 0,
-                    is_team_lead: s.team_lead,
-                  };
-                })
-              )
-              .then(updateSignups)
-          }
+          onClick={() => {
+            addUsersToTeams({
+              event_id: currentEvent.id,
+              users: suggestions.map((s) => {
+                return {
+                  user_id: s.user.id,
+                  team_id: s.team_id || 0,
+                  is_team_lead: s.team_lead,
+                };
+              }),
+            });
+          }}
         >
           Submit Assignments
         </button>

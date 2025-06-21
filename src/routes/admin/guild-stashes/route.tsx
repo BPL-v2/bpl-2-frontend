@@ -55,7 +55,7 @@ function RouteComponent() {
         search: { highlightScoring },
       });
     }
-  }, [stashId, guildStashes]);
+  }, [stashId, guildStashes, highlightScoring]);
 
   const [stashSearch, setStashSearch] = useState("");
   dayjs.extend(relativeTime);
