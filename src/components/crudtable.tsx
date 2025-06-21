@@ -1,4 +1,4 @@
-import React, { JSX, useEffect, useMemo, useState } from "react";
+import React, { JSX, useMemo, useState } from "react";
 import { sendWarning } from "@utils/notifications";
 import ArrayInput from "./arrayinput";
 import dayjs from "dayjs";
@@ -6,6 +6,7 @@ import { DateTimePicker } from "./datetime-picker";
 import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import { Dialog } from "./dialog";
 import Select, { SelectOption } from "./select";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export interface CrudColumn<T> {
   dataIndex?: keyof T;
@@ -15,15 +16,15 @@ export interface CrudColumn<T> {
   required?: boolean;
   hidden?: boolean;
   type?:
-    | "text"
-    | "number"
-    | "checkbox"
-    | "date"
-    | "select"
-    | "multiselect"
-    | "text[]"
-    | "number[]"
-    | "color";
+  | "text"
+  | "number"
+  | "checkbox"
+  | "date"
+  | "select"
+  | "multiselect"
+  | "text[]"
+  | "number[]"
+  | "color";
   defaultValue?: string;
   options?: string[] | SelectOption[];
   render?: (value: any, record: T, index: number) => React.ReactNode;
@@ -89,14 +90,40 @@ const CrudTable = <T,>({
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentData, setCurrentData] = useState<Partial<T>>({});
+  const queryClient = useQueryClient();
 
-  const [data, setData] = useState<T[]>([]);
+  // Use TanStack Query for data fetching
+  const { data: data = [], isLoading, error } = useQuery({
+    queryKey: [resourceName, "list"],
+    queryFn: fetchFunction,
+  });
 
-  useEffect(() => {
-    fetchFunction().then((data) => {
-      setData([...data]);
-    });
-  }, [fetchFunction]);
+  // Create mutation
+  const createMutation = useMutation({
+    mutationFn: createFunction!,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [resourceName, "list"] });
+      setIsCreateModalOpen(false);
+    },
+  });
+
+  // Edit mutation
+  const editMutation = useMutation({
+    mutationFn: editFunction!,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [resourceName, "list"] });
+      setIsCreateModalOpen(false);
+    },
+  });
+
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: deleteFunction!,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [resourceName, "list"] });
+      setIsDeleteModalOpen(false);
+    },
+  });
 
   const form = useMemo(() => {
     return (
@@ -114,21 +141,11 @@ const CrudTable = <T,>({
             }
           }
           if (!currentData && createFunction) {
-            createFunction(createData).then(() => {
-              fetchFunction().then((data) => {
-                setData(data);
-              });
-            });
-            setIsCreateModalOpen(false);
+            createMutation.mutate(createData);
           } else if (currentData && editFunction) {
             // @ts-ignore ugly hack so that we can use put endpoints for updates and no new object is created
             createData.id = currentData.id;
-            editFunction(createData).then(() => {
-              fetchFunction().then((data) => {
-                setData(data);
-              });
-            });
-            setIsCreateModalOpen(false);
+            editMutation.mutate(createData);
           }
           form.reset();
         }}
@@ -271,10 +288,18 @@ const CrudTable = <T,>({
             onClick={() => {
               setIsCreateModalOpen(false);
             }}
+            disabled={createMutation.isPending || editMutation.isPending}
           >
             Cancel
           </button>
-          <button className="btn btn-primary" type="submit">
+          <button
+            className="btn btn-primary"
+            type="submit"
+            disabled={createMutation.isPending || editMutation.isPending}
+          >
+            {createMutation.isPending || editMutation.isPending ? (
+              <span className="loading loading-spinner loading-sm"></span>
+            ) : null}
             {currentData ? "Update" : "Create"}
           </button>
         </div>
@@ -283,12 +308,23 @@ const CrudTable = <T,>({
   }, [
     currentData,
     columns,
-    fetchFunction,
+    data,
     formValidator,
     createFunction,
     editFunction,
-    data,
   ]);
+
+  // Show loading state while data is loading
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center p-8">
+        <div className="flex flex-col items-center gap-4">
+          <span className="loading loading-spinner loading-lg"></span>
+          <p className="text-lg">Loading {resourceName}...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -321,14 +357,13 @@ const CrudTable = <T,>({
             <button
               className="btn btn-secondary"
               onClick={() => {
-                deleteFunction(currentData).then(() => {
-                  setIsDeleteModalOpen(false);
-                  fetchFunction().then((data) => {
-                    setData(data);
-                  });
-                });
+                deleteMutation.mutate(currentData);
               }}
+              disabled={deleteMutation.isPending}
             >
+              {deleteMutation.isPending ? (
+                <span className="loading loading-spinner loading-sm"></span>
+              ) : null}
               Yes
             </button>
           </div>
@@ -337,122 +372,131 @@ const CrudTable = <T,>({
         ""
       )}
 
-      <table className="table bg-base-300 table-md">
-        <thead className="bg-base-200 text-base-content">
-          <tr>
-            {columns
-              .filter((column) => !column.hidden)
-              .map((column) => (
-                <th key={String(column.title)}>{String(column.title)}</th>
-              ))}
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data
-            .filter((entry) => filterFunction?.(entry) ?? true)
-            .sort((a, b) => (a as any).id - (b as any).id)
-            .map((entry, idx) => {
-              return (
-                <tr key={idx}>
-                  {columns
-                    .filter((column) => !column.hidden)
-                    .map((column, cid) => {
-                      const value = entry[
-                        column.dataIndex as keyof T
-                      ] as React.ReactNode;
-                      if (column.render) {
-                        return (
-                          <td key={String(column.dataIndex) + cid}>
-                            {
-                              column.render(
-                                value,
-                                entry,
-                                cid
-                              ) as React.ReactNode
-                            }
-                          </td>
-                        );
-                      }
-                      return <td key={String(column.dataIndex)}>{value}</td>;
-                    })}
-                  <td>
-                    <div className="flex flex-wrap gap-2">
-                      {editFunction && (
-                        <button
-                          className="btn btn-warning btn-sm"
-                          onClick={() => {
-                            setCurrentData({ ...entry });
-                            setIsCreateModalOpen(true);
-                          }}
-                        >
-                          <PencilSquareIcon className="h-6 w-6" />
-                        </button>
-                      )}
-                      {deleteFunction && (
-                        <button
-                          className="btn btn-error btn-sm"
-                          onClick={() => {
-                            setCurrentData({ ...entry });
-                            setIsDeleteModalOpen(true);
-                          }}
-                        >
-                          <TrashIcon className="h-6 w-6" />
-                        </button>
-                      )}
-                      {addtionalActions &&
-                        addtionalActions.map((action) => {
-                          return !action.visible || action.visible(entry) ? (
-                            <button
-                              key={action.name}
-                              className="btn btn-soft btn-sm"
-                              onClick={() => {
-                                if (!action.func) {
-                                  return;
-                                }
-                                setCurrentData(entry);
-                                action.func(entry).then(() => {
-                                  if (action.reload) {
-                                    fetchFunction().then((data) => {
-                                      setData(data);
-                                    });
-                                  }
-                                });
-                              }}
-                            >
-                              {action.render
-                                ? action.render(data)
-                                : action.name}
-                            </button>
-                          ) : null;
-                        })}
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-        </tbody>
-        {createFunction ? (
-          <tfoot>
+      {error && (
+        <div className="alert alert-error">
+          <span>Error loading data: {(error as Error).message}</span>
+        </div>
+      )}
+
+      {!isLoading && !error && (
+        <table className="table bg-base-300 table-md">
+          <thead className="bg-base-200 text-base-content">
             <tr>
-              <td
-                colSpan={columns.length + 1}
-                className="text-center bg-base-200"
-              >
-                <button
-                  className="btn btn-success"
-                  onClick={() => {
-                    setCurrentData({});
-                    setIsCreateModalOpen(true);
-                  }}
-                >
-                  Create new {resourceName}
-                </button>
-              </td>
+              {columns
+                .filter((column) => !column.hidden)
+                .map((column) => (
+                  <th key={String(column.title)}>{String(column.title)}</th>
+                ))}
+              <th>Actions</th>
             </tr>
-          </tfoot>
-        ) : null}
-      </table>
+          </thead>
+          <tbody>
+            {data
+              .filter((entry) => filterFunction?.(entry) ?? true)
+              .sort((a, b) => (a as any).id - (b as any).id)
+              .map((entry, idx) => {
+                return (
+                  <tr key={idx}>
+                    {columns
+                      .filter((column) => !column.hidden)
+                      .map((column, cid) => {
+                        const value = entry[
+                          column.dataIndex as keyof T
+                        ] as React.ReactNode;
+                        if (column.render) {
+                          return (
+                            <td key={String(column.dataIndex) + cid}>
+                              {
+                                column.render(
+                                  value,
+                                  entry,
+                                  cid
+                                ) as React.ReactNode
+                              }
+                            </td>
+                          );
+                        }
+                        return <td key={String(column.dataIndex)}>{value}</td>;
+                      })}
+                    <td>
+                      <div className="flex flex-wrap gap-2">
+                        {editFunction && (
+                          <button
+                            className="btn btn-warning btn-sm"
+                            onClick={() => {
+                              setCurrentData({ ...entry });
+                              setIsCreateModalOpen(true);
+                            }}
+                            disabled={createMutation.isPending || editMutation.isPending}
+                          >
+                            <PencilSquareIcon className="h-6 w-6" />
+                          </button>
+                        )}
+                        {deleteFunction && (
+                          <button
+                            className="btn btn-error btn-sm"
+                            onClick={() => {
+                              setCurrentData({ ...entry });
+                              setIsDeleteModalOpen(true);
+                            }}
+                            disabled={deleteMutation.isPending}
+                          >
+                            <TrashIcon className="h-6 w-6" />
+                          </button>
+                        )}
+                        {addtionalActions &&
+                          addtionalActions.map((action) => {
+                            return !action.visible || action.visible(entry) ? (
+                              <button
+                                key={action.name}
+                                className="btn btn-soft btn-sm"
+                                onClick={() => {
+                                  if (!action.func) {
+                                    return;
+                                  }
+                                  setCurrentData(entry);
+                                  action.func(entry).then(() => {
+                                    if (action.reload) {
+                                      queryClient.invalidateQueries({ queryKey: [resourceName, "list"] });
+                                    }
+                                  });
+                                }}
+                              >
+                                {action.render
+                                  ? action.render(data)
+                                  : action.name}
+                              </button>
+                            ) : null;
+                          })}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+          {createFunction ? (
+            <tfoot>
+              <tr>
+                <td
+                  colSpan={columns.length + 1}
+                  className="text-center bg-base-200"
+                >
+                  <button
+                    className="btn btn-success"
+                    onClick={() => {
+                      setCurrentData({});
+                      setIsCreateModalOpen(true);
+                    }}
+                    disabled={createMutation.isPending || editMutation.isPending}
+                  >
+                    Create new {resourceName}
+                  </button>
+                </td>
+              </tr>
+            </tfoot>
+          ) : null}
+        </table>
+      )}
     </>
   );
 };

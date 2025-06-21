@@ -20,6 +20,7 @@ function bonusAvailableCounter(
   if (new Date(valid_to) < new Date()) {
     return <p className="text-lg"> Daily no longer available</p>;
   }
+
   return (
     <div className="flex flex-row justify-center gap-4 p-2">
       <p className="text-center text-lg">Daily available for</p>

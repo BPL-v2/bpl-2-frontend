@@ -9,13 +9,13 @@ import {
   SubmissionCreate,
   Team,
 } from "@client/api";
-import { submissionApi } from "@client/client";
 import { DateTimePicker } from "./datetime-picker";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { Dialog } from "./dialog";
 import { Link } from "@tanstack/react-router";
 import { CollectionCardTable } from "./collection-card-table";
-import { useGetEventStatus } from "@client/query";
+import { useGetEventStatus, useSubmitBounty } from "@client/query";
+import { useQueryClient } from "@tanstack/react-query";
 
 export type SubmissionTabProps = {
   categoryName: string;
@@ -24,12 +24,12 @@ export type SubmissionTabProps = {
 function SubmissionTab({ categoryName }: SubmissionTabProps) {
   const { scores, currentEvent } = useContext(GlobalStateContext);
   const { data: eventStatus } = useGetEventStatus(currentEvent.id);
-
+  const queryClient = useQueryClient();
+  const submitBountyMutation = useSubmitBounty(queryClient, currentEvent.id);
   const category = scores?.children.find((cat) => cat.name === categoryName);
   const [showModal, setShowModal] = useState(false);
   const [selectedObjective, setSelectedObjective] = useState<ScoreObjective>();
   const formRef = useRef<HTMLFormElement>(null);
-  const [reloadSubmissions, setReloadSubmissions] = useState(false);
 
   if (!category || !currentEvent || !currentEvent.teams) {
     return <></>;
@@ -65,15 +65,8 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
               number: parseInt(values.number) || 1,
               objective_id: selectedObjective.id,
             };
-            submissionApi
-              .submitBounty(currentEvent.id, submissionCreate)
-              .then(() => {
-                setShowModal(false);
-                setSelectedObjective(undefined);
-                setReloadSubmissions(!reloadSubmissions);
-              });
+            submitBountyMutation.mutate(submissionCreate);
             setShowModal(false);
-            setSelectedObjective(undefined);
           }}
           className="form"
         >
@@ -198,11 +191,10 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
                               }
                             >
                               <td
-                                className={`pl-4 py-1 text-left ${
-                                  score.points == 0
-                                    ? "text-error"
-                                    : "text-success"
-                                }`}
+                                className={`pl-4 py-1 text-left ${score.points == 0
+                                  ? "text-error"
+                                  : "text-success"
+                                  }`}
                               >
                                 {score ? score.points : 0}{" "}
                                 {score.number > 1 ? `(${score.number})` : ""}

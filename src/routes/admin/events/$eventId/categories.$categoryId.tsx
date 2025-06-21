@@ -89,8 +89,7 @@ export function ScoringCategoryPage(): JSX.Element {
   const { data: events } = useGetEvents();
   const { eventId, categoryId } = useParams({ from: Route.id });
   const [isObjectiveModalOpen, setIsObjectiveModalOpen] = useState(false);
-  const [isBulkObjectiveModalOpen, setIsBulkObjectiveModalOpen] =
-    useState(false);
+  const [isBulkObjectiveModalOpen, setIsBulkObjectiveModalOpen] = useState(false);
   const [isConditionModalOpen, setIsConditionModalOpen] = useState(false);
   const [scoringPresets, setScoringPresets] = useState<ScoringPreset[]>([]);
   const [_, setRefreshObjectives] = useState(false);

@@ -7,7 +7,7 @@ interface AscendancyProps {
   character_class: string;
 }
 
-export function Ascendancy({ character_class }: AscendancyProps) {
+export function AscendancyName({ character_class }: AscendancyProps) {
   const { gameVersion } = useContext(GlobalStateContext);
   const class_name =
     phreciaMapping[character_class] ||

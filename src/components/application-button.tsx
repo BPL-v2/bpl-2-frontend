@@ -1,6 +1,6 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useMemo } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
-import { ApplicationStatus, Team } from "@client/api";
+import { ApplicationStatus } from "@client/api";
 import { DiscordFilled } from "@icons/discord";
 import { Dialog } from "./dialog";
 import { Link, useRouterState } from "@tanstack/react-router";
@@ -19,26 +19,25 @@ const ApplicationButton = () => {
   const state = useRouterState();
   const [modalOpen, setModalOpen] = React.useState(false);
   const formRef = React.useRef<HTMLFormElement>(null);
-  const [userTeam, setUserTeam] = React.useState<Team | undefined>(undefined);
   const [hourValue, setHourValue] = React.useState(1);
   const [needHelp, setNeedHelp] = React.useState(false);
   const [wantToHelp, setWantToHelp] = React.useState(false);
   const queryClient = useQueryClient();
-  const { data: user } = useGetUser();
-  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
+  const { data: user, isLoading: userLoading, isError: userError } = useGetUser();
+  const { data: eventStatus, isLoading: eventStatusLoading, isError: eventStatusError } = useGetEventStatus(currentEvent.id);
   const { mutate: deleteSignup } = useDeleteSignup(queryClient);
   const { mutate: createSignup, isError: signupError } =
     useCreateSignup(queryClient);
 
-  useEffect(() => {
-    setUserTeam(
-      user &&
-        currentEvent?.teams.find((team) => team.id === eventStatus?.team_id)
-    );
+  const userTeam = useMemo(() => {
+    return user &&
+      currentEvent?.teams.find((team) => team.id === eventStatus?.team_id)
   }, [eventStatus, user, currentEvent]);
   if (
-    !user ||
-    !currentEvent ||
+    userLoading ||
+    eventStatusLoading ||
+    userError ||
+    eventStatusError ||
     currentEvent.application_start_time > new Date().toISOString()
   ) {
     return null;
@@ -89,7 +88,7 @@ const ApplicationButton = () => {
             ref={formRef}
             onSubmit={(e) => {
               e.preventDefault();
-              if (!user.discord_id) {
+              if (!user?.discord_id) {
                 alert("You need to link your Discord account to apply.");
                 return;
               }
@@ -168,7 +167,7 @@ const ApplicationButton = () => {
               </label>
             </fieldset>
           </form>
-          {user.discord_id ? null : (
+          {user?.discord_id ? null : (
             <div className="mt-4">
               <p>
                 You need a linked discord account and join our server to apply.

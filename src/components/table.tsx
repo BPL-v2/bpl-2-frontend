@@ -178,7 +178,7 @@ type ColumnDefMeta = {
   options?: string[] | SelectOption[];
 };
 
-function Filter({ column }: { column: Column<any, unknown> }) {
+function Filter<T>({ column }: { column: Column<T, unknown> }) {
   const columnFilterValue = column.getFilterValue();
   const { filterVariant, filterPlaceholder, options } =
     (column.columnDef.meta as ColumnDefMeta) ?? {};

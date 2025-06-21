@@ -23,12 +23,8 @@ export function ItemTable({ objective, filter }: ItemTableProps) {
   const { currentEvent, gameVersion } = useContext(GlobalStateContext);
   const { data: users } = useGetUsers(currentEvent.id);
   const { data: eventStatus } = useGetEventStatus(currentEvent.id);
-  const [showVariants, setShowVariants] = useState<{
-    [objectiveName: string]: boolean;
-  }>({});
-  const [variantMap, setVariantMap] = useState<{
-    [objectiveName: string]: ScoreObjective[];
-  }>({});
+  const [showVariants, setShowVariants] = useState<{ [objectiveName: string]: boolean }>({});
+  const [variantMap, setVariantMap] = useState<{ [objectiveName: string]: ScoreObjective[] }>({});
   const userTeamID = eventStatus?.team_id || -1;
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   useEffect(() => {
@@ -131,7 +127,7 @@ export function ItemTable({ objective, filter }: ItemTableProps) {
     return className;
   };
 
-  const columns = useMemo<ColumnDef<ExtendedScoreObjective>[]>(() => {
+  const columns = useMemo<ColumnDef<ExtendedScoreObjective, any>[]>(() => {
     const teams = currentEvent.teams.sort((a: Team, b: Team) => {
       if (a.id === userTeamID) {
         return -1;
@@ -177,7 +173,7 @@ export function ItemTable({ objective, filter }: ItemTableProps) {
         {
           accessorKey: "icon",
           header: "",
-          cell: (info: CellContext<ExtendedScoreObjective, any>) =>
+          cell: (info: CellContext<ExtendedScoreObjective, string>) =>
             info.row.original.isVariant ? null : (
               <div className="w-full">
                 <ObjectiveIcon
@@ -195,7 +191,7 @@ export function ItemTable({ objective, filter }: ItemTableProps) {
           header: "",
           enableSorting: false,
           size: Math.min(windowWidth, 1440) - 200 - teams.length * 200, // take up remaining space
-          cell: (info: CellContext<ExtendedScoreObjective, any>) => {
+          cell: (info: CellContext<ExtendedScoreObjective, string>) => {
             return objectNameRender(info.row.original);
           },
           filterFn: "includesString",
@@ -237,7 +233,7 @@ export function ItemTable({ objective, filter }: ItemTableProps) {
                 <div
                   // className="tooltip cursor-help tooltip-bottom z-1000 flex justify-center w-full"
                   className="flex justify-center w-full"
-                  // data-tip={`scored by ${user.display_name}`}
+                // data-tip={`scored by ${user.display_name}`}
                 >
                   <CheckCircleIcon className="h-6 w-6 text-success" />
                 </div>
@@ -274,6 +270,7 @@ export function ItemTable({ objective, filter }: ItemTableProps) {
     objectNameRender,
     userTeamID,
     users,
+    filter,
   ]);
 
   if (!currentEvent || !objective) {

@@ -3,13 +3,17 @@ import uPlot, { AlignedData } from "uplot";
 import "uplot/dist/uPlot.min.css";
 
 import UplotReact from "uplot-react";
-import { useContext, useEffect, useState } from "react";
-import { Character, GameVersion, User } from "@client/api";
-import { characterApi, userApi } from "@client/client";
+import { useContext } from "react";
+import { GameVersion } from "@client/api";
 import { GlobalStateContext } from "@utils/context-provider";
 import { ascendancies, phreciaMapping, poe2Mapping } from "@mytypes/ascendancy";
 import { useParams } from "@tanstack/react-router";
-import { useGetEvents } from "@client/query";
+import {
+  useGetEvents,
+  useGetUserById,
+  useGetUserCharacters,
+  useGetCharacterTimeseries,
+} from "@client/query";
 
 export const Route = createFileRoute("/profile/$userId")({
   component: ProfilePage,
@@ -25,48 +29,17 @@ export const Route = createFileRoute("/profile/$userId")({
 
 export function ProfilePage() {
   const { preferences, currentEvent } = useContext(GlobalStateContext);
-  const [user, setUser] = useState<User>();
-  const [eventId, setEventId] = useState<number>(currentEvent?.id || 0);
-  const [eventCharacters, setEventCharacters] = useState<Character[]>([]);
-  const [characterTimeseries, setCharacterTimeseries] = useState<Character[]>(
-    []
-  );
   const { data: events } = useGetEvents();
   const { userId } = useParams({ from: Route.id });
 
+  // Use TanStack Query hooks from query.ts
+  const { data: user, isLoading: userLoading } = useGetUserById(userId);
+  const { data: eventCharacters = [], isLoading: charactersLoading } =
+    useGetUserCharacters(userId);
+  const { data: characterTimeseries = [], isLoading: timeseriesLoading } =
+    useGetCharacterTimeseries(currentEvent?.id || 0, userId);
+
   const fontColor = preferences.theme === "dark" ? "white" : "black";
-  useEffect(() => {
-    if (!userId) {
-      return;
-    }
-    userApi.getUserById(userId).then(setUser);
-    characterApi.getUserCharacters(userId).then((res) => {
-      setEventCharacters(res);
-    });
-  }, [userId]);
-
-  useEffect(() => {
-    if (!currentEvent) {
-      return;
-    }
-    setEventId(currentEvent.id);
-  }, [currentEvent]);
-
-  useEffect(() => {
-    if (!userId) {
-      return;
-    }
-    characterApi
-      .getCharacterEventHistoryForUser(eventId, userId)
-      .then((res) => {
-        setCharacterTimeseries(
-          res.sort(
-            (a, b) =>
-              new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-          )
-        );
-      });
-  }, [eventId, userId]);
 
   function drawVerticalLine(u: uPlot, timestamp: number, label: string) {
     const ctx = u.ctx;
@@ -150,6 +123,19 @@ export function ProfilePage() {
   if (!userId || !user) {
     return <div>Loading...</div>;
   }
+
+  // Show loading state while any data is loading
+  if (userLoading || charactersLoading || timeseriesLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="flex flex-col items-center gap-4">
+          <span className="loading loading-spinner loading-lg"></span>
+          <p className="text-lg">Loading profile data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <h1 className="text-4xl text-center font-bold m-4">
@@ -173,16 +159,16 @@ export function ProfilePage() {
               } else {
                 ascendancyObj =
                   ascendancies[GameVersion.poe1][
-                    phreciaMapping[character.ascendancy] || character.ascendancy
+                  phreciaMapping[character.ascendancy] || character.ascendancy
                   ];
               }
               return (
                 <div
                   key={character.event_id + character.name}
-                  className={`card w-80 h-130 bg-base-200 m-2 shadow-xl cursor-pointer select-none ${
-                    event.id === eventId ? "outline-2 outline-primary" : ""
-                  }`}
-                  onClick={() => setEventId(character.event_id)}
+                  className={`card w-80 h-130 bg-base-200 m-2 shadow-xl cursor-pointer select-none ${event.id === currentEvent?.id
+                    ? "outline-2 outline-primary"
+                    : ""
+                    }`}
                 >
                   <figure className="h-80">
                     <img

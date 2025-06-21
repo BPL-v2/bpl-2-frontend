@@ -6,7 +6,6 @@ import { GlobalStateContext } from "@utils/context-provider";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { Objective, ObjectiveType, Permission, Submission } from "@client/api";
-import { submissionApi } from "@client/client";
 import {
   CheckCircleIcon,
   EyeSlashIcon,
@@ -16,23 +15,10 @@ import { iterateObjectives } from "@utils/utils";
 import Table from "@components/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TeamName } from "@components/team-name";
-import { useGetRules, useGetUser, useGetUsers } from "@client/query";
+import { useGetUsers, useGetRules, useGetUser, useGetSubmissions, useReviewSubmission } from "@client/query";
+import { useQueryClient } from "@tanstack/react-query";
+import { renderStringWithUrl } from "@utils/text-utils";
 dayjs.extend(customParseFormat);
-
-function renderStringWithUrl(string: string) {
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
-  const urls = string.match(urlRegex);
-  if (urls) {
-    urls.forEach((urlString) => {
-      const url = new URL(urlString);
-      string = string.replace(
-        urlString,
-        `<a class="link link-info" href="${urlString}" target="_blank">${url.hostname.replace("www.", "")}</a>`
-      );
-    });
-  }
-  return <div dangerouslySetInnerHTML={{ __html: string }} />;
-}
 
 export const Route = createFileRoute("/submissions")({
   component: SubmissionPage,
@@ -40,11 +26,13 @@ export const Route = createFileRoute("/submissions")({
 
 function SubmissionPage() {
   const { currentEvent } = useContext(GlobalStateContext);
-  const [reloadTable, setReloadTable] = React.useState(false);
-  const [submissions, setSubmissions] = React.useState<Submission[]>([]);
-  const { data: users } = useGetUsers(currentEvent.id);
-  const { data: rules } = useGetRules(currentEvent.id);
-  const { data: user } = useGetUser();
+  const queryClient = useQueryClient();
+  const { data: users, isLoading: usersLoading } = useGetUsers(currentEvent.id);
+  const { data: rules, isLoading: rulesLoading } = useGetRules(currentEvent.id);
+  const { data: user, isLoading: userLoading } = useGetUser();
+  const { data: submissions = [], isLoading: submissionsLoading } = useGetSubmissions(currentEvent.id);
+  const { mutate: reviewSubmission, isPending: reviewPending } = useReviewSubmission(queryClient, currentEvent.id);
+
   const objectiveMap: Record<number, Objective> = useMemo(() => {
     return {};
   }, []);
@@ -53,13 +41,6 @@ function SubmissionPage() {
       objectiveMap[objective.id] = objective;
     }
   });
-  React.useEffect(() => {
-    if (currentEvent) {
-      submissionApi.getSubmissions(currentEvent.id).then((data) => {
-        setSubmissions(data);
-      });
-    }
-  }, [currentEvent, reloadTable]);
 
   const columns = React.useMemo(() => {
     if (!currentEvent || !rules || !users) {
@@ -208,25 +189,31 @@ function SubmissionPage() {
               <button
                 className="btn btn-success btn-sm"
                 onClick={() => {
-                  submissionApi
-                    .reviewSubmission(currentEvent.id, submissionId, {
-                      approval_status: "APPROVED",
-                    })
-                    .then(() => setReloadTable(!reloadTable));
+                  reviewSubmission({
+                    submissionId: submissionId,
+                    approvalStatus: "APPROVED",
+                  });
                 }}
+                disabled={reviewPending}
               >
+                {reviewPending ? (
+                  <span className="loading loading-spinner loading-xs"></span>
+                ) : null}
                 Approve
               </button>
               <button
                 className="btn btn-error btn-sm"
                 onClick={() => {
-                  submissionApi
-                    .reviewSubmission(currentEvent.id, submissionId, {
-                      approval_status: "REJECTED",
-                    })
-                    .then(() => setReloadTable(!reloadTable));
+                  reviewSubmission({
+                    submissionId: submissionId,
+                    approvalStatus: "REJECTED",
+                  });
                 }}
+                disabled={reviewPending}
               >
+                {reviewPending ? (
+                  <span className="loading loading-spinner loading-xs"></span>
+                ) : null}
                 Reject
               </button>
             </div>
@@ -235,7 +222,19 @@ function SubmissionPage() {
       });
     }
     return columns;
-  }, [currentEvent, users, user, objectiveMap, reloadTable, rules]);
+  }, [currentEvent, users, user, objectiveMap, reviewSubmission]);
+
+  // Show loading state while any data is loading
+  if (usersLoading || rulesLoading || userLoading || submissionsLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="flex flex-col items-center gap-4">
+          <span className="loading loading-spinner loading-lg"></span>
+          <p className="text-lg">Loading submissions...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!currentEvent || !rules) {
     return <div>No event selected</div>;

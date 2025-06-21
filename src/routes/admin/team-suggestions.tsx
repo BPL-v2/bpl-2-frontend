@@ -236,7 +236,7 @@ export function TeamSuggestionsPage() {
   const relevantCategories = containers.filter(
     (category) =>
       category.scoring_preset?.scoring_method ===
-        ScoringMethod.RANKED_COMPLETION_TIME &&
+      ScoringMethod.RANKED_COMPLETION_TIME &&
       eventStatus.team_id !== undefined &&
       !category.team_score[eventStatus.team_id]?.finished
   );
@@ -245,7 +245,7 @@ export function TeamSuggestionsPage() {
     leaves.filter(
       (objective) =>
         objective.scoring_preset?.scoring_method ===
-          ScoringMethod.RANKED_TIME &&
+        ScoringMethod.RANKED_TIME &&
         !objective.team_score[eventStatus.team_id!]?.finished &&
         (!objective.valid_from || new Date(objective.valid_from) < new Date())
     )

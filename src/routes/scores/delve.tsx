@@ -6,7 +6,7 @@ import { CollectionCardTable } from "@components/collection-card-table";
 import { Ranking } from "@components/ranking";
 import { ColumnDef, sortingFns } from "@tanstack/react-table";
 import { LadderEntry, Score, Team } from "@client/api";
-import { Ascendancy } from "@components/ascendancy";
+import { AscendancyName } from "@components/ascendancy-name";
 import { ExperienceBar } from "@components/experience-bar";
 import { TeamName } from "@components/team-name";
 import { LadderPortrait } from "@components/ladder-portrait";
@@ -119,7 +119,7 @@ export function DelveTab() {
                 character_class={info.row.original.character_class}
                 className="w-8 h-8 rounded-full"
               />
-              <Ascendancy character_class={info.row.original.character_class} />
+              <AscendancyName character_class={info.row.original.character_class} />
             </div>
           ),
           size: 250,

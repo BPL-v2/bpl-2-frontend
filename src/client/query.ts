@@ -10,12 +10,19 @@ import {
   streamApi,
   teamApi,
   userApi,
+  submissionApi,
+  jobApi,
+  conditionApi,
 } from "./client";
 import {
   ApplicationStatus,
   EventStatus,
   GuildStashTab,
   SignupCreate,
+  JobType,
+  TeamUserCreate,
+  SubmissionCreate,
+  EventCreate,
 } from "./api";
 import { isLoggedIn } from "@utils/token";
 
@@ -74,6 +81,13 @@ export function useGetEventStatus(event_id: number) {
   });
 }
 
+export function useGetSignups(event_id: number)  {
+  return useQuery({
+    queryKey: ["signups", current !== event_id ? event_id : "current"],
+    queryFn: async () => signupApi.getEventSignups(event_id),
+  });
+}
+
 export function useCreateSignup(queryClient: QueryClient) {
   return useMutation({
     mutationFn: ({ eventId, body }: { eventId: number; body: SignupCreate }) =>
@@ -110,6 +124,15 @@ export function useDeleteSignup(queryClient: QueryClient) {
   });
 }
 
+export function useAddUsersToTeams(queryClient: QueryClient) {
+  return useMutation({
+    mutationFn: ({event_id, users}: {event_id: number, users: TeamUserCreate[]}) => teamApi.addUsersToTeams(event_id, users),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["signups", current !== variables.event_id ? variables.event_id : "current"] });
+    },
+  });
+}
+
 export function useGetRules(event_id: number) {
   return useQuery({
     queryKey: ["rules", current !== event_id ? event_id : "current"],
@@ -130,6 +153,61 @@ export function useGetUser() {
     queryFn: async () => userApi.getUser(),
     enabled: () => isLoggedIn(),
     refetchOnMount: false,
+  });
+}
+
+export function useGetUserById(userId: number) {
+  return useQuery({
+    queryKey: ["user", userId],
+    queryFn: () => userApi.getUserById(userId),
+    enabled: !!userId,
+  });
+}
+
+export function useGetUserCharacters(userId: number) {
+  return useQuery({
+    queryKey: ["userCharacters", userId],
+    queryFn: () => characterApi.getUserCharacters(userId),
+    enabled: !!userId,
+  });
+}
+
+export function useGetCharacterTimeseries(eventId: number, userId: number) {
+  return useQuery({
+    queryKey: ["characterTimeseries", eventId, userId],
+    queryFn: () => characterApi.getCharacterEventHistoryForUser(eventId, userId),
+    enabled: !!userId && !!eventId,
+    select: (data) => data.sort(
+      (a, b) =>
+        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+    ),
+  });
+}
+
+export function useGetSubmissions(eventId: number) {
+  return useQuery({
+    queryKey: ["submissions", eventId],
+    queryFn: () => submissionApi.getSubmissions(eventId),
+    enabled: !!eventId,
+  });
+}
+
+export function useSubmitBounty(queryClient: QueryClient, eventId: number) {
+  return useMutation({
+    mutationFn: (submission: SubmissionCreate) => submissionApi.submitBounty(eventId, submission),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["submissions", eventId] });
+    },
+  });
+}
+
+export function useReviewSubmission(queryClient: QueryClient, eventId: number) {
+  return useMutation({
+    mutationFn: ({ submissionId, approvalStatus }: { submissionId: number; approvalStatus: string }) =>
+      submissionApi.reviewSubmission(eventId, submissionId, { approval_status: approvalStatus }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["submissions", eventId] });
+    },
   });
 }
 
@@ -270,5 +348,57 @@ export function useFile<T>(filePath: string) {
     queryFn: async () =>
       fetch(filePath).then((res) => res.json() as Promise<T>),
     refetchOnMount: false,
+  });
+}
+
+export function useGetJobs() {
+  return useQuery({
+    queryKey: ["jobs"],
+    queryFn: () => jobApi.getJobs(),
+  });
+}
+
+export function useStartJob(queryClient: QueryClient) {
+  return useMutation({
+    mutationFn: ({ eventId, jobType, durationInSeconds }: { eventId: number; jobType: JobType; durationInSeconds: number }) =>
+      jobApi.startJob({ event_id: eventId, job_type: jobType, duration_in_seconds: durationInSeconds }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
+    },
+  });
+}
+
+export function useGetValidMappings(eventId: number) {
+  return useQuery({
+    queryKey: ["validMappings", eventId],
+    queryFn: () => conditionApi.getValidMappings(eventId),
+    enabled: !!eventId,
+  });
+}
+
+export function useGetScoringPresetsForEvent(eventId: number) {
+  return useQuery({
+    queryKey: ["scoringPresetsForEvent", eventId],
+    queryFn: () => scoringApi.getScoringPresetsForEvent(eventId),
+    enabled: !!eventId,
+  });
+}
+
+
+export function useCreateEvent(queryClient: QueryClient) {
+  return useMutation({
+    mutationFn: (event: EventCreate) => eventApi.createEvent(event),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+    },
+  });
+}
+
+export function useDeleteEvent(queryClient: QueryClient) {
+  return useMutation({
+    mutationFn: (eventId: number) => eventApi.deleteEvent(eventId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+    },
   });
 }

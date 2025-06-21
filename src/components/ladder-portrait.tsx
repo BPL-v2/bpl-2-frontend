@@ -1,5 +1,5 @@
 import { LadderEntry } from "@client/api";
-import { Ascendancy } from "./ascendancy";
+import { AscendancyName } from "./ascendancy-name";
 import { AscendancyPortrait } from "./ascendancy-portrait";
 import { ExperienceBar } from "./experience-bar";
 
@@ -18,7 +18,7 @@ export function LadderPortrait({ entry, teamName }: Props) {
       <div>
         <p className="font-bold">{entry.character_name}</p>
         <p className="text-sm">{teamName}</p>
-        <Ascendancy character_class={entry.character_class} />
+        <AscendancyName character_class={entry.character_class} />
         <div className="flex items-center gap-1">
           lvl
           <ExperienceBar experience={entry.experience} level={entry.level} />
