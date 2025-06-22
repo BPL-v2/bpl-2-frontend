@@ -3,7 +3,7 @@ import { SelectOption } from "@components/select";
 import { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
-export function ArrayField<T>({
+export function ArrayField({
   label,
   options,
   className,
