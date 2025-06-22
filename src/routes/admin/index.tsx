@@ -20,7 +20,7 @@ function AdminRouteCard({
   link: string;
   permissions: Permission[];
 }) {
-  const { data: user } = useGetUser();
+  const { user } = useGetUser();
   const hasPermission = permissions.some((permission) =>
     user?.permissions.includes(permission)
   );
@@ -43,7 +43,7 @@ function AdminRouteCard({
 function RouteComponent() {
   const permissions = getPermissions();
   const { currentEvent } = useContext(GlobalStateContext);
-  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
   if (permissions.length === 0 && !eventStatus?.is_team_lead) {
     return "You do not have permission to view this page.";
   }

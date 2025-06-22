@@ -5,7 +5,7 @@ import { useGetEvents } from "@client/query";
 
 export function EventPicker() {
   const { setCurrentEvent } = useContext(GlobalStateContext);
-  const { data: events, isPending, isError } = useGetEvents();
+  const { events, isPending, isError } = useGetEvents();
 
   if (isPending) {
     return <div>Loading events...</div>;
@@ -18,7 +18,7 @@ export function EventPicker() {
     <Select
       placeholder="Pick an event"
       onChange={(value) => {
-        const event = events.find((event) => String(event.id) === value);
+        const event = events.find((event) => event.id === value?.value);
         if (event) {
           setCurrentEvent(event);
           return;
@@ -31,7 +31,7 @@ export function EventPicker() {
       }}
       options={events.map((event) => ({
         label: event.name,
-        value: String(event.id),
+        value: event.id,
       }))}
     ></Select>
   );

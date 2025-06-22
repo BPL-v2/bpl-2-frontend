@@ -40,8 +40,8 @@ type MenuItem = {
 
 function RootComponent() {
   const { currentEvent } = useContext(GlobalStateContext);
-  const { data: user } = useGetUser();
-  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
+  const { user } = useGetUser();
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
   const menu: MenuItem[] = useMemo(() => {
     const menu: MenuItem[] = [
       {

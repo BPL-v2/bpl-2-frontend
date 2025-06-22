@@ -21,12 +21,12 @@ export function OauthCard({
   logo,
 }: OauthCardProps) {
   const state = useRouterState();
-  const queryClient = useQueryClient();
-  const { mutate: removeAuth } = useRemoveOauthProvider(queryClient);
+  const qc = useQueryClient();
+  const { removeOauthProvider } = useRemoveOauthProvider(qc);
   const connectionButton = connected ? (
     <button
       className={`btn btn-error btn-outline`}
-      onClick={() => removeAuth(provider)}
+      onClick={() => removeOauthProvider(provider)}
     >
       Disconnect
     </button>

@@ -19,7 +19,7 @@ const TeamScoreDisplay = ({
   const teamScores = getTotalPoints(objective);
   const potentialScores = getPotentialPoints(objective);
   const { currentEvent } = useContext(GlobalStateContext);
-  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
   if (!currentEvent || !currentEvent.teams) {
     return <></>;
   }

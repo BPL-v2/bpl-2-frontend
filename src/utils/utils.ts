@@ -232,3 +232,41 @@ export function iterateObjectives(
     iterateObjectives(child, callback);
   }
 }
+
+export function findObjective(
+  objective: ScoreObjective | Objective | undefined,
+  finder: (objective: ScoreObjective | Objective) => boolean
+): ScoreObjective | Objective | undefined {
+  if (!objective) {
+    return;
+  }
+  if (finder(objective)) {
+    return objective;
+  }
+  for (const child of objective.children) {
+    const result = findObjective(child, finder);
+    if (result) {
+      return result;
+    }
+  }
+}
+
+export function getPath(
+  objective: ScoreObjective | Objective | undefined,
+  childId: number,
+  path: number[] = []
+): number[] {
+  if (!objective) {
+    return [];
+  }
+  if (objective.id === childId) {
+    return [...path, objective.id];
+  }
+  for (const child of objective.children) {
+    const result = getPath(child, childId, [...path, objective.id]);
+    if (result.includes(childId)) {
+      return result;
+    }
+  }
+  return [];
+}

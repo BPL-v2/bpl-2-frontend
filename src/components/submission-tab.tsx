@@ -23,9 +23,9 @@ export type SubmissionTabProps = {
 
 function SubmissionTab({ categoryName }: SubmissionTabProps) {
   const { scores, currentEvent } = useContext(GlobalStateContext);
-  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
-  const queryClient = useQueryClient();
-  const submitBountyMutation = useSubmitBounty(queryClient, currentEvent.id);
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
+  const qc = useQueryClient();
+  const { submitBounty } = useSubmitBounty(qc, currentEvent.id);
   const category = scores?.children.find((cat) => cat.name === categoryName);
   const [showModal, setShowModal] = useState(false);
   const [selectedObjective, setSelectedObjective] = useState<ScoreObjective>();
@@ -65,7 +65,7 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
               number: parseInt(values.number) || 1,
               objective_id: selectedObjective.id,
             };
-            submitBountyMutation.mutate(submissionCreate);
+            submitBounty(submissionCreate);
             setShowModal(false);
           }}
           className="form"
@@ -191,10 +191,11 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
                               }
                             >
                               <td
-                                className={`pl-4 py-1 text-left ${score.points == 0
-                                  ? "text-error"
-                                  : "text-success"
-                                  }`}
+                                className={`pl-4 py-1 text-left ${
+                                  score.points == 0
+                                    ? "text-error"
+                                    : "text-success"
+                                }`}
                               >
                                 {score ? score.points : 0}{" "}
                                 {score.number > 1 ? `(${score.number})` : ""}

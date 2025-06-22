@@ -15,7 +15,13 @@ import { iterateObjectives } from "@utils/utils";
 import Table from "@components/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TeamName } from "@components/team-name";
-import { useGetUsers, useGetRules, useGetUser, useGetSubmissions, useReviewSubmission } from "@client/query";
+import {
+  useGetUsers,
+  useGetRules,
+  useGetUser,
+  useGetSubmissions,
+  useReviewSubmission,
+} from "@client/query";
 import { useQueryClient } from "@tanstack/react-query";
 import { renderStringWithUrl } from "@utils/text-utils";
 dayjs.extend(customParseFormat);
@@ -26,12 +32,17 @@ export const Route = createFileRoute("/submissions")({
 
 function SubmissionPage() {
   const { currentEvent } = useContext(GlobalStateContext);
-  const queryClient = useQueryClient();
-  const { data: users, isLoading: usersLoading } = useGetUsers(currentEvent.id);
-  const { data: rules, isLoading: rulesLoading } = useGetRules(currentEvent.id);
-  const { data: user, isLoading: userLoading } = useGetUser();
-  const { data: submissions = [], isLoading: submissionsLoading } = useGetSubmissions(currentEvent.id);
-  const { mutate: reviewSubmission, isPending: reviewPending } = useReviewSubmission(queryClient, currentEvent.id);
+  const qc = useQueryClient();
+  const { users, isLoading: usersLoading } = useGetUsers(currentEvent.id);
+  const { rules, isLoading: rulesLoading } = useGetRules(currentEvent.id);
+  const { user, isLoading: userLoading } = useGetUser();
+  const { submissions = [], isLoading: submissionsLoading } = useGetSubmissions(
+    currentEvent.id
+  );
+  const { reviewSubmission, isPending: reviewPending } = useReviewSubmission(
+    qc,
+    currentEvent.id
+  );
 
   const objectiveMap: Record<number, Objective> = useMemo(() => {
     return {};
@@ -222,7 +233,15 @@ function SubmissionPage() {
       });
     }
     return columns;
-  }, [currentEvent, users, user, objectiveMap, reviewSubmission]);
+  }, [
+    currentEvent,
+    users,
+    user,
+    objectiveMap,
+    reviewSubmission,
+    rules,
+    reviewPending,
+  ]);
 
   // Show loading state while any data is loading
   if (usersLoading || rulesLoading || userLoading || submissionsLoading) {

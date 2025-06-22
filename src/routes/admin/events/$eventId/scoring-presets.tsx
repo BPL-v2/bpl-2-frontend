@@ -1,16 +1,28 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import CrudTable, { CrudColumn } from "@components/crudtable";
 import {
   Permission,
   ScoringMethod,
   ScoringPreset,
+  ScoringPresetCreate,
   ScoringPresetType,
 } from "@client/api";
-import { scoringApi } from "@client/client";
 import { useParams } from "@tanstack/react-router";
 import { renderConditionally } from "@utils/token";
-import { useGetEvents } from "@client/query";
+import {
+  useAddScoringPreset,
+  useDeleteScoringPreset,
+  useGetEvents,
+  useGetScoringPresetsForEvent,
+} from "@client/query";
+import { ColumnDef } from "@tanstack/react-table";
+import Table from "@components/table";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { useQueryClient } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
+import { useAppForm } from "@components/form/context";
+import { Dialog } from "@components/dialog";
+import { useStore } from "@tanstack/react-form";
 
 export const Route = createFileRoute("/admin/events/$eventId/scoring-presets")({
   component: renderConditionally(ScoringPresetsPage, [
@@ -48,105 +60,193 @@ function pointsRenderer(points: number[]) {
 }
 
 function ScoringPresetsPage() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [scoringPreset, setScoringPreset] = useState<ScoringPreset>();
   const { eventId } = useParams({ from: Route.id });
-  const { data: events } = useGetEvents();
+  const { events } = useGetEvents();
   const event = events?.find((event) => event.id === eventId);
+  const { scoringPresets } = useGetScoringPresetsForEvent(eventId);
+  const qc = useQueryClient();
+  const presetForm = useAppForm({
+    defaultValues: scoringPreset
+      ? scoringPreset
+      : ({
+          points: [] as number[],
+          type: ScoringPresetType.OBJECTIVE,
+        } as ScoringPresetCreate),
+    onSubmit: (data) => {
+      const create = JSON.parse(
+        JSON.stringify(data.value)
+      ) as ScoringPresetCreate;
+      if (typeof data.value.points === "string") {
+        create.points = (data.value.points as never as string)
+          .split(",")
+          .filter((p) => p.trim())
+          .map((point: string) => parseFloat(point.trim()));
+      }
+      addScoringPreset(create);
+    },
+  });
+  const { addScoringPreset } = useAddScoringPreset(qc, eventId, () => {
+    setIsDialogOpen(false);
+    presetForm.reset();
+    setScoringPreset(undefined);
+  });
+  const { deleteScoringPreset } = useDeleteScoringPreset(qc, eventId);
+
+  const { scoring_method } = useStore(
+    presetForm.store,
+    (state) => state.values
+  );
+  const dialog = useMemo(() => {
+    console.log("scoring_method", scoring_method);
+    return (
+      <Dialog
+        open={isDialogOpen}
+        title={scoringPreset ? "Update Preset" : "Create Preset"}
+        setOpen={setIsDialogOpen}
+        className="max-w-md"
+      >
+        <form
+          className="fieldset bg-base-300 p-6 rounded-box w-full"
+          onSubmit={(e) => {
+            e.preventDefault();
+            presetForm.handleSubmit();
+          }}
+        >
+          <presetForm.AppField
+            name="name"
+            children={(field) => <field.TextField label="Name" required />}
+          />
+          <presetForm.AppField
+            name="points"
+            children={(field) => <field.TextField label="Points" required />}
+          />
+          <presetForm.AppField
+            name="scoring_method"
+            children={(field) => (
+              <field.SelectField
+                label="Scoring Method"
+                options={Object.values(ScoringMethod)}
+                required
+              />
+            )}
+          />
+          <presetForm.AppField
+            name="point_cap"
+            children={(field) => (
+              <field.NumberField
+                label="Point Cap"
+                required={scoring_method === ScoringMethod.POINTS_FROM_VALUE}
+                hidden={scoring_method !== ScoringMethod.POINTS_FROM_VALUE}
+              />
+            )}
+          />
+          <div className="flex flex-row gap-2 justify-end mt-4">
+            <button
+              type="button"
+              className="btn btn-error"
+              onClick={() => {
+                setIsDialogOpen(false);
+              }}
+            >
+              Cancel
+            </button>
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          </div>
+        </form>
+      </Dialog>
+    );
+  }, [isDialogOpen, presetForm, scoringPreset, scoring_method]);
 
   if (!eventId || !event) {
     return <div>Event not found</div>;
   }
-
-  const scoringPresetsColumns: CrudColumn<ScoringPreset>[] = [
+  const presetColumns: ColumnDef<ScoringPreset>[] = [
     {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-      type: "number",
+      header: "ID",
+      accessorKey: "id",
+      size: 50,
     },
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-      type: "text",
-      editable: true,
-      required: true,
+      header: "Name",
+      accessorKey: "name",
+      size: 400,
     },
     {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
-      type: "text",
-      editable: true,
-      required: false,
+      header: "Description",
+      accessorKey: "description",
+      size: 400,
     },
     {
-      title: "Points",
-      dataIndex: "points",
-      key: "points",
-      type: "text",
-      editable: true,
-      render: pointsRenderer,
-      required: true,
+      header: "Points",
+      accessorKey: "points",
+      cell: (info) => pointsRenderer(info.row.original.points),
+      size: 150,
     },
     {
-      title: "Cap",
-      dataIndex: "point_cap",
-      key: "point_cap",
-      type: "number",
-      editable: true,
-      required: false,
+      header: "Cap",
+      accessorKey: "point_cap",
+      cell: (info) =>
+        info.row.original.point_cap ? info.row.original.point_cap : "",
+      size: 50,
     },
     {
-      title: "Scoring Method",
-      dataIndex: "scoring_method",
-      key: "scoring_method",
-      type: "select",
-      options: Object.values(ScoringMethod),
-      editable: true,
-      required: true,
+      header: "Scoring Method",
+      accessorKey: "scoring_method",
+      cell: (info) => info.row.original.scoring_method,
+      size: 250,
     },
     {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
-      type: "select",
-      options: Object.values(ScoringPresetType),
-      editable: true,
-      required: true,
+      header: "Actions",
+      cell: (info) => (
+        <div className="flex flex-row gap-2">
+          <button
+            className="btn btn-sm btn-error"
+            onClick={() => {
+              deleteScoringPreset(info.row.original.id);
+            }}
+          >
+            <TrashIcon className="w-4 h-4" />
+          </button>
+          <button
+            className="btn btn-sm btn-warning"
+            onClick={() => {
+              setIsDialogOpen(true);
+              setScoringPreset(info.row.original);
+            }}
+          >
+            <PencilSquareIcon className="w-4 h-4" />
+          </button>
+        </div>
+      ),
+      size: 100,
     },
   ];
+
   return (
-    <>
+    <div className="flex flex-col gap-2">
       <h1>{`Scoring Presets for Event "${event.name}"`}</h1>
-      <CrudTable<ScoringPreset>
-        resourceName="Scoring Preset"
-        columns={scoringPresetsColumns}
-        fetchFunction={() => scoringApi.getScoringPresetsForEvent(eventId)}
-        createFunction={(data) => {
-          const points = data.points
-            .split(",")
-            .map((point: string) => parseFloat(point.trim()));
-          return scoringApi.createScoringPreset(eventId, {
-            ...data,
-            points: points,
-            event_id: eventId,
-          });
+      {dialog}
+      <button
+        className="btn btn-primary self-center"
+        onClick={() => {
+          setIsDialogOpen(true);
+          setScoringPreset(undefined);
+          presetForm.reset();
         }}
-        editFunction={(data) => {
-          const points = data.points
-            .split(",")
-            .map((point: string) => parseFloat(point.trim()));
-          return scoringApi.createScoringPreset(eventId, {
-            ...data,
-            points: points,
-            event_id: eventId,
-          });
-        }}
-        deleteFunction={(data) =>
-          scoringApi.deleteScoringPreset(eventId, data.id)
-        }
-      ></CrudTable>
-    </>
+      >
+        Create Preset
+      </button>{" "}
+      <Table
+        columns={presetColumns}
+        data={scoringPresets}
+        sortable={false}
+        className="w-full h-[80vh]"
+      />
+    </div>
   );
 }
 

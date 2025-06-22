@@ -21,10 +21,14 @@ export type ItemTableProps = {
 
 export function ItemTable({ objective, filter }: ItemTableProps) {
   const { currentEvent, gameVersion } = useContext(GlobalStateContext);
-  const { data: users } = useGetUsers(currentEvent.id);
-  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
-  const [showVariants, setShowVariants] = useState<{ [objectiveName: string]: boolean }>({});
-  const [variantMap, setVariantMap] = useState<{ [objectiveName: string]: ScoreObjective[] }>({});
+  const { users } = useGetUsers(currentEvent.id);
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
+  const [showVariants, setShowVariants] = useState<{
+    [objectiveName: string]: boolean;
+  }>({});
+  const [variantMap, setVariantMap] = useState<{
+    [objectiveName: string]: ScoreObjective[];
+  }>({});
   const userTeamID = eventStatus?.team_id || -1;
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   useEffect(() => {
@@ -233,7 +237,7 @@ export function ItemTable({ objective, filter }: ItemTableProps) {
                 <div
                   // className="tooltip cursor-help tooltip-bottom z-1000 flex justify-center w-full"
                   className="flex justify-center w-full"
-                // data-tip={`scored by ${user.display_name}`}
+                  // data-tip={`scored by ${user.display_name}`}
                 >
                   <CheckCircleIcon className="h-6 w-6 text-success" />
                 </div>
