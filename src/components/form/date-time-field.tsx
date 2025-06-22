@@ -19,7 +19,7 @@ export function DateTimeField({
       onChange={(date) => {
         try {
           field.handleChange(date);
-        } catch (e) {}
+        } catch (_) {}
       }}
       className={twMerge("w-full", className)}
       {...props}

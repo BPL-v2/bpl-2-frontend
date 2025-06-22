@@ -184,7 +184,7 @@ function TeamPage() {
         </form>
       </Dialog>
     );
-  }, [team, teamForm, isDialogOpen]);
+  }, [team, teamForm, isDialogOpen, event?.game_version]);
 
   if (isPending) {
     return <div className="loading loading-spinner loading-lg"></div>;

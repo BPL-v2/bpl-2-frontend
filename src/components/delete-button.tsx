@@ -26,7 +26,7 @@ export function DeleteButton({
       }, confirmTime);
       return () => clearTimeout(timer);
     }
-  }, [isConfirmed, requireConfirmation]);
+  }, [isConfirmed, requireConfirmation, confirmTime]);
 
   if (!requireConfirmation) {
     return (

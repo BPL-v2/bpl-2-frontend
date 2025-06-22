@@ -23,7 +23,7 @@ export function CommaSeperatedField<T>({
       setStringValue(field.state.value?.map(toString).join(",") || "");
       setIsInitializing(false);
     }
-  }, [field.state.value]);
+  }, [field.state.value, isInitializing]);
 
   return (
     <label
