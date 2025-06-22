@@ -29,14 +29,14 @@ export const Route = createFileRoute("/profile/$userId")({
 
 export function ProfilePage() {
   const { preferences, currentEvent } = useContext(GlobalStateContext);
-  const { data: events } = useGetEvents();
+  const { events } = useGetEvents();
   const { userId } = useParams({ from: Route.id });
 
   // Use TanStack Query hooks from query.ts
-  const { data: user, isLoading: userLoading } = useGetUserById(userId);
-  const { data: eventCharacters = [], isLoading: charactersLoading } =
+  const { user, isLoading: userLoading } = useGetUserById(userId);
+  const { userCharacters = [], isLoading: charactersLoading } =
     useGetUserCharacters(userId);
-  const { data: characterTimeseries = [], isLoading: timeseriesLoading } =
+  const { characterTimeseries = [], isLoading: timeseriesLoading } =
     useGetCharacterTimeseries(currentEvent?.id || 0, userId);
 
   const fontColor = preferences.theme === "dark" ? "white" : "black";
@@ -145,7 +145,7 @@ export function ProfilePage() {
         <div className="card-body ">
           <h2 className="card-title text-3xl">Event Characters</h2>
           <div className="flex flex-row flex-wrap justify-center">
-            {eventCharacters.map((character) => {
+            {userCharacters.map((character) => {
               const event = events?.find((e) => e.id == character.event_id);
               if (!event) {
                 return null;
@@ -159,16 +159,17 @@ export function ProfilePage() {
               } else {
                 ascendancyObj =
                   ascendancies[GameVersion.poe1][
-                  phreciaMapping[character.ascendancy] || character.ascendancy
+                    phreciaMapping[character.ascendancy] || character.ascendancy
                   ];
               }
               return (
                 <div
                   key={character.event_id + character.name}
-                  className={`card w-80 h-130 bg-base-200 m-2 shadow-xl cursor-pointer select-none ${event.id === currentEvent?.id
-                    ? "outline-2 outline-primary"
-                    : ""
-                    }`}
+                  className={`card w-80 h-130 bg-base-200 m-2 shadow-xl cursor-pointer select-none ${
+                    event.id === currentEvent?.id
+                      ? "outline-2 outline-primary"
+                      : ""
+                  }`}
                 >
                   <figure className="h-80">
                     <img

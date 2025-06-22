@@ -22,16 +22,21 @@ const ApplicationButton = () => {
   const [hourValue, setHourValue] = React.useState(1);
   const [needHelp, setNeedHelp] = React.useState(false);
   const [wantToHelp, setWantToHelp] = React.useState(false);
-  const queryClient = useQueryClient();
-  const { data: user, isLoading: userLoading, isError: userError } = useGetUser();
-  const { data: eventStatus, isLoading: eventStatusLoading, isError: eventStatusError } = useGetEventStatus(currentEvent.id);
-  const { mutate: deleteSignup } = useDeleteSignup(queryClient);
-  const { mutate: createSignup, isError: signupError } =
-    useCreateSignup(queryClient);
+  const qc = useQueryClient();
+  const { user, isLoading: userLoading, isError: userError } = useGetUser();
+  const {
+    eventStatus,
+    isLoading: eventStatusLoading,
+    isError: eventStatusError,
+  } = useGetEventStatus(currentEvent.id);
+  const { deleteSignup } = useDeleteSignup(qc);
+  const { createSignup, isError: signupError } = useCreateSignup(qc);
 
   const userTeam = useMemo(() => {
-    return user &&
+    return (
+      user &&
       currentEvent?.teams.find((team) => team.id === eventStatus?.team_id)
+    );
   }, [eventStatus, user, currentEvent]);
   if (
     userLoading ||

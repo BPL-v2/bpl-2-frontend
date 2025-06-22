@@ -54,7 +54,7 @@ export function Dialog({
         )}
       >
         <h3 className="font-bold text-lg mb-8">{title}</h3>
-        <div className="w-full">{children}</div>
+        <div className="w-full flex flex-col items-center">{children}</div>
       </div>
     </dialog>
   );

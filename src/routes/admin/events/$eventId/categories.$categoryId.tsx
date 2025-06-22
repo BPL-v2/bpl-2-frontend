@@ -1,13 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
-import React, { JSX, useEffect, useMemo, useState } from "react";
-import CrudTable, { CrudColumn } from "@components/crudtable";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import React, { JSX, useMemo, useState } from "react";
 
 import { ObjectiveIcon } from "@components/objective-icon";
 import {
-  Condition,
   ObjectiveCreate,
   Objective,
-  ScoringPreset,
   AggregationType,
   GameVersion,
   ItemField,
@@ -15,26 +12,37 @@ import {
   ObjectiveType,
   Operator,
   Permission,
-  ScoringPresetType,
+  ObjectiveConditionCreate,
+  ConditionCreate,
 } from "@client/api";
-import { conditionApi, objectiveApi, scoringApi } from "@client/client";
-import { DateTimePicker } from "@components/datetime-picker";
-import {
-  ClipboardDocumentCheckIcon,
-  PencilSquareIcon,
-  PlusIcon,
-  XCircleIcon,
-} from "@heroicons/react/24/outline";
 import { Dialog } from "@components/dialog";
 import { useParams } from "@tanstack/react-router";
-import {
-  availableAggregationTypes,
-  getSubObjective,
-  operatorToString,
-} from "@mytypes/scoring-objective";
+
 import { renderConditionally } from "@utils/token";
-import Select from "@components/select";
-import { useGetEvents } from "@client/query";
+import {
+  useAddObjectiveCondition,
+  useCreateBulkObjectives,
+  useCreateObjective,
+  useDeleteObjective,
+  useDeleteObjectiveCondition,
+  useGetEvents,
+  useGetRules,
+  useGetScoringPresetsForEvent,
+  useGetValidConditionMappings,
+} from "@client/query";
+import { ColumnDef } from "@tanstack/react-table";
+import Table from "@components/table";
+import { findObjective, getPath } from "@utils/utils";
+import { useAppForm } from "@components/form/context";
+import { useQueryClient } from "@tanstack/react-query";
+import { useStore } from "@tanstack/react-form";
+import {
+  DocumentDuplicateIcon,
+  PencilSquareIcon,
+  PlusIcon,
+  TrashIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
 
 export const Route = createFileRoute(
   "/admin/events/$eventId/categories/$categoryId"
@@ -55,527 +63,203 @@ export const Route = createFileRoute(
   },
 });
 
-async function createBulkItemObjectives(
-  eventId: number,
-  categoryId: number,
-  nameList: string,
-  scoring_preset_id: number,
-  aggregation_method: AggregationType,
-  field: ItemField
-) {
-  const objectives: ObjectiveCreate[] = nameList.split(",").map((name) => {
-    return {
-      name: name.trim(),
-      required_number: 1,
-      objective_type: ObjectiveType.ITEM,
-      aggregation: aggregation_method,
-      number_field: NumberField.STACK_SIZE,
-      scoring_preset_id: scoring_preset_id,
-      parent_id: categoryId,
-      conditions: [
-        {
-          field: field,
-          operator: Operator.EQ,
-          value: name,
-        },
-      ],
-    };
-  });
-  await Promise.all(
-    objectives.map((obj) => objectiveApi.createObjective(eventId, obj))
-  );
-}
+type ExtendedObjectiveCreate = ObjectiveCreate & {
+  item_base_type?: string;
+  item_name?: string;
+};
+
+export type BulkObjectiveCreate = {
+  nameList: string;
+  scoring_preset_id: number;
+  aggregation_method: AggregationType;
+  item_field: ItemField;
+};
+
 export function ScoringCategoryPage(): JSX.Element {
-  const { data: events } = useGetEvents();
+  const qc = useQueryClient();
   const { eventId, categoryId } = useParams({ from: Route.id });
   const [isObjectiveModalOpen, setIsObjectiveModalOpen] = useState(false);
-  const [isBulkObjectiveModalOpen, setIsBulkObjectiveModalOpen] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [isBulkObjectiveModalOpen, setIsBulkObjectiveModalOpen] =
+    useState(false);
   const [isConditionModalOpen, setIsConditionModalOpen] = useState(false);
-  const [scoringPresets, setScoringPresets] = useState<ScoringPreset[]>([]);
-  const [_, setRefreshObjectives] = useState(false);
-  const [conditionField, setConditionField] = useState<ItemField>();
-  const [currentObjective, setCurrentObjective] = useState<
-    Partial<ObjectiveCreate>
-  >({});
+  const [currentObjective, setCurrentObjective] =
+    useState<ExtendedObjectiveCreate>();
+  const { events } = useGetEvents();
+  const { scoringPresets } = useGetScoringPresetsForEvent(eventId);
+  const { rules } = useGetRules(eventId);
+  const { operatorForField, numberFieldsForObjectiveType } =
+    useGetValidConditionMappings(eventId);
 
-  const [objectiveType, setObjectiveType] = useState<ObjectiveType | null>(
-    null
+  const { deleteObjective } = useDeleteObjective(qc, eventId);
+  const { createObjective } = useCreateObjective(qc, eventId, () => {
+    setIsObjectiveModalOpen(false);
+    objectiveForm.reset();
+  });
+  const { createBulkObjectives } = useCreateBulkObjectives(
+    qc,
+    eventId,
+    categoryId,
+    () => {
+      setIsBulkObjectiveModalOpen(false);
+      bulkObjectiveForm.reset();
+    }
+  );
+  const { addObjectiveCondition } = useAddObjectiveCondition(
+    qc,
+    eventId,
+    () => {
+      setIsConditionModalOpen(false);
+    }
+  );
+  const { deleteObjectiveCondition } = useDeleteObjectiveCondition(qc, eventId);
+  const objective = findObjective(
+    rules,
+    (objective) => objective.id === categoryId
+  );
+  const event = events?.find((event) => event.id === eventId);
+  const path = getPath(rules, categoryId);
+  const bulkObjectiveForm = useAppForm({
+    defaultValues: {} as BulkObjectiveCreate,
+    onSubmit: (data) => {
+      createBulkObjectives(data.value);
+      console.log(data.value);
+    },
+  });
+  const categoryForm = useAppForm({
+    defaultValues: (currentObjective
+      ? currentObjective
+      : {
+          aggregation: null,
+          scoring_preset_id: null,
+          name: "",
+          extra: "",
+          number_field: NumberField.FINISHED_OBJECTIVES,
+          required_number: 1,
+          conditions: [],
+          parent_id: categoryId,
+          objective_type: ObjectiveType.CATEGORY,
+        }) as ObjectiveCreate,
+  });
+  const objectiveForm = useAppForm({
+    defaultValues: (currentObjective
+      ? currentObjective
+      : {
+          required_number: 1,
+          conditions: [],
+          parent_id: categoryId,
+        }) as ExtendedObjectiveCreate,
+    onSubmit: (data) => {
+      if (data.value.item_name) {
+        data.value.conditions = extendConditions(
+          data.value.conditions,
+          data.value.item_name,
+          ItemField.NAME
+        );
+        delete data.value.item_name;
+      }
+      if (data.value.item_base_type) {
+        data.value.conditions = extendConditions(
+          data.value.conditions,
+          data.value.item_base_type,
+          ItemField.BASE_TYPE
+        );
+        delete data.value.item_base_type;
+      }
+      createObjective(data.value as ObjectiveCreate);
+    },
+  });
+  const conditionForm = useAppForm({
+    defaultValues: {} as ConditionCreate,
+    onSubmit: (data) => {
+      if (!currentObjective?.id) {
+        return;
+      }
+      data.value.objective_id = currentObjective.id;
+      addObjectiveCondition(data.value);
+    },
+  });
+
+  const { objective_type } = useStore(
+    objectiveForm.store,
+    (state) => state.values
   );
 
-  const event = events?.find((event) => event.id === eventId);
-  const [operatorForField, setOperatorForField] = useState<{
-    [key in ItemField]: Operator[];
-  }>();
-  const [numberFieldsForObjectiveType, setNumberFieldsForObjectiveType] =
-    useState<{
-      [key in ObjectiveType]: NumberField[];
-    }>();
+  const { field: itemField } = useStore(
+    conditionForm.store,
+    (state) => state.values
+  );
 
-  useEffect(() => {
-    conditionApi.getValidMappings(eventId).then((data) => {
-      setOperatorForField(
-        Object.entries(data.field_to_type).reduce(
-          (acc, [key, value]) => {
-            acc[key as ItemField] = data.valid_operators[value];
-            return acc;
-          },
-          {} as { [key in ItemField]: Operator[] }
-        )
-      );
-      setNumberFieldsForObjectiveType(
-        data.objective_type_to_number_fields as {
-          [key in ObjectiveType]: NumberField[];
-        }
-      );
-    });
-  }, [eventId]);
-
-  useEffect(() => {
-    if (!event) {
-      return;
-    }
-    scoringApi.getScoringPresetsForEvent(event.id).then(setScoringPresets);
-  }, [event, setScoringPresets]);
-
-  useEffect(() => {
-    if (!categoryId) {
-      return;
-    }
-  }, [categoryId]);
-
-  // const categoryColumns: CrudColumn<Category>[] = useMemo(
-  //   () => [
-  //     {
-  //       title: "ID",
-  //       dataIndex: "id",
-  //       key: "id",
-  //       type: "number",
-  //     },
-  //     {
-  //       title: "Name",
-  //       dataIndex: "name",
-  //       key: "name",
-  //       type: "text",
-  //       required: true,
-  //       editable: true,
-  //       render: (name: string, data: Category) => {
-  //         return (
-  //           <Link
-  //             className="btn btn-primary m-1"
-  //             to={`/admin/events/$eventId/categories/$categoryId`}
-  //             params={{ eventId: eventId!, categoryId: data.id }}
-  //           >
-  //             {name}
-  //           </Link>
-  //         );
-  //       },
-  //     },
-  //     {
-  //       title: "Sub Categories",
-  //       dataIndex: "children",
-  //       key: "children",
-  //       render: (data: Category[]) => {
-  //         return (
-  //           <div>
-  //             {data.map((category) => {
-  //               return (
-  //                 <Link
-  //                   className="btn btn-dash m-1"
-  //                   key={category.id}
-  //                   to={`/admin/events/$eventId/categories/$categoryId`}
-  //                   params={{ eventId: eventId!, categoryId: category.id }}
-  //                 >
-  //                   {category.name}
-  //                 </Link>
-  //               );
-  //             })}
-  //           </div>
-  //         );
-  //       },
-  //     },
-  //     {
-  //       title: "Scoring Method",
-  //       dataIndex: "scoring_preset_id",
-  //       key: "scoring_preset_id",
-  //       type: "select",
-  //       options: scoringPresets
-  //         .filter((preset) => preset.type == ScoringPresetType.CATEGORY)
-  //         .map((preset) => {
-  //           return { label: preset.name, value: preset.id };
-  //         }),
-  //       editable: true,
-  //       render: (id) => {
-  //         return scoringPresets.find((preset) => preset.id === id)?.name;
-  //       },
-  //     },
-  //   ],
-  //   [scoringPresets]
-  // );
-
-  const objectiveForm = useMemo(() => {
-    const nameInput = (
-      <>
-        <label className="label">Name</label>
-        <input
-          name="name"
-          type="text"
-          className="input"
-          required
-          defaultValue={currentObjective.name}
-        />
-      </>
-    );
-    const extraInput = (
-      <>
-        <label className="label">Extra</label>
-        <input
-          name="extra"
-          className="input"
-          type="text"
-          defaultValue={currentObjective.extra}
-        />
-      </>
-    );
-    const requiredNumberInput = (
-      <>
-        <label className="label">Required Number</label>
-        <input
-          name="required_number"
-          type="number"
-          className="input"
-          required
-          defaultValue={currentObjective.required_number || 1}
-        />
-      </>
-    );
-    const objectiveTypeInput = (
-      <>
-        <label className="label">Objective Type</label>
-        <Select
-          name="objective_type"
-          required
-          value={currentObjective.objective_type}
-          onChange={(value) => {
-            setObjectiveType(value as ObjectiveType);
-          }}
-          options={Object.values(ObjectiveType)}
-        ></Select>
-      </>
-    );
-    const numberfieldInput = objectiveType ? (
-      <>
-        <label className="label">Number Field</label>
-        <Select
-          name="number_field"
-          required
-          value={currentObjective.number_field}
-          options={
-            numberFieldsForObjectiveType
-              ? numberFieldsForObjectiveType[objectiveType]
-              : []
-          }
-        ></Select>
-      </>
-    ) : null;
-    const aggregationInput = objectiveType ? (
-      <>
-        <label className="label">Aggregation Method</label>
-        <Select
-          name="aggregation"
-          required
-          value={currentObjective.aggregation}
-          key={"aggregation-" + objectiveType}
-          options={availableAggregationTypes(objectiveType)}
-        ></Select>
-      </>
-    ) : null;
-
-    const scoringMethodInput = (
-      <>
-        <label className="label">Scoring Method</label>
-        <Select
-          name="scoring_preset_id"
-          value={String(currentObjective.scoring_preset_id)}
-          options={scoringPresets
-            .filter((preset) => preset.type == ScoringPresetType.OBJECTIVE)
-            .map((preset) => ({
-              label: preset.name,
-              value: String(preset.id),
-            }))}
-        ></Select>
-      </>
-    );
-    const validFromInput = (
-      <DateTimePicker
-        label="Valid From"
-        name="valid_from"
-        defaultValue={currentObjective.valid_from}
-      />
-    );
-    const validToInput = (
-      <DateTimePicker
-        label="Valid To"
-        name="valid_to"
-        defaultValue={currentObjective.valid_to}
-      />
-    );
-    const itemNameInput =
-      objectiveType === ObjectiveType.ITEM ? (
-        <>
-          <label className="label">Item Name</label>
-          <input
-            name="conditions-name"
-            type="text"
-            className="input"
-            defaultValue={
-              currentObjective.conditions?.find(
-                (condition) =>
-                  condition.field === ItemField.NAME &&
-                  condition.operator === Operator.EQ
-              )?.value
-            }
-          />
-        </>
-      ) : null;
-
-    const itemBaseTypeInput =
-      objectiveType === ObjectiveType.ITEM ? (
-        <>
-          <label className="label">Base Type</label>
-          <input
-            name="conditions-basetype"
-            type="text"
-            className="input"
-            defaultValue={
-              currentObjective.conditions?.find(
-                (condition) =>
-                  condition.field === ItemField.BASE_TYPE &&
-                  condition.operator === Operator.EQ
-              )?.value
-            }
-          />
-        </>
-      ) : null;
-
-    function objectiveFormSubmit(e: React.FormEvent<HTMLFormElement>) {
-      const form = e.currentTarget;
-      e.preventDefault();
-      const data = new FormData(form);
-      let baseTypeConditionExists = false;
-      let nameConditionExists = false;
-      const conditions =
-        currentObjective.conditions?.map((condition) => {
-          if (
-            condition.field === ItemField.BASE_TYPE &&
-            condition.operator === Operator.EQ &&
-            data.get("conditions-basetype")
-          ) {
-            baseTypeConditionExists = true;
-            condition.value = data.get("conditions-basetype") as string;
-          }
-          if (
-            condition.field === ItemField.NAME &&
-            condition.operator === Operator.EQ &&
-            data.get("conditions-name")
-          ) {
-            nameConditionExists = true;
-            condition.value = data.get("conditions-name") as string;
-          }
-          return condition;
-        }) || [];
-
-      if (data.get("conditions-basetype") && !baseTypeConditionExists) {
-        conditions.push({
-          field: ItemField.BASE_TYPE,
-          operator: Operator.EQ,
-          value: data.get("conditions-basetype") as string,
-        });
-      }
-      if (data.get("conditions-name") && !nameConditionExists) {
-        conditions.push({
-          field: ItemField.NAME,
-          operator: Operator.EQ,
-          value: data.get("conditions-name") as string,
-        });
-      }
-
-      const objectiveCreate: ObjectiveCreate = {
-        aggregation: data.get("aggregation") as AggregationType,
-        parent_id: categoryId,
-        conditions: conditions,
-        extra: data.get("extra") as string,
-        name: data.get("name") as string,
-        number_field: data.get("number_field") as NumberField,
-        objective_type: data.get("objective_type") as ObjectiveType,
-        required_number: Number(data.get("required_number")),
-      };
-      if (data.get("scoring_preset_id")) {
-        objectiveCreate.scoring_preset_id = Number(
-          data.get("scoring_preset_id")
-        );
-      }
-      if (data.get("valid_from")) {
-        objectiveCreate.valid_from = data.get("valid_from") as string;
-      }
-      if (data.get("valid_to")) {
-        objectiveCreate.valid_to = data.get("valid_to") as string;
-      }
-      if (currentObjective.id) {
-        objectiveCreate.id = currentObjective.id;
-      }
-      objectiveApi.createObjective(eventId, objectiveCreate).then(() => {
-        setRefreshObjectives((prev) => !prev);
-        setIsObjectiveModalOpen(false);
-      });
-    }
-
-    return (
-      <form key={currentObjective.id} onSubmit={objectiveFormSubmit}>
-        <div className="flex flxe-col">
-          <fieldset className="fieldset mb-4 p-4 w-full rounded-l-box bg-base-300">
-            {nameInput}
-            {objectiveTypeInput}
-            {itemNameInput}
-            {aggregationInput}
-            {numberfieldInput}
-            {scoringMethodInput}
-          </fieldset>
-          <fieldset className="fieldset mb-4 p-4 w-full rounded-r-box bg-base-300">
-            {extraInput}
-            {requiredNumberInput}
-            {itemBaseTypeInput}
-            {validFromInput}
-            {validToInput}
-          </fieldset>
-        </div>
-        <div className="flex gap-2 justify-end ">
-          <button
-            className="btn btn-secondary"
-            type="button"
-            onClick={() => {
-              setIsObjectiveModalOpen(false);
-            }}
-          >
-            Cancel
-          </button>
-          <button type="submit" className="btn btn-primary">
-            Create
-          </button>
-        </div>
-      </form>
-    );
-  }, [
-    currentObjective,
-    objectiveType,
-    scoringPresets,
-    categoryId,
-    eventId,
-    numberFieldsForObjectiveType,
-  ]);
-
-  const objectiveColumns: CrudColumn<Objective>[] = useMemo(
+  const objectivColumns: ColumnDef<Objective>[] = useMemo(
     () => [
       {
-        title: "",
-        key: "id",
-        render: (_: string, data: Objective) => (
-          <ObjectiveIcon
-            objective={data}
-            gameVersion={event?.game_version ?? GameVersion.poe1}
-          />
-        ),
+        header: "",
+        accessorKey: "id",
+        cell: ({ row }) => {
+          return (
+            <ObjectiveIcon
+              objective={row.original}
+              gameVersion={event?.game_version ?? GameVersion.poe1}
+            />
+          );
+        },
+        size: 80,
       },
       {
-        title: "Name",
-        dataIndex: "name",
-        key: "name",
-        type: "text",
-        editable: true,
+        header: "Name",
+        accessorKey: "name",
+        size: 200,
       },
       {
-        title: "Extra",
-        dataIndex: "extra",
-        key: "extra",
-        type: "text",
-        editable: true,
+        header: "Extra",
+        accessorKey: "extra",
+        size: 200,
       },
       {
-        title: "Required Number",
-        dataIndex: "required_number",
-        key: "required_number",
-        type: "number",
-        editable: true,
+        header: "Num",
+        accessorKey: "required_number",
+        size: 50,
       },
       {
-        title: "Objective Type",
-        dataIndex: "objective_type",
-        key: "objective_type",
-        type: "select",
-        options: Object.values(ObjectiveType),
-        editable: true,
+        header: "Type",
+        accessorKey: "objective_type",
+        size: 100,
       },
       {
-        title: "Aggregation Method",
-        dataIndex: "aggregation",
-        key: "aggregation",
-        type: "select",
-        options: Object.values(AggregationType),
-        editable: true,
+        header: "Aggregation",
+        accessorKey: "aggregation",
+        size: 200,
       },
       {
-        title: "Attribute",
-        dataIndex: "number_field",
-        key: "number_field",
-        type: "select",
-        options: Object.values(NumberField),
-        editable: true,
-      },
-      {
-        title: "Scoring Method",
-        dataIndex: "scoring_preset_id",
-        key: "scoring_preset_id",
-        type: "select",
-        render: (data: number | null) => {
-          return scoringPresets.find((preset) => preset.id === data)?.name;
+        header: "Scoring Method",
+        cell: ({ row }) => {
+          const scoringPreset = scoringPresets.find(
+            (preset) => preset.id === row.original.scoring_preset_id
+          );
+          return <div>{scoringPreset?.name}</div>;
         },
       },
       {
-        title: "Conditions",
-        dataIndex: "conditions",
-        key: "conditions",
-        type: "text",
-        editable: true,
-        render: (data: Condition[]) => {
+        header: "Conditions",
+        accessorKey: "conditions",
+        size: 150,
+        cell: ({ row }) => {
           return (
-            <div>
-              {data.map((condition) => {
-                const text =
-                  condition.field +
-                  " " +
-                  operatorToString(condition.operator) +
-                  " " +
-                  condition.value;
+            <div className="flex flex-col gap-1">
+              {row.original.conditions.map((condition) => {
                 return (
-                  <div
-                    key={`badge-${condition.id}`}
-                    className="tooltip"
-                    data-tip={text}
-                  >
-                    <div className="badge badge-primary badge-sm">
+                  <div className="tooltip" key={"condition-" + condition.id}>
+                    <span className="tooltip-content flex flex-row gap-1 items-center">
+                      <span className="text-success">{condition.field}</span>
+                      <span className="text-info">{condition.operator}</span>
+                      <span className="text-error">{condition.value}</span>
+                    </span>
+                    <div className="badge badge-primary badge-sm whitespace-nowrap select-none pr-[1px]">
+                      {condition.field}
                       <XCircleIcon
-                        className="h-4 w-4 cursor-pointer"
-                        onClick={(event) => {
-                          conditionApi
-                            .deleteCondition(eventId, condition.id)
-                            .then(() => {
-                              event.stopPropagation();
-                              setRefreshObjectives((prev) => !prev);
-                            });
-                        }}
+                        className="w-4 h-4 cursor-pointer"
+                        onClick={() => deleteObjectiveCondition(condition.id)}
                       />
-
-                      {text.slice(0, 10)}
-                      {text.length > 10 ? "..." : ""}
                     </div>
                   </div>
                 );
@@ -584,235 +268,406 @@ export function ScoringCategoryPage(): JSX.Element {
           );
         },
       },
+      {
+        header: "Actions",
+        cell: ({ row }) => {
+          return (
+            <div className="flex flex-row gap-2">
+              <button
+                className="btn btn-warning btn-sm"
+                onClick={() => {
+                  objectiveForm.reset();
+                  setCurrentObjective({
+                    ...row.original,
+                    item_base_type: row.original.conditions.find(
+                      (condition) =>
+                        condition.field === ItemField.BASE_TYPE &&
+                        condition.operator === Operator.EQ
+                    )?.value,
+                    item_name: row.original.conditions.find(
+                      (condition) =>
+                        condition.field === ItemField.NAME &&
+                        condition.operator === Operator.EQ
+                    )?.value,
+                  });
+                  setIsObjectiveModalOpen(true);
+                }}
+              >
+                <PencilSquareIcon className="w-4 h-4" />
+              </button>
+              <button
+                className="btn btn-error btn-sm"
+                onClick={() => {
+                  deleteObjective(row.original.id);
+                }}
+              >
+                <TrashIcon className="w-4 h-4" />
+              </button>
+              <button
+                className="btn btn-info btn-sm"
+                onClick={() => {
+                  const duplicate = JSON.parse(
+                    JSON.stringify(row.original)
+                  ) as ObjectiveCreate;
+                  duplicate.id = undefined;
+                  duplicate.conditions = row.original.conditions.map(
+                    (condition) => {
+                      return {
+                        ...condition,
+                        id: undefined,
+                      };
+                    }
+                  );
+                  createObjective(duplicate);
+                }}
+              >
+                <DocumentDuplicateIcon className="w-4 h-4" />
+              </button>
+              <button
+                className="btn btn-success btn-sm"
+                onClick={() => {
+                  setCurrentObjective(row.original);
+                  setIsConditionModalOpen(true);
+                }}
+              >
+                <PlusIcon className="w-4 h-4" />
+              </button>
+            </div>
+          );
+        },
+      },
     ],
-    [scoringPresets, event, eventId]
+    [scoringPresets, event, objectiveForm]
   );
 
-  const addtionalObjectiveActions = [
-    {
-      name: "Edit",
-      func: async (data: Objective) => {
-        setObjectiveType(data.objective_type);
-        setCurrentObjective({ ...data });
-        setIsObjectiveModalOpen(true);
-      },
-      icon: <PencilSquareIcon className="h-6 w-6" />,
-    },
-    {
-      name: "Add Condition",
-      func: async (data: Objective) => {
-        setCurrentObjective({ ...data });
-        setIsConditionModalOpen(true);
-      },
-      icon: <PlusIcon className="h-6 w-6" />,
-    },
-    {
-      name: "Duplicate",
-      func: async (data: Objective) => {
-        const newObjective: ObjectiveCreate = {
-          ...data,
-          id: undefined,
-          conditions: data.conditions.map((condition) => {
-            return { ...condition, id: undefined, objective_id: undefined };
-          }),
-        };
-        objectiveApi.createObjective(eventId, newObjective).then(() => {
-          setRefreshObjectives((prev) => !prev);
-        });
-      },
-      icon: <ClipboardDocumentCheckIcon className="h-6 w-6" />,
-    },
-  ];
-
-  const objectiveTable = useMemo(() => {
+  const objectiveDialog: React.ReactNode = useMemo(() => {
     return (
-      <>
-        <h3>{"Objectives"} </h3>
-        <CrudTable<Objective>
-          resourceName="Objective"
-          columns={objectiveColumns}
-          fetchFunction={() =>
-            objectiveApi.getObjectiveTreeForEvent(eventId).then((data) => {
-              const obj = getSubObjective(data, categoryId);
-              return obj?.children || [];
-            })
-          }
-          deleteFunction={(obj) =>
-            objectiveApi.deleteObjective(eventId, obj.id)
-          }
-          addtionalActions={addtionalObjectiveActions}
-        />
-        <button
-          className="btn btn-primary m-2"
-          onClick={() => {
-            setCurrentObjective({});
-            setIsObjectiveModalOpen(true);
+      <Dialog
+        title={currentObjective ? "Edit Objective" : "Create Objective"}
+        open={isObjectiveModalOpen}
+        setOpen={setIsObjectiveModalOpen}
+        className="max-w-2xl max-h-[90vh] h-[80vh]"
+      >
+        <form
+          className="flex flex-col gap-2 bg-base-300 p-4 rounded-box w-full"
+          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+            e.preventDefault();
+            objectiveForm.handleSubmit();
           }}
         >
-          Create new Objective
-        </button>
-        <button
-          className="btn btn-primary m-2"
-          onClick={() => {
-            setIsBulkObjectiveModalOpen(true);
-          }}
-        >
-          Create Bulk Objectives
-        </button>
-      </>
+          <div className="grid grid-cols-2 gap-4">
+            <objectiveForm.AppField
+              name="name"
+              children={(field) => <field.TextField label="Name" required />}
+            />
+            <objectiveForm.AppField
+              name="extra"
+              children={(field) => <field.TextField label="Extra" />}
+            />
+            <objectiveForm.AppField
+              name="objective_type"
+              children={(field) => (
+                <field.SelectField
+                  label="Objective Type"
+                  options={Object.values(ObjectiveType).filter(
+                    (t) => t != ObjectiveType.CATEGORY
+                  )}
+                  required
+                />
+              )}
+            />
+            <objectiveForm.AppField
+              name="aggregation"
+              children={(field) => (
+                <field.SelectField
+                  label="Aggregation"
+                  options={Object.values(AggregationType)}
+                  required
+                />
+              )}
+            />
+            <objectiveForm.AppField
+              name="number_field"
+              children={(field) => (
+                <field.SelectField
+                  label="Number Field"
+                  options={
+                    numberFieldsForObjectiveType && objective_type
+                      ? numberFieldsForObjectiveType[objective_type]
+                      : []
+                  }
+                  required
+                  hidden={!objective_type}
+                />
+              )}
+            />
+            <objectiveForm.AppField
+              name="required_number"
+              children={(field) => (
+                <field.NumberField
+                  label="Required Number"
+                  required
+                  hidden={!objective_type}
+                />
+              )}
+            />
+            <objectiveForm.AppField
+              name="item_base_type"
+              children={(field) => (
+                <field.TextField
+                  label="Base Type"
+                  hidden={objective_type !== ObjectiveType.ITEM}
+                />
+              )}
+            />
+            <objectiveForm.AppField
+              name="item_name"
+              children={(field) => (
+                <field.TextField
+                  label="Item Name"
+                  hidden={objective_type !== ObjectiveType.ITEM}
+                />
+              )}
+            />
+            <objectiveForm.AppField
+              name="valid_from"
+              children={(field) => <field.DateTimeField label="Valid From" />}
+            />
+            <objectiveForm.AppField
+              name="valid_to"
+              children={(field) => <field.DateTimeField label="Valid To" />}
+            />
+            <objectiveForm.AppField
+              name="scoring_preset_id"
+              children={(field) => (
+                <field.SelectField
+                  label="Scoring Preset"
+                  options={scoringPresets.map((preset) => ({
+                    label: preset.name,
+                    value: preset.id,
+                  }))}
+                />
+              )}
+            />
+          </div>
+          <div className="flex flex-row gap-2 justify-end">
+            <button
+              type="button"
+              className="btn btn-error"
+              onClick={() => {
+                setIsObjectiveModalOpen(false);
+              }}
+            >
+              Cancel
+            </button>
+            <button type="submit" className="btn btn-primary">
+              {currentObjective ? "Update" : "Create"}
+            </button>
+          </div>
+        </form>
+      </Dialog>
     );
-  }, [objectiveColumns, categoryId, addtionalObjectiveActions, eventId]);
+  }, [
+    scoringPresets,
+    objective_type,
+    numberFieldsForObjectiveType,
+    isObjectiveModalOpen,
+    currentObjective,
+    objectiveForm,
+  ]);
 
-  const bulkObjeciveModal = useMemo(
-    () => (
+  const bulkObjectiveDialog: React.ReactNode = useMemo(() => {
+    return (
       <Dialog
         title="Create Objectives in bulk"
         open={isBulkObjectiveModalOpen}
         setOpen={setIsBulkObjectiveModalOpen}
+        className="max-w-lg"
       >
-        <div className="flex justify-end flex-col gap-y-4">
-          <form
-            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-              e.preventDefault();
-              const form = e.currentTarget;
-              const data = new FormData(form);
-              createBulkItemObjectives(
-                eventId,
-                categoryId,
-                data.get("name_list") as string,
-                Number(data.get("scoring_method")),
-                data.get("aggregation_method") as AggregationType,
-                data.get("identifier") as ItemField
-              ).then(() => {
+        <form
+          className="flex flex-col gap-2 bg-base-300 p-4 rounded-box w-full"
+          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+            e.preventDefault();
+            bulkObjectiveForm.handleSubmit();
+          }}
+        >
+          <bulkObjectiveForm.AppField
+            name="nameList"
+            children={(field) => (
+              <field.TextField
+                label="Name List (Comma separated)"
+                required
+                placeholder="Item1, Item2, Item3"
+              />
+            )}
+          />
+          <bulkObjectiveForm.AppField
+            name="scoring_preset_id"
+            children={(field) => (
+              <field.SelectField
+                label="Scoring Preset"
+                className="w-full"
+                required
+                options={scoringPresets.map((preset) => ({
+                  label: preset.name,
+                  value: preset.id,
+                }))}
+              />
+            )}
+          />
+          <bulkObjectiveForm.AppField
+            name="aggregation_method"
+            children={(field) => (
+              <field.SelectField
+                label="Aggregation Method"
+                className="w-full"
+                required
+                options={Object.values(AggregationType)}
+              />
+            )}
+          />
+          <bulkObjectiveForm.AppField
+            name="item_field"
+            children={(field) => (
+              <field.SelectField
+                label="Item Field"
+                className="w-full"
+                required
+                options={[ItemField.NAME, ItemField.BASE_TYPE]}
+              />
+            )}
+          />
+          <div className="flex flex-row gap-2 justify-end">
+            <button
+              type="button"
+              className="btn btn-error"
+              onClick={() => {
                 setIsBulkObjectiveModalOpen(false);
-                setRefreshObjectives((prev) => !prev);
-              });
-            }}
-          >
-            <fieldset className="fieldset bg-base-300 p-4 rounded-box mb-4">
-              <label className="label">Comma separated list of names</label>
-              <input
-                name="name_list"
-                type="text"
-                className="input w-full"
+              }}
+            >
+              Cancel
+            </button>
+            <button type="submit" className="btn btn-primary">
+              Create
+            </button>
+          </div>
+        </form>
+      </Dialog>
+    );
+  }, [scoringPresets, isBulkObjectiveModalOpen, bulkObjectiveForm]);
+
+  const categoryDialog: React.ReactNode = useMemo(() => {
+    return (
+      <Dialog
+        title={currentObjective ? "Edit Category" : "Create Category"}
+        open={isCategoryModalOpen}
+        setOpen={setIsCategoryModalOpen}
+        className="max-w-lg"
+      >
+        <form
+          className="flex flex-col gap-2 bg-base-300 p-4 rounded-box w-full"
+          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+            e.preventDefault();
+            categoryForm.handleSubmit();
+          }}
+        >
+          <categoryForm.AppField
+            name="name"
+            children={(field) => <field.TextField label="Name" required />}
+          />
+          <categoryForm.AppField
+            name="extra"
+            children={(field) => <field.TextField label="Extra" />}
+          />
+          <categoryForm.AppField
+            name="aggregation"
+            children={(field) => (
+              <field.SelectField
+                label="Aggregation"
+                options={Object.values(AggregationType)}
                 required
               />
-              <label className="label">Identifier</label>
-              <Select
-                className="w-full"
-                name="identifier"
-                required
-                options={["NAME", "BASE_TYPE"]}
-              ></Select>
-              <label className="label">Scoring Method</label>
-              <Select
-                className="w-full"
-                name="scoring_method"
-                required
-                options={scoringPresets
-                  .filter(
-                    (preset) => preset.type == ScoringPresetType.OBJECTIVE
-                  )
-                  .map((preset) => ({
-                    label: preset.name,
-                    value: String(preset.id),
-                  }))}
-              ></Select>
-              <label className="label">Aggregation Method</label>
-              <Select
-                name="aggregation_method"
-                required
-                className="w-full"
-                options={Object.values(AggregationType)}
-              ></Select>
-            </fieldset>
-            <div className="flex gap-2 justify-end ">
-              <button
-                className="btn btn-secondary"
-                type="button"
-                onClick={() => {
-                  setIsBulkObjectiveModalOpen(false);
-                }}
-              >
-                Cancel
-              </button>
-              <button type="submit" className="btn btn-primary">
-                Create
-              </button>
-            </div>
-          </form>
-        </div>
+            )}
+          />
+          <categoryForm.AppField
+            name="scoring_preset_id"
+            children={(field) => (
+              <field.SelectField
+                label="Scoring Preset"
+                options={scoringPresets.map((preset) => ({
+                  label: preset.name,
+                  value: preset.id,
+                }))}
+              />
+            )}
+          />
+          <div className="flex flex-row gap-2 justify-end">
+            <button
+              type="button"
+              className="btn btn-error"
+              onClick={() => {
+                setIsCategoryModalOpen(false);
+              }}
+            >
+              Cancel
+            </button>
+            <button type="submit" className="btn btn-primary">
+              {currentObjective ? "Update" : "Create"}
+            </button>
+          </div>
+        </form>
       </Dialog>
-    ),
-    [isBulkObjectiveModalOpen, categoryId, eventId, scoringPresets]
-  );
-  const objectiveModal = (
-    <Dialog
-      title="Create Objective"
-      open={isObjectiveModalOpen}
-      setOpen={setIsObjectiveModalOpen}
-    >
-      <div className="flex justify-end flex-col gap-y-4">{objectiveForm}</div>
-    </Dialog>
-  );
+    );
+  }, [scoringPresets, isCategoryModalOpen, categoryForm, currentObjective]);
 
-  const conditionModal = useMemo(() => {
+  const conditionDialog: React.ReactNode = useMemo(() => {
+    let operatorOptions: Operator[] = [];
+    if (operatorForField && itemField) {
+      operatorOptions = operatorForField[itemField];
+    }
     return (
       <Dialog
         title="Create Condition"
         open={isConditionModalOpen}
         setOpen={setIsConditionModalOpen}
+        className="max-w-lg"
       >
         <form
+          className="flex flex-col gap-2 bg-base-300 p-4 rounded-box w-full"
           onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
-            const form = e.currentTarget;
-            const data = new FormData(form);
-            if (!currentObjective.id) {
-              return;
-            }
-            const conditionCreate = {
-              field: conditionField!,
-              operator: data.get("operator") as Operator,
-              value: data.get("value") as string,
-              objective_id: currentObjective.id,
-            };
-            conditionApi.createCondition(eventId, conditionCreate).then(() => {
-              setIsConditionModalOpen(false);
-              setRefreshObjectives((prev) => !prev);
-            });
+            conditionForm.handleSubmit();
           }}
         >
-          <fieldset className="fieldset bg-base-300 p-4 rounded-box mb-4">
-            <label className="label">Field</label>
-            <Select
-              className="w-full"
-              name="condition-field"
-              options={Object.values(ItemField)}
-              onChange={(value) => {
-                setConditionField(value as ItemField);
-              }}
-            ></Select>
-            {conditionField !== undefined ? (
-              <>
-                <label className="label">Operator</label>
-                <Select
-                  name="operator"
-                  className="w-full"
-                  required
-                  options={
-                    operatorForField ? operatorForField[conditionField] : []
-                  }
-                ></Select>
-              </>
-            ) : null}
-            <label className="label">Value</label>
-            <input name="value" type="text" className="input w-full" required />
-          </fieldset>
-          <div className="flex gap-2 justify-end ">
+          <conditionForm.AppField
+            name="field"
+            children={(field) => (
+              <field.SelectField
+                label="Field"
+                options={Object.values(ItemField)}
+                required
+              />
+            )}
+          />
+          <conditionForm.AppField
+            name="operator"
+            children={(field) => (
+              <field.SelectField
+                label="Operator"
+                options={operatorOptions}
+                required
+                hidden={!itemField}
+              />
+            )}
+          />
+          <conditionForm.AppField
+            name="value"
+            children={(field) => <field.TextField label="Value" required />}
+          />
+          <div className="flex flex-row gap-2 justify-end">
             <button
-              className="btn btn-secondary"
               type="button"
+              className="btn btn-error"
               onClick={() => {
                 setIsConditionModalOpen(false);
               }}
@@ -826,28 +681,132 @@ export function ScoringCategoryPage(): JSX.Element {
         </form>
       </Dialog>
     );
-  }, [
-    currentObjective,
-    isConditionModalOpen,
-    conditionField,
-    eventId,
-    operatorForField,
-  ]);
+  }, [operatorForField, itemField, isConditionModalOpen, conditionForm]);
+
+  const table = useMemo(() => {
+    return (
+      <Table<Objective>
+        className="w-full h-[70vh]"
+        columns={objectivColumns}
+        data={
+          objective?.children
+            .sort((a, b) => b.id - a.id)
+            .filter((child) => child.children.length == 0) || []
+        }
+        sortable={false}
+      />
+    );
+  }, [objective?.children, objectivColumns]);
 
   if (!categoryId) {
     return <></>;
   }
-
   return (
-    <>
-      {objectiveModal}
-      {bulkObjeciveModal}
-      {conditionModal}
-      {/* <h1>{"Category " + categoryName} </h1>
-      {categoryTable} */}
-      {objectiveTable}
-    </>
+    <div className="flex flex-col gap-4 mt-4">
+      {objectiveDialog}
+      {bulkObjectiveDialog}
+      {categoryDialog}
+      {conditionDialog}
+      <div className="w-full bg-base-300 flex flex-col p-4 rounded-box">
+        <h1 className="text-2xl font-bold mb-4">
+          Categories and Subcategories
+        </h1>
+        {path.map((activeId) => {
+          const activObjective = findObjective(
+            rules,
+            (objective) => objective.id === activeId
+          );
+          const children = activObjective?.children.filter(
+            (child) => child.children.length > 0
+          );
+          if (!children || children.length === 0) {
+            return null;
+          }
+          return (
+            <div key={"category-" + activeId}>
+              {path[0] !== activeId && (
+                <div className="divider divider-primary select-none my-2"></div>
+              )}
+              <div className="flex flex-row flex-wrap gap-1">
+                {children.map((objective) => (
+                  <div key={"category-child-" + objective.id}>
+                    <Link
+                      to={`/admin/events/$eventId/categories/$categoryId`}
+                      params={{ eventId: eventId!, categoryId: objective.id }}
+                      className={`btn ${path.includes(objective.id) ? "btn-primary" : " btn-dash"}`}
+                    >
+                      {objective.name}
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="flex flex-row gap-2 justify-center">
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            setIsCategoryModalOpen(true);
+            setCurrentObjective(undefined);
+            categoryForm.reset();
+          }}
+        >
+          Create Subcategory
+        </button>
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            setIsCategoryModalOpen(true);
+            setCurrentObjective(objective);
+            categoryForm.reset(objective);
+          }}
+        >
+          Edit this Category
+        </button>
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            setCurrentObjective(undefined);
+            setIsObjectiveModalOpen(true);
+          }}
+        >
+          Create new Objective
+        </button>
+        <button
+          className="btn btn-secondary"
+          onClick={() => setIsBulkObjectiveModalOpen(true)}
+        >
+          Create Objectives in bulk
+        </button>
+      </div>
+      {table}
+    </div>
   );
 }
 
 export default ScoringCategoryPage;
+
+function extendConditions(
+  conditions: ObjectiveConditionCreate[],
+  value: string,
+  field: ItemField
+) {
+  let exists = false;
+  const newConditions = conditions.map((condition) => {
+    if (condition.field === field && condition.operator === Operator.EQ) {
+      condition.value = value;
+      exists = true;
+    }
+    return condition;
+  });
+  if (!exists) {
+    newConditions.push({
+      field: field,
+      operator: Operator.EQ,
+      value: value,
+    });
+  }
+  return newConditions;
+}

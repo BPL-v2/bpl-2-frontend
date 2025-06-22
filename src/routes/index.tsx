@@ -14,7 +14,7 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const { currentEvent } = useContext(GlobalStateContext);
-  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
   const now = Date.now();
   const hasStarted =
     currentEvent && Date.parse(currentEvent.event_start_time) < now;

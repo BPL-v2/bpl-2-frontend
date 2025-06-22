@@ -10,9 +10,9 @@ import { useGetUser } from "@client/query";
 import { useQueryClient } from "@tanstack/react-query";
 
 const AuthButton = () => {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const state = useRouterState();
-  const { data: user } = useGetUser();
+  const { user } = useGetUser();
 
   if (
     user &&
@@ -56,7 +56,7 @@ const AuthButton = () => {
               className="hover:bg-error hover:text-error-content"
               onClick={() => {
                 localStorage.removeItem("auth");
-                queryClient.setQueryData(["user"], null);
+                qc.setQueryData(["user"], null);
               }}
             >
               <ArrowLeftStartOnRectangleIcon className="h-6 w-6" />

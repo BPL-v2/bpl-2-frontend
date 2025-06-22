@@ -17,7 +17,7 @@ export const ScoreUpdateCard = ({
   closeAll,
 }: ScoreUpdateCardProps) => {
   const { scores, currentEvent, gameVersion } = useContext(GlobalStateContext);
-  const { data: users } = useGetUsers(currentEvent.id);
+  const { users } = useGetUsers(currentEvent.id);
   const meta = getMetaInfo(update, users, scores, currentEvent?.teams);
   let body: JSX.Element | null = null;
   let title: string | null = null;

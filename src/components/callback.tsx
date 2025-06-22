@@ -26,7 +26,7 @@ export function Callback({
   error_description,
   provider,
 }: CallbackProps) {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   useEffect(() => {
     if (error) {
@@ -46,14 +46,14 @@ export function Callback({
       })
       .then((resp) => {
         localStorage.setItem("auth", resp.auth_token);
-        queryClient.invalidateQueries({
+        qc.invalidateQueries({
           queryKey: ["user"],
         });
         router.navigate({
           to: resp.last_path,
         });
       });
-  }, [state, code, provider, error, queryClient]);
+  }, [state, code, provider, error, qc]);
   if (error) {
     return (
       <>

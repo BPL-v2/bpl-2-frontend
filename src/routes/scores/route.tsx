@@ -60,7 +60,7 @@ export const Route = createFileRoute("/scores")({
 
 function ScoringPage() {
   const { currentEvent, gameVersion } = useContext(GlobalStateContext);
-  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
   const { rules } = Route.useSearch();
 
   const selected = useRouterState({

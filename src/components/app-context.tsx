@@ -21,9 +21,9 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
   // const [_, setUpdates] = useState<ScoreDiff[]>([]);
   const [preferences, setPreferences] = useState(initPreferences());
   const [websocket, setWebsocket] = useState<WebSocket>();
-  const { data: events } = useGetEvents();
-  const { data: rules } = useGetRules(currentEvent.id);
-  const { data: scoringPresets } = useGetScoringPresets(currentEvent.id);
+  const { events } = useGetEvents();
+  const { rules } = useGetRules(currentEvent.id);
+  const { scoringPresets } = useGetScoringPresets(currentEvent.id);
 
   useEffect(() => {
     if (events) {

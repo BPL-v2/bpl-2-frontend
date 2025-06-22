@@ -33,7 +33,7 @@ function bonusAvailableCounter(
 
 export function DailyCard({ daily }: DailyCardProps) {
   const { currentEvent } = useContext(GlobalStateContext);
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   if (!currentEvent || !daily.baseObjective) {
     return <></>;
@@ -98,7 +98,7 @@ export function DailyCard({ daily }: DailyCardProps) {
       {!finished && (
         <div className="py-4 mb-0 rounded-b-box">
           {bonusAvailableCounter(daily.valid_to, () => {
-            queryClient.refetchQueries({
+            qc.refetchQueries({
               queryKey: ["rules", currentEvent.id],
             });
           })}

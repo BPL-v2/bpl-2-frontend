@@ -24,12 +24,14 @@ function Table<T>({
   rowClassName,
   rowStyle,
   className,
+  sortable = true,
 }: {
   data: T[];
   columns: ColumnDef<T>[];
   rowClassName?: (row: Row<T>) => string;
   rowStyle?: (row: Row<T>) => React.CSSProperties;
   className?: string;
+  sortable?: boolean;
 }) {
   const tableRef = React.useRef<HTMLDivElement>(null);
 
@@ -38,10 +40,12 @@ function Table<T>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
     getFilteredRowModel: getFilteredRowModel(),
   };
+  if (sortable) {
+    options.getSortedRowModel = getSortedRowModel();
+    options.onSortingChange = setSorting;
+  }
   const state: Partial<TableState> = {
     sorting,
   };
@@ -86,12 +90,12 @@ function Table<T>({
                   >
                     <div
                       className={
-                        header.column.getCanSort()
+                        sortable && header.column.getCanSort()
                           ? "select-none flex items-center gap-2 cursor-pointer"
                           : ""
                       }
                     >
-                      {header.column.getCanSort() ? (
+                      {sortable && header.column.getCanSort() ? (
                         <div onClick={header.column.getToggleSortingHandler()}>
                           <TableSortIcon
                             className="h-5 w-5 "
@@ -172,16 +176,16 @@ function Table<T>({
 
 export default Table;
 
-type ColumnDefMeta = {
+type ColumnDefMeta<T> = {
   filterVariant?: "string" | "enum" | "boolean";
   filterPlaceholder?: string;
-  options?: string[] | SelectOption[];
+  options?: T[] | SelectOption<T>[];
 };
 
 function Filter<T>({ column }: { column: Column<T, unknown> }) {
   const columnFilterValue = column.getFilterValue();
   const { filterVariant, filterPlaceholder, options } =
-    (column.columnDef.meta as ColumnDefMeta) ?? {};
+    (column.columnDef.meta as ColumnDefMeta<T>) ?? {};
 
   if (filterVariant === "string") {
     return (
@@ -201,7 +205,7 @@ function Filter<T>({ column }: { column: Column<T, unknown> }) {
     return (
       <Select
         onChange={column.setFilterValue}
-        value={(columnFilterValue ?? "") as string}
+        value={(columnFilterValue ?? "") as T}
         options={options!}
         fontSize="text-lg"
         placeholder={filterPlaceholder}

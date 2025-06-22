@@ -49,16 +49,19 @@ function UserSortPage() {
   const { currentEvent } = useContext(GlobalStateContext);
   const [nameFilter, setNameFilter] = useState<string>("");
   const [nameListFilter, setNameListFilter] = useState<string[]>([]);
-  const queryClient = useQueryClient();
-  const { data: signups = [], isLoading, isError } = useGetSignups(currentEvent.id || 0);
-  const { mutate: addUsersToTeams } = useAddUsersToTeams(queryClient);
+  const qc = useQueryClient();
+  const {
+    signups = [],
+    isLoading,
+    isError,
+  } = useGetSignups(currentEvent.id || 0);
+  const { addUsersToTeams } = useAddUsersToTeams(qc);
   const [suggestions, setSuggestions] = useState<Signup[]>([]);
   useEffect(() => {
     if (signups) {
       setSuggestions([...signups]);
     }
   }, [signups]);
-
 
   const sortColumns = useMemo(() => {
     const columns: ColumnDef<Signup>[] = [
@@ -95,11 +98,13 @@ function UserSortPage() {
               );
               addUsersToTeams({
                 event_id: currentEvent?.id || 0,
-                users: [{
-                  user_id: row.original.user.id,
-                  team_id: row.original.team_id,
-                  is_team_lead: e.target.checked,
-                }],
+                users: [
+                  {
+                    user_id: row.original.user.id,
+                    team_id: row.original.team_id,
+                    is_team_lead: e.target.checked,
+                  },
+                ],
               });
             }}
           />
@@ -133,10 +138,10 @@ function UserSortPage() {
                     suggestions.map((signup) =>
                       signup.user.id === row.original.user.id
                         ? {
-                          ...signup,
-                          team_id: team.id,
-                          team_lead: row.original.team_lead,
-                        }
+                            ...signup,
+                            team_id: team.id,
+                            team_lead: row.original.team_lead,
+                          }
                         : signup
                     )
                   );
@@ -291,7 +296,10 @@ function UserSortPage() {
       </table>
       <div className="divider divider-primary">Users</div>
       <div className="flex gap-2 bg-base-300 p-4 wrap mb-2">
-        <button className="btn btn-primary " onClick={() => exportToCSV(signups)}>
+        <button
+          className="btn btn-primary "
+          onClick={() => exportToCSV(signups)}
+        >
           <ArrowDownTrayIcon className="w-4 h-4 mr-2" />
           CSV
         </button>

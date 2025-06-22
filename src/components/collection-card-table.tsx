@@ -42,7 +42,7 @@ export function CollectionCardTable({
   showPoints = true,
 }: CollectionCardTableProps) {
   const { currentEvent } = useContext(GlobalStateContext);
-  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
 
   return (
     <table key={objective.id} className="w-full mt-2">

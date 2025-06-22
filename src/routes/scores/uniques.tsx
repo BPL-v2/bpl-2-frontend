@@ -21,7 +21,7 @@ function UniqueTab() {
   const [selectedTeam, setSelectedTeam] = useState<number | undefined>();
   const [categoryFilter, setCategoryFilter] = useState<string>("");
   const [shownCategories, setShownCategories] = useState<ScoreObjective[]>([]);
-  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
   const tableRef = useRef<HTMLDivElement>(null);
   const handleCategoryClick = (objective: ScoreObjective) => {
     if (objective.id === selectedCategory?.id) {

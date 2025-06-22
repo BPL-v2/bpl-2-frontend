@@ -11,9 +11,9 @@ export const Route = createFileRoute("/settings")({
 });
 
 export function SettingsPage() {
-  const queryClient = useQueryClient();
-  const { data: user } = useGetUser();
-  const { mutate: setUser } = useChangeUserDisplayName(queryClient);
+  const qc = useQueryClient();
+  const { user } = useGetUser();
+  const { changeUserDisplayName } = useChangeUserDisplayName(qc);
 
   if (!user) {
     return <></>;
@@ -33,7 +33,7 @@ export function SettingsPage() {
               className="flex"
               onSubmit={(e) => {
                 e.preventDefault();
-                setUser(e.currentTarget.display_name.value);
+                changeUserDisplayName(e.currentTarget.display_name.value);
               }}
             >
               <div className="join gap-0 ">

@@ -17,16 +17,16 @@ export const Route = createFileRoute("/scores/for-you")({
 
 export function ForYouTab() {
   const { currentEvent, scores } = useContext(GlobalStateContext);
-  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
-  const { data: user } = useGetUser();
-  const { data: characterStats } = useGetCharacterEventHistory(
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
+  const { user } = useGetUser();
+  const { characterHistory } = useGetCharacterEventHistory(
     currentEvent.id,
     user?.id
   );
-  const { data: teamGoals } = useGetTeamGoals(currentEvent.id);
+  const { teamGoals } = useGetTeamGoals(currentEvent.id);
 
   const personalObjectiveRender = useMemo(() => {
-    characterStats?.sort((a, b) => {
+    characterHistory?.sort((a, b) => {
       return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
     });
     const char = {
@@ -34,8 +34,8 @@ export function ForYouTab() {
       atlas_node_count: 0,
       ascendancy_points: 0,
     };
-    if (characterStats && characterStats.length > 0) {
-      characterStats.forEach((stat) => {
+    if (characterHistory && characterHistory.length > 0) {
+      characterHistory.forEach((stat) => {
         char.level = Math.max(char.level, stat.level || 0);
         char.atlas_node_count = Math.max(
           char.atlas_node_count,
@@ -175,7 +175,7 @@ export function ForYouTab() {
         </div>
       </div>
     );
-  }, [characterStats]);
+  }, [characterHistory]);
   if (!scores || !user) {
     return <div>Loading...</div>;
   }

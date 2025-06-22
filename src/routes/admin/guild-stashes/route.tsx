@@ -27,20 +27,11 @@ function RouteComponent() {
   const stashId = useRouterState({
     select: (state) => state.location.pathname.split("/").slice(-1)[0],
   });
-  const queryClient = useQueryClient();
-  const { data: guildStashes } = useGetGuildStash(currentEvent.id);
-  const { mutate: updateGuildStashes } = useUpdateGuildStash(
-    queryClient,
-    currentEvent.id
-  );
-  const { mutate: switchGuildStash } = useSwitchStashFetching(
-    queryClient,
-    currentEvent.id
-  );
-  const { mutate: updateGuildStashTab } = useUpdateGuildStashTab(
-    queryClient,
-    currentEvent.id
-  );
+  const qc = useQueryClient();
+  const { guildStashes } = useGetGuildStash(currentEvent.id);
+  const { updateGuildStash } = useUpdateGuildStash(qc, currentEvent.id);
+  const { switchStashFetching } = useSwitchStashFetching(qc, currentEvent.id);
+  const { updateGuildStashTab } = useUpdateGuildStashTab(qc, currentEvent.id);
   const [hideDisabled, setHideDisabled] = useState(true);
   const [highlightScoring, setHighlightScoring] = useState(true);
   useEffect(() => {
@@ -73,7 +64,7 @@ function RouteComponent() {
         <button
           className="btn btn-primary "
           onClick={() => {
-            updateGuildStashes(); // Example stash ID
+            updateGuildStash(); // Example stash ID
           }}
         >
           Update Guild Stash
@@ -120,9 +111,7 @@ function RouteComponent() {
                   <input
                     type="checkbox"
                     checked={stash.fetch_enabled}
-                    onChange={() => {
-                      switchGuildStash(stash.id);
-                    }}
+                    onChange={() => switchStashFetching(stash.id)}
                     className="checkbox checkbox-primary"
                   />
                 ) : null}

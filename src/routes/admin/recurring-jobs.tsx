@@ -27,10 +27,10 @@ const formatDateForInput = (date: Date | null) => {
 };
 
 function RecurringJobsPage() {
-  const queryClient = useQueryClient();
-  const { data: events, isLoading: eventsLoading } = useGetEvents();
-  const { data: jobs = [], isLoading: jobsLoading } = useGetJobs();
-  const { mutate: startJob, isPending: startJobPending } = useStartJob(queryClient);
+  const qc = useQueryClient();
+  const { events, isLoading: eventsLoading } = useGetEvents();
+  const { jobs = [], isLoading: jobsLoading } = useGetJobs();
+  const { startJob, isPending: startJobPending } = useStartJob(qc);
   const [showModal, setShowModal] = React.useState(false);
   const [selectedEvent, setSelectedEvent] = React.useState<Event | null>(null);
   const [selectedEndDate, setSelectedEndDate] = React.useState<Date | null>(
@@ -98,14 +98,14 @@ function RecurringJobsPage() {
               required
               onChange={(value) =>
                 setSelectedEvent(
-                  events.find((event) => event.id === parseInt(value)) || null
+                  events.find((event) => event.id === value?.value) || null
                 )
               }
               className="w-full"
               placeholder="Pick an event"
               options={events.map((event) => ({
                 label: event.name,
-                value: String(event.id),
+                value: event.id,
               }))}
             ></Select>
             <label className="label">Job Type</label>

@@ -27,8 +27,8 @@ function teamSort(
 
 export function TwitchPage() {
   const { currentEvent } = useContext(GlobalStateContext);
-  const { data: users } = useGetUsers(currentEvent.id);
-  const { data: eventStatus } = useGetEventStatus(currentEvent.id);
+  const { users } = useGetUsers(currentEvent.id);
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
   const {
     data: streams,
     isPending: streamsPending,

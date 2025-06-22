@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
 interface DateTimePickerProps {
-  defaultValue?: Date | string;
-  label?: string;
+  defaultValue?: string;
+  label: string;
   name?: string;
   required?: boolean;
+  onChange?: (date: string) => void;
+  className?: string;
 }
 
 export const DateTimePicker: React.FC<DateTimePickerProps> = ({
@@ -12,6 +15,8 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   label,
   name,
   required,
+  onChange,
+  className,
 }) => {
   const pad = (n: number) => (n < 10 ? `0${n}` : n);
 
@@ -47,13 +52,27 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
     if (!date || !time) {
       return "";
     }
-    return new Date(date + "T" + time).toISOString();
+    try {
+      return new Date(date + "T" + time).toISOString();
+    } catch (e) {
+      return "";
+    }
   };
+  useEffect(() => {
+    if (onChange && date && time) {
+      onChange(toIsoString(time, date));
+    }
+  }, [date, time, name]);
 
   return (
-    <>
-      {label && <label className="label">{label}</label>}
-      <div className="join gap-1 ">
+    <label
+      className={twMerge("flex flex-col gap-1 items-start w-full", className)}
+    >
+      <span className="label">
+        {label}
+        {required && <span className="text-red-500">*</span>}
+      </span>
+      <div className="join w-full">
         <input
           type="date"
           className="input rounded-l-field"
@@ -72,6 +91,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
         />
         <input type="hidden" name={name} value={toIsoString(time, date)} />
       </div>
-    </>
+    </label>
   );
 };
