@@ -235,6 +235,12 @@ export interface Character {
      * @type {number}
      * @memberof Character
      */
+    id: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Character
+     */
     level: number;
     /**
      * 
@@ -256,16 +262,84 @@ export interface Character {
     pantheon: boolean;
     /**
      * 
-     * @type {string}
-     * @memberof Character
-     */
-    timestamp: string;
-    /**
-     * 
      * @type {number}
      * @memberof Character
      */
     user_id: number;
+}
+
+/**
+ * 
+ * @export
+ * @interface CharacterStat
+ */
+export interface CharacterStat {
+    /**
+     * 
+     * @type {number}
+     * @memberof CharacterStat
+     */
+    armour: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CharacterStat
+     */
+    dps: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CharacterStat
+     */
+    ehp: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CharacterStat
+     */
+    ele_max_hit: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CharacterStat
+     */
+    es: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CharacterStat
+     */
+    evasion: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CharacterStat
+     */
+    hp: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CharacterStat
+     */
+    mana: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CharacterStat
+     */
+    phys_max_hit: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CharacterStat
+     */
+    timestamp: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CharacterStat
+     */
+    xp: number;
 }
 
 /**
@@ -2702,16 +2776,6 @@ export interface StashTabMetadata {
 /**
  * 
  * @export
- * @interface StatValues
- */
-export interface StatValues {
-    [key: string]: Array<any>;
-
-}
-
-/**
- * 
- * @export
  * @interface Submission
  */
 export interface Submission {
@@ -3262,85 +3326,27 @@ export const CharactersApiFetchParamCreator = function (configuration?: Configur
     return {
         /**
          * Get all character data for an event for a user
-         * @param {number} event_id Event ID
          * @param {number} user_id User ID
+         * @param {number} character_id Character ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getCharacterEventHistoryForUser(event_id: number, user_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getCharacterEventHistoryForUser.');
-            }
+        getCharacterHistory(user_id: number, character_id: number, options: any = {}): FetchArgs {
             // verify required parameter 'user_id' is not null or undefined
             if (user_id === null || user_id === undefined) {
-                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling getCharacterEventHistoryForUser.');
+                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling getCharacterHistory.');
             }
-            const localVarPath = `/characters/{user_id}/{event_id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Get the time series for a character
-         * @param {number} user_id User ID
-         * @param {number} event_id Event ID
-         * @param {string} character_name Character name
-         * @param {string} start Start time
-         * @param {string} end End time
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharacterTimeSeries(user_id: number, event_id: number, character_name: string, start: string, end: string, options: any = {}): FetchArgs {
-            // verify required parameter 'user_id' is not null or undefined
-            if (user_id === null || user_id === undefined) {
-                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling getCharacterTimeSeries.');
+            // verify required parameter 'character_id' is not null or undefined
+            if (character_id === null || character_id === undefined) {
+                throw new RequiredError('character_id','Required parameter character_id was null or undefined when calling getCharacterHistory.');
             }
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getCharacterTimeSeries.');
-            }
-            // verify required parameter 'character_name' is not null or undefined
-            if (character_name === null || character_name === undefined) {
-                throw new RequiredError('character_name','Required parameter character_name was null or undefined when calling getCharacterTimeSeries.');
-            }
-            // verify required parameter 'start' is not null or undefined
-            if (start === null || start === undefined) {
-                throw new RequiredError('start','Required parameter start was null or undefined when calling getCharacterTimeSeries.');
-            }
-            // verify required parameter 'end' is not null or undefined
-            if (end === null || end === undefined) {
-                throw new RequiredError('end','Required parameter end was null or undefined when calling getCharacterTimeSeries.');
-            }
-            const localVarPath = `/characters/{user_id}/{event_id}/{character_name}`
+            const localVarPath = `/users/{user_id}/characters/{character_id}`
                 .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)))
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"character_name"}}`, encodeURIComponent(String(character_name)));
+                .replace(`{${"character_id"}}`, encodeURIComponent(String(character_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
-
-            if (start !== undefined) {
-                localVarQueryParameter['start'] = start;
-            }
-
-            if (end !== undefined) {
-                localVarQueryParameter['end'] = end;
-            }
 
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
@@ -3382,17 +3388,17 @@ export const CharactersApiFetchParamCreator = function (configuration?: Configur
         },
         /**
          * Fetches all event characters for a user
-         * @param {number} userId User Id
+         * @param {number} user_id User Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserCharacters(userId: number, options: any = {}): FetchArgs {
-            // verify required parameter 'userId' is not null or undefined
-            if (userId === null || userId === undefined) {
-                throw new RequiredError('userId','Required parameter userId was null or undefined when calling getUserCharacters.');
+        getUserCharacters(user_id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'user_id' is not null or undefined
+            if (user_id === null || user_id === undefined) {
+                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling getUserCharacters.');
             }
-            const localVarPath = `/characters/{userId}`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+            const localVarPath = `/users/{user_id}/characters`
+                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
             const localVarHeaderParameter = {} as any;
@@ -3419,35 +3425,13 @@ export const CharactersApiFp = function(configuration?: Configuration) {
     return {
         /**
          * Get all character data for an event for a user
-         * @param {number} event_id Event ID
          * @param {number} user_id User ID
+         * @param {number} character_id Character ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getCharacterEventHistoryForUser(event_id: number, user_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Character>> {
-            const localVarFetchArgs = CharactersApiFetchParamCreator(configuration).getCharacterEventHistoryForUser(event_id, user_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Get the time series for a character
-         * @param {number} user_id User ID
-         * @param {number} event_id Event ID
-         * @param {string} character_name Character name
-         * @param {string} start Start time
-         * @param {string} end End time
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharacterTimeSeries(user_id: number, event_id: number, character_name: string, start: string, end: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<StatValues> {
-            const localVarFetchArgs = CharactersApiFetchParamCreator(configuration).getCharacterTimeSeries(user_id, event_id, character_name, start, end, options);
+        getCharacterHistory(user_id: number, character_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<CharacterStat>> {
+            const localVarFetchArgs = CharactersApiFetchParamCreator(configuration).getCharacterHistory(user_id, character_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -3478,12 +3462,12 @@ export const CharactersApiFp = function(configuration?: Configuration) {
         },
         /**
          * Fetches all event characters for a user
-         * @param {number} userId User Id
+         * @param {number} user_id User Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserCharacters(userId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Character>> {
-            const localVarFetchArgs = CharactersApiFetchParamCreator(configuration).getUserCharacters(userId, options);
+        getUserCharacters(user_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Character>> {
+            const localVarFetchArgs = CharactersApiFetchParamCreator(configuration).getUserCharacters(user_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -3505,26 +3489,13 @@ export const CharactersApiFactory = function (configuration?: Configuration, fet
     return {
         /**
          * Get all character data for an event for a user
-         * @param {number} event_id Event ID
          * @param {number} user_id User ID
+         * @param {number} character_id Character ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getCharacterEventHistoryForUser(event_id: number, user_id: number, options?: any) {
-            return CharactersApiFp(configuration).getCharacterEventHistoryForUser(event_id, user_id, options)(fetch, basePath);
-        },
-        /**
-         * Get the time series for a character
-         * @param {number} user_id User ID
-         * @param {number} event_id Event ID
-         * @param {string} character_name Character name
-         * @param {string} start Start time
-         * @param {string} end End time
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharacterTimeSeries(user_id: number, event_id: number, character_name: string, start: string, end: string, options?: any) {
-            return CharactersApiFp(configuration).getCharacterTimeSeries(user_id, event_id, character_name, start, end, options)(fetch, basePath);
+        getCharacterHistory(user_id: number, character_id: number, options?: any) {
+            return CharactersApiFp(configuration).getCharacterHistory(user_id, character_id, options)(fetch, basePath);
         },
         /**
          * Get all characters for an event
@@ -3537,12 +3508,12 @@ export const CharactersApiFactory = function (configuration?: Configuration, fet
         },
         /**
          * Fetches all event characters for a user
-         * @param {number} userId User Id
+         * @param {number} user_id User Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserCharacters(userId: number, options?: any) {
-            return CharactersApiFp(configuration).getUserCharacters(userId, options)(fetch, basePath);
+        getUserCharacters(user_id: number, options?: any) {
+            return CharactersApiFp(configuration).getUserCharacters(user_id, options)(fetch, basePath);
         },
     };
 };
@@ -3556,29 +3527,14 @@ export const CharactersApiFactory = function (configuration?: Configuration, fet
 export class CharactersApi extends BaseAPI {
     /**
      * Get all character data for an event for a user
-     * @param {number} event_id Event ID
      * @param {number} user_id User ID
+     * @param {number} character_id Character ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CharactersApi
      */
-    public getCharacterEventHistoryForUser(event_id: number, user_id: number, options?: any) {
-        return CharactersApiFp(this.configuration).getCharacterEventHistoryForUser(event_id, user_id, options)(this.fetch, this.basePath);
-    }
-
-    /**
-     * Get the time series for a character
-     * @param {number} user_id User ID
-     * @param {number} event_id Event ID
-     * @param {string} character_name Character name
-     * @param {string} start Start time
-     * @param {string} end End time
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharactersApi
-     */
-    public getCharacterTimeSeries(user_id: number, event_id: number, character_name: string, start: string, end: string, options?: any) {
-        return CharactersApiFp(this.configuration).getCharacterTimeSeries(user_id, event_id, character_name, start, end, options)(this.fetch, this.basePath);
+    public getCharacterHistory(user_id: number, character_id: number, options?: any) {
+        return CharactersApiFp(this.configuration).getCharacterHistory(user_id, character_id, options)(this.fetch, this.basePath);
     }
 
     /**
@@ -3594,13 +3550,13 @@ export class CharactersApi extends BaseAPI {
 
     /**
      * Fetches all event characters for a user
-     * @param {number} userId User Id
+     * @param {number} user_id User Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CharactersApi
      */
-    public getUserCharacters(userId: number, options?: any) {
-        return CharactersApiFp(this.configuration).getUserCharacters(userId, options)(this.fetch, this.basePath);
+    public getUserCharacters(user_id: number, options?: any) {
+        return CharactersApiFp(this.configuration).getUserCharacters(user_id, options)(this.fetch, this.basePath);
     }
 
 }

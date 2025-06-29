@@ -14,7 +14,7 @@ import {
   useGetUserCharacters,
   useGetCharacterTimeseries,
 } from "@client/query";
-import { characterApi } from "@client/client";
+import { getLevelFromExperience } from "@mytypes/level-info";
 
 export const Route = createFileRoute("/profile/$userId")({
   component: ProfilePage,
@@ -32,74 +32,23 @@ export function ProfilePage() {
   const { preferences, currentEvent } = useContext(GlobalStateContext);
   const { events } = useGetEvents();
   const { userId } = useParams({ from: Route.id });
+  const [character, setCharacter] = useState<Character | null>(null);
 
   // Use TanStack Query hooks from query.ts
   const { user, isLoading: userLoading } = useGetUserById(userId);
   const { userCharacters = [], isLoading: charactersLoading } =
     useGetUserCharacters(userId);
   const { characterTimeseries = [], isLoading: timeseriesLoading } =
-    useGetCharacterTimeseries(currentEvent?.id || 0, userId);
-  const [character, setCharacter] = useState<Character | null>(null);
+    useGetCharacterTimeseries(character?.id ?? 0, userId);
 
-  const ts = useMemo(() => {
-    if (!character) {
-      return;
-    }
-    const start = new Date(currentEvent.event_start_time);
-    const end = new Date();
-    return characterApi.getCharacterTimeSeries(
-      userId,
-      currentEvent.id,
-      character.name,
-      start.toISOString(),
-      end.toISOString()
-    );
-  }, [character, currentEvent, userId]);
-  console.log(ts);
   const fontColor = preferences.theme === "dark" ? "white" : "black";
 
-  function drawVerticalLine(u: uPlot, timestamp: number, label: string) {
-    const ctx = u.ctx;
-    const xPos = u.valToPos(timestamp, "x") * window.devicePixelRatio;
-    ctx.beginPath();
-    ctx.moveTo(u.bbox.left + xPos, u.bbox.top);
-    ctx.lineTo(u.bbox.left + xPos, u.bbox.top + u.bbox.height);
-    ctx.strokeStyle = "blue";
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    ctx.textAlign = "center";
-    ctx.textBaseline = "bottom";
-    ctx.textRendering = "optimizeLegibility";
-    ctx.fillStyle = fontColor;
-    ctx.fillText(label, u.bbox.left + xPos, u.bbox.top);
-    ctx.closePath();
-  }
-  const verticalLinePlugin = (): uPlot.Plugin => ({
-    hooks: {
-      draw: (u: uPlot) => {
-        for (const points of [2, 4, 6, 8]) {
-          const xVal = characterTimeseries.find(
-            (c) => c.ascendancy_points === points
-          )?.timestamp;
-          if (!xVal) {
-            continue;
-          }
-          drawVerticalLine(
-            u,
-            new Date(xVal).getTime() / 1000,
-            `Asc${points / 2}`
-          );
-        }
-      },
-    },
-  });
-
   const data: AlignedData = [
-    // xValues: A number array or TypedArray
+    new Float64Array(characterTimeseries.map((c) => c.timestamp)),
     new Float64Array(
-      characterTimeseries.map((c) => new Date(c.timestamp).getTime() / 1000)
+      characterTimeseries.map((c) => getLevelFromExperience(c.xp))
     ),
-    new Float64Array(characterTimeseries.map((c) => c.level)),
+    new Float64Array(characterTimeseries.map((c) => c.xp)),
   ];
   const options: uPlot.Options = {
     title: "Level Progression",
@@ -126,12 +75,11 @@ export function ProfilePage() {
         points: { show: false },
       },
       {
-        label: "lvl",
+        label: "LVL",
         stroke: "green",
       },
     ],
     scales: { x: { time: true } },
-    plugins: [verticalLinePlugin()],
   };
   const state = {
     options: options,
