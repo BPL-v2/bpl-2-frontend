@@ -38,8 +38,6 @@ export default function Select<T>({
   const [selected, setSelected] = useState<SelectOption<T> | undefined>(
     value ? { label: value.toString(), value: value as T } : undefined
   );
-  console.log("selected", selected);
-  console.log("value", value);
   const cleanOptions = useMemo(() => {
     if (!options || options.length === 0) {
       return [];
@@ -81,7 +79,7 @@ export default function Select<T>({
           return option.label.toLowerCase().includes(query.toLowerCase());
         });
   return (
-    <div className={twMerge(fontSize, "w-full")}>
+    <div className={twMerge(fontSize, className)}>
       {name && (
         <input
           type="hidden"

@@ -27,10 +27,10 @@ const formatDateForInput = (date: Date | null) => {
 };
 
 function RecurringJobsPage() {
-  const qc = useQueryClient();
+  const queryClient = useQueryClient();
   const { events, isLoading: eventsLoading } = useGetEvents();
   const { jobs = [], isLoading: jobsLoading } = useGetJobs();
-  const { startJob, isPending: startJobPending } = useStartJob(qc);
+  const { startJob, isPending: startJobPending } = useStartJob(queryClient);
   const [showModal, setShowModal] = React.useState(false);
   const [selectedEvent, setSelectedEvent] = React.useState<Event | null>(null);
   const [selectedEndDate, setSelectedEndDate] = React.useState<Date | null>(
@@ -42,7 +42,7 @@ function RecurringJobsPage() {
     startJob({
       eventId: job.event_id,
       jobType: job.job_type,
-      durationInSeconds: 0,
+      endDate: new Date(),
     });
   };
 
@@ -84,7 +84,7 @@ function RecurringJobsPage() {
             startJob({
               eventId: Number(values.get("event")),
               jobType: values.get("jobType") as JobType,
-              durationInSeconds: 0,
+              endDate: new Date(values.get("endDate") as string),
             });
             setShowModal(false);
             formRef.current?.reset();

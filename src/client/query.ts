@@ -121,7 +121,21 @@ export function useGetSignups(event_id: number) {
   };
 }
 
-export function useCreateSignup(qc: QueryClient) {
+export function useGetOwnSignup(event_id: number) {
+  const query = useQuery({
+    queryKey: ["ownSignup", current !== event_id ? event_id : "current"],
+    queryFn: async () => signupApi.getPersonalSignup(event_id),
+  });
+  return {
+    signup: query.data,
+  };
+}
+
+export function useCreateSignup(
+  qc: QueryClient,
+  successCallback?: () => void,
+  errorCallback?: (msg: string) => void
+) {
   const m = useMutation({
     mutationFn: ({ eventId, body }: { eventId: number; body: SignupCreate }) =>
       signupApi.createSignup(eventId, body),
@@ -131,8 +145,41 @@ export function useCreateSignup(qc: QueryClient) {
           "eventStatus",
           current !== variables.eventId ? variables.eventId : "current",
         ],
+        (old: EventStatus) => {
+          if (!old) return old;
+          return {
+            ...old,
+            application_status: ApplicationStatus.applied,
+          };
+        }
+      );
+      qc.setQueryData(
+        [
+          "ownSignup",
+          current !== variables.eventId ? variables.eventId : "current",
+        ],
         data
       );
+      if (successCallback) {
+        successCallback();
+      }
+    },
+    onError: async (error) => {
+      if (errorCallback) {
+        let errorMessage = "An error occurred";
+        if (error instanceof Response) {
+          try {
+            const errorData = await error.json();
+            errorMessage = errorData.error;
+          } catch {
+            errorMessage = `HTTP ${error.status}: ${error.statusText}`;
+          }
+        } else if (error instanceof Error) {
+          errorMessage = error.message;
+        }
+
+        errorCallback(errorMessage);
+      }
     },
   });
   return {
@@ -157,6 +204,10 @@ export function useDeleteSignup(qc: QueryClient) {
             is_team_lead: false,
           };
         }
+      );
+      qc.setQueryData(
+        ["ownSignup", current !== eventId ? eventId : "current"],
+        undefined
       );
     },
   });
@@ -499,16 +550,16 @@ export function useStartJob(qc: QueryClient) {
     mutationFn: ({
       eventId,
       jobType,
-      durationInSeconds,
+      endDate,
     }: {
       eventId: number;
       jobType: JobType;
-      durationInSeconds: number;
+      endDate: Date;
     }) =>
       jobApi.startJob({
         event_id: eventId,
         job_type: jobType,
-        duration_in_seconds: durationInSeconds,
+        end_date: endDate.toISOString(),
       }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["jobs"] });
@@ -813,3 +864,31 @@ export function useDeleteTeam(qc: QueryClient, eventId: number) {
     deleteTeamPending: m.isPending,
   };
 }
+
+// export function useGetCharacterStats(userId: number, eventId: number) {
+//   const query = useQuery({
+//     queryKey: ["characterStats", userId, eventId],
+//     queryFn: ({
+//       eventId,
+//       characterName,
+//       start,
+//       end,
+//     }: {
+//       eventId: number;
+//       characterName: string;
+//       start: string;
+//       end: string;
+//     }) =>
+//       characterApi.getCharacterTimeSeries(
+//         userId,
+//         eventId,
+//         characterName,
+//         start,
+//         end
+//       ),
+//   });
+//   return {
+//     ...query,
+//     characterStats: query.data,
+//   };
+// }
