@@ -6,7 +6,7 @@ import { Countdown } from "@components/countdown";
 import { DiscordFilled } from "@icons/discord";
 import { HeartIcon } from "@heroicons/react/24/solid";
 import { useGetEventStatus } from "@client/query";
-// import { AscendancyPortrait } from "@components/ascendancy-portrait";
+import { AscendancyPortrait } from "@components/ascendancy-portrait";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -124,8 +124,7 @@ function Home() {
               </div>
             </div>
           </div>
-          {/* TODO: Re-enable once teams have ascendancy splits again */}
-          {/* <div className="card bg-base-300">
+          <div className="card bg-base-300">
             <div className="card-body p-12">
               <div className="card-title text-4xl">Meet the Teams</div>
               <p className="text-2xl mt-4">
@@ -166,7 +165,7 @@ function Home() {
                 ))}
               </div>
             </div>
-          </div> */}
+          </div>
         </>
       ) : null}
     </div>

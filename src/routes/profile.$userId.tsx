@@ -3,8 +3,8 @@ import uPlot, { AlignedData } from "uplot";
 import "uplot/dist/uPlot.min.css";
 
 import UplotReact from "uplot-react";
-import { useContext } from "react";
-import { GameVersion } from "@client/api";
+import { useContext, useMemo, useState } from "react";
+import { Character, GameVersion } from "@client/api";
 import { GlobalStateContext } from "@utils/context-provider";
 import { ascendancies, phreciaMapping, poe2Mapping } from "@mytypes/ascendancy";
 import { useParams } from "@tanstack/react-router";
@@ -14,6 +14,7 @@ import {
   useGetUserCharacters,
   useGetCharacterTimeseries,
 } from "@client/query";
+import { characterApi } from "@client/client";
 
 export const Route = createFileRoute("/profile/$userId")({
   component: ProfilePage,
@@ -38,7 +39,23 @@ export function ProfilePage() {
     useGetUserCharacters(userId);
   const { characterTimeseries = [], isLoading: timeseriesLoading } =
     useGetCharacterTimeseries(currentEvent?.id || 0, userId);
+  const [character, setCharacter] = useState<Character | null>(null);
 
+  const ts = useMemo(() => {
+    if (!character) {
+      return;
+    }
+    const start = new Date(currentEvent.event_start_time);
+    const end = new Date();
+    return characterApi.getCharacterTimeSeries(
+      userId,
+      currentEvent.id,
+      character.name,
+      start.toISOString(),
+      end.toISOString()
+    );
+  }, [character, currentEvent, userId]);
+  console.log(ts);
   const fontColor = preferences.theme === "dark" ? "white" : "black";
 
   function drawVerticalLine(u: uPlot, timestamp: number, label: string) {
@@ -170,6 +187,7 @@ export function ProfilePage() {
                       ? "outline-2 outline-primary"
                       : ""
                   }`}
+                  onClick={() => setCharacter(character)}
                 >
                   <figure className="h-80">
                     <img

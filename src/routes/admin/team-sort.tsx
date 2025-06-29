@@ -371,7 +371,10 @@ function UserSortPage() {
       </div>
       <Table
         data={suggestions
-          .sort((a, b) => a.id - b.id)
+          .sort(
+            (a, b) =>
+              new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+          )
           .filter((signup) => {
             if (nameFilter === "" && nameListFilter.length === 0) {
               return true;

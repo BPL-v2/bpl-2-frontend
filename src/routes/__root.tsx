@@ -8,13 +8,11 @@ import {
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
 import { GlobalStateContext } from "@utils/context-provider";
-import { EventPicker } from "@components/event-picker";
 import ApplicationButton from "@components/application-button";
 import AuthButton from "@components/auth-button";
 
 import { TwitchFilled } from "@icons/twitch";
 import { Footer } from "@components/footer";
-import { isAdmin } from "@utils/token";
 import { useGetEventStatus, useGetUser } from "@client/query";
 
 export const Route = createRootRoute({
@@ -105,7 +103,7 @@ function RootComponent() {
                 </li>
               ))}
             </div>
-            {isAdmin() ? <EventPicker /> : null}
+            {/* {isAdmin() ? <EventPicker /> : null} */}
             <div tabIndex={0} className=" flex items-center">
               <ApplicationButton />
               <AuthButton />

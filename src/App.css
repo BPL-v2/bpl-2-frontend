@@ -217,3 +217,112 @@ html {
     #e79038 95%
   );
 }
+
+/* POB stuff */
+
+.item {
+  height: 100%;
+  width: 100%;
+  border-radius: 0.5rem;
+  padding: 5px;
+}
+
+.inventory {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 4rem));
+  grid-gap: 0.5rem;
+  grid-template-areas:
+    "Weapon  Weapon .       Helm       Helm       .      Offhand Offhand"
+    "Weapon  Weapon .       Helm       Helm       .      Offhand Offhand"
+    "Weapon  Weapon .       BodyArmour BodyArmour Amulet Offhand Offhand"
+    "Weapon  Weapon RingL   BodyArmour BodyArmour RingR  Offhand Offhand"
+    ".       Gloves Gloves  BodyArmour BodyArmour Boots  Boots   ."
+    ".       Gloves Gloves  Belt       Belt       Boots  Boots   ."
+    "Trinket flasks flasks  flasks     flasks     flasks flasks  ."
+    ".       flasks flasks  flasks     flasks     flasks flasks  .";
+}
+
+.weapon1 {
+  grid-area: Weapon;
+  aspect-ratio: 3;
+  object-fit: contain;
+  height: 100%;
+  width: 100%;
+}
+
+.helmet {
+  grid-area: Helm;
+}
+
+.amulet {
+  grid-area: Amulet;
+}
+
+.weapon2 {
+  grid-area: Offhand;
+  aspect-ratio: 3;
+  object-fit: contain;
+  height: 100%;
+}
+
+.ring1 {
+  grid-area: RingL;
+}
+
+.bodyarmour {
+  grid-area: BodyArmour;
+  aspect-ratio: 3;
+  object-fit: contain;
+  height: 100%;
+}
+
+.ring2 {
+  grid-area: RingR;
+}
+
+.gloves {
+  grid-area: Gloves;
+}
+
+.belt {
+  grid-area: Belt;
+  aspect-ratio: 2;
+}
+
+.boots {
+  grid-area: Boots;
+}
+
+.flasks {
+  grid-area: flasks;
+  display: grid;
+  margin: 0 auto;
+  grid-template-columns: repeat(5, minmax(0, 4rem));
+  grid-gap: 0.5rem;
+  grid-template-areas: "Flask0 Flask1 Flask2 Flask3 Flask4";
+}
+
+.flask1 {
+  grid-area: Flask0;
+  aspect-ratio: 0.5;
+}
+
+.flask2 {
+  grid-area: Flask1;
+  aspect-ratio: 0.5;
+}
+
+.flask3 {
+  grid-area: Flask2;
+  aspect-ratio: 0.5;
+}
+
+.flask4 {
+  grid-area: Flask3;
+  aspect-ratio: 0.5;
+}
+
+.flask5 {
+  grid-area: Flask4;
+  aspect-ratio: 0.5;
+}
