@@ -5,10 +5,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ScoreObjective } from "@mytypes/score";
 import { flatMap } from "@utils/utils";
 import {
-  useGetCharacterEventHistory,
   useGetEventStatus,
   useGetTeamGoals,
   useGetUser,
+  useGetUserCharacters,
 } from "@client/query";
 
 export const Route = createFileRoute("/scores/for-you")({
@@ -19,33 +19,15 @@ export function ForYouTab() {
   const { currentEvent, scores } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const { user } = useGetUser();
-  const { characterHistory } = useGetCharacterEventHistory(
-    currentEvent.id,
-    user?.id
-  );
+  const { userCharacters } = useGetUserCharacters(user?.id ?? 0);
   const { teamGoals } = useGetTeamGoals(currentEvent.id);
 
   const personalObjectiveRender = useMemo(() => {
-    characterHistory?.sort((a, b) => {
-      return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
-    });
-    const char = {
-      level: 0,
-      atlas_node_count: 0,
-      ascendancy_points: 0,
-    };
-    if (characterHistory && characterHistory.length > 0) {
-      characterHistory.forEach((stat) => {
-        char.level = Math.max(char.level, stat.level || 0);
-        char.atlas_node_count = Math.max(
-          char.atlas_node_count,
-          stat.atlas_node_count || 0
-        );
-        char.ascendancy_points = Math.max(
-          char.ascendancy_points,
-          stat.ascendancy_points || 0
-        );
-      });
+    const char = userCharacters
+      ?.sort((a, b) => b.level - a.level)
+      .find((c) => c.event_id === currentEvent.id);
+    if (!char) {
+      return null;
     }
     const lastPointsProgress =
       Math.max(char.level / 90, char.atlas_node_count / 40) * 100;
@@ -175,7 +157,7 @@ export function ForYouTab() {
         </div>
       </div>
     );
-  }, [characterHistory]);
+  }, [userCharacters]);
   if (!scores || !user) {
     return <div>Loading...</div>;
   }

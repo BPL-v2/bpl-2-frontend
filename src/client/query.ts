@@ -300,17 +300,11 @@ export function useGetUserCharacters(userId: number) {
   };
 }
 
-export function useGetCharacterTimeseries(eventId: number, userId: number) {
+export function useGetCharacterTimeseries(characterId: number, userId: number) {
   const query = useQuery({
-    queryKey: ["characterTimeseries", eventId, userId],
-    queryFn: () =>
-      characterApi.getCharacterEventHistoryForUser(eventId, userId),
-    enabled: !!userId && !!eventId,
-    select: (data) =>
-      data.sort(
-        (a, b) =>
-          new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-      ),
+    queryKey: ["characterTimeseries", characterId, userId],
+    queryFn: () => characterApi.getCharacterHistory(userId, characterId),
+    enabled: !!userId && !!characterId,
   });
   return {
     ...query,
@@ -386,25 +380,6 @@ export function useRemoveOauthProvider(qc: QueryClient) {
   return {
     removeOauthProvider: m.mutate,
     removeOauthProviderPending: m.isPending,
-  };
-}
-
-export function useGetCharacterEventHistory(
-  event_id: number,
-  user_id?: number
-) {
-  const query = useQuery({
-    queryKey: ["characterHistory", event_id, user_id],
-    queryFn: async () => {
-      if (user_id !== undefined) {
-        return characterApi.getCharacterEventHistoryForUser(event_id, user_id);
-      }
-      return [];
-    },
-  });
-  return {
-    ...query,
-    characterHistory: query.data,
   };
 }
 
