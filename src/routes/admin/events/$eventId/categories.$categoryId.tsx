@@ -38,6 +38,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useStore } from "@tanstack/react-form";
 import {
   DocumentDuplicateIcon,
+  FolderOpenIcon,
   PencilSquareIcon,
   PlusIcon,
   TrashIcon,
@@ -94,6 +95,7 @@ export function ScoringCategoryPage(): JSX.Element {
   const { deleteObjective } = useDeleteObjective(qc, eventId);
   const { createObjective } = useCreateObjective(qc, eventId, () => {
     setIsObjectiveModalOpen(false);
+    setIsCategoryModalOpen(false);
     objectiveForm.reset();
   });
   const { createBulkObjectives } = useCreateBulkObjectives(
@@ -140,6 +142,7 @@ export function ScoringCategoryPage(): JSX.Element {
           parent_id: categoryId,
           objective_type: ObjectiveType.CATEGORY,
         }) as ObjectiveCreate,
+    onSubmit: (data) => createObjective(data.value),
   });
   const objectiveForm = useAppForm({
     defaultValues: (currentObjective
@@ -166,7 +169,7 @@ export function ScoringCategoryPage(): JSX.Element {
         );
         delete data.value.item_base_type;
       }
-      createObjective(data.value as ObjectiveCreate);
+      createObjective(data.value);
     },
   });
   const conditionForm = useAppForm({
@@ -273,65 +276,97 @@ export function ScoringCategoryPage(): JSX.Element {
         cell: ({ row }) => {
           return (
             <div className="flex flex-row gap-2">
-              <button
-                className="btn btn-warning btn-sm"
-                onClick={() => {
-                  objectiveForm.reset();
-                  setCurrentObjective({
-                    ...row.original,
-                    item_base_type: row.original.conditions.find(
-                      (condition) =>
-                        condition.field === ItemField.BASE_TYPE &&
-                        condition.operator === Operator.EQ
-                    )?.value,
-                    item_name: row.original.conditions.find(
-                      (condition) =>
-                        condition.field === ItemField.NAME &&
-                        condition.operator === Operator.EQ
-                    )?.value,
-                  });
-                  setIsObjectiveModalOpen(true);
-                }}
+              <div
+                className="tooltip tooltip-bottom tooltip-warning"
+                data-tip="Edit"
               >
-                <PencilSquareIcon className="w-4 h-4" />
-              </button>
-              <button
-                className="btn btn-error btn-sm"
-                onClick={() => {
-                  deleteObjective(row.original.id);
-                }}
+                <button
+                  className="btn btn-warning btn-sm"
+                  onClick={() => {
+                    objectiveForm.reset();
+                    setCurrentObjective({
+                      ...row.original,
+                      item_base_type: row.original.conditions.find(
+                        (condition) =>
+                          condition.field === ItemField.BASE_TYPE &&
+                          condition.operator === Operator.EQ
+                      )?.value,
+                      item_name: row.original.conditions.find(
+                        (condition) =>
+                          condition.field === ItemField.NAME &&
+                          condition.operator === Operator.EQ
+                      )?.value,
+                    });
+                    setIsObjectiveModalOpen(true);
+                  }}
+                >
+                  <PencilSquareIcon className="w-4 h-4" />
+                </button>
+              </div>
+              <div
+                className="tooltip tooltip-bottom tooltip-error"
+                data-tip="Delete"
               >
-                <TrashIcon className="w-4 h-4" />
-              </button>
-              <button
-                className="btn btn-info btn-sm"
-                onClick={() => {
-                  const duplicate = JSON.parse(
-                    JSON.stringify(row.original)
-                  ) as ObjectiveCreate;
-                  duplicate.id = undefined;
-                  duplicate.conditions = row.original.conditions.map(
-                    (condition) => {
-                      return {
-                        ...condition,
-                        id: undefined,
-                      };
-                    }
-                  );
-                  createObjective(duplicate);
-                }}
+                <button
+                  className="btn btn-error btn-sm"
+                  onClick={() => {
+                    deleteObjective(row.original.id);
+                  }}
+                >
+                  <TrashIcon className="w-4 h-4" />
+                </button>
+              </div>
+              <div
+                className="tooltip tooltip-bottom tooltip-info"
+                data-tip="Duplicate"
               >
-                <DocumentDuplicateIcon className="w-4 h-4" />
-              </button>
-              <button
-                className="btn btn-success btn-sm"
-                onClick={() => {
-                  setCurrentObjective(row.original);
-                  setIsConditionModalOpen(true);
-                }}
+                <button
+                  className="btn btn-info btn-sm"
+                  onClick={() => {
+                    const duplicate = JSON.parse(
+                      JSON.stringify(row.original)
+                    ) as ObjectiveCreate;
+                    duplicate.id = undefined;
+                    duplicate.conditions = row.original.conditions.map(
+                      (condition) => {
+                        return {
+                          ...condition,
+                          id: undefined,
+                        };
+                      }
+                    );
+                    createObjective(duplicate);
+                  }}
+                >
+                  <DocumentDuplicateIcon className="w-4 h-4" />
+                </button>
+              </div>
+              <div
+                className="tooltip tooltip-bottom tooltip-success"
+                data-tip="Add Condition"
               >
-                <PlusIcon className="w-4 h-4" />
-              </button>
+                <button
+                  className="btn btn-success btn-sm"
+                  onClick={() => {
+                    setCurrentObjective(row.original);
+                    setIsConditionModalOpen(true);
+                  }}
+                >
+                  <PlusIcon className="w-4 h-4" />
+                </button>
+              </div>
+              <div
+                className="tooltip tooltip-bottom tooltip-secondary"
+                data-tip="Open as Category"
+              >
+                <Link
+                  to={`/admin/events/$eventId/categories/$categoryId`}
+                  params={{ eventId: eventId!, categoryId: row.original.id }}
+                  className="btn btn-secondary btn-sm"
+                >
+                  <FolderOpenIcon className="w-4 h-4" />
+                </Link>
+              </div>
             </div>
           );
         },
@@ -690,7 +725,7 @@ export function ScoringCategoryPage(): JSX.Element {
         columns={objectivColumns}
         data={
           objective?.children
-            .sort((a, b) => b.id - a.id)
+            .sort((a, b) => a.id - b.id)
             .filter((child) => child.children.length == 0) || []
         }
         sortable={false}
@@ -717,18 +752,15 @@ export function ScoringCategoryPage(): JSX.Element {
             (objective) => objective.id === activeId
           );
           const children = activObjective?.children.filter(
-            (child) => child.children.length > 0
+            (child) => child.children.length > 0 || child.id === categoryId
           );
-          if (!children || children.length === 0) {
-            return null;
-          }
           return (
             <div key={"category-" + activeId}>
               {path[0] !== activeId && (
                 <div className="divider divider-primary select-none my-2"></div>
               )}
               <div className="flex flex-row flex-wrap gap-1">
-                {children.map((objective) => (
+                {children?.map((objective) => (
                   <div key={"category-child-" + objective.id}>
                     <Link
                       to={`/admin/events/$eventId/categories/$categoryId`}

@@ -3,7 +3,7 @@ import uPlot, { AlignedData } from "uplot";
 import "uplot/dist/uPlot.min.css";
 
 import UplotReact from "uplot-react";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useState } from "react";
 import { Character, GameVersion } from "@client/api";
 import { GlobalStateContext } from "@utils/context-provider";
 import { ascendancies, phreciaMapping, poe2Mapping } from "@mytypes/ascendancy";

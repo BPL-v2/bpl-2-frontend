@@ -202,22 +202,15 @@ export function flatMapUniques(objective: ScoreObjective): ScoreObjective[] {
 export function getVariantMap(objective: ScoreObjective): {
   [objectiveName: string]: ScoreObjective[];
 } {
-  const map: { [objectiveName: string]: ScoreObjective[] } = {};
-  if (objective.name.includes("Variants")) {
-    const name = objective.name.split("Variants")[0].trim();
-    map[name] = objective.children;
-    return map;
-  }
-  for (const child of objective.children) {
-    const childMap = getVariantMap(child);
-    Object.entries(childMap).forEach(([key, value]) => {
-      if (!map[key]) {
-        map[key] = [];
+  return objective.children.reduce(
+    (acc, child) => {
+      if (child.children.length > 0) {
+        acc[child.name] = child.children;
       }
-      map[key].push(...value);
-    });
-  }
-  return map;
+      return acc;
+    },
+    {} as { [objectiveName: string]: ScoreObjective[] }
+  );
 }
 
 export function iterateObjectives(
