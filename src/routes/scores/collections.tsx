@@ -1,25 +1,31 @@
-import { useContext } from "react";
+import { JSX, useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import TeamScoreDisplay from "@components/team-score";
 import { CollectionCardTable } from "@components/collection-card-table";
 import { ObjectiveIcon } from "@components/objective-icon";
 import { createFileRoute } from "@tanstack/react-router";
-import { ruleWrapper } from "./route";
 import { CollectionTabRules } from "@rules/collections";
 
 export const Route = createFileRoute("/scores/collections")({
-  component: () => ruleWrapper(<CollectionTab />, <CollectionTabRules />),
+  component: CollectionTab,
 });
 
-export function CollectionTab() {
+export function CollectionTab(): JSX.Element {
   const { scores, currentEvent } = useContext(GlobalStateContext);
   const category = scores?.children.find((cat) => cat.name === "Collections");
-
+  const { rules } = Route.useSearch();
   if (!category || !currentEvent) {
     return <></>;
   }
   return (
     <>
+      {rules ? (
+        <div className="w-full bg-base-200  my-4  p-8 rounded-box">
+          <article className="prose text-left max-w-4xl">
+            <CollectionTabRules />
+          </article>
+        </div>
+      ) : null}
       <TeamScoreDisplay objective={category}></TeamScoreDisplay>
       <div className="divider divider-primary">Collection Goals</div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
@@ -42,7 +48,7 @@ export function CollectionTab() {
                 </div>
               </div>
               <div className="pb-4 mb-0 bg-base-300 rounded-b-box">
-                <CollectionCardTable objective={objective} />
+                <CollectionCardTable objective={objective} hideProgress />
               </div>
             </div>
           );

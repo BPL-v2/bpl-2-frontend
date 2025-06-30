@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { JSX, useContext, useMemo } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import TeamScoreDisplay from "@components/team-score";
 import { ObjectiveIcon } from "@components/objective-icon";
@@ -15,16 +15,16 @@ import { phreciaMapping } from "@mytypes/ascendancy";
 import Table from "@components/table";
 import { createFileRoute } from "@tanstack/react-router";
 import { DelveTabRules } from "@rules/delve";
-import { ruleWrapper } from "./route";
 import { ScoreObjective, TeamScore } from "@mytypes/score";
 import { useGetLadder, useGetUsers } from "@client/query";
 
 export const Route = createFileRoute("/scores/delve")({
-  component: () => ruleWrapper(<DelveTab />, <DelveTabRules />),
+  component: DelveTab,
 });
 
-export function DelveTab() {
+export function DelveTab(): JSX.Element {
   const { scores, currentEvent, isMobile } = useContext(GlobalStateContext);
+  const { rules } = Route.useSearch();
   const {
     data: ladder,
     isPending: ladderIsPending,
@@ -119,7 +119,9 @@ export function DelveTab() {
                 character_class={info.row.original.character_class}
                 className="w-8 h-8 rounded-full"
               />
-              <AscendancyName character_class={info.row.original.character_class} />
+              <AscendancyName
+                character_class={info.row.original.character_class}
+              />
             </div>
           ),
           size: 250,
@@ -176,88 +178,6 @@ export function DelveTab() {
     return columns;
   }, [isMobile, currentEvent, getTeam]);
 
-  // const delveLadderColumns = useMemo(() => {
-  //   let columns: ColumnDef<LadderEntry, any>[] = [];
-  //   if (!isMobile) {
-  //     columns = [
-  //       {
-  //         accessorKey: "delve",
-  //         header: "Delve Depth",
-  //         sortingFn: sortingFns.basic,
-  //         size: 60,
-  //       },
-  //       {
-  //         accessorKey: "character_name",
-  //         header: "Character",
-  //         sortingFn: sortingFns.text,
-  //         size: 250,
-  //       },
-  //       {
-  //         accessorKey: "account_name",
-  //         header: "Account",
-  //         sortingFn: sortingFns.text,
-  //         size: 180,
-  //       },
-  //       {
-  //         accessorFn: (row) => userToTeam[row.user_id] || "Cartographers",
-  //         header: "Team",
-  //         cell: (info) => (
-  //           <TeamName team={userToTeam[info.row.original.user_id]} />
-  //         ),
-  //         sortingFn: sortingFns.text,
-  //         size: 120,
-  //       },
-  //       {
-  //         accessorKey: "character_class",
-  //         header: "Ascendancy",
-  //         cell: (info) => (
-  //           <div className="flex items-center gap-2">
-  //             <AscendancyPortrait
-  //               character_class={info.row.original.character_class}
-  //               className="w-8 h-8 rounded-full"
-  //             />
-  //             <Ascendancy character_class={info.row.original.character_class} />
-  //           </div>
-  //         ),
-  //         sortingFn: sortingFns.text,
-  //         size: 200,
-  //       },
-  //       {
-  //         accessorKey: "experience",
-  //         header: "Level",
-  //         cell: (info) => (
-  //           <ExperienceBar
-  //             experience={info.row.original.experience}
-  //             level={info.row.original.level}
-  //           />
-  //         ),
-  //         sortingFn: sortingFns.basic,
-
-  //         size: 80,
-  //       },
-  //     ];
-  //   } else {
-  //     columns = [
-  //       {
-  //         accessorKey: "delve",
-  //         header: "Depth",
-  //         sortingFn: sortingFns.basic,
-  //         size: 10,
-  //       },
-  //       {
-  //         header: "Character",
-  //         cell: (info) => (
-  //           <LadderPortrait
-  //             entry={info.row.original}
-  //             teamName={userToTeam[info.row.original.user_id]?.name}
-  //           />
-  //         ),
-  //         size: 400,
-  //       },
-  //     ];
-  //   }
-  //   return columns;
-  // }, [isMobile]);
   if (!category || !currentEvent) {
     return <></>;
   }
@@ -300,78 +220,91 @@ export function DelveTab() {
 
   return (
     <>
-      <TeamScoreDisplay objective={category} />
-      {fossilRaceCategory ? (
-        <>
-          <div className="divider divider-primary">Fossil Race</div>
-          <Ranking
-            objective={fossilRaceCategory}
-            description="Fossils:"
-            actual={(teamId) =>
-              fossilRaceCategory.children.reduce(
-                (acc, objective) =>
-                  acc +
-                  Math.min(
-                    objective.team_score[teamId].number,
-                    objective.required_number
-                  ),
-                0
-              )
-            }
-            maximum={fossilRaceCategory.children.reduce(
-              (acc, objective) => acc + objective.required_number,
-              0
-            )}
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-4">
-            {fossilRaceCategory.children.map((objective) => {
-              return (
-                <div className="card bg-base-300" key={objective.id}>
-                  <div className=" rounded-t-box flex  m-0 px-4 bg-base-200 p-2 ">
-                    <ObjectiveIcon
-                      objective={objective}
-                      gameVersion={currentEvent.game_version}
-                      className="h-8"
-                    />
-
-                    <h3 className="flex-grow text-center text-xl font-semibold mx-4 ">
-                      {objective.name}
-                    </h3>
-                  </div>
-                  <div className="pb-4 mb-0 bg-base-300 rounded-b-box">
-                    <CollectionCardTable
-                      objective={objective}
-                      showPoints={false}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </>
+      {rules ? (
+        <div className="w-full bg-base-200  my-4  p-8 rounded-box">
+          <article className="prose text-left max-w-4xl">
+            <DelveTabRules />
+          </article>
+        </div>
       ) : null}
-      {culmulativeDepthTotal && culmulativeDepthRace ? (
-        <>
-          <div className="divider divider-primary">
-            {"Culmulative Team Depth"}
-          </div>
-          <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-8">
+        <TeamScoreDisplay objective={category} />
+        {fossilRaceCategory ? (
+          <div className="bg-base-200 rounded-box p-8 pt-2">
+            <div className="divider divider-primary">Fossil Race</div>
             <Ranking
-              objective={culmulativeDepthObj}
-              maximum={culmulativeDepthRace.required_number}
-              actual={(teamId: number) =>
-                culmulativeDepthObj.team_score[teamId].number
+              objective={fossilRaceCategory}
+              description="Fossils:"
+              actual={(teamId) =>
+                fossilRaceCategory.children.reduce(
+                  (acc, objective) =>
+                    acc +
+                    Math.min(
+                      objective.team_score[teamId].number,
+                      objective.required_number
+                    ),
+                  0
+                )
               }
-              description="Depth:"
+              maximum={fossilRaceCategory.children.reduce(
+                (acc, objective) => acc + objective.required_number,
+                0
+              )}
             />
-            <Table
-              columns={delveLadderColumns}
-              data={ladder.sort((a, b) => b.delve - a.delve)}
-              className="h-[70vh]"
-            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-4">
+              {fossilRaceCategory.children.map((objective) => {
+                return (
+                  <div className="card bg-base-300" key={objective.id}>
+                    <div className=" rounded-t-box flex  m-0 px-4 bg-base-100 p-2 ">
+                      <ObjectiveIcon
+                        objective={objective}
+                        gameVersion={currentEvent.game_version}
+                        className="h-8"
+                      />
+
+                      <h3 className="flex-grow text-center text-xl font-semibold mx-4 ">
+                        {objective.name}
+                      </h3>
+                    </div>
+                    <div className="pb-4 mb-0 bg-base-300 rounded-b-box">
+                      <CollectionCardTable
+                        objective={objective}
+                        showPoints={false}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </>
-      ) : null}
+        ) : null}
+
+        {culmulativeDepthTotal && culmulativeDepthRace ? (
+          <div className="bg-base-200 rounded-box p-8 pt-2">
+            <div className="divider divider-primary">
+              {"Culmulative Team Depth"}
+            </div>
+            <div className="flex flex-col gap-4">
+              <Ranking
+                objective={culmulativeDepthObj}
+                maximum={culmulativeDepthRace.required_number}
+                actual={(teamId: number) =>
+                  culmulativeDepthObj.team_score[teamId].number
+                }
+                description="Depth:"
+              />
+              <Table
+                columns={delveLadderColumns}
+                data={ladder.sort((a, b) => b.delve - a.delve)}
+                className="h-[70vh]"
+                styles={{
+                  header: "bg-base-100",
+                }}
+              />
+            </div>
+          </div>
+        ) : null}
+      </div>
     </>
   );
 }

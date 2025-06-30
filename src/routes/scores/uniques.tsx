@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { JSX, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import TeamScoreDisplay from "@components/team-score";
 import { ItemTable } from "@components/item-table";
@@ -6,14 +6,13 @@ import { isFinished, isWinnable, ScoreObjective } from "@mytypes/score";
 import { UniqueCategoryCard } from "@components/unique-category-card";
 import { createFileRoute } from "@tanstack/react-router";
 import { UniqueTabRules } from "@rules/uniques";
-import { ruleWrapper } from "./route";
 import { useGetEventStatus } from "@client/query";
 
 export const Route = createFileRoute("/scores/uniques")({
-  component: () => ruleWrapper(<UniqueTab />, <UniqueTabRules />),
+  component: UniqueTab,
 });
 
-function UniqueTab() {
+function UniqueTab(): JSX.Element {
   const { currentEvent, scores, preferences, setPreferences } =
     useContext(GlobalStateContext);
   const [uniqueCategory, setUniqueCategory] = useState<ScoreObjective>();
@@ -23,6 +22,7 @@ function UniqueTab() {
   const [shownCategories, setShownCategories] = useState<ScoreObjective[]>([]);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const tableRef = useRef<HTMLDivElement>(null);
+  const { rules } = Route.useSearch();
   const handleCategoryClick = (objective: ScoreObjective) => {
     if (objective.id === selectedCategory?.id) {
       setSelectedCategory(undefined);
@@ -105,6 +105,13 @@ function UniqueTab() {
 
   return (
     <>
+      {rules ? (
+        <div className="w-full bg-base-200  my-4  p-8 rounded-box">
+          <article className="prose text-left max-w-4xl">
+            <UniqueTabRules />
+          </article>
+        </div>
+      ) : null}
       <TeamScoreDisplay
         objective={uniqueCategory}
         selectedTeam={selectedTeam}

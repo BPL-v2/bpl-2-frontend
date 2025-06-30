@@ -13,15 +13,24 @@ import {
   getVariantMap,
 } from "@utils/utils";
 import { useGetEventStatus, useGetUsers } from "@client/query";
-import { twJoin } from "tailwind-merge";
 
 export type ItemTableProps = {
   objective: ScoreObjective;
   filter?: (obj: ScoreObjective) => boolean;
   className?: string;
+  styles?: {
+    header?: string;
+    body?: string;
+    table?: string;
+  };
 };
 
-export function ItemTable({ objective, filter, className }: ItemTableProps) {
+export function ItemTable({
+  objective,
+  filter,
+  className,
+  styles,
+}: ItemTableProps) {
   const { currentEvent, gameVersion } = useContext(GlobalStateContext);
   const { users } = useGetUsers(currentEvent.id);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
@@ -306,6 +315,7 @@ export function ItemTable({ objective, filter, className }: ItemTableProps) {
           (row.original.isVariant ? "bg-base-200" : "")
         }
         className={className ? className : `w-full h-[70vh]`}
+        styles={styles}
       />
     </>
   );

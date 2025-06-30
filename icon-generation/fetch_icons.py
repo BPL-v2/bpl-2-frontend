@@ -42,7 +42,7 @@ def get_base_name(gem) -> Optional[str]:
 
 
 def get_gem_dict() -> dict[str, list[Gem]]:
-    response = request.urlopen("https://repoe-fork.github.io/gems.json")
+    response = request.urlopen("https://repoe-fork.github.io/gems_minimal.min.json")
     full_gems: dict = json.loads(response.read())
     gems: dict[str, list[Gem]] = {}
     gem_colors = {"r": set(), "g": set(), "b": set(), "w": set()}
@@ -78,11 +78,11 @@ def download():
         if version == "poe2":
             baseUrl += "poe2/"
         response = request.urlopen(
-            f"{baseUrl}/base_items.json")
+            f"{baseUrl}/base_items.min.json")
         base_items: ItemDict = json.loads(response.read())
 
         response = request.urlopen(
-            f"{baseUrl}/uniques.json")
+            f"{baseUrl}/uniques.min.json")
         uniques: ItemDict = json.loads(response.read())
 
         for unique in uniques.values():

@@ -17,6 +17,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { TableSortIcon } from "@icons/table-sort";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
 import Select, { SelectOption } from "./select";
+import { twMerge } from "tailwind-merge";
 
 function Table<T>({
   data,
@@ -25,6 +26,7 @@ function Table<T>({
   rowStyle,
   className,
   sortable = true,
+  styles,
 }: {
   data: T[];
   columns: ColumnDef<T>[];
@@ -32,6 +34,11 @@ function Table<T>({
   rowStyle?: (row: Row<T>) => React.CSSProperties;
   className?: string;
   sortable?: boolean;
+  styles?: {
+    header?: string;
+    body?: string;
+    table?: string;
+  };
 }) {
   const tableRef = React.useRef<HTMLDivElement>(null);
 
@@ -75,10 +82,15 @@ function Table<T>({
   });
   return (
     <div ref={tableRef} className={"overflow-auto " + className}>
-      <table className="table table-md">
-        <thead className="bg-base-300 sticky top-0 z-2 font-bold text-lg">
+      <table className={twMerge("table table-md", styles?.table)}>
+        <thead
+          className={twMerge(
+            "sticky top-0 z-2 font-bold text-lg",
+            styles?.header
+          )}
+        >
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id} className="flex w-full bg-base-200">
+            <tr key={headerGroup.id} className="flex w-full ">
               {headerGroup.headers.map((header) => {
                 return (
                   <th
@@ -128,7 +140,7 @@ function Table<T>({
           ))}
         </thead>
         <tbody
-          className="bg-base-300"
+          className={twMerge("bg-base-300", styles?.body)}
           style={{
             height: `${rowVirtualizer.getTotalSize()}px`,
           }}
