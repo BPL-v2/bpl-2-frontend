@@ -174,7 +174,7 @@ export function RulePage() {
           </div>
         ))}
       </div>
-      <div className="divider divider-primary" id="mods">
+      {/* <div className="divider divider-primary" id="mods">
         Private League Modifiers
       </div>
       <p>The Private League will have the following modifiers:</p>
@@ -187,7 +187,7 @@ export function RulePage() {
         Due to the unbalanced nature of the alternative ascendancies, we will
         not impose any team restrictions on any of the ascendancies and you may
         choose to play any ascendancy you like.
-      </p>
+      </p> */}
 
       <div className="divider divider-primary" id="earning-points">
         Earning Points
