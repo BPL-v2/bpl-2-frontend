@@ -121,8 +121,11 @@ def save_gem_image(base_name, gems: list[Gem], path: str, url: str):
             return
     for gem in gems:
         try:
+            discriminator = gem["discriminator"]
+            if "Trarthus" in gem["display_name"]:
+                discriminator = "alt_z"
             img = generate_gem_image(
-                temp_path, gem["color"], gem["discriminator"])
+                temp_path, gem["color"], discriminator)
             img.save(os.path.join(path, encode(gem["display_name"]) + ".webp"))
         except Exception as e:
             print("could not save", e)

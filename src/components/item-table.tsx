@@ -13,13 +13,15 @@ import {
   getVariantMap,
 } from "@utils/utils";
 import { useGetEventStatus, useGetUsers } from "@client/query";
+import { twJoin } from "tailwind-merge";
 
 export type ItemTableProps = {
   objective: ScoreObjective;
   filter?: (obj: ScoreObjective) => boolean;
+  className?: string;
 };
 
-export function ItemTable({ objective, filter }: ItemTableProps) {
+export function ItemTable({ objective, filter, className }: ItemTableProps) {
   const { currentEvent, gameVersion } = useContext(GlobalStateContext);
   const { users } = useGetUsers(currentEvent.id);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
@@ -303,7 +305,7 @@ export function ItemTable({ objective, filter }: ItemTableProps) {
           "hover:bg-base-200/50 " +
           (row.original.isVariant ? "bg-base-200" : "")
         }
-        className="w-full h-[70vh]"
+        className={className ? className : `w-full h-[70vh]`}
       />
     </>
   );

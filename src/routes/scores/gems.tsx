@@ -77,47 +77,55 @@ export function GemTab() {
   }
 
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <TeamScoreDisplay objective={gemCategory} />
-      <div className="divider divider-primary">{gemCategory.name}</div>
-      <div className="flex flex-col gap-4 items-center">
-        <Ranking
-          objective={gemCategory}
-          maximum={gemCategory.children.length}
-          actual={(teamId: number) =>
-            gemCategory.children.filter((o) => o.team_score[teamId]?.finished)
-              .length
-          }
-          description="Gems:"
-        />
-        <div className="join">
-          {["r", "g", "b"].map((c) => (
-            <div
-              key={c}
-              onClick={() => {
-                if (color === c) {
-                  setColor(undefined);
-                } else {
-                  setColor(c as "r" | "g" | "b");
-                }
-              }}
-            >
-              {toColor(c, c === color)}
-            </div>
-          ))}
-        </div>
-        <ItemTable
-          objective={gemCategory}
-          filter={(obj) => {
-            if (!color) return true;
-            const baseType = obj.conditions.find(
-              (c) => c.field === "BASE_TYPE"
-            );
-            if (!baseType) return false;
-            return gemColors[color].includes(baseType.value);
-          }}
-        />
+      <div className="join w-full justify-center">
+        {["r", "g", "b"].map((c) => (
+          <div
+            key={c}
+            onClick={() => {
+              if (color === c) {
+                setColor(undefined);
+              } else {
+                setColor(c as "r" | "g" | "b");
+              }
+            }}
+          >
+            {toColor(c, c === color)}
+          </div>
+        ))}
       </div>
-    </>
+      {gemCategory.children.map((category) => {
+        return (
+          <>
+            <div className="divider divider-primary">{category.name}</div>
+            <div className="flex flex-col gap-4 items-center">
+              <Ranking
+                objective={category}
+                maximum={category.children.length}
+                actual={(teamId: number) =>
+                  category.children.filter(
+                    (o) => o.team_score[teamId]?.finished
+                  ).length
+                }
+                description="Gems:"
+              />
+              <ItemTable
+                objective={category}
+                filter={(obj) => {
+                  if (!color) return true;
+                  const baseType = obj.conditions.find(
+                    (c) => c.field === "BASE_TYPE"
+                  );
+                  if (!baseType) return false;
+                  return gemColors[color].includes(baseType.value);
+                }}
+                className="w-full h-[50vh]"
+              />
+            </div>
+          </>
+        );
+      })}
+    </div>
   );
 }
