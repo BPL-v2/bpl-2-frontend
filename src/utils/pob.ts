@@ -548,7 +548,7 @@ export function decodePoBExport(input: string): PathOfBuilding {
   };
 
   const playerStatElements = xmlDoc.getElementsByTagName("PlayerStat");
-  for (let element of playerStatElements) {
+  for (const element of playerStatElements) {
     const stat = element.getAttribute("stat");
     const value = element.getAttribute("value");
     if (stat && value) {
@@ -575,14 +575,14 @@ export function decodePoBExport(input: string): PathOfBuilding {
       skillsElement.getAttribute("defaultGemQuality") || "";
 
     const skillSetElements = skillsElement.getElementsByTagName("SkillSet");
-    for (let skillSetElement of skillSetElements) {
+    for (const skillSetElement of skillSetElements) {
       const skillSet: SkillSet = {
         id: parseInt(skillSetElement.getAttribute("id") || "0"),
         skills: [],
       };
 
       const skillElements = skillSetElement.getElementsByTagName("Skill");
-      for (let skillElement of skillElements) {
+      for (const skillElement of skillElements) {
         const skill: Skill = {
           label: skillElement.getAttribute("label") || "",
           slot: skillElement.getAttribute("slot") || "",
@@ -595,7 +595,7 @@ export function decodePoBExport(input: string): PathOfBuilding {
         };
 
         const gemElements = skillElement.getElementsByTagName("Gem");
-        for (let gemElement of gemElements) {
+        for (const gemElement of gemElements) {
           const gem: Gem = {
             gemId: gemElement.getAttribute("gemId") || "",
             variantId: gemElement.getAttribute("variantId") || "",
@@ -634,22 +634,24 @@ export function decodePoBExport(input: string): PathOfBuilding {
       const tree = treeElements[0];
       const specs = tree.getElementsByTagName("Spec");
       const activeSpec = Number(tree.getAttribute("activeSpec"));
-      for (let socket of specs[activeSpec - 1].getElementsByTagName("Socket")) {
+      for (const socket of specs[activeSpec - 1].getElementsByTagName(
+        "Socket"
+      )) {
         idToSlot[socket.getAttribute("itemId") || ""] = "Socket";
       }
     }
 
     const itemSets = itemsElement.getElementsByTagName("ItemSet");
     if (itemSets.length > 0) {
-      for (let slot of itemSets[0].getElementsByTagName("Slot")) {
+      for (const slot of itemSets[0].getElementsByTagName("Slot")) {
         idToSlot[slot.getAttribute("itemId") || ""] = slot.getAttribute("name");
       }
     }
     const items: Item[] = [];
     const itemElements = itemsElement.getElementsByTagName("Item");
-    for (let itemElement of itemElements) {
+    for (const itemElement of itemElements) {
       let text = "";
-      for (let node of itemElement.childNodes) {
+      for (const node of itemElement.childNodes) {
         if (node.nodeType === Node.TEXT_NODE) {
           text += node.textContent || "";
         }
@@ -809,7 +811,7 @@ function extractMagicBase(base: string, numMods: number): string {
   if (numMods === 0) return base;
   if (base.startsWith("Synthesised ")) base = base.slice("Synthesised ".length);
   let end = base.indexOf(" of");
-  let hasSuffix = end !== -1;
+  const hasSuffix = end !== -1;
   if (!hasSuffix) end = base.length;
   base = base.slice(0, end);
   if (hasSuffix && numMods === 1) return base;
@@ -854,7 +856,7 @@ export function parseItem(item: string, slot: string | null): Item {
     energyShield = 0;
   let influence1: Influence | undefined, influence2: Influence | undefined;
   let selectedVariant = "";
-  let implicits: Mod[] = [];
+  const implicits: Mod[] = [];
 
   while (idx < lines.length) {
     const line = lines[idx];
@@ -950,7 +952,7 @@ export function parseItem(item: string, slot: string | null): Item {
       break;
     }
   }
-  let explicits: Mod[] = [];
+  const explicits: Mod[] = [];
   if (firstExplicitMod !== -1) {
     for (let i = firstExplicitMod; i < modsEnd; i++) {
       explicits.push(parseMod(lines[i]));
