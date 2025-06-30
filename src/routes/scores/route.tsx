@@ -35,20 +35,6 @@ export type ScoreQueryParams = {
   rules: boolean;
 };
 
-export function ruleWrapper(tab: JSX.Element, tabRules?: JSX.Element) {
-  const { rules } = Route.useSearch();
-  return (
-    <>
-      {rules && tabRules ? (
-        <article className="prose text-left max-w-4xl my-4 bg-base-200 p-8 rounded-box">
-          {tabRules}
-        </article>
-      ) : null}
-      {tab}
-    </>
-  );
-}
-
 export const Route = createFileRoute("/scores")({
   component: ScoringPage,
   validateSearch: (search: Record<string, boolean>): ScoreQueryParams => {

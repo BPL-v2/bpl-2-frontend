@@ -29,21 +29,6 @@ export function UniqueTabRules() {
   if (!uniqueCategory) {
     return <></>;
   }
-  // const categoryScoringMethods = uniqueCategory.children.reduce(
-  //   (acc, category) => {
-  //     if (category.scoring_preset)
-  //       acc[category.scoring_preset.name] = category.scoring_preset;
-  //     return acc;
-  //   },
-  //   {} as Record<string, ScoringPreset | undefined>
-  // );
-  // const objectiveScoringMethods = uniqueCategory.children
-  //   .flatMap((c) => c.children)
-  //   .reduce((acc, objective) => {
-  //     if (objective.scoring_preset)
-  //       acc[objective.scoring_preset.name] = objective.scoring_preset;
-  //     return acc;
-  //   }, {} as Record<string, ScoringPreset | undefined>);
 
   const wikiBaseUrl =
     gameVersion === "poe1"

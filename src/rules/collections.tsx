@@ -49,8 +49,8 @@ export function CollectionTabRules() {
       <p className="text-warning">
         Collection completions are tracked automatically by the system. All
         items that contribute to the completion <b>must</b> be located in the
-        same public stash tab (not guild stash) - so the progress bar displayed
-        might be misleading.
+        same public stash tab - so the progress bar displayed might be
+        misleading.
       </p>
     </>
   );

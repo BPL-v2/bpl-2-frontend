@@ -8,6 +8,7 @@ import { useGetEventStatus } from "@client/query";
 type CollectionCardTableProps = {
   objective: ScoreObjective;
   showPoints?: boolean;
+  hideProgress?: boolean;
 };
 
 function getPlace(score: Score) {
@@ -40,6 +41,7 @@ function finishTooltip(objective: ScoreObjective, score: Score) {
 export function CollectionCardTable({
   objective,
   showPoints = true,
+  hideProgress = false,
 }: CollectionCardTableProps) {
   const { currentEvent } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
@@ -58,7 +60,15 @@ export function CollectionCardTable({
             return scoreB.points - scoreA.points;
           })
           .map(([teamId, score]) => {
-            const percent = (100 * score.number) / objective.required_number;
+            let num = score.number;
+            if (
+              hideProgress &&
+              num / objective.required_number < 1 &&
+              eventStatus?.team_id !== teamId
+            ) {
+              num = 0;
+            }
+            const percent = (100 * num) / objective.required_number;
             return (
               <tr
                 className={
@@ -87,7 +97,7 @@ export function CollectionCardTable({
                 <td className="px-2">
                   <ProgressBar
                     style={{ width: "180px" }}
-                    value={score.number}
+                    value={num}
                     maxVal={objective.required_number}
                   />
                 </td>

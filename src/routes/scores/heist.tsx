@@ -1,19 +1,19 @@
-import { useContext, useEffect } from "react";
+import { JSX, useContext, useEffect } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import TeamScoreDisplay from "@components/team-score";
 import { ItemTable } from "@components/item-table";
-import { GameVersion } from "@client/api";
+import { GameVersion, ScoringMethod } from "@client/api";
 import { Ranking } from "@components/ranking";
 import { createFileRoute } from "@tanstack/react-router";
-import { ruleWrapper } from "./route";
 import { HeistTabRules } from "@rules/heist";
 
 export const Route = createFileRoute("/scores/heist")({
-  component: () => ruleWrapper(<HeistTab />, <HeistTabRules />),
+  component: HeistTab,
 });
 
-export function HeistTab() {
+export function HeistTab(): JSX.Element {
   const { scores, gameVersion } = useContext(GlobalStateContext);
+  const { rules } = Route.useSearch();
   const heistCategory = scores?.children.find(
     (category) => category.name === "Heist"
   );
@@ -26,63 +26,67 @@ export function HeistTab() {
     return <></>;
   }
 
-  const rogueGearCategory = heistCategory.children.find(
-    (category) => category.name === "Rogue Gear"
+  const heistItemRaces = heistCategory.children.filter(
+    (category) =>
+      category.scoring_preset?.scoring_method === ScoringMethod.RANKED_TIME
   );
-  const experimentalBasesCategory = heistCategory.children.find(
-    (category) => category.name === "Experimental Bases"
-  );
-  const heistUniquesCategory = heistCategory.children.find(
-    (category) => category.name === "Blueprint Uniques"
-  );
-  const enchantingOrbObjective = heistCategory.children.find(
-    (c) => c.name === "Enchanting Orb Race"
+
+  const heistMultiItemRaces = heistCategory.children.filter(
+    (category) => category.children.length > 0
   );
 
   return (
     <>
-      <TeamScoreDisplay objective={heistCategory} />
-      {enchantingOrbObjective && (
-        <div className="flex flex-col gap-4">
-          <div className="divider divider-primary">Enchanting Orb Race</div>
-          <Ranking
-            objective={enchantingOrbObjective}
-            maximum={enchantingOrbObjective.required_number}
-            actual={(teamId: number) =>
-              enchantingOrbObjective.team_score[teamId]?.number || 0
-            }
-            description="Orbs:"
-          />
+      {rules ? (
+        <div className="w-full bg-base-200  my-4  p-8 rounded-box">
+          <article className="prose text-left max-w-4xl">
+            <HeistTabRules />
+          </article>
         </div>
-      )}
-      {rogueGearCategory && (
-        <div className="flex flex-col gap-4">
-          <div className="divider divider-primary">Rogue Gear Race</div>
-          <Ranking
-            objective={rogueGearCategory}
-            maximum={rogueGearCategory.children.length}
-            actual={(teamId: number) =>
-              rogueGearCategory.children.filter(
-                (o) => o.team_score[teamId]?.finished
-              ).length
-            }
-            description="Gear:"
-          />
-          <ItemTable objective={rogueGearCategory} />
+      ) : null}
+      <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8">
+          <TeamScoreDisplay objective={heistCategory} />
+          {heistItemRaces.map((category) => (
+            <div className="bg-base-200 rounded-box p-8 pt-2">
+              <div className="divider divider-primary">{category.name}</div>
+              <Ranking
+                objective={category}
+                maximum={category.required_number}
+                actual={(teamId: number) =>
+                  category.team_score[teamId]?.number || 0
+                }
+                description={"Items:"}
+              />
+            </div>
+          ))}
+
+          {heistMultiItemRaces.map((category) => (
+            <div className="bg-base-200 rounded-box p-8 pt-2">
+              <div className="divider divider-primary">{category.name}</div>
+              {category.scoring_preset?.scoring_method ===
+                ScoringMethod.RANKED_TIME && (
+                <Ranking
+                  objective={category}
+                  maximum={category.required_number}
+                  actual={(teamId: number) =>
+                    category.team_score[teamId]?.number || 0
+                  }
+                  description={"Items:"}
+                />
+              )}
+              <div className="flex flex-col">
+                <ItemTable
+                  objective={category}
+                  styles={{
+                    header: "bg-base-100",
+                  }}
+                />
+              </div>
+            </div>
+          ))}
         </div>
-      )}
-      {experimentalBasesCategory && (
-        <>
-          <div className="divider divider-primary">Experimental Bases</div>
-          <ItemTable objective={experimentalBasesCategory} />
-        </>
-      )}
-      {heistUniquesCategory && (
-        <>
-          <div className="divider divider-primary">Heist Uniques</div>
-          <ItemTable objective={heistUniquesCategory} />
-        </>
-      )}
+      </div>
     </>
   );
 }

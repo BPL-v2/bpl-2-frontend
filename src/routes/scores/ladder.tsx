@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { JSX, useContext, useMemo } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { getRootCategoryNames } from "@mytypes/scoring-category";
 import { getTotalPoints } from "@utils/utils";
@@ -14,11 +14,10 @@ import Table from "@components/table";
 import { phreciaMapping, poe2Mapping } from "@mytypes/ascendancy";
 import { calcPersonalPoints } from "@utils/personal-points";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ruleWrapper } from "./route";
-import { POPointRules } from "@rules/po-points";
 import POProgressBar from "@components/po-progress";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
 import { useGetLadder, useGetUsers } from "@client/query";
+import { POPointRules } from "@rules/po-points";
 type RowDef = {
   default: number;
   team: Team;
@@ -32,10 +31,10 @@ type RowDef = {
 };
 
 export const Route = createFileRoute("/scores/ladder")({
-  component: () => ruleWrapper(LadderTab(), POPointRules()),
+  component: LadderTab,
 });
 
-export function LadderTab() {
+export function LadderTab(): JSX.Element {
   const {
     scores,
     currentEvent,
@@ -44,7 +43,7 @@ export function LadderTab() {
     preferences,
     setPreferences,
   } = useContext(GlobalStateContext);
-
+  const { rules } = Route.useSearch();
   const {
     data: ladder,
     isPending: ladderIsPending,
@@ -167,7 +166,9 @@ export function LadderTab() {
                 character_class={info.row.original.character_class}
                 className="w-8 h-8 rounded-full"
               />
-              <AscendancyName character_class={info.row.original.character_class} />
+              <AscendancyName
+                character_class={info.row.original.character_class}
+              />
             </div>
           ),
           size: 250,
@@ -180,9 +181,9 @@ export function LadderTab() {
               gameVersion === GameVersion.poe1
                 ? Object.keys(phreciaMapping)
                 : Object.entries(poe2Mapping).map(([key, value]) => ({
-                  label: value,
-                  value: key,
-                })),
+                    label: value,
+                    value: key,
+                  })),
           },
         },
         {
@@ -412,6 +413,13 @@ export function LadderTab() {
   const checkPoints = objs?.filter((obj) => !obj.scoring_preset?.point_cap);
   return (
     <>
+      {rules ? (
+        <div className="w-full bg-base-200 my-4 p-8 rounded-box">
+          <article className="prose text-left max-w-4xl">
+            <POPointRules />
+          </article>
+        </div>
+      ) : null}
       <div className="divider divider-primary ">Team Scores</div>
       <table className="table bg-base-300 text-lg">
         <thead className="bg-base-200">

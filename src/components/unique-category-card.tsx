@@ -18,9 +18,7 @@ export const UniqueCategoryCard = ({
   teamId,
   onClick,
 }: UniqueCategoryCardProps) => {
-  const totalItems = objective.children.filter(
-    (objective) => objective.children.length === 0
-  ).length;
+  const totalItems = objective.children.length;
   const totalVariants = objective.children.reduce(
     (acc, variantCategory) => acc + variantCategory.children.length,
     0
