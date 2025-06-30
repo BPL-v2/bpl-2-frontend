@@ -286,7 +286,7 @@ export function ItemTable({ objective, filter }: ItemTableProps) {
       <Table
         columns={columns}
         data={
-          flatMapUniques(objective)
+          objective.children
             .filter((obj) => (filter ? filter(obj) : true))
             .sort((a, b) => a.name.localeCompare(b.name))
             .flatMap((objective) => {

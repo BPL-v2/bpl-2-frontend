@@ -88,7 +88,13 @@ function UniqueTab() {
       return <></>;
     }
     if (!selectedCategory) {
-      return <ItemTable objective={uniqueCategory} />;
+      const cat = { ...uniqueCategory, children: [] } as ScoreObjective;
+      for (const child of uniqueCategory.children) {
+        for (const grandChild of child.children) {
+          cat.children.push(grandChild);
+        }
+      }
+      return <ItemTable objective={cat} />;
     }
     return <ItemTable objective={selectedCategory}></ItemTable>;
   }, [selectedCategory, uniqueCategory]);

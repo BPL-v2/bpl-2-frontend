@@ -53,15 +53,6 @@ export default function Select<T>({
         }) as SelectOption<T>
     );
   }, [options]);
-  useEffect(() => {
-    if (cleanOptions.length > 1) {
-      setSelected(
-        cleanOptions.find((option) => option.value === selected?.value)
-      );
-    } else {
-      setSelected(cleanOptions[0] || undefined);
-    }
-  }, [cleanOptions, selected]);
 
   useEffect(() => {
     if (value === null || value === undefined) {
