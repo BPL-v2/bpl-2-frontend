@@ -1,4 +1,5 @@
 import codecs
+import os
 from pathlib import Path
 import struct
 from dataclasses import dataclass
@@ -22,6 +23,7 @@ class GemShadeConstants:
 def gemshade_constants_from_hex(hex_text: str):
     buf = codecs.decode(hex_text.replace(' ', ''), 'hex')
     return GemShadeConstants(*struct.unpack('<ffff', buf))
+
 
 
 SHADE_LUT: dict[(str, str), GemShadeConstants] = {
@@ -68,18 +70,30 @@ def generate_flask_image(base_image: Union[str, bytes, Path], game_version: str,
         return Image.alpha_composite(Image.alpha_composite(bottom, middle), top)
 
 
-def generate_gem_image(base_image: Union[str, bytes, Path], color: Optional[str], discriminator: Optional[Literal["alt_x", "alt_y"]]):
+def generate_gem_image(base_image: Union[str, bytes, Path], color: Optional[str], discriminator: Optional[Literal["alt_x", "alt_y", "alt_z"]]):
     with Image.open(base_image) as img:
         adorn = img.crop((0, 0, 78, 78))
         base = img.crop((2 * 78, 0, 3 * 78, 78))
-        attribute = color2attribute.get(color)
-        if discriminator is None or attribute is None:
-            return Image.alpha_composite(base, adorn)
 
+        shifted_base = shift_base_image(base, color, discriminator)
+        if discriminator == "alt_z":
+            shifted_base = add_sparkles(shifted_base)
+        return Image.alpha_composite(shifted_base, adorn)
+
+
+def add_sparkles(base_image: Image.Image):
+    with open(os.path.join(os.path.dirname(__file__), "sparklebackground.png"), "rb") as f:
+        sparkles = Image.open(f)
+        return Image.alpha_composite(sparkles, base_image)
+
+def shift_base_image(base_image: Image.Image, color: str, discriminator: Optional[Literal["alt_x", "alt_y", "alt_z"]]):
+        attribute = color2attribute.get(color)
+        if discriminator is None or discriminator == "alt_z" or attribute is None:
+            return base_image
         const = SHADE_LUT[(attribute, discriminator)]
 
         base_rgba = _srgb_to_linear(
-            np.float64(np.asarray(base)) / 255.0)
+            np.float64(np.asarray(base_image)) / 255.0)
 
         # Shade algorithm:
         # * compute luminance influence
@@ -131,8 +145,4 @@ def generate_gem_image(base_image: Union[str, bytes, Path], color: Optional[str]
         shifted_rgba = _linear_to_srgb(np.dstack((final_rgb, base_a)))
         shifted_base = Image.fromarray(
             np.uint8(shifted_rgba * 255.), 'RGBA')
-
-        # * desaturate, but the parameter for that seems to be 1 so won't bother
-        # 	return Desaturate(float4(final_rgb, 1.f) * original_a, saturation) * input.colour;
-
-        return Image.alpha_composite(shifted_base, adorn)
+        return shifted_base
