@@ -723,11 +723,7 @@ export function ScoringCategoryPage(): JSX.Element {
       <Table<Objective>
         className="w-full h-[70vh]"
         columns={objectivColumns}
-        data={
-          objective?.children
-            .sort((a, b) => a.id - b.id)
-            .filter((child) => child.children.length == 0) || []
-        }
+        data={objective?.children.sort((a, b) => a.id - b.id) || []}
         sortable={false}
       />
     );
