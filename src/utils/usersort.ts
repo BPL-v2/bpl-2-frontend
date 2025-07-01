@@ -1,14 +1,24 @@
-// eslint-disable-next-line: shut up eslint, this is fine okay?!?
-// @ts-nocheck - This is way too annoying to typecheck. Sue me i dont care
-import { Signup } from "@client/api";
-import { BPLEvent } from "@mytypes/event";
+import { Event } from "@client/api";
+import { ExtendedSignup } from "src/routes/admin/team-sort";
 
-export function sortUsers(currentEvent: BPLEvent, signups: Signup[]): Signup[] {
-  const lockedSignups = signups
-    .filter((signup) => signup.team_id)
-    .map((signup) => signup.id);
-  const suggestion = getSortSuggestion(currentEvent, signups);
-  return improveFairness(suggestion, currentEvent, lockedSignups);
+export function sortUsers(
+  currentEvent: Event,
+  signups: ExtendedSignup[]
+): ExtendedSignup[] {
+  const lockedSignups = signups.reduce(
+    (acc, signup) => {
+      if (signup.team_id) {
+        acc[signup.user.id] = signup.team_id;
+      }
+      return acc;
+    },
+    {} as { [userId: number]: number }
+  );
+  console.log("lockedSignups", lockedSignups);
+  let suggestion = getSortSuggestion(currentEvent, signups);
+  suggestion = improveFairness(suggestion, currentEvent, lockedSignups);
+
+  return ensurePartners(suggestion, lockedSignups);
 }
 
 const playtimeBuckets = ["0-3", "4-6", "7-9", "10-12", "13+"];
@@ -30,10 +40,90 @@ function toBucket(
 
 const randSort = () => Math.random() - 0.5;
 
+function ensurePartners(
+  signups: ExtendedSignup[],
+  lockedSignups: { [userId: number]: number }
+) {
+  const fixedSignups = [];
+  const userToSignup = new Map<number, ExtendedSignup>();
+  const teamToSignups = new Map<number, ExtendedSignup[]>();
+  const matchedPartners = new Set<number>();
+  for (const signup of signups) {
+    userToSignup.set(signup.user.id, signup);
+    if (signup.team_id) {
+      teamToSignups.set(signup.team_id, [
+        ...(teamToSignups.get(signup.team_id) || []),
+        signup,
+      ]);
+    }
+  }
+
+  for (const signup of signups) {
+    if (signup.partner_id) {
+      const partnerSignup = userToSignup.get(signup.partner_id);
+      if (
+        partnerSignup &&
+        partnerSignup.team_id &&
+        partnerSignup.team_id === signup.team_id
+      ) {
+        matchedPartners.add(signup.partner_id);
+        matchedPartners.add(signup.user.id);
+      }
+    }
+  }
+
+  for (const signup of signups) {
+    if (
+      lockedSignups[signup.user.id] ||
+      !signup.partner_id ||
+      matchedPartners.has(signup.user.id)
+    ) {
+      fixedSignups.push(signup);
+      continue;
+    }
+    const partnerSignup = userToSignup.get(signup.partner_id);
+    if (
+      partnerSignup &&
+      partnerSignup.team_id &&
+      partnerSignup.partner_id === signup.user.id
+    ) {
+      let bestFittingUserId = -1;
+      let bestFittingPlaytimeDiff = 1000000;
+      for (const signup2 of teamToSignups.get(partnerSignup.team_id) || []) {
+        if (lockedSignups[signup2.user.id] || signup2.partner_id) {
+          continue;
+        }
+        const playtimeDiff = Math.abs(
+          signup.expected_playtime - signup2.expected_playtime
+        );
+        if (
+          playtimeDiff < bestFittingPlaytimeDiff &&
+          !lockedSignups[signup2.user.id]
+        ) {
+          bestFittingUserId = signup2.user.id;
+          bestFittingPlaytimeDiff = playtimeDiff;
+        }
+      }
+      fixedSignups.push({ ...signup, team_id: partnerSignup.team_id });
+      matchedPartners.add(signup.user.id);
+      matchedPartners.add(signup.partner_id);
+      if (bestFittingUserId !== -1) {
+        fixedSignups.push({
+          ...userToSignup.get(bestFittingUserId),
+          team_id: signup.team_id,
+        });
+      }
+    } else {
+      fixedSignups.push(signup);
+    }
+  }
+  return fixedSignups as ExtendedSignup[];
+}
+
 function improveFairness(
-  signups: Signup[],
-  currentEvent: BPLEvent,
-  lockedSignups: number[]
+  signups: ExtendedSignup[],
+  currentEvent: Event,
+  lockedSignups: { [userId: number]: number }
 ) {
   // tries to balance out team sizes
   for (let i = 0; i < 100; i++) {
@@ -44,69 +134,90 @@ function improveFairness(
       // a difference of 1 between min and max can not be improved upon
       return signups;
     }
-    const minTeam = Object.keys(counts).find((key) => counts[key] === minval);
-    const maxTeam = Object.keys(counts).find((key) => counts[key] === maxval);
+    const minTeam = Object.keys(counts).find(
+      (key) => counts[parseInt(key)] === minval
+    );
+    const maxTeam = Object.keys(counts).find(
+      (key) => counts[parseInt(key)] === maxval
+    );
     for (const signup of signups.sort(randSort)) {
-      if (lockedSignups.includes(signup.id)) {
+      if (lockedSignups[signup.user.id]) {
         continue;
       }
       // switch out a user from the max team to the min team
       if (
+        maxTeam &&
+        minTeam &&
         signup.team_id === parseInt(maxTeam) &&
         !signup.sorted &&
-        !lockedSignups.includes(signup.id)
+        !lockedSignups[signup.user.id]
       ) {
         signup.team_id = parseInt(minTeam);
         break;
       }
     }
   }
+
   return signups;
 }
 
 function getTeamCounts(
-  signups: Signup[],
-  currentEvent: BPLEvent
+  signups: ExtendedSignup[],
+  currentEvent: Event
 ): { [teamId: number]: number } {
   return signups.reduce(
     (acc, signup) => {
-      acc[signup.team_id]++;
+      if (signup.team_id) {
+        acc[signup.team_id]++;
+      }
       return acc;
     },
-    currentEvent.teams.reduce((acc, team) => {
-      acc[team.id] = 0;
-      return acc;
-    }, {})
+    currentEvent.teams.reduce(
+      (acc, team) => {
+        acc[team.id] = 0;
+        return acc;
+      },
+      {} as { [teamId: number]: number }
+    )
   );
 }
 
-export function getSortSuggestion(currentEvent: BPLEvent, signups: Signup[]) {
+export function getSortSuggestion(
+  currentEvent: Event,
+  signups: ExtendedSignup[]
+) {
   const buckets: {
     [key: string]: { [teamId: number]: number };
   } = playtimeBuckets.reduce(
     (buckets, playtime) => {
-      buckets[playtime] = currentEvent.teams.reduce((teamNumbers, team) => {
-        teamNumbers[team.id] = signups.filter(
-          (signup) =>
-            signup.team_id === team.id && signup.expected_playtime === playtime
-        ).length;
-        return teamNumbers;
-      }, {});
+      buckets[playtime] = currentEvent.teams.reduce(
+        (teamNumbers, team) => {
+          teamNumbers[team.id] = signups.filter(
+            (signup) =>
+              signup.team_id === team.id &&
+              signup.expected_playtime === parseInt(playtime)
+          ).length;
+          return teamNumbers;
+        },
+        {} as { [teamId: number]: number }
+      );
       return buckets;
     },
-    {} as { [key in keyof typeof PlayTime]: { [teamId: number]: number } }
+    {} as { [key: string]: { [teamId: number]: number } }
   );
-  buckets["total"] = currentEvent.teams.reduce((teamNumbers, team) => {
-    teamNumbers[team.id] = signups.filter(
-      (signup) => signup.team_id === team.id
-    ).length;
-    return teamNumbers;
-  });
+  buckets["total"] = currentEvent.teams.reduce(
+    (teamNumbers, team) => {
+      teamNumbers[team.id] = signups.filter(
+        (signup) => signup.team_id === team.id
+      ).length;
+      return teamNumbers;
+    },
+    {} as { [teamId: number]: number }
+  );
   const newSignups = [];
 
   for (const signup of signups.slice().sort(randSort)) {
     if (signup.team_id) {
-      console.log("Already assigned", signup.id);
       newSignups.push(signup);
       continue;
     }

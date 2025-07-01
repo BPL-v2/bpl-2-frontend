@@ -29,6 +29,10 @@ type TeamRow = {
   total: number;
 };
 
+export type ExtendedSignup = Signup & {
+  sorted?: boolean;
+};
+
 function toExpectedPlayTime(
   expectedPlaytime: number
 ): "0-3" | "4-6" | "7-9" | "10-12" | "13+" {
@@ -258,6 +262,24 @@ function UserSortPage() {
   };
 
   teamRows = [totalRow, ...teamRows];
+  const signupMap = new Map<number, Signup>();
+  for (const signup of signups) {
+    signupMap.set(signup.user.id, signup);
+  }
+  let count = 0;
+  const partnerMap = new Map<number, number>();
+
+  for (const signup of signups) {
+    if (signup.partner_id) {
+      if (!partnerMap.has(signup.partner_id)) {
+        partnerMap.set(signup.user.id, count);
+        partnerMap.set(signup.partner_id, count);
+        count++;
+      } else {
+        partnerMap.set(signup.user.id, partnerMap.get(signup.partner_id)!);
+      }
+    }
+  }
   return (
     <div style={{ marginTop: "20px" }}>
       <h1>Sort</h1> <div className="divider divider-primary">Teams</div>
@@ -371,10 +393,16 @@ function UserSortPage() {
       </div>
       <Table
         data={suggestions
-          .sort(
-            (a, b) =>
-              new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-          )
+          .sort((a, b) => {
+            const aPartnerGroup = partnerMap.get(a.user.id) ?? -1;
+            const bPartnerGroup = partnerMap.get(b.user.id) ?? -1;
+
+            if (aPartnerGroup !== bPartnerGroup) {
+              return -aPartnerGroup + bPartnerGroup;
+            }
+
+            return b.user.id - a.user.id;
+          })
           .filter((signup) => {
             if (nameFilter === "" && nameListFilter.length === 0) {
               return true;
@@ -392,6 +420,14 @@ function UserSortPage() {
           })}
         columns={sortColumns}
         className="h-[70vh]"
+        rowClassName={(row) => {
+          const partnerGroup = partnerMap.get(row.original.user.id);
+          console.log(row.original.user.id, partnerGroup);
+          if (partnerGroup === undefined) {
+            return "";
+          }
+          return partnerGroup % 2 === 0 ? "bg-base-100/70" : "bg-base-100/40";
+        }}
       />
     </div>
   );

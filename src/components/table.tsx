@@ -85,7 +85,7 @@ function Table<T>({
       <table className={twMerge("table table-md", styles?.table)}>
         <thead
           className={twMerge(
-            "sticky top-0 z-2 font-bold text-lg",
+            "sticky top-0 z-2 font-bold text-lg bg-base-200",
             styles?.header
           )}
         >
