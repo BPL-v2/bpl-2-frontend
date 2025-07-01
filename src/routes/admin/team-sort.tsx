@@ -66,9 +66,35 @@ function UserSortPage() {
       setSuggestions([...signups]);
     }
   }, [signups]);
+  let count = 0;
+  const partnerMap = new Map<number, number>();
+  const signupMap = new Map<number, Signup>();
+  for (const signup of signups) {
+    signupMap.set(signup.user.id, signup);
+  }
+  for (const signup of signups) {
+    if (signup.partner_id) {
+      const partner = signupMap.get(signup.partner_id);
+      if (!partner || partner.partner_id !== signup.user.id) {
+        continue;
+      }
+      if (!partnerMap.has(signup.partner_id)) {
+        partnerMap.set(signup.user.id, count);
+        partnerMap.set(signup.partner_id, count);
+        count++;
+      } else {
+        partnerMap.set(signup.user.id, partnerMap.get(signup.partner_id)!);
+      }
+    }
+  }
 
   const sortColumns = useMemo(() => {
     const columns: ColumnDef<Signup>[] = [
+      {
+        header: "Partners",
+        accessorFn: (row) => partnerMap.get(row.user.id),
+        size: 120,
+      },
       {
         header: "Name",
         accessorKey: "user.display_name",
@@ -159,7 +185,7 @@ function UserSortPage() {
       },
     ];
     return columns;
-  }, [currentEvent, suggestions]);
+  }, [currentEvent, suggestions, partnerMap]);
 
   if (isError) {
     return <div>Error loading signups</div>;
@@ -262,24 +288,6 @@ function UserSortPage() {
   };
 
   teamRows = [totalRow, ...teamRows];
-  const signupMap = new Map<number, Signup>();
-  for (const signup of signups) {
-    signupMap.set(signup.user.id, signup);
-  }
-  let count = 0;
-  const partnerMap = new Map<number, number>();
-
-  for (const signup of signups) {
-    if (signup.partner_id) {
-      if (!partnerMap.has(signup.partner_id)) {
-        partnerMap.set(signup.user.id, count);
-        partnerMap.set(signup.partner_id, count);
-        count++;
-      } else {
-        partnerMap.set(signup.user.id, partnerMap.get(signup.partner_id)!);
-      }
-    }
-  }
   return (
     <div style={{ marginTop: "20px" }}>
       <h1>Sort</h1> <div className="divider divider-primary">Teams</div>
@@ -396,7 +404,6 @@ function UserSortPage() {
           .sort((a, b) => {
             const aPartnerGroup = partnerMap.get(a.user.id) ?? -1;
             const bPartnerGroup = partnerMap.get(b.user.id) ?? -1;
-
             if (aPartnerGroup !== bPartnerGroup) {
               return -aPartnerGroup + bPartnerGroup;
             }
@@ -420,14 +427,6 @@ function UserSortPage() {
           })}
         columns={sortColumns}
         className="h-[70vh]"
-        rowClassName={(row) => {
-          const partnerGroup = partnerMap.get(row.original.user.id);
-          console.log(row.original.user.id, partnerGroup);
-          if (partnerGroup === undefined) {
-            return "";
-          }
-          return partnerGroup % 2 === 0 ? "bg-base-100/70" : "bg-base-100/40";
-        }}
       />
     </div>
   );
