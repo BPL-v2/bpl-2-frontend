@@ -125,6 +125,9 @@ export function useGetOwnSignup(event_id: number) {
   const query = useQuery({
     queryKey: ["ownSignup", current !== event_id ? event_id : "current"],
     queryFn: async () => signupApi.getPersonalSignup(event_id),
+    retry: false,
+    enabled: isLoggedIn(),
+    refetchOnMount: false,
   });
   return {
     signup: query.data,
