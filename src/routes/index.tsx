@@ -76,7 +76,7 @@ function Home() {
               </div>
             </div>
             <div className="w-full aspect-video">
-              <VideoEmbed url="https://www.youtube.com/watch?v=44WUYiLdeQ4" />
+              <VideoEmbed url="https://www.youtube.com/watch?v=pjEuKjNxoMo" />
             </div>
           </div>
         </div>
