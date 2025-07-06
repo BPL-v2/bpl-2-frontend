@@ -50,7 +50,7 @@ function RouteComponent() {
   }
   return (
     <div className="flex flex-col gap-4 mt-4">
-      <EventPicker></EventPicker>
+      {permissions.length > 0 && <EventPicker />}
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <AdminRouteCard
           title="Event Management"
