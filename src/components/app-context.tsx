@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ContextProvider } from "@utils/context-provider";
 import { establishScoreSocket } from "../websocket/score-socket";
-import { mergeScores, ScoreMap } from "@utils/utils";
+import { hidePOTotal, mergeScores, ScoreMap } from "@utils/utils";
 import { ScoringPreset, Event, GameVersion } from "@client/api";
 import { ScoreObjective } from "@mytypes/score";
 import { initPreferences } from "@mytypes/preferences";
@@ -60,20 +60,19 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (rules && scoreData && currentEvent && scoringPresets) {
-      setScores(
-        mergeScores(
-          rules,
-          scoreData,
-          currentEvent?.teams.map((team) => team.id),
-          scoringPresets.reduce(
-            (acc, preset) => {
-              acc[preset.id] = preset;
-              return acc;
-            },
-            {} as Record<number, ScoringPreset>
-          )
+      const newScores = mergeScores(
+        rules,
+        scoreData,
+        currentEvent?.teams.map((team) => team.id),
+        scoringPresets.reduce(
+          (acc, preset) => {
+            acc[preset.id] = preset;
+            return acc;
+          },
+          {} as Record<number, ScoringPreset>
         )
       );
+      setScores(hidePOTotal(newScores));
     }
   }, [rules, scoreData, currentEvent, scoringPresets]);
 
