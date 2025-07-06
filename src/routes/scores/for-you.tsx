@@ -10,6 +10,7 @@ import {
   useGetUser,
   useGetUserCharacters,
 } from "@client/query";
+import { PoGauge } from "@components/po-gauge";
 
 export const Route = createFileRoute("/scores/for-you")({
   component: ForYouTab,
@@ -23,14 +24,12 @@ export function ForYouTab() {
   const { teamGoals } = useGetTeamGoals(currentEvent.id);
 
   const personalObjectiveRender = useMemo(() => {
-    const char = userCharacters
+    let char = userCharacters
       ?.sort((a, b) => b.level - a.level)
       .find((c) => c.event_id === currentEvent.id);
     if (!char) {
       return null;
     }
-    const lastPointsProgress =
-      Math.max(char.level / 90, char.atlas_node_count / 40) * 100;
     return (
       <div>
         <h2 className="mt-4">Personal Objectives</h2>
@@ -38,122 +37,33 @@ export function ForYouTab() {
           Help your team out by improving your character and earn up to 9 points
           for your team.
         </p>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-1 ">
-          <div
-            className={`card bg-base-300 border-2 ${
-              char.level >= 80 ? "border-success" : "border-error"
-            }`}
-          >
-            <div className="card-body">
-              <div className="card-title text-3xl">{"Reach lvl 80"}</div>
-              {char.level >= 80 ? (
-                <div className="text-lg text-left text-success">
-                  {"+3 Points"}
-                </div>
-              ) : null}
-            </div>
-            <progress
-              className={`progress w-full rounded-b-box rounded-t-none  ${
-                char.level >= 80 ? "progress-success" : "progress-error"
-              }`}
-              value={char.level}
-              max={80}
-            ></progress>
-          </div>
-          <div
-            className={`card bg-base-300 border-2 ${
-              char.ascendancy_points >= 8 ? "border-success" : "border-error"
-            }`}
-          >
-            <div className="card-body">
-              <div className="card-title text-3xl">{"Fully Ascend"}</div>
-              {char.ascendancy_points >= 8 ? (
-                <div className="text-lg text-left text-success">
-                  {"+3 Points"}
-                </div>
-              ) : (
-                <div className="text-lg text-left text-warning">
-                  {"Ask for Lab carries if you need help"}
-                </div>
-              )}
-            </div>
-            <progress
-              className={`progress w-full rounded-b-box rounded-t-none  ${
-                char.ascendancy_points >= 8
-                  ? "progress-success"
-                  : "progress-error"
-              }`}
-              value={char.ascendancy_points}
-              max={8}
-            ></progress>
-          </div>
-          <div
-            className={`card col-span-2 bg-base-300 rounded-box border-2 ${
-              char.atlas_node_count >= 40 || char.level >= 90
-                ? "border-success"
-                : "border-error"
-            }`}
-          >
-            <div className="card-body">
-              <div className="flex flex-col sm:flex-row items-center gap-2">
-                <div
-                  className={`card bg-base-200 w-full border-2 ${
-                    char.level >= 90 ? "border-success" : "border-error"
-                  }`}
-                >
-                  <div className="card-body">
-                    <div className="card-title text-3xl">{"Reach lvl 90"}</div>
-                  </div>
-                  <progress
-                    className={`progress w-full rounded-b-box rounded-t-none  ${
-                      char.level >= 90 ? "progress-success" : "progress-error"
-                    }`}
-                    value={char.level}
-                    max={90}
-                  ></progress>
-                </div>
-                <div className="divider divider-vertical sm:divider-horizontal text-2xl font-semibold">
-                  OR
-                </div>
-                <div
-                  className={`card bg-base-200 w-full border-2 ${
-                    char.atlas_node_count >= 40
-                      ? "border-success"
-                      : "border-error"
-                  }`}
-                >
-                  <div className="card-body">
-                    <div className="card-title text-3xl">
-                      {"Gain 40 Atlas Passives"}
-                    </div>
-                  </div>
-                  <progress
-                    className={`progress w-full rounded-b-box rounded-t-none  ${
-                      char.atlas_node_count >= 40
-                        ? "progress-success"
-                        : "progress-error"
-                    }`}
-                    value={char.atlas_node_count}
-                    max={40}
-                  ></progress>
-                </div>
-              </div>
-              {char.atlas_node_count >= 40 || char.level >= 90 ? (
-                <div className="text-lg text-left text-success">
-                  {"+3 Points"}
-                </div>
-              ) : null}
-            </div>
-            <progress
-              className={`progress w-full rounded-b-box rounded-t-none  ${
-                lastPointsProgress >= 100
-                  ? "progress-success"
-                  : "progress-error"
-              }`}
-              value={lastPointsProgress}
-              max={100}
-            ></progress>
-          </div>
+        <div className="flex flex-col gap-1">
+          <PoGauge
+            descriptions={["Lvl 40", "Lvl 60", "Lvl 80"]}
+            values={[
+              char.level >= 40 ? 1 : 0,
+              char.level >= 60 ? 1 : 0,
+              char.level >= 80 ? 1 : 0,
+            ]}
+            cap={3}
+          ></PoGauge>
+          <PoGauge
+            descriptions={["Cruel Lab", "Merc Lab", "Uber Lab"]}
+            values={[
+              char.ascendancy_points >= 4 ? 1 : 0,
+              char.ascendancy_points >= 6 ? 1 : 0,
+              char.ascendancy_points >= 8 ? 1 : 0,
+            ]}
+            cap={3}
+          ></PoGauge>
+          <PoGauge
+            descriptions={["Lvl 90", "40 Atlas Points"]}
+            values={[
+              char.level >= 90 ? 3 : 0,
+              char.atlas_node_count >= 40 ? 3 : 0,
+            ]}
+            cap={3}
+          ></PoGauge>
         </div>
       </div>
     );
@@ -256,7 +166,7 @@ export function ForYouTab() {
   }
 
   return (
-    <div className="prose prose-xl text-left max-w-max flex flex-col px-4 2xl:px-0">
+    <div className="prose prose-xl text-left max-w-full flex flex-col px-4 2xl:px-0">
       {personalObjectiveRender}
       {teamGoals && (
         <div>
