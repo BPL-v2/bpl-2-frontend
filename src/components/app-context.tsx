@@ -26,7 +26,8 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
   const { scoringPresets } = useGetScoringPresets(currentEvent.id);
 
   useEffect(() => {
-    if (events) {
+    // @ts-ignore
+    if (events && currentEvent.id === "current") {
       const currentEvent = events.find((event) => event.is_current);
       if (!currentEvent) return;
       setCurrentEvent(currentEvent);

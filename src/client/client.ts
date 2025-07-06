@@ -18,27 +18,54 @@ import {
 
 import "isomorphic-fetch";
 
-const baseUrl = process.env.VITE_PUBLIC_BPL_BACKEND_URL;
-const config: Configuration = {
-  basePath: baseUrl,
-  apiKey: (_: string) => {
-    return localStorage.getItem("auth")
-      ? "Bearer " + localStorage.getItem("auth")
-      : "";
-  },
+// Custom fetch wrapper to add Authorization header to all requests
+const authenticatedFetch: typeof fetch = async (input, init = {}) => {
+  const authToken = localStorage.getItem("auth");
+  const headers = new Headers(init.headers || {});
+  if (authToken) {
+    headers.set("Authorization", `Bearer ${authToken}`);
+  }
+  return fetch(input, { ...init, headers });
 };
 
-export const eventApi = EventApiFactory(config, fetch, baseUrl);
-export const teamApi = TeamApiFactory(config, fetch, baseUrl);
-export const userApi = UserApiFactory(config, fetch, baseUrl);
-export const objectiveApi = ObjectiveApiFactory(config, fetch, baseUrl);
-export const scoringApi = ScoringApiFactory(config, fetch, baseUrl);
-export const conditionApi = ConditionApiFactory(config, fetch, baseUrl);
-export const submissionApi = SubmissionApiFactory(config, fetch, baseUrl);
-export const signupApi = SignupApiFactory(config, fetch, baseUrl);
-export const oauthApi = OauthApiFactory(config, fetch, baseUrl);
-export const streamApi = StreamsApiFactory(config, fetch, baseUrl);
-export const jobApi = JobsApiFactory(config, fetch, baseUrl);
-export const ladderApi = LadderApiFactory(config, fetch, baseUrl);
-export const characterApi = CharactersApiFactory(config, fetch, baseUrl);
-export const guildStashApi = GuildStashApiFactory(config, fetch, baseUrl);
+const baseUrl = process.env.VITE_PUBLIC_BPL_BACKEND_URL;
+const config: Configuration = { basePath: baseUrl };
+
+export const eventApi = EventApiFactory(config, authenticatedFetch, baseUrl);
+export const teamApi = TeamApiFactory(config, authenticatedFetch, baseUrl);
+export const userApi = UserApiFactory(config, authenticatedFetch, baseUrl);
+export const objectiveApi = ObjectiveApiFactory(
+  config,
+  authenticatedFetch,
+  baseUrl
+);
+export const scoringApi = ScoringApiFactory(
+  config,
+  authenticatedFetch,
+  baseUrl
+);
+export const conditionApi = ConditionApiFactory(
+  config,
+  authenticatedFetch,
+  baseUrl
+);
+export const submissionApi = SubmissionApiFactory(
+  config,
+  authenticatedFetch,
+  baseUrl
+);
+export const signupApi = SignupApiFactory(config, authenticatedFetch, baseUrl);
+export const oauthApi = OauthApiFactory(config, authenticatedFetch, baseUrl);
+export const streamApi = StreamsApiFactory(config, authenticatedFetch, baseUrl);
+export const jobApi = JobsApiFactory(config, authenticatedFetch, baseUrl);
+export const ladderApi = LadderApiFactory(config, authenticatedFetch, baseUrl);
+export const characterApi = CharactersApiFactory(
+  config,
+  authenticatedFetch,
+  baseUrl
+);
+export const guildStashApi = GuildStashApiFactory(
+  config,
+  authenticatedFetch,
+  baseUrl
+);
