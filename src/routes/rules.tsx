@@ -85,9 +85,9 @@ export function RulePage() {
       label: "Can I signup with my friend?",
       children: (
         <>
-          Currently, you may not sign up explicitly with your friend. If they
-          are on a different team, we ask you to follow the rules above and not
-          play or collude with any individuals of other teams.
+          Yes, actually you can! Just make sure to include your friend&apos;s
+          PoE Account name in the signup form. If they do the same with you,
+          you'll get sorted into the same team.
         </>
       ),
     },
