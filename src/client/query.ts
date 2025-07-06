@@ -406,6 +406,7 @@ export function useGetGuildStash(event_id: number) {
         .getGuildStashForUser(event_id)
         .then((data) => data.sort((a, b) => (a.index || 0) - (b.index || 0))),
     enabled: () => isLoggedIn(),
+    retry: false,
     refetchOnMount: false,
   });
   return {

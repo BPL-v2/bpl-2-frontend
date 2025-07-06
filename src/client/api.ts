@@ -1131,6 +1131,12 @@ export interface GuildStashTab {
      * @memberof GuildStashTab
      */
     type: string;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof GuildStashTab
+     */
+    user_ids: Array<number>;
 }
 
 /**
