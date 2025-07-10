@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { Score } from "@client/api";
 import { rank2text } from "@utils/utils";
+import { TeamLogo } from "./teamlogo";
 
 interface RankingProps {
   objective: { team_score: Record<string, Score> };
@@ -83,11 +84,7 @@ export function Ranking({
                   <div className="stat-figure text-secondary row-span-2 hidden 2xl:block">
                     <div className="avatar online">
                       <div className="w-20">
-                        <img
-                          src={`/assets/teams/${
-                            currentEvent?.id
-                          }/${team?.name.toLowerCase()}/logo-w-name.png`}
-                        ></img>
+                        <TeamLogo team={team} eventId={currentEvent.id} />
                       </div>
                     </div>
                   </div>

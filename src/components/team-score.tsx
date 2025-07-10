@@ -4,6 +4,7 @@ import { getPotentialPoints, getTotalPoints } from "@utils/utils";
 import { TeamName } from "./team-name";
 import { ScoreObjective } from "@mytypes/score";
 import { useGetEventStatus } from "@client/query";
+import { TeamLogo } from "./teamlogo";
 
 export type TeamScoreProps = {
   selectedTeam?: number;
@@ -52,11 +53,7 @@ const TeamScoreDisplay = ({
                 <div className="stat-figure text-secondary row-span-2 hidden md:block">
                   <div className="avatar online">
                     <div className="w-24">
-                      <img
-                        src={`/assets/teams/${
-                          currentEvent.id
-                        }/${team.name.toLowerCase()}/logo-w-name.png`}
-                      ></img>
+                      <TeamLogo team={team} eventId={currentEvent.id} />
                     </div>
                   </div>
                 </div>
