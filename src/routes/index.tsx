@@ -5,8 +5,9 @@ import { VideoEmbed } from "@components/video-embed";
 import { Countdown } from "@components/countdown";
 import { DiscordFilled } from "@icons/discord";
 import { HeartIcon } from "@heroicons/react/24/solid";
-import { useGetEventStatus } from "@client/query";
+import { useGetEvents, useGetEventStatus } from "@client/query";
 import { AscendancyPortrait } from "@components/ascendancy-portrait";
+import { TeamLogo } from "@components/teamlogo";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -14,33 +15,40 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const { currentEvent } = useContext(GlobalStateContext);
-  const { eventStatus } = useGetEventStatus(currentEvent.id);
+  const { events } = useGetEvents();
+  const nextEvent = events?.sort((a, b) => {
+    return (
+      (Date.parse(b.event_start_time) || 0) -
+      (Date.parse(a.event_start_time) || 0)
+    );
+  })[0];
+  const { eventStatus } = useGetEventStatus(nextEvent?.id || currentEvent.id);
   const now = Date.now();
-  const hasStarted =
-    currentEvent && Date.parse(currentEvent.event_start_time) < now;
-  const hasEnded =
-    currentEvent && Date.parse(currentEvent.event_end_time) < now;
+  const hasStarted = nextEvent && Date.parse(nextEvent.event_start_time) < now;
+  const hasEnded = nextEvent && Date.parse(nextEvent.event_end_time) < now;
 
   return (
     <div className="flex flex-col gap-8 mt-8 mx-auto ">
-      <div className="card max-w-full bg-base-300">
-        <div className="card-body px-12 py-4 text-2xl flex flex-row gap-8">
-          <div>
-            Signups: {eventStatus?.number_of_signups || 0} /{" "}
-            {currentEvent?.max_size || 0}
-          </div>
-          <div className="divider divider-horizontal" />
-          <div>
-            Waitlist:{" "}
-            {Math.max(
-              (eventStatus?.number_of_signups || 0) -
-                (currentEvent?.max_size || 0),
-              0
-            )}{" "}
-            / {currentEvent?.waitlist_size || 0}
+      {!hasEnded && (
+        <div className="card max-w-full bg-base-300">
+          <div className="card-body px-12 py-4 text-2xl flex flex-row gap-8">
+            <div>
+              Signups: {eventStatus?.number_of_signups || 0} /{" "}
+              {nextEvent?.max_size || 0}
+            </div>
+            <div className="divider divider-horizontal" />
+            <div>
+              Waitlist:{" "}
+              {Math.max(
+                (eventStatus?.number_of_signups || 0) -
+                  (nextEvent?.max_size || 0),
+                0
+              )}{" "}
+              / {nextEvent?.waitlist_size || 0}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <div className="card max-w-full bg-base-300">
         <div className="card-body p-12">
@@ -81,7 +89,7 @@ function Home() {
           </div>
         </div>
       </div>
-      {currentEvent && !hasEnded ? (
+      {nextEvent && !hasEnded ? (
         <>
           <div className="card bg-base-300">
             <div className="card-body p-12">
@@ -91,24 +99,20 @@ function Home() {
                   <p>Applications start: </p>
                   <p>
                     {new Date(
-                      currentEvent.application_start_time
+                      nextEvent.application_start_time
                     ).toLocaleString()}
                   </p>
                   <p>Start time: </p>
-                  <p>
-                    {new Date(currentEvent.event_start_time).toLocaleString()}
-                  </p>
+                  <p>{new Date(nextEvent.event_start_time).toLocaleString()}</p>
                   <p>End time: </p>
-                  <p>
-                    {new Date(currentEvent.event_end_time).toLocaleString()}
-                  </p>
+                  <p>{new Date(nextEvent.event_end_time).toLocaleString()}</p>
                 </div>
 
                 {!hasStarted ? (
                   <div className="flex flex-col items-center gap-4">
                     <h3 className="text-3xl">See you at the Beach in</h3>
                     <Countdown
-                      target={new Date(currentEvent.event_start_time)}
+                      target={new Date(nextEvent.event_start_time)}
                       size="large"
                     />
                   </div>
@@ -116,7 +120,7 @@ function Home() {
                   <div className="flex flex-col items-center gap-4">
                     <h3 className="text-3xl">Event will end in</h3>
                     <Countdown
-                      target={new Date(currentEvent.event_end_time)}
+                      target={new Date(nextEvent.event_end_time)}
                       size="large"
                     />
                   </div>
@@ -132,17 +136,11 @@ function Home() {
                 classes
               </p>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mt-4">
-                {currentEvent.teams.map((team) => (
+                {nextEvent.teams.map((team) => (
                   <div key={team.id} className="card bg-base-200">
                     <div className="card-body">
                       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 items-center">
-                        <img
-                          src={`/assets/teams/${
-                            currentEvent.id
-                          }/${team.name.toLowerCase()}/logo-w-name.png`}
-                          alt={team.name}
-                          className="w-full"
-                        />
+                        <TeamLogo team={team} eventId={nextEvent.id} />
                         <div>
                           <div className="grid grid-cols-4  sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-2 mt-8">
                             {team.allowed_classes.map((character_class) => (
