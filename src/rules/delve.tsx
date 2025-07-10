@@ -43,10 +43,6 @@ export function DelveTabRules() {
     (c) => c.name === "Culmulative Depth"
   );
 
-  const culmDepthRace = delveCategory?.children.find(
-    (c) => c.name === "Culmulative Depth Race"
-  );
-
   const delveRace = delveCategory?.children.find(
     (c) => c.name === "Delve Race"
   );
