@@ -56,7 +56,7 @@ function toColor(color: string, active: boolean): React.ReactNode {
 export function GemTab(): JSX.Element {
   const { currentEvent, scores, gameVersion } = useContext(GlobalStateContext);
   const [color, setColor] = React.useState<"r" | "g" | "b" | undefined>();
-  const { data: gemColors } = useFile<Record<"r" | "g" | "b", string[]>>(
+  const { data: gemColors } = useFile<Record<"r" | "g" | "b" | "w", string[]>>(
     "/assets/poe1/items/gem_colors.json"
   );
   const { rules } = Route.useSearch();

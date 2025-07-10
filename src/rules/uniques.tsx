@@ -3,18 +3,35 @@ import { GlobalStateContext } from "@utils/context-provider";
 import { ScoringMethod } from "@client/api";
 import { pointsToGroup } from "@utils/text-utils";
 
-function convertArrayToText(points: number[] | undefined): string {
+function convertArrayToText(points: number[] | undefined) {
   const groups = pointsToGroup(points || []);
   const textParts = groups.map((group, index) => {
     if (index === 0) {
-      return `The first ${group.count} items award ${group.value} points`;
+      return (
+        <span>
+          The first {group.count} items award{" "}
+          <b className="text-info">{group.value}</b> points
+        </span>
+      );
     } else if (index === groups.length - 1) {
-      return `and the remaining items award ${group.value} points`;
+      return (
+        <span>
+          {" "}
+          and the remaining items award{" "}
+          <b className="text-info">{group.value}</b> points
+        </span>
+      );
     } else {
-      return `the next ${group.count} items award ${group.value} points`;
+      return (
+        <span>
+          {" "}
+          the next {group.count} items award{" "}
+          <b className="text-info">{group.value}</b> points
+        </span>
+      );
     }
   });
-  return textParts.join(", ");
+  return textParts;
 }
 
 export function UniqueTabRules() {
@@ -36,7 +53,7 @@ export function UniqueTabRules() {
       : "https://www.poe2wiki.net/wiki/";
   const variantExample = uniqueCategory.children
     .flatMap((c) => c.children)
-    .find((c) => c.name.includes("Variants") && c.children.length >= 2);
+    .find((c) => c.children.length >= 2);
 
   const ubersCategory = uniqueCategory.children.find(
     (c) =>
@@ -90,7 +107,8 @@ export function UniqueTabRules() {
         Once a team has found every distinct unique item in a unique set, they
         are considered to have completed the set. They are given points
         depending on the time they completed the set. The first team to complete
-        a set is given 10 points, the second team 5 points.
+        a set is given <b className="text-info">10</b> points, the second team{" "}
+        <b className="text-info">5</b> points.
       </p>
       {ubersCategory ? (
         <>

@@ -69,15 +69,10 @@ export function DelveTabRules() {
           <h3>Culmulative Team Depth</h3>
           <p>
             Total team delve progress is equal to a sum of everyone&apos;s
-            individual solo depth progress past 100 depth. Each team gets{" "}
+            individual solo depth progress past 100 depth. Each team is awarded{" "}
             <b className="text-info">1 point per 10</b> total team delve
             progress up to a cap of <b className="text-info">500</b> points.
           </p>
-          {culmDepthRace && (
-            <p>
-              {racePointsToText(culmDepthRace.scoring_preset?.points || [])}
-            </p>
-          )}
         </>
       )}
       {delveRace && (

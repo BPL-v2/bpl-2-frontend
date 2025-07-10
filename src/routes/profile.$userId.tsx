@@ -3,7 +3,7 @@ import uPlot, { AlignedData } from "uplot";
 import "uplot/dist/uPlot.min.css";
 
 import UplotReact from "uplot-react";
-import { useContext, useState } from "react";
+import { use, useContext, useEffect, useState } from "react";
 import { Character, GameVersion } from "@client/api";
 import { GlobalStateContext } from "@utils/context-provider";
 import { ascendancies, phreciaMapping, poe2Mapping } from "@mytypes/ascendancy";
@@ -15,6 +15,8 @@ import {
   useGetCharacterTimeseries,
 } from "@client/query";
 import { getLevelFromExperience } from "@mytypes/level-info";
+import { PoB } from "@components/pob";
+import { characterApi } from "@client/client";
 
 export const Route = createFileRoute("/profile/$userId")({
   component: ProfilePage,
@@ -33,16 +35,36 @@ export function ProfilePage() {
   const { events } = useGetEvents();
   const { userId } = useParams({ from: Route.id });
   const [character, setCharacter] = useState<Character | null>(null);
+  const [pobExport, setPobExport] = useState<string>("");
 
   // Use TanStack Query hooks from query.ts
-  const { user, isLoading: userLoading } = useGetUserById(userId);
-  const { userCharacters = [], isLoading: charactersLoading } =
-    useGetUserCharacters(userId);
-  const { characterTimeseries = [], isLoading: timeseriesLoading } =
-    useGetCharacterTimeseries(character?.id ?? 0, userId);
-
+  const { user } = useGetUserById(userId);
+  const { userCharacters = [] } = useGetUserCharacters(userId);
+  const { characterTimeseries = [] } = useGetCharacterTimeseries(
+    character?.id ?? "",
+    userId
+  );
   const fontColor = preferences.theme === "dark" ? "white" : "black";
+  const fetchPoBExport = (selectedCharacter: Character) => {
+    characterApi
+      .getPoBExport(userId, selectedCharacter.id)
+      .catch((err) => setPobExport(""))
+      .then((res) => {
+        if (res) setPobExport(res.export_string);
+      });
+  };
 
+  useEffect(() => {
+    if (userCharacters.length > 0) {
+      const sortedCharacter = userCharacters.sort(
+        (b, a) => a.event_id - b.event_id
+      )[0];
+      setCharacter(sortedCharacter);
+      fetchPoBExport(sortedCharacter);
+    } else {
+      setCharacter(null);
+    }
+  }, [userCharacters]);
   const data: AlignedData = [
     new Float64Array(characterTimeseries.map((c) => c.timestamp)),
     new Float64Array(
@@ -89,18 +111,6 @@ export function ProfilePage() {
     return <div>Loading...</div>;
   }
 
-  // Show loading state while any data is loading
-  if (userLoading || charactersLoading || timeseriesLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="flex flex-col items-center gap-4">
-          <span className="loading loading-spinner loading-lg"></span>
-          <p className="text-lg">Loading profile data...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
       <h1 className="text-4xl text-center font-bold m-4">
@@ -110,32 +120,33 @@ export function ProfilePage() {
         <div className="card-body ">
           <h2 className="card-title text-3xl">Event Characters</h2>
           <div className="flex flex-row flex-wrap justify-center">
-            {userCharacters.map((character) => {
-              const event = events?.find((e) => e.id == character.event_id);
+            {userCharacters.map((char) => {
+              const event = events?.find((e) => e.id == char.event_id);
               if (!event) {
                 return null;
               }
-              let ascendancyName = character.ascendancy;
+              let ascendancyName = char.ascendancy;
               let ascendancyObj;
               if (event.game_version === GameVersion.poe2) {
                 ascendancyName =
-                  poe2Mapping[character.ascendancy] || character.ascendancy;
+                  poe2Mapping[char.ascendancy] || char.ascendancy;
                 ascendancyObj = ascendancies[GameVersion.poe2][ascendancyName];
               } else {
                 ascendancyObj =
                   ascendancies[GameVersion.poe1][
-                    phreciaMapping[character.ascendancy] || character.ascendancy
+                    phreciaMapping[char.ascendancy] || char.ascendancy
                   ];
               }
               return (
                 <div
-                  key={character.event_id + character.name}
+                  key={char.event_id + char.name}
                   className={`card w-80 h-130 bg-base-200 m-2 shadow-xl cursor-pointer select-none ${
-                    event.id === currentEvent?.id
-                      ? "outline-2 outline-primary"
-                      : ""
+                    char.id === character?.id ? "outline-2 outline-primary" : ""
                   }`}
-                  onClick={() => setCharacter(character)}
+                  onClick={() => {
+                    setCharacter(char);
+                    fetchPoBExport(char);
+                  }}
                 >
                   <figure className="h-80">
                     <img
@@ -151,16 +162,16 @@ export function ProfilePage() {
                   <div className="card-body">
                     <h2 className="card-title text-2xl">{event.name}</h2>
                     <div className="text-lg text-left">
-                      <p> {character.name}</p>
+                      <p> {char.name}</p>
                       <p>
-                        <span>{character.main_skill}</span>{" "}
+                        <span>{char.main_skill}</span>{" "}
                         <span
                           className={`font-bold ${ascendancyObj.classColor}`}
                         >
                           {ascendancyName}
                         </span>
                       </p>
-                      <p>Level {character.level}</p>
+                      <p>Level {char.level}</p>
                     </div>
                   </div>
                 </div>
@@ -169,6 +180,7 @@ export function ProfilePage() {
           </div>
         </div>
       </div>
+      {character && pobExport && <PoB pobString={pobExport} />}
       {state.data[0].length > 0 ? (
         <div className="flex flex-col items-center bg-base-300 m-4 rounded-box">
           <UplotReact

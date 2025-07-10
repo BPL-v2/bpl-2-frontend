@@ -146,6 +146,13 @@ interface Skills {
 
 interface Build {
   playerStats: PlayerStats;
+  bandit: string;
+  level: number;
+  mainSocketGroup: number;
+  pantheonMajorGod: string;
+  pantheonMinorGod: string;
+  className: string;
+  ascendClassName: string;
 }
 
 export interface PathOfBuilding {
@@ -184,6 +191,7 @@ export interface Mod {
 }
 
 export interface Item {
+  id: string;
   rarity: Rarity;
   name: string;
   base: string;
@@ -533,7 +541,16 @@ function pobstringToXml(pob: string): Document {
 export function decodePoBExport(input: string): PathOfBuilding {
   const xmlDoc = pobstringToXml(input);
   const result: PathOfBuilding = {
-    build: { playerStats: {} as PlayerStats },
+    build: {
+      playerStats: {} as PlayerStats,
+      bandit: "",
+      level: 0,
+      mainSocketGroup: 0,
+      pantheonMajorGod: "",
+      pantheonMinorGod: "",
+      className: "",
+      ascendClassName: "",
+    },
     skills: {
       activeSkillSet: 0,
       sortGemsByDPS: "",
@@ -546,6 +563,16 @@ export function decodePoBExport(input: string): PathOfBuilding {
     },
     items: [],
   };
+  const build = xmlDoc.getElementsByTagName("Build")[0];
+  result.build.bandit = build.getAttribute("bandit") || "";
+  result.build.level = parseInt(build.getAttribute("level") || "0");
+  result.build.pantheonMajorGod = build.getAttribute("pantheonMajorGod") || "";
+  result.build.pantheonMinorGod = build.getAttribute("pantheonMinorGod") || "";
+  result.build.className = build.getAttribute("className") || "";
+  result.build.ascendClassName = build.getAttribute("ascendClassName") || "";
+  result.build.mainSocketGroup = parseInt(
+    build.getAttribute("mainSocketGroup") || "0"
+  );
 
   const playerStatElements = xmlDoc.getElementsByTagName("PlayerStat");
   for (const element of playerStatElements) {
@@ -657,7 +684,11 @@ export function decodePoBExport(input: string): PathOfBuilding {
         }
       }
       items.push(
-        parseItem(text.trim(), idToSlot[itemElement.getAttribute("id") || ""])
+        parseItem(
+          text.trim(),
+          idToSlot[itemElement.getAttribute("id") || ""],
+          itemElement.getAttribute("id")!
+        )
       );
     }
     result.items = items;
@@ -833,7 +864,7 @@ function mayBeFullBase(name: string): boolean {
   return name.trim().split(/\s+/).length === words;
 }
 
-export function parseItem(item: string, slot: string | null): Item {
+export function parseItem(item: string, slot: string | null, id: string): Item {
   const lines = item.split("\n");
   if (!lines[0].startsWith("Rarity: ")) throw new Error("expected rarity");
   const rarity = parseRarity(lines[0].slice(8));
@@ -997,5 +1028,6 @@ export function parseItem(item: string, slot: string | null): Item {
     implicits,
     explicits,
     slot,
+    id,
   };
 }
