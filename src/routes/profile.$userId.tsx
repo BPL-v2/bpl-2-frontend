@@ -3,7 +3,7 @@ import uPlot, { AlignedData } from "uplot";
 import "uplot/dist/uPlot.min.css";
 
 import UplotReact from "uplot-react";
-import { use, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Character, GameVersion } from "@client/api";
 import { GlobalStateContext } from "@utils/context-provider";
 import { ascendancies, phreciaMapping, poe2Mapping } from "@mytypes/ascendancy";
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/profile/$userId")({
 });
 
 export function ProfilePage() {
-  const { preferences, currentEvent } = useContext(GlobalStateContext);
+  const { preferences } = useContext(GlobalStateContext);
   const { events } = useGetEvents();
   const { userId } = useParams({ from: Route.id });
   const [character, setCharacter] = useState<Character | null>(null);
