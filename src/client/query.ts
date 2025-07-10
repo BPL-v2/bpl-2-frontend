@@ -303,7 +303,7 @@ export function useGetUserCharacters(userId: number) {
   };
 }
 
-export function useGetCharacterTimeseries(characterId: number, userId: number) {
+export function useGetCharacterTimeseries(characterId: string, userId: number) {
   const query = useQuery({
     queryKey: ["characterTimeseries", characterId, userId],
     queryFn: () => characterApi.getCharacterHistory(userId, characterId),

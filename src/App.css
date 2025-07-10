@@ -73,6 +73,14 @@
   --depth: 0;
   --noise: 0;
 }
+@theme {
+  --color-unique: #af5f1c;
+  --color-magic: #8181f2;
+  --color-rare: #fefe76;
+  --color-fractured: #a29162;
+  --color-crafted: #b4b4ff;
+  --color-corrupted: #d20000;
+}
 
 @utility input {
   @apply border-2 focus:outline-none;
@@ -229,6 +237,7 @@ html {
 
 .inventory {
   display: grid;
+  width: 32rem;
   grid-template-columns: repeat(8, minmax(0, 4rem));
   grid-gap: 0.5rem;
   grid-template-areas:
@@ -244,7 +253,7 @@ html {
 
 .weapon1 {
   grid-area: Weapon;
-  aspect-ratio: 3;
+  aspect-ratio: 3/2;
   object-fit: contain;
   height: 100%;
   width: 100%;
@@ -252,36 +261,41 @@ html {
 
 .helmet {
   grid-area: Helm;
+  aspect-ratio: 1;
 }
 
 .amulet {
   grid-area: Amulet;
+  aspect-ratio: 1;
 }
 
 .weapon2 {
   grid-area: Offhand;
-  aspect-ratio: 3;
+  aspect-ratio: 3/2;
   object-fit: contain;
   height: 100%;
 }
 
 .ring1 {
   grid-area: RingL;
+  aspect-ratio: 1;
 }
 
 .bodyarmour {
   grid-area: BodyArmour;
-  aspect-ratio: 3;
+  aspect-ratio: 3/2;
   object-fit: contain;
   height: 100%;
 }
 
 .ring2 {
   grid-area: RingR;
+  aspect-ratio: 1;
 }
 
 .gloves {
   grid-area: Gloves;
+  aspect-ratio: 1;
 }
 
 .belt {
@@ -291,6 +305,7 @@ html {
 
 .boots {
   grid-area: Boots;
+  aspect-ratio: 1;
 }
 
 .flasks {
@@ -325,4 +340,55 @@ html {
 .flask5 {
   grid-area: Flask4;
   aspect-ratio: 0.5;
+}
+
+.gem-first:before {
+  height: 0.75rem;
+  transform: scaleY(-1) translateY(-0.69rem);
+}
+.gem-first:before,
+.gem-last:before,
+.gem-middle:before {
+  content: "\a0";
+  width: 0.5rem;
+  display: inline-block;
+  margin-left: 0.5rem;
+  background: conic-gradient(
+      from 90deg at 1px 1px,
+      transparent 90deg,
+      currentColor 0
+    )
+    0 0.69rem;
+}
+.gem-last:before {
+  height: 0.75rem;
+}
+
+.tooltip-rose {
+  --tt-bg: var(--color-rose-400);
+  > .tooltip-content,
+  &[data-tip]:before {
+    color: var(--color-rose-950);
+  }
+}
+.tooltip-lime {
+  --tt-bg: var(--color-lime-400);
+  > .tooltip-content,
+  &[data-tip]:before {
+    color: var(--color-lime-950);
+  }
+}
+.tooltip-blue {
+  --tt-bg: var(--color-blue-400);
+  > .tooltip-content,
+  &[data-tip]:before {
+    color: var(--color-blue-950);
+  }
+}
+.tooltip-white {
+  --tt-bg: white;
+  > .tooltip-content,
+  &[data-tip]:before {
+    color: black;
+  }
 }
