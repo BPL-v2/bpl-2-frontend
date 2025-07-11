@@ -217,9 +217,9 @@ export function LadderTab(): JSX.Element {
         });
         columns.push({
           header: "Pantheon",
-          accessorFn: (row) => row.extra?.pantheon,
+          accessorFn: (row) => row.character?.pantheon,
           cell: (info) =>
-            info.row.original.extra?.pantheon ? (
+            info.row.original.character?.pantheon ? (
               <CheckCircleIcon className="h-6 w-6 text-success" />
             ) : (
               <XCircleIcon className="h-6 w-6 text-error" />
@@ -230,9 +230,9 @@ export function LadderTab(): JSX.Element {
           },
         });
         columns.push({
-          accessorFn: (row) => (row.extra?.ascendancy_points || 0) > 6,
+          accessorFn: (row) => (row.character?.ascendancy_points || 0) > 6,
           cell: (info) =>
-            (info.row.original.extra?.ascendancy_points || 0) > 6 ? (
+            (info.row.original.character?.ascendancy_points || 0) > 6 ? (
               <CheckCircleIcon className="h-6 w-6 text-success" />
             ) : (
               <XCircleIcon className="h-6 w-6 text-error" />
@@ -244,7 +244,7 @@ export function LadderTab(): JSX.Element {
           },
         });
         columns.push({
-          accessorFn: (row) => row.extra?.atlas_node_count || 0,
+          accessorFn: (row) => row.character?.atlas_node_count || 0,
           header: "Atlas Points",
           sortingFn: sortingFns.basic,
         });

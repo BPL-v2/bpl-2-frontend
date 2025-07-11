@@ -8,11 +8,11 @@ export function calcPersonalPoints(ladderEntry: LadderEntry) {
   if (ladderEntry.level >= 90) {
     points += 3;
   }
-  if (ladderEntry.extra) {
-    if (ladderEntry.extra.atlas_node_count >= 40) {
+  if (ladderEntry.character) {
+    if (ladderEntry.character.atlas_node_count >= 40) {
       points += 3;
     }
-    if (ladderEntry.extra.ascendancy_points >= 8) {
+    if (ladderEntry.character.ascendancy_points >= 8) {
       points += 3;
     }
   }

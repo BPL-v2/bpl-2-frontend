@@ -1959,6 +1959,12 @@ export interface LadderEntry {
     account_name: string;
     /**
      * 
+     * @type {Character}
+     * @memberof LadderEntry
+     */
+    character?: Character;
+    /**
+     * 
      * @type {string}
      * @memberof LadderEntry
      */
@@ -1983,12 +1989,6 @@ export interface LadderEntry {
     experience: number;
     /**
      * 
-     * @type {Character}
-     * @memberof LadderEntry
-     */
-    extra?: Character;
-    /**
-     * 
      * @type {number}
      * @memberof LadderEntry
      */
@@ -1999,6 +1999,12 @@ export interface LadderEntry {
      * @memberof LadderEntry
      */
     rank: number;
+    /**
+     * 
+     * @type {CharacterStat}
+     * @memberof LadderEntry
+     */
+    stats?: CharacterStat;
     /**
      * 
      * @type {string}
