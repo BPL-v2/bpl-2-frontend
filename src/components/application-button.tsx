@@ -37,6 +37,7 @@ const ApplicationButton = () => {
     () => setModalOpen(false),
     (error) => alert(error)
   );
+
   const dialog = useMemo(() => {
     return (
       <Dialog title="Apply for Event" open={modalOpen} setOpen={setModalOpen}>
@@ -198,7 +199,7 @@ const ApplicationButton = () => {
     eventStatusLoading ||
     userError ||
     eventStatusError ||
-    currentEvent.application_start_time > new Date().toISOString()
+    new Date(currentEvent.application_start_time) > new Date()
   ) {
     return null;
   }
