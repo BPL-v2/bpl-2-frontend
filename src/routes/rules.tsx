@@ -189,17 +189,17 @@ export function RulePage() {
         choose to play any ascendancy you like.
       </p> */}
 
-      <div className="divider divider-primary" id="earning-points">
+      {/* <div className="divider divider-primary" id="earning-points">
         Earning Points
       </div>
       <p>
-        In BPL 16, three teams compete to earn as many points as possible in 4
+        In BPL 17, three teams compete to earn as many points as possible in 3
         days. Compared to previous seasons items can be scored from anyones
         stash in the league - not just the team leads. There are some
         intricacies to scoring items that you should be aware of though:
       </p>
-      <div className="flex flex-col gap-2 mt-4">
-        {/* {itemStashCollapse.map((rule, index) => (
+      <div className="flex flex-col gap-2 mt-4"> */}
+      {/* {itemStashCollapse.map((rule, index) => (
           <div
             key={rule.label + index}
             tabIndex={index}
@@ -209,7 +209,7 @@ export function RulePage() {
             <div className="collapse-content text-sm">{rule.children}</div>
           </div>
         ))} */}
-      </div>
+      {/* </div> */}
       <div className="divider divider-primary" id="faq">
         Frequently Asked Questions
       </div>
