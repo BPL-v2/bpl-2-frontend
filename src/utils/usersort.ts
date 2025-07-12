@@ -17,8 +17,9 @@ export function sortUsers(
   console.log("lockedSignups", lockedSignups);
   let suggestion = getSortSuggestion(currentEvent, signups);
   suggestion = improveFairness(suggestion, currentEvent, lockedSignups);
-
-  return ensurePartners(suggestion, lockedSignups);
+  suggestion = ensurePartners(suggestion, lockedSignups);
+  suggestion = improveFairness(suggestion, currentEvent, lockedSignups);
+  return suggestion;
 }
 
 const playtimeBuckets = ["0-3", "4-6", "7-9", "10-12", "13+"];
@@ -107,12 +108,6 @@ function ensurePartners(
       fixedSignups.push({ ...signup, team_id: partnerSignup.team_id });
       matchedPartners.add(signup.user.id);
       matchedPartners.add(signup.partner_id);
-      if (bestFittingUserId !== -1) {
-        fixedSignups.push({
-          ...userToSignup.get(bestFittingUserId),
-          team_id: signup.team_id,
-        });
-      }
     } else {
       fixedSignups.push(signup);
     }
@@ -141,7 +136,7 @@ function improveFairness(
       (key) => counts[parseInt(key)] === maxval
     );
     for (const signup of signups.sort(randSort)) {
-      if (lockedSignups[signup.user.id]) {
+      if (lockedSignups[signup.user.id] || signup.partner_id) {
         continue;
       }
       // switch out a user from the max team to the min team
