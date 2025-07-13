@@ -77,8 +77,6 @@ function RootComponent() {
     return menu.filter((item) => item.visible);
   }, [eventStatus, user]);
 
-  const userIsMissingDiscord = user && !user.discord_id;
-  const userIsMissingPoE = user && !user.account_name;
   return (
     <>
       <div className="max-w-[1440px] text-center mx-auto ">
