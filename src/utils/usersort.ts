@@ -88,7 +88,6 @@ function ensurePartners(
       partnerSignup.team_id &&
       partnerSignup.partner_id === signup.user.id
     ) {
-      let bestFittingUserId = -1;
       let bestFittingPlaytimeDiff = 1000000;
       for (const signup2 of teamToSignups.get(partnerSignup.team_id) || []) {
         if (lockedSignups[signup2.user.id] || signup2.partner_id) {
@@ -101,7 +100,6 @@ function ensurePartners(
           playtimeDiff < bestFittingPlaytimeDiff &&
           !lockedSignups[signup2.user.id]
         ) {
-          bestFittingUserId = signup2.user.id;
           bestFittingPlaytimeDiff = playtimeDiff;
         }
       }
