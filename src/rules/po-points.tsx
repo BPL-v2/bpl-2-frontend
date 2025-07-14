@@ -45,19 +45,40 @@ export function POPointRules() {
       <h3>Personal Objective Points</h3>
       <p>
         Players can earn personal objective points for their team by progressing
-        their character. Each of these milestones will award{" "}
-        <b className="text-info">3</b> points up to a maximum of{" "}
-        <b className="text-info">9</b> points per player and a maximum of{" "}
+        their character. Each player can earn a maximum of{" "}
+        <b className="text-info">9</b> points for a team score maximum of{" "}
         <b className="text-info">
           {totalObjective?.scoring_preset?.point_cap}{" "}
         </b>{" "}
-        points per team:
+        points per team. These are the challenges that can be completed to earn
+        points:
       </p>
       <ul>
-        <li>Reach level 80</li>
-        <li>Reach level 90</li>
-        <li>Complete the Eternal (Uber) Labyrinth</li>
-        <li>Allocate 40 Atlas Nodes</li>
+        <li>
+          Reach level 40 <b className="text-info"> +1</b>
+        </li>
+
+        <li>
+          Reach level 60 <b className="text-info"> +1</b>
+        </li>
+        <li>
+          Reach level 80 <b className="text-info"> +1</b>
+        </li>
+        <li>
+          Complete the Cruel Labyrinth <b className="text-info"> +1</b>
+        </li>
+        <li>
+          Complete the Merc Labyrinth <b className="text-info"> +1</b>
+        </li>
+        <li>
+          Complete the Uber Labyrinth <b className="text-info"> +1</b>
+        </li>
+        <li>
+          Reach level 90 <b className="text-info"> +3</b>
+        </li>
+        <li>
+          Allocate 40 Atlas Nodes <b className="text-info"> +3</b>
+        </li>
       </ul>
       {checkPoints.length > 0 && (
         <>
