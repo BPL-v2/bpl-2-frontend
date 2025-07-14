@@ -1,13 +1,14 @@
 import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { CollectionCardTable } from "./collection-card-table";
-import { Daily } from "@mytypes/scoring-objective";
 import { ObjectiveIcon } from "./objective-icon";
 import { Countdown } from "./countdown";
 import { useQueryClient } from "@tanstack/react-query";
+import { ScoreObjective } from "@mytypes/score";
+import { ScoringMethod } from "@client/api";
 
 export type DailyCardProps = {
-  daily: Daily;
+  daily: ScoreObjective;
 };
 
 function bonusAvailableCounter(
@@ -35,66 +36,56 @@ export function DailyCard({ daily }: DailyCardProps) {
   const { currentEvent } = useContext(GlobalStateContext);
   const qc = useQueryClient();
 
-  if (!currentEvent || !daily.baseObjective) {
+  if (!currentEvent) {
     return <></>;
   }
   // need to deep copy the base objective to avoid modifying the original
-  const objective = JSON.parse(JSON.stringify(daily.baseObjective));
-  if (daily.raceObjective) {
-    Object.entries(daily.raceObjective.team_score).forEach(
-      ([teamId, score]) => {
-        objective.team_score[teamId].points += score.points;
-      }
-    );
-  }
-  if (
-    daily.baseObjective.valid_from &&
-    new Date(daily.baseObjective.valid_from) > new Date()
-  ) {
+
+  if (daily.valid_from && new Date(daily.valid_from) > new Date()) {
     return (
-      <div className="card bg-base-300" key={daily.baseObjective.id}>
+      <div className="card bg-base-300" key={daily.id}>
         <div className="rounded-t-box p-8 bg-base-200 h-25 text-center text-xl font-semibold">
           Daily not yet available
         </div>
         <div className="card-body bg-base-300 p-8 rounded-b-box">
           <p className="text-center text-lg">The daily will be available in:</p>
           <div className="flex justify-center">
-            <Countdown target={new Date(daily.baseObjective.valid_from)} />
+            <Countdown target={new Date(daily.valid_from)} />
           </div>
         </div>
       </div>
     );
   }
-  objective.valid_to = daily.valid_to;
-  const finished = Object.values(daily.baseObjective.team_score).reduce(
+  const finished = Object.values(daily.team_score).reduce(
     (acc, score) => score.finished && acc,
     true
   );
 
   return (
-    <div className="card bg-base-200" key={objective.id}>
+    <div className="card bg-base-200" key={daily.id}>
       <div className="card-title rounded-t-box flex items-center m-0 px-4 bg-base-200 h-25">
         <ObjectiveIcon
-          objective={objective}
+          objective={daily}
           gameVersion={currentEvent.game_version}
         />
         <div
-          className={objective.extra ? "tooltip text-2xl" : undefined}
-          data-tip={objective.extra}
+          className={daily.extra ? "tooltip text-2xl" : undefined}
+          data-tip={daily.extra}
         >
           <h3 className="flex-grow text-center mt-4 text-xl font-medium mx-4">
-            {daily.raceObjective ? (
+            {daily.scoring_preset?.scoring_method ===
+            ScoringMethod.RANKED_TIME ? (
               <b className="font-extrabold">Race: </b>
             ) : (
               ""
             )}
-            {objective.name}
-            {objective.extra ? <i className="text-error">*</i> : null}
+            {daily.name}
+            {daily.extra ? <i className="text-error">*</i> : null}
           </h3>
         </div>
       </div>
 
-      <CollectionCardTable objective={objective} />
+      <CollectionCardTable objective={daily} />
       {!finished && (
         <div className="py-4 mb-0 rounded-b-box">
           {bonusAvailableCounter(daily.valid_to, () => {

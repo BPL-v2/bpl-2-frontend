@@ -314,7 +314,11 @@ function EventPage() {
             />
           </div>
           <div className="flex flex-row justify-end gap-4 mt-4">
-            <button type="button" className="btn btn-error">
+            <button
+              type="button"
+              className="btn btn-error"
+              onClick={() => setIsOpen(false)}
+            >
               Cancel
             </button>
             <button type="submit" className="btn btn-success">
