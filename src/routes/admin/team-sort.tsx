@@ -250,6 +250,7 @@ function UserSortPage() {
       "Needs Help",
       "Wants to Help",
       "Team Lead",
+      "Partner",
     ];
     const teamMap = currentEvent.teams.reduce(
       (acc, team) => {
@@ -268,6 +269,7 @@ function UserSortPage() {
         signup.needs_help ? "X" : "",
         signup.wants_to_help ? "X" : "",
         signup.team_lead ? "X" : "",
+        signup.partner?.account_name || "",
       ]);
 
     const csvContent = [headers, ...rows]
