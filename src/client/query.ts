@@ -378,7 +378,7 @@ export function useChangeUserDisplayName(qc: QueryClient) {
 export function useRemoveOauthProvider(qc: QueryClient) {
   const m = useMutation({
     mutationFn: (provider: string) => userApi.removeAuth(provider),
-    onSuccess: () => qc.setQueryData(["user"], undefined),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["user"] }),
   });
   return {
     removeOauthProvider: m.mutate,
