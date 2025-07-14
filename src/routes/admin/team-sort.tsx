@@ -375,14 +375,14 @@ function UserSortPage() {
         >
           Reset Suggestions
         </button>
-        <button
+        {/* <button
           className="btn btn-outline"
           onClick={() => {
             setSuggestions(signups.map((s) => ({ ...s, team_id: undefined })));
           }}
         >
           Reset Everything
-        </button>
+        </button> */}
         <button
           className="btn btn-warning"
           onClick={() => {
