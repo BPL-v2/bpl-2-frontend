@@ -2,6 +2,7 @@ import { useRouterState } from "@tanstack/react-router";
 import { redirectOauth } from "@utils/oauth";
 import { useRemoveOauthProvider } from "@client/query";
 import { useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
 
 type OauthCardProps = {
   required?: boolean;
@@ -10,6 +11,7 @@ type OauthCardProps = {
   title: string;
   description: string;
   logo: React.ReactNode;
+  allowDisconnect?: boolean;
 };
 
 export function OauthCard({
@@ -19,25 +21,34 @@ export function OauthCard({
   connected,
   title,
   logo,
+  allowDisconnect = true,
 }: OauthCardProps) {
   const state = useRouterState();
   const qc = useQueryClient();
   const { removeOauthProvider } = useRemoveOauthProvider(qc);
-  const connectionButton = connected ? (
-    <button
-      className={`btn btn-error btn-outline`}
-      onClick={() => removeOauthProvider(provider)}
-    >
-      Disconnect
-    </button>
-  ) : (
-    <button
-      className={`btn btn-success btn-outline`}
-      onClick={redirectOauth(provider, state.location.href)}
-    >
-      Connect
-    </button>
-  );
+  const connectionButton = useMemo(() => {
+    if (connected && !allowDisconnect) {
+      return null;
+    }
+    if (!connected) {
+      return (
+        <button
+          className={`btn btn-success btn-outline`}
+          onClick={redirectOauth(provider, state.location.href)}
+        >
+          Connect
+        </button>
+      );
+    }
+    return (
+      <button
+        className={`btn btn-error btn-outline`}
+        onClick={() => removeOauthProvider(provider)}
+      >
+        Disconnect
+      </button>
+    );
+  }, []);
 
   const card = (
     <div
