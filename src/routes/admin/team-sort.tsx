@@ -96,6 +96,11 @@ function UserSortPage() {
         size: 120,
       },
       {
+        header: "ID",
+        accessorKey: "user.id",
+        size: 100,
+      },
+      {
         header: "Name",
         accessorKey: "user.display_name",
         size: 200,
@@ -106,7 +111,7 @@ function UserSortPage() {
         size: 200,
       },
       {
-        header: "Expected Playtime",
+        header: "Playtime",
         accessorKey: "expected_playtime",
         size: 250,
       },
