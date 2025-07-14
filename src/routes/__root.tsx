@@ -109,6 +109,13 @@ function RootComponent() {
           </ul>
         </div>
         <div className="min-h-[79vh] mb-4">
+          {user && !user.account_name && (
+            <div className="bg-error text-error-content p-4 text-lg">
+              Looks like you haven't connected your PoE Account yet, make sure
+              to connect by logging in in the top right corner to connect your
+              account so that we can track your characters progress.
+            </div>
+          )}{" "}
           <Outlet />
         </div>
         <Footer></Footer>
