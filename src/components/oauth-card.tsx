@@ -48,7 +48,7 @@ export function OauthCard({
         Disconnect
       </button>
     );
-  }, []);
+  }, [connected, allowDisconnect, provider]);
 
   const card = (
     <div
