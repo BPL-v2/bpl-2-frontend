@@ -519,13 +519,6 @@ export function getImageLocation(
   return null;
 }
 
-export type Daily = {
-  baseObjective: ScoreObjective;
-  raceObjective?: ScoreObjective;
-  valid_from: string;
-  valid_to?: string;
-};
-
 export function getSubObjective<
   T extends Objective | ScoreObjective | undefined,
 >(objective: T, subObjectiveId: number): T {
