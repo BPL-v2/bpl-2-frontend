@@ -195,6 +195,7 @@ const ApplicationButton = () => {
     );
   }, [eventStatus, user, currentEvent]);
   if (
+    !user ||
     userLoading ||
     eventStatusLoading ||
     userError ||
