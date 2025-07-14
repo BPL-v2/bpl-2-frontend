@@ -88,6 +88,7 @@ export function SettingsPage() {
                   alt="Path of Exile logo"
                 />
               }
+              allowDisconnect={false}
             ></OauthCard>
             <OauthCard
               title="Discord"
