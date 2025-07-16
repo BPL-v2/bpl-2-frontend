@@ -45,7 +45,7 @@ function RouteComponent() {
   useEffect(() => {
     if (!ref.current) return;
     const observer = new ResizeObserver(([entry]) => {
-      setWidth(entry.contentRect.width);
+      setWidth(entry.contentRect.width * 0.8);
     });
     observer.observe(ref.current);
     return () => observer.disconnect();
