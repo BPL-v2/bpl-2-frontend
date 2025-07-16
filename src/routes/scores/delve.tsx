@@ -5,13 +5,13 @@ import { ObjectiveIcon } from "@components/objective-icon";
 import { CollectionCardTable } from "@components/collection-card-table";
 import { Ranking } from "@components/ranking";
 import { ColumnDef, sortingFns } from "@tanstack/react-table";
-import { LadderEntry, Score, Team } from "@client/api";
+import { GameVersion, LadderEntry, Score, Team } from "@client/api";
 import { AscendancyName } from "@components/ascendancy-name";
 import { ExperienceBar } from "@components/experience-bar";
 import { TeamName } from "@components/team-name";
 import { LadderPortrait } from "@components/ladder-portrait";
 import { AscendancyPortrait } from "@components/ascendancy-portrait";
-import { phreciaMapping } from "@mytypes/ascendancy";
+import { ascendancies } from "@mytypes/ascendancy";
 import Table from "@components/table";
 import { createFileRoute } from "@tanstack/react-router";
 import { DelveTabRules } from "@rules/delve";
@@ -130,10 +130,7 @@ export function DelveTab(): JSX.Element {
           meta: {
             filterVariant: "enum",
             filterPlaceholder: "Ascendancy",
-            // options: Object.keys(
-            //   ascendancies[currentEvent.game_version] || {}
-            // ).map((ascendancy) => ascendancy),
-            options: Object.keys(phreciaMapping),
+            options: Object.keys(ascendancies[GameVersion.poe1]),
           },
         },
         {
