@@ -116,7 +116,7 @@ export const StashTabSpecial: React.FC<Props> = ({
   return (
     <div className="relative">
       {sections.length > 0 && (
-        <div className="join mb-4 absolute top-2 left-1/2 -translate-x-1/2 z-10">
+        <div className="join mb-4 absolute top-2 left-2 z-10">
           {sections.map((section) => (
             <button
               key={section}
