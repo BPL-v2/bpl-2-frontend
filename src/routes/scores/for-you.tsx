@@ -1,5 +1,5 @@
 import { useContext, useMemo } from "react";
-import { ScoringMethod } from "@client/api";
+import { Character, ScoringMethod } from "@client/api";
 import { GlobalStateContext } from "@utils/context-provider";
 import { createFileRoute } from "@tanstack/react-router";
 import { ScoreObjective } from "@mytypes/score";
@@ -28,7 +28,12 @@ export function ForYouTab() {
       ?.sort((a, b) => b.level - a.level)
       .find((c) => c.event_id === currentEvent.id);
     if (!char) {
-      return null;
+      char = {
+        level: 1,
+        ascendancy_points: 0,
+        atlas_node_count: 0,
+        event_id: currentEvent.id,
+      } as Character;
     }
     return (
       <div>
@@ -104,6 +109,7 @@ export function ForYouTab() {
       !objective.team_score[eventStatus.team_id!]?.finished &&
       (!objective.valid_from || new Date(objective.valid_from) < new Date())
   );
+  console.log("relevantObjectives", relevantObjectives);
 
   function categoryRender(category: ScoreObjective) {
     const childLeaves = category.children.filter(
@@ -179,6 +185,9 @@ export function ForYouTab() {
             {relevantCategories
               .filter((category) => teamGoals?.includes(category.id))
               .map(categoryRender)}
+            {relevantObjectives
+              .filter((obj) => teamGoals?.includes(obj.id))
+              .map(objRender)}
           </div>
         </div>
       )}
