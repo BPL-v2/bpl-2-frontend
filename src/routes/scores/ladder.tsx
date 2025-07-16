@@ -11,7 +11,7 @@ import { TeamName } from "@components/team-name";
 import { LadderPortrait } from "@components/ladder-portrait";
 import { AscendancyPortrait } from "@components/ascendancy-portrait";
 import Table from "@components/table";
-import { phreciaMapping, poe2Mapping } from "@mytypes/ascendancy";
+import { ascendancies, poe2Mapping } from "@mytypes/ascendancy";
 import { calcPersonalPoints } from "@utils/personal-points";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import POProgressBar from "@components/po-progress";
@@ -179,7 +179,7 @@ export function LadderTab(): JSX.Element {
             filterPlaceholder: "Ascendancy",
             options:
               gameVersion === GameVersion.poe1
-                ? Object.keys(phreciaMapping)
+                ? Object.keys(ascendancies[GameVersion.poe1])
                 : Object.entries(poe2Mapping).map(([key, value]) => ({
                     label: value,
                     value: key,
