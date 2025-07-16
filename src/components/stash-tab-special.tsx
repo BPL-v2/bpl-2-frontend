@@ -162,7 +162,7 @@ export const StashTabSpecial: React.FC<Props> = ({
               onClick={() => onItemClick?.(item)}
             >
               <div
-                className="tooltip tooltip-primary tooltip-bottom relative cursor-pointer"
+                className="tooltip tooltip-white tooltip-bottom relative cursor-pointer"
                 data-tip={`${item.name} ${item.typeLine}`}
               >
                 <img

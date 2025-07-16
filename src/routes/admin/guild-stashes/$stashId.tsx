@@ -7,7 +7,6 @@ import { StashTabUnique } from "@components/stash-tab-unique";
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 import { createFileRoute, useParams, useSearch } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
-import { getColor } from "@utils/item";
 import { findObjective } from "@utils/utils";
 import { useContext, useRef, useState } from "react";
 
@@ -55,7 +54,18 @@ function RouteComponent() {
   } else if (currentTab.type === "UniqueStash") {
     type = "Unique";
   }
-
+  let textColor = "text-white";
+  switch (selectedItem?.rarity) {
+    case "Unique":
+      textColor = "text-unique";
+      break;
+    case "Rare":
+      textColor = "text-rare";
+      break;
+    case "Magic":
+      textColor = "text-magic";
+      break;
+  }
   return (
     <div ref={ref}>
       <Dialog
@@ -75,8 +85,9 @@ function RouteComponent() {
               }}
             ></ClipboardDocumentCheckIcon>
             <div
-              className="flex flex-col items-center mb-[-1rem]"
-              style={{ color: getColor(selectedItem || {}) }}
+              className={
+                "flex flex-col items-center mb-[-1rem]" + ` ${textColor}`
+              }
             >
               {selectedItem?.name ? <p> {selectedItem?.name}</p> : null}
               <p> {selectedItem?.typeLine}</p>
@@ -172,7 +183,7 @@ function RouteComponent() {
       {type == "Unique" && (
         <StashTabUnique
           tab={currentTab}
-          size={width}
+          size={1000}
           onItemClick={(item) => {
             setSelectedItem(item);
             setOpen(true);
