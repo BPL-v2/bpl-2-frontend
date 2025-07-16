@@ -1,7 +1,6 @@
 import {
   useGetGuildStash,
   useSwitchStashFetching,
-  useUpdateGuildStash,
   useUpdateGuildStashTab,
 } from "@client/query";
 import { useQueryClient } from "@tanstack/react-query";
@@ -29,7 +28,6 @@ function RouteComponent() {
   });
   const qc = useQueryClient();
   const { guildStashes } = useGetGuildStash(currentEvent.id);
-  const { updateGuildStash } = useUpdateGuildStash(qc, currentEvent.id);
   const { switchStashFetching } = useSwitchStashFetching(qc, currentEvent.id);
   const { updateGuildStashTab } = useUpdateGuildStashTab(qc, currentEvent.id);
   const [hideDisabled, setHideDisabled] = useState(true);

@@ -4593,17 +4593,17 @@ export const GuildStashApiFetchParamCreator = function (configuration?: Configur
             };
         },
         /**
-         * Updates the guild stash tabs for a user
+         * Parses all user access for guild stash tabs
          * @param {number} eventId Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateGuildStash(eventId: number, options: any = {}): FetchArgs {
+        updateAccess(eventId: number, options: any = {}): FetchArgs {
             // verify required parameter 'eventId' is not null or undefined
             if (eventId === null || eventId === undefined) {
-                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling updateGuildStash.');
+                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling updateAccess.');
             }
-            const localVarPath = `/{eventId}/guild-stash`
+            const localVarPath = `/{eventId}/guild-stash/update-access`
                 .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
@@ -4736,17 +4736,17 @@ export const GuildStashApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         * Updates the guild stash tabs for a user
+         * Parses all user access for guild stash tabs
          * @param {number} eventId Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateGuildStash(eventId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<GuildStashTab>> {
-            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).updateGuildStash(eventId, options);
+        updateAccess(eventId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).updateAccess(eventId, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.json();
+                        return response;
                     } else {
                         throw response;
                     }
@@ -4811,13 +4811,13 @@ export const GuildStashApiFactory = function (configuration?: Configuration, fet
             return GuildStashApiFp(configuration).switchStashFetching(eventId, stash_id, options)(fetch, basePath);
         },
         /**
-         * Updates the guild stash tabs for a user
+         * Parses all user access for guild stash tabs
          * @param {number} eventId Event Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateGuildStash(eventId: number, options?: any) {
-            return GuildStashApiFp(configuration).updateGuildStash(eventId, options)(fetch, basePath);
+        updateAccess(eventId: number, options?: any) {
+            return GuildStashApiFp(configuration).updateAccess(eventId, options)(fetch, basePath);
         },
         /**
          * Fetches current items for specific guild stash tab
@@ -4875,14 +4875,14 @@ export class GuildStashApi extends BaseAPI {
     }
 
     /**
-     * Updates the guild stash tabs for a user
+     * Parses all user access for guild stash tabs
      * @param {number} eventId Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GuildStashApi
      */
-    public updateGuildStash(eventId: number, options?: any) {
-        return GuildStashApiFp(this.configuration).updateGuildStash(eventId, options)(this.fetch, this.basePath);
+    public updateAccess(eventId: number, options?: any) {
+        return GuildStashApiFp(this.configuration).updateAccess(eventId, options)(this.fetch, this.basePath);
     }
 
     /**
