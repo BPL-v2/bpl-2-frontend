@@ -61,17 +61,14 @@ function RouteComponent() {
           value={stashSearch}
           onChange={(e) => setStashSearch(e.target.value)}
         />
-        <button className="btn btn-primary " onClick={() => updateGuildStash()}>
-          Update Guild Stash
-        </button>
         <button
-          className="btn btn-primary "
+          className="btn btn-primary w-43"
           onClick={() => setHideDisabled(!hideDisabled)}
         >
           {hideDisabled ? "Show" : "Hide"} Disabled Tabs
         </button>
         <button
-          className="btn btn-primary "
+          className="btn btn-secondary w-53"
           onClick={() => {
             setHighlightScoring(!highlightScoring);
             router.navigate({
@@ -81,7 +78,7 @@ function RouteComponent() {
             });
           }}
         >
-          {highlightScoring ? "Show" : "Hide"} Non-Objective Tabs
+          {highlightScoring ? "Show" : "Hide"} Non-Objective Items
         </button>
       </div>
       <div className="flex flex-row gap-2 mt-2 justify-center">
