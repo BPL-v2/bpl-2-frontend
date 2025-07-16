@@ -407,7 +407,7 @@ export function useGetGuildStash(event_id: number) {
         .then((data) => data.sort((a, b) => (a.index || 0) - (b.index || 0))),
     enabled: () => isLoggedIn(),
     retry: false,
-    refetchOnMount: false,
+    refetchInterval: 60 * 1000, // Refetch every minute
   });
   return {
     ...query,
@@ -424,6 +424,7 @@ export function useGetGuildStashTab(event_id: number, tabId: string) {
     queryFn: async ({ client }) =>
       guildStashApi.getGuildStashTab(event_id, tabId),
     enabled: () => isLoggedIn(),
+    refetchInterval: 60 * 1000, // Refetch every minute
   });
   return {
     ...query,
