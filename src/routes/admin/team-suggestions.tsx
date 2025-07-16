@@ -241,14 +241,11 @@ export function TeamSuggestionsPage() {
       !category.team_score[eventStatus.team_id]?.finished
   );
 
-  const relevantObjectives = containers.flatMap((category) =>
-    leaves.filter(
-      (objective) =>
-        objective.scoring_preset?.scoring_method ===
-          ScoringMethod.RANKED_TIME &&
-        !objective.team_score[eventStatus.team_id!]?.finished &&
-        (!objective.valid_from || new Date(objective.valid_from) < new Date())
-    )
+  const relevantObjectives = leaves.filter(
+    (objective) =>
+      objective.scoring_preset?.scoring_method === ScoringMethod.RANKED_TIME &&
+      !objective.team_score[eventStatus.team_id!]?.finished &&
+      (!objective.valid_from || new Date(objective.valid_from) < new Date())
   );
 
   return (
