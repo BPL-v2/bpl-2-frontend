@@ -53,6 +53,7 @@ export const StashTabGrid: React.FC<Props> = ({
             const padding = gridNum === 24 ? "px-[2px]" : "px-[4px]";
             return (
               <div
+                key={`${i}-${j}-${item.id}`}
                 className="tooltip tooltip-primary tooltip-bottom relative cursor-pointer"
                 data-tip={`${item.name} ${item.typeLine}`}
                 onClick={() => onItemClick && onItemClick(item)}
