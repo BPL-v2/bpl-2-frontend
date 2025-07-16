@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
 import { DisplayItem, GuildStashTabGGG } from "@client/api";
-import { getColor } from "@utils/item";
 
 type Props = {
   tab: GuildStashTabGGG;
@@ -51,10 +50,29 @@ export const StashTabGrid: React.FC<Props> = ({
             }
             const textSize = gridNum === 24 ? "text-xs" : "";
             const padding = gridNum === 24 ? "px-[2px]" : "px-[4px]";
+            let borderColor = "border-white";
+            let tooltipColor = "tooltip-white";
+            switch (item.rarity) {
+              case "Unique":
+                tooltipColor = "tooltip-unique";
+                borderColor = "border-unique";
+                break;
+              case "Rare":
+                tooltipColor = "tooltip-rare";
+                borderColor = "border-rare";
+                break;
+              case "Magic":
+                tooltipColor = "tooltip-magic";
+                borderColor = "border-magic";
+                break;
+            }
             return (
               <div
                 key={`${i}-${j}-${item.id}`}
-                className="tooltip tooltip-primary tooltip-bottom relative cursor-pointer"
+                className={
+                  "tooltip tooltip-bottom relative cursor-pointer" +
+                  ` ${tooltipColor}`
+                }
                 data-tip={`${item.name} ${item.typeLine}`}
                 onClick={() => onItemClick && onItemClick(item)}
                 style={{
@@ -64,9 +82,8 @@ export const StashTabGrid: React.FC<Props> = ({
               >
                 <img
                   key={`${i}-${j}`}
-                  className="w-full h-full border-1"
+                  className={"w-full h-full border-1" + ` ${borderColor}`}
                   style={{
-                    borderColor: getColor(item),
                     objectFit: "contain",
                   }}
                   src={item.icon}

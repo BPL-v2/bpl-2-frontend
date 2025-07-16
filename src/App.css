@@ -392,3 +392,25 @@ html {
     color: black;
   }
 }
+
+.tooltip-unique {
+  --tt-bg: var(--color-unique);
+  > .tooltip-content,
+  &[data-tip]:before {
+    color: black;
+  }
+}
+.tooltip-magic {
+  --tt-bg: var(--color-magic);
+  > .tooltip-content,
+  &[data-tip]:before {
+    color: black;
+  }
+}
+.tooltip-rare {
+  --tt-bg: var(--color-rare);
+  > .tooltip-content,
+  &[data-tip]:before {
+    color: black;
+  }
+}

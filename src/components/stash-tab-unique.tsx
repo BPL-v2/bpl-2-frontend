@@ -25,7 +25,11 @@ export const StashTabUnique: React.FC<Props> = ({
   highlightScoring = true,
 }) => {
   const [selectedCategory, setSelectedCategory] =
-    React.useState<GuildStashTabGGG>(tab.children?.[0] || tab);
+    React.useState<GuildStashTabGGG>(
+      tab.children?.filter(
+        (child) => !highlightScoring || child.items?.some((i) => i.objectiveId)
+      )?.[0] || tab
+    );
 
   return (
     <div
@@ -76,7 +80,7 @@ export const StashTabUnique: React.FC<Props> = ({
                 onClick={() => onItemClick && onItemClick(item)}
               >
                 <div className="items-center card-body select-none rounded-box">
-                  <span className="text-orange-400 font-bold h-15">
+                  <span className="text-unique font-bold h-15">
                     {item.name}
                   </span>
                   <img
