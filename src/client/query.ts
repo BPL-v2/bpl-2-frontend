@@ -463,22 +463,6 @@ export function useUpdateGuildStashTab(qc: QueryClient, event_id: number) {
   };
 }
 
-export function useUpdateGuildStash(qc: QueryClient, event_id: number) {
-  const m = useMutation({
-    mutationFn: () => guildStashApi.updateGuildStash(event_id),
-    onSuccess: (data) => {
-      qc.setQueryData(
-        ["guildStashes", current !== event_id ? event_id : "current"],
-        data
-      );
-    },
-  });
-  return {
-    updateGuildStash: m.mutate,
-    updateGuildStashPending: m.isPending,
-  };
-}
-
 export function useSwitchStashFetching(qc: QueryClient, event_id: number) {
   const m = useMutation({
     mutationFn: (tabId: string) =>
