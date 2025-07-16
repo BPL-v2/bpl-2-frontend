@@ -1,5 +1,5 @@
-import { Item } from "@client/api";
-import { useGetGuildStashTab } from "@client/query";
+import { DisplayItem } from "@client/api";
+import { useGetGuildStashTab, useGetRules } from "@client/query";
 import { Dialog } from "@components/dialog";
 import { StashTabGrid } from "@components/stash-tab-grid";
 import { StashTabSpecial } from "@components/stash-tab-special";
@@ -8,6 +8,7 @@ import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 import { createFileRoute, useParams, useSearch } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
 import { getColor } from "@utils/item";
+import { findObjective } from "@utils/utils";
 import { useContext, useEffect, useRef, useState } from "react";
 
 type StashType = "Grid" | "Special" | "Unique";
@@ -34,8 +35,10 @@ function RouteComponent() {
     isPending,
     isError,
   } = useGetGuildStashTab(currentEvent.id, stashId);
+  const { rules } = useGetRules(currentEvent.id);
+
   const [open, setOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [selectedItem, setSelectedItem] = useState<DisplayItem | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(1000);
 
@@ -146,6 +149,11 @@ function RouteComponent() {
             </>
           )}
         </div>
+        {selectedItem?.objectiveId &&
+          `Counts for "${
+            findObjective(rules, (obj) => selectedItem.objectiveId === obj.id)
+              ?.name
+          }"`}
       </Dialog>
 
       {type == "Grid" && (
