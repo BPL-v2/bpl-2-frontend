@@ -61,12 +61,7 @@ function RouteComponent() {
           value={stashSearch}
           onChange={(e) => setStashSearch(e.target.value)}
         />
-        <button
-          className="btn btn-primary "
-          onClick={() => {
-            updateGuildStash(); // Example stash ID
-          }}
-        >
+        <button className="btn btn-primary " onClick={() => updateGuildStash()}>
           Update Guild Stash
         </button>
         <button
@@ -79,7 +74,6 @@ function RouteComponent() {
           className="btn btn-primary "
           onClick={() => {
             setHighlightScoring(!highlightScoring);
-
             router.navigate({
               to: "/admin/guild-stashes/$stashId",
               params: { stashId },
@@ -106,43 +100,52 @@ function RouteComponent() {
             })
             .sort((a, b) => a.index || 0 - (b.index || 0))
             .map((stash) => (
-              <div className="flex flex-row items-center gap-2" key={stash.id}>
-                {!hideDisabled ? (
-                  <input
-                    type="checkbox"
-                    checked={stash.fetch_enabled}
-                    onChange={() => switchStashFetching(stash.id)}
-                    className="checkbox checkbox-primary"
-                  />
-                ) : null}
-                <Link
-                  to={`/admin/guild-stashes/$stashId`}
-                  params={{ stashId: stash.id }}
+              <div
+                className="tooltip tooltip-primary tooltip-bottom"
+                data-tip={stash.user_ids.length + " users eligible to fetch"}
+                key={stash.id}
+              >
+                <div
+                  className="flex flex-row items-center gap-2"
                   key={stash.id}
-                  className="p-2 border-2 rounded-xl flex flex-row items-center gap-2 w-full justify-between text-left"
-                  style={{ borderColor: "#" + (stash.color || "000000") }}
-                  activeProps={{
-                    className: "bg-base-300",
-                  }}
-                  inactiveProps={{
-                    className: "bg-base-100 border-dotted",
-                  }}
-                  search={{ highlightScoring }}
                 >
-                  <img
-                    src={`/assets/${gameVersion}/stashtabs/${stash.type.toLowerCase().replace("stash", "")}.png`}
-                  ></img>
-                  <h3 className="text-sm w-full">{stash.name}</h3>
-                  <button
-                    className="btn btn-sm btn-primary whitespace-break-spaces"
-                    onClick={() => {
-                      updateGuildStashTab(stash.id);
+                  {!hideDisabled ? (
+                    <input
+                      type="checkbox"
+                      checked={stash.fetch_enabled}
+                      onChange={() => switchStashFetching(stash.id)}
+                      className="checkbox checkbox-primary"
+                    />
+                  ) : null}
+                  <Link
+                    to={`/admin/guild-stashes/$stashId`}
+                    params={{ stashId: stash.id }}
+                    key={stash.id}
+                    className="p-2 border-2 rounded-xl flex flex-row items-center gap-2 w-full justify-between text-left"
+                    style={{ borderColor: "#" + (stash.color || "000000") }}
+                    activeProps={{
+                      className: "bg-base-300",
                     }}
+                    inactiveProps={{
+                      className: "bg-base-100 border-dotted",
+                    }}
+                    search={{ highlightScoring }}
                   >
-                    {dayjs(stash.last_fetch).fromNow()}
-                    <ArrowPathIcon className="h-4 w-4" />
-                  </button>
-                </Link>
+                    <img
+                      src={`/assets/${gameVersion}/stashtabs/${stash.type.toLowerCase().replace("stash", "")}.png`}
+                    ></img>
+                    <h3 className="text-sm w-full">{stash.name}</h3>
+                    <button
+                      className="btn btn-sm btn-primary whitespace-break-spaces"
+                      onClick={() => {
+                        updateGuildStashTab(stash.id);
+                      }}
+                    >
+                      {dayjs(stash.last_fetch).fromNow()}
+                      <ArrowPathIcon className="h-4 w-4" />
+                    </button>
+                  </Link>
+                </div>
               </div>
             ))}
         </div>

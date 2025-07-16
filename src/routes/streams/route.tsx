@@ -66,7 +66,7 @@ export function TwitchPage() {
                   activeProps={{ className: "border-primary" }}
                   inactiveProps={{ className: "border-transparent" }}
                 >
-                  <TwitchStreamEmbed stream={stream} width={360} height={180} />
+                  <TwitchStreamEmbed stream={stream} width={340} height={170} />
                 </Link>
               ))}
           </div>
