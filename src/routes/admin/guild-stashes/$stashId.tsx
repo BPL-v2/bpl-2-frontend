@@ -9,7 +9,7 @@ import { createFileRoute, useParams, useSearch } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
 import { getColor } from "@utils/item";
 import { findObjective } from "@utils/utils";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 
 type StashType = "Grid" | "Special" | "Unique";
 export type ScoreQueryParams = {
@@ -40,16 +40,7 @@ function RouteComponent() {
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<DisplayItem | null>(null);
   const ref = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(1000);
-
-  useEffect(() => {
-    if (!ref.current) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setWidth(entry.contentRect.width * 0.8);
-    });
-    observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [ref.current]); // eslint-disable-line
+  const width = 700;
   if (isPending || isError || !currentTab) {
     return (
       <div
