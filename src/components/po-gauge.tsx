@@ -13,7 +13,7 @@ export function PoGauge({ descriptions, values, cap }: Props) {
     <div className="flex gap-2 items-center">
       <div className={total > 0 ? "text-success" : ""}>+{total}</div>
       <div
-        className="grid gap-1 w-full"
+        className="grid gap-2 w-full join"
         style={{
           display: "grid",
           gridTemplateColumns: `repeat(${descriptions.length}, minmax(0, 1fr))`,
@@ -22,7 +22,7 @@ export function PoGauge({ descriptions, values, cap }: Props) {
         {descriptions.map((description, index) => (
           <div
             key={index}
-            className={`text-center ${values[index] > 0 ? "text-success-content bg-success" : "bg-base-300"}`}
+            className={`text-center join-item ${values[index] > 0 ? "text-success-content bg-success" : "bg-base-300"}`}
           >
             {description}
           </div>

@@ -27,14 +27,15 @@ import { Route as ScoresDelveRouteImport } from './routes/scores/delve'
 import { Route as ScoresDailiesRouteImport } from './routes/scores/dailies'
 import { Route as ScoresCollectionsRouteImport } from './routes/scores/collections'
 import { Route as ScoresBountiesRouteImport } from './routes/scores/bounties'
-import { Route as ProfileUserIdRouteImport } from './routes/profile.$userId'
 import { Route as AdminUserManagementRouteImport } from './routes/admin/user-management'
 import { Route as AdminTeamSuggestionsRouteImport } from './routes/admin/team-suggestions'
 import { Route as AdminTeamSortRouteImport } from './routes/admin/team-sort'
 import { Route as AdminSubmissionsRouteImport } from './routes/admin/submissions'
 import { Route as AdminRecurringJobsRouteImport } from './routes/admin/recurring-jobs'
 import { Route as AdminGuildStashesRouteRouteImport } from './routes/admin/guild-stashes/route'
+import { Route as ProfileUserIdIndexRouteImport } from './routes/profile/$userId/index'
 import { Route as AdminEventsIndexRouteImport } from './routes/admin/events/index'
+import { Route as ProfileUserIdCharacterIdRouteImport } from './routes/profile/$userId/$characterId'
 import { Route as AuthTwitchCallbackRouteImport } from './routes/auth/twitch.callback'
 import { Route as AuthPoeCallbackRouteImport } from './routes/auth/poe.callback'
 import { Route as AuthDiscordCallbackRouteImport } from './routes/auth/discord.callback'
@@ -133,11 +134,6 @@ const ScoresBountiesRoute = ScoresBountiesRouteImport.update({
   path: '/bounties',
   getParentRoute: () => ScoresRouteRoute,
 } as any)
-const ProfileUserIdRoute = ProfileUserIdRouteImport.update({
-  id: '/profile/$userId',
-  path: '/profile/$userId',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminUserManagementRoute = AdminUserManagementRouteImport.update({
   id: '/admin/user-management',
   path: '/admin/user-management',
@@ -168,11 +164,22 @@ const AdminGuildStashesRouteRoute = AdminGuildStashesRouteRouteImport.update({
   path: '/admin/guild-stashes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileUserIdIndexRoute = ProfileUserIdIndexRouteImport.update({
+  id: '/profile/$userId/',
+  path: '/profile/$userId/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminEventsIndexRoute = AdminEventsIndexRouteImport.update({
   id: '/admin/events/',
   path: '/admin/events/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileUserIdCharacterIdRoute =
+  ProfileUserIdCharacterIdRouteImport.update({
+    id: '/profile/$userId/$characterId',
+    path: '/profile/$userId/$characterId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthTwitchCallbackRoute = AuthTwitchCallbackRouteImport.update({
   id: '/auth/twitch/callback',
   path: '/auth/twitch/callback',
@@ -225,7 +232,6 @@ export interface FileRoutesByFullPath {
   '/admin/team-sort': typeof AdminTeamSortRoute
   '/admin/team-suggestions': typeof AdminTeamSuggestionsRoute
   '/admin/user-management': typeof AdminUserManagementRoute
-  '/profile/$userId': typeof ProfileUserIdRoute
   '/scores/bounties': typeof ScoresBountiesRoute
   '/scores/collections': typeof ScoresCollectionsRoute
   '/scores/dailies': typeof ScoresDailiesRoute
@@ -242,7 +248,9 @@ export interface FileRoutesByFullPath {
   '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/auth/poe/callback': typeof AuthPoeCallbackRoute
   '/auth/twitch/callback': typeof AuthTwitchCallbackRoute
+  '/profile/$userId/$characterId': typeof ProfileUserIdCharacterIdRoute
   '/admin/events': typeof AdminEventsIndexRoute
+  '/profile/$userId': typeof ProfileUserIdIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
   '/admin/events/$eventId/categories/$categoryId': typeof AdminEventsEventIdCategoriesCategoryIdRoute
@@ -260,7 +268,6 @@ export interface FileRoutesByTo {
   '/admin/team-sort': typeof AdminTeamSortRoute
   '/admin/team-suggestions': typeof AdminTeamSuggestionsRoute
   '/admin/user-management': typeof AdminUserManagementRoute
-  '/profile/$userId': typeof ProfileUserIdRoute
   '/scores/bounties': typeof ScoresBountiesRoute
   '/scores/collections': typeof ScoresCollectionsRoute
   '/scores/dailies': typeof ScoresDailiesRoute
@@ -277,7 +284,9 @@ export interface FileRoutesByTo {
   '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/auth/poe/callback': typeof AuthPoeCallbackRoute
   '/auth/twitch/callback': typeof AuthTwitchCallbackRoute
+  '/profile/$userId/$characterId': typeof ProfileUserIdCharacterIdRoute
   '/admin/events': typeof AdminEventsIndexRoute
+  '/profile/$userId': typeof ProfileUserIdIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
   '/admin/events/$eventId/categories/$categoryId': typeof AdminEventsEventIdCategoriesCategoryIdRoute
@@ -296,7 +305,6 @@ export interface FileRoutesById {
   '/admin/team-sort': typeof AdminTeamSortRoute
   '/admin/team-suggestions': typeof AdminTeamSuggestionsRoute
   '/admin/user-management': typeof AdminUserManagementRoute
-  '/profile/$userId': typeof ProfileUserIdRoute
   '/scores/bounties': typeof ScoresBountiesRoute
   '/scores/collections': typeof ScoresCollectionsRoute
   '/scores/dailies': typeof ScoresDailiesRoute
@@ -313,7 +321,9 @@ export interface FileRoutesById {
   '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/auth/poe/callback': typeof AuthPoeCallbackRoute
   '/auth/twitch/callback': typeof AuthTwitchCallbackRoute
+  '/profile/$userId/$characterId': typeof ProfileUserIdCharacterIdRoute
   '/admin/events/': typeof AdminEventsIndexRoute
+  '/profile/$userId/': typeof ProfileUserIdIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
   '/admin/events/$eventId/categories/$categoryId': typeof AdminEventsEventIdCategoriesCategoryIdRoute
@@ -333,7 +343,6 @@ export interface FileRouteTypes {
     | '/admin/team-sort'
     | '/admin/team-suggestions'
     | '/admin/user-management'
-    | '/profile/$userId'
     | '/scores/bounties'
     | '/scores/collections'
     | '/scores/dailies'
@@ -350,7 +359,9 @@ export interface FileRouteTypes {
     | '/auth/discord/callback'
     | '/auth/poe/callback'
     | '/auth/twitch/callback'
+    | '/profile/$userId/$characterId'
     | '/admin/events'
+    | '/profile/$userId'
     | '/admin/events/$eventId/scoring-presets'
     | '/admin/events/$eventId/teams'
     | '/admin/events/$eventId/categories/$categoryId'
@@ -368,7 +379,6 @@ export interface FileRouteTypes {
     | '/admin/team-sort'
     | '/admin/team-suggestions'
     | '/admin/user-management'
-    | '/profile/$userId'
     | '/scores/bounties'
     | '/scores/collections'
     | '/scores/dailies'
@@ -385,7 +395,9 @@ export interface FileRouteTypes {
     | '/auth/discord/callback'
     | '/auth/poe/callback'
     | '/auth/twitch/callback'
+    | '/profile/$userId/$characterId'
     | '/admin/events'
+    | '/profile/$userId'
     | '/admin/events/$eventId/scoring-presets'
     | '/admin/events/$eventId/teams'
     | '/admin/events/$eventId/categories/$categoryId'
@@ -403,7 +415,6 @@ export interface FileRouteTypes {
     | '/admin/team-sort'
     | '/admin/team-suggestions'
     | '/admin/user-management'
-    | '/profile/$userId'
     | '/scores/bounties'
     | '/scores/collections'
     | '/scores/dailies'
@@ -420,7 +431,9 @@ export interface FileRouteTypes {
     | '/auth/discord/callback'
     | '/auth/poe/callback'
     | '/auth/twitch/callback'
+    | '/profile/$userId/$characterId'
     | '/admin/events/'
+    | '/profile/$userId/'
     | '/admin/events/$eventId/scoring-presets'
     | '/admin/events/$eventId/teams'
     | '/admin/events/$eventId/categories/$categoryId'
@@ -439,12 +452,13 @@ export interface RootRouteChildren {
   AdminTeamSortRoute: typeof AdminTeamSortRoute
   AdminTeamSuggestionsRoute: typeof AdminTeamSuggestionsRoute
   AdminUserManagementRoute: typeof AdminUserManagementRoute
-  ProfileUserIdRoute: typeof ProfileUserIdRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AuthDiscordCallbackRoute: typeof AuthDiscordCallbackRoute
   AuthPoeCallbackRoute: typeof AuthPoeCallbackRoute
   AuthTwitchCallbackRoute: typeof AuthTwitchCallbackRoute
+  ProfileUserIdCharacterIdRoute: typeof ProfileUserIdCharacterIdRoute
   AdminEventsIndexRoute: typeof AdminEventsIndexRoute
+  ProfileUserIdIndexRoute: typeof ProfileUserIdIndexRoute
   AdminEventsEventIdScoringPresetsRoute: typeof AdminEventsEventIdScoringPresetsRoute
   AdminEventsEventIdTeamsRoute: typeof AdminEventsEventIdTeamsRoute
   AdminEventsEventIdCategoriesCategoryIdRoute: typeof AdminEventsEventIdCategoriesCategoryIdRoute
@@ -578,13 +592,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScoresBountiesRouteImport
       parentRoute: typeof ScoresRouteRoute
     }
-    '/profile/$userId': {
-      id: '/profile/$userId'
-      path: '/profile/$userId'
-      fullPath: '/profile/$userId'
-      preLoaderRoute: typeof ProfileUserIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/user-management': {
       id: '/admin/user-management'
       path: '/admin/user-management'
@@ -627,11 +634,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminGuildStashesRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile/$userId/': {
+      id: '/profile/$userId/'
+      path: '/profile/$userId'
+      fullPath: '/profile/$userId'
+      preLoaderRoute: typeof ProfileUserIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/events/': {
       id: '/admin/events/'
       path: '/admin/events'
       fullPath: '/admin/events'
       preLoaderRoute: typeof AdminEventsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/$userId/$characterId': {
+      id: '/profile/$userId/$characterId'
+      path: '/profile/$userId/$characterId'
+      fullPath: '/profile/$userId/$characterId'
+      preLoaderRoute: typeof ProfileUserIdCharacterIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/twitch/callback': {
@@ -755,12 +776,13 @@ const rootRouteChildren: RootRouteChildren = {
   AdminTeamSortRoute: AdminTeamSortRoute,
   AdminTeamSuggestionsRoute: AdminTeamSuggestionsRoute,
   AdminUserManagementRoute: AdminUserManagementRoute,
-  ProfileUserIdRoute: ProfileUserIdRoute,
   AdminIndexRoute: AdminIndexRoute,
   AuthDiscordCallbackRoute: AuthDiscordCallbackRoute,
   AuthPoeCallbackRoute: AuthPoeCallbackRoute,
   AuthTwitchCallbackRoute: AuthTwitchCallbackRoute,
+  ProfileUserIdCharacterIdRoute: ProfileUserIdCharacterIdRoute,
   AdminEventsIndexRoute: AdminEventsIndexRoute,
+  ProfileUserIdIndexRoute: ProfileUserIdIndexRoute,
   AdminEventsEventIdScoringPresetsRoute: AdminEventsEventIdScoringPresetsRoute,
   AdminEventsEventIdTeamsRoute: AdminEventsEventIdTeamsRoute,
   AdminEventsEventIdCategoriesCategoryIdRoute:
