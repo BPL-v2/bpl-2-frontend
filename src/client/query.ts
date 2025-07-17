@@ -829,30 +829,14 @@ export function useDeleteTeam(qc: QueryClient, eventId: number) {
   };
 }
 
-// export function useGetCharacterStats(userId: number, eventId: number) {
-//   const query = useQuery({
-//     queryKey: ["characterStats", userId, eventId],
-//     queryFn: ({
-//       eventId,
-//       characterName,
-//       start,
-//       end,
-//     }: {
-//       eventId: number;
-//       characterName: string;
-//       start: string;
-//       end: string;
-//     }) =>
-//       characterApi.getCharacterTimeSeries(
-//         userId,
-//         eventId,
-//         characterName,
-//         start,
-//         end
-//       ),
-//   });
-//   return {
-//     ...query,
-//     characterStats: query.data,
-//   };
-// }
+export function useGetPoBExport(userId: number, characterId: string) {
+  const query = useQuery({
+    queryKey: ["pobExport", userId, characterId],
+    queryFn: () => characterApi.getPoBExport(userId, characterId),
+    enabled: !!userId && !!characterId,
+  });
+  return {
+    ...query,
+    pobExport: query.data?.export_string ?? "",
+  };
+}
