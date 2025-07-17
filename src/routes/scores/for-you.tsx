@@ -42,7 +42,7 @@ export function ForYouTab() {
           Help your team out by improving your character and earn up to 9 points
           for your team.
         </p>
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-2">
           <PoGauge
             descriptions={["Lvl 40", "Lvl 60", "Lvl 80"]}
             values={[

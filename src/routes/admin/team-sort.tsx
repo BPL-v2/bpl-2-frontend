@@ -54,11 +54,14 @@ function UserSortPage() {
   const [nameFilter, setNameFilter] = useState<string>("");
   const [nameListFilter, setNameListFilter] = useState<string[]>([]);
   const qc = useQueryClient();
-  const {
-    signups = [],
-    isLoading,
-    isError,
-  } = useGetSignups(currentEvent.id || 0);
+  const { signups = [], isLoading, isError } = useGetSignups(currentEvent.id);
+  const userIdToSignupMap = signups.reduce(
+    (acc, signup) => {
+      acc[signup.user.id] = signup;
+      return acc;
+    },
+    {} as Record<number, Signup>
+  );
   const { addUsersToTeams } = useAddUsersToTeams(qc);
   const [suggestions, setSuggestions] = useState<Signup[]>([]);
   useEffect(() => {
@@ -274,7 +277,7 @@ function UserSortPage() {
         signup.needs_help ? "X" : "",
         signup.wants_to_help ? "X" : "",
         signup.team_lead ? "X" : "",
-        signup.partner?.account_name || "",
+        userIdToSignupMap[signup.partner_id || 0]?.user.account_name || "",
       ]);
 
     const csvContent = [headers, ...rows]

@@ -18,7 +18,7 @@ import { getLevelFromExperience } from "@mytypes/level-info";
 import { PoB } from "@components/pob";
 import { characterApi } from "@client/client";
 
-export const Route = createFileRoute("/profile/$userId")({
+export const Route = createFileRoute("/profile/$userId/")({
   component: ProfilePage,
   params: {
     parse: (params) => ({
