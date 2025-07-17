@@ -177,8 +177,20 @@ export function PoB({ pobString }: Probs) {
   ];
   const flaskSlots = ["Flask 1", "Flask 2", "Flask 3", "Flask 4", "Flask 5"];
   let jewels: Item[] = [];
-  const equipment: Record<string, Item | undefined> = {};
-  const flasks: Record<string, Item | undefined> = {};
+  const equipment: Record<string, Item | undefined> = equipmentSlots.reduce(
+    (acc, slot) => {
+      acc[slot] = undefined;
+      return acc;
+    },
+    {} as Record<string, Item | undefined>
+  );
+  const flasks: Record<string, Item | undefined> = flaskSlots.reduce(
+    (acc, slot) => {
+      acc[slot] = undefined;
+      return acc;
+    },
+    {} as Record<string, Item | undefined>
+  );
   for (const item of pob.items) {
     if (!item.slot) continue;
     if (item.slot.includes("Abyssal") || item.slot.includes("Socket")) {
@@ -187,6 +199,7 @@ export function PoB({ pobString }: Probs) {
       equipment[item.slot] = item;
     } else if (flaskSlots.includes(item.slot)) {
       flasks[item.slot] = item;
+      console.log("flask", item.slot, item);
     }
   }
 
@@ -242,7 +255,7 @@ export function PoB({ pobString }: Probs) {
                   {
                     pob.skills.skillSets[0].skills[
                       pob.build.mainSocketGroup - 1
-                    ].gems.find((gem) => !gem.variantId.includes("Support"))
+                    ]?.gems.find((gem) => !gem.variantId.includes("Support"))
                       ?.nameSpec
                   }{" "}
                   {pob.build.ascendClassName || pob.build.className}
@@ -416,7 +429,7 @@ export function PoB({ pobString }: Probs) {
               <div>
                 Speed:{" "}
                 <span className="dark:text-white">
-                  {pob.build.playerStats.speed.toFixed(2)}
+                  {pob.build.playerStats.speed?.toFixed(2)}
                 </span>
               </div>
               {pob.build.playerStats.critMultiplier > 1.6 && (
@@ -425,7 +438,7 @@ export function PoB({ pobString }: Probs) {
                     Crit Chance:{" "}
                     <span className="dark:text-white">
                       {pob.build.playerStats.critChance
-                        .toFixed(2)
+                        ?.toFixed(2)
                         .toLocaleString()}
                       %
                     </span>
@@ -433,7 +446,7 @@ export function PoB({ pobString }: Probs) {
                   <div>
                     Crit Multi:{" "}
                     <span className="dark:text-white">
-                      {pob.build.playerStats.critMultiplier.toFixed(2)}
+                      {pob.build.playerStats.critMultiplier?.toFixed(2)}
                     </span>
                   </div>
                 </>

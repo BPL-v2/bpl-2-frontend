@@ -104,17 +104,15 @@ export function LadderTab(): JSX.Element {
             filterPlaceholder: "Character",
           },
           cell: (info) => (
-            <a
-              className="cursor-pointer"
-              target="_blank"
-              rel="noreferrer"
-              href={`https://www.pathofexile.com/account/view-profile/${info.row.original.account_name.replace(
-                "#",
-                "-"
-              )}/characters?characterName=${info.row.original.character_name}`}
+            <Link
+              to={`/profile/$userId/$characterId`}
+              params={{
+                userId: info.row.original.character?.user_id || 0,
+                characterId: info.row.original.character?.id || "",
+              }}
             >
               {info.row.original.character_name}
-            </a>
+            </Link>
           ),
         },
         {

@@ -529,7 +529,6 @@ function pobstringToXml(pob: string): Document {
   }
   const inflated = inflateZlib(bytes);
   const xmlString = new TextDecoder().decode(inflated);
-  console.log(xmlString);
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(xmlString, "text/xml");
   if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
@@ -770,7 +769,7 @@ function fixupItemName(name: string): string {
   if (idx !== -1) name = name.slice(idx + 2);
   const bracket = name.indexOf("[");
   if (bracket !== -1) name = name.slice(0, bracket);
-  return name.trim();
+  return name.replace("Superior", "").trim();
 }
 
 function parseAltQuality(
