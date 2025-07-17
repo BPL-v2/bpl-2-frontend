@@ -1341,6 +1341,12 @@ export interface Item {
     id?: string;
     /**
      * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    identified?: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof Item
      */
@@ -1624,6 +1630,7 @@ export enum ItemField {
     IS_CORRUPTED = 'IS_CORRUPTED',
     IS_VAAL = 'IS_VAAL',
     IS_SPLIT = 'IS_SPLIT',
+    IS_IDENTIFIED = 'IS_IDENTIFIED',
     SANCTUM_AFFLICTIONS = 'SANCTUM_AFFLICTIONS',
     TEMPLE_ROOMS = 'TEMPLE_ROOMS',
     RITUAL_VESSEL_BOSSES = 'RITUAL_VESSEL_BOSSES',
