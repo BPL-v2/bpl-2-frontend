@@ -432,9 +432,9 @@ export function LadderTab(): JSX.Element {
       sorter: (a: any, b: any) => a[categoryName] - b[categoryName],
     }));
   }
-  const objs = scores?.children.find(
-    (category) => category.name === "Personal Objectives"
-  )?.children;
+  // const objs = scores?.children.find(
+  //   (category) => category.name === "Personal Objectives"
+  // )?.children;
   // const totalObjective = objs?.find(
   //   (obj) => obj.scoring_preset?.point_cap || 0 > 0
   // );
