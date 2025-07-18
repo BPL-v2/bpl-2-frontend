@@ -14,7 +14,7 @@ import Table from "@components/table";
 import { ascendancies, poe2Mapping } from "@mytypes/ascendancy";
 import { calcPersonalPoints } from "@utils/personal-points";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import POProgressBar from "@components/po-progress";
+// import POProgressBar from "@components/po-progress";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
 import { useGetLadder, useGetUsers } from "@client/query";
 import { POPointRules } from "@rules/po-points";
@@ -435,10 +435,10 @@ export function LadderTab(): JSX.Element {
   const objs = scores?.children.find(
     (category) => category.name === "Personal Objectives"
   )?.children;
-  const totalObjective = objs?.find(
-    (obj) => obj.scoring_preset?.point_cap || 0 > 0
-  );
-  const checkPoints = objs?.filter((obj) => !obj.scoring_preset?.point_cap);
+  // const totalObjective = objs?.find(
+  //   (obj) => obj.scoring_preset?.point_cap || 0 > 0
+  // );
+  // const checkPoints = objs?.filter((obj) => !obj.scoring_preset?.point_cap);
   return (
     <>
       {rules ? (
@@ -474,7 +474,7 @@ export function LadderTab(): JSX.Element {
             ))}
         </tbody>
       </table>
-      <div className="divider divider-primary">Personal Objective Points</div>
+      {/* <div className="divider divider-primary">Personal Objective Points</div>
       {totalObjective && checkPoints && (
         <div className="card bg-base-300">
           <div className="card-body">
@@ -523,7 +523,7 @@ export function LadderTab(): JSX.Element {
             </div>
           </div>
         </div>
-      )}
+      )} */}
       <div className="divider divider-primary">Ladder</div>
       <Table
         data={ladder.sort((a, b) => a.rank - b.rank)}
