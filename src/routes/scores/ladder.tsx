@@ -18,6 +18,7 @@ import POProgressBar from "@components/po-progress";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
 import { useGetLadder, useGetUsers } from "@client/query";
 import { POPointRules } from "@rules/po-points";
+import { getSkillColor } from "@utils/gems";
 type RowDef = {
   default: number;
   team: Team;
@@ -115,31 +116,31 @@ export function LadderTab(): JSX.Element {
             </Link>
           ),
         },
-        {
-          accessorKey: "account_name",
-          header: "",
-          enableSorting: false,
-          size: 250,
-          filterFn: "includesString",
-          meta: {
-            filterVariant: "string",
-            filterPlaceholder: "Account",
-          },
-          cell: (info) => {
-            const accountName = info.getValue<string>();
-            return info.row.original.user_id ? (
-              <Link
-                to={`/profile/$userId`}
-                params={{ userId: info.row.original.user_id }}
-                rel="noopener noreferrer"
-              >
-                {accountName}
-              </Link>
-            ) : (
-              accountName
-            );
-          },
-        },
+        // {
+        //   accessorKey: "account_name",
+        //   header: "",
+        //   enableSorting: false,
+        //   size: 250,
+        //   filterFn: "includesString",
+        //   meta: {
+        //     filterVariant: "string",
+        //     filterPlaceholder: "Account",
+        //   },
+        //   cell: (info) => {
+        //     const accountName = info.getValue<string>();
+        //     return info.row.original.user_id ? (
+        //       <Link
+        //         to={`/profile/$userId`}
+        //         params={{ userId: info.row.original.user_id }}
+        //         rel="noopener noreferrer"
+        //       >
+        //         {accountName}
+        //       </Link>
+        //     ) : (
+        //       accountName
+        //     );
+        //   },
+        // },
         {
           accessorFn: (row) => getTeam(row.user_id)?.name,
           header: " ",
@@ -158,18 +159,30 @@ export function LadderTab(): JSX.Element {
         {
           accessorKey: "character_class",
           header: "",
-          cell: (info) => (
-            <div className="flex items-center gap-2">
-              <AscendancyPortrait
-                character_class={info.row.original.character_class}
-                className="w-8 h-8 rounded-full"
-              />
-              <AscendancyName
-                character_class={info.row.original.character_class}
-              />
-            </div>
-          ),
-          size: 250,
+          cell: (info) => {
+            return (
+              <div className="flex items-center gap-2">
+                <AscendancyPortrait
+                  character_class={info.row.original.character_class}
+                  className="w-8 h-8 rounded-full"
+                />
+                <div className="flex flex-col">
+                  <span
+                    className={getSkillColor(
+                      info.row.original.character?.main_skill
+                    )}
+                  >
+                    {" "}
+                    {info.row.original.character?.main_skill}
+                  </span>
+                  <AscendancyName
+                    character_class={info.row.original.character_class}
+                  />
+                </div>
+              </div>
+            );
+          },
+          size: 300,
           filterFn: "includesString",
           enableSorting: false,
           meta: {
@@ -184,6 +197,23 @@ export function LadderTab(): JSX.Element {
                   })),
           },
         },
+        {
+          accessorFn: (row) => row.stats?.dps || 0,
+          header: "DPS",
+          cell: (info) => info.getValue<number>().toLocaleString(),
+        },
+
+        {
+          accessorFn: (row) => row.stats?.ehp || 0,
+          header: "EHP",
+
+          cell: (info) => {
+            const ehp = info.getValue<number>();
+            if (ehp == 2147483647) return "inf";
+            return ehp.toLocaleString();
+          },
+        },
+
         {
           accessorKey: "experience",
           header: "Level",

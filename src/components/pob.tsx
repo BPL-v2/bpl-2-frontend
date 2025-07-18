@@ -94,21 +94,23 @@ function ItemWindow({ item }: { item?: Item }) {
           ))}
         </div>
       )}
-      <div className={`flex flex-col gap-1 border p-2 w-full ${borderColor}`}>
-        {item.explicits.map((explicit) => (
-          <span
-            className={
-              explicit.crafted
-                ? "text-crafted"
-                : explicit.fractured
-                  ? "text-fractured"
-                  : "text-magic"
-            }
-          >
-            {explicit.line}
-          </span>
-        ))}
-      </div>
+      {item.explicits.length > 0 && (
+        <div className={`flex flex-col gap-1 border p-2 w-full ${borderColor}`}>
+          {item.explicits.map((explicit) => (
+            <span
+              className={
+                explicit.crafted
+                  ? "text-crafted"
+                  : explicit.fractured
+                    ? "text-fractured"
+                    : "text-magic"
+              }
+            >
+              {explicit.line}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -206,18 +208,9 @@ export function PoB({ pobString }: Probs) {
   return (
     <>
       <div className="m-4 flex flex-col xl:flex-row gap-4 text-left">
-        <div className="inventory select-none p-8 bg-base-300 rounded-box self-center">
-          {Object.entries(equipment).map(([slot, item]) => (
-            <ItemDisplay
-              key={slot}
-              item={item}
-              slot={slot}
-              selection={selectedItem}
-              selectionSetter={setSelectedItem}
-            />
-          ))}
-          <div className="flasks">
-            {Object.entries(flasks).map(([slot, item]) => (
+        <div className="select-none p-8 bg-base-300 rounded-box">
+          <div className="inventory  self-center">
+            {Object.entries(equipment).map(([slot, item]) => (
               <ItemDisplay
                 key={slot}
                 item={item}
@@ -226,19 +219,30 @@ export function PoB({ pobString }: Probs) {
                 selectionSetter={setSelectedItem}
               />
             ))}
+            <div className="flasks">
+              {Object.entries(flasks).map(([slot, item]) => (
+                <ItemDisplay
+                  key={slot}
+                  item={item}
+                  slot={slot}
+                  selection={selectedItem}
+                  selectionSetter={setSelectedItem}
+                />
+              ))}
+            </div>
+            <div className="col-span-full"></div>
+            {jewels.map((item) => {
+              return (
+                <ItemDisplay
+                  key={item.id}
+                  item={item}
+                  slot={item?.slot}
+                  selection={selectedItem}
+                  selectionSetter={setSelectedItem}
+                />
+              );
+            })}
           </div>
-          <div className="col-span-full"></div>
-          {jewels.map((item) => {
-            return (
-              <ItemDisplay
-                key={item.id}
-                item={item}
-                slot={item?.slot}
-                selection={selectedItem}
-                selectionSetter={setSelectedItem}
-              />
-            );
-          })}
         </div>
         <div className="flex flex-col gap-4 flex-1">
           <div className="flex-auto flex flex-col gap-2 bg-base-300 p-8 rounded-box">
