@@ -103,7 +103,7 @@ function RouteComponent() {
                 Influences:{" "}
                 {Object.keys(selectedItem?.influences || {}).map(
                   (influence) => (
-                    <span key={influence}>{influence?.toUpperCase()}</span>
+                    <span key={influence}>{influence}</span>
                   )
                 )}
               </div>
