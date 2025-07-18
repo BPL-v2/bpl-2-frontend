@@ -126,7 +126,7 @@ export const StashTabSpecial: React.FC<Props> = ({
               onClick={() => setSelectedSection(section)}
               type="button"
             >
-              {section.toUpperCase()}
+              {section}
             </button>
           ))}
         </div>
