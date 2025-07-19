@@ -68,7 +68,7 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
             submitBounty(submissionCreate);
             setShowModal(false);
           }}
-          className="form"
+          className="form w-full"
         >
           <fieldset className="fieldset bg-base-300 p-6 rounded-box">
             <DateTimePicker
@@ -106,7 +106,7 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
             <input type="text" className="input w-full" name="comment" />
           </fieldset>
         </form>
-        <div className="modal-action">
+        <div className="modal-action w-full">
           <button
             className="btn btn-soft"
             onClick={() => {
