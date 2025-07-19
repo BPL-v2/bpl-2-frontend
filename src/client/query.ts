@@ -306,7 +306,10 @@ export function useGetUserCharacters(userId: number) {
 export function useGetCharacterTimeseries(characterId: string, userId: number) {
   const query = useQuery({
     queryKey: ["characterTimeseries", characterId, userId],
-    queryFn: () => characterApi.getCharacterHistory(userId, characterId),
+    queryFn: () =>
+      characterApi
+        .getCharacterHistory(userId, characterId)
+        .then((data) => data.sort((a, b) => a.timestamp - b.timestamp)),
     enabled: !!userId && !!characterId,
   });
   return {
