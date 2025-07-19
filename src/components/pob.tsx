@@ -201,7 +201,6 @@ export function PoB({ pobString }: Probs) {
       equipment[item.slot] = item;
     } else if (flaskSlots.includes(item.slot)) {
       flasks[item.slot] = item;
-      console.log("flask", item.slot, item);
     }
   }
   const characterClass =

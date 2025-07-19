@@ -38,38 +38,58 @@ function RouteComponent() {
     new Float64Array(
       characterTimeseries.map((c) => getLevelFromExperience(c.xp))
     ),
-    new Float64Array(characterTimeseries.map((c) => c.xp)),
+    // new Float64Array(characterTimeseries.map((c) => c.xp)),
+    new Float64Array(characterTimeseries.map((c) => c.dps)),
   ];
+  const maxDps = Math.max(...characterTimeseries.map((c) => c.dps), 1);
+
   const options: uPlot.Options = {
-    title: "Level Progression",
+    title: "Progression",
     width: 800,
     height: 400,
-    legend: {
-      show: true,
-    },
+    legend: { show: true },
     axes: [
       {
         side: 2,
         stroke: fontColor,
+        scale: "x",
         ticks: { size: 0 },
       },
       {
         label: "Level",
         side: 3,
         stroke: fontColor,
+        scale: "lvl",
+      },
+      {
+        label: "DPS",
+        side: 1,
+        stroke: fontColor,
+        scale: "dps",
       },
     ],
     series: [
       {
         label: "",
         points: { show: false },
+        scale: "x",
       },
       {
         label: "LVL",
         stroke: "green",
+        scale: "lvl",
+      },
+      {
+        label: "DPS",
+        stroke: "red",
+        scale: "dps",
       },
     ],
-    scales: { x: { time: true } },
+    scales: {
+      x: { time: true },
+      lvl: { range: [1, 100] },
+      dps: { range: [0, maxDps] },
+    },
   };
   const state = {
     options: options,
