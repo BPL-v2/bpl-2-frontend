@@ -427,7 +427,9 @@ export function PoB({ pobString }: Probs) {
               <div>
                 DPS:{" "}
                 <span className="dark:text-white">
-                  {Math.round(pob.build.playerStats.fullDPS).toLocaleString()}
+                  {Math.round(
+                    pob.build.playerStats.combinedDPS
+                  ).toLocaleString()}
                 </span>
               </div>
               <div>
