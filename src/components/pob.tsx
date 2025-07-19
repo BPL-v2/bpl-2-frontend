@@ -207,6 +207,7 @@ export function PoB({ pobString }: Probs) {
     pob.build.ascendClassName != "None"
       ? pob.build.ascendClassName
       : pob.build.className;
+  console.log(pob.build.playerStats);
   return (
     <>
       <div className="m-4 flex flex-col xl:flex-row gap-4 text-left">
