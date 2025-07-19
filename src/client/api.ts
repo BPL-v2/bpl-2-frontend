@@ -2357,7 +2357,8 @@ export enum Operator {
     CONTAINS_MATCH = 'CONTAINS_MATCH',
     LENGTH_EQ = 'LENGTH_EQ',
     LENGTH_GT = 'LENGTH_GT',
-    LENGTH_LT = 'LENGTH_LT'
+    LENGTH_LT = 'LENGTH_LT',
+    DOES_NOT_MATCH = 'DOES_NOT_MATCH'
 }
 
 /**
