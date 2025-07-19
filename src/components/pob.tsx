@@ -204,7 +204,10 @@ export function PoB({ pobString }: Probs) {
       console.log("flask", item.slot, item);
     }
   }
-
+  const characterClass =
+    pob.build.ascendClassName != "None"
+      ? pob.build.ascendClassName
+      : pob.build.className;
   return (
     <>
       <div className="m-4 flex flex-col xl:flex-row gap-4 text-left">
@@ -249,9 +252,7 @@ export function PoB({ pobString }: Probs) {
             <div className="flex justify-between items-center">
               <h1 className="flex items-center text-xl mb-1 gap-4">
                 <AscendancyPortrait
-                  character_class={
-                    pob.build.ascendClassName || pob.build.className
-                  }
+                  character_class={characterClass}
                   className="w-14 h-14 rounded-full"
                 />
                 <span>
@@ -262,7 +263,7 @@ export function PoB({ pobString }: Probs) {
                     ]?.gems.find((gem) => !gem.variantId.includes("Support"))
                       ?.nameSpec
                   }{" "}
-                  {pob.build.ascendClassName || pob.build.className}
+                  {characterClass}
                 </span>
               </h1>
               <div
