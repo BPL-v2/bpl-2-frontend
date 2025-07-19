@@ -375,7 +375,7 @@ const classToBaseType: Record<string, string> = {
   "Support Skill Gem": "Added Chaos Damage Support",
   Jewel: "Cobalt Jewel",
   AbyssJewel: "Ghastly Eye Jewel",
-  Map: "DeliriusMap",
+  Map: "Map",
   MapFragment: "Abyss Scarab",
   Breachstone: "Chayula's Breachstone",
   VaultKey: "Ancient Reliquary Key",
