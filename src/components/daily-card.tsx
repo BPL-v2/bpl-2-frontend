@@ -72,7 +72,7 @@ export function DailyCard({ daily }: DailyCardProps) {
           className={daily.extra ? "tooltip text-2xl" : undefined}
           data-tip={daily.extra}
         >
-          <h3 className="flex-grow text-center mt-4 text-xl font-medium mx-4">
+          <h3 className="flex-grow text-center mt-4 text-lg font-medium mx-4">
             {daily.scoring_preset?.scoring_method ===
             ScoringMethod.RANKED_TIME ? (
               <b className="font-extrabold">Race: </b>
