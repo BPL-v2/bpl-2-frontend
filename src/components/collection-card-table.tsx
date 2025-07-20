@@ -54,9 +54,9 @@ export function CollectionCardTable({
             return [parseInt(teamId), score] as [number, Score];
           })
           .sort(([, scoreA], [, scoreB]) => {
-            if (scoreA.points === scoreB.points) {
-              return scoreB.number - scoreA.number;
-            }
+            // if (scoreA.points === scoreB.points) {
+            //   return scoreB.number - scoreA.number;
+            // }
             return scoreB.points - scoreA.points;
           })
           .map(([teamId, score]) => {
