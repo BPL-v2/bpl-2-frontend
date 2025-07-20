@@ -207,7 +207,20 @@ export function PoB({ pobString }: Probs) {
     pob.build.ascendClassName != "None"
       ? pob.build.ascendClassName
       : pob.build.className;
-  console.log(pob.build.playerStats);
+  const highestDps = Math.max(
+    pob.build.playerStats.combinedDPS,
+    pob.build.playerStats.cullingDPS,
+    pob.build.playerStats.fullDPS,
+    pob.build.playerStats.fullDotDPS,
+    pob.build.playerStats.fullDotDPS,
+    pob.build.playerStats.totalDPS,
+    pob.build.playerStats.totalDot,
+    pob.build.playerStats.totalDotDPS,
+    pob.build.playerStats.withBleedDPS,
+    pob.build.playerStats.withIgniteDPS,
+    pob.build.playerStats.withPoisonDPS
+  );
+
   return (
     <>
       <div className="m-4 flex flex-col xl:flex-row gap-4 text-left">
@@ -428,9 +441,7 @@ export function PoB({ pobString }: Probs) {
               <div>
                 DPS:{" "}
                 <span className="dark:text-white">
-                  {Math.round(
-                    pob.build.playerStats.combinedDPS
-                  ).toLocaleString()}
+                  {Math.round(highestDps).toLocaleString()}
                 </span>
               </div>
               <div>
