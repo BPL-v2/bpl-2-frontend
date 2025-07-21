@@ -108,8 +108,8 @@ export const Levels: LevelInfo[] = [
 ];
 
 export function getLevelFromExperience(experience: number): number {
-  const level = Levels.find((info) => info.exp >= experience);
-  if (!level) return 100;
+  const level = Levels.find((info) => info.exp + info.expToLevel > experience);
+  if (!level || level.level === 100) return 100;
   return level.level + (experience - level.exp) / level.expToLevel;
 }
 
