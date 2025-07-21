@@ -31,6 +31,7 @@ import {
   ConditionCreate,
   TeamCreate,
   ScoringPresetCreate,
+  Character,
 } from "./api";
 import { isLoggedIn } from "@utils/token";
 import { BulkObjectiveCreate } from "src/routes/admin/events/$eventId/categories.$categoryId";
@@ -294,7 +295,22 @@ export function useGetUserById(userId: number) {
 export function useGetUserCharacters(userId: number) {
   const query = useQuery({
     queryKey: ["userCharacters", userId],
-    queryFn: () => characterApi.getUserCharacters(userId),
+    queryFn: () =>
+      characterApi.getUserCharacters(userId).then((data) => {
+        const eventCharacters = data.reduce(
+          (acc, character) => {
+            if (!acc[character.event_id]) {
+              acc[character.event_id] = [];
+            }
+            acc[character.event_id].push(character);
+            return acc;
+          },
+          {} as { [eventId: number]: Character[] }
+        );
+        return Object.values(eventCharacters).map((characters) => {
+          return characters.sort((a, b) => b.level - a.level)[0];
+        });
+      }),
     enabled: !!userId,
   });
   return {
