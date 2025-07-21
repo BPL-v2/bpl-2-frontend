@@ -45,7 +45,7 @@ export function CollectionCardTable({
 }: CollectionCardTableProps) {
   const { currentEvent } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
-
+  hideProgress = false;
   return (
     <table key={objective.id} className="w-full mt-2">
       <tbody className="bg-base-300">
