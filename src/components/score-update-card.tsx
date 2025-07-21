@@ -16,7 +16,7 @@ export const ScoreUpdateCard = ({
   close,
   closeAll,
 }: ScoreUpdateCardProps) => {
-  const { scores, currentEvent, gameVersion } = useContext(GlobalStateContext);
+  const { scores, currentEvent } = useContext(GlobalStateContext);
   const { users } = useGetUsers(currentEvent.id);
   const meta = getMetaInfo(update, users, scores, currentEvent?.teams);
   let body: JSX.Element | null = null;
@@ -37,7 +37,7 @@ export const ScoreUpdateCard = ({
           <ObjectiveIcon
             className=""
             objective={meta.objective}
-            gameVersion={gameVersion}
+            gameVersion={currentEvent.game_version}
           />
         </div>
 
@@ -46,7 +46,7 @@ export const ScoreUpdateCard = ({
     );
     title = meta.teamName + " +" + meta.points;
   } else if (meta.parent) {
-    const img_location = `assets/${gameVersion}/icons/${meta.parent.name}.svg`;
+    const img_location = `assets/${currentEvent.game_version}/icons/${meta.parent.name}.svg`;
     body = (
       <div className="card-body flex gap-2 flex-row">
         <div className="h-20 w-20">

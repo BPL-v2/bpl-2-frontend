@@ -17,7 +17,6 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
   const [scoreData, setScoreData] = useState<ScoreMap>({});
   const [scores, setScores] = useState<ScoreObjective>();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
-  const [gameVersion, setGameVersion] = useState<GameVersion>(GameVersion.poe1);
   // const [_, setUpdates] = useState<ScoreDiff[]>([]);
   const [preferences, setPreferences] = useState(initPreferences());
   const [websocket, setWebsocket] = useState<WebSocket>();
@@ -28,9 +27,10 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // @ts-ignore
     if (events && currentEvent.id === "current") {
-      const currentEvent = events.find((event) => event.is_current);
-      if (!currentEvent) return;
-      setCurrentEvent(currentEvent);
+      const ev = events.find((event) => event.is_current);
+      if (!ev) return;
+      // @ts-ignore
+      setCurrentEvent({ ...ev, ignoreRefetch: true });
     }
   }, [events]);
 
@@ -40,7 +40,6 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
       return;
     }
     websocket?.close(1000, "eventChange");
-    setGameVersion(currentEvent.game_version);
     establishScoreSocket(
       currentEvent.id,
       setScoreData,
@@ -95,8 +94,6 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
           setScores: setScores,
           isMobile: isMobile,
           setIsMobile: setIsMobile,
-          gameVersion: gameVersion,
-          setGameVersion: setGameVersion,
           preferences: preferences,
           setPreferences: setPreferences,
         }}

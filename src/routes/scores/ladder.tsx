@@ -36,14 +36,8 @@ export const Route = createFileRoute("/scores/ladder")({
 });
 
 export function LadderTab(): JSX.Element {
-  const {
-    scores,
-    currentEvent,
-    isMobile,
-    gameVersion,
-    preferences,
-    setPreferences,
-  } = useContext(GlobalStateContext);
+  const { scores, currentEvent, isMobile, preferences, setPreferences } =
+    useContext(GlobalStateContext);
   const { rules } = Route.useSearch();
   const {
     data: ladder,
@@ -189,7 +183,7 @@ export function LadderTab(): JSX.Element {
             filterVariant: "enum",
             filterPlaceholder: "Ascendancy",
             options:
-              gameVersion === GameVersion.poe1
+              currentEvent.game_version === GameVersion.poe1
                 ? Object.keys(ascendancies[GameVersion.poe1])
                 : Object.entries(poe2Mapping).map(([key, value]) => ({
                     label: value,
@@ -325,14 +319,7 @@ export function LadderTab(): JSX.Element {
       ];
     }
     return columns;
-  }, [
-    isMobile,
-    currentEvent,
-    preferences,
-    gameVersion,
-    getTeam,
-    setPreferences,
-  ]);
+  }, [isMobile, currentEvent, preferences, getTeam, setPreferences]);
 
   if (ladderIsPending || usersIsPending) {
     return <div className="loading loading-spinner loading-lg"></div>;

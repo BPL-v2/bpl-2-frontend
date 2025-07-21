@@ -35,7 +35,7 @@ function convertArrayToText(points: number[] | undefined) {
 }
 
 export function UniqueTabRules() {
-  const { scores, gameVersion } = useContext(GlobalStateContext);
+  const { scores, currentEvent } = useContext(GlobalStateContext);
 
   const uniqueCategory = scores?.children.find(
     (category) => category.name === "Uniques"
@@ -48,7 +48,7 @@ export function UniqueTabRules() {
   }
 
   const wikiBaseUrl =
-    gameVersion === "poe1"
+    currentEvent.game_version === "poe1"
       ? "https://www.poewiki.net/wiki/"
       : "https://www.poe2wiki.net/wiki/";
   const variantExample = uniqueCategory.children

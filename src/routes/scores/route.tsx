@@ -45,7 +45,7 @@ export const Route = createFileRoute("/scores")({
 });
 
 function ScoringPage() {
-  const { currentEvent, gameVersion } = useContext(GlobalStateContext);
+  const { currentEvent } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const { rules } = Route.useSearch();
 
@@ -114,22 +114,22 @@ function ScoringPage() {
         name: "Heist",
         key: "heist",
         rules: <HeistTabRules />,
-        visible: gameVersion === GameVersion.poe1,
+        visible: currentEvent.game_version === GameVersion.poe1,
       },
       {
         name: "Gems",
         key: "gems",
         rules: <GemTabRules />,
-        visible: gameVersion === GameVersion.poe1,
+        visible: currentEvent.game_version === GameVersion.poe1,
       },
       {
         name: "Delve",
         key: "delve",
         rules: <DelveTabRules />,
-        visible: gameVersion === GameVersion.poe1,
+        visible: currentEvent.game_version === GameVersion.poe1,
       },
     ];
-  }, [gameVersion, eventStatus]);
+  }, [currentEvent, eventStatus]);
 
   if (!currentEvent) {
     return <div>Event not found</div>;
