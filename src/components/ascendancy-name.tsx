@@ -8,18 +8,20 @@ interface AscendancyProps {
 }
 
 export function AscendancyName({ character_class }: AscendancyProps) {
-  const { gameVersion } = useContext(GlobalStateContext);
+  const { currentEvent } = useContext(GlobalStateContext);
   const class_name =
     phreciaMapping[character_class] ||
     poe2Mapping[character_class] ||
     character_class;
-  const ascendancy = ascendancies[gameVersion];
+  const ascendancy = ascendancies[currentEvent.game_version];
   if (!ascendancy || !ascendancy[class_name]) {
     return character_class;
   }
   return (
     <p className={`font-bold ${ascendancy[class_name].classColor}`}>
-      {gameVersion === GameVersion.poe1 ? character_class : class_name}
+      {currentEvent.game_version === GameVersion.poe1
+        ? character_class
+        : class_name}
     </p>
   );
 }

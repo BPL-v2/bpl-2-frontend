@@ -22,7 +22,7 @@ export const Route = createFileRoute("/admin/guild-stashes")({
 });
 
 function RouteComponent() {
-  const { currentEvent, gameVersion } = useContext(GlobalStateContext);
+  const { currentEvent } = useContext(GlobalStateContext);
   const stashId = useRouterState({
     select: (state) => state.location.pathname.split("/").slice(-1)[0],
   });
@@ -127,7 +127,7 @@ function RouteComponent() {
                     search={{ highlightScoring }}
                   >
                     <img
-                      src={`/assets/${gameVersion}/stashtabs/${stash.type.toLowerCase().replace("stash", "")}.png`}
+                      src={`/assets/${currentEvent.game_version}/stashtabs/${stash.type.toLowerCase().replace("stash", "")}.png`}
                     ></img>
                     <h3 className="text-sm w-full">{stash.name}</h3>
                     <button

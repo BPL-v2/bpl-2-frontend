@@ -9,8 +9,6 @@ export type GlobalState = {
   setScores: (c: ScoreObjective | undefined) => void;
   isMobile: boolean;
   setIsMobile: (c: boolean) => void;
-  gameVersion: GameVersion;
-  setGameVersion: (c: GameVersion) => void;
   preferences: Preferences;
   setPreferences: (c: Preferences) => void;
 };
@@ -26,8 +24,6 @@ export const GlobalStateContext = createContext<GlobalState>({
   setScores: () => {},
   isMobile: false,
   setIsMobile: () => {},
-  gameVersion: GameVersion.poe1,
-  setGameVersion: () => {},
   preferences: initPreferences(),
   setPreferences: () => {},
 });

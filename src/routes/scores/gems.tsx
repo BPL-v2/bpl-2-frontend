@@ -54,17 +54,17 @@ function toColor(color: string, active: boolean): React.ReactNode {
 }
 
 export function GemTab(): JSX.Element {
-  const { currentEvent, scores, gameVersion } = useContext(GlobalStateContext);
+  const { currentEvent, scores } = useContext(GlobalStateContext);
   const [color, setColor] = React.useState<"r" | "g" | "b" | undefined>();
   const { data: gemColors } = useFile<Record<"r" | "g" | "b" | "w", string[]>>(
     "/assets/poe1/items/gem_colors.json"
   );
   const { rules } = Route.useSearch();
   useEffect(() => {
-    if (gameVersion !== GameVersion.poe1) {
+    if (currentEvent.game_version !== GameVersion.poe1) {
       // router.navigate("/scores?tab=Ladder");
     }
-  }, [gameVersion]);
+  }, [currentEvent]);
   if (!currentEvent || !scores) {
     return <></>;
   }

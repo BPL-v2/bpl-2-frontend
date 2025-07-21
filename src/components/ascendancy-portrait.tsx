@@ -11,8 +11,8 @@ export function AscendancyPortrait({
   character_class,
   className,
 }: AscendancyProps) {
-  const { gameVersion } = useContext(GlobalStateContext);
-  const asc = ascendancies[gameVersion];
+  const { currentEvent } = useContext(GlobalStateContext);
+  const asc = ascendancies[currentEvent.game_version];
   if (!asc) {
     return null;
   }

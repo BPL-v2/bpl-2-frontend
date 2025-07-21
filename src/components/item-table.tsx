@@ -31,7 +31,7 @@ export function ItemTable({
   className,
   styles,
 }: ItemTableProps) {
-  const { currentEvent, gameVersion } = useContext(GlobalStateContext);
+  const { currentEvent } = useContext(GlobalStateContext);
   const { users } = useGetUsers(currentEvent.id);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const [showVariants, setShowVariants] = useState<{
@@ -162,7 +162,10 @@ export function ItemTable({
           enableSorting: false,
           cell: (info) => (
             <div className="w-full">
-              {imageOverlayedWithText(info.row.original, gameVersion)}
+              {imageOverlayedWithText(
+                info.row.original,
+                currentEvent.game_version
+              )}
             </div>
           ),
         },
@@ -193,7 +196,7 @@ export function ItemTable({
               <div className="w-full">
                 <ObjectiveIcon
                   objective={info.row.original}
-                  gameVersion={gameVersion}
+                  gameVersion={currentEvent.game_version}
                 />
               </div>
             ),
@@ -280,7 +283,6 @@ export function ItemTable({
     showVariants,
     windowWidth,
     badgeClass,
-    gameVersion,
     imageOverlayedWithText,
     objectNameRender,
     userTeamID,

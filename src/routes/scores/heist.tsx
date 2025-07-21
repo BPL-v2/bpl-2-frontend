@@ -12,16 +12,16 @@ export const Route = createFileRoute("/scores/heist")({
 });
 
 export function HeistTab(): JSX.Element {
-  const { scores, gameVersion } = useContext(GlobalStateContext);
+  const { scores, currentEvent } = useContext(GlobalStateContext);
   const { rules } = Route.useSearch();
   const heistCategory = scores?.children.find(
     (category) => category.name === "Heist"
   );
   useEffect(() => {
-    if (gameVersion !== GameVersion.poe1) {
+    if (currentEvent.game_version !== GameVersion.poe1) {
       // router.navigate("/scores?tab=Ladder");
     }
-  }, [gameVersion]);
+  }, [currentEvent]);
   if (!heistCategory) {
     return <></>;
   }
