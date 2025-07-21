@@ -1,9 +1,10 @@
+import { CharacterStat } from "@client/api";
 import { useGetCharacterTimeseries, useGetPoBExport } from "@client/query";
 import { PoB } from "@components/pob";
 import { getLevelFromExperience } from "@mytypes/level-info";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AlignedData } from "uplot";
 import UplotReact from "uplot-react";
 
@@ -25,6 +26,8 @@ export const Route = createFileRoute("/profile/$userId/$characterId")({
 function RouteComponent() {
   const { preferences } = useContext(GlobalStateContext);
   const { userId, characterId } = useParams({ from: Route.id });
+  const [selectedMetric, setSelectedMetric] =
+    useState<keyof CharacterStat>("dps");
 
   const { characterTimeseries = [] } = useGetCharacterTimeseries(
     characterId,
@@ -38,10 +41,12 @@ function RouteComponent() {
     new Float64Array(
       characterTimeseries.map((c) => getLevelFromExperience(c.xp))
     ),
-    // new Float64Array(characterTimeseries.map((c) => c.xp)),
-    new Float64Array(characterTimeseries.map((c) => c.dps)),
+    new Float64Array(characterTimeseries.map((c) => c[selectedMetric])),
   ];
-  const maxDps = Math.max(...characterTimeseries.map((c) => c.dps), 1);
+  const maxMetric = Math.max(
+    ...characterTimeseries.map((c) => c[selectedMetric]),
+    1
+  );
 
   const options: uPlot.Options = {
     title: "Progression",
@@ -62,7 +67,7 @@ function RouteComponent() {
         scale: "lvl",
       },
       {
-        label: "DPS",
+        label: selectedMetric.toUpperCase(),
         side: 1,
         stroke: fontColor,
         scale: "dps",
@@ -80,7 +85,7 @@ function RouteComponent() {
         scale: "lvl",
       },
       {
-        label: "DPS",
+        label: selectedMetric.toUpperCase().replace("_", " "),
         stroke: "red",
         scale: "dps",
       },
@@ -88,7 +93,7 @@ function RouteComponent() {
     scales: {
       x: { time: true },
       lvl: { range: [1, 100] },
-      dps: { range: [0, maxDps] },
+      dps: { range: [0, maxMetric] },
     },
   };
   const state = {
@@ -100,12 +105,39 @@ function RouteComponent() {
     <>
       {pobExport && <PoB pobString={pobExport} />}
       {state.data[0].length > 0 ? (
-        <div className="flex flex-col items-center bg-base-300 m-4 rounded-box">
+        <div className="flex flex-row bg-base-300 m-4 rounded-box justify-center">
           <UplotReact
-            className="bg-base-200 rounded-box m-4 p-4 flex justify-center"
+            className="bg-base-200 rounded-box m-4 p-4"
             options={state.options}
             data={state.data}
           />
+          <div className="flex flex-col  p-4 self-auto">
+            Shown Metric:
+            {[
+              "dps",
+              "ehp",
+              "hp",
+              "mana",
+              "es",
+              "armour",
+              "evasion",
+              "ele_max_hit",
+              "phys_max_hit",
+              "movement_speed",
+            ].map((metric) => (
+              <button
+                key={metric as string}
+                className={`btn  m-1 ${
+                  selectedMetric === (metric as keyof CharacterStat)
+                    ? "btn-primary"
+                    : ""
+                }`}
+                onClick={() => setSelectedMetric(metric as keyof CharacterStat)}
+              >
+                {metric.toUpperCase().replace("_", " ")}
+              </button>
+            ))}
+          </div>
         </div>
       ) : null}
     </>
