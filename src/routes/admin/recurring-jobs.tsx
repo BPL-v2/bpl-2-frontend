@@ -17,13 +17,11 @@ export const Route = createFileRoute("/admin/recurring-jobs")({
 
 const formatDateForInput = (date: Date | null) => {
   if (!date) return "";
-  const pad = (num: number) => String(num).padStart(2, "0");
-  const year = date.getFullYear();
-  const month = pad(date.getMonth() + 1);
-  const day = pad(date.getDate());
-  const hours = pad(date.getHours());
-  const minutes = pad(date.getMinutes());
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
+  const tzOffset = 2 * date.getTimezoneOffset() * 60000;
+  const localISO = new Date(date.getTime() - tzOffset)
+    .toISOString()
+    .slice(0, 16);
+  return localISO;
 };
 
 function RecurringJobsPage() {
@@ -77,7 +75,7 @@ function RecurringJobsPage() {
         setOpen={setShowModal}
       >
         <form
-          className="space-y-4 text-left"
+          className="space-y-4 text-left w-full"
           onSubmit={(e) => {
             const values = new FormData(formRef.current!);
             e.preventDefault();
@@ -96,11 +94,12 @@ function RecurringJobsPage() {
             <Select
               name="event"
               required
-              onChange={(value) =>
+              onChange={(value) => {
                 setSelectedEvent(
-                  events.find((event) => event.id === value?.value) || null
-                )
-              }
+                  // @ts-ignore
+                  events.find((event) => event.id === value) || null
+                );
+              }}
               className="w-full"
               placeholder="Pick an event"
               options={events.map((event) => ({
