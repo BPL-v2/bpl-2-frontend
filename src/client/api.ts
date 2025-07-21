@@ -2446,6 +2446,20 @@ export interface RecurringJob {
 /**
  * 
  * @export
+ * @interface ReportPlaytimeRequest
+ */
+export interface ReportPlaytimeRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof ReportPlaytimeRequest
+     */
+    actual_playtime: number;
+}
+
+/**
+ * 
+ * @export
  * @interface Score
  */
 export interface Score {
@@ -6482,6 +6496,51 @@ export const SignupApiFetchParamCreator = function (configuration?: Configuratio
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Reports the actual playtime for the authenticated user
+         * @param {number} event_id Event Id
+         * @param {ReportPlaytimeRequest} body Actual Playtime
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        reportPlaytime(event_id: number, body: ReportPlaytimeRequest, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling reportPlaytime.');
+            }
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling reportPlaytime.');
+            }
+            const localVarPath = `/events/{event_id}/signups/self/actual-playtime`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"ReportPlaytimeRequest" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -6564,6 +6623,25 @@ export const SignupApiFp = function(configuration?: Configuration) {
                 });
             };
         },
+        /**
+         * Reports the actual playtime for the authenticated user
+         * @param {number} event_id Event Id
+         * @param {ReportPlaytimeRequest} body Actual Playtime
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        reportPlaytime(event_id: number, body: ReportPlaytimeRequest, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Signup> {
+            const localVarFetchArgs = SignupApiFetchParamCreator(configuration).reportPlaytime(event_id, body, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
     }
 };
 
@@ -6609,6 +6687,16 @@ export const SignupApiFactory = function (configuration?: Configuration, fetch?:
          */
         getPersonalSignup(event_id: number, options?: any) {
             return SignupApiFp(configuration).getPersonalSignup(event_id, options)(fetch, basePath);
+        },
+        /**
+         * Reports the actual playtime for the authenticated user
+         * @param {number} event_id Event Id
+         * @param {ReportPlaytimeRequest} body Actual Playtime
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        reportPlaytime(event_id: number, body: ReportPlaytimeRequest, options?: any) {
+            return SignupApiFp(configuration).reportPlaytime(event_id, body, options)(fetch, basePath);
         },
     };
 };
@@ -6663,6 +6751,18 @@ export class SignupApi extends BaseAPI {
      */
     public getPersonalSignup(event_id: number, options?: any) {
         return SignupApiFp(this.configuration).getPersonalSignup(event_id, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Reports the actual playtime for the authenticated user
+     * @param {number} event_id Event Id
+     * @param {ReportPlaytimeRequest} body Actual Playtime
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SignupApi
+     */
+    public reportPlaytime(event_id: number, body: ReportPlaytimeRequest, options?: any) {
+        return SignupApiFp(this.configuration).reportPlaytime(event_id, body, options)(this.fetch, this.basePath);
     }
 
 }
