@@ -81,7 +81,7 @@ export function isFinished(objective: ScoreObjective, teamId: number): boolean {
     return finishedObjectives === objective.children.length;
   }
   for (const child of objective.children) {
-    if (child.children.length == 0 && !child.team_score[teamId].finished) {
+    if (!child.team_score[teamId].finished) {
       return false;
     }
   }
