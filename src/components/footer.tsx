@@ -22,7 +22,7 @@ export function Footer() {
           <DiscordFilled className="h-6 w-6" />
         </a>
         <a
-          href="https://github.com/Liberatorist/bpl-2"
+          href="https://github.com/orgs/BPL-v2/repositories"
           target="_blank"
           className="cursor-pointer hover:text-primary"
         >
