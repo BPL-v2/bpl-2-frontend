@@ -2675,6 +2675,12 @@ export interface Signup {
      * @type {number}
      * @memberof Signup
      */
+    actual_playtime: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Signup
+     */
     expected_playtime: number;
     /**
      * 
