@@ -10,6 +10,8 @@ echo "VITE_PUBLIC_BPL_BACKEND_URL = http://localhost/api" > .env
 npm install
 ```
 
+Alternatively you can set `VITE_PUBLIC_BPL_BACKEND_URL=https://v2202503259898322516.goodsrv.de/api` to directly work with the production backend instead of your own local one
+
 ## Icon generation
 
 We download images from https://repoe-fork.github.io
