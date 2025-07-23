@@ -848,14 +848,14 @@ export function useDeleteTeam(qc: QueryClient, eventId: number) {
   };
 }
 
-export function useGetPoBExport(userId: number, characterId: string) {
+export function useGetPoBs(userId: number, characterId: string) {
   const query = useQuery({
     queryKey: ["pobExport", userId, characterId],
-    queryFn: () => characterApi.getPoBExport(userId, characterId),
+    queryFn: () => characterApi.getPoBs(userId, characterId),
     enabled: !!userId && !!characterId,
   });
   return {
     ...query,
-    pobExport: query.data?.export_string ?? "",
+    pobs: query.data,
   };
 }

@@ -223,7 +223,7 @@ export function PoB({ pobString }: Probs) {
 
   return (
     <>
-      <div className="m-4 flex flex-col xl:flex-row gap-4 text-left">
+      <div className="flex flex-col xl:flex-row gap-4 text-left">
         <div className="select-none p-8 bg-base-300 rounded-box">
           <div className="inventory  self-center">
             {Object.entries(equipment).map(([slot, item]) => (

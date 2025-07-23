@@ -3472,33 +3472,28 @@ export const CharactersApiFetchParamCreator = function (configuration?: Configur
             };
         },
         /**
-         * Get the PoB export for a character at a specific timestamp
+         * Get all PoB exports for a character
          * @param {number} user_id User ID
          * @param {string} character_id Character ID
-         * @param {string} [timestamp] Timestamp in RFC3339 format
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPoBExport(user_id: number, character_id: string, timestamp?: string, options: any = {}): FetchArgs {
+        getPoBs(user_id: number, character_id: string, options: any = {}): FetchArgs {
             // verify required parameter 'user_id' is not null or undefined
             if (user_id === null || user_id === undefined) {
-                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling getPoBExport.');
+                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling getPoBs.');
             }
             // verify required parameter 'character_id' is not null or undefined
             if (character_id === null || character_id === undefined) {
-                throw new RequiredError('character_id','Required parameter character_id was null or undefined when calling getPoBExport.');
+                throw new RequiredError('character_id','Required parameter character_id was null or undefined when calling getPoBs.');
             }
-            const localVarPath = `/users/{user_id}/characters/{character_id}/pob`
+            const localVarPath = `/users/{user_id}/characters/{character_id}/pobs`
                 .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)))
                 .replace(`{${"character_id"}}`, encodeURIComponent(String(character_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
-
-            if (timestamp !== undefined) {
-                localVarQueryParameter['timestamp'] = timestamp;
-            }
 
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
@@ -3585,15 +3580,14 @@ export const CharactersApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         * Get the PoB export for a character at a specific timestamp
+         * Get all PoB exports for a character
          * @param {number} user_id User ID
          * @param {string} character_id Character ID
-         * @param {string} [timestamp] Timestamp in RFC3339 format
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPoBExport(user_id: number, character_id: string, timestamp?: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<PoB> {
-            const localVarFetchArgs = CharactersApiFetchParamCreator(configuration).getPoBExport(user_id, character_id, timestamp, options);
+        getPoBs(user_id: number, character_id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<PoB>> {
+            const localVarFetchArgs = CharactersApiFetchParamCreator(configuration).getPoBs(user_id, character_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -3651,15 +3645,14 @@ export const CharactersApiFactory = function (configuration?: Configuration, fet
             return CharactersApiFp(configuration).getCharactersForEvent(event_id, options)(fetch, basePath);
         },
         /**
-         * Get the PoB export for a character at a specific timestamp
+         * Get all PoB exports for a character
          * @param {number} user_id User ID
          * @param {string} character_id Character ID
-         * @param {string} [timestamp] Timestamp in RFC3339 format
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPoBExport(user_id: number, character_id: string, timestamp?: string, options?: any) {
-            return CharactersApiFp(configuration).getPoBExport(user_id, character_id, timestamp, options)(fetch, basePath);
+        getPoBs(user_id: number, character_id: string, options?: any) {
+            return CharactersApiFp(configuration).getPoBs(user_id, character_id, options)(fetch, basePath);
         },
         /**
          * Fetches all event characters for a user
@@ -3704,16 +3697,15 @@ export class CharactersApi extends BaseAPI {
     }
 
     /**
-     * Get the PoB export for a character at a specific timestamp
+     * Get all PoB exports for a character
      * @param {number} user_id User ID
      * @param {string} character_id Character ID
-     * @param {string} [timestamp] Timestamp in RFC3339 format
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CharactersApi
      */
-    public getPoBExport(user_id: number, character_id: string, timestamp?: string, options?: any) {
-        return CharactersApiFp(this.configuration).getPoBExport(user_id, character_id, timestamp, options)(this.fetch, this.basePath);
+    public getPoBs(user_id: number, character_id: string, options?: any) {
+        return CharactersApiFp(this.configuration).getPoBs(user_id, character_id, options)(this.fetch, this.basePath);
     }
 
     /**
