@@ -1,10 +1,10 @@
 import { CharacterStat } from "@client/api";
-import { useGetCharacterTimeseries, useGetPoBExport } from "@client/query";
+import { useGetCharacterTimeseries, useGetPoBs } from "@client/query";
 import { PoB } from "@components/pob";
 import { getLevelFromExperience } from "@mytypes/level-info";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AlignedData } from "uplot";
 import UplotReact from "uplot-react";
 
@@ -33,8 +33,14 @@ function RouteComponent() {
     characterId,
     userId
   );
-  const { pobExport } = useGetPoBExport(userId, characterId);
+  const { pobs = [] } = useGetPoBs(userId, characterId);
+  useEffect(() => {
+    if (pobs.length > 0) {
+      setPobId(pobs.length - 1);
+    }
+  }, [pobs]);
   const fontColor = preferences.theme === "dark" ? "white" : "black";
+  const [pobId, setPobId] = useState<number>(0);
 
   const data: AlignedData = [
     new Float64Array(characterTimeseries.map((c) => c.timestamp)),
@@ -102,12 +108,20 @@ function RouteComponent() {
   };
 
   return (
-    <>
-      {pobExport && <PoB pobString={pobExport} />}
+    <div className="w-full m-4 flex flex-col gap-4">
+      <input
+        type="range"
+        className="range range-primary w-full"
+        min="0"
+        max={pobs?.length ? pobs.length - 1 : 0}
+        value={pobId}
+        onChange={(e) => setPobId(Number(e.target.value))}
+      />
+      {pobs.length > 0 && <PoB pobString={pobs[pobId].export_string} />}
       {state.data[0].length > 0 ? (
-        <div className="flex flex-row bg-base-300 m-4 rounded-box justify-center">
+        <div className="flex flex-row bg-base-300  rounded-box justify-center">
           <UplotReact
-            className="bg-base-200 rounded-box m-4 p-4"
+            className="bg-base-200 rounded-box p-4"
             options={state.options}
             data={state.data}
           />
@@ -140,6 +154,6 @@ function RouteComponent() {
           </div>
         </div>
       ) : null}
-    </>
+    </div>
   );
 }
