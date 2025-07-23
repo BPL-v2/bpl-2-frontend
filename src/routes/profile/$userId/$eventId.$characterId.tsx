@@ -1,5 +1,9 @@
 import { CharacterStat } from "@client/api";
-import { useGetCharacterTimeseries, useGetPoBs } from "@client/query";
+import {
+  useGetCharacterTimeseries,
+  useGetEvents,
+  useGetPoBs,
+} from "@client/query";
 import { PoB } from "@components/pob";
 import { getLevelFromExperience } from "@mytypes/level-info";
 import { createFileRoute, useParams } from "@tanstack/react-router";
@@ -8,24 +12,49 @@ import { useContext, useEffect, useState } from "react";
 import { AlignedData } from "uplot";
 import UplotReact from "uplot-react";
 
-export const Route = createFileRoute("/profile/$userId/$characterId")({
+function getDeltaTimeAfterLeagueStart(
+  timestamp?: string,
+  leagueStart?: string
+) {
+  // If either timestamp or league
+  if (!timestamp || !leagueStart) {
+    return "";
+  }
+  const ts = new Date(timestamp).getTime();
+  const leagueStartDate = new Date(leagueStart).getTime();
+  const milliseconds = ts - leagueStartDate;
+  const days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
+  const hours = Math.floor(
+    (milliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  );
+  const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
+  return `Time since league start: ${days} days, ${hours} hours, ${minutes} minutes`;
+}
+
+export const Route = createFileRoute("/profile/$userId/$eventId/$characterId")({
   component: RouteComponent,
   params: {
     parse: (params) => ({
       characterId: params.characterId,
       // @ts-ignore: i just dont get it man...
       userId: Number(params.userId),
+      eventId: Number(params.eventId),
     }),
-    stringify: (params: { userId: number; characterId: string }) => ({
+    stringify: (params: {
+      userId: number;
+      characterId: string;
+      eventId: number;
+    }) => ({
       characterId: params.characterId,
       userId: String(params.userId),
+      eventId: String(params.eventId),
     }),
   },
 });
 
 function RouteComponent() {
   const { preferences } = useContext(GlobalStateContext);
-  const { userId, characterId } = useParams({ from: Route.id });
+  const { userId, characterId, eventId } = useParams({ from: Route.id });
   const [selectedMetric, setSelectedMetric] =
     useState<keyof CharacterStat>("dps");
 
@@ -33,6 +62,8 @@ function RouteComponent() {
     characterId,
     userId
   );
+  const { events = [] } = useGetEvents();
+  const event = events.find((e) => e.id === Number(eventId));
   const { pobs = [] } = useGetPoBs(userId, characterId);
   useEffect(() => {
     if (pobs.length > 0) {
@@ -109,14 +140,25 @@ function RouteComponent() {
 
   return (
     <div className="w-full m-4 flex flex-col gap-4">
-      <input
-        type="range"
-        className="range range-primary w-full"
-        min="0"
-        max={pobs?.length ? pobs.length - 1 : 0}
-        value={pobId}
-        onChange={(e) => setPobId(Number(e.target.value))}
-      />
+      <div className="relative w-full flex items-center justify-center my-4">
+        <input
+          type="range"
+          className="range range-primary w-full range-xl [--range-thumb:blue]"
+          min="0"
+          max={pobs?.length ? pobs.length - 1 : 0}
+          value={pobId}
+          onChange={(e) => setPobId(Number(e.target.value))}
+        />
+        <span
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 px-2 py-1 rounded text-primary-content pointer-events-none select-none"
+          style={{ zIndex: 2 }}
+        >
+          {getDeltaTimeAfterLeagueStart(
+            pobs[pobId]?.timestamp,
+            event?.event_start_time
+          )}
+        </span>
+      </div>
       {pobs.length > 0 && <PoB pobString={pobs[pobId].export_string} />}
       {state.data[0].length > 0 ? (
         <div className="flex flex-row bg-base-300  rounded-box justify-center">

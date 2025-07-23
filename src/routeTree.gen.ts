@@ -36,11 +36,11 @@ import { Route as AdminRecurringJobsRouteImport } from './routes/admin/recurring
 import { Route as ProfileUserIdRouteRouteImport } from './routes/profile/$userId/route'
 import { Route as AdminGuildStashesRouteRouteImport } from './routes/admin/guild-stashes/route'
 import { Route as AdminEventsIndexRouteImport } from './routes/admin/events/index'
-import { Route as ProfileUserIdCharacterIdRouteImport } from './routes/profile/$userId/$characterId'
 import { Route as AuthTwitchCallbackRouteImport } from './routes/auth/twitch.callback'
 import { Route as AuthPoeCallbackRouteImport } from './routes/auth/poe.callback'
 import { Route as AuthDiscordCallbackRouteImport } from './routes/auth/discord.callback'
 import { Route as AdminGuildStashesStashIdRouteImport } from './routes/admin/guild-stashes/$stashId'
+import { Route as ProfileUserIdEventIdCharacterIdRouteImport } from './routes/profile/$userId/$eventId.$characterId'
 import { Route as AdminEventsEventIdTeamsRouteImport } from './routes/admin/events/$eventId/teams'
 import { Route as AdminEventsEventIdScoringPresetsRouteImport } from './routes/admin/events/$eventId/scoring-presets'
 import { Route as AdminEventsEventIdCategoriesCategoryIdRouteImport } from './routes/admin/events/$eventId/categories.$categoryId'
@@ -180,12 +180,6 @@ const AdminEventsIndexRoute = AdminEventsIndexRouteImport.update({
   path: '/admin/events/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfileUserIdCharacterIdRoute =
-  ProfileUserIdCharacterIdRouteImport.update({
-    id: '/$characterId',
-    path: '/$characterId',
-    getParentRoute: () => ProfileUserIdRouteRoute,
-  } as any)
 const AuthTwitchCallbackRoute = AuthTwitchCallbackRouteImport.update({
   id: '/auth/twitch/callback',
   path: '/auth/twitch/callback',
@@ -206,6 +200,12 @@ const AdminGuildStashesStashIdRoute =
     id: '/$stashId',
     path: '/$stashId',
     getParentRoute: () => AdminGuildStashesRouteRoute,
+  } as any)
+const ProfileUserIdEventIdCharacterIdRoute =
+  ProfileUserIdEventIdCharacterIdRouteImport.update({
+    id: '/$eventId/$characterId',
+    path: '/$eventId/$characterId',
+    getParentRoute: () => ProfileUserIdRouteRoute,
   } as any)
 const AdminEventsEventIdTeamsRoute = AdminEventsEventIdTeamsRouteImport.update({
   id: '/admin/events/$eventId/teams',
@@ -256,10 +256,10 @@ export interface FileRoutesByFullPath {
   '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/auth/poe/callback': typeof AuthPoeCallbackRoute
   '/auth/twitch/callback': typeof AuthTwitchCallbackRoute
-  '/profile/$userId/$characterId': typeof ProfileUserIdCharacterIdRoute
   '/admin/events': typeof AdminEventsIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
+  '/profile/$userId/$eventId/$characterId': typeof ProfileUserIdEventIdCharacterIdRoute
   '/admin/events/$eventId/categories/$categoryId': typeof AdminEventsEventIdCategoriesCategoryIdRoute
 }
 export interface FileRoutesByTo {
@@ -293,10 +293,10 @@ export interface FileRoutesByTo {
   '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/auth/poe/callback': typeof AuthPoeCallbackRoute
   '/auth/twitch/callback': typeof AuthTwitchCallbackRoute
-  '/profile/$userId/$characterId': typeof ProfileUserIdCharacterIdRoute
   '/admin/events': typeof AdminEventsIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
+  '/profile/$userId/$eventId/$characterId': typeof ProfileUserIdEventIdCharacterIdRoute
   '/admin/events/$eventId/categories/$categoryId': typeof AdminEventsEventIdCategoriesCategoryIdRoute
 }
 export interface FileRoutesById {
@@ -331,10 +331,10 @@ export interface FileRoutesById {
   '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/auth/poe/callback': typeof AuthPoeCallbackRoute
   '/auth/twitch/callback': typeof AuthTwitchCallbackRoute
-  '/profile/$userId/$characterId': typeof ProfileUserIdCharacterIdRoute
   '/admin/events/': typeof AdminEventsIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
+  '/profile/$userId/$eventId/$characterId': typeof ProfileUserIdEventIdCharacterIdRoute
   '/admin/events/$eventId/categories/$categoryId': typeof AdminEventsEventIdCategoriesCategoryIdRoute
 }
 export interface FileRouteTypes {
@@ -370,10 +370,10 @@ export interface FileRouteTypes {
     | '/auth/discord/callback'
     | '/auth/poe/callback'
     | '/auth/twitch/callback'
-    | '/profile/$userId/$characterId'
     | '/admin/events'
     | '/admin/events/$eventId/scoring-presets'
     | '/admin/events/$eventId/teams'
+    | '/profile/$userId/$eventId/$characterId'
     | '/admin/events/$eventId/categories/$categoryId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -407,10 +407,10 @@ export interface FileRouteTypes {
     | '/auth/discord/callback'
     | '/auth/poe/callback'
     | '/auth/twitch/callback'
-    | '/profile/$userId/$characterId'
     | '/admin/events'
     | '/admin/events/$eventId/scoring-presets'
     | '/admin/events/$eventId/teams'
+    | '/profile/$userId/$eventId/$characterId'
     | '/admin/events/$eventId/categories/$categoryId'
   id:
     | '__root__'
@@ -444,10 +444,10 @@ export interface FileRouteTypes {
     | '/auth/discord/callback'
     | '/auth/poe/callback'
     | '/auth/twitch/callback'
-    | '/profile/$userId/$characterId'
     | '/admin/events/'
     | '/admin/events/$eventId/scoring-presets'
     | '/admin/events/$eventId/teams'
+    | '/profile/$userId/$eventId/$characterId'
     | '/admin/events/$eventId/categories/$categoryId'
   fileRoutesById: FileRoutesById
 }
@@ -667,13 +667,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminEventsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/profile/$userId/$characterId': {
-      id: '/profile/$userId/$characterId'
-      path: '/$characterId'
-      fullPath: '/profile/$userId/$characterId'
-      preLoaderRoute: typeof ProfileUserIdCharacterIdRouteImport
-      parentRoute: typeof ProfileUserIdRouteRoute
-    }
     '/auth/twitch/callback': {
       id: '/auth/twitch/callback'
       path: '/auth/twitch/callback'
@@ -701,6 +694,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/guild-stashes/$stashId'
       preLoaderRoute: typeof AdminGuildStashesStashIdRouteImport
       parentRoute: typeof AdminGuildStashesRouteRoute
+    }
+    '/profile/$userId/$eventId/$characterId': {
+      id: '/profile/$userId/$eventId/$characterId'
+      path: '/$eventId/$characterId'
+      fullPath: '/profile/$userId/$eventId/$characterId'
+      preLoaderRoute: typeof ProfileUserIdEventIdCharacterIdRouteImport
+      parentRoute: typeof ProfileUserIdRouteRoute
     }
     '/admin/events/$eventId/teams': {
       id: '/admin/events/$eventId/teams'
@@ -783,11 +783,11 @@ const AdminGuildStashesRouteRouteWithChildren =
   )
 
 interface ProfileUserIdRouteRouteChildren {
-  ProfileUserIdCharacterIdRoute: typeof ProfileUserIdCharacterIdRoute
+  ProfileUserIdEventIdCharacterIdRoute: typeof ProfileUserIdEventIdCharacterIdRoute
 }
 
 const ProfileUserIdRouteRouteChildren: ProfileUserIdRouteRouteChildren = {
-  ProfileUserIdCharacterIdRoute: ProfileUserIdCharacterIdRoute,
+  ProfileUserIdEventIdCharacterIdRoute: ProfileUserIdEventIdCharacterIdRoute,
 }
 
 const ProfileUserIdRouteRouteWithChildren =
