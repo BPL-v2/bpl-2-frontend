@@ -39,8 +39,12 @@ export function ProfilePage() {
         (b, a) => a.event_id - b.event_id
       )[0];
       router.navigate({
-        to: `/profile/$userId/$characterId`,
-        params: { characterId: sortedCharacter.id, userId: userId },
+        to: `/profile/$userId/$eventId/$characterId`,
+        params: {
+          characterId: sortedCharacter.id,
+          userId: userId,
+          eventId: sortedCharacter.event_id,
+        },
       });
     }
   }, [userCharacters, characterId]);
@@ -80,8 +84,12 @@ export function ProfilePage() {
 
                 return (
                   <Link
-                    to={`/profile/$userId/$characterId`}
-                    params={{ characterId: char.id, userId: userId }}
+                    to={`/profile/$userId/$eventId/$characterId`}
+                    params={{
+                      characterId: char.id,
+                      userId: userId,
+                      eventId: char.event_id,
+                    }}
                     key={char.event_id + char.name}
                     className={`card w-80 h-130 bg-base-200 m-2 cursor-pointer select-none `}
                     activeProps={{
