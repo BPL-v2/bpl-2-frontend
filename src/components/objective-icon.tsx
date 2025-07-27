@@ -39,7 +39,11 @@ export function ObjectiveIcon({
       href={wikilink}
       target="_blank"
     >
-      <img className={className || "max-w-14 max-h-14"} src={img_location} />
+      <img
+        className={className || "max-w-14 max-h-14"}
+        src={img_location}
+        alt={itemName || img_location}
+      />
     </a>
   );
 }

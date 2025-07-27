@@ -23,5 +23,5 @@ export function AscendancyPortrait({
   if (!asc[char]) {
     return null;
   }
-  return <img src={asc[char].thumbnail} className={className} />;
+  return <img src={asc[char].thumbnail} className={className} alt={char} />;
 }
