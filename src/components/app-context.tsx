@@ -5,7 +5,15 @@ import { hidePOTotal, mergeScores, ScoreMap } from "@utils/utils";
 import { ScoringPreset, Event, GameVersion } from "@client/api";
 import { ScoreObjective } from "@mytypes/score";
 import { initPreferences } from "@mytypes/preferences";
-import { useGetEvents, useGetRules, useGetScoringPresets } from "@client/query";
+import {
+  useGetEvents,
+  useGetEventStatus,
+  useGetLadder,
+  useGetRules,
+  useGetScoringPresets,
+  useGetUser,
+  useGetUsers,
+} from "@client/query";
 
 function ContextWrapper({ children }: { children: React.ReactNode }) {
   // initialize with a dummy event so that we can start making api calls
@@ -23,6 +31,10 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
   const { events } = useGetEvents();
   const { rules } = useGetRules(currentEvent.id);
   const { scoringPresets } = useGetScoringPresets(currentEvent.id);
+  useGetLadder(currentEvent.id);
+  useGetUsers(currentEvent.id);
+  useGetUser();
+  useGetEventStatus(currentEvent.id);
 
   useEffect(() => {
     // @ts-ignore

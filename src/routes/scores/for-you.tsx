@@ -6,9 +6,9 @@ import { ScoreObjective } from "@mytypes/score";
 import { flatMap } from "@utils/utils";
 import {
   useGetEventStatus,
+  useGetLadder,
   useGetTeamGoals,
   useGetUser,
-  useGetUserCharacters,
 } from "@client/query";
 import { PoGauge } from "@components/po-gauge";
 
@@ -20,13 +20,14 @@ export function ForYouTab() {
   const { currentEvent, scores } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const { user } = useGetUser();
-  const { userCharacters } = useGetUserCharacters(user?.id ?? 0);
+  const { ladder } = useGetLadder(currentEvent.id);
   const { teamGoals } = useGetTeamGoals(currentEvent.id);
 
   const personalObjectiveRender = useMemo(() => {
-    let char = userCharacters
+    let char = ladder
       ?.sort((a, b) => b.level - a.level)
-      .find((c) => c.event_id === currentEvent.id);
+      .find((c) => c.user_id === user?.id)?.character;
+
     if (!char) {
       char = {
         level: 1,
@@ -72,7 +73,7 @@ export function ForYouTab() {
         </div>
       </div>
     );
-  }, [userCharacters]);
+  }, [ladder]);
   if (!scores || !user) {
     return <div>Loading...</div>;
   }
