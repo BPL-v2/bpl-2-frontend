@@ -466,7 +466,7 @@ export function LadderTab(): JSX.Element {
       {totalObjective && checkPoints && (
         <div className="card bg-base-300">
           <div className="card-body">
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
               {currentEvent.teams
                 .sort((a, b) => {
                   const aScore = totalObjective.team_score[a.id]?.number || 0;
@@ -494,10 +494,10 @@ export function LadderTab(): JSX.Element {
                   );
                   total += current;
                   return (
-                    <div className="flex flex-row gap-2" key={team.id}>
-                      <div className="flex flex-row justify-between w-40 text-lg">
+                    <div className="flex flex-col" key={team.id}>
+                      <div className="flex flex-row justify-start text-lg gap-2">
                         <TeamName className="font-semibold" team={team} />
-                        <div>{total}</div>
+                        <div className="">{`${total} = (${current} + ${extra.join(" + ")})`}</div>
                       </div>
                       <POProgressBar
                         checkpoints={values}

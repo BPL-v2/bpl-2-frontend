@@ -206,15 +206,19 @@ const ApplicationButton = () => {
   }
 
   if (userTeam) {
-    return <TeamName team={userTeam} className="text-lg p-4 " />;
+    return (
+      <span className="text-2xl">
+        Sorted with <TeamName team={userTeam} className="font-bold" />
+      </span>
+    );
   }
   if (eventStatus?.application_status === ApplicationStatus.applied) {
     return (
       <>
         {dialog}
         <div className="dropdown">
-          <button className={`btn btn-lg py-8 hover:btn-primary flex flex-col`}>
-            <span className="">
+          <button className={`underline cursor-pointer`}>
+            <span className="text-2xl">
               Signed up {eventStatus?.partner ? "with" : ""}
             </span>
             {eventStatus?.partner && (
@@ -266,10 +270,8 @@ const ApplicationButton = () => {
       <>
         {dialog}
         <button
-          className={`btn btn-lg py-8 border-0 text-base-content hover:text-primary-content hover:bg-primary`}
-          onClick={() => {
-            setModalOpen(true);
-          }}
+          className={`btn btn-primary btn-lg`}
+          onClick={() => setModalOpen(true)}
         >
           Apply for Event
         </button>

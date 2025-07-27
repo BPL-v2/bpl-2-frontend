@@ -8,7 +8,6 @@ import {
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
 import { GlobalStateContext } from "@utils/context-provider";
-import ApplicationButton from "@components/application-button";
 import AuthButton from "@components/auth-button";
 
 import { TwitchFilled } from "@icons/twitch";
@@ -103,7 +102,6 @@ function RootComponent() {
             </div>
             {/* {isAdmin() ? <EventPicker /> : null} */}
             <div tabIndex={0} className=" flex items-center">
-              <ApplicationButton />
               <AuthButton />
             </div>
           </ul>
