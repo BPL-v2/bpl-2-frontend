@@ -166,7 +166,7 @@ export function DelveTab(): JSX.Element {
           cell: (info) => (
             <LadderPortrait
               entry={info.row.original}
-              teamName={getTeam(info.row.original.user_id)?.name}
+              team={getTeam(info.row.original.user_id)}
             />
           ),
         },
