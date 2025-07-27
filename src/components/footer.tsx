@@ -15,6 +15,7 @@ export function Footer() {
       </aside>
       <nav className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
         <a
+          aria-label="Discord"
           href="https://discord.com/invite/3weG9JACgb"
           target="_blank"
           className="cursor-pointer hover:text-primary"
@@ -22,6 +23,7 @@ export function Footer() {
           <DiscordFilled className="h-6 w-6" />
         </a>
         <a
+          aria-label="GitHub"
           href="https://github.com/orgs/BPL-v2/repositories"
           target="_blank"
           className="cursor-pointer hover:text-primary"
@@ -29,6 +31,7 @@ export function Footer() {
           <GithubFilled className="h-6 w-6" />
         </a>
         <a
+          aria-label="Twitch"
           href="https://www.twitch.tv/bpl_poe"
           target="_blank"
           className="cursor-pointer hover:text-primary"
@@ -36,6 +39,7 @@ export function Footer() {
           <TwitchFilled className="h-6 w-6" />
         </a>
         <a
+          aria-label="YouTube"
           href="https://www.youtube.com/@BPL-PoE"
           target="_blank"
           className="cursor-pointer hover:text-primary"
@@ -43,6 +47,7 @@ export function Footer() {
           <YoutubeFilled className="h-6 w-6" />
         </a>
         <a
+          aria-label="Twitter"
           href="https://x.com/BPL_PoE"
           target="_blank"
           className="cursor-pointer hover:text-primary"

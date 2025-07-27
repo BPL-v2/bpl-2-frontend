@@ -50,7 +50,11 @@ export const ScoreUpdateCard = ({
     body = (
       <div className="card-body flex gap-2 flex-row">
         <div className="h-20 w-20">
-          <img className="h-full w-full object-contain" src={img_location} />
+          <img
+            className="h-full w-full object-contain"
+            src={img_location}
+            alt={meta.parent.name}
+          />
         </div>
         <p className="text-lg text-left">
           {meta.parent?.name} was finished in {meta.rank}. place

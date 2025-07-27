@@ -107,6 +107,7 @@ export function ProfilePage() {
                           height: "100%",
                           objectFit: "cover",
                         }}
+                        alt={ascendancyName}
                       />
                     </figure>
                     <div className="card-body">

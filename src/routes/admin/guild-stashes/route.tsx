@@ -128,6 +128,7 @@ function RouteComponent() {
                   >
                     <img
                       src={`/assets/${currentEvent.game_version}/stashtabs/${stash.type.toLowerCase().replace("stash", "")}.png`}
+                      alt={stash.type}
                     ></img>
                     <h3 className="text-sm w-full">{stash.name}</h3>
                     <button

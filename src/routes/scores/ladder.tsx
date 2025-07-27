@@ -39,16 +39,10 @@ export function LadderTab(): JSX.Element {
   const { scores, currentEvent, isMobile, preferences, setPreferences } =
     useContext(GlobalStateContext);
   const { rules } = Route.useSearch();
-  const {
-    data: ladder,
-    isPending: ladderIsPending,
-    isError: ladderIsError,
-  } = useGetLadder(currentEvent.id);
-  const {
-    data: users,
-    isPending: usersIsPending,
-    isError: usersIsError,
-  } = useGetUsers(currentEvent.id);
+  const { data: ladder, isError: ladderIsError } = useGetLadder(
+    currentEvent.id
+  );
+  const { data: users, isError: usersIsError } = useGetUsers(currentEvent.id);
   const teamMap = useMemo(
     () =>
       currentEvent?.teams?.reduce((acc: { [teamId: number]: Team }, team) => {
@@ -322,9 +316,6 @@ export function LadderTab(): JSX.Element {
     return columns;
   }, [isMobile, currentEvent, preferences, getTeam, setPreferences]);
 
-  if (ladderIsPending || usersIsPending) {
-    return <div className="loading loading-spinner loading-lg"></div>;
-  }
   if (ladderIsError || usersIsError) {
     return (
       <div className="alert alert-error">
@@ -334,39 +325,49 @@ export function LadderTab(): JSX.Element {
       </div>
     );
   }
-
-  if (!scores || !currentEvent || !currentEvent.teams) {
-    return <></>;
-  }
+  let rows: RowDef[] = [];
   const categoryNames = getRootCategoryNames(currentEvent.game_version);
-  const categories = scores.children.filter((child) =>
-    categoryNames.includes(child.name)
-  );
-  categories.push(scores);
-  const points = categories.reduce(
-    (acc, category) => {
-      if (!category) {
-        return acc;
-      }
-      const points = getTotalPoints(category);
-      for (const [teamId, teamPoints] of Object.entries(points)) {
-        const id = parseInt(teamId);
-        if (!acc[id]) {
-          acc[id] = {};
+  if (scores) {
+    const categories = scores.children.filter((child) =>
+      categoryNames.includes(child.name)
+    );
+    categories.push(scores);
+    const points = categories.reduce(
+      (acc, category) => {
+        if (!category) {
+          return acc;
         }
-        acc[id][category.name] = teamPoints;
-      }
-      return acc;
-    },
-    {} as { [teamId: number]: { [categoryName: string]: number } }
-  );
-  const rows = Object.entries(points).map(([teamId, teamPoints]) => {
-    return {
-      team: teamMap[parseInt(teamId)],
-      key: teamId,
-      ...teamPoints,
-    } as RowDef;
-  });
+        const points = getTotalPoints(category);
+        for (const [teamId, teamPoints] of Object.entries(points)) {
+          const id = parseInt(teamId);
+          if (!acc[id]) {
+            acc[id] = {};
+          }
+          acc[id][category.name] = teamPoints;
+        }
+        return acc;
+      },
+      {} as { [teamId: number]: { [categoryName: string]: number } }
+    );
+    rows = Object.entries(points).map(([teamId, teamPoints]) => {
+      return {
+        team: teamMap[parseInt(teamId)],
+        key: teamId,
+        ...teamPoints,
+      } as RowDef;
+    });
+  } else {
+    rows = currentEvent.teams.map((team) => {
+      return {
+        team: team,
+        key: team?.id?.toString(),
+        default: 0,
+        ...Object.fromEntries(
+          categoryNames.map((categoryName) => [categoryName, 0])
+        ),
+      } as RowDef;
+    });
+  }
   const scoreColumns: any[] = [
     {
       title: "Team",
@@ -514,7 +515,7 @@ export function LadderTab(): JSX.Element {
       )}
       <div className="divider divider-primary">Ladder</div>
       <Table
-        data={ladder.sort((a, b) => a.rank - b.rank)}
+        data={ladder?.sort((a, b) => a.rank - b.rank) || []}
         columns={ladderColumns}
         className="h-[70vh]"
       />

@@ -19,7 +19,7 @@ export default defineConfig({
     tailwindcss(),
   ],
   preview: {
-    port: 3001,
+    port: 3000,
   },
   // for dev
   server: {

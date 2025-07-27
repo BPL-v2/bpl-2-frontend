@@ -43,7 +43,13 @@ function RootComponent() {
     const menu: MenuItem[] = [
       {
         label: <div className="text-4xl font-bold">BPL</div>,
-        icon: <img className="h-10" src="/assets/app-logos/bpl-logo.png" />,
+        icon: (
+          <img
+            className="h-10"
+            src="/assets/app-logos/bpl-logo.webp"
+            alt="bpl-logo"
+          />
+        ),
         url: "/",
         visible: true,
       },
@@ -80,11 +86,12 @@ function RootComponent() {
     <>
       <div className="max-w-[1440px] text-center mx-auto ">
         <div className="text-xl p-0 flex items-center ">
-          <ul className="navbar bg-base-200">
-            <div className="flex flex-1 justify-left gap-1 sm:gap-2 xl:gap-4">
+          <div className="navbar bg-base-200">
+            <ul className="flex flex-1 justify-left gap-1 sm:gap-2 xl:gap-4">
               {menu.map((item) => (
                 <li key={item.url}>
                   <Link
+                    aria-label={item.label.toString()}
                     to={item.url}
                     className="btn flex items-center gap-2 h-16 font-semibold text-xl btn-sm lg:btn-md"
                     activeProps={{
@@ -99,12 +106,9 @@ function RootComponent() {
                   </Link>
                 </li>
               ))}
-            </div>
-            {/* {isAdmin() ? <EventPicker /> : null} */}
-            <div tabIndex={0} className=" flex items-center">
-              <AuthButton />
-            </div>
-          </ul>
+            </ul>
+            <AuthButton />
+          </div>
         </div>
         <div className="min-h-[79vh] mb-4">
           {user && !user.account_name && (
@@ -113,7 +117,7 @@ function RootComponent() {
               to connect by logging in in the top right corner to connect your
               account so that we can track your characters progress.
             </div>
-          )}{" "}
+          )}
           <Outlet />
         </div>
         <Footer></Footer>
