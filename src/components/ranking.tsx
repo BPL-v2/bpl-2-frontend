@@ -81,7 +81,7 @@ export function Ranking({
             >
               <div className="card-body">
                 <div className="flex flex-row items-center justify-between ">
-                  <div className="stat-figure text-secondary row-span-2 hidden 2xl:block">
+                  <div className="stat-figure text-secondary row-span-2 hidden lg:block">
                     <div className="avatar online">
                       <div className="w-20">
                         <TeamLogo team={team} eventId={currentEvent.id} />
@@ -95,11 +95,11 @@ export function Ranking({
                           ?.name
                       }
                     </div>
-                    <div className="text-left text-lg bg-blend-normal font-extrabold">
+                    <div className="text-left text-lg bg-blend-normal font-semibold">
                       {description} {actual(teamId)} / {maximum}
                     </div>
                   </div>
-                  <div className="px-4">
+                  <div className="">
                     {
                       <div className="text-lg font-semibold">
                         {rank2text(score.rank)}

@@ -6,11 +6,11 @@ interface TeamNameProps {
 }
 export function TeamName({ team, className }: TeamNameProps) {
   if (!team) {
-    return <div className={className}>-</div>;
+    return <span className={className}>-</span>;
   }
   return (
-    <div className={className} style={{ color: team.color }}>
+    <span className={className} style={{ color: team.color }}>
       {team.name}
-    </div>
+    </span>
   );
 }

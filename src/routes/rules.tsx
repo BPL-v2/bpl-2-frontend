@@ -153,7 +153,7 @@ export function RulePage() {
   //   },
   // ];
   return (
-    <div className="text-left">
+    <article className="prose text-left p-4 max-w-full ">
       <div className="divider divider-primary" id="gameplay">
         Gameplay Rules
       </div>
@@ -213,7 +213,7 @@ export function RulePage() {
       <div className="divider divider-primary" id="faq">
         Frequently Asked Questions
       </div>
-      <div className="flex flex-col gap-1 mt-4">
+      <div className="flex flex-col gap-2 mt-4">
         {faqCollapse.map((faq, index) => (
           <div
             key={faq.label + index}
@@ -225,6 +225,6 @@ export function RulePage() {
           </div>
         ))}
       </div>
-    </div>
+    </article>
   );
 }

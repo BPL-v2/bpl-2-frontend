@@ -145,7 +145,7 @@ function ScoringPage() {
                 <Link
                   to={`/scores/${tab.key}`}
                   search={{ rules: rules }}
-                  className={`btn btn-sm text-base`}
+                  className={`btn btn-xs md:btn-sm text-base`}
                   activeProps={{
                     className: "btn-primary",
                   }}
