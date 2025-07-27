@@ -123,10 +123,7 @@ export function ScoringCategoryPage(): JSX.Element {
   const path = getPath(rules, categoryId);
   const bulkObjectiveForm = useAppForm({
     defaultValues: {} as BulkObjectiveCreate,
-    onSubmit: (data) => {
-      createBulkObjectives(data.value);
-      console.log(data.value);
-    },
+    onSubmit: (data) => createBulkObjectives(data.value),
   });
   const categoryForm = useAppForm({
     defaultValues: (currentObjective

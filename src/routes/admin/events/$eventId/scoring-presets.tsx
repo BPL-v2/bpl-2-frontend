@@ -99,7 +99,6 @@ function ScoringPresetsPage() {
     (state) => state.values
   );
   const dialog = useMemo(() => {
-    console.log("scoring_method", scoring_method);
     return (
       <Dialog
         open={isDialogOpen}

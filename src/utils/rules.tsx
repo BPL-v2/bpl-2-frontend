@@ -106,7 +106,6 @@ function getItemPointsRules(category: ScoreObjective) {
 }
 
 export function getPointRules(category: ScoreObjective) {
-  console.log(category);
   return (
     <>
       <h3>{category.name}</h3>

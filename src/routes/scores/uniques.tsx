@@ -118,7 +118,7 @@ function UniqueTab(): JSX.Element {
         setSelectedTeam={setSelectedTeam}
       />
       <div className="flex justify-center">
-        <fieldset className="fieldset w-xl bg-base-300 p-4 pt-4 rounded-box flex gap-12 flex-row justify-center m-2">
+        <fieldset className="fieldset w-xl bg-base-300 p-2 md:p-4 rounded-box flex gap-12 flex-row justify-center m-2">
           <div>
             <legend className="fieldset-legend">Category</legend>
             <input
@@ -129,7 +129,7 @@ function UniqueTab(): JSX.Element {
             />
           </div>
           <div>
-            <legend className="fieldset-legend ">Show finished</legend>
+            <legend className="fieldset-legend">Show finished</legend>
             <label className="fieldset-label">
               <input
                 type="checkbox"
@@ -148,9 +148,7 @@ function UniqueTab(): JSX.Element {
             </label>
           </div>
           <div>
-            <legend className="fieldset-legend">
-              Show 1st place unavailable
-            </legend>
+            <legend className="fieldset-legend">Show unwinnable</legend>
             <label className="fieldset-label">
               <input
                 type="checkbox"
