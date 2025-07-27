@@ -14,7 +14,6 @@ export function sortUsers(
     },
     {} as { [userId: number]: number }
   );
-  console.log("lockedSignups", lockedSignups);
   let suggestion = getSortSuggestion(currentEvent, signups);
   suggestion = improveFairness(suggestion, currentEvent, lockedSignups);
   suggestion = ensurePartners(suggestion, lockedSignups);

@@ -28,7 +28,7 @@ const TeamScoreDisplay = ({
   return (
     <>
       <div
-        className={`grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2 px-1 2xl:px-0`}
+        className={`grid grid-cols-3 md:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-1 md:gap-2 px-1 2xl:px-0`}
       >
         {currentEvent.teams.map((team) => {
           const bgColor =
@@ -39,13 +39,13 @@ const TeamScoreDisplay = ({
             team.id === selectedTeam ? "border-primary" : "border-transparent";
           return (
             <div
-              className={`card grow border-4  ${bgColor} ${borderColor} ${interactive}`}
+              className={`flex rounded-box border-4 p-0 ${bgColor} ${borderColor} ${interactive}`}
               key={team.id}
               onClick={() =>
                 setSelectedTeam ? setSelectedTeam(team.id) : null
               }
             >
-              <div className="stat px-0 md:px-4">
+              <div className="stat p-1 md:p-4">
                 <div className="col-start-1 font-bold text-xl md:text-2xl">
                   <TeamName team={team} />
                 </div>
@@ -57,30 +57,14 @@ const TeamScoreDisplay = ({
                     </div>
                   </div>
                 </div>
-                <div className="stat-value text-xl md:text-2xl">{`${
-                  teamScores[team.id]
-                } / ${potentialScores[team.id]}`}</div>
-                {/* <div className="stat-desc text-secondary">desc</div> */}
+                <div className="stat-value text-xl md:text-2xl whitespace-nowrap">
+                  {teamScores[team.id]}
+                  <span className="hidden md:inline">
+                    {" "}
+                    / {potentialScores[team.id]}
+                  </span>
+                </div>
               </div>
-
-              {/* <div className="flex justify-center gap-4 m-4 ">
-                <div className="avatar w-24 select-none">
-                  <img
-                    className=""
-                        src={`/assets/teams/${
-                          currentEvent.id
-                        }/${team.name.toLowerCase()}/logo-w-name.png`}
-                  ></img>
-                </div>
-                <div className="flex flex-col justify-center">
-                  <h2 className="text-2xl font-bold">{team.name}</h2>
-                  <p className="text-xl font-bold">
-                    {`Score: ${teamScores[team.id]} / ${
-                      potentialScores[team.id]
-                    }`}
-                  </p>
-                </div>
-              </div> */}
             </div>
           );
         })}

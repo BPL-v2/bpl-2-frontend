@@ -110,8 +110,6 @@ export function ForYouTab() {
       !objective.team_score[eventStatus.team_id!]?.finished &&
       (!objective.valid_from || new Date(objective.valid_from) < new Date())
   );
-  console.log("relevantObjectives", relevantObjectives);
-
   function categoryRender(category: ScoreObjective) {
     const childLeaves = category.children.filter(
       (obj) => obj.children.length === 0
