@@ -19,6 +19,7 @@ import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
 import { useGetLadder, useGetUsers } from "@client/query";
 import { POPointRules } from "@rules/po-points";
 import { getSkillColor } from "@utils/gems";
+import TeamScoreDisplay from "@components/team-score";
 type RowDef = {
   default: number;
   team: Team;
@@ -290,26 +291,25 @@ export function LadderTab(): JSX.Element {
     } else {
       columns = [
         {
-          accessorKey: "rank",
-          header: "Rank",
-          sortingFn: sortingFns.basic,
-          size: 100,
-        },
-        {
           accessorFn: (row) =>
-            row.account_name + row.character_name + row.character_class,
+            row.account_name +
+            row.character_name +
+            row.character_class +
+            row.character?.main_skill,
           header: " ",
           filterFn: "includesString",
           meta: {
             filterVariant: "string",
-            filterPlaceholder: "Character",
+            filterPlaceholder: "Search",
           },
           cell: (info) => (
             <LadderPortrait
               entry={info.row.original}
-              teamName={getTeam(info.row.original.user_id)?.name}
+              team={getTeam(info.row.original.user_id)}
             />
           ),
+          enableSorting: false,
+          size: 400,
         },
       ];
     }
@@ -383,44 +383,14 @@ export function LadderTab(): JSX.Element {
       key: "default",
       defaultSortOrder: "descend",
     },
-    ...getCompletionColumns(isMobile),
-  ];
-
-  function getCompletionColumns(isMobile: boolean) {
-    if (isMobile) {
-      return [
-        // {
-        //   title: "Categories",
-        //   render: (record: RowDef) => {
-        //     return (
-        //       <>
-        //         <div className="flex flex-wrap gap-2">
-        //           {categoryNames.map((categoryName) => {
-        //             return (
-        //               <div
-        //                 key={`badge-${categoryName}`}
-        //                 className="badge badge-primary badge-lg"
-        //               >
-        //                 {/* @ts-ignore */}
-        //                 {`${categoryName} ${record[categoryName]}`}
-        //               </div>
-        //             );
-        //           })}
-        //         </div>
-        //       </>
-        //     );
-        //   },
-        // },
-      ];
-    }
-
-    return categoryNames.map((categoryName) => ({
+    ...categoryNames.map((categoryName) => ({
       title: categoryName,
       dataIndex: categoryName,
       key: `column-${categoryName}`,
       sorter: (a: any, b: any) => a[categoryName] - b[categoryName],
-    }));
-  }
+    })),
+  ];
+
   const objs = scores?.children.find(
     (category) => category.name === "Personal Objectives"
   )?.children;
@@ -437,32 +407,38 @@ export function LadderTab(): JSX.Element {
           </article>
         </div>
       ) : null}
-      <div className="divider divider-primary ">Team Scores</div>
-      <table className="table bg-base-300 text-lg">
-        <thead className="bg-base-200">
-          <tr>
-            {scoreColumns.map((column) => (
-              <th key={`header-${column.key}`}>{column.title}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows
-            .sort((a, b) => b.default - a.default)
-            .map((row) => (
-              <tr key={row.key} className="hover:bg-base-200/50">
+      {isMobile ? (
+        <TeamScoreDisplay objective={scores} />
+      ) : (
+        <>
+          <div className="divider divider-primary ">Team Scores</div>
+          <table className="table bg-base-300 text-lg">
+            <thead className="bg-base-200">
+              <tr>
                 {scoreColumns.map((column) => (
-                  <td key={`column-${column.key}`}>
-                    {
-                      // @ts-ignore: column.dataIndex can be used to access the row data
-                      column.render ? column.render(row) : row[column.dataIndex]
-                    }
-                  </td>
+                  <th key={`header-${column.key}`}>{column.title}</th>
                 ))}
               </tr>
-            ))}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {rows
+                .sort((a, b) => b.default - a.default)
+                .map((row) => (
+                  <tr key={row.key} className="hover:bg-base-200/50">
+                    {scoreColumns.map((column) => (
+                      <td key={`column-${column.key}`}>
+                        {column.render
+                          ? column.render(row)
+                          : // @ts-ignore: column.dataIndex can be used to access the row data
+                            row[column.dataIndex]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </>
+      )}
       <div className="divider divider-primary">Personal Objective Points</div>
       {totalObjective && checkPoints && (
         <div className="card bg-base-300">

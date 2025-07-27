@@ -9,7 +9,7 @@ import { TeamLogo } from "./teamlogo";
 export type TeamScoreProps = {
   selectedTeam?: number;
   setSelectedTeam?: (teamId: number) => void;
-  objective: ScoreObjective;
+  objective?: ScoreObjective;
 };
 
 const TeamScoreDisplay = ({
@@ -17,10 +17,21 @@ const TeamScoreDisplay = ({
   selectedTeam,
   setSelectedTeam,
 }: TeamScoreProps) => {
-  const teamScores = getTotalPoints(objective);
-  const potentialScores = getPotentialPoints(objective);
+  if (!objective) {
+    return <></>;
+  }
+
   const { currentEvent } = useContext(GlobalStateContext);
+  const nullScore = currentEvent.teams.reduce(
+    (acc, team) => {
+      acc[team.id] = 0;
+      return acc;
+    },
+    {} as { [teamId: number]: number }
+  );
   const { eventStatus } = useGetEventStatus(currentEvent.id);
+  const teamScores = objective ? getTotalPoints(objective) : nullScore;
+  const potentialScores = objective ? getPotentialPoints(objective) : nullScore;
   if (!currentEvent || !currentEvent.teams) {
     return <></>;
   }
