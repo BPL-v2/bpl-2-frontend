@@ -2,7 +2,7 @@ import { JSX, useContext, useMemo } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { getRootCategoryNames } from "@mytypes/scoring-category";
 import { getTotalPoints } from "@utils/utils";
-import { GameVersion, LadderEntry, Team } from "@client/api";
+import { LadderEntry, Team } from "@client/api";
 import { ColumnDef, sortingFns } from "@tanstack/react-table";
 
 import { AscendancyName } from "@components/ascendancy-name";
@@ -11,7 +11,6 @@ import { TeamName } from "@components/team-name";
 import { LadderPortrait } from "@components/ladder-portrait";
 import { AscendancyPortrait } from "@components/ascendancy-portrait";
 import Table from "@components/table";
-import { ascendancies, poe2Mapping } from "@mytypes/ascendancy";
 import { calcPersonalPoints } from "@utils/personal-points";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import POProgressBar from "@components/po-progress";
