@@ -28,7 +28,7 @@ function getDeltaTimeAfterLeagueStart(
     (milliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
   );
   const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
-  return `Time since league start: ${days} days, ${hours} hours, ${minutes} minutes`;
+  return `${days} days, ${hours} hours, ${minutes} minutes`;
 }
 
 export const Route = createFileRoute("/profile/$userId/$eventId/$characterId")({
@@ -118,12 +118,26 @@ function RouteComponent() {
       },
       {
         label: "LVL",
-        stroke: "green",
+        stroke: "oklch(0.841 0.238 128.85)",
+        width: 2,
+        fill: "oklch(0.841 0.238 128.85 / 10%)",
+        points: {
+          size: 8,
+          stroke: "oklch(0.841 0.238 128.85)",
+          fill: "oklch(0.841 0.238 128.85)",
+        },
         scale: "lvl",
       },
       {
         label: selectedMetric.toUpperCase().replace("_", " "),
-        stroke: "red",
+        stroke: "oklch(0.789 0.154 211.53)",
+        width: 2,
+        fill: "oklch(0.789 0.154 211.53 / 10%)",
+        points: {
+          size: 8,
+          stroke: "oklch(0.789 0.154 211.53)",
+          fill: "oklch(0.789 0.154 211.53)",
+        },
         scale: "dps",
       },
     ],
@@ -161,13 +175,39 @@ function RouteComponent() {
       </div>
       {pobs.length > 0 && <PoB pobString={pobs[pobId].export_string} />}
       {state.data[0].length > 0 ? (
-        <div className="flex flex-row bg-base-300  rounded-box justify-center">
+        <div className="flex flex-row bg-base-200 rounded-box justify-center p-4 gap-4">
           <UplotReact
-            className="bg-base-200 rounded-box p-4"
+            className="bg-base-300 rounded-box p-4"
             options={state.options}
             data={state.data}
+            onCreate={(chart) => {
+              chart.over.addEventListener("click", (e) => {
+                const timestamp = chart.posToVal(e.offsetX, "x");
+                let minDiff = Infinity;
+                let closestDataPoint: number | null = null;
+                for (let i = 0; i < state.data[0].length; i++) {
+                  const dataPointTimestamp = state.data[0][i];
+                  const diff = Math.abs(dataPointTimestamp - timestamp);
+                  if (diff < minDiff) {
+                    minDiff = diff;
+                    closestDataPoint = i;
+                  }
+                }
+                if (closestDataPoint === null) {
+                  return;
+                }
+                for (let i = 0; i < pobs.length; i++) {
+                  const pob = pobs[i];
+                  const pobTimestamp = new Date(pob.timestamp).getTime();
+                  if (pobTimestamp >= state.data[0][closestDataPoint] * 1000) {
+                    setPobId(i);
+                    return;
+                  }
+                }
+              });
+            }}
           />
-          <div className="flex flex-col  p-4 self-auto">
+          <div className="flex flex-col p-4 self-auto bg-base-300 rounded-box">
             Shown Metric:
             {[
               "dps",
