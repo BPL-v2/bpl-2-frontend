@@ -8,7 +8,7 @@ import { PoB } from "@components/pob";
 import { getLevelFromExperience } from "@mytypes/level-info";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AlignedData } from "uplot";
 import UplotReact from "uplot-react";
 
@@ -28,8 +28,13 @@ function getDeltaTimeAfterLeagueStart(
     (milliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
   );
   const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
-  return `${days} days, ${hours} hours, ${minutes} minutes`;
+  return `${days} days, ${hours} hours, ${minutes} mins`;
 }
+const formatMetricTick = (val: number, maxMetric: number) => {
+  if (maxMetric >= 1_000_000) return (val / 1_000_000).toFixed(1) + " mil";
+  if (maxMetric >= 1_000) return (val / 1_000).toFixed(1) + "k";
+  return val.toString();
+};
 
 export const Route = createFileRoute("/profile/$userId/$eventId/$characterId")({
   component: RouteComponent,
@@ -51,12 +56,30 @@ export const Route = createFileRoute("/profile/$userId/$eventId/$characterId")({
     }),
   },
 });
+function drawVerticalLine(u: uPlot, timestamp: number, label: string) {
+  const ctx = u.ctx;
+  const xPos = u.valToPos(timestamp, "x") * window.devicePixelRatio;
+  ctx.beginPath();
+  ctx.moveTo(u.bbox.left + xPos, u.bbox.top);
+  ctx.lineTo(u.bbox.left + xPos, u.bbox.top + u.bbox.height);
+  ctx.strokeStyle = "white";
+  ctx.setLineDash([5, 5]);
+  ctx.stroke();
+  ctx.textAlign = "center";
+  ctx.textBaseline = "bottom";
+  ctx.textRendering = "optimizeLegibility";
+  ctx.fillStyle = "white";
+  ctx.fillText(label, u.bbox.left + xPos, u.bbox.top);
+  ctx.closePath();
+  ctx.setLineDash([]);
+}
 
 function RouteComponent() {
   const { preferences } = useContext(GlobalStateContext);
   const { userId, characterId, eventId } = useParams({ from: Route.id });
   const [selectedMetric, setSelectedMetric] =
     useState<keyof CharacterStat>("dps");
+  const plotRef = useRef<HTMLDivElement>(null);
 
   const { characterTimeseries = [] } = useGetCharacterTimeseries(
     characterId,
@@ -72,6 +95,9 @@ function RouteComponent() {
   }, [pobs]);
   const fontColor = preferences.theme === "dark" ? "white" : "black";
   const [pobId, setPobId] = useState<number>(0);
+  const selectedPobTimestamp = pobs[pobId]?.timestamp
+    ? new Date(pobs[pobId].timestamp).getTime() / 1000
+    : null;
 
   const data: AlignedData = [
     new Float64Array(characterTimeseries.map((c) => c.timestamp)),
@@ -84,6 +110,17 @@ function RouteComponent() {
     ...characterTimeseries.map((c) => c[selectedMetric]),
     1
   );
+
+  const verticalLinePlugin = (): uPlot.Plugin => ({
+    hooks: {
+      draw: (u: uPlot) => {
+        if (!selectedPobTimestamp) {
+          return;
+        }
+        drawVerticalLine(u, selectedPobTimestamp, `PoB`);
+      },
+    },
+  });
 
   const options: uPlot.Options = {
     title: "Progression",
@@ -99,15 +136,20 @@ function RouteComponent() {
       },
       {
         label: "Level",
+        labelFont: "16px sans-serif",
         side: 3,
         stroke: fontColor,
         scale: "lvl",
       },
       {
-        label: selectedMetric.toUpperCase(),
+        label: selectedMetric.toUpperCase().replace("_", " "),
+        labelGap: 10,
+        labelFont: "",
         side: 1,
         stroke: fontColor,
-        scale: "dps",
+        scale: "metric",
+        values: (self, ticks) =>
+          ticks.map((tick) => formatMetricTick(tick, maxMetric)),
       },
     ],
     series: [
@@ -138,14 +180,15 @@ function RouteComponent() {
           stroke: "oklch(0.789 0.154 211.53)",
           fill: "oklch(0.789 0.154 211.53)",
         },
-        scale: "dps",
+        scale: "metric",
       },
     ],
     scales: {
       x: { time: true },
       lvl: { range: [1, 100] },
-      dps: { range: [0, maxMetric] },
+      metric: { range: [0, maxMetric] },
     },
+    plugins: [verticalLinePlugin()],
   };
   const state = {
     options: options,
@@ -154,88 +197,100 @@ function RouteComponent() {
 
   return (
     <div className="w-full m-4 flex flex-col gap-4">
-      <div className="relative w-full flex items-center justify-center my-4">
-        <input
-          type="range"
-          className="range range-primary w-full range-xl [--range-thumb:blue]"
-          min="0"
-          max={pobs?.length ? pobs.length - 1 : 0}
-          value={pobId}
-          onChange={(e) => setPobId(Number(e.target.value))}
-        />
-        <span
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 px-2 py-1 rounded text-primary-content pointer-events-none select-none"
-          style={{ zIndex: 2 }}
-        >
-          {getDeltaTimeAfterLeagueStart(
-            pobs[pobId]?.timestamp,
-            event?.event_start_time
-          )}
-        </span>
-      </div>
       {pobs.length > 0 && <PoB pobString={pobs[pobId].export_string} />}
-      {state.data[0].length > 0 ? (
-        <div className="flex flex-row bg-base-200 rounded-box justify-center p-4 gap-4">
-          <UplotReact
-            className="bg-base-300 rounded-box p-4"
-            options={state.options}
-            data={state.data}
-            onCreate={(chart) => {
-              chart.over.addEventListener("click", (e) => {
-                const timestamp = chart.posToVal(e.offsetX, "x");
-                let minDiff = Infinity;
-                let closestDataPoint: number | null = null;
-                for (let i = 0; i < state.data[0].length; i++) {
-                  const dataPointTimestamp = state.data[0][i];
-                  const diff = Math.abs(dataPointTimestamp - timestamp);
-                  if (diff < minDiff) {
-                    minDiff = diff;
-                    closestDataPoint = i;
+      {state.data[0].length > 0 && (
+        <div className="bg-base-200 rounded-box justify-center">
+          <div className="relative flex items-center justify-center mx-4 mt-2">
+            <input
+              type="range"
+              className="range range-primary w-full range-xl [--range-thumb:blue]"
+              min="0"
+              max={pobs?.length ? pobs.length - 1 : 0}
+              value={pobId}
+              onChange={(e) => setPobId(Number(e.target.value))}
+            />
+            <span
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 px-2 py-1 rounded text-primary-content pointer-events-none select-none"
+              style={{ zIndex: 2 }}
+            >
+              {getDeltaTimeAfterLeagueStart(
+                pobs[pobId]?.timestamp,
+                event?.event_start_time
+              )}
+            </span>
+          </div>
+          <div className="flex flex-row bg-base-200 rounded-box justify-center p-4 gap-4">
+            <div className="bg-base-300 rounded-box p-4 w-full " ref={plotRef}>
+              <UplotReact
+                options={state.options}
+                data={state.data}
+                onCreate={(chart) => {
+                  chart.setSize({
+                    width: plotRef.current?.clientWidth || 800,
+                    height: plotRef.current?.clientHeight || 400,
+                  });
+                  chart.over.addEventListener("click", (e) => {
+                    const timestamp = chart.posToVal(e.offsetX, "x");
+                    let minDiff = Infinity;
+                    let closestDataPoint: number | null = null;
+                    for (let i = 0; i < state.data[0].length; i++) {
+                      const dataPointTimestamp = state.data[0][i];
+                      const diff = Math.abs(dataPointTimestamp - timestamp);
+                      if (diff < minDiff) {
+                        minDiff = diff;
+                        closestDataPoint = i;
+                      }
+                    }
+                    if (closestDataPoint === null) {
+                      return;
+                    }
+                    for (let i = 0; i < pobs.length; i++) {
+                      const pob = pobs[i];
+                      const pobTimestamp = new Date(pob.timestamp).getTime();
+                      if (
+                        pobTimestamp >=
+                        state.data[0][closestDataPoint] * 1000
+                      ) {
+                        setPobId(i);
+                        return;
+                      }
+                    }
+                  });
+                }}
+              />
+            </div>
+            <div className="flex flex-col p-4 self-auto bg-base-300 rounded-box">
+              Shown Metric:
+              {[
+                "dps",
+                "ehp",
+                "hp",
+                "mana",
+                "es",
+                "armour",
+                "evasion",
+                "ele_max_hit",
+                "phys_max_hit",
+                "movement_speed",
+              ].map((metric) => (
+                <button
+                  key={metric as string}
+                  className={`btn  m-1 ${
+                    selectedMetric === (metric as keyof CharacterStat)
+                      ? "btn-primary"
+                      : ""
+                  }`}
+                  onClick={() =>
+                    setSelectedMetric(metric as keyof CharacterStat)
                   }
-                }
-                if (closestDataPoint === null) {
-                  return;
-                }
-                for (let i = 0; i < pobs.length; i++) {
-                  const pob = pobs[i];
-                  const pobTimestamp = new Date(pob.timestamp).getTime();
-                  if (pobTimestamp >= state.data[0][closestDataPoint] * 1000) {
-                    setPobId(i);
-                    return;
-                  }
-                }
-              });
-            }}
-          />
-          <div className="flex flex-col p-4 self-auto bg-base-300 rounded-box">
-            Shown Metric:
-            {[
-              "dps",
-              "ehp",
-              "hp",
-              "mana",
-              "es",
-              "armour",
-              "evasion",
-              "ele_max_hit",
-              "phys_max_hit",
-              "movement_speed",
-            ].map((metric) => (
-              <button
-                key={metric as string}
-                className={`btn  m-1 ${
-                  selectedMetric === (metric as keyof CharacterStat)
-                    ? "btn-primary"
-                    : ""
-                }`}
-                onClick={() => setSelectedMetric(metric as keyof CharacterStat)}
-              >
-                {metric.toUpperCase().replace("_", " ")}
-              </button>
-            ))}
+                >
+                  {metric.toUpperCase().replace("_", " ")}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      ) : null}
+      )}
     </div>
   );
 }
