@@ -206,7 +206,7 @@ function RouteComponent() {
       {pobs.length > 0 && <PoB pobString={pobs[pobId].export_string} />}
       {state.data[0].length > 0 && (
         <div className="bg-base-200 rounded-box justify-center">
-          <div className="relative flex items-center justify-center mx-4 mt-2">
+          <div className="relative flex items-center justify-center m-4 mb-0">
             <input
               type="range"
               className="range range-primary w-full range-xl [--range-thumb:blue]"

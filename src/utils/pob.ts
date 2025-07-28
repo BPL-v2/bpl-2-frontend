@@ -854,10 +854,17 @@ function extractMagicBase(base: string, numMods: number): string {
 
 function mayBeFullBase(name: string): boolean {
   let words = 2;
-  if (
+  if (["Tricorne", "Sallet", "Chestplate"].includes(name)) {
+    words = 1;
+  } else if (
     name.endsWith("Shield") ||
     name.endsWith("Cluster Jewel") ||
-    name.endsWith("Abyss Jewel")
+    name.endsWith("Life Flask") ||
+    name.endsWith("Hybrid Flask") ||
+    name.endsWith("Mana Flask") ||
+    name.endsWith("Abyss Jewel") ||
+    name === "Full Scale Armour" ||
+    name === "Fingerless Silk Gloves"
   )
     words = 3;
   return name.trim().split(/\s+/).length === words;

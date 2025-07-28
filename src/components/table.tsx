@@ -140,7 +140,7 @@ function Table<T>({
           ))}
         </thead>
         <tbody
-          className={twMerge("bg-base-300", styles?.body)}
+          className={styles?.body}
           style={{
             height: `${rowVirtualizer.getTotalSize()}px`,
           }}
@@ -149,10 +149,10 @@ function Table<T>({
             const row = rows[virtualRow.index] as Row<T>;
             return (
               <tr
-                className={
-                  "flex absolute w-full items-center " +
-                  (rowClassName ? rowClassName(row) : " hover:bg-base-200/50")
-                }
+                className={twMerge(
+                  "flex absolute w-full items-center bg-base-300",
+                  rowClassName ? rowClassName(row) : " hover:bg-base-200"
+                )}
                 style={{
                   ...(rowStyle ? rowStyle(row) : {}),
                   transform: `translateY(${virtualRow.start}px)`,
