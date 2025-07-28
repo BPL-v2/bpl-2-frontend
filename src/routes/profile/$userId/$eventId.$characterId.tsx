@@ -184,7 +184,13 @@ function RouteComponent() {
       },
     ],
     scales: {
-      x: { time: true },
+      x: {
+        time: true,
+        range: (self, initMin, initMax) => [
+          self.scales.x.min || initMin,
+          self.scales.x.max || initMax,
+        ],
+      },
       lvl: { range: [1, 100] },
       metric: { range: [0, maxMetric] },
     },
