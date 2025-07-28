@@ -78,12 +78,6 @@ export function LadderTab(): JSX.Element {
     if (!isMobile) {
       columns = [
         {
-          accessorKey: "rank",
-          header: "Rank",
-          sortingFn: sortingFns.basic,
-          size: 100,
-        },
-        {
           accessorKey: "character_name",
           header: "",
           enableSorting: false,
@@ -106,31 +100,6 @@ export function LadderTab(): JSX.Element {
             </Link>
           ),
         },
-        // {
-        //   accessorKey: "account_name",
-        //   header: "",
-        //   enableSorting: false,
-        //   size: 250,
-        //   filterFn: "includesString",
-        //   meta: {
-        //     filterVariant: "string",
-        //     filterPlaceholder: "Account",
-        //   },
-        //   cell: (info) => {
-        //     const accountName = info.getValue<string>();
-        //     return info.row.original.user_id ? (
-        //       <Link
-        //         to={`/profile/$userId`}
-        //         params={{ userId: info.row.original.user_id }}
-        //         rel="noopener noreferrer"
-        //       >
-        //         {accountName}
-        //       </Link>
-        //     ) : (
-        //       accountName
-        //     );
-        //   },
-        // },
         {
           accessorFn: (row) => getTeam(row.user_id)?.name,
           header: " ",
@@ -147,14 +116,15 @@ export function LadderTab(): JSX.Element {
           },
         },
         {
-          accessorKey: "character_class",
+          id: "ascendancy",
+          accessorFn: (row) => row.character_class + row.character?.main_skill,
           header: "",
           cell: (info) => {
             return (
               <div className="flex items-center gap-2">
                 <AscendancyPortrait
                   character_class={info.row.original.character_class}
-                  className="w-8 h-8 rounded-full"
+                  className="w-10 h-10 rounded-full"
                 />
                 <div className="flex flex-col">
                   <span
@@ -176,15 +146,8 @@ export function LadderTab(): JSX.Element {
           filterFn: "includesString",
           enableSorting: false,
           meta: {
-            filterVariant: "enum",
-            filterPlaceholder: "Ascendancy",
-            options:
-              currentEvent.game_version === GameVersion.poe1
-                ? Object.keys(ascendancies[GameVersion.poe1])
-                : Object.entries(poe2Mapping).map(([key, value]) => ({
-                    label: value,
-                    value: key,
-                  })),
+            filterVariant: "string",
+            filterPlaceholder: "Ascendancy / Skill",
           },
         },
         {
@@ -271,7 +234,7 @@ export function LadderTab(): JSX.Element {
         // @ts-ignore
         header: (
           <button
-            className="btn btn-primary"
+            className="btn btn-primary btn-sm"
             onClick={() => {
               setPreferences({
                 ...preferences,
@@ -282,10 +245,10 @@ export function LadderTab(): JSX.Element {
               });
             }}
           >
-            {preferences.ladder.showPoPoints ? "Hide" : "Show"} P.O.
+            P.O.
           </button>
         ),
-        width: 50,
+        width: 10,
         id: "showPoPoints",
       });
     } else {
