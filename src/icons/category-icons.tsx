@@ -1145,7 +1145,7 @@ const svgMap: Record<string, (props: IconProps) => JSX.Element> = {
   Legion: LegionIcon,
   Ultimatum: UltimatumIcon,
   "Trial of Chaos": UltimatumIcon,
-  "Vendor Uniques": ShadeOfSolarisIcon,
+  Vendor: ShadeOfSolarisIcon,
   Warband: RedbladeBannerIcon,
   Bestiary: BestiaryIcon,
   Memories: MemoriesIcon,
