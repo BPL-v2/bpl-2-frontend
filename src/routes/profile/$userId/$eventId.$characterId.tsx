@@ -206,25 +206,27 @@ function RouteComponent() {
       {pobs.length > 0 && <PoB pobString={pobs[pobId].export_string} />}
       {state.data[0].length > 0 && (
         <div className="bg-base-200 rounded-box justify-center">
-          <div className="relative flex items-center justify-center m-4 mb-0">
-            <input
-              type="range"
-              className="range range-primary w-full range-xl [--range-thumb:blue]"
-              min="0"
-              max={pobs?.length ? pobs.length - 1 : 0}
-              value={pobId}
-              onChange={(e) => setPobId(Number(e.target.value))}
-            />
-            <span
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 px-2 py-1 rounded text-primary-content pointer-events-none select-none"
-              style={{ zIndex: 2 }}
-            >
-              {getDeltaTimeAfterLeagueStart(
-                pobs[pobId]?.timestamp,
-                event?.event_start_time
-              )}
-            </span>
-          </div>
+          {pobs.length > 0 && (
+            <div className="relative flex items-center justify-center m-4 mb-0">
+              <input
+                type="range"
+                className="range range-primary w-full range-xl [--range-thumb:blue]"
+                min="0"
+                max={pobs?.length ? pobs.length - 1 : 0}
+                value={pobId}
+                onChange={(e) => setPobId(Number(e.target.value))}
+              />
+              <span
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 px-2 py-1 rounded text-primary-content pointer-events-none select-none"
+                style={{ zIndex: 2 }}
+              >
+                {getDeltaTimeAfterLeagueStart(
+                  pobs[pobId]?.timestamp,
+                  event?.event_start_time
+                )}
+              </span>
+            </div>
+          )}
           <div className="flex flex-row bg-base-200 rounded-box justify-center p-4 gap-4">
             <div className="bg-base-300 rounded-box p-4 w-full " ref={plotRef}>
               <UplotReact
