@@ -265,7 +265,7 @@ export interface Character {
      * @type {number}
      * @memberof Character
      */
-    user_id: number;
+    user_id?: number;
 }
 
 /**
