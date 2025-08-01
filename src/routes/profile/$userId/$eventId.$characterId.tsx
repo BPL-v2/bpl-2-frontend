@@ -142,7 +142,7 @@ function RouteComponent() {
         scale: "lvl",
       },
       {
-        label: selectedMetric.toUpperCase().replace("_", " "),
+        label: selectedMetric.toUpperCase().replaceAll("_", " "),
         labelGap: 10,
         labelFont: "",
         side: 1,
@@ -171,7 +171,7 @@ function RouteComponent() {
         scale: "lvl",
       },
       {
-        label: selectedMetric.toUpperCase().replace("_", " "),
+        label: selectedMetric.toUpperCase().replaceAll("_", " "),
         stroke: "oklch(0.789 0.154 211.53)",
         width: 2,
         fill: "oklch(0.789 0.154 211.53 / 10%)",
@@ -290,7 +290,7 @@ function RouteComponent() {
                     setSelectedMetric(metric as keyof CharacterStat)
                   }
                 >
-                  {metric.toUpperCase().replace("_", " ")}
+                  {metric.toUpperCase().replaceAll("_", " ")}
                 </button>
               ))}
             </div>
