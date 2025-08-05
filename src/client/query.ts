@@ -144,19 +144,12 @@ export function useCreateSignup(
     mutationFn: ({ eventId, body }: { eventId: number; body: SignupCreate }) =>
       signupApi.createSignup(eventId, body),
     onSuccess: (data, variables) => {
-      qc.setQueryData(
-        [
+      qc.invalidateQueries({
+        queryKey: [
           "eventStatus",
           current !== variables.eventId ? variables.eventId : "current",
         ],
-        (old: EventStatus) => {
-          if (!old) return old;
-          return {
-            ...old,
-            application_status: ApplicationStatus.applied,
-          };
-        }
-      );
+      });
       qc.setQueryData(
         [
           "ownSignup",
@@ -197,18 +190,9 @@ export function useDeleteSignup(qc: QueryClient) {
   const m = useMutation({
     mutationFn: signupApi.deleteSignup,
     onSuccess: (_, eventId) => {
-      qc.setQueryData(
-        ["eventStatus", current !== eventId ? eventId : "current"],
-        (old: EventStatus) => {
-          if (!old) return old;
-          return {
-            ...old,
-            application_status: ApplicationStatus.none,
-            team_id: null,
-            is_team_lead: false,
-          };
-        }
-      );
+      qc.invalidateQueries({
+        queryKey: ["eventStatus", current !== eventId ? eventId : "current"],
+      });
       qc.setQueryData(
         ["ownSignup", current !== eventId ? eventId : "current"],
         undefined

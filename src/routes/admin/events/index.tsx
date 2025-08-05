@@ -54,7 +54,7 @@ function EventPage() {
     onSubmit: (data) => createEvent(data.value),
   });
 
-  const ColumnDef: ColumnDef<Event>[] = [
+  const columnDef: ColumnDef<Event>[] = [
     {
       header: "ID",
       accessorKey: "id",
@@ -74,25 +74,25 @@ function EventPage() {
     },
     {
       header: "Dates",
-      size: 300,
+      size: 260,
       cell: (info) => (
-        <div className="grid grid-cols-2 gap-2">
-          <div>Application Start: </div>
-          <div>
+        <div className="grid grid-cols-2 gap-0 w-full text-xs">
+          <div className="text-left">Application Start: </div>
+          <div className="text-right">
             {new Date(
               info.row.original.application_start_time
             ).toLocaleString()}
           </div>
-          <div>Application End: </div>
-          <div>
+          <div className="text-left">Application End: </div>
+          <div className="text-right">
             {new Date(info.row.original.application_end_time).toLocaleString()}
           </div>
-          <div>Event Start: </div>
-          <div>
+          <div className="text-left">Event Start: </div>
+          <div className="text-right">
             {new Date(info.row.original.event_start_time).toLocaleString()}
           </div>
-          <div>Event End: </div>
-          <div>
+          <div className="text-left">Event End: </div>
+          <div className="text-right">
             {new Date(info.row.original.event_end_time).toLocaleString()}
           </div>
         </div>
@@ -149,7 +149,7 @@ function EventPage() {
     },
     {
       header: "Actions",
-      size: 400,
+      size: 500,
       cell: (info) => (
         <div className="flex flex-row gap-2 flex-wrap">
           <button
@@ -328,7 +328,10 @@ function EventPage() {
         </form>
       </Dialog>
 
-      <Table columns={ColumnDef} data={events ?? []} />
+      <Table
+        columns={columnDef}
+        data={events?.sort((a, b) => b.id - a.id) ?? []}
+      />
       <button
         className="btn btn-success self-center"
         onClick={() => setIsOpen(true)}
