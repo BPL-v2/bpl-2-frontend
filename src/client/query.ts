@@ -15,8 +15,6 @@ import {
   conditionApi,
 } from "./client";
 import {
-  ApplicationStatus,
-  EventStatus,
   GuildStashTab,
   SignupCreate,
   JobType,
