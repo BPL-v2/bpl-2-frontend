@@ -154,7 +154,7 @@ function Home() {
                               >
                                 <AscendancyPortrait
                                   character_class={character_class}
-                                  className="avatar w-15 h-15 sm:w-16 sm:h-16 xl:w-20 xl:h-20 rounded-full"
+                                  className="avatar w-15 h-15 sm:w-16 sm:h-16 xl:w-20 xl:h-20 rounded-full object-cover"
                                 ></AscendancyPortrait>
                               </div>
                             ))}

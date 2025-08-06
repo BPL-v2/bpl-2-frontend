@@ -26,7 +26,7 @@ export function LadderPortrait({ entry, team }: Props) {
     >
       <AscendancyPortrait
         character_class={entry.character_class}
-        className="w-20 h-20 rounded-full"
+        className="w-20 h-20 rounded-full object-cover"
       />
       <div className="flex flex-col w-full">
         <span className="font-bold" style={{ color: team?.color || "inherit" }}>
