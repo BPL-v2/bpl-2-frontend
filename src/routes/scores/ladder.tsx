@@ -123,7 +123,7 @@ export function LadderTab(): JSX.Element {
               <div className="flex items-center gap-2">
                 <AscendancyPortrait
                   character_class={info.row.original.character_class}
-                  className="w-10 h-10 rounded-full"
+                  className="w-10 h-10 rounded-full object-cover"
                 />
                 <div className="flex flex-col">
                   <span

@@ -266,7 +266,7 @@ export function PoB({ pobString }: Probs) {
               <h1 className="flex items-center text-xl mb-1 gap-4">
                 <AscendancyPortrait
                   character_class={characterClass}
-                  className="w-14 h-14 rounded-full"
+                  className="w-14 h-14 rounded-full object-cover"
                 />
                 <span>
                   Level {pob.build.level}{" "}
