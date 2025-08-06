@@ -117,7 +117,7 @@ export function DelveTab(): JSX.Element {
             <div className="flex items-center gap-2">
               <AscendancyPortrait
                 character_class={info.row.original.character_class}
-                className="w-8 h-8 rounded-full"
+                className="w-8 h-8 rounded-full object-cover"
               />
               <AscendancyName
                 character_class={info.row.original.character_class}
