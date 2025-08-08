@@ -15,7 +15,8 @@ export const establishScoreSocket = (
     import.meta.env.VITE_PUBLIC_BPL_BACKEND_URL.replace("https", "wss").replace(
       "http",
       "ws"
-    ) + `/events/${eventId}/scores/ws`;
+    ) +
+    `/events/${eventId}/scores/ws?token=${localStorage.getItem("auth") || ""}`;
   const ws = new WebSocket(url);
   ws.onopen = () => {
     console.log("WebSocket connection established", new Date());
@@ -23,7 +24,6 @@ export const establishScoreSocket = (
 
   const previousScores: ScoreMap = {};
   ws.onmessage = (event) => {
-    console.log("Received new scores", new Date());
     const updates: ScoreDiff[] = [];
     Object.values(JSON.parse(event.data) as ScoreDiff[]).forEach((diff) => {
       if (diff.diff_type !== "Unchanged" && diff.score.finished) {
