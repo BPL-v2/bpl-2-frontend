@@ -2272,6 +2272,12 @@ export interface ObjectiveCreate {
     extra?: string;
     /**
      * 
+     * @type {boolean}
+     * @memberof ObjectiveCreate
+     */
+    hide_progress?: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof ObjectiveCreate
      */

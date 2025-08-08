@@ -148,6 +148,7 @@ export function ScoringCategoryPage(): JSX.Element {
           required_number: 1,
           conditions: [],
           parent_id: categoryId,
+          hide_progress: false,
         }) as ExtendedObjectiveCreate,
     onSubmit: (data) => {
       if (data.value.item_name) {
@@ -478,6 +479,15 @@ export function ScoringCategoryPage(): JSX.Element {
                     label: preset.name,
                     value: preset.id,
                   }))}
+                />
+              )}
+            />
+            <objectiveForm.AppField
+              name="hide_progress"
+              children={(field) => (
+                <field.BooleanField
+                  label="Hide Progress"
+                  className="checkbox-xl checkbox-primary"
                 />
               )}
             />
