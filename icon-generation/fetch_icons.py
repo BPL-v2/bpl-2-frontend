@@ -15,6 +15,7 @@ def encode(string: str) -> str:
         .replace(",", "")
         .replace("'", "")
         .replace('"', "")
+        .replace(':', "")
     )
 
 
