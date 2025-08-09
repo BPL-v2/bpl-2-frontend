@@ -13,6 +13,8 @@ def encode(string: str) -> str:
         .replace(" ", "_")
         .replace("%", "")
         .replace(",", "")
+        .replace("'", "")
+        .replace('"', "")
     )
 
 
@@ -42,7 +44,8 @@ def get_base_name(gem) -> Optional[str]:
 
 
 def get_gem_dict() -> dict[str, list[Gem]]:
-    response = request.urlopen("https://repoe-fork.github.io/gems_minimal.min.json")
+    response = request.urlopen(
+        "https://repoe-fork.github.io/gems_minimal.min.json")
     full_gems: dict = json.loads(response.read())
     gems: dict[str, list[Gem]] = {}
     gem_colors = {"r": set(), "g": set(), "b": set(), "w": set()}
