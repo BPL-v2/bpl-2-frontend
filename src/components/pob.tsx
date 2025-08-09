@@ -6,14 +6,14 @@ import { decodePoBExport, Item, Rarity } from "@utils/pob";
 import { useMemo, useState } from "react";
 import { AscendancyPortrait } from "./ascendancy-portrait";
 import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
+import { encode } from "@mytypes/scoring-objective";
 
 function getLink(item: Item) {
   let link = "/assets/poe1/items/";
   if (item.rarity === Rarity.Unique) {
-    link += "uniques/" + item.name.replaceAll(" ", "_") + ".webp";
+    link += "uniques/" + encode(item.name) + ".webp";
   } else {
-    link +=
-      "basetypes/" + item.base.split(" (")[0].replaceAll(" ", "_") + ".webp";
+    link += "basetypes/" + encode(item.base.split(" (")[0]) + ".webp";
   }
   return link;
 }
