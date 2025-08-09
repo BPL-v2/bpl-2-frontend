@@ -454,7 +454,7 @@ function getFirstConditionValue(condition: Condition): string {
   return "";
 }
 
-function encode(string: string): string {
+export function encode(string: string): string {
   return string
     .replaceAll(" ", "_")
     .replaceAll("%", "")
