@@ -456,11 +456,12 @@ function getFirstConditionValue(condition: Condition): string {
 
 function encode(string: string): string {
   return string
-    .replace(" ", "_")
-    .replace("%", "")
-    .replace(",", "")
-    .replace("'", "")
-    .replace('"', "");
+    .replaceAll(" ", "_")
+    .replaceAll("%", "")
+    .replaceAll(",", "")
+    .replaceAll("'", "")
+    .replaceAll(":", "")
+    .replaceAll('"', "");
 }
 
 export function getImageLocation(
