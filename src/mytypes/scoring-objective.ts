@@ -454,6 +454,15 @@ function getFirstConditionValue(condition: Condition): string {
   return "";
 }
 
+function encode(string: string): string {
+  return string
+    .replace(" ", "_")
+    .replace("%", "")
+    .replace(",", "")
+    .replace("'", "")
+    .replace('"', "");
+}
+
 export function getImageLocation(
   objective: ScoreObjective | Objective,
   gameVersion: GameVersion = GameVersion.poe1
@@ -489,10 +498,7 @@ export function getImageLocation(
           anomaly[objective.extra] || Object.values(anomaly)[0]
         }.webp`;
       }
-      return `/assets/${gameVersion}/items/uniques/${attributes.name.replaceAll(
-        " ",
-        "_"
-      )}.webp`;
+      return `/assets/${gameVersion}/items/uniques/${encode(attributes.name)}.webp`;
     }
     if (attributes.base_type) {
       if (anomalousBaseTypes[gameVersion][attributes.base_type]) {
@@ -500,20 +506,14 @@ export function getImageLocation(
           anomalousBaseTypes[gameVersion][attributes.base_type]
         }.webp`;
       }
-      return `/assets/${gameVersion}/items/basetypes/${attributes.base_type.replaceAll(
-        " ",
-        "_"
-      )}.webp`;
+      return `/assets/${gameVersion}/items/basetypes/${encode(attributes.base_type)}.webp`;
     }
     if (attributes.item_class) {
       const baseType = classToBaseType[attributes.item_class];
       if (!baseType) {
         return null;
       }
-      return `/assets/${gameVersion}/items/basetypes/${baseType.replaceAll(
-        " ",
-        "_"
-      )}.webp`;
+      return `/assets/${gameVersion}/items/basetypes/${encode(baseType)}.webp`;
     }
   }
   return null;
