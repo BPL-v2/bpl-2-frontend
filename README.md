@@ -1,4 +1,4 @@
-### Frontend for BPL
+# Frontend for BPL
 
 ## How to set up
 
@@ -32,3 +32,8 @@ Run the backend go server on localhost and execute
 ```
 ./generate_client.sh
 ```
+
+## Credits
+
+- Some code in this project is derived from [pasteofexile](https://github.com/Dav1dde/pasteofexile), licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See LICENSE for details.
+- Icons are provided by [RePoE Fork](https://github.com/repoe-fork/repoe).

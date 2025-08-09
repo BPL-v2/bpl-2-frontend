@@ -1,3 +1,6 @@
+// Portions of this file are derived from pasteofexile (https://github.com/Dav1dde/pasteofexile)
+// Licensed under GNU AGPL v3.0: https://www.gnu.org/licenses/agpl-3.0.html
+// Copyright (c) Dav1dde and contributors
 import pako from "pako";
 
 interface PlayerStats {
