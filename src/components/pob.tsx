@@ -47,10 +47,10 @@ function ItemWindow({ item }: { item?: Item }) {
 
   return (
     <div
-      className={`absolute left-full x z-10 x items-center justify-center pointer-events-none border bg-black/[0.9] flex flex-col gap w-128 text-center ${borderColor}`}
+      className={`absolute left-full x z-10 x items-center justify-center pointer-events-none border-2 bg-base-100 rounded-field flex flex-col gap w-128 text-center ${borderColor}`}
     >
       <div
-        className={`flex flex-col gap-1 text-xl font-bold p-2 border w-full ${headerColor} ${borderColor}`}
+        className={`flex flex-col gap-1 text-xl font-bold border-b-1 p-2 w-full ${borderColor} ${headerColor}`}
       >
         <p>{item.name}</p>
         <p>{item.name.includes(item.base) ? "" : item.base}</p>
@@ -59,7 +59,9 @@ function ItemWindow({ item }: { item?: Item }) {
         item.armour > 0 ||
         item.evasion > 0 ||
         item.energyShield > 0) && (
-        <div className={`flex flex-col gap-1 p-2 border w-full ${borderColor}`}>
+        <div
+          className={`flex flex-col gap-1 p-2 border-y-1 w-full ${borderColor}`}
+        >
           {item.quality > 0 && (
             <div>
               <span className="text-base-content/70">
@@ -89,7 +91,9 @@ function ItemWindow({ item }: { item?: Item }) {
         </div>
       )}
       {item.implicits.length > 0 && (
-        <div className={`flex flex-col gap-1 border p-2 w-full ${borderColor}`}>
+        <div
+          className={`flex flex-col gap-1 border-y-1 p-2 w-full ${borderColor}`}
+        >
           {item.implicits.map((implicit) => (
             <span className={implicit.crafted ? "text-crafted" : "text-magic"}>
               {implicit.line}
@@ -98,7 +102,9 @@ function ItemWindow({ item }: { item?: Item }) {
         </div>
       )}
       {item.explicits.length > 0 && (
-        <div className={`flex flex-col gap-1 border p-2 w-full ${borderColor}`}>
+        <div
+          className={`flex flex-col gap-1 border-t-1 p-2 w-full ${borderColor}`}
+        >
           {item.explicits.map((explicit) => (
             <span
               className={
@@ -297,14 +303,14 @@ export function PoB({ pobString }: Probs) {
             <div className="flex flex-row gap-2 justify-left">
               <div>
                 Life:{" "}
-                <span className="text-rose-500">
+                <span className="text-health">
                   {pob.build.playerStats.life.toLocaleString()}
                 </span>
               </div>
               {pob.build.playerStats.energyShield > 0 && (
                 <div>
                   ES:{" "}
-                  <span className="text-cyan-200">
+                  <span className="text-energy-shield">
                     {pob.build.playerStats.energyShield.toLocaleString()}
                   </span>
                 </div>
@@ -312,7 +318,7 @@ export function PoB({ pobString }: Probs) {
               {pob.build.playerStats.mana > 0 && (
                 <div>
                   Mana:{" "}
-                  <span className="text-blue-400">
+                  <span className="text-mana">
                     {pob.build.playerStats.mana.toLocaleString()}
                   </span>
                 </div>
@@ -328,34 +334,34 @@ export function PoB({ pobString }: Probs) {
                 </span>
                 {showEhpTooltip && (
                   <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 z-30 pointer-events-none w-60">
-                    <div className="bg-black/[0.9] py-2 px-4 text-sm whitespace-pre-line rounded-box shadow-lg">
+                    <div className="bg-base-100 py-2 px-4 text-sm whitespace-pre-line rounded-box shadow-lg">
                       <div>
                         <span>Physical Max Hit: </span>
-                        <span className="text-white">
+                        <span className="">
                           {pob.build.playerStats.physicalMaximumHitTaken.toLocaleString()}
                         </span>
                       </div>
                       <div>
                         <span>Fire Max Hit: </span>
-                        <span className="text-orange-400">
+                        <span className="text-fire">
                           {pob.build.playerStats.fireMaximumHitTaken.toLocaleString()}
                         </span>
                       </div>
                       <div>
                         <span>Cold Max Hit: </span>
-                        <span className="text-cyan-200">
+                        <span className="text-cold">
                           {pob.build.playerStats.coldMaximumHitTaken.toLocaleString()}
                         </span>
                       </div>
                       <div>
                         <span>Lightning Max Hit: </span>
-                        <span className="text-yellow-300">
+                        <span className="text-lightning">
                           {pob.build.playerStats.lightningMaximumHitTaken.toLocaleString()}
                         </span>
                       </div>
                       <div>
                         <span>Chaos Max Hit: </span>
-                        <span className="text-fuchsia-500">
+                        <span className="text-chaos">
                           {pob.build.playerStats.chaosMaximumHitTaken.toLocaleString()}
                         </span>
                       </div>
@@ -367,7 +373,7 @@ export function PoB({ pobString }: Probs) {
                 pob.build.playerStats.effectiveBlockChance > 20) && (
                 <div>
                   Block:{" "}
-                  <span className="text-white">
+                  <span className="text-highlight-content">
                     <span title="Attack Block">
                       {" "}
                       {Math.round(pob.build.playerStats.effectiveBlockChance)}%
@@ -386,7 +392,7 @@ export function PoB({ pobString }: Probs) {
               {pob.build.playerStats.effectiveSpellSuppressionChance > 25 && (
                 <div>
                   Suppression:{" "}
-                  <span className="dark:text-white">
+                  <span className="text-highlight-content">
                     {Math.round(
                       pob.build.playerStats.effectiveSpellSuppressionChance
                     )}
@@ -398,19 +404,19 @@ export function PoB({ pobString }: Probs) {
             <div className="flex flex-row gap-2  justify-left">
               <div>
                 Resistances:{" "}
-                <span className="text-orange-400">
+                <span className="text-fire">
                   {pob.build.playerStats.fireResist.toLocaleString()}%
                 </span>
                 /
-                <span className="text-blue-400">
+                <span className="text-cold">
                   {pob.build.playerStats.coldResist.toLocaleString()}%
                 </span>
                 /
-                <span className="text-yellow-300">
+                <span className="text-lightning">
                   {pob.build.playerStats.lightningResist.toLocaleString()}%
                 </span>
                 /
-                <span className="text-fuchsia-500">
+                <span className="text-chaos">
                   {pob.build.playerStats.chaosResist.toLocaleString()}%
                 </span>
               </div>
@@ -418,7 +424,7 @@ export function PoB({ pobString }: Probs) {
                 pob.build.playerStats.physicalDamageReduction > 5 && (
                   <div>
                     Armour:{" "}
-                    <span className="dark:text-white">
+                    <span className="text-highlight-content">
                       {pob.build.playerStats.armour.toLocaleString()}
                     </span>
                   </div>
@@ -426,7 +432,7 @@ export function PoB({ pobString }: Probs) {
               {pob.build.playerStats.meleeEvadeChance > 5 && (
                 <div>
                   Evasion:{" "}
-                  <span className="dark:text-white">
+                  <span className="text-highlight-content">
                     {pob.build.playerStats.evasion.toLocaleString()}
                   </span>
                 </div>
@@ -434,7 +440,7 @@ export function PoB({ pobString }: Probs) {
               {pob.build.playerStats.ward > 200 && (
                 <div>
                   Ward:{" "}
-                  <span className="dark:text-white">
+                  <span className="text-highlight-content">
                     {pob.build.playerStats.ward.toLocaleString()}
                   </span>
                 </div>
@@ -443,13 +449,13 @@ export function PoB({ pobString }: Probs) {
             <div className="flex flex-row gap-2">
               <div>
                 DPS:{" "}
-                <span className="dark:text-white">
+                <span className="text-highlight-content">
                   {Math.round(highestDps).toLocaleString()}
                 </span>
               </div>
               <div>
                 Speed:{" "}
-                <span className="dark:text-white">
+                <span className="text-highlight-content">
                   {pob.build.playerStats.speed?.toFixed(2)}
                 </span>
               </div>
@@ -457,7 +463,7 @@ export function PoB({ pobString }: Probs) {
                 <>
                   <div>
                     Crit Chance:{" "}
-                    <span className="dark:text-white">
+                    <span className="text-highlight-content">
                       {pob.build.playerStats.critChance
                         ?.toFixed(2)
                         .toLocaleString()}
@@ -466,7 +472,7 @@ export function PoB({ pobString }: Probs) {
                   </div>
                   <div>
                     Crit Multi:{" "}
-                    <span className="dark:text-white">
+                    <span className="text-highlight-content">
                       {pob.build.playerStats.critMultiplier?.toFixed(2)}
                     </span>
                   </div>
@@ -475,7 +481,7 @@ export function PoB({ pobString }: Probs) {
               {pob.build.playerStats.effectiveMovementSpeedMod > 2 && (
                 <div>
                   Movement Speed:{" "}
-                  <span className="dark:text-white">
+                  <span className="text-highlight-content">
                     {Math.round(
                       pob.build.playerStats.effectiveMovementSpeedMod * 100
                     )}
@@ -505,7 +511,7 @@ export function PoB({ pobString }: Probs) {
                         ) ||
                         gemColors.r.includes(gem.nameSpec + " Support")
                       ) {
-                        text = "text-rose-500";
+                        text = "text-strength";
                         tooltip = "tooltip-rose";
                       } else if (
                         gemColors.g.includes(
@@ -513,7 +519,7 @@ export function PoB({ pobString }: Probs) {
                         ) ||
                         gemColors.g.includes(gem.nameSpec + " Support")
                       ) {
-                        text = "text-lime-400";
+                        text = "text-dexterity";
                         tooltip = "tooltip-lime";
                       } else if (
                         gemColors.b.includes(
@@ -521,7 +527,7 @@ export function PoB({ pobString }: Probs) {
                         ) ||
                         gemColors.b.includes(gem.nameSpec + " Support")
                       ) {
-                        text = "text-blue-400";
+                        text = "text-intelligence";
                         tooltip = "tooltip-blue";
                       }
                     }

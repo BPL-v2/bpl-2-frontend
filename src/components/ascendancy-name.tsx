@@ -18,7 +18,7 @@ export function AscendancyName({ character_class }: AscendancyProps) {
     return character_class;
   }
   return (
-    <span className={`font-bold ${ascendancy[class_name].classColor}`}>
+    <span className={`font-semi-bold ${ascendancy[class_name].classColor}`}>
       {currentEvent.game_version === GameVersion.poe1
         ? character_class
         : class_name}

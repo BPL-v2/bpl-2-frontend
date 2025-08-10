@@ -62,9 +62,8 @@ export function TwitchPage() {
                 <Link
                   to={`/streams/$twitchAccount`}
                   params={{ twitchAccount: stream.user_login ?? "" }}
-                  className="cursor-pointer rounded-lg border-2"
+                  className="cursor-pointer rounded-field border-2"
                   activeProps={{ className: "border-primary" }}
-                  inactiveProps={{ className: "border-transparent" }}
                 >
                   <TwitchStreamEmbed stream={stream} width={340} height={170} />
                 </Link>
