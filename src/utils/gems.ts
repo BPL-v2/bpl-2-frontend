@@ -752,11 +752,11 @@ export function getSkillColor(skillName?: string): string {
   }
   const cleanedSkillName = skillName.replace("Vaal ", "");
   if (gemColors.r.includes(cleanedSkillName)) {
-    return "text-rose-500";
+    return "text-strength";
   } else if (gemColors.g.includes(cleanedSkillName)) {
-    return "text-lime-400";
+    return "text-dexterity";
   } else if (gemColors.b.includes(cleanedSkillName)) {
-    return "text-blue-400";
+    return "text-intelligence";
   }
   return "text-white";
 }

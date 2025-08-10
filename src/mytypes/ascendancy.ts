@@ -129,12 +129,12 @@ export const ascendancies: Record<GameVersion, Record<string, ClassDef>> = {
     Scion: {
       thumbnail: "/assets/poe1/ascendancies/thumbnails/Scion.png",
       image: "/assets/poe1/ascendancies/Scion.png",
-      classColor: "text-white",
+      classColor: "text-highlight-content",
     },
     Ascendant: {
       thumbnail: "/assets/poe1/ascendancies/thumbnails/Ascendant.png",
       image: "/assets/poe1/ascendancies/Ascendant.jpg",
-      classColor: "text-white",
+      classColor: "text-highlight-content",
     },
     Shadow: {
       thumbnail: "/assets/poe1/ascendancies/thumbnails/Shadow.png",

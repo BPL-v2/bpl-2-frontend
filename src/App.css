@@ -7,7 +7,7 @@
 @plugin "daisyui/theme" {
   name: "dark";
   default: false;
-  prefersdark: false;
+  prefersdark: true;
   color-scheme: "dark";
   --color-base-100: oklch(10% 0.034 265.754);
   --color-base-200: oklch(20% 0.034 265.754);
@@ -21,14 +21,14 @@
   --color-accent-content: oklch(14.472% 0.035 350.048);
   --color-neutral: oklch(27.949% 0.036 260.03);
   --color-neutral-content: oklch(100% 0 0);
-  --color-info: oklch(68.455% 0.148 237.251);
-  --color-info-content: oklch(0% 0 0);
-  --color-success: oklch(78.452% 0.132 181.911);
-  --color-success-content: oklch(15.69% 0.026 181.911);
-  --color-warning: oklch(83.242% 0.139 82.95);
-  --color-warning-content: oklch(16.648% 0.027 82.95);
-  --color-error: oklch(71.785% 0.17 13.118);
-  --color-error-content: oklch(14.357% 0.034 13.118);
+  --color-info: oklch(70% 0.15 240);
+  --color-info-content: oklch(15% 0.1 20);
+  --color-success: oklch(70% 0.15 160);
+  --color-success-content: oklch(15% 0.1 160);
+  --color-warning: oklch(70% 0.15 80);
+  --color-warning-content: oklch(15% 0.1 80);
+  --color-error: oklch(70% 0.2 0);
+  --color-error-content: oklch(15% 0.1 0);
   --radius-selector: 1rem;
   --radius-field: 1rem;
   --radius-box: 1rem;
@@ -37,6 +37,16 @@
   --border: 1px;
   --depth: 0;
   --noise: 0;
+  --color-highlight: oklch(0% 0 0);
+  --color-highlight-content: oklch(100% 0 0);
+
+  --color-health: var(--color-rose-500);
+  --color-mana: var(--color-blue-400);
+  --color-energy-shield: var(--color-cyan-200);
+  --color-lightning: var(--color-yellow-300);
+  --color-fire: var(--color-orange-400);
+  --color-cold: var(--color-blue-400);
+  --color-chaos: var(--color-fuchsia-500);
 }
 
 @plugin "daisyui/theme" {
@@ -44,35 +54,51 @@
   default: false;
   prefersdark: false;
   color-scheme: "light";
-  --color-base-100: oklch(97% 0.014 254.604);
-  --color-base-200: oklch(93% 0.032 255.585);
-  --color-base-300: oklch(85% 0.059 254.128);
-  --color-base-content: oklch(20% 0.091 267.935);
-  --color-primary: oklch(51% 0.262 276.966);
-  --color-primary-content: oklch(96% 0.018 272.314);
-  --color-secondary: oklch(55% 0.288 302.321);
-  --color-secondary-content: oklch(97% 0.014 308.299);
-  --color-accent: oklch(72.36% 0.176 350.048);
-  --color-accent-content: oklch(14.472% 0.035 350.048);
-  --color-neutral: oklch(27.949% 0.036 260.03);
-  --color-neutral-content: oklch(100% 0 0);
-  --color-info: oklch(50% 0.134 242.749);
-  --color-info-content: oklch(98% 0.003 247.858);
-  --color-success: oklch(69% 0.17 162.48);
-  --color-success-content: oklch(12% 0.042 264.695);
-  --color-warning: oklch(68% 0.162 75.834);
-  --color-warning-content: oklch(14% 0.004 49.25);
-  --color-error: oklch(70% 0.237 25.331);
-  --color-error-content: oklch(14.357% 0.034 13.118);
+  --color-base-100: oklch(100% 0 0);
+  --color-base-200: oklch(97.466% 0.011 259.822);
+  --color-base-300: oklch(93.268% 0.016 262.751);
+  --color-base-content: oklch(41.886% 0.053 255.824);
+  --color-primary: oklch(60% 0.262 276.966);
+  --color-primary-content: oklch(91.372% 0.051 257.57);
+  --color-secondary: oklch(60% 0.35 300);
+  --color-secondary-content: oklch(88.51% 0.032 282.339);
+  --color-accent: oklch(59.939% 0.191 335.171);
+  --color-accent-content: oklch(11.988% 0.038 335.171);
+  --color-neutral: oklch(19.616% 0.063 257.651);
+  --color-neutral-content: oklch(83.923% 0.012 257.651);
+  --color-info: oklch(70% 0.15 240);
+  --color-info-content: oklch(15% 0.1 20);
+  --color-success: oklch(70% 0.2 160);
+  --color-success-content: oklch(15% 0.1 160);
+  --color-warning: oklch(70% 0.2 80);
+  --color-warning-content: oklch(15% 0.1 80);
+  --color-error: oklch(70% 0.2 0);
+  --color-error-content: oklch(15% 0.1 0);
   --radius-selector: 1rem;
   --radius-field: 1rem;
   --radius-box: 1rem;
   --size-selector: 0.25rem;
   --size-field: 0.25rem;
-  --border: 2px;
+  --border: 1px;
   --depth: 0;
   --noise: 0;
+  --color-highlight: oklch(100% 0.02 160);
+  --color-highlight-content: oklch(0% 0 0);
+
+  --color-health: var(--color-rose-600);
+  --color-mana: var(--color-blue-500);
+  --color-energy-shield: var(--color-cyan-500);
+  --color-lightning: var(--color-amber-500);
+  --color-fire: var(--color-orange-700);
+  --color-cold: var(--color-blue-500);
+  --color-chaos: var(--color-fuchsia-600);
+  --color-rare: var(--color-yellow-400);
+
+  --color-strength: var(--color-rose-600);
+  --color-dexterity: var(--color-lime-500);
+  --color-intelligence: var(--color-blue-600);
 }
+
 @theme {
   --color-unique: #af5f1c;
   --color-magic: #8181f2;
@@ -80,6 +106,21 @@
   --color-fractured: #a29162;
   --color-crafted: #b4b4ff;
   --color-corrupted: #d20000;
+
+  --color-health: var(--color-rose-500);
+  --color-mana: var(--color-blue-400);
+  --color-energy-shield: var(--color-cyan-200);
+  --color-lightning: var(--color-yellow-300);
+  --color-fire: var(--color-orange-400);
+  --color-cold: var(--color-blue-400);
+  --color-chaos: var(--color-fuchsia-500);
+
+  --color-strength: var(--color-rose-500);
+  --color-dexterity: var(--color-lime-400);
+  --color-intelligence: var(--color-blue-400);
+
+  --color-highlight: oklch(0% 0 0);
+  --color-highlight-content: oklch(100% 0 0);
 }
 
 @utility input {
@@ -88,23 +129,6 @@
 
 @utility select {
   @apply border-2 focus:outline-none;
-}
-
-[data-theme="light"] {
-  .bg-highlight {
-    background-color: oklch(94% 0.05 255);
-  }
-  .content-highlight {
-    color: oklch(0% 0 0);
-  }
-}
-[data-theme="dark"] {
-  .bg-highlight {
-    background-color: oklch(45% 0.03 265.754);
-  }
-  .content-highlight {
-    color: oklch(100% 0 0);
-  }
 }
 
 html {
@@ -121,58 +145,6 @@ html {
 }
 .bg-twitch {
   background-color: #9146ff;
-}
-
-.twitch-viewer-count {
-  position: absolute;
-  bottom: 10px;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  color: white;
-  padding: 0px 0.4rem;
-  font-size: 1rem;
-  border-radius: 4px;
-}
-
-.twitch-live-indicator {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: red;
-  color: white;
-  font-weight: bold;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-  display: inline-block;
-  text-align: center;
-  font-size: 0.8em;
-  border-radius: 4px;
-}
-
-.twitch-stream-info {
-  display: flex;
-  margin-left: 0.5rem;
-  text-align: left;
-}
-
-.twitch-stream-username {
-  margin: 0;
-  font-weight: bold;
-  font-size: 1.3rem;
-}
-
-.twitch-stream-title {
-  margin: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  font-size: 1rem;
-}
-.twitch-stream-title span {
-  display: inline-block;
-  transition: transform 1s ease;
-  margin-bottom: 0.5rem;
-  margin-right: 0.5rem;
 }
 
 #marquee:hover span {

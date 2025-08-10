@@ -13,18 +13,10 @@ export const TwitchStreamEmbed = ({
 }: TwitchStreamEmbedProps) => {
   return (
     <div
-      style={{
-        width: `${width}px`,
-        backgroundColor: "black",
-        overflow: "hidden",
-        borderRadius: "8px",
-      }}
+      className="bg-base-200 rounded-field overflow-hidden"
+      style={{ width: `${width}px`, minHeight: `${height + 60}px` }}
     >
-      <div
-        style={{
-          position: "relative",
-        }}
-      >
+      <div className="relative">
         {stream.thumbnail_url ? (
           <img
             src={stream.thumbnail_url
@@ -33,14 +25,21 @@ export const TwitchStreamEmbed = ({
             alt={stream.title}
           />
         ) : null}
-        <div className="twitch-live-indicator">LIVE</div>
-        <div className="twitch-viewer-count">{stream.viewer_count} viewers</div>
+        <div className="absolute top-2 left-2 bg-red-600 text-white rounded-md px-2 font-bold text-sm">
+          LIVE
+        </div>
+        <div className="absolute bottom-2 left-2 bg-black/50 text-white rounded-lg px-2 text-sm">
+          {stream.viewer_count} viewers
+        </div>
       </div>
-      <div className="twitch-stream-info">
-        <div>
-          <h1>{stream.user_name}</h1>
-          <p id="marquee" className="twitch-stream-title">
-            <span>{stream.title}</span>
+      <div className="text-left rounded-full ml-2">
+        <div className="rounded-full">
+          <h1 className="font-bold text-lg">{stream.user_name}</h1>
+          <p
+            id="marquee"
+            className="overflow-hidden overflow-ellipsis whitespace-nowrap"
+          >
+            <span className="inline-block my-1">{stream.title}</span>
           </p>
         </div>
       </div>
