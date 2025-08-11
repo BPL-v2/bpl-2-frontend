@@ -1103,7 +1103,7 @@ function RedbladeBannerIcon({
   );
 }
 
-const svgMap: Record<string, (props: IconProps) => JSX.Element> = {
+export const iconMap: Record<string, (props: IconProps) => JSX.Element> = {
   Sanctum: SanctumIcon,
   Abyss: AbyssIcon,
   Arbiter: ArbiterIcon,
@@ -1165,7 +1165,7 @@ export function CategoryIcon({
   height,
   style,
 }: IconRendererProps) {
-  const renderer = svgMap[name];
+  const renderer = iconMap[name];
 
   if (!renderer) {
     return;
