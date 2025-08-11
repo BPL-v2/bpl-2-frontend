@@ -211,8 +211,9 @@ export function rank2text(rank: number) {
 }
 
 export function flatMap<T extends Objective | ScoreObjective>(
-  objective: T
+  objective?: T
 ): T[] {
+  if (!objective) return [];
   const objectives: T[] = [objective];
   for (const child of objective.children) {
     objectives.push(...flatMap(child as T));
@@ -299,4 +300,15 @@ export function getPath(
     }
   }
   return [];
+}
+
+export function timeSort<T, K extends keyof T>(
+  timefield: K,
+  direction: "asc" | "desc"
+): (a: T & Record<K, string>, b: T & Record<K, string>) => number {
+  return (a, b) => {
+    const timeA = new Date(a[timefield]).getTime();
+    const timeB = new Date(b[timefield]).getTime();
+    return direction === "asc" ? timeA - timeB : timeB - timeA;
+  };
 }

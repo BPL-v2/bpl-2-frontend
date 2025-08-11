@@ -22,6 +22,7 @@ import { useGetEventStatus } from "@client/query";
 type scoringTabKey =
   | "ladder"
   | "for-you"
+  | "progress"
   | "uniques"
   | "races"
   | "bounties"
@@ -79,6 +80,11 @@ function ScoringPage() {
         name: "For You",
         key: "for-you",
         visible: !!eventStatus?.team_id,
+      },
+      {
+        name: "Progress",
+        key: "progress",
+        visible: true,
       },
       {
         name: "Uniques",
