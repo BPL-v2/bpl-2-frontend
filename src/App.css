@@ -37,7 +37,7 @@
   --border: 1px;
   --depth: 0;
   --noise: 0;
-  --color-highlight: oklch(0% 0 0);
+  --color-highlight: oklch(40% 0.034 265.754);
   --color-highlight-content: oklch(100% 0 0);
 
   --color-health: var(--color-rose-500);
