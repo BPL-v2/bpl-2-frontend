@@ -2146,6 +2146,12 @@ export interface Objective {
     extra: string;
     /**
      * 
+     * @type {boolean}
+     * @memberof Objective
+     */
+    hide_progress: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof Objective
      */
@@ -2691,6 +2697,12 @@ export interface Signup {
     expected_playtime: number;
     /**
      * 
+     * @type {string}
+     * @memberof Signup
+     */
+    extra?: string;
+    /**
+     * 
      * @type {boolean}
      * @memberof Signup
      */
@@ -2751,6 +2763,12 @@ export interface SignupCreate {
      * @memberof SignupCreate
      */
     expected_playtime: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SignupCreate
+     */
+    extra?: string;
     /**
      * 
      * @type {boolean}

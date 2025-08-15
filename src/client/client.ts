@@ -23,7 +23,11 @@ const authenticatedFetch: typeof fetch = async (input, init = {}) => {
   const authToken = localStorage.getItem("auth");
   const headers = new Headers(init.headers || {});
   if (authToken) {
-    headers.set("Authorization", `Bearer ${authToken}`);
+    try {
+      headers.set("Authorization", `Bearer ${authToken}`);
+    } catch (error) {
+      console.error("Error setting auth token:", error);
+    }
   }
   return fetch(input, { ...init, headers });
 };
