@@ -1,5 +1,5 @@
 import { Event } from "@client/api";
-import { ExtendedSignup } from "src/routes/admin/team-sort";
+import { ExtendedSignup } from "../routes/admin/team-sort";
 
 export function sortUsers(
   currentEvent: Event,

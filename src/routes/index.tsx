@@ -8,7 +8,7 @@ import { HeartIcon } from "@heroicons/react/24/solid";
 import { useGetEvents, useGetEventStatus } from "@client/query";
 import { AscendancyPortrait } from "@components/ascendancy-portrait";
 import { TeamLogo } from "@components/teamlogo";
-import ApplicationButton from "@components/application-button";
+import SignupButton from "@components/signup-button";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -33,7 +33,7 @@ function Home() {
       {!hasEnded && (
         <div className="card max-w-full bg-base-300">
           <div className="card-body px-12 py-4 text-2xl flex flex-row gap-8 items-center">
-            <ApplicationButton />
+            <SignupButton />
             <div className="divider divider-horizontal" />
             <div>
               Signups: {eventStatus?.number_of_signups || 0} /{" "}

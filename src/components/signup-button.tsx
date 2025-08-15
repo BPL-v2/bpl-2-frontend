@@ -15,7 +15,7 @@ import {
 } from "@client/query";
 import { useQueryClient } from "@tanstack/react-query";
 
-const ApplicationButton = () => {
+const SignupButton = () => {
   const { currentEvent } = useContext(GlobalStateContext);
   const state = useRouterState();
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -59,6 +59,10 @@ const ApplicationButton = () => {
                 wants_to_help: wantToHelp,
                 needs_help: needHelp,
                 partner_account_name: partnerName,
+                extra:
+                  formData.get("extra") === "on"
+                    ? JSON.stringify({ guild_owner: true })
+                    : undefined,
               },
             });
           }}
@@ -83,7 +87,7 @@ const ApplicationButton = () => {
                 />
               </div>
             </div>
-            <label className="fieldset-label">
+            {/* <label className="fieldset-label">
               Do you want to play with another person? (PoE account name
               required)
             </label>
@@ -93,8 +97,16 @@ const ApplicationButton = () => {
                 type="text"
                 className="input input-bordered w-full bg-base-200"
               />
-            </div>
-
+            </div> */}
+            <label className="fieldset-label text-info">
+              <input
+                type="checkbox"
+                id="extra"
+                name="extra"
+                className="checkbox checkbox-info"
+              />
+              Are you owner of a guild with unlocked guild stashes?
+            </label>
             <label className="fieldset-label">
               <input
                 type="checkbox"
@@ -280,4 +292,4 @@ const ApplicationButton = () => {
   }
 };
 
-export default ApplicationButton;
+export default SignupButton;
