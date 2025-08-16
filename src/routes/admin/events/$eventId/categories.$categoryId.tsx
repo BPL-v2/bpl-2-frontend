@@ -33,7 +33,7 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@components/table";
 import { findObjective, getPath } from "@utils/utils";
-import { useAppForm } from "@components/form/context";
+import { setFormValues, useAppForm } from "@components/form/context";
 import { useQueryClient } from "@tanstack/react-query";
 import { useStore } from "@tanstack/react-form";
 import {
@@ -84,8 +84,6 @@ export function ScoringCategoryPage(): JSX.Element {
   const [isBulkObjectiveModalOpen, setIsBulkObjectiveModalOpen] =
     useState(false);
   const [isConditionModalOpen, setIsConditionModalOpen] = useState(false);
-  const [currentObjective, setCurrentObjective] =
-    useState<ExtendedObjectiveCreate>();
   const { events } = useGetEvents();
   const { scoringPresets } = useGetScoringPresetsForEvent(eventId);
   const { rules } = useGetRules(eventId);
@@ -107,12 +105,8 @@ export function ScoringCategoryPage(): JSX.Element {
       bulkObjectiveForm.reset();
     }
   );
-  const { addObjectiveCondition } = useAddObjectiveCondition(
-    qc,
-    eventId,
-    () => {
-      setIsConditionModalOpen(false);
-    }
+  const { addObjectiveCondition } = useAddObjectiveCondition(qc, eventId, () =>
+    setIsConditionModalOpen(false)
   );
   const { deleteObjectiveCondition } = useDeleteObjectiveCondition(qc, eventId);
   const objective = findObjective(
@@ -126,30 +120,26 @@ export function ScoringCategoryPage(): JSX.Element {
     onSubmit: (data) => createBulkObjectives(data.value),
   });
   const categoryForm = useAppForm({
-    defaultValues: (currentObjective
-      ? currentObjective
-      : {
-          aggregation: null,
-          scoring_preset_id: null,
-          name: "",
-          extra: "",
-          number_field: NumberField.FINISHED_OBJECTIVES,
-          required_number: 1,
-          conditions: [],
-          parent_id: categoryId,
-          objective_type: ObjectiveType.CATEGORY,
-        }) as ObjectiveCreate,
+    defaultValues: {
+      aggregation: null,
+      scoring_preset_id: null,
+      name: "",
+      extra: "",
+      number_field: NumberField.FINISHED_OBJECTIVES,
+      required_number: 1,
+      conditions: [],
+      parent_id: categoryId,
+      objective_type: ObjectiveType.CATEGORY,
+    } as unknown as ObjectiveCreate,
     onSubmit: (data) => createObjective(data.value),
   });
   const objectiveForm = useAppForm({
-    defaultValues: (currentObjective
-      ? currentObjective
-      : {
-          required_number: 1,
-          conditions: [],
-          parent_id: categoryId,
-          hide_progress: false,
-        }) as ExtendedObjectiveCreate,
+    defaultValues: {
+      required_number: 1,
+      conditions: [],
+      parent_id: categoryId,
+      hide_progress: false,
+    } as unknown as ExtendedObjectiveCreate,
     onSubmit: (data) => {
       if (data.value.item_name) {
         data.value.conditions = extendConditions(
@@ -172,13 +162,7 @@ export function ScoringCategoryPage(): JSX.Element {
   });
   const conditionForm = useAppForm({
     defaultValues: {} as ConditionCreate,
-    onSubmit: (data) => {
-      if (!currentObjective?.id) {
-        return;
-      }
-      data.value.objective_id = currentObjective.id;
-      addObjectiveCondition(data.value);
-    },
+    onSubmit: (data) => addObjectiveCondition(data.value),
   });
 
   const { objective_type } = useStore(
@@ -281,20 +265,23 @@ export function ScoringCategoryPage(): JSX.Element {
                 <button
                   className="btn btn-warning btn-sm"
                   onClick={() => {
-                    objectiveForm.reset();
-                    setCurrentObjective({
-                      ...row.original,
-                      item_base_type: row.original.conditions.find(
+                    setFormValues(objectiveForm, row.original);
+                    objectiveForm.setFieldValue(
+                      "item_base_type",
+                      row.original.conditions.find(
                         (condition) =>
                           condition.field === ItemField.BASE_TYPE &&
                           condition.operator === Operator.EQ
-                      )?.value,
-                      item_name: row.original.conditions.find(
+                      )?.value
+                    );
+                    objectiveForm.setFieldValue(
+                      "item_name",
+                      row.original.conditions.find(
                         (condition) =>
                           condition.field === ItemField.NAME &&
                           condition.operator === Operator.EQ
-                      )?.value,
-                    });
+                      )?.value
+                    );
                     setIsObjectiveModalOpen(true);
                   }}
                 >
@@ -307,9 +294,7 @@ export function ScoringCategoryPage(): JSX.Element {
               >
                 <button
                   className="btn btn-error btn-sm"
-                  onClick={() => {
-                    deleteObjective(row.original.id);
-                  }}
+                  onClick={() => deleteObjective(row.original.id)}
                 >
                   <TrashIcon className="w-4 h-4" />
                 </button>
@@ -346,7 +331,10 @@ export function ScoringCategoryPage(): JSX.Element {
                 <button
                   className="btn btn-success btn-sm"
                   onClick={() => {
-                    setCurrentObjective(row.original);
+                    conditionForm.setFieldValue(
+                      "objective_id",
+                      row.original.id
+                    );
                     setIsConditionModalOpen(true);
                   }}
                 >
@@ -376,7 +364,7 @@ export function ScoringCategoryPage(): JSX.Element {
   const objectiveDialog: React.ReactNode = useMemo(() => {
     return (
       <Dialog
-        title={currentObjective ? "Edit Objective" : "Create Objective"}
+        title={"Create Objective"}
         open={isObjectiveModalOpen}
         setOpen={setIsObjectiveModalOpen}
         className="max-w-2xl max-h-[90vh] h-[80vh]"
@@ -503,7 +491,7 @@ export function ScoringCategoryPage(): JSX.Element {
               Cancel
             </button>
             <button type="submit" className="btn btn-primary">
-              {currentObjective ? "Update" : "Create"}
+              Save
             </button>
           </div>
         </form>
@@ -514,7 +502,6 @@ export function ScoringCategoryPage(): JSX.Element {
     objective_type,
     numberFieldsForObjectiveType,
     isObjectiveModalOpen,
-    currentObjective,
     objectiveForm,
   ]);
 
@@ -601,7 +588,7 @@ export function ScoringCategoryPage(): JSX.Element {
   const categoryDialog: React.ReactNode = useMemo(() => {
     return (
       <Dialog
-        title={currentObjective ? "Edit Category" : "Create Category"}
+        title={"Create Category"}
         open={isCategoryModalOpen}
         setOpen={setIsCategoryModalOpen}
         className="max-w-lg"
@@ -654,13 +641,13 @@ export function ScoringCategoryPage(): JSX.Element {
               Cancel
             </button>
             <button type="submit" className="btn btn-primary">
-              {currentObjective ? "Update" : "Create"}
+              Save
             </button>
           </div>
         </form>
       </Dialog>
     );
-  }, [scoringPresets, isCategoryModalOpen, categoryForm, currentObjective]);
+  }, [scoringPresets, isCategoryModalOpen, categoryForm]);
 
   const conditionDialog: React.ReactNode = useMemo(() => {
     let operatorOptions: Operator[] = [];
@@ -784,7 +771,6 @@ export function ScoringCategoryPage(): JSX.Element {
           className="btn btn-primary"
           onClick={() => {
             setIsCategoryModalOpen(true);
-            setCurrentObjective(undefined);
             categoryForm.reset();
           }}
         >
@@ -793,9 +779,8 @@ export function ScoringCategoryPage(): JSX.Element {
         <button
           className="btn btn-primary"
           onClick={() => {
+            setFormValues(categoryForm, objective);
             setIsCategoryModalOpen(true);
-            setCurrentObjective(objective);
-            categoryForm.reset(objective);
           }}
         >
           Edit this Category
@@ -803,7 +788,6 @@ export function ScoringCategoryPage(): JSX.Element {
         <button
           className="btn btn-primary"
           onClick={() => {
-            setCurrentObjective(undefined);
             setIsObjectiveModalOpen(true);
           }}
         >

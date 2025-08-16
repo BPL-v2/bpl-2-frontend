@@ -31,7 +31,6 @@ function TeamPage() {
   const { eventId } = useParams({ from: Route.id });
   const { events, isPending, isError } = useGetEvents();
   const event = events?.find((event) => event.id === eventId);
-  const [team, setTeam] = useState<Team>();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const qc = useQueryClient();
   const { createTeam } = useCreateTeam(qc, eventId, () => {
@@ -40,14 +39,12 @@ function TeamPage() {
   const { deleteTeam } = useDeleteTeam(qc, eventId);
 
   const teamForm = useAppForm({
-    defaultValues: team
-      ? team
-      : ({
-          name: "",
-          color: "#bbb",
-          allowed_classes: [],
-        } as TeamCreate),
-    onSubmit: (data) => createTeam(data.value),
+    defaultValues: {
+      name: "",
+      color: "#000000",
+      allowed_classes: [],
+    } as TeamCreate,
+    onSubmit: (data) => createTeam(data.value as TeamCreate),
   });
 
   const columns: ColumnDef<Team>[] = [
@@ -88,7 +85,7 @@ function TeamPage() {
           <button
             className="btn btn-sm btn-warning"
             onClick={() => {
-              setTeam(info.row.original);
+              teamForm.reset(info.row.original, { keepDefaultValues: true });
               setIsDialogOpen(true);
             }}
           >
@@ -102,7 +99,7 @@ function TeamPage() {
   const dialog = useMemo(() => {
     return (
       <Dialog
-        title={team ? "Edit Team" : "Create Team"}
+        title={"Create Team"}
         open={isDialogOpen}
         setOpen={setIsDialogOpen}
         className="w-md "
@@ -178,13 +175,13 @@ function TeamPage() {
               Cancel
             </button>
             <button className="btn btn-primary" type="submit">
-              {team ? "Save" : "Create"}
+              {"Save"}
             </button>
           </div>
         </form>
       </Dialog>
     );
-  }, [team, teamForm, isDialogOpen, event?.game_version]);
+  }, [teamForm, isDialogOpen, event?.game_version]);
 
   if (isPending) {
     return <div className="loading loading-spinner loading-lg"></div>;
@@ -204,7 +201,6 @@ function TeamPage() {
         onClick={() => {
           teamForm.reset();
           setIsDialogOpen(true);
-          setTeam(undefined);
         }}
       >
         Create Team

@@ -20,7 +20,7 @@ import Table from "@components/table";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { useAppForm } from "@components/form/context";
+import { setFormValues, useAppForm } from "@components/form/context";
 import { Dialog } from "@components/dialog";
 import { useStore } from "@tanstack/react-form";
 
@@ -61,19 +61,16 @@ function pointsRenderer(points: number[]) {
 
 function ScoringPresetsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [scoringPreset, setScoringPreset] = useState<ScoringPreset>();
   const { eventId } = useParams({ from: Route.id });
   const { events } = useGetEvents();
   const event = events?.find((event) => event.id === eventId);
   const { scoringPresets } = useGetScoringPresetsForEvent(eventId);
   const qc = useQueryClient();
   const presetForm = useAppForm({
-    defaultValues: scoringPreset
-      ? scoringPreset
-      : ({
-          points: [] as number[],
-          type: ScoringPresetType.OBJECTIVE,
-        } as ScoringPresetCreate),
+    defaultValues: {
+      points: [] as number[],
+      type: ScoringPresetType.OBJECTIVE,
+    } as ScoringPresetCreate,
     onSubmit: (data) => {
       const create = JSON.parse(
         JSON.stringify(data.value)
@@ -90,7 +87,6 @@ function ScoringPresetsPage() {
   const { addScoringPreset } = useAddScoringPreset(qc, eventId, () => {
     setIsDialogOpen(false);
     presetForm.reset();
-    setScoringPreset(undefined);
   });
   const { deleteScoringPreset } = useDeleteScoringPreset(qc, eventId);
 
@@ -102,7 +98,7 @@ function ScoringPresetsPage() {
     return (
       <Dialog
         open={isDialogOpen}
-        title={scoringPreset ? "Update Preset" : "Create Preset"}
+        title={"Create Preset"}
         setOpen={setIsDialogOpen}
         className="max-w-md"
       >
@@ -158,7 +154,7 @@ function ScoringPresetsPage() {
         </form>
       </Dialog>
     );
-  }, [isDialogOpen, presetForm, scoringPreset, scoring_method]);
+  }, [isDialogOpen, presetForm, scoring_method]);
 
   if (!eventId || !event) {
     return <div>Event not found</div>;
@@ -214,7 +210,7 @@ function ScoringPresetsPage() {
             className="btn btn-sm btn-warning"
             onClick={() => {
               setIsDialogOpen(true);
-              setScoringPreset(info.row.original);
+              setFormValues(presetForm, info.row.original);
             }}
           >
             <PencilSquareIcon className="w-4 h-4" />
@@ -233,7 +229,6 @@ function ScoringPresetsPage() {
         className="btn btn-primary self-center"
         onClick={() => {
           setIsDialogOpen(true);
-          setScoringPreset(undefined);
           presetForm.reset();
         }}
       >
