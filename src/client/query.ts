@@ -32,7 +32,7 @@ import {
   Character,
 } from "./api";
 import { isLoggedIn } from "@utils/token";
-import { BulkObjectiveCreate } from "src/routes/admin/events/$eventId/categories.$categoryId";
+import { BulkObjectiveCreate } from "../routes/admin/events/$eventId/categories.$categoryId";
 
 let current = 0;
 

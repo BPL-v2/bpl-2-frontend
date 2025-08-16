@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Event, Permission, GameVersion, EventCreate } from "@client/api";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
 import { renderConditionally } from "@utils/token";
-import { useAppForm } from "@components/form/context";
+import { setFormValues, useAppForm } from "@components/form/context";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@components/table";
 import {
@@ -28,7 +28,6 @@ export const Route = createFileRoute("/admin/events/")({
 function EventPage() {
   const { events, isPending, isError } = useGetEvents();
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<Event | undefined>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { duplicateEvent } = useDuplicateEvent(queryClient);
@@ -36,21 +35,19 @@ function EventPage() {
   const { deleteEvent } = useDeleteEvent(queryClient);
 
   const form = useAppForm({
-    defaultValues: selectedEvent
-      ? selectedEvent
-      : ({
-          name: "",
-          game_version: GameVersion.poe1,
-          application_start_time: new Date().toISOString(),
-          application_end_time: new Date().toISOString(),
-          event_start_time: new Date().toISOString(),
-          event_end_time: new Date().toISOString(),
-          max_size: 0,
-          waitlist_size: 0,
-          is_current: false,
-          is_public: false,
-          is_locked: false,
-        } as EventCreate),
+    defaultValues: {
+      name: "",
+      game_version: GameVersion.poe1,
+      application_start_time: new Date().toISOString(),
+      application_end_time: new Date().toISOString(),
+      event_start_time: new Date().toISOString(),
+      event_end_time: new Date().toISOString(),
+      max_size: 1000,
+      waitlist_size: 100,
+      is_current: false,
+      is_public: false,
+      is_locked: false,
+    } as EventCreate,
     onSubmit: (data) => createEvent(data.value),
   });
 
@@ -155,8 +152,7 @@ function EventPage() {
           <button
             className="btn btn-warning btn-sm"
             onClick={() => {
-              setSelectedEvent(info.row.original);
-              form.reset();
+              setFormValues(form, info.row.original);
               setIsOpen(true);
             }}
           >
@@ -235,7 +231,7 @@ function EventPage() {
       <Dialog
         setOpen={setIsOpen}
         open={isOpen}
-        title={selectedEvent ? "Update Event" : "Create Event"}
+        title={"Create Event"}
         className="max-w-xl"
       >
         <form
@@ -322,7 +318,7 @@ function EventPage() {
               Cancel
             </button>
             <button type="submit" className="btn btn-success">
-              {selectedEvent ? "Update" : "Create"}
+              Save
             </button>
           </div>
         </form>

@@ -62,7 +62,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
     if (onChange && date && time) {
       onChange(toIsoString(time, date));
     }
-  }, [date, time, name]);
+  }, [date, time]);
 
   return (
     <label
