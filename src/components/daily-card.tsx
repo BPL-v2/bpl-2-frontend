@@ -6,6 +6,7 @@ import { Countdown } from "./countdown";
 import { useQueryClient } from "@tanstack/react-query";
 import { ScoreObjective } from "@mytypes/score";
 import { ScoringMethod } from "@client/api";
+import { twMerge } from "tailwind-merge";
 
 export type DailyCardProps = {
   daily: ScoreObjective;
@@ -61,8 +62,17 @@ export function DailyCard({ daily }: DailyCardProps) {
     true
   );
 
+  const isRace =
+    daily.scoring_preset?.scoring_method === ScoringMethod.RANKED_TIME;
+  const isAvailable = daily.valid_to && new Date(daily.valid_to) > new Date();
   return (
-    <div className="card bg-base-200" key={daily.id}>
+    <div
+      className={twMerge(
+        "card bg-base-200",
+        isRace && isAvailable ? "outline-4 outline-info" : ""
+      )}
+      key={daily.id}
+    >
       <div className="card-title rounded-t-box flex items-center m-0 px-4 bg-base-200 h-25">
         <ObjectiveIcon
           objective={daily}
@@ -73,12 +83,7 @@ export function DailyCard({ daily }: DailyCardProps) {
           data-tip={daily.extra}
         >
           <h3 className="flex-grow text-center mt-4 text-lg font-medium mx-4">
-            {daily.scoring_preset?.scoring_method ===
-            ScoringMethod.RANKED_TIME ? (
-              <b className="font-extrabold">Race: </b>
-            ) : (
-              ""
-            )}
+            {isRace ? <b className="font-extrabold text-info">Race: </b> : ""}
             {daily.name}
             {daily.extra ? <i className="text-error">*</i> : null}
           </h3>
