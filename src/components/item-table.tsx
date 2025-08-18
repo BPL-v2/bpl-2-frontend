@@ -13,6 +13,7 @@ import {
   getVariantMap,
 } from "@utils/utils";
 import { useGetEventStatus, useGetUsers } from "@client/query";
+import { twMerge } from "tailwind-merge";
 
 export type ItemTableProps = {
   objective: ScoreObjective;
@@ -265,9 +266,8 @@ export function ItemTable({
               if (user) {
                 return (
                   <div
-                    // className="tooltip cursor-help tooltip-bottom z-1000 flex justify-center w-full"
-                    className="flex justify-center w-full"
-                    // data-tip={`scored by ${user.display_name}`}
+                    className="tooltip tooltip-info cursor-help tooltip-bottom z-1000 flex justify-center w-full"
+                    data-tip={`scored by ${user.display_name}`}
                   >
                     <CheckCircleIcon className="h-6 w-6 text-success" />
                   </div>
@@ -329,10 +329,12 @@ export function ItemTable({
             }) as ExtendedScoreObjective[]
         }
         rowClassName={(row) =>
-          "hover:bg-base-200/50 " +
-          (row.original.isVariant ? "bg-base-200" : "")
+          twMerge(
+            "hover:bg-base-200/50 ",
+            row.original.isVariant && "bg-base-200"
+          )
         }
-        className={className ? className : `w-full h-[70vh]`}
+        className={className ? className : "w-full h-[70vh]"}
         styles={styles}
       />
     </>

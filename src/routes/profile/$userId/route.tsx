@@ -18,6 +18,7 @@ import {
   usePrevNextButtons,
 } from "@components/carousel-arrows";
 import { DotButton, useDotButton } from "@components/carousel-buttons";
+import { twMerge } from "tailwind-merge";
 
 export const Route = createFileRoute("/profile/$userId")({
   component: ProfilePage,
@@ -58,7 +59,7 @@ export function ProfilePage() {
         (b, a) => a.event_id - b.event_id
       )[0];
       router.navigate({
-        to: `/profile/$userId/$eventId/$characterId`,
+        to: "/profile/$userId/$eventId/$characterId",
         params: {
           characterId: sortedCharacter.id,
           userId: userId,
@@ -101,14 +102,16 @@ export function ProfilePage() {
                 return (
                   <div className="embla__slide" key={char.id}>
                     <Link
-                      to={`/profile/$userId/$eventId/$characterId`}
+                      to={"/profile/$userId/$eventId/$characterId"}
                       params={{
                         characterId: char.id,
                         userId: userId,
                         eventId: char.event_id,
                       }}
                       key={char.event_id + char.name}
-                      className={`card w-80 h-130 bg-base-200 m-2 cursor-pointer select-none embla__slide`}
+                      className={
+                        "card w-80 h-130 bg-base-200 m-2 cursor-pointer select-none embla__slide"
+                      }
                       activeProps={{
                         className: "border-primary  shadow-2xl shadow-primary",
                       }}
@@ -136,7 +139,10 @@ export function ProfilePage() {
                           <p>
                             <span>{char.main_skill}</span>{" "}
                             <span
-                              className={`font-bold ${ascendancyObj.classColor}`}
+                              className={twMerge(
+                                "font-bold",
+                                ascendancyObj.classColor
+                              )}
                             >
                               {ascendancyName}
                             </span>

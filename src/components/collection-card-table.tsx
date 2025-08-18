@@ -4,6 +4,7 @@ import { GlobalStateContext } from "@utils/context-provider";
 import { ProgressBar } from "./progress-bar";
 import { Score } from "@client/api";
 import { useGetEventStatus } from "@client/query";
+import { twMerge } from "tailwind-merge";
 
 type CollectionCardTableProps = {
   objective: ScoreObjective;
@@ -29,11 +30,8 @@ function getPlace(score: Score) {
 function finishTooltip(objective: ScoreObjective, score: Score) {
   const place = getPlace(score);
   return `${place} ${
-    objective.scoring_preset
-      ? `${score.points}/${Math.max(
-          ...objective.scoring_preset!.points
-        )} points`
-      : ""
+    objective.scoring_preset &&
+    `${score.points}/${Math.max(...objective.scoring_preset!.points)} points`
   }`;
 }
 
@@ -55,7 +53,7 @@ export function CollectionCardTable({
     .slice(0, preferences.limitTeams ? preferences.limitTeams : undefined)
     .map((team) => team.id);
   return (
-    <table key={objective.id} className="w-full mt-2">
+    <table key={objective.id} className="w-full">
       <tbody className="bg-base-300">
         {Object.entries(objective.team_score)
           .filter(([teamId]) => teamIds.includes(parseInt(teamId)))
@@ -68,7 +66,7 @@ export function CollectionCardTable({
             }
             return scoreB.points - scoreA.points;
           })
-          .map(([teamId, score]) => {
+          .map(([teamId, score], idx) => {
             let num = score.number;
             const percent = (100 * num) / objective.required_number;
             return (
@@ -81,15 +79,21 @@ export function CollectionCardTable({
                 key={teamId}
               >
                 {showPoints ? (
-                  <td className="py-1 px-2">
+                  <td
+                    className={twMerge(
+                      "py-1 px-2",
+                      idx === teamIds.length - 1 && "rounded-bl-box"
+                    )}
+                  >
                     <div
                       className="tooltip"
                       data-tip={finishTooltip(objective, score)}
                     >
                       <div
-                        className={`text-left px-2 ${
+                        className={twMerge(
+                          "text-left px-2",
                           percent < 100 ? "text-error" : "text-success"
-                        }`}
+                        )}
                       >
                         {score.points}
                       </div>
@@ -103,7 +107,12 @@ export function CollectionCardTable({
                     maxVal={objective.required_number}
                   />
                 </td>
-                <td className="text-left px-2">
+                <td
+                  className={twMerge(
+                    "text-left px-2",
+                    idx === teamIds.length - 1 && "rounded-br-box"
+                  )}
+                >
                   {currentEvent?.teams.find((team) => team.id === teamId)?.name}
                 </td>
               </tr>

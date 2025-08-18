@@ -26,22 +26,23 @@ export function DailyTab(): JSX.Element {
           </article>
         </div>
       ) : null}
-      <TeamScoreDisplay objective={dailyCategory}></TeamScoreDisplay>
-      <div className="divider divider-primary">Dailies</div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-        {dailyCategory.children
-          .sort((dailyA: ScoreObjective, dailyB: ScoreObjective) => {
-            const releaseA = dailyA.valid_from
-              ? new Date(dailyA.valid_from)
-              : new Date();
-            const releaseB = dailyB.valid_from
-              ? new Date(dailyB.valid_from)
-              : new Date();
-            return releaseA.getTime() - releaseB.getTime();
-          })
-          .map((daily) => (
-            <DailyCard daily={daily} key={`daily-${daily.id}`} />
-          ))}
+      <div className="flex flex-col gap-4">
+        <TeamScoreDisplay objective={dailyCategory}></TeamScoreDisplay>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+          {dailyCategory.children
+            .sort((dailyA: ScoreObjective, dailyB: ScoreObjective) => {
+              const releaseA = dailyA.valid_from
+                ? new Date(dailyA.valid_from)
+                : new Date();
+              const releaseB = dailyB.valid_from
+                ? new Date(dailyB.valid_from)
+                : new Date();
+              return releaseA.getTime() - releaseB.getTime();
+            })
+            .map((daily) => (
+              <DailyCard daily={daily} key={`daily-${daily.id}`} />
+            ))}
+        </div>
       </div>
     </>
   );

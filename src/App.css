@@ -123,6 +123,19 @@
   --color-highlight-content: oklch(100% 0 0);
 }
 
+@utility bborder {
+  @apply border-1;
+  @apply border-base-content/20;
+}
+@utility bborder-b {
+  @apply border-b-1;
+  @apply border-base-content/20;
+}
+@utility bborder-t {
+  @apply border-t-1;
+  @apply border-base-content/20;
+}
+
 @utility input {
   @apply border-2 focus:outline-none;
 }

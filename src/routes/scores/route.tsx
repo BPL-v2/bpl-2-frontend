@@ -18,6 +18,7 @@ import {
 } from "@tanstack/react-router";
 import { router } from "../../router";
 import { useGetEventStatus } from "@client/query";
+import { twMerge } from "tailwind-merge";
 
 type scoringTabKey =
   | "ladder"
@@ -56,7 +57,7 @@ function ScoringPage() {
   useEffect(() => {
     if (selected === "scores") {
       router.navigate({
-        to: `/scores/ladder`,
+        to: "/scores/ladder",
         search: {
           rules: rules,
         },
@@ -151,7 +152,7 @@ function ScoringPage() {
                 <Link
                   to={`/scores/${tab.key}`}
                   search={{ rules: rules }}
-                  className={`btn btn-xs md:btn-sm text-base`}
+                  className={"btn btn-xs md:btn-sm text-base"}
                   activeProps={{
                     className: "btn-primary",
                   }}
@@ -166,9 +167,10 @@ function ScoringPage() {
         </ul>
         <Link
           to={"/scores/" + selected}
-          className={`btn w-14 md:w-36 border-1 border-secondary mx-2 ${
+          className={twMerge(
+            "btn w-14 md:w-36 border-1 border-secondary mx-2",
             rules ? "bg-secondary text-secondary-content" : "text-secondary"
-          }`}
+          )}
           search={{ rules: !rules }}
         >
           <BookOpenIcon className="h-6 w-6" />

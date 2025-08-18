@@ -16,6 +16,7 @@ import { Link } from "@tanstack/react-router";
 import { CollectionCardTable } from "./collection-card-table";
 import { useGetEventStatus, useSubmitBounty } from "@client/query";
 import { useQueryClient } from "@tanstack/react-query";
+import { twMerge } from "tailwind-merge";
 
 export type SubmissionTabProps = {
   categoryName: string;
@@ -123,134 +124,151 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
           </button>
         </div>
       </Dialog>
-      <TeamScoreDisplay objective={category}></TeamScoreDisplay>
-      <h1 className="text-xl mt-4">
-        Click to see all{" "}
-        <Link
-          to={`/submissions`}
-          className="text-primary underline cursor-pointer"
-        >
-          Submissions
-        </Link>
-      </h1>
-      <div className="divider divider-primary">{category.name}</div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-        {category.children
-          .filter(
-            (objective) => objective.objective_type == ObjectiveType.SUBMISSION
-          )
-          .map((objective) => {
-            const teamIds = currentEvent.teams
-              .sort((a, b) => {
-                if (a.id === eventStatus?.team_id) return -1;
-                if (b.id === eventStatus?.team_id) return 1;
-                return (
-                  (objective.team_score[b.id]?.points || 0) -
-                  (objective.team_score[a.id]?.points || 0)
-                );
-              })
-              .slice(
-                0,
-                preferences.limitTeams ? preferences.limitTeams : undefined
-              )
-              .map((team) => team.id);
+      <div className="flex flex-col gap-4">
+        <TeamScoreDisplay objective={category}></TeamScoreDisplay>
+        <h1 className="text-xl">
+          Click to see all{" "}
+          <Link
+            to={"/submissions"}
+            className="text-primary underline cursor-pointer"
+          >
+            Submissions
+          </Link>
+        </h1>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+          {category.children
+            .filter(
+              (objective) =>
+                objective.objective_type == ObjectiveType.SUBMISSION
+            )
+            .map((objective) => {
+              const teamIds = currentEvent.teams
+                .sort((a, b) => {
+                  if (a.id === eventStatus?.team_id) return -1;
+                  if (b.id === eventStatus?.team_id) return 1;
+                  return (
+                    (objective.team_score[b.id]?.points || 0) -
+                    (objective.team_score[a.id]?.points || 0)
+                  );
+                })
+                .slice(
+                  0,
+                  preferences.limitTeams ? preferences.limitTeams : undefined
+                )
+                .map((team) => team.id);
 
-            return (
-              <div className="card bg-base-300" key={objective.id}>
-                <div className="h-22 flex items-center justify-between bg-base-200 rounded-t-box px-4">
-                  <div
-                    className={"w-full " + (objective.extra ? "tooltip" : "")}
-                    data-tip={objective.extra}
-                  >
-                    <h3 className="flex-grow text-center m-4 text-xl font-medium mr-4 ">
-                      {`${objective.name}`}
-                      {objective.extra ? <i className="text-error">*</i> : null}
-                    </h3>
-                  </div>
-                  {eventStatus?.team_id ? (
-                    <div className="tooltip" data-tip="Submit Bounty">
-                      <button
-                        className="rounded-full"
-                        onClick={() => {
-                          setSelectedObjective(objective);
-                          setShowModal(true);
-                        }}
-                      >
-                        <PlusCircleIcon className="h-8 w-8 cursor-pointer" />
-                      </button>
+              return (
+                <div className="card bg-base-300 bborder" key={objective.id}>
+                  <div className="min-h-22 h-full flex items-center justify-between bg-base-200 rounded-t-box py-2 px-4 bborder-b">
+                    <div
+                      className={twMerge(
+                        "w-full",
+                        objective.extra && "tooltip"
+                      )}
+                      data-tip={objective.extra}
+                    >
+                      <h3 className="flex-grow text-center text-xl font-medium mr-4 ">
+                        {objective.name}
+                        {objective.extra ? (
+                          <i className="text-error">*</i>
+                        ) : null}
+                      </h3>
                     </div>
-                  ) : null}
-                </div>
-                <div className="pb-4 mb-0 rounded-b-box">
-                  <table
-                    key={objective.id}
-                    className="w-full border-collapse mt-4"
-                  >
-                    <tbody>
-                      {Object.entries(objective.team_score)
-                        .filter(([teamId]) =>
-                          teamIds.includes(parseInt(teamId))
-                        )
-                        .map(([teamId, score]) => {
-                          return [parseInt(teamId), score] as [number, Score];
-                        })
-                        .sort(
-                          ([, scoreA], [, scoreB]) =>
-                            scoreB.points - scoreA.points
-                        )
-                        .map(([teamId, score]) => {
-                          return (
-                            <tr
-                              key={teamId}
-                              className={
-                                eventStatus?.team_id === teamId
-                                  ? "bg-highlight content-highlight"
-                                  : "bg-base-300"
-                              }
-                            >
-                              <td
-                                className={`pl-4 py-1 text-left ${
-                                  score.points == 0
-                                    ? "text-error"
-                                    : "text-success"
-                                }`}
+                    {eventStatus?.team_id ? (
+                      <div className="tooltip" data-tip="Submit Bounty">
+                        <button
+                          className="rounded-full"
+                          onClick={() => {
+                            setSelectedObjective(objective);
+                            setShowModal(true);
+                          }}
+                        >
+                          <PlusCircleIcon className="h-8 w-8 cursor-pointer" />
+                        </button>
+                      </div>
+                    ) : null}
+                  </div>
+                  <div className="rounded-b-box">
+                    <table
+                      key={objective.id}
+                      className="w-full border-collapse"
+                    >
+                      <tbody>
+                        {Object.entries(objective.team_score)
+                          .filter(([teamId]) =>
+                            teamIds.includes(parseInt(teamId))
+                          )
+                          .map(([teamId, score]) => {
+                            return [parseInt(teamId), score] as [number, Score];
+                          })
+                          .sort(
+                            ([, scoreA], [, scoreB]) =>
+                              scoreB.points - scoreA.points
+                          )
+                          .map(([teamId, score], idx) => {
+                            return (
+                              <tr
+                                key={teamId}
+                                className={
+                                  eventStatus?.team_id === teamId
+                                    ? "bg-highlight content-highlight"
+                                    : "bg-base-300"
+                                }
                               >
-                                {score ? score.points : 0}{" "}
-                                {score.number > 1 ? `(${score.number})` : ""}
-                              </td>
-                              <td className="pr-4 text-right">
-                                {teamMap[teamId]?.name}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                    </tbody>
-                  </table>
+                                <td
+                                  className={twMerge(
+                                    "pl-4 py-1 text-left",
+                                    idx === teamIds.length - 1 &&
+                                      "rounded-bl-box",
+                                    score.points == 0
+                                      ? "text-error"
+                                      : "text-success"
+                                  )}
+                                >
+                                  {score?.points || 0}{" "}
+                                  {score.number > 1 && `(${score.number})`}
+                                </td>
+                                <td
+                                  className={twMerge(
+                                    "pr-4 text-right",
+                                    idx === teamIds.length - 1 &&
+                                      "rounded-br-box"
+                                  )}
+                                >
+                                  {teamMap[teamId]?.name}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        {category.children
-          .filter(
-            (objective) => objective.objective_type != ObjectiveType.SUBMISSION
-          )
-          .map((objective) => (
-            <div className="card bg-base-300" key={objective.id}>
-              <div className="h-22 flex items-center justify-between bg-base-200 rounded-t-box px-4">
-                <div
-                  className={objective.extra ? "tooltip  text-2xl " : undefined}
-                  data-tip={objective.extra}
-                ></div>
-                <h3 className="flex-grow text-center m-4 text-xl font-medium mr-4">
-                  {`${objective.name}`}
-                  {objective.extra ? <i className="text-error">*</i> : null}
-                </h3>
-              </div>
-              <div className="pb-4 mb-0 bg-base-300 rounded-b-box mt-2">
+              );
+            })}
+          {category.children
+            .filter(
+              (objective) =>
+                objective.objective_type != ObjectiveType.SUBMISSION
+            )
+            .map((objective) => (
+              <div className="card bg-base-300 bborder" key={objective.id}>
+                <div className="min-h-22 h-full flex items-center justify-between bg-base-200 rounded-t-box px-4 bborder-b">
+                  <div
+                    className={
+                      objective.extra ? "tooltip  text-2xl " : undefined
+                    }
+                    data-tip={objective.extra}
+                  ></div>
+                  <h3 className="flex-grow text-center m-4 text-xl font-medium mr-4">
+                    {objective.name}
+                    {objective.extra ? <i className="text-error">*</i> : null}
+                  </h3>
+                </div>
                 <CollectionCardTable objective={objective} />
               </div>
-            </div>
-          ))}
+            ))}
+        </div>
       </div>
     </>
   );

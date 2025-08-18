@@ -229,9 +229,9 @@ const SignupButton = () => {
       <>
         {dialog}
         <div className="dropdown">
-          <button className={`underline cursor-pointer`}>
+          <button className={"underline cursor-pointer"}>
             <span className="text-2xl">
-              Signed up {eventStatus?.partner ? "with" : ""}
+              Signed up {eventStatus?.partner && "with "}
             </span>
             {eventStatus?.partner && (
               <span className="text-info">{eventStatus?.partner}</span>
@@ -248,7 +248,9 @@ const SignupButton = () => {
           >
             <li>
               <div
-                className={`text-warning hover:bg-warning hover:text-warning-content`}
+                className={
+                  "text-warning hover:bg-warning hover:text-warning-content"
+                }
                 onClick={() => {
                   setHourValue(signup?.expected_playtime ?? 1);
                   setNeedHelp(signup?.needs_help ?? false);
@@ -259,7 +261,7 @@ const SignupButton = () => {
                 Edit Application
               </div>
               <div
-                className={`text-error hover:bg-error hover:text-error-content`}
+                className={"text-error hover:bg-error hover:text-error-content"}
                 onClick={() => deleteSignup(currentEvent.id)}
               >
                 Withdraw Application
@@ -282,7 +284,7 @@ const SignupButton = () => {
       <>
         {dialog}
         <button
-          className={`btn btn-primary btn-lg`}
+          className={"btn btn-primary btn-lg"}
           onClick={() => setModalOpen(true)}
         >
           Apply for Event

@@ -29,7 +29,10 @@ function POProgressBar({
         .map((value, index) => (
           <div
             key={index}
-            className={`h-full border-r-1 ${index % 2 ? "bg-success/80" : "bg-success/70"} min-w-25`}
+            className={twMerge(
+              "h-full border-r-1 min-w-25",
+              index % 2 ? "bg-success/80" : "bg-success/70"
+            )}
             style={{ width: `${(value / max) * 100}%` }}
           >
             {value} (+{extra[index]})

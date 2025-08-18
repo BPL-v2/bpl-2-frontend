@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { DisplayItem, GuildStashTabGGG } from "@client/api";
+import { twMerge } from "tailwind-merge";
 
 type Props = {
   tab: GuildStashTabGGG;
@@ -28,7 +29,7 @@ export const StashTabGrid: React.FC<Props> = ({
   }, [tab.items, highlightScoring]);
   return (
     <div
-      className={`grid gap-1 aspect-square h-[90vh]`}
+      className={"grid gap-1 aspect-square h-[90vh]"}
       style={{
         gridTemplateColumns: `repeat(${gridNum}, minmax(0, 1fr))`,
         gridTemplateRows: `repeat(${gridNum}, minmax(0, 1fr))`,
@@ -48,8 +49,6 @@ export const StashTabGrid: React.FC<Props> = ({
                 occupied.add(`${i + dx}-${j + dy}`);
               }
             }
-            const textSize = gridNum === 24 ? "text-xs" : "";
-            const padding = gridNum === 24 ? "px-[2px]" : "px-[4px]";
             let borderColor = "border-white";
             let tooltipColor = "tooltip-white";
             switch (item.rarity) {
@@ -69,10 +68,10 @@ export const StashTabGrid: React.FC<Props> = ({
             return (
               <div
                 key={`${i}-${j}-${item.id}`}
-                className={
-                  "tooltip tooltip-bottom relative cursor-pointer" +
-                  ` ${tooltipColor}`
-                }
+                className={twMerge(
+                  "tooltip tooltip-bottom relative cursor-pointer",
+                  tooltipColor
+                )}
                 data-tip={`${item.name} ${item.typeLine}`}
                 onClick={() => onItemClick && onItemClick(item)}
                 style={{
@@ -82,7 +81,7 @@ export const StashTabGrid: React.FC<Props> = ({
               >
                 <img
                   key={`${i}-${j}`}
-                  className={"w-full h-full border-1" + ` ${borderColor}`}
+                  className={twMerge("w-full h-full border-1", borderColor)}
                   style={{
                     objectFit: "contain",
                   }}
@@ -90,7 +89,10 @@ export const StashTabGrid: React.FC<Props> = ({
                   alt={item.name}
                 />
                 <div
-                  className={`absolute left-0 top-0 select-none ${textSize} ${padding}`}
+                  className={twMerge(
+                    "absolute left-0 top-0 select-none",
+                    gridNum === 24 ? "text-xs px-[2px]" : "px-[4px]"
+                  )}
                 >
                   {(item.stackSize || 0) > 0 ? item.stackSize : null}
                 </div>

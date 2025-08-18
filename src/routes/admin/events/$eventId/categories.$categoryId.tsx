@@ -44,6 +44,7 @@ import {
   TrashIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
+import { twMerge } from "tailwind-merge";
 
 export const Route = createFileRoute(
   "/admin/events/$eventId/categories/$categoryId"
@@ -346,7 +347,7 @@ export function ScoringCategoryPage(): JSX.Element {
                 data-tip="Open as Category"
               >
                 <Link
-                  to={`/admin/events/$eventId/categories/$categoryId`}
+                  to={"/admin/events/$eventId/categories/$categoryId"}
                   params={{ eventId: eventId!, categoryId: row.original.id }}
                   className="btn btn-secondary btn-sm"
                 >
@@ -753,9 +754,14 @@ export function ScoringCategoryPage(): JSX.Element {
                 {children?.map((objective) => (
                   <div key={"category-child-" + objective.id}>
                     <Link
-                      to={`/admin/events/$eventId/categories/$categoryId`}
+                      to={"/admin/events/$eventId/categories/$categoryId"}
                       params={{ eventId: eventId!, categoryId: objective.id }}
-                      className={`btn ${path.includes(objective.id) ? "btn-primary" : " btn-dash"}`}
+                      className={twMerge(
+                        "btn",
+                        path.includes(objective.id)
+                          ? "btn-primary"
+                          : " btn-dash"
+                      )}
                     >
                       {objective.name}
                     </Link>

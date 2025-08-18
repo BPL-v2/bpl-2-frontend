@@ -172,7 +172,9 @@ export const StashTabSpecial: React.FC<Props> = ({
                   className="max-w-full max-h-full object-contain"
                 />{" "}
                 <div
-                  className={`absolute left-[2px] top-[2px] select-none text-xs text-white`}
+                  className={
+                    "absolute left-[2px] top-[2px] select-none text-xs text-white"
+                  }
                 >
                   {(item.stackSize || 0) > 0 ? item.stackSize : null}
                 </div>

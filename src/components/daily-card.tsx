@@ -7,6 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ScoreObjective } from "@mytypes/score";
 import { ScoringMethod } from "@client/api";
 import { twMerge } from "tailwind-merge";
+import { twMerge } from "tailwind-merge";
 
 export type DailyCardProps = {
   daily: ScoreObjective;
@@ -37,15 +38,15 @@ export function DailyCard({ daily }: DailyCardProps) {
   const { currentEvent } = useContext(GlobalStateContext);
   const qc = useQueryClient();
 
-  if (!currentEvent) {
+  if (!currentEvent || !daily.valid_from) {
     return <></>;
   }
-  // need to deep copy the base objective to avoid modifying the original
+  const isReleased = new Date(daily.valid_from) < new Date();
 
-  if (daily.valid_from && new Date(daily.valid_from) > new Date()) {
+  if (!isReleased) {
     return (
-      <div className="card bg-base-300" key={daily.id}>
-        <div className="rounded-t-box p-8 bg-base-200 h-25 text-center text-xl font-semibold">
+      <div className="card bg-base-300 bborder" key={daily.id}>
+        <div className="rounded-t-box p-8 bg-base-200 h-full min-h-25 text-center text-xl font-semibold">
           Daily not yet available
         </div>
         <div className="card-body bg-base-300 p-8 rounded-b-box">
@@ -57,7 +58,7 @@ export function DailyCard({ daily }: DailyCardProps) {
       </div>
     );
   }
-  const finished = Object.values(daily.team_score).reduce(
+  const isFinished = Object.values(daily.team_score).reduce(
     (acc, score) => score.finished && acc,
     true
   );
@@ -79,7 +80,7 @@ export function DailyCard({ daily }: DailyCardProps) {
           gameVersion={currentEvent.game_version}
         />
         <div
-          className={daily.extra ? "tooltip text-2xl" : undefined}
+          className={daily.extra && "tooltip text-2xl"}
           data-tip={daily.extra}
         >
           <h3 className="flex-grow text-center mt-4 text-lg font-medium mx-4">
@@ -89,10 +90,11 @@ export function DailyCard({ daily }: DailyCardProps) {
           </h3>
         </div>
       </div>
-
-      <CollectionCardTable objective={daily} />
-      {!finished && (
-        <div className="py-4 mb-0 rounded-b-box">
+      <div className={twMerge("bg-base-300", isFinished && "rounded-b-box")}>
+        <CollectionCardTable objective={daily} />
+      </div>
+      {!isFinished && (
+        <div className="flex items-center justify-center rounded-b-box min-h-15">
           {bonusAvailableCounter(daily.valid_to, () => {
             qc.refetchQueries({
               queryKey: ["rules", currentEvent.id],
