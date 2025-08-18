@@ -48,7 +48,7 @@ export function CollectionTab(): JSX.Element {
                 </div>
               </div>
               <div className="pb-4 mb-0 bg-base-300 rounded-b-box">
-                <CollectionCardTable objective={objective} hideProgress />
+                <CollectionCardTable objective={objective} />
               </div>
             </div>
           );

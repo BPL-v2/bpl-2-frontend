@@ -8,7 +8,6 @@ import { useGetEventStatus } from "@client/query";
 type CollectionCardTableProps = {
   objective: ScoreObjective;
   showPoints?: boolean;
-  hideProgress?: boolean;
 };
 
 function getPlace(score: Score) {
@@ -41,33 +40,36 @@ function finishTooltip(objective: ScoreObjective, score: Score) {
 export function CollectionCardTable({
   objective,
   showPoints = true,
-  hideProgress = false,
 }: CollectionCardTableProps) {
-  const { currentEvent } = useContext(GlobalStateContext);
+  const { currentEvent, preferences } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
-  hideProgress = false;
+  const teamIds = currentEvent.teams
+    .sort((a, b) => {
+      if (a.id === eventStatus?.team_id) return -1;
+      if (b.id === eventStatus?.team_id) return 1;
+      return (
+        (objective.team_score[b.id]?.points || 0) -
+        (objective.team_score[a.id]?.points || 0)
+      );
+    })
+    .slice(0, preferences.limitTeams ? preferences.limitTeams : undefined)
+    .map((team) => team.id);
   return (
     <table key={objective.id} className="w-full mt-2">
       <tbody className="bg-base-300">
         {Object.entries(objective.team_score)
+          .filter(([teamId]) => teamIds.includes(parseInt(teamId)))
           .map(([teamId, score]) => {
             return [parseInt(teamId), score] as [number, Score];
           })
           .sort(([, scoreA], [, scoreB]) => {
-            // if (scoreA.points === scoreB.points) {
-            //   return scoreB.number - scoreA.number;
-            // }
+            if (scoreA.points === scoreB.points) {
+              return scoreB.number - scoreA.number;
+            }
             return scoreB.points - scoreA.points;
           })
           .map(([teamId, score]) => {
             let num = score.number;
-            if (
-              hideProgress &&
-              num / objective.required_number < 1 &&
-              eventStatus?.team_id !== teamId
-            ) {
-              num = 0;
-            }
             const percent = (100 * num) / objective.required_number;
             return (
               <tr
@@ -96,7 +98,7 @@ export function CollectionCardTable({
                 ) : null}
                 <td className="px-2">
                   <ProgressBar
-                    style={{ width: "180px" }}
+                    style={{ width: "150px" }}
                     value={num}
                     maxVal={objective.required_number}
                   />

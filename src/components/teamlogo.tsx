@@ -2,16 +2,25 @@ import { Team } from "@client/api";
 import { useState } from "react";
 
 export function TeamLogo({ team, eventId }: { team?: Team; eventId: number }) {
-  const [hasErrored, setHasErrored] = useState(false);
+  const [errorCount, setErrorCount] = useState(0);
   if (!team?.name) return null;
+  if (errorCount == 2) {
+    return (
+      <div
+        className="w-full h-full text-center m-auto flex flex-col items-center justify-center text-2xl font-bold"
+        style={{ backgroundColor: team.color }}
+      >
+        {team.name}
+      </div>
+    );
+  }
   return (
     <img
       onError={(e) => {
-        if (hasErrored) return; // Prevent infinite loop of errors
+        setErrorCount(errorCount + 1);
         e.currentTarget.src = `/assets/teams/${
           eventId
         }/${team?.name.toLowerCase()}/logo-w-name.png`;
-        setHasErrored(true);
       }}
       src={`/assets/teams/${
         eventId

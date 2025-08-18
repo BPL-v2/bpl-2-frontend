@@ -195,7 +195,7 @@ function TeamPage() {
 
   return (
     <div className="flex flex-col gap-2">
-      <Table columns={columns} data={event.teams} />
+      <Table columns={columns} data={event.teams.sort((a, b) => a.id - b.id)} />
       <button
         className="btn btn-primary self-center"
         onClick={() => {

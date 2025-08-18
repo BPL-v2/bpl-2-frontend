@@ -31,7 +31,7 @@ export function ItemTable({
   className,
   styles,
 }: ItemTableProps) {
-  const { currentEvent } = useContext(GlobalStateContext);
+  const { currentEvent, preferences } = useContext(GlobalStateContext);
   const { users } = useGetUsers(currentEvent.id);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const [showVariants, setShowVariants] = useState<{
@@ -51,6 +51,17 @@ export function ItemTable({
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  const teamIds = currentEvent.teams
+    .sort((a, b) => {
+      if (a.id === eventStatus?.team_id) return -1;
+      if (b.id === eventStatus?.team_id) return 1;
+      return (
+        (objective.team_score[b.id]?.points || 0) -
+        (objective.team_score[a.id]?.points || 0)
+      );
+    })
+    .slice(0, preferences.limitTeams ? preferences.limitTeams : undefined)
+    .map((team) => team.id);
 
   useEffect(() => {
     const variantMap = getVariantMap(objective);
@@ -208,7 +219,7 @@ export function ItemTable({
           accessorKey: "name",
           header: "",
           enableSorting: false,
-          size: Math.min(windowWidth, 1440) - 200 - teams.length * 200, // take up remaining space
+          size: Math.min(windowWidth, 1440) - 200 - teamIds.length * 200, // take up remaining space
           cell: (info: CellContext<ExtendedScoreObjective, string>) => {
             return objectNameRender(info.row.original);
           },
@@ -218,61 +229,66 @@ export function ItemTable({
             filterPlaceholder: "Name",
           },
         },
-        ...teams.map((team) => ({
-          accessorKey: `team_score.${team.id}.finished`,
-          header: () => {
-            const objectives = flatMapUniques(objective);
-            return (
-              <div>
-                <div>{team.name || "Team"}</div>
-                <div className="text-sm text-info">
-                  {objectives
-                    .filter((o) => (filter ? filter(o) : true))
-                    .filter((o) => o.team_score[team.id]?.finished)?.length ||
-                    0}{" "}
-                  /{" "}
-                  {objectives.filter((o) => (filter ? filter(o) : true)).length}
-                </div>
-              </div>
-            );
-          },
-          enableSorting: false,
-          size: 200,
-          cell: (info: CellContext<ExtendedScoreObjective, string>) => {
-            const finished =
-              info.row.original.team_score[team.id]?.finished || false;
-            const user =
-              finished &&
-              users?.find(
-                (u) => info.row.original.team_score[team.id]?.user_id === u.id
-              );
-            if (user) {
+        ...teams
+          .filter((team) => teamIds.includes(team.id))
+          .map((team) => ({
+            accessorKey: `team_score.${team.id}.finished`,
+            header: () => {
+              const objectives = flatMapUniques(objective);
               return (
-                <div
-                  // className="tooltip cursor-help tooltip-bottom z-1000 flex justify-center w-full"
-                  className="flex justify-center w-full"
-                  // data-tip={`scored by ${user.display_name}`}
-                >
-                  <CheckCircleIcon className="h-6 w-6 text-success" />
+                <div>
+                  <div>{team.name || "Team"}</div>
+                  <div className="text-sm text-info">
+                    {objectives
+                      .filter((o) => (filter ? filter(o) : true))
+                      .filter((o) => o.team_score[team.id]?.finished)?.length ||
+                      0}{" "}
+                    /{" "}
+                    {
+                      objectives.filter((o) => (filter ? filter(o) : true))
+                        .length
+                    }
+                  </div>
                 </div>
               );
-            } else if (finished) {
+            },
+            enableSorting: false,
+            size: 200,
+            cell: (info: CellContext<ExtendedScoreObjective, string>) => {
+              const finished =
+                info.row.original.team_score[team.id]?.finished || false;
+              const user =
+                finished &&
+                users?.find(
+                  (u) => info.row.original.team_score[team.id]?.user_id === u.id
+                );
+              if (user) {
+                return (
+                  <div
+                    // className="tooltip cursor-help tooltip-bottom z-1000 flex justify-center w-full"
+                    className="flex justify-center w-full"
+                    // data-tip={`scored by ${user.display_name}`}
+                  >
+                    <CheckCircleIcon className="h-6 w-6 text-success" />
+                  </div>
+                );
+              } else if (finished) {
+                return (
+                  <div className="flex justify-center w-full">
+                    <CheckCircleIcon className="h-6 w-6 text-success" />{" "}
+                  </div>
+                );
+              }
               return (
                 <div className="flex justify-center w-full">
-                  <CheckCircleIcon className="h-6 w-6 text-success" />{" "}
+                  <XCircleIcon className="h-6 w-6 text-error" />{" "}
                 </div>
               );
-            }
-            return (
-              <div className="flex justify-center w-full">
-                <XCircleIcon className="h-6 w-6 text-error" />{" "}
-              </div>
-            );
-          },
-          meta: {
-            filterVariant: "boolean",
-          },
-        })),
+            },
+            meta: {
+              filterVariant: "boolean",
+            },
+          })),
       ];
     }
     return columns;

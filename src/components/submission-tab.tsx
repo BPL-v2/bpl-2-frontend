@@ -22,7 +22,7 @@ export type SubmissionTabProps = {
 };
 
 function SubmissionTab({ categoryName }: SubmissionTabProps) {
-  const { scores, currentEvent } = useContext(GlobalStateContext);
+  const { scores, currentEvent, preferences } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const qc = useQueryClient();
   const { submitBounty } = useSubmitBounty(qc, currentEvent.id);
@@ -140,6 +140,21 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
             (objective) => objective.objective_type == ObjectiveType.SUBMISSION
           )
           .map((objective) => {
+            const teamIds = currentEvent.teams
+              .sort((a, b) => {
+                if (a.id === eventStatus?.team_id) return -1;
+                if (b.id === eventStatus?.team_id) return 1;
+                return (
+                  (objective.team_score[b.id]?.points || 0) -
+                  (objective.team_score[a.id]?.points || 0)
+                );
+              })
+              .slice(
+                0,
+                preferences.limitTeams ? preferences.limitTeams : undefined
+              )
+              .map((team) => team.id);
+
             return (
               <div className="card bg-base-300" key={objective.id}>
                 <div className="h-22 flex items-center justify-between bg-base-200 rounded-t-box px-4">
@@ -173,6 +188,9 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
                   >
                     <tbody>
                       {Object.entries(objective.team_score)
+                        .filter(([teamId]) =>
+                          teamIds.includes(parseInt(teamId))
+                        )
                         .map(([teamId, score]) => {
                           return [parseInt(teamId), score] as [number, Score];
                         })

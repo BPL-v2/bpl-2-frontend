@@ -1338,6 +1338,12 @@ export interface Item {
      * @type {string}
      * @memberof Item
      */
+    icon?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Item
+     */
     id?: string;
     /**
      * 
@@ -1610,6 +1616,7 @@ export enum ItemField {
     BASE_TYPE = 'BASE_TYPE',
     NAME = 'NAME',
     ITEM_CLASS = 'ITEM_CLASS',
+    ICON_NAME = 'ICON_NAME',
     TYPE_LINE = 'TYPE_LINE',
     QUALITY = 'QUALITY',
     LEVEL = 'LEVEL',

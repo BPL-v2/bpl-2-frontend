@@ -5,6 +5,8 @@ import { ThemePicker } from "@components/theme-picker";
 import { createFileRoute } from "@tanstack/react-router";
 import { useChangeUserDisplayName, useGetUser } from "@client/query";
 import { useQueryClient } from "@tanstack/react-query";
+import { useContext } from "react";
+import { GlobalStateContext } from "@utils/context-provider";
 
 export const Route = createFileRoute("/settings")({
   component: SettingsPage,
@@ -14,6 +16,7 @@ export function SettingsPage() {
   const qc = useQueryClient();
   const { user } = useGetUser();
   const { changeUserDisplayName } = useChangeUserDisplayName(qc);
+  const { preferences, setPreferences } = useContext(GlobalStateContext);
 
   if (!user) {
     return <></>;
@@ -28,7 +31,7 @@ export function SettingsPage() {
               Settings
             </legend>
 
-            <label className="label">Your displayed username</label>
+            <label className="label text-lg">Your displayed username</label>
             <form
               className="flex"
               onSubmit={(e) => {
@@ -36,12 +39,12 @@ export function SettingsPage() {
                 changeUserDisplayName(e.currentTarget.display_name.value);
               }}
             >
-              <div className="join gap-0 ">
+              <div className="join gap-0 w-100">
                 <input
                   type="text"
                   name="display_name"
                   defaultValue={user.display_name}
-                  className="input rounded-l-field focus:border-r-transparent focus:outline-transparent"
+                  className="input rounded-l-field focus:border-r-transparent focus:outline-transparent w-full"
                   required
                 />
                 <button
@@ -53,10 +56,28 @@ export function SettingsPage() {
               </div>
             </form>
 
-            <label className="label">Theme</label>
+            <label className="label text-lg">Theme</label>
             <div className="flex flex-row gap-2">
               <ThemePicker />
             </div>
+            <label className="label text-lg">
+              Limit Shown Teams:{" "}
+              {preferences.limitTeams ? preferences.limitTeams : "No Limit"}
+              {" (we recommend 4-5)"}
+            </label>
+            <input
+              type="range"
+              className="range range-primary w-100"
+              min={0}
+              max={20}
+              value={preferences.limitTeams}
+              onChange={(e) =>
+                setPreferences({
+                  ...preferences,
+                  limitTeams: e.target.valueAsNumber,
+                })
+              }
+            ></input>
           </fieldset>
         </div>
       </div>

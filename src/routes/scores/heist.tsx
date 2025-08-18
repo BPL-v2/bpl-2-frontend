@@ -48,7 +48,7 @@ export function HeistTab(): JSX.Element {
         <div className="flex flex-col gap-8">
           <TeamScoreDisplay objective={heistCategory} />
           {heistItemRaces.map((category) => (
-            <div className="bg-base-200 rounded-box p-8 pt-2">
+            <div key={category.id} className="bg-base-200 rounded-box p-8 pt-2">
               <div className="divider divider-primary">{category.name}</div>
               <Ranking
                 objective={category}
@@ -62,7 +62,7 @@ export function HeistTab(): JSX.Element {
           ))}
 
           {heistMultiItemRaces.map((category) => (
-            <div className="bg-base-200 rounded-box p-8 pt-2">
+            <div key={category.id} className="bg-base-200 rounded-box p-8 pt-2">
               <div className="divider divider-primary">{category.name}</div>
               {category.scoring_preset?.scoring_method ===
                 ScoringMethod.RANKED_TIME && (

@@ -15,12 +15,13 @@ import { calcPersonalPoints } from "@utils/personal-points";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import POProgressBar from "@components/po-progress";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
-import { useGetLadder, useGetUsers } from "@client/query";
+import { useGetEventStatus, useGetLadder, useGetUsers } from "@client/query";
 import { POPointRules } from "@rules/po-points";
 import { getSkillColor } from "@utils/gems";
 import TeamScoreDisplay from "@components/team-score";
+
 type RowDef = {
-  default: number;
+  total: number;
   team: Team;
   key: string;
   "Personal Objectives": number;
@@ -42,6 +43,7 @@ export function LadderTab(): JSX.Element {
   const { data: ladder, isError: ladderIsError } = useGetLadder(
     currentEvent.id
   );
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
   const { data: users, isError: usersIsError } = useGetUsers(currentEvent.id);
   const teamMap = useMemo(
     () =>
@@ -287,69 +289,46 @@ export function LadderTab(): JSX.Element {
       </div>
     );
   }
-  let rows: RowDef[] = [];
   const categoryNames = getRootCategoryNames(currentEvent.game_version);
-  if (scores) {
-    const categories = scores.children.filter((child) =>
-      categoryNames.includes(child.name)
-    );
-    categories.push(scores);
-    const points = categories.reduce(
-      (acc, category) => {
-        if (!category) {
-          return acc;
-        }
-        const points = getTotalPoints(category);
-        for (const [teamId, teamPoints] of Object.entries(points)) {
-          const id = parseInt(teamId);
-          if (!acc[id]) {
-            acc[id] = {};
+  const rows = currentEvent.teams.map((team) => {
+    return {
+      team: team,
+      key: team?.id?.toString(),
+      total: getTotalPoints(scores)[team.id] || 0,
+      ...Object.fromEntries(
+        categoryNames.map((categoryName) => {
+          const child = scores?.children.find(
+            (category) => category.name === categoryName
+          );
+          if (!child) {
+            return [categoryName, 0];
           }
-          acc[id][category.name] = teamPoints;
-        }
-        return acc;
-      },
-      {} as { [teamId: number]: { [categoryName: string]: number } }
-    );
-    rows = Object.entries(points).map(([teamId, teamPoints]) => {
-      return {
-        team: teamMap[parseInt(teamId)],
-        key: teamId,
-        ...teamPoints,
-      } as RowDef;
-    });
-  } else {
-    rows = currentEvent.teams.map((team) => {
-      return {
-        team: team,
-        key: team?.id?.toString(),
-        default: 0,
-        ...Object.fromEntries(
-          categoryNames.map((categoryName) => [categoryName, 0])
-        ),
-      } as RowDef;
-    });
-  }
-  const scoreColumns: any[] = [
-    {
-      title: "Team",
-      dataIndex: ["team", "name"],
-      render: (row: any) => (
-        <TeamName className="font-semibold" team={row.team} />
+          return [categoryName, getTotalPoints(child)[team.id] || 0];
+        })
       ),
-      key: "team",
+    } as RowDef;
+  });
+  const scoreColumns: ColumnDef<RowDef, any>[] = [
+    {
+      accessorKey: "team.name",
+      header: "Team",
+      cell: ({ row }) => (
+        <TeamName className="font-semibold" team={row.original?.team} />
+      ),
     },
     {
-      title: "Total",
-      dataIndex: "default",
-      key: "default",
-      defaultSortOrder: "descend",
+      accessorKey: "total",
+      header: "Total",
+      cell: ({ row }) => {
+        return row.original.total;
+      },
     },
     ...categoryNames.map((categoryName) => ({
-      title: categoryName,
-      dataIndex: categoryName,
+      header: categoryName == "Personal Objectives" ? "P.O." : categoryName,
+      accessorKey: categoryName,
       key: `column-${categoryName}`,
       sorter: (a: any, b: any) => a[categoryName] - b[categoryName],
+      size: 125,
     })),
   ];
 
@@ -374,31 +353,11 @@ export function LadderTab(): JSX.Element {
       ) : (
         <>
           <div className="divider divider-primary ">Team Scores</div>
-          <table className="table bg-base-300 text-lg">
-            <thead className="bg-base-200">
-              <tr>
-                {scoreColumns.map((column) => (
-                  <th key={`header-${column.key}`}>{column.title}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {rows
-                .sort((a, b) => b.default - a.default)
-                .map((row) => (
-                  <tr key={row.key} className="hover:bg-base-200/50">
-                    {scoreColumns.map((column) => (
-                      <td key={`column-${column.key}`}>
-                        {column.render
-                          ? column.render(row)
-                          : // @ts-ignore: column.dataIndex can be used to access the row data
-                            row[column.dataIndex]}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+          <Table
+            data={rows.sort((a, b) => b.total - a.total)}
+            columns={scoreColumns}
+            className="max-h-[30vh]"
+          ></Table>
         </>
       )}
       <div className="divider divider-primary">Personal Objective Points</div>
@@ -408,10 +367,18 @@ export function LadderTab(): JSX.Element {
             <div className="flex flex-col gap-2">
               {currentEvent.teams
                 .sort((a, b) => {
-                  const aScore = totalObjective.team_score[a.id]?.number || 0;
-                  const bScore = totalObjective.team_score[b.id]?.number || 0;
-                  return bScore - aScore;
+                  if (a.id === eventStatus?.team_id) return -1;
+                  if (b.id === eventStatus?.team_id) return 1;
+                  return (
+                    (totalObjective.team_score[b.id]?.number || 0) -
+                    (totalObjective.team_score[a.id]?.number || 0)
+                  );
                 })
+                .slice(
+                  0,
+                  preferences.limitTeams ? preferences.limitTeams : undefined
+                )
+
                 .map((team) => {
                   const values = [];
                   const extra = [];

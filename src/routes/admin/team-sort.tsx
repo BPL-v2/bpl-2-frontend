@@ -9,6 +9,7 @@ import { renderConditionally } from "@utils/token";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
 import { useAddUsersToTeams, useGetSignups } from "@client/query";
 import { useQueryClient } from "@tanstack/react-query";
+import { twMerge } from "tailwind-merge";
 
 export const Route = createFileRoute("/admin/team-sort")({
   component: renderConditionally(UserSortPage, [
@@ -93,11 +94,11 @@ function UserSortPage() {
 
   const sortColumns = useMemo(() => {
     const columns: ColumnDef<Signup>[] = [
-      {
-        header: "Partners",
-        accessorFn: (row) => partnerMap.get(row.user.id),
-        size: 120,
-      },
+      // {
+      //   header: "Partners",
+      //   accessorFn: (row) => partnerMap.get(row.user.id),
+      //   size: 120,
+      // },
       {
         header: "ID",
         accessorKey: "user.id",
@@ -116,7 +117,7 @@ function UserSortPage() {
       {
         header: "Playtime",
         accessorKey: "expected_playtime",
-        size: 250,
+        size: 120,
       },
       {
         header: "Lead",
@@ -147,48 +148,56 @@ function UserSortPage() {
             }}
           />
         ),
-        size: 200,
+        size: 100,
       },
       {
         header: "Assign Team",
-        size: 600,
+        size: 700,
         cell: ({ row }) => {
-          return currentEvent?.teams.map((team) => (
-            <button
-              key={team.id + "-" + row.original.user.id}
-              className={
-                row.original.team_id !== team.id
-                  ? "btn btn-dash"
-                  : "btn btn-primary"
-              }
-              style={{ marginRight: "5px" }}
-              onClick={() => {
-                if (row.original.team_id) {
-                  setSuggestions(
-                    suggestions.map((signup) =>
-                      signup.user.id === row.original.user.id
-                        ? { ...signup, team_id: undefined, team_lead: false }
-                        : signup
-                    )
-                  );
-                } else {
-                  setSuggestions(
-                    suggestions.map((signup) =>
-                      signup.user.id === row.original.user.id
-                        ? {
-                            ...signup,
-                            team_id: team.id,
-                            team_lead: row.original.team_lead,
-                          }
-                        : signup
-                    )
-                  );
-                }
-              }}
-            >
-              {team.name.slice()}
-            </button>
-          ));
+          return (
+            <div className="flex flex-wrap gap-1">
+              {currentEvent?.teams.map((team) => (
+                <button
+                  key={team.id + "-" + row.original.user.id}
+                  className={twMerge(
+                    "btn btn-sm",
+                    row.original.team_id === team.id
+                      ? "btn-primary"
+                      : "btn-dash hover:bg-base-300"
+                  )}
+                  onClick={() => {
+                    if (row.original.team_id === team.id) {
+                      setSuggestions(
+                        suggestions.map((signup) =>
+                          signup.user.id === row.original.user.id
+                            ? {
+                                ...signup,
+                                team_id: undefined,
+                                team_lead: false,
+                              }
+                            : signup
+                        )
+                      );
+                    } else {
+                      setSuggestions(
+                        suggestions.map((signup) =>
+                          signup.user.id === row.original.user.id
+                            ? {
+                                ...signup,
+                                team_id: team.id,
+                                team_lead: row.original.team_lead,
+                              }
+                            : signup
+                        )
+                      );
+                    }
+                  }}
+                >
+                  {team.name.slice()}
+                </button>
+              ))}
+            </div>
+          );
         },
       },
     ];

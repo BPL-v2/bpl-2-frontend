@@ -7,6 +7,7 @@ export type Preferences = {
   ladder: {
     showPoPoints: boolean;
   };
+  limitTeams: number;
 };
 export const defaultPreferences: Preferences = {
   theme: "dark",
@@ -17,6 +18,7 @@ export const defaultPreferences: Preferences = {
   ladder: {
     showPoPoints: false,
   },
+  limitTeams: 0,
 };
 
 export function initPreferences(): Preferences {
