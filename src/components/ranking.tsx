@@ -4,6 +4,7 @@ import { Score } from "@client/api";
 import { rank2text } from "@utils/utils";
 // import { TeamLogo } from "./teamlogo";
 import { useGetEventStatus } from "@client/query";
+import { twMerge } from "tailwind-merge";
 
 interface RankingProps {
   objective: { team_score: Record<string, Score> };
@@ -79,9 +80,10 @@ export function Ranking({
 
   return (
     <div
-      className={`w-full grid gap-4 ${getGridLayout(
-        Object.keys(teamIds).length
-      )}`}
+      className={twMerge(
+        "w-full grid gap-4",
+        getGridLayout(Object.keys(teamIds).length)
+      )}
     >
       {Object.entries(objective.team_score)
         .sort(sort)
@@ -90,7 +92,7 @@ export function Ranking({
           const teamId = parseInt(teamIdstr);
           return (
             <div
-              className={"card " + getCardColor(score)}
+              className={"card bborder " + getCardColor(score)}
               key={"score-" + teamId}
             >
               <div className="card-body">

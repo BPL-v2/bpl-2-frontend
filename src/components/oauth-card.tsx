@@ -3,6 +3,7 @@ import { redirectOauth } from "@utils/oauth";
 import { useRemoveOauthProvider } from "@client/query";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { twMerge } from "tailwind-merge";
 
 type OauthCardProps = {
   required?: boolean;
@@ -33,7 +34,7 @@ export function OauthCard({
     if (!connected) {
       return (
         <button
-          className={`btn btn-success btn-outline`}
+          className={"btn btn-success btn-outline"}
           onClick={redirectOauth(provider, state.location.href)}
         >
           Connect
@@ -42,7 +43,7 @@ export function OauthCard({
     }
     return (
       <button
-        className={`btn btn-error btn-outline`}
+        className={"btn btn-error btn-outline"}
         onClick={() => removeOauthProvider(provider)}
       >
         Disconnect
@@ -52,10 +53,17 @@ export function OauthCard({
 
   const card = (
     <div
-      className={`card border-2 max-h-100 max-w-110 ${connected ? "border-sucess" : required ? "border-error" : "border-base-100"} ${connected ? "bg-base-300" : "bg-base-200"}`}
+      className={twMerge(
+        "card border-2 max-h-100 max-w-110",
+        required ? "border-error" : "border-base-100",
+        connected ? "border-success bg-base-300" : "bg-base-200 border-base-300"
+      )}
     >
       <div
-        className={`rounded-t-box px-8 py-4 items-center justify-between flex ${connected ? "bg-base-200" : "bg-base-100"}`}
+        className={twMerge(
+          "rounded-t-box px-8 py-4 items-center justify-between flex",
+          connected ? "bg-base-200" : "bg-base-100"
+        )}
       >
         <h1 className="text-2xl font-bold text-center">{title}</h1>
         {connectionButton}

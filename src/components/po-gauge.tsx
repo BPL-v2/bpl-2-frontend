@@ -1,3 +1,5 @@
+import { twMerge } from "tailwind-merge";
+
 type Props = {
   descriptions: string[];
   values: number[];
@@ -22,7 +24,12 @@ export function PoGauge({ descriptions, values, cap }: Props) {
         {descriptions.map((description, index) => (
           <div
             key={index}
-            className={`text-center join-item ${values[index] > 0 ? "text-success-content bg-success" : "bg-base-300"}`}
+            className={twMerge(
+              "text-center join-item",
+              values[index] > 0
+                ? "text-success-content bg-success"
+                : "bg-base-300"
+            )}
           >
             {description}
           </div>

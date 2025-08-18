@@ -60,7 +60,7 @@ export function TwitchPage() {
               .sort((a, b) => (b.viewer_count || 0) - (a.viewer_count || 0))
               .map((stream) => (
                 <Link
-                  to={`/streams/$twitchAccount`}
+                  to={"/streams/$twitchAccount"}
                   params={{ twitchAccount: stream.user_login ?? "" }}
                   className="cursor-pointer rounded-field border-2"
                   activeProps={{ className: "border-primary" }}

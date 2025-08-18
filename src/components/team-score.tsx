@@ -5,6 +5,7 @@ import { TeamName } from "./team-name";
 import { ScoreObjective } from "@mytypes/score";
 import { useGetEventStatus } from "@client/query";
 import { TeamLogo } from "./teamlogo";
+import { twMerge } from "tailwind-merge";
 
 export type TeamScoreProps = {
   selectedTeam?: number;
@@ -35,11 +36,12 @@ const TeamScoreDisplay = ({
   if (!currentEvent || !currentEvent.teams) {
     return <></>;
   }
-  const interactive = selectedTeam ? "cursor-pointer hover:bg-base-200" : "";
   return (
     <>
       <div
-        className={`grid grid-cols-3 md:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-1 md:gap-2 px-1 2xl:px-0`}
+        className={
+          "grid grid-cols-3 md:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-1 md:gap-2 px-1 2xl:px-0"
+        }
       >
         {currentEvent.teams
           .sort((a, b) => {
@@ -49,17 +51,18 @@ const TeamScoreDisplay = ({
           })
           .slice(0, preferences.limitTeams ? preferences.limitTeams : undefined)
           .map((team) => {
-            const bgColor =
-              team.id === eventStatus?.team_id
-                ? "bg-highlight content-highlight"
-                : "bg-base-300";
-            const borderColor =
-              team.id === selectedTeam
-                ? "border-primary"
-                : "border-transparent";
             return (
               <div
-                className={`flex rounded-box border-4 p-0 ${bgColor} ${borderColor} ${interactive}`}
+                className={twMerge(
+                  "flex rounded-box p-0 outline-2 bborder",
+                  team.id === eventStatus?.team_id
+                    ? "bg-highlight content-highlight"
+                    : "bg-base-300",
+                  team.id === selectedTeam
+                    ? "outline-primary border-transparent"
+                    : "outline-transparent",
+                  selectedTeam && "cursor-pointer hover:bg-base-200"
+                )}
                 key={team.id}
                 onClick={() =>
                   setSelectedTeam ? setSelectedTeam(team.id) : null

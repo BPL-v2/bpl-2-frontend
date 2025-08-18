@@ -7,6 +7,7 @@ import { useMemo, useState } from "react";
 import { AscendancyPortrait } from "./ascendancy-portrait";
 import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
 import { encode } from "@mytypes/scoring-objective";
+import { twMerge } from "tailwind-merge";
 
 function getLink(item: Item) {
   let link = "/assets/poe1/items/";
@@ -47,10 +48,18 @@ function ItemWindow({ item }: { item?: Item }) {
 
   return (
     <div
-      className={`absolute left-full x z-10 x items-center justify-center pointer-events-none border-2 bg-base-100 rounded-field flex flex-col gap w-128 text-center ${borderColor}`}
+      className={twMerge(
+        "absolute left-full x z-10 x items-center justify-center pointer-events-none",
+        "border-2 bg-base-100 rounded-field flex flex-col gap w-128 text-center",
+        borderColor
+      )}
     >
       <div
-        className={`flex flex-col gap-1 text-xl font-bold border-b-1 p-2 w-full ${borderColor} ${headerColor}`}
+        className={twMerge(
+          "flex flex-col gap-1 text-xl font-bold border-b-1 p-2 w-full",
+          borderColor,
+          headerColor
+        )}
       >
         <p>{item.name}</p>
         <p>{item.name.includes(item.base) ? "" : item.base}</p>
@@ -60,7 +69,10 @@ function ItemWindow({ item }: { item?: Item }) {
         item.evasion > 0 ||
         item.energyShield > 0) && (
         <div
-          className={`flex flex-col gap-1 p-2 border-y-1 w-full ${borderColor}`}
+          className={twMerge(
+            "flex flex-col gap-1 p-2 border-y-1 w-full",
+            borderColor
+          )}
         >
           {item.quality > 0 && (
             <div>
@@ -92,7 +104,10 @@ function ItemWindow({ item }: { item?: Item }) {
       )}
       {item.implicits.length > 0 && (
         <div
-          className={`flex flex-col gap-1 border-y-1 p-2 w-full ${borderColor}`}
+          className={twMerge(
+            "flex flex-col gap-1 border-y-1 p-2 w-full",
+            borderColor
+          )}
         >
           {item.implicits.map((implicit) => (
             <span className={implicit.crafted ? "text-crafted" : "text-magic"}>
@@ -103,7 +118,10 @@ function ItemWindow({ item }: { item?: Item }) {
       )}
       {item.explicits.length > 0 && (
         <div
-          className={`flex flex-col gap-1 border-t-1 p-2 w-full ${borderColor}`}
+          className={twMerge(
+            "flex flex-col gap-1 border-t-1 p-2 w-full",
+            borderColor
+          )}
         >
           {item.explicits.map((explicit) => (
             <span
@@ -145,7 +163,10 @@ function ItemDisplay({
     return (
       <div
         key={"item-" + item.id}
-        className={`item bg-base-200 relative ${slot.replaceAll(" ", "").toLowerCase()} flex justify-center items-center`}
+        className={twMerge(
+          "item bg-base-200 relative flex justify-center items-center",
+          slot.replaceAll(" ", "").toLowerCase()
+        )}
         onMouseEnter={() => selectionSetter(item)}
         onMouseLeave={() => selectionSetter(undefined)}
       >
@@ -162,7 +183,10 @@ function ItemDisplay({
   return (
     <div
       key={"item-" + slot}
-      className={`item bg-base-200 ${slot.replaceAll(" ", "").toLowerCase()}`}
+      className={twMerge(
+        "item bg-base-200",
+        slot.replaceAll(" ", "").toLowerCase()
+      )}
     ></div>
   );
 }
@@ -544,12 +568,12 @@ export function PoB({ pobString }: Probs) {
                     }
                     return (
                       <div
-                        className={`tooltip tooltip-left ${tooltip}`}
+                        className={twMerge("tooltip tooltip-left", tooltip)}
                         data-tip={`${gem.level} / ${gem.quality}%`}
                         key={gemId}
                       >
                         <div
-                          className={`truncate ${position} ${text}`}
+                          className={twMerge("truncate", position, text)}
                           key={"gem-" + skillId + "-" + gemId}
                           data-tip={`${gem.level} / ${gem.quality}%`}
                         >

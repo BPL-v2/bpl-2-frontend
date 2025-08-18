@@ -23,7 +23,9 @@ const AuthButton = () => {
       <div className="dropdown dropdown-end">
         <div
           tabIndex={0}
-          className={`btn btn-lg py-8 border-0 hover:text-primary-content hover:bg-primary`}
+          className={
+            "btn btn-lg py-8 border-0 hover:text-primary-content hover:bg-primary"
+          }
         >
           <UserIcon className="h-6 w-6" />
           <div className="hidden sm:block">
@@ -40,11 +42,11 @@ const AuthButton = () => {
           }}
         >
           <li>
-            <Link to={`/settings`} className="flex flex-row gap-2">
+            <Link to={"/settings"} className="flex flex-row gap-2">
               <Cog6ToothIcon className="h-6 w-6" /> Settings
             </Link>
             <Link
-              to={`/profile/$userId`}
+              to={"/profile/$userId"}
               params={{ userId: user.id }}
               className="flex flex-row gap-2"
             >

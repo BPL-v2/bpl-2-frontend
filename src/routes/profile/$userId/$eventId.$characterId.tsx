@@ -9,6 +9,7 @@ import { getLevelFromExperience } from "@mytypes/level-info";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
 import { useContext, useEffect, useRef, useState } from "react";
+import { twMerge } from "tailwind-merge";
 import { AlignedData } from "uplot";
 import UplotReact from "uplot-react";
 
@@ -117,7 +118,7 @@ function RouteComponent() {
         if (!selectedPobTimestamp) {
           return;
         }
-        drawVerticalLine(u, selectedPobTimestamp, `PoB`);
+        drawVerticalLine(u, selectedPobTimestamp, "PoB");
       },
     },
   });
@@ -283,11 +284,10 @@ function RouteComponent() {
               ].map((metric) => (
                 <button
                   key={metric as string}
-                  className={`btn  m-1 ${
-                    selectedMetric === (metric as keyof CharacterStat)
-                      ? "btn-primary"
-                      : ""
-                  }`}
+                  className={twMerge(
+                    "btn m-1",
+                    selectedMetric === metric && "btn-primary"
+                  )}
                   onClick={() =>
                     setSelectedMetric(metric as keyof CharacterStat)
                   }

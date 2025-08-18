@@ -9,6 +9,7 @@ import { createFileRoute, useParams, useSearch } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
 import { findObjective } from "@utils/utils";
 import { useContext, useRef, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
 type StashType = "Grid" | "Special" | "Unique";
 export type ScoreQueryParams = {
@@ -85,9 +86,10 @@ function RouteComponent() {
               }}
             ></ClipboardDocumentCheckIcon>
             <div
-              className={
-                "flex flex-col items-center mb-[-1rem]" + ` ${textColor}`
-              }
+              className={twMerge(
+                "flex flex-col items-center mb-[-1rem]",
+                textColor
+              )}
             >
               {selectedItem?.name ? <p> {selectedItem?.name}</p> : null}
               <p> {selectedItem?.typeLine}</p>

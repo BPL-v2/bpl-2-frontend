@@ -1,4 +1,5 @@
 import React from "react";
+import { twMerge } from "tailwind-merge";
 
 interface CountdownProps {
   target: Date;
@@ -50,14 +51,18 @@ export function Countdown({ target, onEnd, size }: CountdownProps) {
     default:
       break;
   }
+  const countdownClass = twMerge("countdown mont-mono", numberSize);
 
   return (
     <div
-      className={`grid grid-flow-col gap-5 text-center auto-cols-max ${textSize}`}
+      className={twMerge(
+        "grid grid-flow-col gap-5 text-center auto-cols-max",
+        textSize
+      )}
     >
       {days > 0 && (
         <div className="flex flex-col">
-          <span className={`countdown font-mono ${numberSize}`}>
+          <span className={countdownClass}>
             <span
               style={{ "--value": Math.min(days, 99) } as React.CSSProperties}
               aria-live="polite"
@@ -70,7 +75,7 @@ export function Countdown({ target, onEnd, size }: CountdownProps) {
         </div>
       )}
       <div className="flex flex-col">
-        <span className={`countdown font-mono ${numberSize}`}>
+        <span className={countdownClass}>
           <span
             style={{ "--value": hours } as React.CSSProperties}
             aria-live="polite"
@@ -82,7 +87,7 @@ export function Countdown({ target, onEnd, size }: CountdownProps) {
         hours
       </div>
       <div className="flex flex-col">
-        <span className={`countdown font-mono ${numberSize}`}>
+        <span className={countdownClass}>
           <span
             style={{ "--value": minutes } as React.CSSProperties}
             aria-live="polite"
@@ -94,7 +99,7 @@ export function Countdown({ target, onEnd, size }: CountdownProps) {
         min
       </div>
       <div className="flex flex-col">
-        <span className={`countdown font-mono ${numberSize}`}>
+        <span className={countdownClass}>
           <span
             style={{ "--value": seconds } as React.CSSProperties}
             aria-live="polite"

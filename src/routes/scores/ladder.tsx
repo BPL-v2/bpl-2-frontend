@@ -90,7 +90,7 @@ export function LadderTab(): JSX.Element {
           },
           cell: (info) => (
             <Link
-              to={`/profile/$userId/$eventId/$characterId`}
+              to={"/profile/$userId/$eventId/$characterId"}
               params={{
                 userId: info.row.original.character?.user_id || 0,
                 characterId: info.row.original.character?.id || "",

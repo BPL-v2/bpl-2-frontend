@@ -1,3 +1,5 @@
+import { twMerge } from "tailwind-merge";
+
 interface ProgressBarProps {
   value: number;
   maxVal: number;
@@ -8,9 +10,10 @@ export function ProgressBar({ value, maxVal, style }: ProgressBarProps) {
   return (
     <div className="flex items-center" style={style}>
       <progress
-        className={`progress w-40 mr-2 ${
-          percent < 100 ? "" : "progress-success"
-        }`}
+        className={twMerge(
+          "progress w-40 mr-2",
+          percent >= 100 && "progress-success"
+        )}
         value={percent}
         max="100"
       ></progress>

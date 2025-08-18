@@ -17,7 +17,7 @@ export function LadderPortrait({ entry, team }: Props) {
   return (
     <Link
       className="flex flex-row gap-5 items-center w-100"
-      to={`/profile/$userId/$eventId/$characterId`}
+      to={"/profile/$userId/$eventId/$characterId"}
       params={{
         userId: entry.character?.user_id || 0,
         characterId: entry.character?.id || "",

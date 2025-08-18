@@ -113,7 +113,7 @@ function RouteComponent() {
                     />
                   ) : null}
                   <Link
-                    to={`/admin/guild-stashes/$stashId`}
+                    to={"/admin/guild-stashes/$stashId"}
                     params={{ stashId: stash.id }}
                     key={stash.id}
                     className="p-2 border-2 rounded-xl flex flex-row items-center gap-2 w-full justify-between text-left"
