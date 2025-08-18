@@ -2,7 +2,8 @@ import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { Score } from "@client/api";
 import { rank2text } from "@utils/utils";
-import { TeamLogo } from "./teamlogo";
+// import { TeamLogo } from "./teamlogo";
+import { useGetEventStatus } from "@client/query";
 
 interface RankingProps {
   objective: { team_score: Record<string, Score> };
@@ -62,18 +63,31 @@ export function Ranking({
   maximum,
   actual,
 }: RankingProps) {
-  const { currentEvent } = useContext(GlobalStateContext);
+  const { currentEvent, preferences } = useContext(GlobalStateContext);
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
+  const teamIds = currentEvent.teams
+    .sort((a, b) => {
+      if (a.id === eventStatus?.team_id) return -1;
+      if (b.id === eventStatus?.team_id) return 1;
+      return (
+        (objective.team_score[b.id]?.points || 0) -
+        (objective.team_score[a.id]?.points || 0)
+      );
+    })
+    .slice(0, preferences.limitTeams ? preferences.limitTeams : undefined)
+    .map((team) => team.id);
+
   return (
     <div
       className={`w-full grid gap-4 ${getGridLayout(
-        Object.keys(objective.team_score).length
+        Object.keys(teamIds).length
       )}`}
     >
       {Object.entries(objective.team_score)
         .sort(sort)
+        .filter(([teamId]) => teamIds.includes(parseInt(teamId)))
         .map(([teamIdstr, score]) => {
           const teamId = parseInt(teamIdstr);
-          const team = currentEvent?.teams?.find((t) => t.id === teamId);
           return (
             <div
               className={"card " + getCardColor(score)}
@@ -81,13 +95,13 @@ export function Ranking({
             >
               <div className="card-body">
                 <div className="flex flex-row items-center justify-between ">
-                  <div className="stat-figure text-secondary row-span-2 hidden lg:block">
+                  {/* <div className="stat-figure row-span-2 hidden lg:block">
                     <div className="avatar online">
                       <div className="w-20">
                         <TeamLogo team={team} eventId={currentEvent.id} />
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="flex flex-col px-4">
                     <div className="card-title flex items-center text-2xl ">
                       {

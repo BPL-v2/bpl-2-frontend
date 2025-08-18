@@ -21,7 +21,7 @@ const TeamScoreDisplay = ({
     return <></>;
   }
 
-  const { currentEvent } = useContext(GlobalStateContext);
+  const { currentEvent, preferences } = useContext(GlobalStateContext);
   const nullScore = currentEvent.teams.reduce(
     (acc, team) => {
       acc[team.id] = 0;
@@ -39,46 +39,55 @@ const TeamScoreDisplay = ({
   return (
     <>
       <div
-        className={`grid grid-cols-3 md:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-1 md:gap-2 px-1 2xl:px-0`}
+        className={`grid grid-cols-3 md:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-1 md:gap-2 px-1 2xl:px-0`}
       >
-        {currentEvent.teams.map((team) => {
-          const bgColor =
-            team.id === eventStatus?.team_id
-              ? "bg-highlight content-highlight"
-              : "bg-base-300";
-          const borderColor =
-            team.id === selectedTeam ? "border-primary" : "border-transparent";
-          return (
-            <div
-              className={`flex rounded-box border-4 p-0 ${bgColor} ${borderColor} ${interactive}`}
-              key={team.id}
-              onClick={() =>
-                setSelectedTeam ? setSelectedTeam(team.id) : null
-              }
-            >
-              <div className="stat p-1 md:p-4">
-                <div className="col-start-1 font-bold text-xl md:text-2xl">
-                  <TeamName team={team} />
-                </div>
+        {currentEvent.teams
+          .sort((a, b) => {
+            if (a.id === eventStatus?.team_id) return -1;
+            if (b.id === eventStatus?.team_id) return 1;
+            return teamScores[b.id] - teamScores[a.id];
+          })
+          .slice(0, preferences.limitTeams ? preferences.limitTeams : undefined)
+          .map((team) => {
+            const bgColor =
+              team.id === eventStatus?.team_id
+                ? "bg-highlight content-highlight"
+                : "bg-base-300";
+            const borderColor =
+              team.id === selectedTeam
+                ? "border-primary"
+                : "border-transparent";
+            return (
+              <div
+                className={`flex rounded-box border-4 p-0 ${bgColor} ${borderColor} ${interactive}`}
+                key={team.id}
+                onClick={() =>
+                  setSelectedTeam ? setSelectedTeam(team.id) : null
+                }
+              >
+                <div className="stat p-1 md:p-4">
+                  <div className="col-start-1 font-bold text-xl md:text-2xl">
+                    <TeamName team={team} />
+                  </div>
 
-                <div className="stat-figure text-secondary row-span-2 hidden md:block">
-                  <div className="avatar online">
-                    <div className="w-24">
-                      <TeamLogo team={team} eventId={currentEvent.id} />
+                  <div className="stat-figure row-span-2 hidden md:block">
+                    <div className="avatar online">
+                      <div className="w-24">
+                        <TeamLogo team={team} eventId={currentEvent.id} />
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="stat-value text-xl md:text-2xl whitespace-nowrap">
-                  {teamScores[team.id]}
-                  <span className="hidden md:inline">
-                    {" "}
-                    / {potentialScores[team.id]}
-                  </span>
+                  <div className="stat-value text-xl md:text-2xl whitespace-nowrap">
+                    {teamScores[team.id]}
+                    <span className="hidden md:inline">
+                      {" "}
+                      / {potentialScores[team.id]}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
     </>
   );

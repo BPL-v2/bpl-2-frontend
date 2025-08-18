@@ -27,6 +27,9 @@ function Home() {
   const now = Date.now();
   const hasStarted = nextEvent && Date.parse(nextEvent.event_start_time) < now;
   const hasEnded = nextEvent && Date.parse(nextEvent.event_end_time) < now;
+  console.log(nextEvent);
+  console.log(hasStarted);
+  console.log(hasEnded);
 
   return (
     <div className="flex flex-col gap-8 mt-8 mx-auto ">
@@ -142,10 +145,10 @@ function Home() {
                 {nextEvent.teams.map((team) => (
                   <div key={team.id} className="card bg-base-200">
                     <div className="card-body">
-                      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 items-center">
+                      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 items-center h-full">
                         <TeamLogo team={team} eventId={nextEvent.id} />
                         <div>
-                          <div className="grid grid-cols-4  sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-2 mt-8">
+                          <div className="grid grid-cols-6 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-3 2xl:grid-cols-4 gap-2 mt-8">
                             {team.allowed_classes.map((character_class) => (
                               <div
                                 key={team.id + character_class}

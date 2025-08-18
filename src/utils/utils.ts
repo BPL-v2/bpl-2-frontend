@@ -74,9 +74,12 @@ export function hidePOTotal(score: ScoreObjective): ScoreObjective {
   return score;
 }
 
-export function getTotalPoints(objective: ScoreObjective): {
+export function getTotalPoints(objective?: ScoreObjective): {
   [teamId: number]: number;
 } {
+  if (!objective) {
+    return {};
+  }
   const points: { [teamId: number]: number } = {};
   for (const [teamId, teamScore] of Object.entries(objective.team_score)) {
     points[parseInt(teamId)] = teamScore.points;
