@@ -68,12 +68,12 @@ export function DailyCard({ daily }: DailyCardProps) {
   return (
     <div
       className={twMerge(
-        "card bg-base-200",
+        "card bg-base-200 bborder",
         isRace && isAvailable ? "outline-4 outline-info" : ""
       )}
       key={daily.id}
     >
-      <div className="card-title rounded-t-box flex items-center m-0 px-4 bg-base-200 h-25">
+      <div className="card-title rounded-t-box flex items-center py-2 px-4 bg-base-200 h-full min-h-25 bborder-b">
         <ObjectiveIcon
           objective={daily}
           gameVersion={currentEvent.game_version}
@@ -82,7 +82,7 @@ export function DailyCard({ daily }: DailyCardProps) {
           className={daily.extra && "tooltip text-2xl"}
           data-tip={daily.extra}
         >
-          <h3 className="flex-grow text-center mt-4 text-lg font-medium mx-4">
+          <h3 className="flex-grow text-center text-lg font-medium mx-4">
             {isRace ? <b className="font-extrabold text-info">Race: </b> : ""}
             {daily.name}
             {daily.extra ? <i className="text-error">*</i> : null}
