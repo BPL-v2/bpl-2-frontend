@@ -7,7 +7,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ScoreObjective } from "@mytypes/score";
 import { ScoringMethod } from "@client/api";
 import { twMerge } from "tailwind-merge";
-import { twMerge } from "tailwind-merge";
 
 export type DailyCardProps = {
   daily: ScoreObjective;
