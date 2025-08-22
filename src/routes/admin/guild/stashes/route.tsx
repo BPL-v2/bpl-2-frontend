@@ -1,4 +1,5 @@
 import {
+  useGetEventStatus,
   useGetGuildStash,
   useSwitchStashFetching,
   useUpdateGuildStashTab,
@@ -16,6 +17,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { router } from "../../../../router";
+import { getPermissions } from "@utils/token";
 
 export const Route = createFileRoute("/admin/guild/stashes")({
   component: RouteComponent,
@@ -32,10 +34,13 @@ function RouteComponent() {
   const { updateGuildStashTab } = useUpdateGuildStashTab(qc, currentEvent.id);
   const [hideDisabled, setHideDisabled] = useState(true);
   const [highlightScoring, setHighlightScoring] = useState(true);
-
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
   const [stashSearch, setStashSearch] = useState("");
   dayjs.extend(relativeTime);
-
+  const permissions = getPermissions();
+  if (permissions.length === 0 && !eventStatus?.is_team_lead) {
+    return "You do not have permission to view this page.";
+  }
   return (
     <div>
       <div className="flex flex-row gap-2 items-center justify-center mt-2">

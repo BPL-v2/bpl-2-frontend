@@ -1,10 +1,20 @@
+import { useGetEventStatus } from "@client/query";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { GlobalStateContext } from "@utils/context-provider";
+import { getPermissions } from "@utils/token";
+import { useContext } from "react";
 
 export const Route = createFileRoute("/admin/guild/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const { currentEvent } = useContext(GlobalStateContext);
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
+  const permissions = getPermissions();
+  if (permissions.length === 0 && !eventStatus?.is_team_lead) {
+    return "You do not have permission to view this page.";
+  }
   return (
     <div className="flex flex-row gap-4 mt-4">
       <Link
