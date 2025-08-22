@@ -11,13 +11,13 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
-import { router } from "../../../router";
+import { router } from "../../../../router";
 
-export const Route = createFileRoute("/admin/guild-stashes")({
+export const Route = createFileRoute("/admin/guild/stashes")({
   component: RouteComponent,
 });
 
@@ -32,19 +32,6 @@ function RouteComponent() {
   const { updateGuildStashTab } = useUpdateGuildStashTab(qc, currentEvent.id);
   const [hideDisabled, setHideDisabled] = useState(true);
   const [highlightScoring, setHighlightScoring] = useState(true);
-  useEffect(() => {
-    const firstStash = guildStashes?.find(
-      (stash) => stash.fetch_enabled && !stash.parent_id
-    );
-    if (stashId == "guild-stashes" && firstStash) {
-      router.navigate({
-        to: "/admin/guild-stashes/$stashId",
-        replace: true,
-        params: { stashId: firstStash.id },
-        search: { highlightScoring },
-      });
-    }
-  }, [stashId, guildStashes, highlightScoring]);
 
   const [stashSearch, setStashSearch] = useState("");
   dayjs.extend(relativeTime);
@@ -70,7 +57,7 @@ function RouteComponent() {
           onClick={() => {
             setHighlightScoring(!highlightScoring);
             router.navigate({
-              to: "/admin/guild-stashes/$stashId",
+              to: "/admin/guild/stashes/$stashId",
               params: { stashId },
               search: { highlightScoring: !highlightScoring },
             });
@@ -113,7 +100,7 @@ function RouteComponent() {
                     />
                   ) : null}
                   <Link
-                    to={"/admin/guild-stashes/$stashId"}
+                    to={"/admin/guild/stashes/$stashId"}
                     params={{ stashId: stash.id }}
                     key={stash.id}
                     className="p-2 border-2 rounded-xl flex flex-row items-center gap-2 w-full justify-between text-left"

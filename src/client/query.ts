@@ -841,3 +841,25 @@ export function useGetPoBs(userId: number, characterId: string) {
     pobs: query.data,
   };
 }
+
+export function useGetGuildLogs(eventId: number, guildId: number) {
+  const query = useQuery({
+    queryKey: ["guildLogs", eventId, guildId],
+    queryFn: () => guildStashApi.getLogEntriesForGuild(eventId, guildId),
+  });
+  return {
+    ...query,
+    logs: query.data,
+  };
+}
+
+export function useGetGuilds(eventId: number) {
+  const query = useQuery({
+    queryKey: ["guilds", eventId],
+    queryFn: () => guildStashApi.getGuilds(eventId),
+  });
+  return {
+    ...query,
+    guilds: query.data,
+  };
+}

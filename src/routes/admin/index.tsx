@@ -103,11 +103,11 @@ function RouteComponent() {
               </div>
             </Link>
             <Link
-              to={"/admin/guild-stashes"}
+              to={"/admin/guild"}
               className="card bg-base-300 hover:bg-base-200 border-2 border-base-content"
             >
               <div className="card-body">
-                <h2 className="card-title">Guild Stash</h2>
+                <h2 className="card-title">Guild Stashes</h2>
                 <p className="text-left">
                   Team leaders can monitor the fetch status of guild stash tabs.
                 </p>

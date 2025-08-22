@@ -15,7 +15,7 @@ type StashType = "Grid" | "Special" | "Unique";
 export type ScoreQueryParams = {
   highlightScoring: boolean;
 };
-export const Route = createFileRoute("/admin/guild-stashes/$stashId")({
+export const Route = createFileRoute("/admin/guild/stashes/$stashId")({
   component: RouteComponent,
   validateSearch: (search: Record<string, boolean>): ScoreQueryParams => {
     return {
