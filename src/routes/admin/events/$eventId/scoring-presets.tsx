@@ -220,7 +220,6 @@ function ScoringPresetsPage() {
       size: 100,
     },
   ];
-
   return (
     <div className="flex flex-col gap-2">
       <h1>{`Scoring Presets for Event "${event.name}"`}</h1>

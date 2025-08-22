@@ -1,6 +1,7 @@
 import { useGetEventStatus, useGetGuilds } from "@client/query";
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
+import { getPermissions } from "@utils/token";
 import { useContext } from "react";
 
 export const Route = createFileRoute("/admin/guild/logs")({
@@ -9,16 +10,19 @@ export const Route = createFileRoute("/admin/guild/logs")({
 
 function RouteComponent() {
   const { currentEvent } = useContext(GlobalStateContext);
-  const { guilds } = useGetGuilds(currentEvent.id);
+  const { guilds = [] } = useGetGuilds(currentEvent.id);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
-
+  const permissions = getPermissions();
+  if (permissions.length === 0 && !eventStatus?.is_team_lead) {
+    return "You do not have permission to view this page.";
+  }
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-4 m-4">
         <div>Choose a guild:</div>
         <div className="join">
           {guilds
-            ?.filter((guild) => guild.team_id === eventStatus?.team_id)
+            // .filter((guild) => guild.team_id === eventStatus?.team_id)
             .map((guild) => (
               <Link
                 to={`/admin/guild/logs/$guildId`}
