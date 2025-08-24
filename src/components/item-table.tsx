@@ -256,19 +256,24 @@ export function ItemTable({
             enableSorting: false,
             size: 200,
             cell: (info: CellContext<ExtendedScoreObjective, string>) => {
-              const finished =
-                info.row.original.team_score[team.id]?.finished || false;
-              const user =
-                finished &&
-                users?.find(
-                  (u) => info.row.original.team_score[team.id]?.user_id === u.id
-                );
+              const score = info.row.original.team_score[team.id];
+              const finished = score?.finished || false;
+              const user = users?.find((u) => score?.user_id === u.id);
               if (user) {
                 return (
                   <div
-                    className="tooltip tooltip-info cursor-help tooltip-bottom z-1000 flex justify-center w-full"
-                    data-tip={`scored by ${user.display_name}`}
+                    className={twMerge(
+                      "tooltip cursor-help flex justify-center items-center w-full",
+                      info.row.index == 0 ? "tooltip-bottom" : "tooltip-top"
+                    )}
                   >
+                    <div className="tooltip-content px-4 flex flex-col gap-1 bg-base-100">
+                      <span>Scored by {user.display_name}</span>
+                      <span>
+                        on {new Date(score.timestamp).toLocaleString()}
+                      </span>
+                    </div>
+
                     <CheckCircleIcon className="h-6 w-6 text-success" />
                   </div>
                 );
@@ -329,10 +334,9 @@ export function ItemTable({
             }) as ExtendedScoreObjective[]
         }
         rowClassName={(row) =>
-          twMerge(
-            "hover:bg-base-200/50 ",
-            row.original.isVariant && "bg-base-200"
-          )
+          row.original.isVariant
+            ? "bg-base-200 hover:bg-base-100"
+            : "bg-base-300 hover:bg-base-200"
         }
         className={className ? className : "w-full h-[70vh]"}
         styles={styles}

@@ -403,7 +403,14 @@ html {
 .embla {
   /* max-width: 70rem; */
   margin: auto;
+  --slide-spacing: 0px;
+  --slide-spacing-sm: 5px;
+  --slide-spacing-md: 5px;
+  --slide-spacing-lg: 5px;
+  --slide-size: 100%;
   --slide-size-lg: calc(100% / 4);
+  --slide-size-md: calc(100% / 3);
+  --slide-size-sm: calc(100% / 2);
 }
 .embla__viewport {
   overflow: hidden;
@@ -429,10 +436,16 @@ html {
   flex: 0 0 var(--slide-size);
   padding-left: var(--slide-spacing);
 }
-@media (min-width: 750px) {
+@media (min-width: 500px) {
   .embla__slide {
     flex: 0 0 var(--slide-size-sm);
     padding-left: var(--slide-spacing-sm);
+  }
+}
+@media (min-width: 750px) {
+  .embla__slide {
+    flex: 0 0 var(--slide-size-md);
+    padding-left: var(--slide-spacing-md);
   }
 }
 @media (min-width: 1200px) {

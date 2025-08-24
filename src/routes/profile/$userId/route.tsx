@@ -72,7 +72,7 @@ export function ProfilePage() {
     return <div>Loading...</div>;
   }
   return (
-    <div>
+    <div className=" px-2">
       <h1 className="text-4xl text-center font-bold m-4">
         {user.display_name}'s Profile
       </h1>
@@ -110,34 +110,28 @@ export function ProfilePage() {
                       }}
                       key={char.event_id + char.name}
                       className={
-                        "card w-80 h-130 bg-base-200 m-2 cursor-pointer select-none embla__slide"
+                        "bg-base-300 cursor-pointer select-none embla__slide flex flex-row gap-4 rounded-full border-2 items-center p-1 "
                       }
                       activeProps={{
-                        className: "border-primary  shadow-2xl shadow-primary",
+                        className: "border-primary shadow-2xl",
                       }}
                       inactiveProps={{
                         className: "border-transparent",
                       }}
                     >
-                      <figure className="h-80">
-                        <img
-                          src={ascendancyObj.image}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                          }}
-                          alt={ascendancyName}
-                        />
-                      </figure>
-                      <div className="card-body">
-                        <h2 className="card-title text-2xl">
+                      <img
+                        src={ascendancyObj.thumbnail}
+                        className="rounded-full h-22 w-22"
+                        alt={ascendancyName}
+                      />
+                      <div className="bg-base-300 text-left rounded-r-full">
+                        <p className=" text-xl font-bold">
                           {event.name.split(" (PL")[0]}
-                        </h2>
-                        <div className="text-lg text-left">
+                        </p>
+                        <div className="text-lg">
                           <p> {char.name}</p>
-                          <p>
-                            <span>{char.main_skill}</span>{" "}
+                          <div className="flex flex-row gap-2">
+                            <span>Level {char.level}</span>
                             <span
                               className={twMerge(
                                 "font-bold",
@@ -146,8 +140,7 @@ export function ProfilePage() {
                             >
                               {ascendancyName}
                             </span>
-                          </p>
-                          <p>Level {char.level}</p>
+                          </div>
                         </div>
                       </div>
                     </Link>
@@ -167,7 +160,7 @@ export function ProfilePage() {
               disabled={nextBtnDisabled}
             />
           </div>
-          <div className="flex flex-row gap-2 flex-wrap justify-end">
+          <div className="flex-row hidden sm:flex gap-2 flex-wrap justify-end">
             {scrollSnaps.map((_, index) => (
               <DotButton
                 key={index}
