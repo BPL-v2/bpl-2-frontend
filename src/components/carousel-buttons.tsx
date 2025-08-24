@@ -5,6 +5,7 @@ import React, {
   useState,
 } from "react";
 import { EmblaCarouselType } from "embla-carousel";
+import { twMerge } from "tailwind-merge";
 
 type UseDotButtonType = {
   selectedIndex: number;
@@ -59,10 +60,10 @@ export const DotButton: React.FC<DotButtonProps> = ({ onClick, active }) => {
   return (
     <button
       type="button"
-      className={
-        "btn btn-xs btn-outline border-2 btn-circle " +
-        (active ? "border-white" : "border-base-300")
-      }
+      className={twMerge(
+        "border-2 h-6 w-6 rounded-full",
+        active ? "border-white" : "border-base-300"
+      )}
       onClick={onClick}
     ></button>
   );

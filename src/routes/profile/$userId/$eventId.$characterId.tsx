@@ -218,7 +218,7 @@ function RouteComponent() {
     }
   }
   return (
-    <div className="w-full m-4 flex flex-col gap-4">
+    <div className="w-full flex flex-col gap-4  px-2">
       {contributions.length > 0 && (
         <div className="bg-base-300 rounded-box p-4 flex flex-col gap-4">
           <h1 className="text-xl text-left">
@@ -227,7 +227,7 @@ function RouteComponent() {
               +{contributions.reduce((acc, curr) => acc + curr.score.points, 0)}
             </span>
           </h1>
-          <div className=" flex flex-row gap-4">
+          <div className="flex flex-row gap-4 flex-wrap">
             {contributions
               .sort((a, b) => b.score.points - a.score.points)
               .map((contribution) => {
@@ -261,31 +261,31 @@ function RouteComponent() {
           </div>
         </div>
       )}
+      {pobs.length > 0 && (
+        <div className="relative flex items-center justify-center">
+          <input
+            type="range"
+            className="range range-primary w-full  md:range-xl [--range-thumb:blue]"
+            min="0"
+            max={pobs?.length ? pobs.length - 1 : 0}
+            value={pobId}
+            onChange={(e) => setPobId(Number(e.target.value))}
+          />
+          <span
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 px-2 py-1 rounded text-primary-content pointer-events-none select-none text-xs md:text-md"
+            style={{ zIndex: 2 }}
+          >
+            {getDeltaTimeAfterLeagueStart(
+              pobs[pobId]?.timestamp,
+              event?.event_start_time
+            )}
+          </span>
+        </div>
+      )}
       {pobs.length > 0 && <PoB pobString={pobs[pobId].export_string} />}
       {state.data[0].length > 0 && (
         <div className="bg-base-200 rounded-box justify-center">
-          {pobs.length > 0 && (
-            <div className="relative flex items-center justify-center m-4 mb-0">
-              <input
-                type="range"
-                className="range range-primary w-full range-xl [--range-thumb:blue]"
-                min="0"
-                max={pobs?.length ? pobs.length - 1 : 0}
-                value={pobId}
-                onChange={(e) => setPobId(Number(e.target.value))}
-              />
-              <span
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 px-2 py-1 rounded text-primary-content pointer-events-none select-none"
-                style={{ zIndex: 2 }}
-              >
-                {getDeltaTimeAfterLeagueStart(
-                  pobs[pobId]?.timestamp,
-                  event?.event_start_time
-                )}
-              </span>
-            </div>
-          )}
-          <div className="flex flex-row bg-base-200 rounded-box justify-center p-4 gap-4">
+          <div className="hidden lg:flex flex-row bg-base-200 rounded-box justify-center p-4 gap-4">
             <div className="bg-base-300 rounded-box p-4 w-full " ref={plotRef}>
               <UplotReact
                 options={state.options}
