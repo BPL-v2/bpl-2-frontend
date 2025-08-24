@@ -1,13 +1,15 @@
-import { CharacterStat } from "@client/api";
+import { CharacterStat, GameVersion, ObjectiveType } from "@client/api";
 import {
   useGetCharacterTimeseries,
   useGetEvents,
   useGetPoBs,
 } from "@client/query";
+import { ObjectiveIcon } from "@components/objective-icon";
 import { PoB } from "@components/pob";
 import { getLevelFromExperience } from "@mytypes/level-info";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
+import { flatMap } from "@utils/utils";
 import { useContext, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { AlignedData } from "uplot";
@@ -76,7 +78,7 @@ function drawVerticalLine(u: uPlot, timestamp: number, label: string) {
 }
 
 function RouteComponent() {
-  const { preferences } = useContext(GlobalStateContext);
+  const { preferences, scores } = useContext(GlobalStateContext);
   const { userId, characterId, eventId } = useParams({ from: Route.id });
   const [selectedMetric, setSelectedMetric] =
     useState<keyof CharacterStat>("dps");
@@ -202,8 +204,63 @@ function RouteComponent() {
     data: data,
   };
 
+  const contributions = [];
+  for (const objective of flatMap(scores)) {
+    if (
+      objective.objective_type !== ObjectiveType.ITEM ||
+      objective.required_number > 1
+    )
+      continue;
+    for (const [_, score] of Object.entries(objective.team_score)) {
+      if (score.user_id === userId && score.points > 0) {
+        contributions.push({ objective: objective, score: score });
+      }
+    }
+  }
   return (
     <div className="w-full m-4 flex flex-col gap-4">
+      {contributions.length > 0 && (
+        <div className="bg-base-300 rounded-box p-4 flex flex-col gap-4">
+          <h1 className="text-xl text-left">
+            Item contributions:{" "}
+            <span className="text-success">
+              +{contributions.reduce((acc, curr) => acc + curr.score.points, 0)}
+            </span>
+          </h1>
+          <div className=" flex flex-row gap-4">
+            {contributions
+              .sort((a, b) => b.score.points - a.score.points)
+              .map((contribution) => {
+                return (
+                  <div className="tooltip">
+                    <div className="tooltip-content p-2 font-bold bg-base-100">
+                      <div className="">{contribution.objective.name}</div>
+                      <span>
+                        {new Date(
+                          contribution.score.timestamp
+                        ).toLocaleString()}
+                      </span>
+                    </div>
+
+                    <div
+                      className="flex flex-col items-center gap-2"
+                      key={contribution.objective.id}
+                    >
+                      <ObjectiveIcon
+                        objective={contribution.objective}
+                        gameVersion={GameVersion.poe1}
+                      />
+                      <p className="text-success">
+                        {" "}
+                        +{contribution.score.points}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      )}
       {pobs.length > 0 && <PoB pobString={pobs[pobId].export_string} />}
       {state.data[0].length > 0 && (
         <div className="bg-base-200 rounded-box justify-center">
