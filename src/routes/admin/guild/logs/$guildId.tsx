@@ -18,54 +18,55 @@ export const Route = createFileRoute("/admin/guild/logs/$guildId")({
   },
 });
 
-function filterMovements(
+interface ProcessedLog extends Omit<GuildStashChangelog, "number"> {
+  number: number;
+  originalNumber?: number; // Store original number for modified actions
+  displayNumber: string; // What to display in the UI
+}
+
+function filterMovementsAndProcessQuantities(
   logs: GuildStashChangelog[],
   maxMinutesDiff = 10
-): GuildStashChangelog[] {
+): ProcessedLog[] {
   const start = performance.now();
 
-  // Group logs by account + item + number
-  const groups = new Map<string, GuildStashChangelog[]>();
+  // Sort all logs by timestamp first
+  const sortedLogs = [...logs].sort((a, b) => a.timestamp - b.timestamp);
 
-  for (const log of logs) {
-    const key = `${log.account_name}:${log.item_name}:${log.number}`;
-    if (!groups.has(key)) {
-      groups.set(key, []);
+  // Step 1: First pass - identify movements to filter out
+  const movementGroups = new Map<string, GuildStashChangelog[]>();
+  for (const log of sortedLogs) {
+    const key = `${log.account_name}:${log.item_name}`;
+    if (!movementGroups.has(key)) {
+      movementGroups.set(key, []);
     }
-    groups.get(key)!.push(log);
+    movementGroups.get(key)!.push(log);
   }
 
   const toRemove = new Set<GuildStashChangelog>();
 
-  // Process each group
-  for (const groupLogs of groups.values()) {
-    if (groupLogs.length < 2) continue;
-
-    // Sort by timestamp for easier pairing
-    groupLogs.sort((a, b) => a.timestamp - b.timestamp);
-
-    // Find add/remove pairs within time window
+  // Find movements within time window
+  for (const groupLogs of movementGroups.values()) {
     for (let i = 0; i < groupLogs.length - 1; i++) {
       if (toRemove.has(groupLogs[i])) continue;
 
       const current = groupLogs[i];
-
       for (let j = i + 1; j < groupLogs.length; j++) {
         if (toRemove.has(groupLogs[j])) continue;
 
         const other = groupLogs[j];
 
-        // Check time difference first (quick exit)
+        // Check time difference first
         const timeDiff = Math.abs(current.timestamp - other.timestamp) / 60;
-        if (timeDiff > maxMinutesDiff) break; // logs are sorted, no need to check further
+        if (timeDiff > maxMinutesDiff) break;
 
-        // Check if actions are opposite
+        // Check if actions are opposite and same quantity
         const isOppositeAction =
           (current.action === Action.added &&
             other.action === Action.removed) ||
           (current.action === Action.removed && other.action === Action.added);
 
-        if (isOppositeAction) {
+        if (isOppositeAction && current.number === other.number) {
           toRemove.add(current);
           toRemove.add(other);
           break;
@@ -74,14 +75,57 @@ function filterMovements(
     }
   }
 
-  const result = logs.filter((log) => !toRemove.has(log));
+  // Step 2: Second pass - process quantities with movements filtered out
+  const processedLogs: ProcessedLog[] = [];
+
+  // Group by stash_name + item_name for quantity tracking
+  const quantityGroups = new Map<string, GuildStashChangelog[]>();
+  for (const log of sortedLogs) {
+    const key = `${log.stash_name}:${log.item_name}`;
+    if (!quantityGroups.has(key)) {
+      quantityGroups.set(key, []);
+    }
+    quantityGroups.get(key)!.push(log);
+  }
+
+  for (const groupLogs of quantityGroups.values()) {
+    let currentQuantity = 0;
+
+    for (const log of groupLogs) {
+      if (toRemove.has(log)) continue;
+
+      let processedLog: ProcessedLog = {
+        ...log,
+        displayNumber: log.number.toString(),
+        originalNumber: log.number,
+      };
+
+      if (log.action === Action.added) {
+        currentQuantity += log.number;
+      } else if (log.action === Action.removed) {
+        currentQuantity -= log.number;
+      } else if (log.action === Action.modified) {
+        // Calculate the difference from current tracked quantity
+        const previousQuantity = currentQuantity;
+        currentQuantity = log.number;
+        const difference = currentQuantity - previousQuantity;
+
+        processedLog.displayNumber = `${currentQuantity} (${difference > 0 ? `+${difference}` : difference})`;
+      }
+
+      processedLogs.push(processedLog);
+    }
+  }
+
+  // Sort processed logs back to original timestamp order
+  processedLogs.sort((a, b) => a.timestamp - b.timestamp);
 
   const end = performance.now();
   console.log(
-    `Filtered ${logs.length - result.length} movements in ${end - start}ms`
+    `Filtered ${logs.length - processedLogs.length} movements and processed quantities in ${end - start}ms`
   );
 
-  return result;
+  return processedLogs;
 }
 
 function RouteComponent() {
@@ -89,11 +133,16 @@ function RouteComponent() {
   const { guildId } = useParams({ from: Route.id });
 
   const { logs = [] } = useGetGuildLogs(currentEvent.id, guildId);
-  const filteredLogs = useMemo(() => filterMovements(logs), [logs]);
+  const processedLogs = useMemo(
+    () => filterMovementsAndProcessQuantities(logs),
+    [logs]
+  );
+
   const stashNames = Array.from(
-    new Set(filteredLogs.map((log) => log.stash_name))
+    new Set(processedLogs.map((log) => log.stash_name))
   ).filter((s) => s);
-  const columns: ColumnDef<GuildStashChangelog>[] = [
+
+  const columns: ColumnDef<ProcessedLog>[] = [
     {
       header: "Timestamp",
       accessorKey: "timestamp",
@@ -132,9 +181,22 @@ function RouteComponent() {
     },
     {
       header: "Number",
-      accessorKey: "number",
+      accessorKey: "displayNumber",
       size: 100,
       enableSorting: false,
+      cell: ({ row }) => (
+        <span
+          className={
+            row.original.action === Action.modified
+              ? row.original.displayNumber.includes("+")
+                ? "text-success"
+                : "text-error"
+              : ""
+          }
+        >
+          {row.original.displayNumber}
+        </span>
+      ),
     },
     {
       header: "",
@@ -150,20 +212,24 @@ function RouteComponent() {
   ];
 
   return (
-    <Table
-      className="w-full h-[80vh]"
-      data={filteredLogs}
-      columns={columns}
-      rowClassName={(row) => {
-        switch (row.original.action) {
-          case Action.added:
-            return "bg-success/20";
-          case Action.removed:
-            return "bg-error/20";
-          default:
-            return "";
-        }
-      }}
-    />
+    <div className="flex flex-col gap-4">
+      <Table
+        className="w-full h-[80vh]"
+        data={processedLogs.sort((a, b) => b.timestamp - a.timestamp)}
+        columns={columns}
+        rowClassName={(row) => {
+          switch (row.original.action) {
+            case Action.added:
+              return "bg-success/20";
+            case Action.removed:
+              return "bg-error/20";
+            case Action.modified:
+              return "bg-warning/20";
+            default:
+              return "";
+          }
+        }}
+      />
+    </div>
   );
 }
