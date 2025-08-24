@@ -1111,6 +1111,38 @@ export enum GemSocket {
 /**
  * 
  * @export
+ * @interface Guild
+ */
+export interface Guild {
+    /**
+     * 
+     * @type {number}
+     * @memberof Guild
+     */
+    id: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Guild
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Guild
+     */
+    tag: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Guild
+     */
+    team_id?: number;
+}
+
+/**
+ * 
+ * @export
  * @interface GuildStashChangeResponse
  */
 export interface GuildStashChangeResponse {
@@ -3298,26 +3330,6 @@ export interface TeamCreate {
 /**
  * 
  * @export
- * @interface TeamGuild
- */
-export interface TeamGuild {
-    /**
-     * 
-     * @type {number}
-     * @memberof TeamGuild
-     */
-    guild_id: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof TeamGuild
-     */
-    team_id: number;
-}
-
-/**
- * 
- * @export
  * @interface TeamSubmissionCreate
  */
 export interface TeamSubmissionCreate {
@@ -5016,6 +5028,57 @@ export const GuildStashApiFetchParamCreator = function (configuration?: Configur
             };
         },
         /**
+         * Saves a guild for the current event
+         * @param {number} eventId Event Id
+         * @param {number} guildId Guild Id
+         * @param {Guild} guild Guild
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveGuild(eventId: number, guildId: number, guild: Guild, options: any = {}): FetchArgs {
+            // verify required parameter 'eventId' is not null or undefined
+            if (eventId === null || eventId === undefined) {
+                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling saveGuild.');
+            }
+            // verify required parameter 'guildId' is not null or undefined
+            if (guildId === null || guildId === undefined) {
+                throw new RequiredError('guildId','Required parameter guildId was null or undefined when calling saveGuild.');
+            }
+            // verify required parameter 'guild' is not null or undefined
+            if (guild === null || guild === undefined) {
+                throw new RequiredError('guild','Required parameter guild was null or undefined when calling saveGuild.');
+            }
+            const localVarPath = `/{eventId}/guilds/{guildId}`
+                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
+                .replace(`{${"guildId"}}`, encodeURIComponent(String(guildId)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"Guild" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(guild || {}) : (guild || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Enables fetching for a specific guild stash tab
          * @param {number} eventId Event Id
          * @param {string} stash_id Stash Tab Id
@@ -5207,7 +5270,7 @@ export const GuildStashApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getGuilds(eventId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<TeamGuild>> {
+        getGuilds(eventId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Guild>> {
             const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).getGuilds(eventId, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
@@ -5252,6 +5315,26 @@ export const GuildStashApiFp = function(configuration?: Configuration) {
          */
         getLogEntriesForGuild(eventId: number, guildId: number, limit?: number, offset?: number, username?: string, itemname?: string, stashname?: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<GuildStashChangelog>> {
             const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).getLogEntriesForGuild(eventId, guildId, limit, offset, username, itemname, stashname, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * Saves a guild for the current event
+         * @param {number} eventId Event Id
+         * @param {number} guildId Guild Id
+         * @param {Guild} guild Guild
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveGuild(eventId: number, guildId: number, guild: Guild, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Guild> {
+            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).saveGuild(eventId, guildId, guild, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -5392,6 +5475,17 @@ export const GuildStashApiFactory = function (configuration?: Configuration, fet
             return GuildStashApiFp(configuration).getLogEntriesForGuild(eventId, guildId, limit, offset, username, itemname, stashname, options)(fetch, basePath);
         },
         /**
+         * Saves a guild for the current event
+         * @param {number} eventId Event Id
+         * @param {number} guildId Guild Id
+         * @param {Guild} guild Guild
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveGuild(eventId: number, guildId: number, guild: Guild, options?: any) {
+            return GuildStashApiFp(configuration).saveGuild(eventId, guildId, guild, options)(fetch, basePath);
+        },
+        /**
          * Enables fetching for a specific guild stash tab
          * @param {number} eventId Event Id
          * @param {string} stash_id Stash Tab Id
@@ -5504,6 +5598,19 @@ export class GuildStashApi extends BaseAPI {
      */
     public getLogEntriesForGuild(eventId: number, guildId: number, limit?: number, offset?: number, username?: string, itemname?: string, stashname?: string, options?: any) {
         return GuildStashApiFp(this.configuration).getLogEntriesForGuild(eventId, guildId, limit, offset, username, itemname, stashname, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Saves a guild for the current event
+     * @param {number} eventId Event Id
+     * @param {number} guildId Guild Id
+     * @param {Guild} guild Guild
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GuildStashApi
+     */
+    public saveGuild(eventId: number, guildId: number, guild: Guild, options?: any) {
+        return GuildStashApiFp(this.configuration).saveGuild(eventId, guildId, guild, options)(this.fetch, this.basePath);
     }
 
     /**

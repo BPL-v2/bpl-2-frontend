@@ -26,12 +26,12 @@ function RouteComponent() {
             .map((guild) => (
               <Link
                 to={`/admin/guild/logs/$guildId`}
-                params={{ guildId: guild.guild_id }}
+                params={{ guildId: guild.id }}
                 className="btn join-item btn-primary"
                 inactiveProps={{ className: "btn-outline" }}
-                key={guild.guild_id}
+                key={guild.id}
               >
-                {guild.guild_id}
+                {guild.name} &lt;{guild.tag}&gt;
               </Link>
             ))}
         </div>
