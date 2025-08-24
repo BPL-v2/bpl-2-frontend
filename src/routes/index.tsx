@@ -27,10 +27,6 @@ function Home() {
   const now = Date.now();
   const hasStarted = nextEvent && Date.parse(nextEvent.event_start_time) < now;
   const hasEnded = nextEvent && Date.parse(nextEvent.event_end_time) < now;
-  console.log(nextEvent);
-  console.log(hasStarted);
-  console.log(hasEnded);
-
   return (
     <div className="flex flex-col gap-8 mt-8 mx-auto ">
       {!hasEnded && (

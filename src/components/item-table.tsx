@@ -121,7 +121,7 @@ export function ItemTable({
 
     const img_location = getImageLocation(objective, gameVersion);
     if (!img_location) {
-      return <></>;
+      return <div className="w-20 h-20 sm:w-16 sm:h-16"></div>;
     }
     return (
       <div className="relative flex items-center justify-center">

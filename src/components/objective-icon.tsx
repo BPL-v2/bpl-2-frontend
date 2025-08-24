@@ -1,6 +1,7 @@
 import { Objective, GameVersion } from "@client/api";
 import { ScoreObjective } from "@mytypes/score";
 import { getImageLocation, getItemName } from "@mytypes/scoring-objective";
+import { twMerge } from "tailwind-merge";
 
 export type ObjectiveIconProps = {
   objective: ScoreObjective | Objective;
@@ -16,7 +17,7 @@ export function ObjectiveIcon({
   const img_location = getImageLocation(objective, gameVersion);
   const itemName = getItemName(objective);
   if (!img_location) {
-    return <></>;
+    return <div className={twMerge("w-14 h-14", className)}> </div>;
   }
   let wikilink: string | undefined = undefined;
   if (itemName) {
@@ -35,12 +36,15 @@ export function ObjectiveIcon({
 
   return (
     <a
-      className="select-none flex items-center justify-center cursor-pointer"
+      className={twMerge(
+        "select-none flex items-center justify-center cursor-pointer w-14 h-14",
+        className
+      )}
       href={wikilink}
       target="_blank"
     >
       <img
-        className={className || "max-w-14 max-h-14"}
+        className={twMerge("max-w-14 max-h-14", className)}
         src={img_location}
         alt={itemName || img_location}
       />
