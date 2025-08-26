@@ -3,6 +3,7 @@ import {
   useGetCharacterTimeseries,
   useGetEvents,
   useGetPoBs,
+  useGetUser,
 } from "@client/query";
 import { ObjectiveIcon } from "@components/objective-icon";
 import { PoB } from "@components/pob";
@@ -80,6 +81,7 @@ function drawVerticalLine(u: uPlot, timestamp: number, label: string) {
 function RouteComponent() {
   const { preferences, scores } = useContext(GlobalStateContext);
   const { userId, characterId, eventId } = useParams({ from: Route.id });
+  const { user } = useGetUser();
   const [selectedMetric, setSelectedMetric] =
     useState<keyof CharacterStat>("dps");
   const plotRef = useRef<HTMLDivElement>(null);
@@ -219,7 +221,7 @@ function RouteComponent() {
   }
   return (
     <div className="w-full flex flex-col gap-4  px-2">
-      {contributions.length > 0 && (
+      {contributions.length > 0 && user?.id === userId && (
         <div className="bg-base-300 rounded-box p-4 flex flex-col gap-4">
           <h1 className="text-xl text-left">
             Item contributions:{" "}
