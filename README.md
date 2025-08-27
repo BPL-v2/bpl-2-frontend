@@ -5,7 +5,6 @@
 Install node v23 and npm, run
 
 ```
-touch .env
 echo "VITE_PUBLIC_BPL_BACKEND_URL = http://localhost/api" > .env
 npm install
 ```
@@ -36,4 +35,4 @@ Run the backend go server on localhost and execute
 ## Credits
 
 - Some code in this project is derived from [pasteofexile](https://github.com/Dav1dde/pasteofexile), licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See LICENSE for details.
-- Icons are provided by [RePoE Fork](https://github.com/repoe-fork/repoe).
+- Icons are provided by [RePoE Fork](https://github.com/repoe-fork/repoe) and ultimately property of Grinding Gear Games
