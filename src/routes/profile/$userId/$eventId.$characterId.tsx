@@ -1,20 +1,12 @@
-import { CharacterStat, GameVersion, ObjectiveType } from "@client/api";
-import {
-  useGetCharacterTimeseries,
-  useGetEvents,
-  useGetPoBs,
-  useGetUser,
-} from "@client/query";
+import { GameVersion, ObjectiveType } from "@client/api";
+import { useGetEvents, useGetPoBs, useGetUser } from "@client/query";
+import { LazyCharacterChart } from "@components/character-chart-lazy";
 import { ObjectiveIcon } from "@components/objective-icon";
 import { PoB } from "@components/pob";
-import { getLevelFromExperience } from "@mytypes/level-info";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
 import { flatMap } from "@utils/utils";
-import { useContext, useEffect, useRef, useState } from "react";
-import { twMerge } from "tailwind-merge";
-import { AlignedData } from "uplot";
-import UplotReact from "uplot-react";
+import { Suspense, useContext, useEffect, useState } from "react";
 
 function getDeltaTimeAfterLeagueStart(
   timestamp?: string,
@@ -34,11 +26,6 @@ function getDeltaTimeAfterLeagueStart(
   const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
   return `${days} days, ${hours} hours, ${minutes} mins`;
 }
-const formatMetricTick = (val: number, maxMetric: number) => {
-  if (maxMetric >= 1_000_000) return (val / 1_000_000).toFixed(1) + " mil";
-  if (maxMetric >= 1_000) return (val / 1_000).toFixed(1) + "k";
-  return val.toString();
-};
 
 export const Route = createFileRoute("/profile/$userId/$eventId/$characterId")({
   component: RouteComponent,
@@ -60,36 +47,11 @@ export const Route = createFileRoute("/profile/$userId/$eventId/$characterId")({
     }),
   },
 });
-function drawVerticalLine(u: uPlot, timestamp: number, label: string) {
-  const ctx = u.ctx;
-  const xPos = u.valToPos(timestamp, "x") * window.devicePixelRatio;
-  ctx.beginPath();
-  ctx.moveTo(u.bbox.left + xPos, u.bbox.top);
-  ctx.lineTo(u.bbox.left + xPos, u.bbox.top + u.bbox.height);
-  ctx.strokeStyle = "white";
-  ctx.setLineDash([5, 5]);
-  ctx.stroke();
-  ctx.textAlign = "center";
-  ctx.textBaseline = "bottom";
-  ctx.textRendering = "optimizeLegibility";
-  ctx.fillStyle = "white";
-  ctx.fillText(label, u.bbox.left + xPos, u.bbox.top);
-  ctx.closePath();
-  ctx.setLineDash([]);
-}
 
 function RouteComponent() {
-  const { preferences, scores } = useContext(GlobalStateContext);
+  const { scores } = useContext(GlobalStateContext);
   const { userId, characterId, eventId } = useParams({ from: Route.id });
   const { user } = useGetUser();
-  const [selectedMetric, setSelectedMetric] =
-    useState<keyof CharacterStat>("dps");
-  const plotRef = useRef<HTMLDivElement>(null);
-
-  const { characterTimeseries = [] } = useGetCharacterTimeseries(
-    characterId,
-    userId
-  );
   const { events = [] } = useGetEvents();
   const event = events.find((e) => e.id === Number(eventId));
   const { pobs = [] } = useGetPoBs(userId, characterId);
@@ -98,113 +60,7 @@ function RouteComponent() {
       setPobId(pobs.length - 1);
     }
   }, [pobs]);
-  const fontColor = preferences.theme === "dark" ? "white" : "black";
   const [pobId, setPobId] = useState<number>(0);
-  const selectedPobTimestamp = pobs[pobId]?.timestamp
-    ? new Date(pobs[pobId].timestamp).getTime() / 1000
-    : null;
-
-  const data: AlignedData = [
-    new Float64Array(characterTimeseries.map((c) => c.timestamp)),
-    new Float64Array(
-      characterTimeseries.map((c) => getLevelFromExperience(c.xp))
-    ),
-    new Float64Array(characterTimeseries.map((c) => c[selectedMetric])),
-  ];
-  const maxMetric = Math.max(
-    ...characterTimeseries.map((c) => c[selectedMetric]),
-    1
-  );
-
-  const verticalLinePlugin = (): uPlot.Plugin => ({
-    hooks: {
-      draw: (u: uPlot) => {
-        if (!selectedPobTimestamp) {
-          return;
-        }
-        drawVerticalLine(u, selectedPobTimestamp, "PoB");
-      },
-    },
-  });
-
-  const options: uPlot.Options = {
-    title: "Progression",
-    width: 800,
-    height: 400,
-    legend: { show: true },
-    axes: [
-      {
-        side: 2,
-        stroke: fontColor,
-        scale: "x",
-        ticks: { size: 0 },
-      },
-      {
-        label: "Level",
-        labelFont: "16px sans-serif",
-        side: 3,
-        stroke: fontColor,
-        scale: "lvl",
-      },
-      {
-        label: selectedMetric.toUpperCase().replaceAll("_", " "),
-        labelGap: 10,
-        labelFont: "",
-        side: 1,
-        stroke: fontColor,
-        scale: "metric",
-        values: (self, ticks) =>
-          ticks.map((tick) => formatMetricTick(tick, maxMetric)),
-      },
-    ],
-    series: [
-      {
-        label: "",
-        points: { show: false },
-        scale: "x",
-      },
-      {
-        label: "LVL",
-        stroke: "oklch(0.841 0.238 128.85)",
-        width: 2,
-        fill: "oklch(0.841 0.238 128.85 / 10%)",
-        points: {
-          size: 8,
-          stroke: "oklch(0.841 0.238 128.85)",
-          fill: "oklch(0.841 0.238 128.85)",
-        },
-        scale: "lvl",
-      },
-      {
-        label: selectedMetric.toUpperCase().replaceAll("_", " "),
-        stroke: "oklch(0.789 0.154 211.53)",
-        width: 2,
-        fill: "oklch(0.789 0.154 211.53 / 10%)",
-        points: {
-          size: 8,
-          stroke: "oklch(0.789 0.154 211.53)",
-          fill: "oklch(0.789 0.154 211.53)",
-        },
-        scale: "metric",
-      },
-    ],
-    scales: {
-      x: {
-        time: true,
-        range: (self, initMin, initMax) => [
-          self.scales.x.min || initMin,
-          self.scales.x.max || initMax,
-        ],
-      },
-      lvl: { range: [1, 100] },
-      metric: { range: [0, maxMetric] },
-    },
-    plugins: [verticalLinePlugin()],
-  };
-  const state = {
-    options: options,
-    data: data,
-  };
 
   const contributions = [];
   for (const objective of flatMap(scores)) {
@@ -285,79 +141,23 @@ function RouteComponent() {
         </div>
       )}
       {pobs.length > 0 && <PoB pobString={pobs[pobId].export_string} />}
-      {state.data[0].length > 0 && (
-        <div className="bg-base-200 rounded-box justify-center">
-          <div className="hidden lg:flex flex-row bg-base-200 rounded-box justify-center p-4 gap-4">
-            <div className="bg-base-300 rounded-box p-4 w-full " ref={plotRef}>
-              <UplotReact
-                options={state.options}
-                data={state.data}
-                onCreate={(chart) => {
-                  chart.setSize({
-                    width: plotRef.current?.clientWidth || 800,
-                    height: plotRef.current?.clientHeight || 400,
-                  });
-                  chart.over.addEventListener("click", (e) => {
-                    const timestamp = chart.posToVal(e.offsetX, "x");
-                    let minDiff = Infinity;
-                    let closestDataPoint: number | null = null;
-                    for (let i = 0; i < state.data[0].length; i++) {
-                      const dataPointTimestamp = state.data[0][i];
-                      const diff = Math.abs(dataPointTimestamp - timestamp);
-                      if (diff < minDiff) {
-                        minDiff = diff;
-                        closestDataPoint = i;
-                      }
-                    }
-                    if (closestDataPoint === null) {
-                      return;
-                    }
-                    for (let i = 0; i < pobs.length; i++) {
-                      const pob = pobs[i];
-                      const pobTimestamp = new Date(pob.timestamp).getTime();
-                      if (
-                        pobTimestamp >=
-                        state.data[0][closestDataPoint] * 1000
-                      ) {
-                        setPobId(i);
-                        return;
-                      }
-                    }
-                  });
-                }}
-              />
-            </div>
-            <div className="flex flex-col p-4 self-auto bg-base-300 rounded-box">
-              Shown Metric:
-              {[
-                "dps",
-                "ehp",
-                "hp",
-                "mana",
-                "es",
-                "armour",
-                "evasion",
-                "ele_max_hit",
-                "phys_max_hit",
-                "movement_speed",
-              ].map((metric) => (
-                <button
-                  key={metric as string}
-                  className={twMerge(
-                    "btn m-1",
-                    selectedMetric === metric && "btn-primary"
-                  )}
-                  onClick={() =>
-                    setSelectedMetric(metric as keyof CharacterStat)
-                  }
-                >
-                  {metric.toUpperCase().replaceAll("_", " ")}
-                </button>
-              ))}
+      <Suspense
+        fallback={
+          <div className="bg-base-200 rounded-box justify-center p-8">
+            <div className="flex items-center justify-center">
+              <span className="loading loading-spinner loading-lg"></span>
+              <span className="ml-2">Loading chart...</span>
             </div>
           </div>
-        </div>
-      )}
+        }
+      >
+        <LazyCharacterChart
+          userId={userId}
+          characterId={characterId}
+          pobId={pobId}
+          setPobId={setPobId}
+        />
+      </Suspense>
     </div>
   );
 }

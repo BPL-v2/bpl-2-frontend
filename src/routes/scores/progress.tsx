@@ -87,7 +87,7 @@ function RouteComponent() {
     )
     .filter((s) => s.points > 0);
 
-  const timestamp2Scores: Record<string, Record<number, number>> = {};
+  const timestamp2Scores: Record<number, Record<number, number>> = {};
   const currentVal = currentEvent.teams.reduce(
     (acc, team) => {
       acc[team.id] = 0;
@@ -129,7 +129,7 @@ function RouteComponent() {
   const eventStart = new Date(currentEvent.event_start_time).getTime() / 1000;
   const eventEnd = new Date(currentEvent.event_end_time).getTime() / 1000;
   for (const [timestamp, scores] of Object.entries(timestamp2Scores)) {
-    const ts = new Date(timestamp).getTime() / 1000;
+    const ts = parseInt(timestamp);
     if (ts < eventStart || ts > eventEnd) continue;
 
     timestamps.push(ts);
@@ -316,7 +316,7 @@ function RouteComponent() {
           return (
             <span>
               {getDeltaTimeBetween(
-                new Date(row.original.timestamp * 1000).toISOString(),
+                row.original.timestamp,
                 currentEvent.event_start_time
               )}
             </span>
