@@ -2737,16 +2737,16 @@ export interface Score {
     rank: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Score
      */
-    timestamp: string;
+    timestamp: number;
     /**
      * 
      * @type {number}
      * @memberof Score
      */
-    user_id: number;
+    user_id?: number;
 }
 
 /**
@@ -6568,6 +6568,14 @@ export const ScoresApiFetchParamCreator = function (configuration?: Configuratio
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
 
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943

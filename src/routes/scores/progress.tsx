@@ -7,11 +7,11 @@ import { ScoreObjective } from "@mytypes/score";
 import { createFileRoute } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";
 import { GlobalStateContext } from "@utils/context-provider";
-import { flatMap, timeSort } from "@utils/utils";
-import { useContext, useRef, useState } from "react";
+import { getDeltaTimeBetween } from "@utils/time";
+import { flatMap } from "@utils/utils";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { getDeltaTimeBetween } from "@utils/time";
+import { useContext, useRef, useState } from "react";
 import { AlignedData } from "uplot";
 import UplotReact from "uplot-react";
 dayjs.extend(relativeTime);
@@ -103,7 +103,7 @@ function RouteComponent() {
         s.objective.scoring_preset?.scoring_method !=
         ScoringMethod.POINTS_FROM_VALUE
     )
-    .sort(timeSort<ScoreRow, "timestamp">("timestamp", "asc"))) {
+    .sort((a, b) => a.timestamp - b.timestamp)) {
     if (!scoreRow.team) continue;
     currentVal[scoreRow.team.id] += scoreRow.points;
     currentVal[0] =
@@ -316,7 +316,7 @@ function RouteComponent() {
           return (
             <span>
               {getDeltaTimeBetween(
-                row.original.timestamp,
+                new Date(row.original.timestamp * 1000).toISOString(),
                 currentEvent.event_start_time
               )}
             </span>
@@ -365,7 +365,7 @@ function RouteComponent() {
             }
             return true;
           })
-          .sort(timeSort<ScoreRow, "timestamp">("timestamp", "desc"))}
+          .sort((a, b) => b.timestamp - a.timestamp)}
         className="h-[70vh]"
       ></Table>
       <div className="h-[1000px] bg-base-300 p-4 rounded-box mt-4">

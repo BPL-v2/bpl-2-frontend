@@ -1,4 +1,5 @@
 import { ScoreDiff } from "@client/api";
+import { QueryClient } from "@tanstack/react-query";
 import { ScoreMap } from "@utils/utils";
 
 export const establishScoreSocket = (
@@ -7,6 +8,7 @@ export const establishScoreSocket = (
   setWebsocket: (ws: WebSocket) => void,
   appendUpdates: (updates: ScoreDiff[]) => void
 ) => {
+  const qc = new QueryClient();
   if (!import.meta.env.VITE_PUBLIC_BPL_BACKEND_URL) {
     console.error("VITE_PUBLIC_BPL_BACKEND_URL is not defined");
     return;
@@ -21,32 +23,46 @@ export const establishScoreSocket = (
   ws.onopen = () => {
     console.log("WebSocket connection established", new Date());
   };
-
-  const previousScores: ScoreMap = {};
   ws.onmessage = (event) => {
-    const updates: ScoreDiff[] = [];
     Object.values(JSON.parse(event.data) as ScoreDiff[]).forEach((diff) => {
       if (diff.diff_type !== "Unchanged" && diff.score.finished) {
         if (
           diff.diff_type === "Added" ||
           (diff.field_diff?.includes("Finished") && diff.score.finished)
         ) {
-          updates.push(diff);
+          qc.setQueryData(["score", eventId], (previous: ScoreMap) => {
+            if (!previous)
+              return { [diff.team_id]: { [diff.objective_id]: diff.score } };
+            return {
+              ...previous,
+              [diff.team_id]: {
+                ...previous[diff.team_id],
+                [diff.objective_id]: diff.score,
+              },
+            };
+          });
         }
       }
       if (diff.diff_type === "Removed") {
-        if (previousScores[diff.team_id]) {
-          delete previousScores[diff.team_id][diff.objective_id];
-        }
+        qc.setQueryData(["score", eventId], (previous: ScoreMap) => {
+          if (!previous) return {};
+          delete previous[diff.team_id]?.[diff.objective_id];
+          return { ...previous };
+        });
       } else {
-        if (!previousScores[diff.team_id]) {
-          previousScores[diff.team_id] = {};
-        }
-        previousScores[diff.team_id][diff.objective_id] = diff.score;
+        qc.setQueryData(["score", eventId], (previous: ScoreMap) => {
+          if (!previous)
+            return { [diff.team_id]: { [diff.objective_id]: diff.score } };
+          return {
+            ...previous,
+            [diff.team_id]: {
+              ...previous[diff.team_id],
+              [diff.objective_id]: diff.score,
+            },
+          };
+        });
       }
     });
-    appendUpdates(updates);
-    setScores({ ...previousScores });
   };
 
   ws.onerror = (error) => {

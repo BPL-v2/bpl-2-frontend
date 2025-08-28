@@ -1,19 +1,20 @@
-import { useEffect, useState } from "react";
-import { ContextProvider } from "@utils/context-provider";
-import { establishScoreSocket } from "../websocket/score-socket";
-import { hidePOTotal, mergeScores, ScoreMap } from "@utils/utils";
-import { ScoringPreset, Event, GameVersion } from "@client/api";
-import { ScoreObjective } from "@mytypes/score";
-import { initPreferences } from "@mytypes/preferences";
+import { Event, GameVersion, ScoringPreset } from "@client/api";
 import {
   useGetEvents,
   useGetEventStatus,
   useGetLadder,
   useGetRules,
+  useGetScore,
   useGetScoringPresets,
   useGetUser,
   useGetUsers,
 } from "@client/query";
+import { initPreferences } from "@mytypes/preferences";
+import { ScoreObjective } from "@mytypes/score";
+import { ContextProvider } from "@utils/context-provider";
+import { hidePOTotal, mergeScores, ScoreMap } from "@utils/utils";
+import { useEffect, useState } from "react";
+import { establishScoreSocket } from "../websocket/score-socket";
 
 function ContextWrapper({ children }: { children: React.ReactNode }) {
   // initialize with a dummy event so that we can start making api calls
@@ -30,6 +31,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
   const [websocket, setWebsocket] = useState<WebSocket>();
   const { events } = useGetEvents();
   const { rules } = useGetRules(currentEvent.id);
+  const { score = {} } = useGetScore(currentEvent.id);
   const { scoringPresets } = useGetScoringPresets(currentEvent.id);
   useGetLadder(currentEvent.id);
   useGetUsers(currentEvent.id);
@@ -73,7 +75,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
     if (rules && scoreData && currentEvent && scoringPresets) {
       const newScores = mergeScores(
         rules,
-        scoreData,
+        score,
         currentEvent?.teams.map((team) => team.id),
         scoringPresets.reduce(
           (acc, preset) => {
@@ -85,7 +87,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
       );
       setScores(hidePOTotal(newScores));
     }
-  }, [rules, scoreData, currentEvent, scoringPresets]);
+  }, [rules,  currentEvent, scoringPresets, score]);
 
   useEffect(() => {
     document

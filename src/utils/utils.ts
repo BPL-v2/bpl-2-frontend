@@ -16,7 +16,7 @@ function getEmptyScore(): Score {
     points: 0,
     user_id: 0,
     rank: 0,
-    timestamp: new Date().toISOString(),
+    timestamp: new Date().getTime()/1000,
     number: 0,
     finished: false,
   };
