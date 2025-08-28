@@ -1,9 +1,9 @@
-export function getDeltaTimeBetween(to?: string, from?: string) {
+export function getDeltaTimeBetween(to?: number, from?: string) {
   // If either timestamp or league
   if (!to || !from) {
     return "";
   }
-  const ts = new Date(to).getTime();
+  const ts = to * 1000;
   const fromDate = new Date(from).getTime();
   const milliseconds = ts - fromDate;
   const days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
