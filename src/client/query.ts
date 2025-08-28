@@ -846,7 +846,7 @@ export function useGetPoBs(userId: number, characterId: string) {
 
 export function useGetGuildLogs(eventId: number, guildId: number) {
   const query = useQuery({
-    queryKey: ["guildLogs", eventId, guildId],
+    queryKey: ["guildLogs", current !== eventId ? eventId : "current", guildId],
     queryFn: () => guildStashApi.getLogEntriesForGuild(eventId, guildId),
   });
   return {
@@ -857,7 +857,7 @@ export function useGetGuildLogs(eventId: number, guildId: number) {
 
 export function useGetGuilds(eventId: number) {
   const query = useQuery({
-    queryKey: ["guilds", eventId],
+    queryKey: ["guilds", current !== eventId ? eventId : "current"],
     queryFn: () => guildStashApi.getGuilds(eventId),
   });
   return {
@@ -868,7 +868,7 @@ export function useGetGuilds(eventId: number) {
 
 export function useGetScore(eventId: number) {
   const query = useQuery({
-    queryKey: ["score", eventId],
+    queryKey: ["score", current !== eventId ? eventId : "current"],
     queryFn: async () => {
       const scoreDiffs = await scoresApi.getLatestScoresForEvent(eventId);
       return scoreDiffs.reduce((acc, diff) => {
