@@ -1,22 +1,22 @@
-import { JSX, useContext, useMemo } from "react";
-import { GlobalStateContext } from "@utils/context-provider";
-import TeamScoreDisplay from "@components/team-score";
-import { ObjectiveIcon } from "@components/objective-icon";
-import { CollectionCardTable } from "@components/collection-card-table";
-import { Ranking } from "@components/ranking";
-import { ColumnDef, sortingFns } from "@tanstack/react-table";
 import { GameVersion, LadderEntry, Score, Team } from "@client/api";
-import { AscendancyName } from "@components/ascendancy-name";
-import { ExperienceBar } from "@components/experience-bar";
-import { TeamName } from "@components/team-name";
-import { LadderPortrait } from "@components/ladder-portrait";
-import { AscendancyPortrait } from "@components/ascendancy-portrait";
-import { ascendancies } from "@mytypes/ascendancy";
-import Table from "@components/table";
-import { createFileRoute } from "@tanstack/react-router";
-import { DelveTabRules } from "@rules/delve";
-import { ScoreObjective, TeamScore } from "@mytypes/score";
 import { useGetLadder, useGetUsers } from "@client/query";
+import { AscendancyName } from "@components/ascendancy-name";
+import { AscendancyPortrait } from "@components/ascendancy-portrait";
+import { CollectionCardTable } from "@components/collection-card-table";
+import { ExperienceBar } from "@components/experience-bar";
+import { LadderPortrait } from "@components/ladder-portrait";
+import { ObjectiveIcon } from "@components/objective-icon";
+import { Ranking } from "@components/ranking";
+import Table from "@components/table";
+import { TeamName } from "@components/team-name";
+import TeamScoreDisplay from "@components/team-score";
+import { ascendancies } from "@mytypes/ascendancy";
+import { ScoreObjective, TeamScore } from "@mytypes/score";
+import { DelveTabRules } from "@rules/delve";
+import { createFileRoute } from "@tanstack/react-router";
+import { ColumnDef, sortingFns } from "@tanstack/react-table";
+import { GlobalStateContext } from "@utils/context-provider";
+import { JSX, useContext, useMemo } from "react";
 
 export const Route = createFileRoute("/scores/delve")({
   component: DelveTab,
@@ -203,8 +203,8 @@ export function DelveTab(): JSX.Element {
       (culmulativeDepthTotal?.team_score[teamId].points || 0) +
       (culmulativeDepthRace?.team_score[teamId].points || 0);
     score.timestamp =
-      culmulativeDepthTotal?.team_score[teamId].timestamp ||
-      new Date().toISOString();
+      (culmulativeDepthTotal?.team_score[teamId].timestamp  ||
+      new Date().getTime() / 1000)*1000;
     score.user_id = culmulativeDepthTotal?.team_score[teamId].user_id || 0;
     culmulativeDepthObj.team_score[teamId] = score;
   }

@@ -8,6 +8,7 @@ import {
   LadderApiFactory,
   OauthApiFactory,
   ObjectiveApiFactory,
+  ScoresApiFactory,
   ScoringApiFactory,
   SignupApiFactory,
   StreamsApiFactory,
@@ -44,6 +45,11 @@ export const objectiveApi = ObjectiveApiFactory(
   baseUrl
 );
 export const scoringApi = ScoringApiFactory(
+  config,
+  authenticatedFetch,
+  baseUrl
+);
+export const scoresApi = ScoresApiFactory(
   config,
   authenticatedFetch,
   baseUrl

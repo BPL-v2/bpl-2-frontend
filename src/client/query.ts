@@ -1,38 +1,40 @@
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { isLoggedIn } from "@utils/token";
+import { ScoreMap } from "@utils/utils";
+import { BulkObjectiveCreate } from "../routes/admin/events/$eventId/categories.$categoryId";
+import {
+  Character,
+  ConditionCreate,
+  EventCreate,
+  GuildStashTab,
+  ItemField,
+  JobType,
+  NumberField,
+  ObjectiveCreate,
+  ObjectiveType,
+  Operator,
+  ScoringPresetCreate,
+  SignupCreate,
+  SubmissionCreate,
+  TeamCreate,
+  TeamUserCreate,
+} from "./api";
 import {
   characterApi,
+  conditionApi,
   eventApi,
   guildStashApi,
+  jobApi,
   ladderApi,
   objectiveApi,
+  scoresApi,
   scoringApi,
   signupApi,
   streamApi,
+  submissionApi,
   teamApi,
   userApi,
-  submissionApi,
-  jobApi,
-  conditionApi,
 } from "./client";
-import {
-  GuildStashTab,
-  SignupCreate,
-  JobType,
-  TeamUserCreate,
-  SubmissionCreate,
-  EventCreate,
-  ItemField,
-  Operator,
-  ObjectiveType,
-  NumberField,
-  ObjectiveCreate,
-  ConditionCreate,
-  TeamCreate,
-  ScoringPresetCreate,
-  Character,
-} from "./api";
-import { isLoggedIn } from "@utils/token";
-import { BulkObjectiveCreate } from "../routes/admin/events/$eventId/categories.$categoryId";
 
 let current = 0;
 
@@ -861,5 +863,25 @@ export function useGetGuilds(eventId: number) {
   return {
     ...query,
     guilds: query.data,
+  };
+}
+
+export function useGetScore(eventId: number) {
+  const query = useQuery({
+    queryKey: ["score", eventId],
+    queryFn: async () => {
+      const scoreDiffs = await scoresApi.getLatestScoresForEvent(eventId);
+      return scoreDiffs.reduce((acc, diff) => {
+        if (!acc[diff.team_id]) {
+          acc[diff.team_id] = {};
+        }
+        acc[diff.team_id][diff.objective_id] = diff.score;
+        return acc;
+      }, {} as ScoreMap);
+    },
+  });
+  return {
+    ...query,
+    score: query.data,
   };
 }

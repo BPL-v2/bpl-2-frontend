@@ -1,8 +1,8 @@
+import { Medal } from "@icons/medal";
 import { ScoreObjective } from "@mytypes/score";
 import { getPotentialPoints, getTotalPoints } from "@utils/utils";
-import { Medal } from "@icons/medal";
-import { CategoryIcon } from "../icons/category-icons";
 import { twMerge } from "tailwind-merge";
+import { CategoryIcon } from "../icons/category-icons";
 
 type UniqueCategoryCardProps = {
   objective: ScoreObjective;
@@ -22,10 +22,7 @@ export const UniqueCategoryCard = ({
     (acc, variantCategory) => acc + variantCategory.children.length,
     0
   );
-  const numItems =
-    teamId && objective.team_score[teamId]
-      ? objective.team_score[teamId].number
-      : 0;
+  const numItems =objective.team_score[teamId]?.number ||0;
   const numVariants = teamId
     ? objective.children.reduce((acc, subCategory) => {
         return (
