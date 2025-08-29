@@ -2,12 +2,12 @@
 // Licensed under GNU AGPL v3.0: https://www.gnu.org/licenses/agpl-3.0.html
 // Copyright (c) Dav1dde and contributors
 import { useFile } from "@client/query";
-import { decodePoBExport, Item, Rarity } from "@utils/pob";
-import { useMemo, useState } from "react";
-import { AscendancyPortrait } from "./ascendancy-portrait";
 import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
 import { encode } from "@mytypes/scoring-objective";
+import { decodePoBExport, Item, Rarity } from "@utils/pob";
+import { useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { AscendancyPortrait } from "./ascendancy-portrait";
 
 function getLink(item: Item) {
   let link = "/assets/poe1/items/";
@@ -155,6 +155,47 @@ function ItemDisplay({
   selection,
   selectionSetter,
 }: ItemDisplayProps) {
+  const [imageStyle, setImageStyle] = useState<React.CSSProperties>({
+    maxWidth: "90%",
+    maxHeight: "90%",
+    objectFit: "contain" as const,
+  });
+
+  const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
+    if (!slot || !item) return;
+
+    const isWeaponSlot =
+      slot.toLowerCase().includes("weapon") ||
+      slot.toLowerCase().includes("offhand");
+
+    if (isWeaponSlot) {
+      const img = event.currentTarget;
+      const aspectRatio = img.naturalHeight / img.naturalWidth;
+      let width = 100;
+      let height = 100;
+      if (aspectRatio >= 3.1) {
+        // 4x1
+        width = width / 2;
+      } else if (aspectRatio >= 2.2) {
+        // 3x1
+        height = (height * 3) / 4;
+        width = width / 2;
+      } else if (aspectRatio >= 1.8) {
+        // 4x2
+      } else if (aspectRatio >= 1.3) {
+        // 3x2
+        height = (height * 3) / 4;
+      } else if (aspectRatio >= 0.9) {
+        // 2x2
+        height = height / 2;
+      }
+      setImageStyle({
+        width: `${width}%`,
+        height: `${height}%`,
+      });
+    }
+  };
+
   if (!item && !slot) return null;
   if (!slot) {
     slot = item?.slot || "Unknown";
@@ -164,17 +205,19 @@ function ItemDisplay({
       <div
         key={"item-" + item.id}
         className={twMerge(
-          "item bg-base-200 relative flex justify-center items-center",
+          "h-full w-full rounded-lg p-1 bg-base-200 relative flex justify-center items-center",
           slot.replaceAll(" ", "").toLowerCase()
         )}
         onMouseEnter={() => selectionSetter(item)}
         onMouseLeave={() => selectionSetter(undefined)}
       >
         <img
-          className="max-w-full max-h-full object-contain"
+          className="object-contain"
+          style={imageStyle}
           src={getLink(item)}
           alt={item?.name}
           loading="lazy"
+          onLoad={handleImageLoad}
         />
         {selection?.id === item.id && <ItemWindow item={selection} />}
       </div>
@@ -257,8 +300,8 @@ export function PoB({ pobString }: Probs) {
   return (
     <>
       <div className="flex flex-col xl:flex-row gap-4 text-left min-h-170">
-        <div className="select-none p-8 bg-base-300 rounded-box">
-          <div className="inventory self-center">
+        <div className="select-none p-2 md:p-8 bg-base-300 rounded-box">
+          <div className="inventory gap-1 md:gap-2 self-center">
             {Object.entries(equipment).map(([slot, item]) => (
               <ItemDisplay
                 key={slot}
@@ -294,14 +337,14 @@ export function PoB({ pobString }: Probs) {
           </div>
         </div>
         <div className="flex flex-col gap-4 flex-1">
-          <div className="flex-auto flex flex-col gap-2 bg-base-300 p-8 rounded-box">
+          <div className="flex flex-col gap-2 bg-base-300 p-8 rounded-box">
             <div className="flex justify-between items-center">
-              <h1 className="flex items-center text-xl mb-1 gap-4">
+              <div className="flex items-center text-xl mb-1 gap-4">
                 <AscendancyPortrait
                   character_class={characterClass}
                   className="w-14 h-14 rounded-full object-cover"
                 />
-                <span>
+                <h1>
                   Level {pob.build.level}{" "}
                   {
                     pob.skills.skillSets[0].skills[
@@ -310,12 +353,9 @@ export function PoB({ pobString }: Probs) {
                       ?.nameSpec
                   }{" "}
                   {characterClass}
-                </span>
-              </h1>
-              <div
-                className="tooltip tooltip-primary"
-                data-tip="Copy PoB to clipboard"
-              >
+                </h1>
+              </div>
+              <div title="Copy PoB to clipboard">
                 <ClipboardDocumentListIcon
                   className="h-8 w-8 cursor-pointer hover:text-primary select-none"
                   onClick={() => {
@@ -324,7 +364,7 @@ export function PoB({ pobString }: Probs) {
                 />
               </div>
             </div>
-            <div className="flex flex-row gap-2 justify-left">
+            <div className="flex flex-row gap-2 justify-left flex-wrap">
               <div>
                 Life:{" "}
                 <span className="text-health">
@@ -425,7 +465,7 @@ export function PoB({ pobString }: Probs) {
                 </div>
               )}
             </div>
-            <div className="flex flex-row gap-2  justify-left">
+            <div className="flex flex-row gap-2 justify-left flex-wrap">
               <div>
                 Resistances:{" "}
                 <span className="text-fire">
