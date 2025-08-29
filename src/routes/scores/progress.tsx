@@ -322,7 +322,11 @@ function RouteComponent() {
             </span>
           );
         }
-        return <span>{new Date(row.original.timestamp).toLocaleString()}</span>;
+        return (
+          <span>
+            {new Date(row.original.timestamp * 1000).toLocaleString()}
+          </span>
+        );
       },
       size: 200,
     },
