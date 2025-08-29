@@ -1,7 +1,7 @@
 import { Permission } from "@client/api";
 
 import { JSX } from "react";
-import { router } from "../router";
+import { router } from "../main";
 export type TokenPayload = {
   exp: number;
   permissions: Permission[];

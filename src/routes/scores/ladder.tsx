@@ -1,24 +1,29 @@
-import { JSX, useContext, useMemo } from "react";
-import { GlobalStateContext } from "@utils/context-provider";
-import { getRootCategoryNames } from "@mytypes/scoring-category";
-import { getTotalPoints } from "@utils/utils";
 import { LadderEntry, Team } from "@client/api";
+import { getRootCategoryNames } from "@mytypes/scoring-category";
 import { ColumnDef, sortingFns } from "@tanstack/react-table";
+import { GlobalStateContext } from "@utils/context-provider";
+import { getTotalPoints } from "@utils/utils";
+import { JSX, useContext, useMemo } from "react";
 
+import {
+  preloadLadderData,
+  useGetEventStatus,
+  useGetLadder,
+  useGetUsers,
+} from "@client/query";
 import { AscendancyName } from "@components/ascendancy-name";
-import { ExperienceBar } from "@components/experience-bar";
-import { TeamName } from "@components/team-name";
-import { LadderPortrait } from "@components/ladder-portrait";
 import { AscendancyPortrait } from "@components/ascendancy-portrait";
-import Table from "@components/table";
-import { calcPersonalPoints } from "@utils/personal-points";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { ExperienceBar } from "@components/experience-bar";
+import { LadderPortrait } from "@components/ladder-portrait";
 import POProgressBar from "@components/po-progress";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
-import { useGetEventStatus, useGetLadder, useGetUsers } from "@client/query";
-import { POPointRules } from "@rules/po-points";
-import { getSkillColor } from "@utils/gems";
+import Table from "@components/table";
+import { TeamName } from "@components/team-name";
 import TeamScoreDisplay from "@components/team-score";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
+import { POPointRules } from "@rules/po-points";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { getSkillColor } from "@utils/gems";
+import { calcPersonalPoints } from "@utils/personal-points";
 
 type RowDef = {
   total: number;
@@ -34,6 +39,10 @@ type RowDef = {
 
 export const Route = createFileRoute("/scores/ladder")({
   component: LadderTab,
+  // @ts-ignore
+  loader: async ({ context: { queryClient } }) => {
+    preloadLadderData(queryClient);
+  },
 });
 
 export function LadderTab(): JSX.Element {

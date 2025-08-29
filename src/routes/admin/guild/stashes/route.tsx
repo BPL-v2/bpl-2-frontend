@@ -4,6 +4,7 @@ import {
   useSwitchStashFetching,
   useUpdateGuildStashTab,
 } from "@client/query";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   createFileRoute,
@@ -12,12 +13,11 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
-import { useContext, useState } from "react";
+import { getPermissions } from "@utils/token";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { ArrowPathIcon } from "@heroicons/react/24/outline";
-import { router } from "../../../../router";
-import { getPermissions } from "@utils/token";
+import { useContext, useState } from "react";
+import { router } from "../../../../main";
 
 export const Route = createFileRoute("/admin/guild/stashes")({
   component: RouteComponent,

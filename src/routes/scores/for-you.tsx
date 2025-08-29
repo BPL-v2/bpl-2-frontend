@@ -1,26 +1,31 @@
-import { useContext, useMemo } from "react";
 import { Character, ScoringMethod } from "@client/api";
-import { GlobalStateContext } from "@utils/context-provider";
-import { createFileRoute } from "@tanstack/react-router";
-import { ScoreObjective } from "@mytypes/score";
-import { flatMap } from "@utils/utils";
 import {
+  preloadLadderData,
   useGetEventStatus,
   useGetLadder,
   useGetTeamGoals,
   useGetUser,
 } from "@client/query";
 import { PoGauge } from "@components/po-gauge";
+import { ScoreObjective } from "@mytypes/score";
+import { createFileRoute } from "@tanstack/react-router";
+import { GlobalStateContext } from "@utils/context-provider";
+import { flatMap } from "@utils/utils";
+import { useContext, useMemo } from "react";
 
 export const Route = createFileRoute("/scores/for-you")({
   component: ForYouTab,
+  // @ts-ignore
+  loader: async ({ context: { queryClient } }) => {
+    preloadLadderData(queryClient);
+  },
 });
 
 export function ForYouTab() {
   const { currentEvent, scores } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const { user } = useGetUser();
-  const { ladder } = useGetLadder(currentEvent.id);
+  const { ladder } = useGetLadder(101);
   const { teamGoals } = useGetTeamGoals(currentEvent.id);
 
   const personalObjectiveRender = useMemo(() => {
