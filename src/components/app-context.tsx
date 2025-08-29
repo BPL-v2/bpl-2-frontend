@@ -19,7 +19,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
   // initialize with a dummy event so that we can start making api calls
   const [currentEvent, setCurrentEvent] = useState<Event>({
     id: "current",
-    gameVersion: GameVersion.poe1,
+    game_version: GameVersion.poe1,
     teams: [{ name: "" }, { name: "" }, { name: "" }],
   } as unknown as Event);
   const [scoreData, setScoreData] = useState<ScoreMap>({});
