@@ -80,7 +80,7 @@ function ScoringPage() {
       {
         name: "For You",
         key: "for-you",
-        visible: !!eventStatus?.team_id,
+        visible: true,
       },
       {
         name: "Progress",
@@ -138,9 +138,6 @@ function ScoringPage() {
     ];
   }, [currentEvent, eventStatus]);
 
-  if (!currentEvent) {
-    return <div>Event not found</div>;
-  }
   return (
     <>
       <div className="flex items-center justify-between bg-base-200 mb-4 rounded-b-box">

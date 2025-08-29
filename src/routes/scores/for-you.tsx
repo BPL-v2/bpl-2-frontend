@@ -79,12 +79,13 @@ export function ForYouTab() {
       </div>
     );
   }, [ladder]);
-  if (!scores || !user) {
-    return <div>Loading...</div>;
-  }
   const teamId = eventStatus?.team_id as number;
-  if (teamId === undefined || !eventStatus) {
-    return;
+  if (teamId === null || !eventStatus) {
+    return (
+      <div className="prose prose-xl text-left max-w-full flex flex-col px-4 2xl:px-0">
+        You have not been assigned to a team yet.
+      </div>
+    );
   }
 
   const objectives = flatMap(scores);
