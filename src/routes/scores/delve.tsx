@@ -1,5 +1,5 @@
 import { GameVersion, LadderEntry, Score, Team } from "@client/api";
-import { useGetLadder, useGetUsers } from "@client/query";
+import { preloadLadderData, useGetLadder, useGetUsers } from "@client/query";
 import { AscendancyName } from "@components/ascendancy-name";
 import { AscendancyPortrait } from "@components/ascendancy-portrait";
 import { CollectionCardTable } from "@components/collection-card-table";
@@ -20,6 +20,10 @@ import { JSX, useContext, useMemo } from "react";
 
 export const Route = createFileRoute("/scores/delve")({
   component: DelveTab,
+  // @ts-ignore
+  loader: async ({ context: { queryClient } }) => {
+    preloadLadderData(queryClient);
+  },
 });
 
 export function DelveTab(): JSX.Element {
@@ -203,8 +207,8 @@ export function DelveTab(): JSX.Element {
       (culmulativeDepthTotal?.team_score[teamId].points || 0) +
       (culmulativeDepthRace?.team_score[teamId].points || 0);
     score.timestamp =
-      (culmulativeDepthTotal?.team_score[teamId].timestamp  ||
-      new Date().getTime() / 1000)*1000;
+      (culmulativeDepthTotal?.team_score[teamId].timestamp ||
+        new Date().getTime() / 1000) * 1000;
     score.user_id = culmulativeDepthTotal?.team_score[teamId].user_id || 0;
     culmulativeDepthObj.team_score[teamId] = score;
   }
