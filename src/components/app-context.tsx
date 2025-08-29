@@ -2,7 +2,6 @@ import { Event, GameVersion, ScoringPreset } from "@client/api";
 import {
   useGetEvents,
   useGetEventStatus,
-  useGetLadder,
   useGetRules,
   useGetScore,
   useGetScoringPresets,
@@ -33,7 +32,6 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
   const { rules } = useGetRules(currentEvent.id);
   const { score = {} } = useGetScore(currentEvent.id);
   const { scoringPresets } = useGetScoringPresets(currentEvent.id);
-  useGetLadder(currentEvent.id);
   useGetUsers(currentEvent.id);
   useGetUser();
   useGetEventStatus(currentEvent.id);
@@ -87,7 +85,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
       );
       setScores(hidePOTotal(newScores));
     }
-  }, [rules,  currentEvent, scoringPresets, score]);
+  }, [rules, currentEvent, scoringPresets, score]);
 
   useEffect(() => {
     document

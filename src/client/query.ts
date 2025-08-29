@@ -62,6 +62,7 @@ export function useGetLadder(event_id: number) {
     queryKey: ["ladder", current !== event_id ? event_id : "current"],
     queryFn: async () => ladderApi.getLadder(event_id),
     refetchInterval: 60 * 1000,
+    staleTime: 60 * 1000,
   });
   return {
     ...query,
@@ -884,4 +885,14 @@ export function useGetScore(eventId: number) {
     ...query,
     score: query.data,
   };
+}
+
+export function preloadLadderData(qc: QueryClient) {
+  if (!qc.getQueryData(["ladder", "current"])) {
+    qc.prefetchQuery({
+      queryKey: ["ladder", "current"],
+      //@ts-ignore
+      queryFn: async () => ladderApi.getLadder("current"),
+    });
+  }
 }

@@ -1,24 +1,24 @@
-import { JSX, useContext, useEffect, useMemo } from "react";
-import { GlobalStateContext } from "@utils/context-provider";
 import { GameVersion } from "@client/api";
-import { UniqueTabRules } from "@rules/uniques";
-import { RaceTabRules } from "@rules/races";
+import { useGetEventStatus } from "@client/query";
+import BookOpenIcon from "@heroicons/react/24/outline/BookOpenIcon";
 import { BountyTabRules } from "@rules/bounties";
 import { CollectionTabRules } from "@rules/collections";
 import { DailyTabRules } from "@rules/dailies";
-import { HeistTabRules } from "@rules/heist";
-import { GemTabRules } from "@rules/gems";
-import BookOpenIcon from "@heroicons/react/24/outline/BookOpenIcon";
 import { DelveTabRules } from "@rules/delve";
+import { GemTabRules } from "@rules/gems";
+import { HeistTabRules } from "@rules/heist";
+import { RaceTabRules } from "@rules/races";
+import { UniqueTabRules } from "@rules/uniques";
 import {
   createFileRoute,
   Link,
   Outlet,
   useRouterState,
 } from "@tanstack/react-router";
-import { router } from "../../router";
-import { useGetEventStatus } from "@client/query";
+import { GlobalStateContext } from "@utils/context-provider";
+import { JSX, useContext, useEffect, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
+import { router } from "../../main";
 
 type scoringTabKey =
   | "ladder"

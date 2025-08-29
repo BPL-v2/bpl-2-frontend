@@ -1,9 +1,9 @@
 import { oauthApi } from "@client/client";
-import { useEffect } from "react";
-import { router } from "../router";
-import { getCallbackUrl } from "@utils/oauth";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
+import { getCallbackUrl } from "@utils/oauth";
+import { useEffect } from "react";
+import { router } from "../main";
 
 type CallbackProps = {
   state: string;

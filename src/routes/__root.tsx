@@ -1,18 +1,18 @@
 import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
-import "../App.css";
 import { JSX, useContext, useMemo } from "react";
+import "../App.css";
 
+import AuthButton from "@components/auth-button";
 import {
   BookOpenIcon,
   ChartBarIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
 import { GlobalStateContext } from "@utils/context-provider";
-import AuthButton from "@components/auth-button";
 
-import { TwitchFilled } from "@icons/twitch";
-import { Footer } from "@components/footer";
 import { useGetEventStatus, useGetUser } from "@client/query";
+import { Footer } from "@components/footer";
+import { TwitchFilled } from "@icons/twitch";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -63,7 +63,7 @@ function RootComponent() {
       {
         label: "Scoring",
         icon: <ChartBarIcon className="h-6 w-6" />,
-        url: "/scores",
+        url: "/scores/ladder",
         visible: true,
       },
       {
