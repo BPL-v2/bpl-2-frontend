@@ -45,20 +45,13 @@ function RootComponent() {
         label: <div className="text-4xl font-bold">BPL</div>,
         icon: (
           <img
-            className="h-10"
+            className="h-10 w-8"
             src="/assets/app-logos/bpl-logo.webp"
             alt="bpl-logo"
           />
         ),
         url: "/",
         visible: true,
-      },
-      {
-        label: "Admin",
-        icon: <Cog6ToothIcon className="h-6 w-6" />,
-        url: "/admin",
-        visible:
-          (user?.permissions?.length || 0) > 0 || eventStatus?.is_team_lead,
       },
       {
         label: "Scoring",
@@ -77,6 +70,13 @@ function RootComponent() {
         icon: <BookOpenIcon className="h-6 w-6" />,
         url: "/rules",
         visible: true,
+      },
+      {
+        label: "Admin",
+        icon: <Cog6ToothIcon className="h-6 w-6" />,
+        url: "/admin",
+        visible:
+          (user?.permissions?.length || 0) > 0 || eventStatus?.is_team_lead,
       },
     ];
     return menu.filter((item) => item.visible);
