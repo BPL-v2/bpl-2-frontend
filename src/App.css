@@ -213,18 +213,10 @@ html {
 
 /* POB stuff */
 
-.item {
-  height: 100%;
-  width: 100%;
-  border-radius: 0.5rem;
-  padding: 5px;
-}
 
 .inventory {
   display: grid;
-  width: 32rem;
   grid-template-columns: repeat(8, minmax(0, 4rem));
-  grid-gap: 0.5rem;
   grid-template-areas:
     "Weapon  Weapon .       Helm       Helm       .      Offhand Offhand"
     "Weapon  Weapon .       Helm       Helm       .      Offhand Offhand"
@@ -238,10 +230,12 @@ html {
 
 .weapon1 {
   grid-area: Weapon;
-  aspect-ratio: 3/2;
-  object-fit: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 100%;
   width: 100%;
+  /* Remove fixed aspect-ratio to allow dynamic sizing */
 }
 
 .helmet {
@@ -256,9 +250,11 @@ html {
 
 .weapon2 {
   grid-area: Offhand;
-  aspect-ratio: 3/2;
-  object-fit: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 100%;
+  /* Remove fixed aspect-ratio to allow dynamic sizing */
 }
 
 .ring1 {

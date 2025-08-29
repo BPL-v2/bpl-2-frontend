@@ -52,7 +52,9 @@ export function ProfilePage() {
       <h1 className="text-4xl text-center font-bold m-4">
         {user.display_name}'s Profile
       </h1>
-      <ProfileCarousel userCharacters={userCharacters} userId={userId} />
+      {userCharacters.length > 0 && (
+        <ProfileCarousel userCharacters={userCharacters} userId={userId} />
+      )}
       <Outlet />
     </div>
   );
