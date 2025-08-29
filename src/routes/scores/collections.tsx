@@ -1,13 +1,29 @@
-import { JSX, useContext } from "react";
-import { GlobalStateContext } from "@utils/context-provider";
-import TeamScoreDisplay from "@components/team-score";
+import { GameVersion, Objective } from "@client/api";
 import { CollectionCardTable } from "@components/collection-card-table";
 import { ObjectiveIcon } from "@components/objective-icon";
-import { createFileRoute } from "@tanstack/react-router";
+import TeamScoreDisplay from "@components/team-score";
+import { getImageLocation } from "@mytypes/scoring-objective";
 import { CollectionTabRules } from "@rules/collections";
+import { createFileRoute } from "@tanstack/react-router";
+import { GlobalStateContext } from "@utils/context-provider";
+import { JSX, useContext } from "react";
 
 export const Route = createFileRoute("/scores/collections")({
   component: CollectionTab,
+  // @ts-ignore
+  loader: async ({ context: { queryClient } }) => {
+    const rules = queryClient.getQueryData(["rules", "current"]) as Objective;
+    rules?.children
+      .find((child) => child.name === "Collections")
+      ?.children.map((objective) =>
+        getImageLocation(objective, GameVersion.poe1)
+      )
+      .filter((url): url is string => url !== null)
+      .forEach((url) => {
+        const img = new Image();
+        img.src = url;
+      });
+  },
 });
 
 export function CollectionTab(): JSX.Element {

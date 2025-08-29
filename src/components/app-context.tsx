@@ -97,25 +97,21 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
     localStorage.setItem("preferences", JSON.stringify(preferences));
   }, [preferences]);
   return (
-    <>
-      <ContextProvider
-        value={{
-          currentEvent: currentEvent,
-          setCurrentEvent: setCurrentEvent,
-          scores: scores,
-          setScores: setScores,
-          isMobile: isMobile,
-          setIsMobile: setIsMobile,
-          preferences: preferences,
-          setPreferences: setPreferences,
-        }}
-      >
-        {children}
-      </ContextProvider>
-    </>
+    <ContextProvider
+      value={{
+        currentEvent: currentEvent,
+        setCurrentEvent: setCurrentEvent,
+        scores: scores,
+        setScores: setScores,
+        isMobile: isMobile,
+        setIsMobile: setIsMobile,
+        preferences: preferences,
+        setPreferences: setPreferences,
+      }}
+    >
+      {children}
+    </ContextProvider>
   );
-
-  return;
 }
 
 export default ContextWrapper;

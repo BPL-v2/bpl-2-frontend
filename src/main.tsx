@@ -29,7 +29,7 @@ if (!rootElement.innerHTML) {
     <QueryClientProvider client={queryClient}>
       <ContextWrapper>
         <RouterProvider router={router} />
-      </ContextWrapper>{" "}
+      </ContextWrapper>
     </QueryClientProvider>
   );
 }
