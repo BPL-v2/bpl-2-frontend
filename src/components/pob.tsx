@@ -50,7 +50,7 @@ function ItemTooltip({
     const tooltip = tooltipRef.current;
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
-    const tooltipWidth = 320; // w-80 = 320px
+    const tooltipWidth = tooltip.scrollHeight;
     const tooltipHeight = tooltip.scrollHeight;
 
     let left = mouseX + 8; // Start 8px to the right of cursor
@@ -76,7 +76,7 @@ function ItemTooltip({
       top = 16;
     }
     setPosition({ left, top, maxWidth });
-  }, [mouseX, mouseY]);
+  }, [mouseX, mouseY, tooltipRef.current]);
 
   if (!item) return null;
 
@@ -106,7 +106,7 @@ function ItemTooltip({
       ref={tooltipRef}
       className={twMerge(
         "fixed z-30 pointer-events-none w-80",
-        "border-2 bg-base-100 rounded-field flex flex-col gap text-center shadow-lg",
+        "border-2 bg-base-100/90 rounded-field flex flex-col gap text-center shadow-lg",
         position.left != 0 && position.top != 0 ? "block" : "hidden",
         borderColor
       )}
