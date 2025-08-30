@@ -3,8 +3,16 @@
 // Copyright (c) Dav1dde and contributors
 import { useFile } from "@client/query";
 import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
+import { InventoryIcon } from "@icons/inventory-icons";
 import { encode } from "@mytypes/scoring-objective";
-import { decodePoBExport, Item, Rarity } from "@utils/pob";
+import {
+  decodePoBExport,
+  Gem,
+  Item,
+  PathOfBuilding,
+  Rarity,
+  Skill,
+} from "@utils/pob";
 import { useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { AscendancyPortrait } from "./ascendancy-portrait";
@@ -299,9 +307,9 @@ export function PoB({ pobString }: Probs) {
 
   return (
     <>
-      <div className="flex flex-col xl:flex-row gap-4 text-left min-h-170">
-        <div className="select-none p-2 md:p-8 bg-base-300 rounded-box">
-          <div className="inventory gap-1 md:gap-2 self-center">
+      <div className="flex flex-col lg:flex-row gap-4 text-left min-h-170">
+        <div className="flex justify-center select-none p-4 md:p-8 bg-base-300 rounded-box">
+          <div className="inventory gap-1 md:gap-2">
             {Object.entries(equipment).map(([slot, item]) => (
               <ItemDisplay
                 key={slot}
@@ -337,7 +345,7 @@ export function PoB({ pobString }: Probs) {
           </div>
         </div>
         <div className="flex flex-col gap-4 flex-1">
-          <div className="flex flex-col gap-2 bg-base-300 p-8 rounded-box">
+          <div className="flex flex-col gap-2 bg-base-300 p-4 md:p-8 rounded-box">
             <div className="flex justify-between items-center">
               <div className="flex items-center text-xl mb-1 gap-4">
                 <AscendancyPortrait
@@ -555,78 +563,129 @@ export function PoB({ pobString }: Probs) {
               )}
             </div>
           </div>
-
-          <div className="columns-2 gap-2 bg-base-300 p-8 rounded-box text-sm h-full">
-            {pob.skills.skillSets[0].skills
-              .filter((skill) => equipmentSlots.includes(skill.slot))
-              .sort((a, b) => b.gems.length - a.gems.length)
-              .map((skill, skillId) => (
-                <div
-                  className="break-inside-avoid mt-2 first:mt-0 bg-base-200 px-3 py-2.5 rounded-xl flex flex-col"
-                  key={`skill-${skillId}`}
-                >
-                  {skill.gems.map((gem, gemId) => {
-                    let text = "text-white";
-                    let tooltip = "tooltip-white";
-                    if (gemColors && gem.gemId) {
-                      if (
-                        gemColors.r.includes(
-                          gem.nameSpec.replace("Vaal ", "")
-                        ) ||
-                        gemColors.r.includes(gem.nameSpec + " Support")
-                      ) {
-                        text = "text-strength";
-                        tooltip = "tooltip-rose";
-                      } else if (
-                        gemColors.g.includes(
-                          gem.nameSpec.replace("Vaal ", "")
-                        ) ||
-                        gemColors.g.includes(gem.nameSpec + " Support")
-                      ) {
-                        text = "text-dexterity";
-                        tooltip = "tooltip-lime";
-                      } else if (
-                        gemColors.b.includes(
-                          gem.nameSpec.replace("Vaal ", "")
-                        ) ||
-                        gemColors.b.includes(gem.nameSpec + " Support")
-                      ) {
-                        text = "text-intelligence";
-                        tooltip = "tooltip-blue";
-                      }
-                    }
-                    let position = "";
-                    if (gem.skillId.includes("Support")) {
-                      position =
-                        gemId === skill.gems.length - 1
-                          ? "gem-last"
-                          : "gem-middle";
-                    } else {
-                      if (skillId === 0) {
-                        text += " font-bold";
-                      }
-                    }
-                    return (
-                      <div
-                        className={twMerge("tooltip tooltip-left", tooltip)}
-                        data-tip={`${gem.level} / ${gem.quality}%`}
-                        key={gemId}
-                      >
-                        <div
-                          className={twMerge("truncate", position, text)}
-                          key={"gem-" + skillId + "-" + gemId}
-                          data-tip={`${gem.level} / ${gem.quality}%`}
-                        >
-                          {gem.nameSpec}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
+          <div className="columns-2 gap-2 bg-base-300 p-4 md:p-8 rounded-box text-sm h-full">
+            {equipmentSlots
+              .sort((slotA, slotB) => {
+                const mainGroup =
+                  pob.skills.skillSets[0].skills[pob.build.mainSocketGroup - 1];
+                if (mainGroup.slot == slotA) return -1;
+                if (mainGroup.slot == slotB) return 1;
+                return 0;
+              })
+              .map((slot) => {
+                const skills = pob.skills.skillSets[0].skills.filter(
+                  (skill) => skill.slot === slot
+                );
+                if (skills.length === 0) return null;
+                return (
+                  <div
+                    className="break-inside-avoid mt-2 first:mt-0 bg-base-200 px-3 py-2.5 rounded-xl flex flex-col relative"
+                    key={`skill-${slot}`}
+                  >
+                    <InventoryIcon
+                      slot={slot}
+                      className="absolute right-2 top-2"
+                    />
+                    <div key={slot} className="flex flex-col gap-2">
+                      {skills.map((skill, skillId) => {
+                        return (
+                          <div
+                            key={`skill-${slot}-${skillId}`}
+                            className="flex flex-col"
+                          >
+                            {skill.gems.map((gem, gemId) => (
+                              <SkillGem
+                                key={`gem-${slot}-${skillId}-${gemId}`}
+                                id={gemId}
+                                gem={gem}
+                                skillGroup={skill}
+                                pob={pob}
+                                gemColors={gemColors}
+                              />
+                            ))}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
           </div>
         </div>
       </div>
     </>
   );
+}
+
+function SkillGem({
+  id,
+  gem,
+  skillGroup: skill,
+  pob,
+  gemColors,
+}: {
+  id: number;
+  gem: Gem;
+  skillGroup: Skill;
+  pob: PathOfBuilding;
+  gemColors?: Record<"r" | "g" | "b" | "w", string[]>;
+}) {
+  let text = getGemColor(gem, gemColors);
+  let position = "";
+  if (gem.skillId.includes("Support")) {
+    position = id === skill.gems.length - 1 ? "gem-last" : "gem-middle";
+  } else {
+    if (isMainSkill(skill, pob)) {
+      text += " font-bold";
+    }
+  }
+  return (
+    <span className={twMerge("truncate", position, text)}>{gem.nameSpec}</span>
+  );
+}
+
+function isMainSkill(skill: Skill, pob: PathOfBuilding): boolean {
+  const mainSkillGroup =
+    pob.skills.skillSets[0].skills[pob.build.mainSocketGroup - 1];
+  if (
+    skill.slot !== mainSkillGroup.slot ||
+    skill.gems.length !== mainSkillGroup.gems.length
+  ) {
+    return false;
+  }
+  for (let i = 0; i < skill.gems.length; i++) {
+    if (skill.gems[i].gemId !== mainSkillGroup.gems[i].gemId) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function getGemColor(
+  gem: Gem,
+  gemColors?: Record<"r" | "g" | "b" | "w", string[]>
+): string {
+  if (!gemColors || !gem.gemId) {
+    return "text-base-content";
+  }
+  if (
+    gemColors.r.includes(gem.nameSpec.replace("Vaal ", "")) ||
+    gemColors.r.includes(gem.nameSpec + " Support")
+  ) {
+    return "text-strength";
+  }
+  if (
+    gemColors.g.includes(gem.nameSpec.replace("Vaal ", "")) ||
+    gemColors.g.includes(gem.nameSpec + " Support")
+  ) {
+    return "text-dexterity";
+  }
+  if (
+    gemColors.b.includes(gem.nameSpec.replace("Vaal ", "")) ||
+    gemColors.b.includes(gem.nameSpec + " Support")
+  ) {
+    return "text-intelligence";
+  }
+
+  return "text-base-content";
 }
