@@ -13,7 +13,7 @@ import {
   Rarity,
   Skill,
 } from "@utils/pob";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { AscendancyPortrait } from "./ascendancy-portrait";
 
@@ -31,8 +31,55 @@ type Probs = {
   pobString: string;
 };
 
-function ItemWindow({ item }: { item?: Item }) {
+function ItemTooltip({
+  item,
+  mouseX,
+  mouseY,
+}: {
+  item?: Item;
+  mouseX?: number;
+  mouseY?: number;
+}) {
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ left: 0, top: 0, maxWidth: 320 });
+
+  useEffect(() => {
+    if (!mouseX || !mouseY || !tooltipRef.current) {
+      return;
+    }
+    const tooltip = tooltipRef.current;
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const tooltipWidth = 320; // w-80 = 320px
+    const tooltipHeight = tooltip.scrollHeight;
+
+    let left = mouseX + 8; // Start 8px to the right of cursor
+    let top = mouseY;
+    let maxWidth = tooltipWidth;
+
+    // Check if tooltip would overflow right edge
+    if (left + tooltipWidth > viewportWidth - 16) {
+      // Position to the left of the cursor instead
+      left = mouseX - tooltipWidth - 8;
+      // If still overflowing, clamp to viewport
+      if (left < 16) {
+        left = 16;
+        maxWidth = viewportWidth - 32; // Leave 16px margin on each side
+      }
+    }
+
+    // Check vertical overflow
+    if (top + tooltipHeight > viewportHeight - 16) {
+      top = viewportHeight - tooltipHeight - 16;
+    }
+    if (top < 16) {
+      top = 16;
+    }
+    setPosition({ left, top, maxWidth });
+  }, [mouseX, mouseY]);
+
   if (!item) return null;
+
   let headerColor = "";
   let borderColor = "";
   switch (item.rarity) {
@@ -56,11 +103,19 @@ function ItemWindow({ item }: { item?: Item }) {
 
   return (
     <div
+      ref={tooltipRef}
       className={twMerge(
-        "absolute left-full x z-10 x items-center justify-center pointer-events-none",
-        "border-2 bg-base-100 rounded-field flex flex-col gap w-128 text-center",
+        "fixed z-30 pointer-events-none w-80",
+        "border-2 bg-base-100 rounded-field flex flex-col gap text-center shadow-lg",
+        position.left != 0 && position.top != 0 ? "block" : "hidden",
         borderColor
       )}
+      style={{
+        left: `${position.left}px`,
+        top: `${position.top}px`,
+        maxHeight: "90vh",
+        overflow: "auto",
+      }}
     >
       <div
         className={twMerge(
@@ -155,6 +210,8 @@ type ItemDisplayProps = {
   slot: string | null;
   selection?: Item;
   selectionSetter: (item?: Item) => void;
+  mousePosition?: { x: number; y: number };
+  setMousePosition: (pos?: { x: number; y: number }) => void;
 };
 
 function ItemDisplay({
@@ -162,6 +219,8 @@ function ItemDisplay({
   slot,
   selection,
   selectionSetter,
+  mousePosition,
+  setMousePosition,
 }: ItemDisplayProps) {
   const [imageStyle, setImageStyle] = useState<React.CSSProperties>({
     maxWidth: "90%",
@@ -208,6 +267,25 @@ function ItemDisplay({
   if (!slot) {
     slot = item?.slot || "Unknown";
   }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (item) {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    }
+  };
+
+  const handleMouseEnter = (e: React.MouseEvent) => {
+    selectionSetter(item);
+    if (item) {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    }
+  };
+
+  const handleMouseLeave = () => {
+    selectionSetter(undefined);
+    setMousePosition(undefined);
+  };
+
   let img = item && (
     <>
       <img
@@ -218,7 +296,13 @@ function ItemDisplay({
         loading="lazy"
         onLoad={handleImageLoad}
       />
-      {selection?.id === item.id && <ItemWindow item={selection} />}
+      {selection?.id === item.id && (
+        <ItemTooltip
+          item={selection}
+          mouseX={mousePosition?.x}
+          mouseY={mousePosition?.y}
+        />
+      )}
     </>
   );
 
@@ -229,8 +313,9 @@ function ItemDisplay({
         "h-full w-full rounded-lg p-1 bg-base-200 relative flex justify-center items-center",
         slot.replaceAll(" ", "").toLowerCase()
       )}
-      onMouseEnter={() => selectionSetter(item)}
-      onMouseLeave={() => selectionSetter(undefined)}
+      onMouseEnter={handleMouseEnter}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
       {img}
     </div>
@@ -243,6 +328,10 @@ export function PoB({ pobString }: Probs) {
   );
   const pob = useMemo(() => decodePoBExport(pobString), [pobString]);
   const [selectedItem, setSelectedItem] = useState<Item>();
+  const [mousePosition, setMousePosition] = useState<{
+    x: number;
+    y: number;
+  }>();
   const [showEhpTooltip, setShowEhpTooltip] = useState(false);
   const equipmentSlots = [
     "Helmet",
@@ -312,6 +401,8 @@ export function PoB({ pobString }: Probs) {
                 slot={slot}
                 selection={selectedItem}
                 selectionSetter={setSelectedItem}
+                mousePosition={mousePosition}
+                setMousePosition={setMousePosition}
               />
             ))}
             <div className="flasks">
@@ -322,6 +413,8 @@ export function PoB({ pobString }: Probs) {
                   slot={slot}
                   selection={selectedItem}
                   selectionSetter={setSelectedItem}
+                  mousePosition={mousePosition}
+                  setMousePosition={setMousePosition}
                 />
               ))}
             </div>
@@ -334,6 +427,8 @@ export function PoB({ pobString }: Probs) {
                   slot={item?.slot}
                   selection={selectedItem}
                   selectionSetter={setSelectedItem}
+                  mousePosition={mousePosition}
+                  setMousePosition={setMousePosition}
                 />
               );
             })}
