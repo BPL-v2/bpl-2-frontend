@@ -208,37 +208,32 @@ function ItemDisplay({
   if (!slot) {
     slot = item?.slot || "Unknown";
   }
-  if (item) {
-    return (
-      <div
-        key={"item-" + item.id}
-        className={twMerge(
-          "h-full w-full rounded-lg p-1 bg-base-200 relative flex justify-center items-center",
-          slot.replaceAll(" ", "").toLowerCase()
-        )}
-        onMouseEnter={() => selectionSetter(item)}
-        onMouseLeave={() => selectionSetter(undefined)}
-      >
-        <img
-          className="object-contain"
-          style={imageStyle}
-          src={getLink(item)}
-          alt={item?.name}
-          loading="lazy"
-          onLoad={handleImageLoad}
-        />
-        {selection?.id === item.id && <ItemWindow item={selection} />}
-      </div>
-    );
-  }
+  let img = item && (
+    <>
+      <img
+        className="object-contain"
+        style={imageStyle}
+        src={getLink(item)}
+        alt={item?.name}
+        loading="lazy"
+        onLoad={handleImageLoad}
+      />
+      {selection?.id === item.id && <ItemWindow item={selection} />}
+    </>
+  );
+
   return (
     <div
       key={"item-" + slot}
       className={twMerge(
-        "item bg-base-200",
+        "h-full w-full rounded-lg p-1 bg-base-200 relative flex justify-center items-center",
         slot.replaceAll(" ", "").toLowerCase()
       )}
-    ></div>
+      onMouseEnter={() => selectionSetter(item)}
+      onMouseLeave={() => selectionSetter(undefined)}
+    >
+      {img}
+    </div>
   );
 }
 
@@ -365,7 +360,7 @@ export function PoB({ pobString }: Probs) {
               </div>
               <div title="Copy PoB to clipboard">
                 <ClipboardDocumentListIcon
-                  className="h-8 w-8 cursor-pointer hover:text-primary select-none"
+                  className="h-8 w-8 cursor-pointer select-none hover:text-primary  active:text-secondary active:scale-110 transition-transform duration-100"
                   onClick={() => {
                     navigator.clipboard.writeText(pobString);
                   }}
@@ -570,7 +565,16 @@ export function PoB({ pobString }: Probs) {
                   pob.skills.skillSets[0].skills[pob.build.mainSocketGroup - 1];
                 if (mainGroup.slot == slotA) return -1;
                 if (mainGroup.slot == slotB) return 1;
-                return 0;
+                const skillsA = pob.skills.skillSets[0].skills.filter(
+                  (skill) => skill.slot === slotA
+                );
+                const skillsB = pob.skills.skillSets[0].skills.filter(
+                  (skill) => skill.slot === slotB
+                );
+                return (
+                  skillsB.flatMap((skill) => skill.gems).length -
+                  skillsA.flatMap((skill) => skill.gems).length
+                );
               })
               .map((slot) => {
                 const skills = pob.skills.skillSets[0].skills.filter(
