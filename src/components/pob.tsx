@@ -41,7 +41,11 @@ function ItemTooltip({
   mouseY?: number;
 }) {
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ left: 0, top: 0, maxWidth: 320 });
+  const [position, setPosition] = useState({
+    left: mouseX,
+    top: mouseY,
+    maxWidth: 0,
+  });
 
   useEffect(() => {
     if (!mouseX || !mouseY || !tooltipRef.current) {
@@ -53,19 +57,11 @@ function ItemTooltip({
     const tooltipWidth = tooltip.scrollHeight;
     const tooltipHeight = tooltip.scrollHeight;
 
-    let left = mouseX + 8; // Start 8px to the right of cursor
+    let left = mouseX;
     let top = mouseY;
-    let maxWidth = tooltipWidth;
-
-    // Check if tooltip would overflow right edge
-    if (left + tooltipWidth > viewportWidth - 16) {
-      // Position to the left of the cursor instead
-      left = mouseX - tooltipWidth - 8;
-      // If still overflowing, clamp to viewport
-      if (left < 16) {
-        left = 16;
-        maxWidth = viewportWidth - 32; // Leave 16px margin on each side
-      }
+    let maxWidth = 320;
+    if (left + tooltipWidth > viewportWidth) {
+      left = viewportWidth - maxWidth - 32;
     }
 
     // Check vertical overflow
@@ -105,7 +101,7 @@ function ItemTooltip({
     <div
       ref={tooltipRef}
       className={twMerge(
-        "fixed z-30 pointer-events-none w-80",
+        "fixed z-30 pointer-events-none",
         "border-2 bg-base-100/90 rounded-field flex flex-col gap text-center shadow-lg",
         position.left != 0 && position.top != 0 ? "block" : "hidden",
         borderColor
@@ -113,8 +109,8 @@ function ItemTooltip({
       style={{
         left: `${position.left}px`,
         top: `${position.top}px`,
+        width: position.maxWidth,
         maxHeight: "90vh",
-        overflow: "auto",
       }}
     >
       <div
@@ -227,6 +223,7 @@ function ItemDisplay({
     maxHeight: "90%",
     objectFit: "contain" as const,
   });
+  const itemRef = useRef<HTMLImageElement>(null);
 
   const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
     if (!slot || !item) return;
@@ -268,17 +265,12 @@ function ItemDisplay({
     slot = item?.slot || "Unknown";
   }
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (item) {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    }
-  };
-
   const handleMouseEnter = (e: React.MouseEvent) => {
     selectionSetter(item);
-    if (item) {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    }
+    setMousePosition({
+      x: (itemRef.current?.getBoundingClientRect().right || 0) + 10,
+      y: itemRef.current?.getBoundingClientRect().top || 0,
+    });
   };
 
   const handleMouseLeave = () => {
@@ -289,7 +281,7 @@ function ItemDisplay({
   let img = item && (
     <>
       <img
-        className="object-contain"
+        className="object-contain "
         style={imageStyle}
         src={getLink(item)}
         alt={item?.name}
@@ -311,10 +303,11 @@ function ItemDisplay({
       key={"item-" + slot}
       className={twMerge(
         "h-full w-full rounded-lg p-1 bg-base-200 relative flex justify-center items-center",
+        item && "cursor-pointer",
         slot.replaceAll(" ", "").toLowerCase()
       )}
+      ref={itemRef}
       onMouseEnter={handleMouseEnter}
-      onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
       {img}

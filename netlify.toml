@@ -2,7 +2,19 @@
   command = "npm run build"
   publish = "dist"
 
-  [[redirects]]
-    from = "/*"
-    to = "/index.html"
-    status = 200
+# Cache all static assets for a week (except HTML)
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# Don't cache HTML files (so deployments work immediately)
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
