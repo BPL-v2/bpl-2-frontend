@@ -3,7 +3,7 @@
 // Copyright (c) Dav1dde and contributors
 import pako from "pako";
 
-interface PlayerStats {
+export interface PlayerStats {
   averageDamage: number;
   averageBurstDamage: number;
   speed: number;
@@ -106,7 +106,7 @@ interface PlayerStats {
   enduranceChargesMax: number;
 }
 
-interface Gem {
+export interface Gem {
   gemId: string;
   variantId: string;
   enableGlobal1: string;
@@ -121,7 +121,7 @@ interface Gem {
   skillPart?: number;
 }
 
-interface Skill {
+export interface Skill {
   label: string;
   slot: string;
   mainActiveSkillCalcs: string;
@@ -131,12 +131,12 @@ interface Skill {
   gems: Gem[];
 }
 
-interface SkillSet {
+export interface SkillSet {
   id: number;
   skills: Skill[];
 }
 
-interface Skills {
+export interface Skills {
   activeSkillSet: number;
   sortGemsByDPS: string;
   sortGemsByDPSField: string;
@@ -147,7 +147,7 @@ interface Skills {
   skillSets: SkillSet[];
 }
 
-interface Build {
+export interface Build {
   playerStats: PlayerStats;
   bandit: string;
   level: number;
@@ -215,6 +215,7 @@ export interface Item {
   explicits: Mod[];
   slot: string | null;
 }
+
 function setPlayerStat(stats: PlayerStats, stat: string, value: number): void {
   switch (stat) {
     case "AverageDamage":
