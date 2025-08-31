@@ -15,9 +15,8 @@ export function PoGauge({ descriptions, values, cap }: Props) {
     <div className="flex gap-2 items-center">
       <div className={total > 0 ? "text-success" : ""}>+{total}</div>
       <div
-        className="grid gap-2 w-full join"
+        className="grid gap-1 w-full join"
         style={{
-          display: "grid",
           gridTemplateColumns: `repeat(${descriptions.length}, minmax(0, 1fr))`,
         }}
       >

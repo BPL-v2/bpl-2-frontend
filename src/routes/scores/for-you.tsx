@@ -7,6 +7,7 @@ import {
   useGetUser,
 } from "@client/query";
 import { PoGauge } from "@components/po-gauge";
+import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { ScoreObjective } from "@mytypes/score";
 import { createFileRoute } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
@@ -26,7 +27,15 @@ export function ForYouTab() {
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const { user } = useGetUser();
   const { ladder } = useGetLadder(101);
-  const { teamGoals } = useGetTeamGoals(currentEvent.id);
+  const { teamGoals = [] } = useGetTeamGoals(currentEvent.id);
+  const teamGoalMap = teamGoals.reduce(
+    (acc, goal) => {
+      // @ts-ignore bad type in spec
+      acc[goal.objective_id] = goal.extra;
+      return acc;
+    },
+    {} as Record<number, string>
+  );
 
   const personalObjectiveRender = useMemo(() => {
     let char = ladder
@@ -42,13 +51,13 @@ export function ForYouTab() {
       } as Character;
     }
     return (
-      <div>
+      <div className="flex flex-col gap-2">
         <h2 className="mt-4">Personal Objectives</h2>
         <p>
           Help your team out by improving your character and earn up to 9 points
           for your team.
         </p>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1 text-base font-bold mt-[-1rem]">
           <PoGauge
             descriptions={["Lvl 40", "Lvl 60", "Lvl 80"]}
             values={[
@@ -116,7 +125,10 @@ export function ForYouTab() {
       !objective.team_score[eventStatus.team_id!]?.finished &&
       (!objective.valid_from || new Date(objective.valid_from) < new Date())
   );
-  function categoryRender(category: ScoreObjective) {
+  function categoryRender(
+    category: ScoreObjective,
+    teamGoalMap: Record<number, string>
+  ) {
     const childLeaves = category.children.filter(
       (obj) => obj.children.length === 0
     );
@@ -124,9 +136,10 @@ export function ForYouTab() {
     const unfinishedObjectives = childLeaves.filter(
       (obj) => !obj.team_score[teamId]?.finished
     );
+    const teamLeadMessage = teamGoalMap[category.id];
     return (
       <div className="card bg-base-300" key={category.id}>
-        <div className="card-body">
+        <div className="card-body flex-row gap-1">
           <div tabIndex={0} className="collapse bg-base-200 items-start">
             <div className="card-title collapse-title flex justify-between text-lg pe-px-4 px-4">
               <div>{category.name}</div>
@@ -146,6 +159,14 @@ export function ForYouTab() {
               ))}
             </ul>
           </div>
+          {teamLeadMessage && (
+            <div className="tooltip">
+              <div className="tooltip-content text-lg text-error whitespace-pre-wrap text-left p-4">
+                {teamLeadMessage}
+              </div>
+              <EnvelopeIcon className="h-6 w-6 text-error cursor-help"></EnvelopeIcon>
+            </div>
+          )}
         </div>
         <progress
           className="progress progress-primary w-full rounded-b-box rounded-t-none"
@@ -156,16 +177,25 @@ export function ForYouTab() {
     );
   }
 
-  function objRender(obj: ScoreObjective) {
+  function objRender(obj: ScoreObjective, teamGoalMap: Record<number, string>) {
+    const teamLeadMessage = teamGoalMap[obj.id];
     return (
       <div className="card bg-base-300" key={obj.id}>
-        <div className="card-body">
+        <div className="card-body flex-row gap-1">
           <div className="card-title flex justify-between text-lg">
             <div>{obj.name}</div>
             <div className="text-primary whitespace-nowrap">
               {obj.team_score[teamId]?.number} / {obj.required_number}
             </div>
           </div>
+          {teamLeadMessage && (
+            <div className="tooltip">
+              <div className="tooltip-content text-lg text-error whitespace-pre-wrap text-left p-4">
+                {teamLeadMessage}
+              </div>
+              <EnvelopeIcon className="h-6 w-6 text-error cursor-help"></EnvelopeIcon>
+            </div>
+          )}
         </div>
         <progress
           className="progress progress-primary w-full rounded-b-box rounded-t-none"
@@ -175,35 +205,56 @@ export function ForYouTab() {
       </div>
     );
   }
-
+  let suggestionsExist = false;
+  for (const entry of Object.entries(teamGoalMap)) {
+    if (entry[0] != String(scores?.id)) {
+      suggestionsExist = true;
+      break;
+    }
+  }
   return (
-    <div className="prose prose-xl text-left max-w-full flex flex-col px-4 2xl:px-0">
+    <div className="prose prose-lg text-left max-w-full flex flex-col px-4 2xl:px-0">
       {personalObjectiveRender}
       {teamGoals && (
         <div>
-          <h2>Team lead suggestions</h2>
-          <p>
-            Your team leads have selected objectives that are urgent for you to
-            do.
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-            {relevantCategories
-              .filter((category) => teamGoals?.includes(category.id))
-              .map(categoryRender)}
-            {relevantObjectives
-              .filter((obj) => teamGoals?.includes(obj.id))
-              .map(objRender)}
-          </div>
+          {scores && teamGoalMap[scores.id] && (
+            <>
+              <h3 className="flex items-center gap-2">
+                <EnvelopeIcon className="h-8 w-8" /> Your team leads have left a
+                message for you:
+              </h3>
+              <p className="whitespace-pre-wrap text-info">
+                {teamGoalMap[scores.id]}
+              </p>
+            </>
+          )}
+          {suggestionsExist && (
+            <>
+              <h3>
+                Your team leads have selected objectives that are urgent for you
+                to do.
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                {relevantCategories
+                  .filter((category) => teamGoalMap[category.id] != undefined)
+                  .map((category) => categoryRender(category, teamGoalMap))}
+                {relevantObjectives
+                  .filter((obj) => teamGoalMap[obj.id] != undefined)
+                  .map((obj) => objRender(obj, teamGoalMap))}
+              </div>
+            </>
+          )}
         </div>
       )}
       <div>
-        <h2>{teamGoals ? "Remaining" : "To do"}</h2>
-        <p>Other objectives that are time sensitive for you to do.</p>
+        <h3>{teamGoals ? "Remaining Objectives" : "To do"}</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
           {relevantCategories
-            .filter((category) => !teamGoals?.includes(category.id))
-            .map(categoryRender)}
-          {relevantObjectives.map(objRender)}
+            .filter((category) => teamGoalMap[category.id] == undefined)
+            .map((category) => categoryRender(category, teamGoalMap))}
+          {relevantObjectives
+            .filter((obj) => teamGoalMap[obj.id] == undefined)
+            .map((obj) => objRender(obj, teamGoalMap))}
         </div>
       </div>
     </div>

@@ -3178,7 +3178,7 @@ export interface Submission {
      * @type {number}
      * @memberof Submission
      */
-    team_id?: number;
+    team_id: number;
     /**
      * 
      * @type {string}
@@ -3345,6 +3345,26 @@ export interface TeamSubmissionCreate {
      * @memberof TeamSubmissionCreate
      */
     team_ids: Array<number>;
+}
+
+/**
+ * 
+ * @export
+ * @interface TeamSuggestion
+ */
+export interface TeamSuggestion {
+    /**
+     * 
+     * @type {string}
+     * @memberof TeamSuggestion
+     */
+    extra?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof TeamSuggestion
+     */
+    objective_id?: number;
 }
 
 /**
@@ -8104,10 +8124,11 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
          * Creates a suggestion for an objective for your team for an event
          * @param {number} event_id Event Id
          * @param {number} objective_id Objective Id
+         * @param {TeamSuggestion} body Suggestion data
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createObjectiveTeamSuggestion(event_id: number, objective_id: number, options: any = {}): FetchArgs {
+        createObjectiveTeamSuggestion(event_id: number, objective_id: number, body: TeamSuggestion, options: any = {}): FetchArgs {
             // verify required parameter 'event_id' is not null or undefined
             if (event_id === null || event_id === undefined) {
                 throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createObjectiveTeamSuggestion.');
@@ -8116,11 +8137,15 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
             if (objective_id === null || objective_id === undefined) {
                 throw new RequiredError('objective_id','Required parameter objective_id was null or undefined when calling createObjectiveTeamSuggestion.');
             }
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling createObjectiveTeamSuggestion.');
+            }
             const localVarPath = `/events/{event_id}/suggestions/{objective_id}`
                 .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
                 .replace(`{${"objective_id"}}`, encodeURIComponent(String(objective_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -8132,10 +8157,14 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
                 localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
             }
 
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             localVarUrlObj.search = null;
             localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"TeamSuggestion" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -8401,11 +8430,12 @@ export const TeamApiFp = function(configuration?: Configuration) {
          * Creates a suggestion for an objective for your team for an event
          * @param {number} event_id Event Id
          * @param {number} objective_id Objective Id
+         * @param {TeamSuggestion} body Suggestion data
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createObjectiveTeamSuggestion(event_id: number, objective_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).createObjectiveTeamSuggestion(event_id, objective_id, options);
+        createObjectiveTeamSuggestion(event_id: number, objective_id: number, body: TeamSuggestion, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).createObjectiveTeamSuggestion(event_id, objective_id, body, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -8498,7 +8528,7 @@ export const TeamApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTeamSuggestions(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<number>> {
+        getTeamSuggestions(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<TeamSuggestion>> {
             const localVarFetchArgs = TeamApiFetchParamCreator(configuration).getTeamSuggestions(event_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
@@ -8551,11 +8581,12 @@ export const TeamApiFactory = function (configuration?: Configuration, fetch?: F
          * Creates a suggestion for an objective for your team for an event
          * @param {number} event_id Event Id
          * @param {number} objective_id Objective Id
+         * @param {TeamSuggestion} body Suggestion data
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createObjectiveTeamSuggestion(event_id: number, objective_id: number, options?: any) {
-            return TeamApiFp(configuration).createObjectiveTeamSuggestion(event_id, objective_id, options)(fetch, basePath);
+        createObjectiveTeamSuggestion(event_id: number, objective_id: number, body: TeamSuggestion, options?: any) {
+            return TeamApiFp(configuration).createObjectiveTeamSuggestion(event_id, objective_id, body, options)(fetch, basePath);
         },
         /**
          * Creates a team for an event
@@ -8641,12 +8672,13 @@ export class TeamApi extends BaseAPI {
      * Creates a suggestion for an objective for your team for an event
      * @param {number} event_id Event Id
      * @param {number} objective_id Objective Id
+     * @param {TeamSuggestion} body Suggestion data
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TeamApi
      */
-    public createObjectiveTeamSuggestion(event_id: number, objective_id: number, options?: any) {
-        return TeamApiFp(this.configuration).createObjectiveTeamSuggestion(event_id, objective_id, options)(this.fetch, this.basePath);
+    public createObjectiveTeamSuggestion(event_id: number, objective_id: number, body: TeamSuggestion, options?: any) {
+        return TeamApiFp(this.configuration).createObjectiveTeamSuggestion(event_id, objective_id, body, options)(this.fetch, this.basePath);
     }
 
     /**
