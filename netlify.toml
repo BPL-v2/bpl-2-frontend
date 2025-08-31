@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  command = "npm run build-tsc"
   publish = "dist"
 
 # Cache all static assets for a week (except HTML)
