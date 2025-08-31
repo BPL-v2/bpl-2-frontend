@@ -1,10 +1,11 @@
 import { Action, GuildStashChangelog } from "@client/api";
-import { useGetGuildLogs } from "@client/query";
+import { preloadGuildLogs, useGetGuildLogs } from "@client/query";
 import Table from "@components/table";
+import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";
 import { GlobalStateContext } from "@utils/context-provider";
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo } from "react";
 
 export const Route = createFileRoute("/admin/guild/logs/$guildId")({
   component: RouteComponent,
@@ -131,8 +132,16 @@ function filterMovementsAndProcessQuantities(
 function RouteComponent() {
   const { currentEvent } = useContext(GlobalStateContext);
   const { guildId } = useParams({ from: Route.id });
-
   const { logs = [] } = useGetGuildLogs(currentEvent.id, guildId);
+  const mutation = preloadGuildLogs(
+    currentEvent.id,
+    guildId,
+    200,
+    useQueryClient()
+  );
+  useEffect(() => {
+    mutation.mutate();
+  }, [currentEvent.id, guildId]);
   const processedLogs = useMemo(
     () => filterMovementsAndProcessQuantities(logs),
     [logs]

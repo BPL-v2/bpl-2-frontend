@@ -521,18 +521,13 @@ function setPlayerStat(stats: PlayerStats, stat: string, value: number): void {
   }
 }
 
-function inflateZlib(data: Uint8Array): Uint8Array {
-  return pako.inflate(data);
-}
-
 function pobstringToXml(pob: string): Document {
   const decoded = atob(pob.replace(/-/g, "+").replace(/_/g, "/"));
   const bytes = new Uint8Array(decoded.length);
   for (let i = 0; i < decoded.length; i++) {
     bytes[i] = decoded.charCodeAt(i);
   }
-  const inflated = inflateZlib(bytes);
-  const xmlString = new TextDecoder().decode(inflated);
+  const xmlString = new TextDecoder().decode(pako.inflate(bytes));
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(xmlString, "text/xml");
   if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
@@ -842,18 +837,18 @@ function parseMod(modLine: string): Mod {
 }
 
 function extractMagicBase(base: string, numMods: number): string {
-  if (numMods === 0) return base;
   if (base.startsWith("Synthesised ")) base = base.slice("Synthesised ".length);
+  if (numMods === 0) return base;
   let end = base.indexOf(" of");
   const hasSuffix = end !== -1;
   if (!hasSuffix) end = base.length;
   base = base.slice(0, end);
+  if (numMods > 2) return base.split(" ").slice(1).join(" ");
+  if (base.split(" ").length > 3) return base.split(" ").slice(1).join(" ");
   if (hasSuffix && numMods === 1) return base;
-  else if (mayBeFullBase(base)) return base;
-  else {
-    const idx = base.indexOf(" ");
-    return idx !== -1 ? base.slice(idx + 1) : base;
-  }
+  if (mayBeFullBase(base)) return base;
+  const idx = base.indexOf(" ");
+  return idx !== -1 ? base.slice(idx + 1) : base;
 }
 
 function mayBeFullBase(name: string): boolean {
