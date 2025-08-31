@@ -69,17 +69,15 @@ const TeamScoreDisplay = ({
                 }
               >
                 <div className="stat p-1 md:p-4">
-                  <div className="col-start-1 font-bold text-xl md:text-2xl">
-                    <TeamName team={team} />
-                  </div>
-
-                  <div className="stat-figure row-span-2 hidden md:block">
-                    <div className="avatar online">
-                      <div className="w-24">
-                        <TeamLogo team={team} eventId={currentEvent.id} />
-                      </div>
-                    </div>
-                  </div>
+                  <TeamName
+                    team={team}
+                    className="col-start-1 font-bold text-xl md:text-2xl"
+                  />
+                  <TeamLogo
+                    team={team}
+                    eventId={currentEvent.id}
+                    className="stat-figure row-span-2 hidden md:block w-24"
+                  />
                   <div className="stat-value text-xl md:text-2xl whitespace-nowrap">
                     {teamScores[team.id]}
                     <span className="hidden md:inline">

@@ -36,7 +36,7 @@ export function CollectionTab(): JSX.Element {
   return (
     <>
       {rules ? (
-        <div className="w-full bg-base-200  my-4  p-8 rounded-box">
+        <div className="w-full bg-base-200 my-4 p-8 rounded-box">
           <article className="prose text-left max-w-4xl">
             <CollectionTabRules />
           </article>
@@ -44,21 +44,23 @@ export function CollectionTab(): JSX.Element {
       ) : null}
       <div className="flex flex-col gap-4">
         <TeamScoreDisplay objective={category}></TeamScoreDisplay>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {category.children.map((objective) => {
             return (
               <div className="card bg-base-300 bborder" key={objective.id}>
-                <div className="card-title rounded-t-box flex items-center m-0 py-2 px-4 bg-base-200 h-full min-h-22 bborder-b ">
+                <div className="card-title rounded-t-box flex items-center m-0 py-2 px-4 bg-base-200 h-full min-h-22 bborder-b">
                   <ObjectiveIcon
                     objective={objective}
                     gameVersion={currentEvent.game_version}
                   />
                   <div
                     className={
-                      objective.extra ? "tooltip  text-2xl " : undefined
+                      objective.extra ? "tooltip tooltip-primary" : undefined
                     }
-                    data-tip={objective.extra}
                   >
+                    <div className="tooltip-content text-xl max-w-75 ">
+                      {objective.extra}
+                    </div>
                     <h3 className="flex-grow text-center text-xl font-medium mx-4">
                       {`Collect ${objective.required_number} ${objective.name}`}
                       {objective.extra ? (

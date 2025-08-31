@@ -67,7 +67,7 @@ const SignupButton = () => {
             });
           }}
         >
-          <fieldset className="fieldset bg-base-300 p-4 rounded-box gap-4 ">
+          <fieldset className="fieldset bg-base-300 p-4 rounded-box gap-4">
             <label className="fieldset-label">
               How many hours will you be able to play per day?
             </label>

@@ -361,7 +361,7 @@ export function LadderTab(): JSX.Element {
         <TeamScoreDisplay objective={scores} />
       ) : (
         <>
-          <div className="divider divider-primary ">Team Scores</div>
+          <div className="divider divider-primary">Team Scores</div>
           <Table
             data={rows.sort((a, b) => b.total - a.total)}
             columns={scoreColumns}

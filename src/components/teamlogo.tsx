@@ -1,14 +1,24 @@
 import { Team } from "@client/api";
 import { useState } from "react";
+import { twMerge } from "tailwind-merge";
 
-export function TeamLogo({ team, eventId }: { team?: Team; eventId: number }) {
+interface TeamLogoProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+  team?: Team;
+  eventId: number;
+}
+
+export function TeamLogo({ team, eventId, ...props }: TeamLogoProps) {
   const [errorCount, setErrorCount] = useState(0);
   if (!team?.name) return null;
   if (errorCount == 1) {
     return (
       <div
-        className="w-full h-full text-center m-auto flex flex-col items-center justify-center text-2xl font-bold"
-        style={{ backgroundColor: team.color }}
+        {...props}
+        className={twMerge(
+          "w-full h-full text-center m-auto flex flex-col items-center justify-center text-2xl font-bold",
+          props.className
+        )}
+        style={{ ...props.style, backgroundColor: team.color }}
       >
         {team.name}
       </div>
@@ -16,6 +26,7 @@ export function TeamLogo({ team, eventId }: { team?: Team; eventId: number }) {
   }
   return (
     <img
+      {...props}
       onError={(e) => {
         setErrorCount(errorCount + 1);
       }}

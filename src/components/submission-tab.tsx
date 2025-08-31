@@ -135,7 +135,7 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
             Submissions
           </Link>
         </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {category.children
             .filter(
               (objective) =>
@@ -163,11 +163,13 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
                     <div
                       className={twMerge(
                         "w-full",
-                        objective.extra && "tooltip"
+                        objective.extra && "tooltip tooltip-primary"
                       )}
-                      data-tip={objective.extra}
                     >
-                      <h3 className="flex-grow text-center text-xl font-medium mr-4 ">
+                      <div className="tooltip-content text-xl max-w-75">
+                        {objective.extra}
+                      </div>
+                      <h3 className="flex-grow text-center text-xl font-medium mr-4">
                         {objective.name}
                         {objective.extra ? (
                           <i className="text-error">*</i>
@@ -175,7 +177,10 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
                       </h3>
                     </div>
                     {eventStatus?.team_id ? (
-                      <div className="tooltip" data-tip="Submit Bounty">
+                      <div
+                        className="tooltip tooltip-left lg:tooltip-top"
+                        data-tip="Submit Bounty"
+                      >
                         <button
                           className="rounded-full"
                           onClick={() => {
@@ -256,14 +261,17 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
                 <div className="min-h-22 h-full flex items-center justify-between bg-base-200 rounded-t-box px-4 bborder-b">
                   <div
                     className={
-                      objective.extra ? "tooltip  text-2xl " : undefined
+                      objective.extra ? "tooltip tooltip-primary" : undefined
                     }
-                    data-tip={objective.extra}
-                  ></div>
-                  <h3 className="flex-grow text-center m-4 text-xl font-medium mr-4">
-                    {objective.name}
-                    {objective.extra ? <i className="text-error">*</i> : null}
-                  </h3>
+                  >
+                    <div className="tooltip-content text-xl max-w-75">
+                      {objective.extra}
+                    </div>
+                    <h3 className="flex-grow text-center m-4 text-xl font-medium mr-4">
+                      {objective.name}
+                      {objective.extra ? <i className="text-error">*</i> : null}
+                    </h3>
+                  </div>
                 </div>
                 <CollectionCardTable objective={objective} />
               </div>

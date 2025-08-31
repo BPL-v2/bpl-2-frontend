@@ -90,7 +90,7 @@ function Table<T>({
           )}
         >
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id} className="flex w-full ">
+            <tr key={headerGroup.id} className="flex w-full">
               {headerGroup.headers.map((header) => {
                 return (
                   <th

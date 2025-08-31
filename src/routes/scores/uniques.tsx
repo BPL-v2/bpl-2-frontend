@@ -1,12 +1,12 @@
-import { JSX, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { GlobalStateContext } from "@utils/context-provider";
-import TeamScoreDisplay from "@components/team-score";
-import { ItemTable } from "@components/item-table";
-import { isFinished, isWinnable, ScoreObjective } from "@mytypes/score";
-import { UniqueCategoryCard } from "@components/unique-category-card";
-import { createFileRoute } from "@tanstack/react-router";
-import { UniqueTabRules } from "@rules/uniques";
 import { useGetEventStatus } from "@client/query";
+import { ItemTable } from "@components/item-table";
+import TeamScoreDisplay from "@components/team-score";
+import { UniqueCategoryCard } from "@components/unique-category-card";
+import { isFinished, isWinnable, ScoreObjective } from "@mytypes/score";
+import { UniqueTabRules } from "@rules/uniques";
+import { createFileRoute } from "@tanstack/react-router";
+import { GlobalStateContext } from "@utils/context-provider";
+import { JSX, useContext, useEffect, useMemo, useRef, useState } from "react";
 
 export const Route = createFileRoute("/scores/uniques")({
   component: UniqueTab,
@@ -106,7 +106,7 @@ function UniqueTab(): JSX.Element {
   return (
     <>
       {rules ? (
-        <div className="w-full bg-base-200  my-4  p-8 rounded-box">
+        <div className="w-full bg-base-200 my-4 p-8 rounded-box">
           <article className="prose text-left max-w-4xl">
             <UniqueTabRules />
           </article>

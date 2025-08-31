@@ -86,7 +86,10 @@ export function CollectionCardTable({
                     )}
                   >
                     <div
-                      className="tooltip"
+                      className={twMerge(
+                        "tooltip tooltip-right",
+                        percent < 100 ? "tooltip-error" : "tooltip-success"
+                      )}
                       data-tip={finishTooltip(objective, score)}
                     >
                       <div
@@ -100,12 +103,8 @@ export function CollectionCardTable({
                     </div>
                   </td>
                 ) : null}
-                <td className="px-2">
-                  <ProgressBar
-                    style={{ width: "150px" }}
-                    value={num}
-                    maxVal={objective.required_number}
-                  />
+                <td className="px-2 w-full">
+                  <ProgressBar value={num} maxVal={objective.required_number} />
                 </td>
                 <td
                   className={twMerge(

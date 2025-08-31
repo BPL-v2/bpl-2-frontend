@@ -145,7 +145,6 @@ function UserPage() {
         )}
         columns={columns}
         className="h-[70vh]"
-      // pageSizeOptions={[20, 50, 100]}
       />
     </div>
   );

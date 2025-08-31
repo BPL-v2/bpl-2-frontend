@@ -18,7 +18,7 @@ export const Route = createRootRoute({
   component: RootComponent,
   notFoundComponent: () => {
     return (
-      <div className="flex flex-col gap-8 mt-8 mx-auto ">
+      <div className="flex flex-col gap-8 mt-8 mx-auto">
         <h1 className="text-2xl">Could not find page</h1>
         <Link className="link link-info" to="/">
           Return to home page
@@ -84,8 +84,8 @@ function RootComponent() {
 
   return (
     <>
-      <div className="max-w-[1440px] text-center mx-auto ">
-        <div className="text-xl p-0 flex items-center ">
+      <div className="max-w-[1440px] text-center mx-auto">
+        <div className="text-xl p-0 flex items-center">
           <div className="navbar bg-base-200">
             <ul className="flex flex-1 justify-left gap-1 sm:gap-2 xl:gap-4">
               {menu.map((item) => (

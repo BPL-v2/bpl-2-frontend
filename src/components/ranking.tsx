@@ -96,7 +96,7 @@ export function Ranking({
               key={"score-" + teamId}
             >
               <div className="card-body">
-                <div className="flex flex-row items-center justify-between ">
+                <div className="flex flex-row items-center justify-between">
                   {/* <div className="stat-figure row-span-2 hidden lg:block">
                     <div className="avatar online">
                       <div className="w-20">
@@ -105,7 +105,7 @@ export function Ranking({
                     </div>
                   </div> */}
                   <div className="flex flex-col px-4">
-                    <div className="card-title flex items-center text-2xl ">
+                    <div className="card-title flex items-center text-2xl">
                       {
                         currentEvent?.teams?.find((team) => team.id === teamId)
                           ?.name

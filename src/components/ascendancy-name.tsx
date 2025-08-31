@@ -4,11 +4,11 @@ import { GlobalStateContext } from "@utils/context-provider";
 import { GameVersion } from "@client/api";
 import { twMerge } from "tailwind-merge";
 
-interface AscendancyProps {
+interface AscendancyProps extends React.HTMLAttributes<HTMLDivElement> {
   character_class: string;
 }
 
-export function AscendancyName({ character_class }: AscendancyProps) {
+export function AscendancyName({ character_class, ...props }: AscendancyProps) {
   const { currentEvent } = useContext(GlobalStateContext);
   const class_name =
     phreciaMapping[character_class] ||
@@ -20,7 +20,12 @@ export function AscendancyName({ character_class }: AscendancyProps) {
   }
   return (
     <span
-      className={twMerge("font-semi-bold", ascendancy[class_name].classColor)}
+      {...props}
+      className={twMerge(
+        "font-semi-bold",
+        ascendancy[class_name].classColor,
+        props.className
+      )}
     >
       {currentEvent.game_version === GameVersion.poe1
         ? character_class

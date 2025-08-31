@@ -1,15 +1,14 @@
 import { Team } from "@client/api";
 
-interface TeamNameProps {
+interface TeamNameProps extends React.HTMLAttributes<HTMLSpanElement> {
   team?: Team;
-  className?: string;
 }
-export function TeamName({ team, className }: TeamNameProps) {
+export function TeamName({ team, ...props }: TeamNameProps) {
   if (!team) {
-    return <span className={className}>-</span>;
+    return <span {...props}>-</span>;
   }
   return (
-    <span className={className} style={{ color: team.color }}>
+    <span {...props} style={{ color: team.color }}>
       {team.name}
     </span>
   );

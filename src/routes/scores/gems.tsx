@@ -79,7 +79,7 @@ export function GemTab(): JSX.Element {
   return (
     <>
       {rules ? (
-        <div className="w-full bg-base-200  my-4  p-8 rounded-box">
+        <div className="w-full bg-base-200 my-4 p-8 rounded-box">
           <article className="prose text-left max-w-4xl">
             <GemTabRules />
           </article>

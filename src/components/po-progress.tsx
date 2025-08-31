@@ -1,11 +1,10 @@
 import { twMerge } from "tailwind-merge";
 
-interface POProgressBarProps {
-  checkpoints: number[]; // Array of values defining the sections
+interface POProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
+  checkpoints: number[];
   extra: number[];
-  current: number; // Current value of the progress bar
-  max: number; // Maximum value of the progress bar
-  className?: string; // Optional className for additional styling
+  current: number;
+  max: number;
 }
 
 function POProgressBar({
@@ -13,15 +12,16 @@ function POProgressBar({
   extra,
   max,
   current,
-  className = "",
+  ...props
 }: POProgressBarProps) {
   const diff = checkpoints.reduce((a, b) => a - b, current);
 
   return (
     <div
+      {...props}
       className={twMerge(
         "flex w-full h-7 bg-base-200 rounded-lg overflow-hidden text-success-content text-lg",
-        className
+        props.className
       )}
     >
       {checkpoints

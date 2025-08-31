@@ -48,12 +48,14 @@ export function ProfilePage() {
   }
 
   return (
-    <div className=" px-2">
-      <h1 className="text-4xl text-center font-bold m-4">
+    <div className="flex flex-col gap-4 mt-4">
+      <h1 className="text-4xl text-center font-bold">
         {user.display_name}'s Profile
       </h1>
       {userCharacters.length > 0 && (
-        <ProfileCarousel userCharacters={userCharacters} userId={userId} />
+        <div>
+          <ProfileCarousel userCharacters={userCharacters} userId={userId} />
+        </div>
       )}
       <Outlet />
     </div>

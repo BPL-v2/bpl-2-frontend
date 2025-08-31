@@ -20,7 +20,7 @@ export function DailyTab(): JSX.Element {
   return (
     <>
       {rules ? (
-        <div className="w-full bg-base-200  my-4  p-8 rounded-box">
+        <div className="w-full bg-base-200 my-4 p-8 rounded-box">
           <article className="prose text-left max-w-4xl">
             <DailyTabRules />
           </article>
@@ -28,7 +28,7 @@ export function DailyTab(): JSX.Element {
       ) : null}
       <div className="flex flex-col gap-4">
         <TeamScoreDisplay objective={dailyCategory}></TeamScoreDisplay>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {dailyCategory.children
             .sort((dailyA: ScoreObjective, dailyB: ScoreObjective) => {
               const releaseA = dailyA.valid_from

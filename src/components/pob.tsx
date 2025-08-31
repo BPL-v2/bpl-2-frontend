@@ -101,8 +101,8 @@ function ItemTooltip({
     <div
       ref={tooltipRef}
       className={twMerge(
-        "fixed z-30 pointer-events-none",
-        "border-2 bg-base-100/90 rounded-field flex flex-col gap text-center shadow-lg",
+        "fixed z-30 pointer-events-none text-xs md:text-base",
+        "border-2 bg-base-100/60 md:bg-base-100/90 rounded-field flex flex-col gap text-center shadow-lg",
         position.left != 0 && position.top != 0 ? "block" : "hidden",
         borderColor
       )}
@@ -115,7 +115,7 @@ function ItemTooltip({
     >
       <div
         className={twMerge(
-          "flex flex-col gap-1 text-xl font-bold border-b-1 p-2 w-full",
+          "flex flex-col text-sm md:text-xl font-bold border-b-1 p-2 w-full",
           borderColor,
           headerColor
         )}
@@ -129,7 +129,7 @@ function ItemTooltip({
         item.energyShield > 0) && (
         <div
           className={twMerge(
-            "flex flex-col gap-1 p-2 border-y-1 w-full",
+            "flex flex-col p-2 border-y-1 w-full md:gap-1",
             borderColor
           )}
         >
@@ -164,7 +164,7 @@ function ItemTooltip({
       {item.implicits.length > 0 && (
         <div
           className={twMerge(
-            "flex flex-col gap-1 border-y-1 p-2 w-full",
+            "flex flex-col border-y-1 p-2 w-full  md:gap-1",
             borderColor
           )}
         >
@@ -178,7 +178,7 @@ function ItemTooltip({
       {item.explicits.length > 0 && (
         <div
           className={twMerge(
-            "flex flex-col gap-1 border-t-1 p-2 w-full",
+            "flex flex-col md:gap-1 border-t-1 p-2 w-full",
             borderColor
           )}
         >
@@ -385,8 +385,8 @@ export function PoB({ pobString }: Probs) {
   return (
     <>
       <div className="flex flex-col lg:flex-row gap-4 text-left min-h-170">
-        <div className="flex justify-center select-none p-4 md:p-8 bg-base-300 rounded-box">
-          <div className="inventory gap-1 md:gap-2">
+        <div className="flex justify-center select-none p-4 lg:p-8 bg-base-300 rounded-box min-w-[50%]">
+          <div className="inventory gap-1 md:gap-2 mt-0 m-auto">
             {Object.entries(equipment).map(([slot, item]) => (
               <ItemDisplay
                 key={slot}
@@ -651,8 +651,8 @@ export function PoB({ pobString }: Probs) {
               .sort((slotA, slotB) => {
                 const mainGroup =
                   pob.skills.skillSets[0].skills[pob.build.mainSocketGroup - 1];
-                if (mainGroup.slot == slotA) return -1;
-                if (mainGroup.slot == slotB) return 1;
+                if (mainGroup?.slot == slotA) return -1;
+                if (mainGroup?.slot == slotB) return 1;
                 const skillsA = pob.skills.skillSets[0].skills.filter(
                   (skill) => skill.slot === slotA
                 );
@@ -671,7 +671,7 @@ export function PoB({ pobString }: Probs) {
                 if (skills.length === 0) return null;
                 return (
                   <div
-                    className="break-inside-avoid mt-2 first:mt-0 bg-base-200 px-3 py-2.5 rounded-xl flex flex-col relative"
+                    className="break-inside-avoid mb-2 bg-base-200 px-3 py-2.5 rounded-xl flex flex-col relative"
                     key={`skill-${slot}`}
                   >
                     <InventoryIcon
