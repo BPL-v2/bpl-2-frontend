@@ -848,12 +848,39 @@ export function useGetPoBs(userId: number, characterId: string) {
 export function useGetGuildLogs(eventId: number, guildId: number) {
   const query = useQuery({
     queryKey: ["guildLogs", current !== eventId ? eventId : "current", guildId],
-    queryFn: () => guildStashApi.getLogEntriesForGuild(eventId, guildId),
+    queryFn: () => {
+      return guildStashApi.getLogEntriesForGuild(eventId, guildId);
+    },
   });
   return {
     ...query,
     logs: query.data,
   };
+}
+
+export function preloadGuildLogs(
+  eventId: number,
+  guildId: number,
+  limit: number,
+  qc: QueryClient
+) {
+  return useMutation({
+    mutationFn: () =>
+      guildStashApi.getLogEntriesForGuild(eventId, guildId, limit),
+    onSuccess: (data) => {
+      const existing = qc.getQueryData([
+        "guildLogs",
+        current !== eventId ? eventId : "current",
+        guildId,
+      ]);
+      if (!existing) {
+        qc.setQueryData(
+          ["guildLogs", current !== eventId ? eventId : "current", guildId],
+          data
+        );
+      }
+    },
+  });
 }
 
 export function useGetGuilds(eventId: number) {
