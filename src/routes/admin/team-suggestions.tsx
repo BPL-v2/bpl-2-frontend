@@ -1,13 +1,22 @@
-import { createFileRoute } from "@tanstack/react-router";
-import React, { useContext, useEffect, useMemo } from "react";
-import { ColumnDef } from "@tanstack/react-table";
-import { GlobalStateContext } from "@utils/context-provider";
-import { ScoringMethod, Team } from "@client/api";
-import { teamApi } from "@client/client";
+import { ScoringMethod, Team, TeamSuggestion } from "@client/api";
+import {
+  useAddTeamSuggestion,
+  useDeleteTeamSuggestion,
+  useGetEventStatus,
+  useGetTeamGoals,
+} from "@client/query";
 import Table from "@components/table";
 import { ScoreObjective } from "@mytypes/score";
-import { useGetEventStatus } from "@client/query";
-import { getPotentialPoints, iterateObjectives } from "@utils/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
+import { ColumnDef } from "@tanstack/react-table";
+import { GlobalStateContext } from "@utils/context-provider";
+import {
+  getPotentialPoints,
+  getTotalPoints,
+  iterateObjectives,
+} from "@utils/utils";
+import { useContext, useMemo } from "react";
 
 export const Route = createFileRoute("/admin/team-suggestions")({
   component: TeamSuggestionsPage,
@@ -15,15 +24,11 @@ export const Route = createFileRoute("/admin/team-suggestions")({
 
 export function TeamSuggestionsPage() {
   const { currentEvent, scores } = useContext(GlobalStateContext);
-  const [teamGoals, setTeamGoals] = React.useState<number[]>([]);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
-
-  useEffect(() => {
-    if (!currentEvent) {
-      return;
-    }
-    teamApi.getTeamSuggestions(currentEvent.id).then(setTeamGoals);
-  }, [currentEvent]);
+  const qc = useQueryClient();
+  const { teamGoals = [] } = useGetTeamGoals(currentEvent.id);
+  const { addTeamSuggestion } = useAddTeamSuggestion(currentEvent.id, qc);
+  const { deleteTeamSuggestion } = useDeleteTeamSuggestion(currentEvent.id, qc);
 
   const categoryColumns = useMemo(() => {
     if (!eventStatus) {
@@ -38,8 +43,9 @@ export function TeamSuggestionsPage() {
       {
         header: "Available Points",
         accessorFn: (category) =>
-          getPotentialPoints(category)[eventStatus.team_id!],
-        size: 350,
+          getPotentialPoints(category)[eventStatus.team_id!] -
+          getTotalPoints(category)[eventStatus.team_id!],
+        size: 200,
       },
 
       {
@@ -102,32 +108,78 @@ export function TeamSuggestionsPage() {
             </div>
           );
         },
-        size: 400,
+        size: 200,
       },
       {
-        header: "Is Team Focus?",
-        accessorFn: (category) => teamGoals.includes(category.id),
+        header: "Team Focus",
+        accessorFn: (category) =>
+          !!teamGoals.find((ts) => ts.objective_id === category.id),
         cell: (row) => (
           <input
             type="checkbox"
             className="checkbox checkbox-primary"
-            defaultChecked={teamGoals.includes(row.row.original.id)}
+            defaultChecked={
+              !!teamGoals.find((ts) => ts.objective_id === row.row.original.id)
+            }
             key={"cat-" + row.row.original.id}
             onChange={(e) => {
               if (e.target.checked) {
-                teamApi.createObjectiveTeamSuggestion(
-                  currentEvent!.id,
-                  row.row.original.id
-                );
+                addTeamSuggestion({
+                  objective_id: row.row.original.id,
+                });
               } else {
-                teamApi.deleteObjectiveTeamSuggestion(
-                  currentEvent!.id,
-                  row.row.original.id
-                );
+                deleteTeamSuggestion(row.row.original.id);
               }
             }}
           />
         ),
+        size: 150,
+      },
+      {
+        header: "Message for Team",
+        accessorFn: (category) =>
+          teamGoals.find((ts) => ts.objective_id === category.id),
+        enableSorting: false,
+        cell: ({ row, getValue }) => {
+          const suggestion = getValue() as TeamSuggestion | undefined;
+          return (
+            <>
+              {suggestion && (
+                <form
+                  className="flex flex-row gap-2 w-full"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.target as HTMLFormElement);
+                    const extra = formData.get("extra");
+                    addTeamSuggestion({
+                      objective_id: suggestion.objective_id,
+                      extra: extra ? (extra as string) : undefined,
+                    });
+                  }}
+                >
+                  <textarea
+                    className="textarea textarea-primary"
+                    name="extra"
+                    defaultValue={
+                      teamGoals.find(
+                        (ts) => ts.objective_id === suggestion.objective_id
+                      )?.extra
+                    }
+                    key={"cat-" + row.original.id}
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      console.log(e);
+                    }}
+                  />
+                  <button type="submit" className="btn btn-primary h-full">
+                    Save
+                  </button>
+                </form>
+              )}
+            </>
+          );
+        },
+        size: 450,
       },
     ];
     return columns;
@@ -182,32 +234,77 @@ export function TeamSuggestionsPage() {
           }
           return `${nextTeam?.name}: ${num}`;
         },
-        size: 400,
+        size: 200,
       },
       {
-        header: "Is Team Focus?",
-        accessorFn: (objective) => teamGoals.includes(objective.id),
-        cell: (row) => (
+        header: "Team Focus",
+        accessorFn: (category) =>
+          teamGoals.find((ts) => ts.objective_id === category.id),
+        cell: ({ row, getValue }) => (
           <input
             type="checkbox"
             className="checkbox checkbox-primary"
-            defaultChecked={teamGoals.includes(row.row.original.id)}
-            key={"obj-" + row.row.original.id}
+            defaultChecked={getValue() !== undefined}
+            key={"cat-" + row.original.id}
             onChange={(e) => {
               if (e.target.checked) {
-                teamApi.createObjectiveTeamSuggestion(
-                  currentEvent!.id,
-                  row.row.original.id
-                );
+                addTeamSuggestion({
+                  objective_id: row.original.id,
+                });
               } else {
-                teamApi.deleteObjectiveTeamSuggestion(
-                  currentEvent!.id,
-                  row.row.original.id
-                );
+                deleteTeamSuggestion(row.original.id);
               }
             }}
           />
         ),
+        size: 150,
+      },
+      {
+        header: "Message for Team",
+        accessorFn: (category) =>
+          teamGoals.find((ts) => ts.objective_id === category.id),
+        enableSorting: false,
+        cell: ({ row, getValue }) => {
+          console.log(getValue());
+          const suggestion = getValue() as TeamSuggestion | undefined;
+          return (
+            <>
+              {suggestion && (
+                <form
+                  className="flex flex-row gap-2 w-full"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.target as HTMLFormElement);
+                    const extra = formData.get("extra");
+                    addTeamSuggestion({
+                      objective_id: suggestion.objective_id,
+                      extra: extra ? (extra as string) : undefined,
+                    });
+                  }}
+                >
+                  <textarea
+                    className="textarea textarea-primary"
+                    name="extra"
+                    defaultValue={
+                      teamGoals.find(
+                        (ts) => ts.objective_id === suggestion.objective_id
+                      )?.extra
+                    }
+                    key={"cat-" + row.original.id}
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      console.log(e);
+                    }}
+                  />
+                  <button type="submit" className="btn btn-primary h-full">
+                    Save
+                  </button>
+                </form>
+              )}
+            </>
+          );
+        },
+        size: 400,
       },
     ];
     return columns;
@@ -249,18 +346,50 @@ export function TeamSuggestionsPage() {
   );
 
   return (
-    <div>
-      <div className="divider divider-primary">Categories</div>
+    <div className="flex flex-col gap-4 mt-4">
+      <form
+        className="flex flex-row gap-2 bg-base-300 rounded-box p-8"
+        onSubmit={(e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target as HTMLFormElement);
+          const extra = formData.get("extra");
+          addTeamSuggestion({
+            objective_id: scores.id,
+            extra: extra ? (extra as string) : undefined,
+          });
+        }}
+      >
+        <div className="fieldset w-full">
+          <label className="label">
+            <span className="text-lg">
+              Write a message for your team members
+            </span>
+          </label>
+          <div className="flex flex-row gap-2 ">
+            <textarea
+              className="textarea textarea-primary w-full h-30"
+              name="extra"
+              defaultValue={
+                teamGoals.find((ts) => ts.objective_id === scores.id)?.extra
+              }
+            />
+            <button type="submit" className="btn btn-primary h-full">
+              Save
+            </button>
+          </div>
+        </div>
+      </form>
+      <div className="divider divider-primary m-0">Categories</div>
       <Table
         columns={categoryColumns}
         data={relevantCategories}
-        className="h-[50vh] mt-8"
+        className="max-h-[50vh]"
       />
-      <div className="divider divider-primary">Objectives</div>
+      <div className="divider divider-primary m-0">Objectives</div>
       <Table
         columns={objectiveColumns}
         data={relevantObjectives}
-        className="h-[50vh] mt-8"
+        className="max-h-[50vh]"
       />
     </div>
   );

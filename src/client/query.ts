@@ -17,6 +17,7 @@ import {
   SignupCreate,
   SubmissionCreate,
   TeamCreate,
+  TeamSuggestion,
   TeamUserCreate,
 } from "./api";
 import {
@@ -387,18 +388,6 @@ export function useRemoveOauthProvider(qc: QueryClient) {
   return {
     removeOauthProvider: m.mutate,
     removeOauthProviderPending: m.isPending,
-  };
-}
-
-export function useGetTeamGoals(event_id: number) {
-  const query = useQuery({
-    queryKey: ["teamGoals", current !== event_id ? event_id : "current"],
-    queryFn: async () => teamApi.getTeamSuggestions(event_id),
-    enabled: () => isLoggedIn(),
-  });
-  return {
-    ...query,
-    teamGoals: query.data,
   };
 }
 
@@ -922,4 +911,57 @@ export function preloadLadderData(qc: QueryClient) {
       queryFn: async () => ladderApi.getLadder("current"),
     });
   }
+}
+
+export function useGetTeamGoals(event_id: number) {
+  const query = useQuery({
+    queryKey: ["teamGoals", current !== event_id ? event_id : "current"],
+    queryFn: async () => teamApi.getTeamSuggestions(event_id),
+    enabled: () => isLoggedIn(),
+  });
+  return {
+    ...query,
+    teamGoals: query.data,
+  };
+}
+
+export function useAddTeamSuggestion(
+  eventId: number,
+  queryClient: QueryClient
+) {
+  const mutation = useMutation({
+    mutationFn: (suggestion: TeamSuggestion) =>
+      teamApi.createObjectiveTeamSuggestion(
+        eventId,
+        suggestion.objective_id!,
+        suggestion
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["teamGoals", current !== eventId ? eventId : "current"],
+      });
+    },
+  });
+  return {
+    addTeamSuggestion: mutation.mutate,
+    ...mutation,
+  };
+}
+export function useDeleteTeamSuggestion(
+  eventId: number,
+  queryClient: QueryClient
+) {
+  const mutation = useMutation({
+    mutationFn: (objectiveId: number) =>
+      teamApi.deleteObjectiveTeamSuggestion(eventId, objectiveId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["teamGoals", current !== eventId ? eventId : "current"],
+      });
+    },
+  });
+  return {
+    deleteTeamSuggestion: mutation.mutate,
+    ...mutation,
+  };
 }

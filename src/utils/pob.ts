@@ -843,12 +843,17 @@ function extractMagicBase(base: string, numMods: number): string {
   const hasSuffix = end !== -1;
   if (!hasSuffix) end = base.length;
   base = base.slice(0, end);
-  if (numMods > 2) return base.split(" ").slice(1).join(" ");
-  if (base.split(" ").length > 3) return base.split(" ").slice(1).join(" ");
-  if (hasSuffix && numMods === 1) return base;
-  if (mayBeFullBase(base)) return base;
-  const idx = base.indexOf(" ");
-  return idx !== -1 ? base.slice(idx + 1) : base;
+  if (
+    // has prefix
+    numMods > 2 ||
+    (!hasSuffix && numMods === 1) ||
+    base.split(" ").length > 3 ||
+    !mayBeFullBase(base)
+  ) {
+    const idx = base.indexOf(" ");
+    return idx !== -1 ? base.slice(idx + 1) : base;
+  }
+  return base;
 }
 
 function mayBeFullBase(name: string): boolean {
