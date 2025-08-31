@@ -1,19 +1,18 @@
 import { TrashIcon } from "@heroicons/react/24/outline";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-interface DeleteButtonProps {
+interface DeleteButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   onDelete: () => void;
   requireConfirmation?: boolean;
   confirmTime?: number;
-  className?: string;
 }
 
 export function DeleteButton({
   onDelete,
   requireConfirmation = false,
   confirmTime = 1000,
-  className = "",
+  ...props
 }: DeleteButtonProps) {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -31,7 +30,7 @@ export function DeleteButton({
   if (!requireConfirmation) {
     return (
       <button
-        className={twMerge("btn btn-error", className)}
+        className={twMerge("btn btn-error", props.className)}
         onClick={onDelete}
       >
         <TrashIcon className="h-6 w-6" />
@@ -42,7 +41,10 @@ export function DeleteButton({
   if (isTransitioning) {
     return (
       <div className="tooltip tooltip-error" data-tip="Click again to confirm">
-        <button className={twMerge("btn btn-error", className)}>
+        <button
+          {...props}
+          className={twMerge("btn btn-error", props.className)}
+        >
           <div className="loading loading-spinner"></div>
         </button>
       </div>
@@ -56,7 +58,8 @@ export function DeleteButton({
         data-tip="Click again to confirm"
       >
         <button
-          className={twMerge("btn btn-warning", className)}
+          {...props}
+          className={twMerge("btn btn-warning", props.className)}
           onClick={() => {
             onDelete();
             setIsConfirmed(false);
@@ -70,7 +73,8 @@ export function DeleteButton({
 
   return (
     <button
-      className={twMerge("btn btn-error", className)}
+      {...props}
+      className={twMerge("btn btn-error", props.className)}
       onClick={() => setIsConfirmed(true)}
     >
       <TrashIcon className="h-6 w-6" />

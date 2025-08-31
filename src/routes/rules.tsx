@@ -153,7 +153,7 @@ export function RulePage() {
   //   },
   // ];
   return (
-    <article className="prose text-left p-4 max-w-full ">
+    <article className="prose text-left p-4 max-w-full">
       <div className="divider divider-primary" id="gameplay">
         Gameplay Rules
       </div>

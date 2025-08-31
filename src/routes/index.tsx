@@ -28,7 +28,7 @@ function Home() {
   const hasStarted = nextEvent && Date.parse(nextEvent.event_start_time) < now;
   const hasEnded = nextEvent && Date.parse(nextEvent.event_end_time) < now;
   return (
-    <div className="flex flex-col gap-8 mt-8 mx-auto ">
+    <div className="flex flex-col gap-8 mt-8 mx-auto">
       {!hasEnded && (
         <div className="card max-w-full bg-base-300">
           <div className="card-body px-12 py-4 text-2xl flex flex-row gap-8 items-center">
@@ -54,7 +54,7 @@ function Home() {
 
       <div className="card max-w-full bg-base-300">
         <div className="card-body p-12">
-          <div className="card-title text-4xl ">What is BPL?</div>
+          <div className="card-title text-4xl">What is BPL?</div>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 items-center">
             <div>
               <p className="text-2xl mt-4 text-left">

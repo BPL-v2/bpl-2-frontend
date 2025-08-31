@@ -78,10 +78,9 @@ export function DailyCard({ daily }: DailyCardProps) {
           objective={daily}
           gameVersion={currentEvent.game_version}
         />
-        <div
-          className={daily.extra && "tooltip text-2xl"}
-          data-tip={daily.extra}
-        >
+        <div className={daily.extra ? "tooltip tooltip-primary" : undefined}>
+          <div className="tooltip-content text-xl max-w-75 ">{daily.extra}</div>
+
           <h3 className="flex-grow text-center text-lg font-medium mx-4">
             {isRace ? <b className="font-extrabold text-info">Race: </b> : ""}
             {daily.name}

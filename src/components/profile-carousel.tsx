@@ -1,11 +1,5 @@
 import { GameVersion } from "@client/api";
 import { useGetEvents } from "@client/query";
-import {
-  NextButton,
-  PrevButton,
-  usePrevNextButtons,
-} from "@components/carousel-arrows";
-import { DotButton, useDotButton } from "@components/carousel-buttons";
 import { ascendancies, phreciaMapping, poe2Mapping } from "@mytypes/ascendancy";
 import { Link } from "@tanstack/react-router";
 import useEmblaCarousel from "embla-carousel-react";
@@ -21,18 +15,18 @@ export function ProfileCarousel({
   userId,
 }: ProfileCarouselProps) {
   const { events } = useGetEvents();
-  const [emblaRef, emblaApi] = useEmblaCarousel({
+  const [emblaRef, _] = useEmblaCarousel({
     align: "start",
     dragFree: true,
   });
-  const { selectedIndex, scrollSnaps, onDotButtonClick } =
-    useDotButton(emblaApi);
-  const {
-    prevBtnDisabled,
-    nextBtnDisabled,
-    onPrevButtonClick,
-    onNextButtonClick,
-  } = usePrevNextButtons(emblaApi);
+  // const { selectedIndex, scrollSnaps, onDotButtonClick } =
+  //   useDotButton(emblaApi);
+  // const {
+  //   prevBtnDisabled,
+  //   nextBtnDisabled,
+  //   onPrevButtonClick,
+  //   onNextButtonClick,
+  // } = usePrevNextButtons(emblaApi);
 
   return (
     <section className="embla">
@@ -68,7 +62,7 @@ export function ProfileCarousel({
                     }}
                     key={char.event_id + char.name}
                     className={
-                      "bg-base-300 cursor-pointer select-none embla__slide flex flex-row gap-4 rounded-full border-2 items-center p-1 "
+                      "bg-base-300 cursor-pointer select-none embla__slide flex flex-row gap-4 rounded-full border-4 items-center p-1 "
                     }
                     activeProps={{
                       className: "border-primary shadow-2xl",
@@ -107,7 +101,7 @@ export function ProfileCarousel({
             })}
         </div>
       </div>
-      <div className="flex flex-row justify-between items-center p-4">
+      {/* <div className="flex flex-row justify-between items-center p-4">
         <div>
           <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
           <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
@@ -121,7 +115,7 @@ export function ProfileCarousel({
             />
           ))}
         </div>
-      </div>
+      </div> */}
     </section>
   );
 }

@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
 import SubmissionTab from "@components/submission-tab";
 import { RaceTabRules } from "@rules/races";
+import { createFileRoute } from "@tanstack/react-router";
 import { JSX } from "react";
 
 export const Route = createFileRoute("/scores/races")({
@@ -12,7 +12,7 @@ export function RacePage(): JSX.Element {
   return (
     <>
       {rules ? (
-        <div className="w-full bg-base-200  my-4  p-8 rounded-box">
+        <div className="w-full bg-base-200 my-4 p-8 rounded-box">
           <article className="prose text-left max-w-4xl">
             <RaceTabRules />
           </article>

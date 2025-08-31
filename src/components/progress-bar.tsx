@@ -1,17 +1,19 @@
 import { twMerge } from "tailwind-merge";
 
-interface ProgressBarProps {
+interface ProgressBarProps extends React.HTMLAttributes<HTMLElement> {
   value: number;
   maxVal: number;
-  style?: React.CSSProperties;
 }
-export function ProgressBar({ value, maxVal, style }: ProgressBarProps) {
+export function ProgressBar({ value, maxVal, ...props }: ProgressBarProps) {
   const percent = Math.min((value / maxVal) * 100, 100);
   return (
-    <div className="flex items-center" style={style}>
+    <div
+      {...props}
+      className={twMerge("flex flex-row items-center", props.className)}
+    >
       <progress
         className={twMerge(
-          "progress w-40 mr-2",
+          "progress mr-2",
           percent >= 100 && "progress-success"
         )}
         value={percent}

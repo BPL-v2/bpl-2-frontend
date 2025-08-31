@@ -29,16 +29,8 @@ export const Route = createFileRoute("/scores/delve")({
 export function DelveTab(): JSX.Element {
   const { scores, currentEvent, isMobile } = useContext(GlobalStateContext);
   const { rules } = Route.useSearch();
-  const {
-    data: ladder,
-    isPending: ladderIsPending,
-    isError: ladderIsError,
-  } = useGetLadder(currentEvent.id);
-  const {
-    data: users,
-    isPending: usersIsPending,
-    isError: usersIsError,
-  } = useGetUsers(currentEvent.id);
+  const { data: ladder = [] } = useGetLadder(currentEvent.id);
+  const { data: users } = useGetUsers(currentEvent.id);
   const category = scores?.children.find((c) => c.name === "Delve");
   const teamMap = useMemo(
     () =>
@@ -179,7 +171,7 @@ export function DelveTab(): JSX.Element {
     return columns;
   }, [isMobile, currentEvent, getTeam]);
 
-  if (!category || !currentEvent) {
+  if (!category) {
     return <></>;
   }
   const fossilRaceCategory = category.children.find(
@@ -212,17 +204,10 @@ export function DelveTab(): JSX.Element {
     score.user_id = culmulativeDepthTotal?.team_score[teamId].user_id || 0;
     culmulativeDepthObj.team_score[teamId] = score;
   }
-  if (ladderIsPending || usersIsPending) {
-    return <div className="loading loading-spinner loading-lg"></div>;
-  }
-  if (ladderIsError || usersIsError) {
-    return <div className="alert alert-error">Failed to load ladder</div>;
-  }
-
   return (
     <>
       {rules ? (
-        <div className="w-full bg-base-200  my-4  p-8 rounded-box">
+        <div className="w-full bg-base-200 my-4 p-8 rounded-box">
           <article className="prose text-left max-w-4xl">
             <DelveTabRules />
           </article>
@@ -256,14 +241,14 @@ export function DelveTab(): JSX.Element {
               {fossilRaceCategory.children.map((objective) => {
                 return (
                   <div className="card bg-base-300" key={objective.id}>
-                    <div className=" rounded-t-box flex  m-0 px-4 bg-base-100 p-2 ">
+                    <div className="rounded-t-box flex m-0 px-4 bg-base-100 p-2">
                       <ObjectiveIcon
                         objective={objective}
                         gameVersion={currentEvent.game_version}
                         className="h-8"
                       />
 
-                      <h3 className="flex-grow text-center text-xl font-semibold mx-4 ">
+                      <h3 className="flex-grow text-center text-xl font-semibold mx-4">
                         {objective.name}
                       </h3>
                     </div>
@@ -296,7 +281,7 @@ export function DelveTab(): JSX.Element {
               />
               <Table
                 columns={delveLadderColumns}
-                data={ladder.sort((a, b) => b.delve - a.delve)}
+                data={ladder?.sort((a, b) => b.delve - a.delve)}
                 className="h-[70vh]"
                 styles={{
                   header: "bg-base-100",

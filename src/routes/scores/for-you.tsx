@@ -136,7 +136,7 @@ export function ForYouTab() {
               </div>
             </div>
             <ul className="collapse-content list not-prose">
-              <li className="p-4 pb-2 text-xs opacity-60 tracking-wide ">
+              <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
                 Missing Items
               </li>
               {unfinishedObjectives.map((obj) => (
