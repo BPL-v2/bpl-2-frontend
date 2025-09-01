@@ -105,7 +105,7 @@ export function GemTab(): JSX.Element {
         </div>
         {gemCategory.children.map((category) => {
           return (
-            <div key={category.id} className="bg-base-200 rounded-box p-8 p">
+            <div key={category.id} className="bg-base-200 rounded-box md:p-8">
               <div className="divider divider-primary">{category.name}</div>
               <div className="flex flex-col gap-4 items-center">
                 <Ranking
