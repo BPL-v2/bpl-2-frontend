@@ -6,6 +6,7 @@ import { ProfileCarousel } from "@components/profile-carousel";
 import { useParams } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { router } from "../../../main";
+import { usePageSEO } from "@utils/use-seo";
 
 export const Route = createFileRoute("/profile/$userId")({
   component: ProfilePage,
@@ -20,6 +21,7 @@ export const Route = createFileRoute("/profile/$userId")({
 });
 
 export function ProfilePage() {
+   usePageSEO('profile');
   const { userId } = useParams({ from: Route.id });
 
   const { user } = useGetUserById(userId);

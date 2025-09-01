@@ -7,12 +7,14 @@ import { useChangeUserDisplayName, useGetUser } from "@client/query";
 import { useQueryClient } from "@tanstack/react-query";
 import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
+import { usePageSEO } from "@utils/use-seo";
 
 export const Route = createFileRoute("/settings")({
   component: SettingsPage,
 });
 
 export function SettingsPage() {
+  usePageSEO('settings');
   const qc = useQueryClient();
   const { user } = useGetUser();
   const { changeUserDisplayName } = useChangeUserDisplayName(qc);

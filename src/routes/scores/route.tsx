@@ -16,6 +16,7 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
+import { usePageSEO } from "@utils/use-seo";
 import { JSX, useContext, useEffect, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { router } from "../../main";
@@ -47,6 +48,7 @@ export const Route = createFileRoute("/scores")({
 });
 
 function ScoringPage() {
+  usePageSEO('scores');
   const { currentEvent } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const { rules } = Route.useSearch();

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import React, { useContext, useMemo } from "react";
 
 import { GlobalStateContext } from "@utils/context-provider";
+import { usePageSEO } from "@utils/use-seo";
 
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -31,6 +32,7 @@ export const Route = createFileRoute("/submissions")({
 });
 
 function SubmissionPage() {
+  usePageSEO('submissions');
   const { currentEvent } = useContext(GlobalStateContext);
   const qc = useQueryClient();
   const { users, isLoading: usersLoading } = useGetUsers(currentEvent.id);
