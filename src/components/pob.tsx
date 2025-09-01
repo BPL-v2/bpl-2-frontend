@@ -169,7 +169,7 @@ function ItemTooltip({
           )}
         >
           {item.implicits.map((implicit) => (
-            <span className={implicit.crafted ? "text-crafted" : "text-magic"}>
+            <span key={implicit.line} className={implicit.crafted ? "text-crafted" : "text-magic"}>
               {implicit.line}
             </span>
           ))}
@@ -184,6 +184,7 @@ function ItemTooltip({
         >
           {item.explicits.map((explicit) => (
             <span
+              key={explicit.line}
               className={
                 explicit.crafted
                   ? "text-crafted"

@@ -4,6 +4,7 @@ import { TwitchStreamEmbed } from "@components/twitch-stream";
 import { GlobalStateContext } from "@utils/context-provider";
 import { EventStatus, Team } from "@client/api";
 import { useGetEventStatus, useGetStreams, useGetUsers } from "@client/query";
+import { usePageSEO } from "@utils/use-seo";
 
 export const Route = createFileRoute("/streams")({
   component: TwitchPage,
@@ -26,6 +27,7 @@ function teamSort(
 }
 
 export function TwitchPage() {
+  usePageSEO('streams');
   const { currentEvent } = useContext(GlobalStateContext);
   const { users } = useGetUsers(currentEvent.id);
   const { eventStatus } = useGetEventStatus(currentEvent.id);

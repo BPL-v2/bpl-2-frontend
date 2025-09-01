@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { usePageSEO } from "@utils/use-seo";
 
 export const Route = createFileRoute("/rules")({
   component: RulePage,
@@ -9,6 +10,7 @@ type CollapseItems = {
   children: React.ReactNode;
 };
 export function RulePage() {
+  usePageSEO('rules');
   const ruleCollapse: CollapseItems[] = [
     {
       label:

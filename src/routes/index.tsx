@@ -9,12 +9,14 @@ import { useGetEvents, useGetEventStatus } from "@client/query";
 import { AscendancyPortrait } from "@components/ascendancy-portrait";
 import { TeamLogo } from "@components/teamlogo";
 import SignupButton from "@components/signup-button";
+import { usePageSEO } from "@utils/use-seo";
 
 export const Route = createFileRoute("/")({
   component: Home,
 });
 
 function Home() {
+  usePageSEO('home');
   const { currentEvent } = useContext(GlobalStateContext);
   const { events } = useGetEvents();
   const nextEvent = events?.sort((a, b) => {
@@ -168,6 +170,6 @@ function Home() {
           </div>
         </>
       ) : null}
-    </div>
+      </div>
   );
 }
