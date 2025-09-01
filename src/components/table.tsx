@@ -82,7 +82,7 @@ function Table<T>({
   });
   return (
     <div ref={tableRef} className={"overflow-auto " + className}>
-      <table className={twMerge("table table-md", styles?.table)}>
+      <table className={twMerge("table table-md bg-base-300", styles?.table)}>
         <thead
           className={twMerge(
             "sticky top-0 z-1 font-bold text-lg bg-base-200",
@@ -140,7 +140,7 @@ function Table<T>({
           ))}
         </thead>
         <tbody
-          className={twMerge("bg-base-300", styles?.body)}
+          className={ styles?.body}
           style={{
             height: `${rowVirtualizer.getTotalSize()}px`,
           }}
@@ -150,7 +150,7 @@ function Table<T>({
             return (
               <tr
                 className={twMerge(
-                  "flex absolute w-full items-center",
+                  "flex absolute w-full items-center hover:bg-highlight",
                   rowClassName ? rowClassName(row) : ""
                 )}
                 style={{
