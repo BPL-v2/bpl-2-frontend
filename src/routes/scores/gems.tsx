@@ -1,13 +1,13 @@
-import React, { JSX, useContext, useEffect } from "react";
-import { GlobalStateContext } from "@utils/context-provider";
-import TeamScoreDisplay from "@components/team-score";
-import { ItemTable } from "@components/item-table";
 import { GameVersion } from "@client/api";
-import { createFileRoute } from "@tanstack/react-router";
-import { Ranking } from "@components/ranking";
-import { GemTabRules } from "@rules/gems";
 import { useFile } from "@client/query";
+import { ItemTable } from "@components/item-table";
+import { Ranking } from "@components/ranking";
+import TeamScoreDisplay from "@components/team-score";
+import { GemTabRules } from "@rules/gems";
+import { createFileRoute } from "@tanstack/react-router";
+import { GlobalStateContext } from "@utils/context-provider";
 import clsx from "clsx";
+import React, { JSX, useContext, useEffect } from "react";
 
 export const Route = createFileRoute("/scores/gems")({
   component: GemTab,
@@ -20,7 +20,7 @@ function toColor(color: string, active: boolean): React.ReactNode {
         <span
           className={clsx(
             "join-item btn btn-lg",
-            active ? "bg-red-400 text-black" : "bg-base-300"
+            active ? "bg-red-400 text-black" : "bg-base-300 text-red-400"
           )}
         >
           Red
@@ -31,7 +31,7 @@ function toColor(color: string, active: boolean): React.ReactNode {
         <span
           className={clsx(
             "join-item btn btn-lg",
-            active ? "bg-green-400 text-black" : "bg-base-300"
+            active ? "bg-green-400 text-black" : "bg-base-300 text-green-400"
           )}
         >
           Green
@@ -42,7 +42,7 @@ function toColor(color: string, active: boolean): React.ReactNode {
         <span
           className={clsx(
             "join-item btn btn-lg",
-            active ? "bg-blue-400 text-black" : "bg-base-300"
+            active ? "bg-blue-400 text-black" : "bg-base-300 text-blue-400"
           )}
         >
           Blue

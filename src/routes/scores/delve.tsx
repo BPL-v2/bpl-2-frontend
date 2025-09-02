@@ -213,10 +213,10 @@ export function DelveTab(): JSX.Element {
           </article>
         </div>
       ) : null}
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-4">
         <TeamScoreDisplay objective={category} />
         {fossilRaceCategory ? (
-          <div className="bg-base-200 rounded-box p-8 pt-2">
+          <div className="bg-base-200 rounded-box p-4 pt-2">
             <div className="divider divider-primary">Fossil Race</div>
             <Ranking
               objective={fossilRaceCategory}
@@ -241,23 +241,21 @@ export function DelveTab(): JSX.Element {
               {fossilRaceCategory.children.map((objective) => {
                 return (
                   <div className="card bg-base-300" key={objective.id}>
-                    <div className="rounded-t-box flex m-0 px-4 bg-base-100 p-2">
+                    <div className="rounded-t-box flex px-4 bg-base-100 p-2">
                       <ObjectiveIcon
                         objective={objective}
                         gameVersion={currentEvent.game_version}
-                        className="h-8"
+                        className="h-7"
                       />
 
-                      <h3 className="flex-grow text-center text-xl font-semibold mx-4">
+                      <h1 className="flex-grow text-center text-xl font-semibold mx-4">
                         {objective.name}
-                      </h3>
+                      </h1>
                     </div>
-                    <div className="pb-4 mb-0 bg-base-300 rounded-b-box">
-                      <CollectionCardTable
-                        objective={objective}
-                        showPoints={false}
-                      />
-                    </div>
+                    <CollectionCardTable
+                      objective={objective}
+                      showPoints={false}
+                    />
                   </div>
                 );
               })}
@@ -266,7 +264,7 @@ export function DelveTab(): JSX.Element {
         ) : null}
 
         {culmulativeDepthTotal && culmulativeDepthRace ? (
-          <div className="bg-base-200 rounded-box p-8 pt-2">
+          <div className="bg-base-200 rounded-box p-4 pt-2">
             <div className="divider divider-primary">
               {"Culmulative Team Depth"}
             </div>

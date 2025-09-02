@@ -205,13 +205,12 @@ export function ForYouTab() {
       </div>
     );
   }
-  let suggestionsExist = false;
-  for (const entry of Object.entries(teamGoalMap)) {
-    if (entry[0] != String(scores?.id)) {
-      suggestionsExist = true;
-      break;
-    }
-  }
+  const suggestedCategories = relevantCategories.filter(
+    (category) => teamGoalMap[category.id] != undefined
+  );
+  const suggestedObjectives = relevantObjectives.filter(
+    (obj) => teamGoalMap[obj.id] != undefined
+  );
   return (
     <div className="prose prose-lg text-left max-w-full flex flex-col px-4 2xl:px-0">
       {personalObjectiveRender}
@@ -228,7 +227,8 @@ export function ForYouTab() {
               </p>
             </>
           )}
-          {suggestionsExist && (
+          {(suggestedCategories.length > 0 ||
+            suggestedObjectives.length > 0) && (
             <>
               <h3>
                 Your team leads have selected objectives that are urgent for you
