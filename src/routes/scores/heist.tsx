@@ -1,11 +1,11 @@
-import { GameVersion, ScoringMethod } from "@client/api";
-import { ItemTable } from "@components/item-table";
-import { Ranking } from "@components/ranking";
-import TeamScoreDisplay from "@components/team-score";
-import { HeistTabRules } from "@rules/heist";
-import { createFileRoute } from "@tanstack/react-router";
-import { GlobalStateContext } from "@utils/context-provider";
 import { JSX, useContext, useEffect } from "react";
+import { GlobalStateContext } from "@utils/context-provider";
+import TeamScoreDisplay from "@components/team-score";
+import { ItemTable } from "@components/item-table";
+import { GameVersion, ScoringMethod } from "@client/api";
+import { Ranking } from "@components/ranking";
+import { createFileRoute } from "@tanstack/react-router";
+import { HeistTabRules } from "@rules/heist";
 
 export const Route = createFileRoute("/scores/heist")({
   component: HeistTab,
@@ -44,27 +44,12 @@ export function HeistTab(): JSX.Element {
           </article>
         </div>
       ) : null}
-      <div className="flex flex-col gap-4">
-        <TeamScoreDisplay objective={heistCategory} />
-        {heistItemRaces.map((category) => (
-          <div key={category.id} className="bg-base-200 rounded-box p-8 pt-2">
-            <div className="divider divider-primary">{category.name}</div>
-            <Ranking
-              objective={category}
-              maximum={category.required_number}
-              actual={(teamId: number) =>
-                category.team_score[teamId]?.number || 0
-              }
-              description={"Items:"}
-            />
-          </div>
-        ))}
-
-        {heistMultiItemRaces.map((category) => (
-          <div key={category.id} className="bg-base-200 rounded-box p-8 pt-2">
-            <div className="divider divider-primary">{category.name}</div>
-            {category.scoring_preset?.scoring_method ===
-              ScoringMethod.RANKED_TIME && (
+      <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8">
+          <TeamScoreDisplay objective={heistCategory} />
+          {heistItemRaces.map((category) => (
+            <div key={category.id} className="bg-base-200 rounded-box p-8 pt-2">
+              <div className="divider divider-primary">{category.name}</div>
               <Ranking
                 objective={category}
                 maximum={category.required_number}
@@ -73,17 +58,34 @@ export function HeistTab(): JSX.Element {
                 }
                 description={"Items:"}
               />
-            )}
-            <div className="flex flex-col">
-              <ItemTable
-                objective={category}
-                styles={{
-                  header: "bg-base-100",
-                }}
-              />
             </div>
-          </div>
-        ))}
+          ))}
+
+          {heistMultiItemRaces.map((category) => (
+            <div key={category.id} className="bg-base-200 rounded-box p-8 pt-2">
+              <div className="divider divider-primary">{category.name}</div>
+              {category.scoring_preset?.scoring_method ===
+                ScoringMethod.RANKED_TIME && (
+                <Ranking
+                  objective={category}
+                  maximum={category.required_number}
+                  actual={(teamId: number) =>
+                    category.team_score[teamId]?.number || 0
+                  }
+                  description={"Items:"}
+                />
+              )}
+              <div className="flex flex-col">
+                <ItemTable
+                  objective={category}
+                  styles={{
+                    header: "bg-base-100",
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );

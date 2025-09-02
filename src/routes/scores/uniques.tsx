@@ -15,6 +15,7 @@ export const Route = createFileRoute("/scores/uniques")({
 function UniqueTab(): JSX.Element {
   const { currentEvent, scores, preferences, setPreferences } =
     useContext(GlobalStateContext);
+  const [uniqueCategory, setUniqueCategory] = useState<ScoreObjective>();
   const [selectedCategory, setSelectedCategory] = useState<ScoreObjective>();
   const [selectedTeam, setSelectedTeam] = useState<number | undefined>();
   const [categoryFilter, setCategoryFilter] = useState<string>("");
@@ -33,9 +34,7 @@ function UniqueTab(): JSX.Element {
     }
     tableRef.current.scrollIntoView({ behavior: "smooth" });
   };
-  const uniqueCategory = scores?.children.find(
-    (category) => category.name === "Uniques"
-  );
+
   useEffect(() => {
     if (eventStatus && eventStatus.team_id) {
       setSelectedTeam(eventStatus.team_id);
@@ -47,6 +46,25 @@ function UniqueTab(): JSX.Element {
       setSelectedTeam(currentEvent.teams[0].id);
     }
   }, [eventStatus, currentEvent]);
+
+  useEffect(() => {
+    if (!scores) {
+      return;
+    }
+    const uniques = scores.children.find(
+      (category) => category.name === "Uniques"
+    );
+    if (!uniques) {
+      return;
+    }
+    setUniqueCategory(uniques);
+    if (!selectedCategory) {
+      return;
+    }
+    setSelectedCategory(
+      uniques.children.find((category) => category.id === selectedCategory.id)
+    );
+  }, [scores, selectedCategory]);
 
   useEffect(() => {
     if (!uniqueCategory || !selectedTeam) {
@@ -80,7 +98,8 @@ function UniqueTab(): JSX.Element {
     }
     return <ItemTable objective={selectedCategory}></ItemTable>;
   }, [selectedCategory, uniqueCategory]);
-  if (!uniqueCategory) {
+
+  if (!uniqueCategory || !currentEvent || !scores || !selectedTeam) {
     return <></>;
   }
 
@@ -93,85 +112,83 @@ function UniqueTab(): JSX.Element {
           </article>
         </div>
       ) : null}
-      <div className="flex flex-col gap-4">
-        <TeamScoreDisplay
-          objective={uniqueCategory}
-          selectedTeam={selectedTeam}
-          setSelectedTeam={setSelectedTeam}
-        />
-        <div className="flex justify-center">
-          <fieldset className="fieldset w-2xl bg-base-300 p-2 md:p-4 rounded-box flex gap-12 flex-row justify-evenly">
-            <div>
-              <legend className="fieldset-legend">Category</legend>
+      <TeamScoreDisplay
+        objective={uniqueCategory}
+        selectedTeam={selectedTeam}
+        setSelectedTeam={setSelectedTeam}
+      />
+      <div className="flex justify-center">
+        <fieldset className="fieldset w-xl bg-base-300 p-2 md:p-4 rounded-box flex gap-12 flex-row justify-center m-2">
+          <div>
+            <legend className="fieldset-legend">Category</legend>
+            <input
+              type="search"
+              className="input input-sm "
+              placeholder=""
+              onInput={(e) => setCategoryFilter(e.currentTarget.value)}
+            />
+          </div>
+          <div>
+            <legend className="fieldset-legend">Show finished</legend>
+            <label className="fieldset-label">
               <input
-                type="search"
-                className="input input-sm"
-                placeholder=""
-                onInput={(e) => setCategoryFilter(e.currentTarget.value)}
+                type="checkbox"
+                checked={preferences.uniqueSets.showCompleted}
+                className="toggle toggle-lg"
+                onChange={(e) =>
+                  setPreferences({
+                    ...preferences,
+                    uniqueSets: {
+                      ...preferences.uniqueSets,
+                      showCompleted: e.target.checked,
+                    },
+                  })
+                }
               />
-            </div>
-            <div>
-              <legend className="fieldset-legend">Show finished</legend>
-              <label className="fieldset-label">
-                <input
-                  type="checkbox"
-                  checked={preferences.uniqueSets.showCompleted}
-                  className="toggle toggle-lg"
-                  onChange={(e) =>
-                    setPreferences({
-                      ...preferences,
-                      uniqueSets: {
-                        ...preferences.uniqueSets,
-                        showCompleted: e.target.checked,
-                      },
-                    })
-                  }
-                />
-              </label>
-            </div>
-            <div>
-              <legend className="fieldset-legend">Show unwinnable</legend>
-              <label className="fieldset-label">
-                <input
-                  type="checkbox"
-                  checked={preferences.uniqueSets.showFirstAvailable}
-                  className="toggle toggle-lg"
-                  onChange={(e) => {
-                    setPreferences({
-                      ...preferences,
-                      uniqueSets: {
-                        ...preferences.uniqueSets,
-                        showFirstAvailable: e.target.checked,
-                      },
-                    });
-                  }}
-                />
-              </label>
-            </div>
-          </fieldset>
-        </div>
-        <div className="divider divider-primary m-0">Categories</div>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 m-2">
-          {shownCategories
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((category) => {
-              return (
-                <div key={`unique-category-${category.id}`}>
-                  <UniqueCategoryCard
-                    objective={category}
-                    selected={category.id === selectedCategory?.id}
-                    teamId={selectedTeam}
-                    onClick={() => handleCategoryClick(category)}
-                  />
-                </div>
-              );
-            })}
-        </div>
-        <div ref={tableRef} className="divider divider-primary m-0">
-          Items
-        </div>
-        {table}
+            </label>
+          </div>
+          <div>
+            <legend className="fieldset-legend">Show unwinnable</legend>
+            <label className="fieldset-label">
+              <input
+                type="checkbox"
+                checked={preferences.uniqueSets.showFirstAvailable}
+                className="toggle toggle-lg"
+                onChange={(e) => {
+                  setPreferences({
+                    ...preferences,
+                    uniqueSets: {
+                      ...preferences.uniqueSets,
+                      showFirstAvailable: e.target.checked,
+                    },
+                  });
+                }}
+              />
+            </label>
+          </div>
+        </fieldset>
       </div>
+      <div className="divider divider-primary">Categories</div>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 m-2">
+        {shownCategories
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((category) => {
+            return (
+              <div key={`unique-category-${category.id}`}>
+                <UniqueCategoryCard
+                  objective={category}
+                  selected={category.id === selectedCategory?.id}
+                  teamId={selectedTeam}
+                  onClick={() => handleCategoryClick(category)}
+                />
+              </div>
+            );
+          })}
+      </div>
+      <div ref={tableRef} className="divider divider-primary">
+        Items
+      </div>
+      {table}
     </>
   );
 }
