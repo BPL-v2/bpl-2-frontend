@@ -1,7 +1,3 @@
-import { useContext, useRef, useState } from "react";
-import { GlobalStateContext } from "@utils/context-provider";
-import { ScoreObjective } from "@mytypes/score";
-import TeamScoreDisplay from "./team-score";
 import {
   AggregationType,
   ObjectiveType,
@@ -9,14 +5,18 @@ import {
   SubmissionCreate,
   Team,
 } from "@client/api";
-import { DateTimePicker } from "./datetime-picker";
-import { PlusCircleIcon } from "@heroicons/react/24/outline";
-import { Dialog } from "./dialog";
-import { Link } from "@tanstack/react-router";
-import { CollectionCardTable } from "./collection-card-table";
 import { useGetEventStatus, useSubmitBounty } from "@client/query";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import { ScoreObjective } from "@mytypes/score";
 import { useQueryClient } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
+import { GlobalStateContext } from "@utils/context-provider";
+import { useContext, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { CollectionCardTable } from "./collection-card-table";
+import { DateTimePicker } from "./datetime-picker";
+import { Dialog } from "./dialog";
+import TeamScoreDisplay from "./team-score";
 
 export type SubmissionTabProps = {
   categoryName: string;
@@ -56,14 +56,15 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
             e.preventDefault();
             const values = Object.fromEntries(
               new FormData(e.target as HTMLFormElement)
-            ) as any;
+            );
 
             if (!selectedObjective) {
               return;
             }
             const submissionCreate: SubmissionCreate = {
               ...values,
-              number: parseInt(values.number) || 1,
+              timestamp: values.timestamp as string,
+              number: parseInt(values.number as string) || 1,
               objective_id: selectedObjective.id,
             };
             submitBounty(submissionCreate);

@@ -4,9 +4,9 @@ import "uplot/dist/uPlot.min.css";
 import { useGetUserById, useGetUserCharacters } from "@client/query";
 import { ProfileCarousel } from "@components/profile-carousel";
 import { useParams } from "@tanstack/react-router";
+import { usePageSEO } from "@utils/use-seo";
 import { useEffect } from "react";
 import { router } from "../../../main";
-import { usePageSEO } from "@utils/use-seo";
 
 export const Route = createFileRoute("/profile/$userId")({
   component: ProfilePage,
@@ -21,13 +21,12 @@ export const Route = createFileRoute("/profile/$userId")({
 });
 
 export function ProfilePage() {
-   usePageSEO('profile');
+  usePageSEO("profile");
   const { userId } = useParams({ from: Route.id });
 
   const { user } = useGetUserById(userId);
   const { userCharacters = [] } = useGetUserCharacters(userId);
-  // @ts-ignore
-  const { characterId } = useParams({ from: Route.fullPath });
+  const { characterId } = useParams({ strict: false });
 
   useEffect(() => {
     if (characterId === undefined && userCharacters.length > 0) {
@@ -43,7 +42,7 @@ export function ProfilePage() {
         },
       });
     }
-  }, [userCharacters, characterId]);
+  }, [userCharacters, characterId, userId]);
 
   if (!userId || !user) {
     return <div>Loading...</div>;

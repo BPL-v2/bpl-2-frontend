@@ -10,7 +10,7 @@ import { JSX, useContext } from "react";
 
 export const Route = createFileRoute("/scores/collections")({
   component: CollectionTab,
-  // @ts-ignore
+  // @ts-ignore context is not typed
   loader: async ({ context: { queryClient } }) => {
     const rules = queryClient.getQueryData(["rules", "current"]) as Objective;
     rules?.children

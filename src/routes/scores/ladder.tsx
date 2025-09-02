@@ -39,7 +39,7 @@ type RowDef = {
 
 export const Route = createFileRoute("/scores/ladder")({
   component: LadderTab,
-  // @ts-ignore
+  // @ts-ignore context is not typed
   loader: async ({ context: { queryClient } }) => {
     preloadLadderData(queryClient);
   },
@@ -84,7 +84,7 @@ export function LadderTab(): JSX.Element {
     if (!currentEvent) {
       return [];
     }
-    let columns: ColumnDef<LadderEntry, any>[] = [];
+    let columns: ColumnDef<LadderEntry>[] = [];
     if (!isMobile) {
       columns = [
         {
@@ -317,7 +317,7 @@ export function LadderTab(): JSX.Element {
       ),
     } as RowDef;
   });
-  const scoreColumns: ColumnDef<RowDef, any>[] = [
+  const scoreColumns: ColumnDef<RowDef>[] = [
     {
       accessorKey: "team.name",
       header: "Team",
@@ -336,7 +336,8 @@ export function LadderTab(): JSX.Element {
       header: categoryName == "Personal Objectives" ? "P.O." : categoryName,
       accessorKey: categoryName,
       key: `column-${categoryName}`,
-      sorter: (a: any, b: any) => a[categoryName] - b[categoryName],
+      // @ts-ignore
+      sorter: (a, b) => a[categoryName] - b[categoryName],
       size: 125,
     })),
   ];

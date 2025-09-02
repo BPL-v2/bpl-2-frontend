@@ -59,7 +59,7 @@ function ItemTooltip({
 
     let left = mouseX;
     let top = mouseY;
-    let maxWidth = 320;
+    const maxWidth = 320;
     if (left + tooltipWidth > viewportWidth) {
       left = viewportWidth - maxWidth - 32;
     }
@@ -72,7 +72,7 @@ function ItemTooltip({
       top = 16;
     }
     setPosition({ left, top, maxWidth });
-  }, [mouseX, mouseY, tooltipRef.current]);
+  }, [mouseX, mouseY, tooltipRef]);
 
   if (!item) return null;
 
@@ -169,7 +169,10 @@ function ItemTooltip({
           )}
         >
           {item.implicits.map((implicit) => (
-            <span key={implicit.line} className={implicit.crafted ? "text-crafted" : "text-magic"}>
+            <span
+              key={implicit.line}
+              className={implicit.crafted ? "text-crafted" : "text-magic"}
+            >
               {implicit.line}
             </span>
           ))}
@@ -266,7 +269,7 @@ function ItemDisplay({
     slot = item?.slot || "Unknown";
   }
 
-  const handleMouseEnter = (e: React.MouseEvent) => {
+  const handleMouseEnter = () => {
     selectionSetter(item);
     setMousePosition({
       x: (itemRef.current?.getBoundingClientRect().right || 0) + 10,
@@ -279,7 +282,7 @@ function ItemDisplay({
     setMousePosition(undefined);
   };
 
-  let img = item && (
+  const img = item && (
     <>
       <img
         className="object-contain "
@@ -340,7 +343,7 @@ export function PoB({ pobString }: Probs) {
     "Weapon 2",
   ];
   const flaskSlots = ["Flask 1", "Flask 2", "Flask 3", "Flask 4", "Flask 5"];
-  let jewels: Item[] = [];
+  const jewels: Item[] = [];
   const equipment: Record<string, Item | undefined> = equipmentSlots.reduce(
     (acc, slot) => {
       acc[slot] = undefined;

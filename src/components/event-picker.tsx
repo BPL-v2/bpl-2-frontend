@@ -1,7 +1,7 @@
-import { useContext } from "react";
-import { GlobalStateContext } from "@utils/context-provider";
-import Select from "./select";
 import { useGetEvents } from "@client/query";
+import { GlobalStateContext } from "@utils/context-provider";
+import { useContext } from "react";
+import Select from "./select";
 
 export function EventPicker() {
   const { currentEvent, setCurrentEvent } = useContext(GlobalStateContext);

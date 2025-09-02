@@ -1,19 +1,19 @@
-import { getImageLocation } from "@mytypes/scoring-objective";
-import { GlobalStateContext } from "@utils/context-provider";
-import { useContext, useEffect, useMemo, useState } from "react";
-import { ObjectiveIcon } from "./objective-icon";
 import { GameVersion, Team } from "@client/api";
-import { CellContext, ColumnDef } from "@tanstack/react-table";
-import Table from "./table";
+import { useGetEventStatus, useGetUsers } from "@client/query";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
 import { ScoreObjective } from "@mytypes/score";
+import { getImageLocation } from "@mytypes/scoring-objective";
+import { CellContext, ColumnDef } from "@tanstack/react-table";
+import { GlobalStateContext } from "@utils/context-provider";
 import {
   ExtendedScoreObjective,
   flatMapUniques,
   getVariantMap,
 } from "@utils/utils";
-import { useGetEventStatus, useGetUsers } from "@client/query";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { ObjectiveIcon } from "./objective-icon";
+import Table from "./table";
 
 export type ItemTableProps = {
   objective: ScoreObjective;
@@ -154,7 +154,7 @@ export function ItemTable({
     return className;
   };
 
-  const columns = useMemo<ColumnDef<ExtendedScoreObjective, any>[]>(() => {
+  const columns = useMemo<ColumnDef<ExtendedScoreObjective>[]>(() => {
     const teams = currentEvent.teams.sort((a: Team, b: Team) => {
       if (a.id === userTeamID) {
         return -1;
@@ -164,7 +164,7 @@ export function ItemTable({
       }
       return a.name.localeCompare(b.name);
     });
-    let columns: ColumnDef<ExtendedScoreObjective, any>[] = [];
+    let columns: ColumnDef<ExtendedScoreObjective>[] = [];
     if (windowWidth < 1200) {
       columns = [
         {
@@ -203,7 +203,7 @@ export function ItemTable({
         {
           accessorKey: "icon",
           header: "",
-          cell: (info: CellContext<ExtendedScoreObjective, string>) =>
+          cell: (info) =>
             info.row.original.isVariant ? null : (
               <div className="w-full">
                 <ObjectiveIcon
@@ -221,9 +221,7 @@ export function ItemTable({
           header: "",
           enableSorting: false,
           size: Math.min(windowWidth, 1440) - 200 - teamIds.length * 200, // take up remaining space
-          cell: (info: CellContext<ExtendedScoreObjective, string>) => {
-            return objectNameRender(info.row.original);
-          },
+          cell: (info) => objectNameRender(info.row.original),
           filterFn: "includesString",
           meta: {
             filterVariant: "string",
@@ -232,68 +230,71 @@ export function ItemTable({
         },
         ...teams
           .filter((team) => teamIds.includes(team.id))
-          .map((team) => ({
-            accessorKey: `team_score.${team.id}.finished`,
-            header: () => {
-              const objectives = flatMapUniques(objective);
-              return (
-                <div>
-                  <div>{team.name || "Team"}</div>
-                  <div className="text-sm text-info">
-                    {objectives
-                      .filter((o) => (filter ? filter(o) : true))
-                      .filter((o) => o.team_score[team.id]?.finished)?.length ||
-                      0}{" "}
-                    /{" "}
-                    {
-                      objectives.filter((o) => (filter ? filter(o) : true))
-                        .length
-                    }
-                  </div>
-                </div>
-              );
-            },
-            enableSorting: false,
-            size: 200,
-            cell: (info: CellContext<ExtendedScoreObjective, string>) => {
-              const score = info.row.original.team_score[team.id];
-              const finished = score?.finished || false;
-              const user = users?.find((u) => score?.user_id === u.id);
-              if (user) {
-                return (
-                  <div
-                    className={twMerge(
-                      "tooltip cursor-help flex justify-center items-center w-full",
-                      info.row.index == 0 ? "tooltip-bottom" : "tooltip-top"
-                    )}
-                  >
-                    <div className="tooltip-content px-4 flex flex-col gap-1 bg-base-100">
-                      <span>Scored by {user.display_name}</span>
-                      <span>
-                        on {new Date(score.timestamp).toLocaleString()}
-                      </span>
+          .map(
+            (team) =>
+              ({
+                accessorKey: `team_score.${team.id}.finished`,
+                header: () => {
+                  const objectives = flatMapUniques(objective);
+                  return (
+                    <div>
+                      <div>{team.name || "Team"}</div>
+                      <div className="text-sm text-info">
+                        {objectives
+                          .filter((o) => (filter ? filter(o) : true))
+                          .filter((o) => o.team_score[team.id]?.finished)
+                          ?.length || 0}{" "}
+                        /{" "}
+                        {
+                          objectives.filter((o) => (filter ? filter(o) : true))
+                            .length
+                        }
+                      </div>
                     </div>
+                  );
+                },
+                enableSorting: false,
+                size: 200,
+                cell: (info: CellContext<ExtendedScoreObjective, string>) => {
+                  const score = info.row.original.team_score[team.id];
+                  const finished = score?.finished || false;
+                  const user = users?.find((u) => score?.user_id === u.id);
+                  if (user) {
+                    return (
+                      <div
+                        className={twMerge(
+                          "tooltip cursor-help flex justify-center items-center w-full",
+                          info.row.index == 0 ? "tooltip-bottom" : "tooltip-top"
+                        )}
+                      >
+                        <div className="tooltip-content px-4 flex flex-col gap-1 bg-base-100">
+                          <span>Scored by {user.display_name}</span>
+                          <span>
+                            on {new Date(score.timestamp).toLocaleString()}
+                          </span>
+                        </div>
 
-                    <CheckCircleIcon className="h-6 w-6 text-success" />
-                  </div>
-                );
-              } else if (finished) {
-                return (
-                  <div className="flex justify-center w-full">
-                    <CheckCircleIcon className="h-6 w-6 text-success" />{" "}
-                  </div>
-                );
-              }
-              return (
-                <div className="flex justify-center w-full">
-                  <XCircleIcon className="h-6 w-6 text-error" />{" "}
-                </div>
-              );
-            },
-            meta: {
-              filterVariant: "boolean",
-            },
-          })),
+                        <CheckCircleIcon className="h-6 w-6 text-success" />
+                      </div>
+                    );
+                  } else if (finished) {
+                    return (
+                      <div className="flex justify-center w-full">
+                        <CheckCircleIcon className="h-6 w-6 text-success" />{" "}
+                      </div>
+                    );
+                  }
+                  return (
+                    <div className="flex justify-center w-full">
+                      <XCircleIcon className="h-6 w-6 text-error" />{" "}
+                    </div>
+                  );
+                },
+                meta: {
+                  filterVariant: "boolean",
+                },
+              }) as ColumnDef<ExtendedScoreObjective>
+          ),
       ];
     }
     return columns;
@@ -309,6 +310,7 @@ export function ItemTable({
     userTeamID,
     users,
     filter,
+    teamIds,
   ]);
 
   if (!currentEvent || !objective) {

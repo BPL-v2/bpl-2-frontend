@@ -1,5 +1,4 @@
 import { GameVersion } from "@client/api";
-import { useGetEventStatus } from "@client/query";
 import BookOpenIcon from "@heroicons/react/24/outline/BookOpenIcon";
 import { BountyTabRules } from "@rules/bounties";
 import { CollectionTabRules } from "@rules/collections";
@@ -48,9 +47,8 @@ export const Route = createFileRoute("/scores")({
 });
 
 function ScoringPage() {
-  usePageSEO('scores');
+  usePageSEO("scores");
   const { currentEvent } = useContext(GlobalStateContext);
-  const { eventStatus } = useGetEventStatus(currentEvent.id);
   const { rules } = Route.useSearch();
 
   const selected = useRouterState({
@@ -138,7 +136,7 @@ function ScoringPage() {
         visible: currentEvent.game_version === GameVersion.poe1,
       },
     ];
-  }, [currentEvent, eventStatus]);
+  }, [currentEvent]);
 
   return (
     <>

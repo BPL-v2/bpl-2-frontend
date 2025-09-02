@@ -20,7 +20,7 @@ import { JSX, useContext, useMemo } from "react";
 
 export const Route = createFileRoute("/scores/delve")({
   component: DelveTab,
-  // @ts-ignore
+  // @ts-ignore context is not typed
   loader: async ({ context: { queryClient } }) => {
     preloadLadderData(queryClient);
   },

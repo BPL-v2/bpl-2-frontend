@@ -95,7 +95,7 @@ function filterMovementsAndProcessQuantities(
     for (const log of groupLogs) {
       if (toRemove.has(log)) continue;
 
-      let processedLog: ProcessedLog = {
+      const processedLog: ProcessedLog = {
         ...log,
         displayNumber: log.number.toString(),
         originalNumber: log.number,
