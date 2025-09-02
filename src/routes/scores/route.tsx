@@ -48,7 +48,7 @@ export const Route = createFileRoute("/scores")({
 });
 
 function ScoringPage() {
-  usePageSEO("scores");
+  usePageSEO('scores');
   const { currentEvent } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const { rules } = Route.useSearch();

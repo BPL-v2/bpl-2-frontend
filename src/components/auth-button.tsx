@@ -1,13 +1,13 @@
-import { useGetUser } from "@client/query";
 import {
+  UserIcon,
   ArrowLeftStartOnRectangleIcon,
   ArrowRightEndOnRectangleIcon,
   Cog6ToothIcon,
-  UserIcon,
 } from "@heroicons/react/24/outline";
-import { useQueryClient } from "@tanstack/react-query";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { redirectOauth } from "@utils/oauth";
+import { useGetUser } from "@client/query";
+import { useQueryClient } from "@tanstack/react-query";
 
 const AuthButton = () => {
   const qc = useQueryClient();
@@ -24,7 +24,7 @@ const AuthButton = () => {
         <div
           tabIndex={0}
           className={
-            "btn btn-lg btn-ghost py-8 border-0 hover:text-primary-content hover:bg-primary focus:text-primary-content focus:bg-primary"
+            "btn btn-lg py-8 border-0 hover:text-primary-content hover:bg-primary"
           }
         >
           <UserIcon className="h-6 w-6" />
@@ -42,18 +42,13 @@ const AuthButton = () => {
           }}
         >
           <li>
-            <Link
-              to={"/settings"}
-              className="flex flex-row gap-2"
-              activeProps={{ className: "text-primary" }}
-            >
+            <Link to={"/settings"} className="flex flex-row gap-2">
               <Cog6ToothIcon className="h-6 w-6" /> Settings
             </Link>
             <Link
               to={"/profile/$userId"}
               params={{ userId: user.id }}
               className="flex flex-row gap-2"
-              activeProps={{ className: "text-primary" }}
             >
               <UserIcon className="h-6 w-6" /> Profile
             </Link>
@@ -76,7 +71,7 @@ const AuthButton = () => {
   }
   return (
     <button
-      className="btn btn-lg btn-ghost py-8 border-0 hover:text-primary-content hover:bg-primary"
+      className="btn btn-lg py-8 border-0 hover:text-primary-content hover:bg-primary"
       onClick={redirectOauth("poe", state.location.href)}
       // onClick={redirectOauth("discord", state.location.href)}
     >

@@ -7,7 +7,7 @@ import { CategoryIcon } from "../icons/category-icons";
 type UniqueCategoryCardProps = {
   objective: ScoreObjective;
   selected: boolean;
-  teamId?: number;
+  teamId: number;
   onClick: () => void;
 };
 
@@ -22,7 +22,7 @@ export const UniqueCategoryCard = ({
     (acc, variantCategory) => acc + variantCategory.children.length,
     0
   );
-  const numItems = teamId ? objective.team_score[teamId]?.number : 0;
+  const numItems =objective.team_score[teamId]?.number ||0;
   const numVariants = teamId
     ? objective.children.reduce((acc, subCategory) => {
         return (
@@ -41,9 +41,8 @@ export const UniqueCategoryCard = ({
     ? `${getTotalPoints(objective)[teamId]} / ${
         getPotentialPoints(objective)[teamId]
       }`
-    : undefined;
+    : null;
 
-  const rank = teamId ? objective.team_score[teamId]?.rank : undefined;
   return (
     <div
       className={twMerge(
@@ -62,7 +61,7 @@ export const UniqueCategoryCard = ({
         )}
       >
         <div className="flex-shrink-0">
-          <Medal rank={rank} size={28} />
+          <Medal rank={objective.team_score[teamId]?.rank} size={28} />
         </div>
         <h1 className="font-extrabold">{objective.name}</h1>
         <div className="hidden sm:block flex-shrink-0 text-sm"> {points} </div>
