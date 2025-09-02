@@ -84,7 +84,7 @@ function RootComponent() {
 
   return (
     <>
-      <div className="max-w-[1440px] text-center mx-auto">
+      <div className="max-w-[1440px] h-full text-center mx-auto">
         <div className="text-xl p-0 flex items-center">
           <div className="navbar bg-base-200">
             <ul className="flex flex-1 justify-left gap-1 sm:gap-2 xl:gap-4">
@@ -110,7 +110,7 @@ function RootComponent() {
             <AuthButton />
           </div>
         </div>
-        <div className="min-h-[79vh] mb-4">
+        <div className="min-h-[88vh] mb-4">
           {user && !user.account_name && (
             <div className="bg-error text-error-content p-4 text-lg">
               Looks like you haven't connected your PoE Account yet, make sure
