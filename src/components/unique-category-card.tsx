@@ -7,14 +7,14 @@ import { CategoryIcon } from "../icons/category-icons";
 type UniqueCategoryCardProps = {
   objective: ScoreObjective;
   selected: boolean;
-  teamId: number;
+  teamId?: number;
   onClick: () => void;
 };
 
 export const UniqueCategoryCard = ({
   objective,
   selected,
-  teamId,
+  teamId = 0,
   onClick,
 }: UniqueCategoryCardProps) => {
   const totalItems = objective.children.length;
@@ -22,7 +22,7 @@ export const UniqueCategoryCard = ({
     (acc, variantCategory) => acc + variantCategory.children.length,
     0
   );
-  const numItems =objective.team_score[teamId]?.number ||0;
+  const numItems = objective.team_score[teamId]?.number || 0;
   const numVariants = teamId
     ? objective.children.reduce((acc, subCategory) => {
         return (

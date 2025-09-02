@@ -40,11 +40,7 @@ const TeamScoreDisplay = ({
         }
       >
         {currentEvent.teams
-          .sort((a, b) => {
-            if (a.id === eventStatus?.team_id) return -1;
-            if (b.id === eventStatus?.team_id) return 1;
-            return teamScores[b.id] - teamScores[a.id];
-          })
+          .sort((a, b) => b.id - a.id)
           .slice(0, preferences.limitTeams ? preferences.limitTeams : undefined)
           .map((team) => {
             return (
@@ -72,7 +68,7 @@ const TeamScoreDisplay = ({
                   <TeamLogo
                     team={team}
                     eventId={currentEvent.id}
-                    className="stat-figure row-span-2 hidden md:block w-24"
+                    className="stat-figure row-span-2 hidden md:block h-24 w-24"
                   />
                   <div className="stat-value text-xl md:text-2xl whitespace-nowrap">
                     {teamScores[team.id]}

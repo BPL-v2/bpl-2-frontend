@@ -15,7 +15,6 @@ export const Route = createFileRoute("/scores/uniques")({
 function UniqueTab(): JSX.Element {
   const { currentEvent, scores, preferences, setPreferences } =
     useContext(GlobalStateContext);
-  const [uniqueCategory, setUniqueCategory] = useState<ScoreObjective>();
   const [selectedCategory, setSelectedCategory] = useState<ScoreObjective>();
   const [selectedTeam, setSelectedTeam] = useState<number | undefined>();
   const [categoryFilter, setCategoryFilter] = useState<string>("");
@@ -23,16 +22,16 @@ function UniqueTab(): JSX.Element {
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const tableRef = useRef<HTMLDivElement>(null);
   const { rules } = Route.useSearch();
+  const uniqueCategory = scores?.children.find(
+    (category) => category.name === "Uniques"
+  );
   const handleCategoryClick = (objective: ScoreObjective) => {
     if (objective.id === selectedCategory?.id) {
       setSelectedCategory(undefined);
       return;
     }
     setSelectedCategory(objective);
-    if (!tableRef.current) {
-      return;
-    }
-    tableRef.current.scrollIntoView({ behavior: "smooth" });
+    tableRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -46,25 +45,6 @@ function UniqueTab(): JSX.Element {
       setSelectedTeam(currentEvent.teams[0].id);
     }
   }, [eventStatus, currentEvent]);
-
-  useEffect(() => {
-    if (!scores) {
-      return;
-    }
-    const uniques = scores.children.find(
-      (category) => category.name === "Uniques"
-    );
-    if (!uniques) {
-      return;
-    }
-    setUniqueCategory(uniques);
-    if (!selectedCategory) {
-      return;
-    }
-    setSelectedCategory(
-      uniques.children.find((category) => category.id === selectedCategory.id)
-    );
-  }, [scores, selectedCategory]);
 
   useEffect(() => {
     if (!uniqueCategory || !selectedTeam) {
@@ -99,7 +79,7 @@ function UniqueTab(): JSX.Element {
     return <ItemTable objective={selectedCategory}></ItemTable>;
   }, [selectedCategory, uniqueCategory]);
 
-  if (!uniqueCategory || !currentEvent || !scores || !selectedTeam) {
+  if (!uniqueCategory) {
     return <></>;
   }
 
