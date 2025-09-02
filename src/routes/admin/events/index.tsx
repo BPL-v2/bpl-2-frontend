@@ -1,22 +1,22 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Event, Permission, GameVersion, EventCreate } from "@client/api";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
-import { renderConditionally } from "@utils/token";
-import { setFormValues, useAppForm } from "@components/form/context";
-import { ColumnDef } from "@tanstack/react-table";
-import Table from "@components/table";
+import { Event, EventCreate, GameVersion, Permission } from "@client/api";
+import { objectiveApi } from "@client/client";
 import {
   useCreateEvent,
   useDeleteEvent,
   useDuplicateEvent,
   useGetEvents,
 } from "@client/query";
-import { Dialog } from "@components/dialog";
-import { useState } from "react";
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { DeleteButton } from "@components/delete-button";
-import { objectiveApi } from "@client/client";
+import { Dialog } from "@components/dialog";
+import { setFormValues, useAppForm } from "@components/form/context";
+import Table from "@components/table";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { ColumnDef } from "@tanstack/react-table";
+import { renderConditionally } from "@utils/token";
+import { useState } from "react";
 
 export const Route = createFileRoute("/admin/events/")({
   component: renderConditionally(EventPage, [
@@ -67,29 +67,29 @@ function EventPage() {
       header: "Version",
       accessorKey: "game_version",
       enableSorting: false,
-      size: 100,
+      size: 80,
     },
     {
       header: "Dates",
-      size: 260,
+      size: 340,
       cell: (info) => (
         <div className="grid grid-cols-2 gap-0 w-full text-xs">
           <div className="text-left">Application Start: </div>
-          <div className="text-right">
+          <div className="text-right font-mono">
             {new Date(
               info.row.original.application_start_time
             ).toLocaleString()}
           </div>
           <div className="text-left">Application End: </div>
-          <div className="text-right">
+          <div className="text-right font-mono">
             {new Date(info.row.original.application_end_time).toLocaleString()}
           </div>
           <div className="text-left">Event Start: </div>
-          <div className="text-right">
+          <div className="text-right font-mono">
             {new Date(info.row.original.event_start_time).toLocaleString()}
           </div>
           <div className="text-left">Event End: </div>
-          <div className="text-right">
+          <div className="text-right font-mono">
             {new Date(info.row.original.event_end_time).toLocaleString()}
           </div>
         </div>
@@ -130,7 +130,7 @@ function EventPage() {
           <XCircleIcon className="h-6 w-6 text-error" />
         ),
       enableSorting: false,
-      size: 80,
+      size: 70,
     },
     {
       header: "Locked",
@@ -142,11 +142,11 @@ function EventPage() {
           <XCircleIcon className="h-6 w-6 text-error" />
         ),
       enableSorting: false,
-      size: 80,
+      size: 70,
     },
     {
       header: "Actions",
-      size: 500,
+      size: 450,
       cell: (info) => (
         <div className="flex flex-row gap-2 flex-wrap">
           <button
