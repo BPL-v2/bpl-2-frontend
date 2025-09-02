@@ -1,8 +1,8 @@
-import React, { CSSProperties } from "react";
-import { getEmbedUrl, getThumbnailUrl } from "@utils/video-utils";
 import { PlayCircleIcon } from "@heroicons/react/24/outline";
-import { YoutubeFilled } from "@icons/youtube";
 import { TwitchFilled } from "@icons/twitch";
+import { YoutubeFilled } from "@icons/youtube";
+import { getEmbedUrl, getThumbnailUrl } from "@utils/video-utils";
+import React, { CSSProperties } from "react";
 export interface VideoEmbedProps {
   url: string;
   title?: string;
@@ -12,7 +12,7 @@ function getIcon(url: string): React.ReactNode {
   let parsedUrl: URL;
   try {
     parsedUrl = new URL(url);
-  } catch (_) {
+  } catch {
     return;
   }
 

@@ -1,10 +1,10 @@
-import { ScoreObjective } from "@mytypes/score";
-import { useContext } from "react";
-import { GlobalStateContext } from "@utils/context-provider";
-import { ProgressBar } from "./progress-bar";
 import { Score } from "@client/api";
 import { useGetEventStatus } from "@client/query";
+import { ScoreObjective } from "@mytypes/score";
+import { GlobalStateContext } from "@utils/context-provider";
+import { useContext } from "react";
 import { twMerge } from "tailwind-merge";
+import { ProgressBar } from "./progress-bar";
 
 type CollectionCardTableProps = {
   objective: ScoreObjective;
@@ -67,8 +67,7 @@ export function CollectionCardTable({
             return scoreB.points - scoreA.points;
           })
           .map(([teamId, score], idx) => {
-            let num = score.number;
-            const percent = (100 * num) / objective.required_number;
+            const percent = (100 * score.number) / objective.required_number;
             return (
               <tr
                 className={
@@ -104,7 +103,10 @@ export function CollectionCardTable({
                   </td>
                 ) : null}
                 <td className="px-2 w-full">
-                  <ProgressBar value={num} maxVal={objective.required_number} />
+                  <ProgressBar
+                    value={score.number}
+                    maxVal={objective.required_number}
+                  />
                 </td>
                 <td
                   className={twMerge(

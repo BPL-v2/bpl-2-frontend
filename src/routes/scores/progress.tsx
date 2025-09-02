@@ -53,8 +53,8 @@ function RouteComponent() {
         {} as Record<number, ScoreObjective>
       ) || {};
 
-  const childIdToUniqueCategory = Object.entries(uniqueCategories).reduce(
-    (acc, [id, category]) => {
+  const childIdToUniqueCategory = Object.values(uniqueCategories).reduce(
+    (acc, category) => {
       category.children?.forEach((child) => {
         child.children.forEach((grandChild) => {
           acc[grandChild.id] = category;

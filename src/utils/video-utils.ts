@@ -2,7 +2,7 @@ export function getEmbedUrl(url: string): URL | undefined {
   let parsedUrl: URL;
   try {
     parsedUrl = new URL(url);
-  } catch (_) {
+  } catch {
     return;
   }
   let embedUrl: URL | undefined;
@@ -55,7 +55,7 @@ export async function getThumbnailUrl(
   let parsedUrl: URL;
   try {
     parsedUrl = new URL(url);
-  } catch (_) {
+  } catch {
     return;
   }
   if (parsedUrl.hostname === "www.youtube.com") {

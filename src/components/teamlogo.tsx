@@ -27,7 +27,7 @@ export function TeamLogo({ team, eventId, ...props }: TeamLogoProps) {
   return (
     <img
       {...props}
-      onError={(e) => {
+      onError={() => {
         setErrorCount(errorCount + 1);
       }}
       src={`/assets/teams/${eventId}/${team?.name.toLowerCase()}-min`}

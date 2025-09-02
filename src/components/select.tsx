@@ -91,7 +91,7 @@ export default function Select<T>({
         <ComboboxButton className="w-full" name={name}>
           <ComboboxInput
             className={twMerge("select w-full", fontSize, className)}
-            displayValue={(_) => selected?.label || ""}
+            displayValue={() => selected?.label || ""}
             onChange={(event) => {
               setQuery(event.target.value);
             }}

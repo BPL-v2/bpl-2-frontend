@@ -1,4 +1,4 @@
-import { GameVersion } from "@client/api";
+import { Character, GameVersion } from "@client/api";
 import { useGetEvents } from "@client/query";
 import { ascendancies, phreciaMapping, poe2Mapping } from "@mytypes/ascendancy";
 import { Link } from "@tanstack/react-router";
@@ -6,7 +6,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import { twMerge } from "tailwind-merge";
 
 interface ProfileCarouselProps {
-  userCharacters: any[];
+  userCharacters: Character[];
   userId: number;
 }
 
@@ -15,7 +15,7 @@ export function ProfileCarousel({
   userId,
 }: ProfileCarouselProps) {
   const { events } = useGetEvents();
-  const [emblaRef, _] = useEmblaCarousel({
+  const [emblaRef] = useEmblaCarousel({
     align: "start",
     dragFree: true,
   });
@@ -34,7 +34,7 @@ export function ProfileCarousel({
         <div className="embla__container">
           {userCharacters
             .sort((b, a) => a.event_id - b.event_id)
-            .map((char, idx) => {
+            .map((char) => {
               const event = events?.find((e) => e.id == char.event_id);
               if (!event) {
                 return null;

@@ -54,7 +54,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
     }
     try {
       return new Date(date + "T" + time).toISOString();
-    } catch (e) {
+    } catch {
       return "";
     }
   };

@@ -1039,7 +1039,7 @@ export function parseItem(item: string, slot: string | null, id: string): Item {
   };
 }
 
-var baseTypeWordCounts = {
+const baseTypeWordCounts = {
   1: [
     "Stiletto",
     "Skean",

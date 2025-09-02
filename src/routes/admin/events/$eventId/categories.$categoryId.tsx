@@ -1,24 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import React, { JSX, useMemo, useState } from "react";
 
-import { ObjectiveIcon } from "@components/objective-icon";
 import {
-  ObjectiveCreate,
-  Objective,
   AggregationType,
+  ConditionCreate,
   GameVersion,
   ItemField,
   NumberField,
+  Objective,
+  ObjectiveConditionCreate,
+  ObjectiveCreate,
   ObjectiveType,
   Operator,
   Permission,
-  ObjectiveConditionCreate,
-  ConditionCreate,
 } from "@client/api";
 import { Dialog } from "@components/dialog";
+import { ObjectiveIcon } from "@components/objective-icon";
 import { useParams } from "@tanstack/react-router";
 
-import { renderConditionally } from "@utils/token";
 import {
   useAddObjectiveCondition,
   useCreateBulkObjectives,
@@ -30,12 +29,8 @@ import {
   useGetScoringPresetsForEvent,
   useGetValidConditionMappings,
 } from "@client/query";
-import { ColumnDef } from "@tanstack/react-table";
-import Table from "@components/table";
-import { findObjective, getPath } from "@utils/utils";
 import { setFormValues, useAppForm } from "@components/form/context";
-import { useQueryClient } from "@tanstack/react-query";
-import { useStore } from "@tanstack/react-form";
+import Table from "@components/table";
 import {
   DocumentDuplicateIcon,
   FolderOpenIcon,
@@ -44,6 +39,11 @@ import {
   TrashIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
+import { useStore } from "@tanstack/react-form";
+import { useQueryClient } from "@tanstack/react-query";
+import { ColumnDef } from "@tanstack/react-table";
+import { renderConditionally } from "@utils/token";
+import { findObjective, getPath } from "@utils/utils";
 import { twMerge } from "tailwind-merge";
 
 export const Route = createFileRoute(

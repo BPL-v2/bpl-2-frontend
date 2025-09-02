@@ -1,6 +1,6 @@
 import { DateTimePicker } from "@components/datetime-picker";
-import { useFieldContext } from "./context";
 import { twMerge } from "tailwind-merge";
+import { useFieldContext } from "./context";
 
 export function DateTimeField({
   label,
@@ -19,7 +19,7 @@ export function DateTimeField({
       onChange={(date) => {
         try {
           field.handleChange(date);
-        } catch (_) {
+        } catch {
           // ignore
         }
       }}

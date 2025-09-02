@@ -16,7 +16,7 @@ import { useContext, useMemo } from "react";
 
 export const Route = createFileRoute("/scores/for-you")({
   component: ForYouTab,
-  // @ts-ignore
+  // @ts-ignore context is not typed
   loader: async ({ context: { queryClient } }) => {
     preloadLadderData(queryClient);
   },
@@ -87,7 +87,7 @@ export function ForYouTab() {
         </div>
       </div>
     );
-  }, [ladder]);
+  }, [ladder, currentEvent.id, user?.id]);
   const teamId = eventStatus?.team_id as number;
   if (teamId === null || !eventStatus) {
     return (

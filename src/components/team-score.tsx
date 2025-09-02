@@ -1,11 +1,11 @@
-import { useContext } from "react";
+import { useGetEventStatus } from "@client/query";
+import { ScoreObjective } from "@mytypes/score";
 import { GlobalStateContext } from "@utils/context-provider";
 import { getPotentialPoints, getTotalPoints } from "@utils/utils";
-import { TeamName } from "./team-name";
-import { ScoreObjective } from "@mytypes/score";
-import { useGetEventStatus } from "@client/query";
-import { TeamLogo } from "./teamlogo";
+import { useContext } from "react";
 import { twMerge } from "tailwind-merge";
+import { TeamName } from "./team-name";
+import { TeamLogo } from "./teamlogo";
 
 export type TeamScoreProps = {
   selectedTeam?: number;
@@ -18,10 +18,6 @@ const TeamScoreDisplay = ({
   selectedTeam,
   setSelectedTeam,
 }: TeamScoreProps) => {
-  if (!objective) {
-    return <></>;
-  }
-
   const { currentEvent, preferences } = useContext(GlobalStateContext);
   const nullScore = currentEvent.teams.reduce(
     (acc, team) => {

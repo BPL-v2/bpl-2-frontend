@@ -1,13 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { Event, JobType, Permission, RecurringJob } from "@client/api";
-import React from "react";
 import { useGetEvents, useGetJobs, useStartJob } from "@client/query";
+import { Dialog } from "@components/dialog";
+import Select from "@components/select";
 import { useQueryClient } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
+import { renderConditionally } from "@utils/token";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { Dialog } from "@components/dialog";
-import { renderConditionally } from "@utils/token";
-import Select from "@components/select";
+import React from "react";
 
 dayjs.extend(customParseFormat);
 
@@ -96,8 +96,7 @@ function RecurringJobsPage() {
               required
               onChange={(value) => {
                 setSelectedEvent(
-                  // @ts-ignore
-                  events.find((event) => event.id === value) || null
+                  events.find((event) => event.id === (value || 0)) || null
                 );
               }}
               className="w-full"

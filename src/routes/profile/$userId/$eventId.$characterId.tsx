@@ -69,7 +69,7 @@ function RouteComponent() {
       objective.required_number > 1
     )
       continue;
-    for (const [_, score] of Object.entries(objective.team_score)) {
+    for (const score of Object.values(objective.team_score)) {
       if (score.user_id === userId && score.points > 0) {
         contributions.push({ objective: objective, score: score });
       }

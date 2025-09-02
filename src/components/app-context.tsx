@@ -56,7 +56,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
       currentEvent.id,
       setScoreData,
       setWebsocket,
-      (newUpdates) => {}
+      () => {}
       // setUpdates((prevUpdates) => [...newUpdates, ...prevUpdates])
     );
   }, [currentEvent]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -85,7 +85,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
       );
       setScores(hidePOTotal(newScores));
     }
-  }, [rules, currentEvent, scoringPresets, score]);
+  }, [rules, currentEvent, scoringPresets, score, scoreData]);
 
   useEffect(() => {
     document
