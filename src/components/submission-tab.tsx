@@ -10,15 +10,19 @@ import {
 import {
   useGetEventStatus,
   useGetSubmissions,
+  useGetUsers,
   useSubmitBounty,
 } from "@client/query";
 import {
   CheckCircleIcon,
   EyeSlashIcon,
+  LinkIcon,
   MinusCircleIcon,
   PlusCircleIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
+import { TwitchFilled } from "@icons/twitch";
+import { YoutubeFilled } from "@icons/youtube";
 import { ScoreObjective } from "@mytypes/score";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
@@ -34,25 +38,118 @@ export type SubmissionTabProps = {
   categoryName: string;
 };
 
-function SubmissionStatus({ submissions }: { submissions: Submission[] }) {
+function getUrls(string: string): URL[] {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const urls = string.match(urlRegex) || [];
+  return urls.map((url) => new URL(url));
+}
+
+function getRelevantSubmission(
+  submissions: Submission[]
+): Submission | undefined {
   if (submissions.length === 0) {
+    return;
+  }
+  const approved = submissions.find(
+    (submission) => submission.approval_status === ApprovalStatus.APPROVED
+  );
+  if (approved) {
+    return approved;
+  }
+  const pending = submissions.find(
+    (submission) => submission.approval_status === ApprovalStatus.PENDING
+  );
+  if (pending) {
+    return pending;
+  }
+  return submissions[0];
+}
+
+function SubmissionStatus({
+  submissions,
+  userMap,
+}: {
+  submissions: Submission[];
+  userMap: { [userId: number]: string };
+}) {
+  const submission = getRelevantSubmission(submissions);
+  if (!submission) {
     return <MinusCircleIcon className="h-5 w-5" />;
   }
-  if (
-    submissions.find(
-      (submission) => submission.approval_status === ApprovalStatus.APPROVED
-    )
-  ) {
-    return <CheckCircleIcon className="h-5 w-5 text-success" />;
+
+  if (submission.approval_status === ApprovalStatus.APPROVED) {
+    return (
+      <div className="tooltip tooltip-success tooltip-left">
+        <span className="tooltip-content">
+          Submitted by {userMap[submission.user_id]}
+        </span>
+        <CheckCircleIcon className="h-5 w-5 text-success" />
+      </div>
+    );
   }
-  if (
-    submissions.find(
-      (submission) => submission.approval_status === ApprovalStatus.PENDING
-    )
-  ) {
-    return <EyeSlashIcon className="h-5 w-5 text-warning" />;
+  if (submission.approval_status === ApprovalStatus.PENDING) {
+    return (
+      <div className="tooltip tooltip-warning tooltip-left" data-tip="Pending">
+        <span className="tooltip-content">
+          Submitted by {userMap[submission.user_id]} - In Review
+        </span>
+        <EyeSlashIcon className="h-5 w-5 text-warning" />{" "}
+      </div>
+    );
   }
-  return <XCircleIcon className="h-5 w-5 text-error" />;
+
+  return (
+    <div className="tooltip tooltip-warning tooltip-left" data-tip="Pending">
+      <span className="tooltip-content">
+        Submitted by {userMap[submission.user_id]} - Rejected by{" "}
+        {userMap[submission.reviewer_id!]}
+      </span>
+      <XCircleIcon className="h-5 w-5 text-error" />
+    </div>
+  );
+}
+
+function VideoButton({ submissions }: { submissions: Submission[] }) {
+  const submission = getRelevantSubmission(submissions);
+  if (!submission) {
+    return null;
+  }
+  const urls = getUrls(submission?.proof);
+  const youtubeUrl = urls.find(
+    (url) =>
+      url.hostname.endsWith("youtube.com") || url.hostname.endsWith("youtu.be")
+  );
+  if (youtubeUrl) {
+    return (
+      <a href={youtubeUrl.href} target="_blank">
+        <YoutubeFilled className="h-5 w-5" brandColor></YoutubeFilled>
+      </a>
+    );
+  }
+  const twitchUrl = urls.find((url) => url.hostname.endsWith("twitch.tv"));
+  if (twitchUrl) {
+    if (
+      new Date(submission.timestamp) <
+      new Date(Date.now() - 1000 * 60 * 60 * 24 * 14)
+    ) {
+      return (
+        <TwitchFilled className="h-5 w-5 cursor-not-allowed"></TwitchFilled>
+      );
+    }
+    return (
+      <a href={twitchUrl.href} target="_blank">
+        <TwitchFilled className="h-5 w-5" brandColor></TwitchFilled>
+      </a>
+    );
+  }
+  if (urls.length > 0) {
+    return (
+      <a href={urls[0].href} target="_blank">
+        <LinkIcon className="h-5 w-5 text-blue-500"></LinkIcon>
+      </a>
+    );
+  }
+  return null;
 }
 
 function SubmissionTab({ categoryName }: SubmissionTabProps) {
@@ -65,6 +162,12 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
   const [selectedObjective, setSelectedObjective] = useState<ScoreObjective>();
   const formRef = useRef<HTMLFormElement>(null);
   const { submissions = [] } = useGetSubmissions(currentEvent.id);
+  const { users } = useGetUsers(currentEvent.id);
+  const userMap =
+    users?.reduce((acc: { [userId: number]: string }, user) => {
+      acc[user.id] = user.display_name;
+      return acc;
+    }, {}) || {};
 
   const teamMap = currentEvent.teams.reduce(
     (acc: { [teamId: number]: Team }, team) => {
@@ -284,7 +387,11 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
                                     <span className="">
                                       {teamMap[teamId]?.name}
                                     </span>
-                                    <SubmissionStatus submissions={s} />
+                                    <VideoButton submissions={s} />
+                                    <SubmissionStatus
+                                      submissions={s}
+                                      userMap={userMap}
+                                    />
                                   </div>
                                 </td>
                               </tr>
