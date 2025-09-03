@@ -58,10 +58,10 @@ export function useGetEvents() {
   };
 }
 
-export function useGetLadder(event_id: number) {
+export function useGetLadder(eventId: number) {
   const query = useQuery({
-    queryKey: ["ladder", current !== event_id ? event_id : "current"],
-    queryFn: async () => ladderApi.getLadder(event_id),
+    queryKey: ["ladder", current !== eventId ? eventId : "current"],
+    queryFn: async () => ladderApi.getLadder(eventId),
     refetchInterval: 60 * 1000,
     staleTime: 60 * 1000,
   });
@@ -71,11 +71,11 @@ export function useGetLadder(event_id: number) {
   };
 }
 
-export function useGetUsers(event_id: number) {
+export function useGetUsers(eventId: number) {
   const query = useQuery({
-    queryKey: ["users", current !== event_id ? event_id : "current"],
+    queryKey: ["users", current !== eventId ? eventId : "current"],
     queryFn: async () =>
-      userApi.getUsersForEvent(event_id).then((users) => {
+      userApi.getUsersForEvent(eventId).then((users) => {
         return Object.entries(users)
           .map(([teamId, user]) => {
             return user.map((u) => ({ ...u, team_id: parseInt(teamId) }));
@@ -90,10 +90,10 @@ export function useGetUsers(event_id: number) {
   };
 }
 
-export function useGetStreams(event_id: number) {
+export function useGetStreams(eventId: number) {
   const query = useQuery({
-    queryKey: ["streams", current !== event_id ? event_id : "current"],
-    queryFn: async () => streamApi.getStreams(event_id),
+    queryKey: ["streams", current !== eventId ? eventId : "current"],
+    queryFn: async () => streamApi.getStreams(eventId),
   });
   return {
     ...query,
@@ -101,10 +101,10 @@ export function useGetStreams(event_id: number) {
   };
 }
 
-export function useGetEventStatus(event_id: number) {
+export function useGetEventStatus(eventId: number) {
   const query = useQuery({
-    queryKey: ["eventStatus", current !== event_id ? event_id : "current"],
-    queryFn: async () => eventApi.getEventStatus(event_id),
+    queryKey: ["eventStatus", current !== eventId ? eventId : "current"],
+    queryFn: async () => eventApi.getEventStatus(eventId),
     refetchOnMount: false,
   });
   return {
@@ -113,10 +113,10 @@ export function useGetEventStatus(event_id: number) {
   };
 }
 
-export function useGetSignups(event_id: number) {
+export function useGetSignups(eventId: number) {
   const query = useQuery({
-    queryKey: ["signups", current !== event_id ? event_id : "current"],
-    queryFn: async () => signupApi.getEventSignups(event_id),
+    queryKey: ["signups", current !== eventId ? eventId : "current"],
+    queryFn: async () => signupApi.getEventSignups(eventId),
   });
   return {
     ...query,
@@ -124,10 +124,10 @@ export function useGetSignups(event_id: number) {
   };
 }
 
-export function useGetOwnSignup(event_id: number) {
+export function useGetOwnSignup(eventId: number) {
   const query = useQuery({
-    queryKey: ["ownSignup", current !== event_id ? event_id : "current"],
-    queryFn: async () => signupApi.getPersonalSignup(event_id),
+    queryKey: ["ownSignup", current !== eventId ? eventId : "current"],
+    queryFn: async () => signupApi.getPersonalSignup(eventId),
     retry: false,
     enabled: isLoggedIn(),
     refetchOnMount: false,
@@ -210,17 +210,17 @@ export function useDeleteSignup(qc: QueryClient) {
 export function useAddUsersToTeams(qc: QueryClient) {
   const m = useMutation({
     mutationFn: ({
-      event_id,
+      eventId,
       users,
     }: {
-      event_id: number;
+      eventId: number;
       users: TeamUserCreate[];
-    }) => teamApi.addUsersToTeams(event_id, users),
+    }) => teamApi.addUsersToTeams(eventId, users),
     onSuccess: (_, variables) => {
       qc.invalidateQueries({
         queryKey: [
           "signups",
-          current !== variables.event_id ? variables.event_id : "current",
+          current !== variables.eventId ? variables.eventId : "current",
         ],
       });
     },
@@ -231,10 +231,11 @@ export function useAddUsersToTeams(qc: QueryClient) {
   };
 }
 
-export function useGetRules(event_id: number) {
+export function useGetRules(eventId: number) {
   const query = useQuery({
-    queryKey: ["rules", current !== event_id ? event_id : "current"],
-    queryFn: async () => objectiveApi.getObjectiveTreeForEvent(event_id),
+    queryKey: ["rules", current !== eventId ? eventId : "current"],
+    queryFn: async () => objectiveApi.getObjectiveTreeForEvent(eventId),
+    refetchOnMount: false,
   });
   return {
     ...query,
@@ -242,10 +243,10 @@ export function useGetRules(event_id: number) {
   };
 }
 
-export function useGetScoringPresets(event_id: number) {
+export function useGetScoringPresets(eventId: number) {
   const query = useQuery({
-    queryKey: ["scoringPresets", current !== event_id ? event_id : "current"],
-    queryFn: async () => scoringApi.getScoringPresetsForEvent(event_id),
+    queryKey: ["scoringPresets", current !== eventId ? eventId : "current"],
+    queryFn: async () => scoringApi.getScoringPresetsForEvent(eventId),
   });
   return {
     ...query,
@@ -322,7 +323,7 @@ export function useGetCharacterTimeseries(characterId: string, userId: number) {
 
 export function useGetSubmissions(eventId: number) {
   const query = useQuery({
-    queryKey: ["submissions", eventId],
+    queryKey: ["submissions", current !== eventId ? eventId : "current"],
     queryFn: () => submissionApi.getSubmissions(eventId),
     enabled: !!eventId,
   });
@@ -337,7 +338,9 @@ export function useSubmitBounty(qc: QueryClient, eventId: number) {
     mutationFn: (submission: SubmissionCreate) =>
       submissionApi.submitBounty(eventId, submission),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["submissions", eventId] });
+      qc.invalidateQueries({
+        queryKey: ["submissions", current !== eventId ? eventId : "current"],
+      });
     },
   });
   return {
@@ -359,7 +362,9 @@ export function useReviewSubmission(qc: QueryClient, eventId: number) {
         approval_status: approvalStatus,
       }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["submissions", eventId] });
+      qc.invalidateQueries({
+        queryKey: ["submissions", current !== eventId ? eventId : "current"],
+      });
     },
   });
   return {
@@ -391,12 +396,12 @@ export function useRemoveOauthProvider(qc: QueryClient) {
   };
 }
 
-export function useGetGuildStash(event_id: number) {
+export function useGetGuildStash(eventId: number) {
   const query = useQuery({
-    queryKey: ["guildStashes", current !== event_id ? event_id : "current"],
+    queryKey: ["guildStashes", current !== eventId ? eventId : "current"],
     queryFn: async () =>
       guildStashApi
-        .getGuildStashForUser(event_id)
+        .getGuildStashForUser(eventId)
         .then((data) => data.sort((a, b) => (a.index || 0) - (b.index || 0))),
     enabled: () => isLoggedIn(),
     retry: false,
@@ -407,15 +412,15 @@ export function useGetGuildStash(event_id: number) {
     guildStashes: query.data,
   };
 }
-export function useGetGuildStashTab(event_id: number, tabId: string) {
+export function useGetGuildStashTab(eventId: number, tabId: string) {
   const query = useQuery({
     queryKey: [
       "guildStashTab",
       tabId,
-      current !== event_id ? event_id : "current",
+      current !== eventId ? eventId : "current",
     ],
     queryFn: async ({ client }) =>
-      guildStashApi.getGuildStashTab(event_id, tabId),
+      guildStashApi.getGuildStashTab(eventId, tabId),
     enabled: () => isLoggedIn(),
     refetchInterval: 60 * 1000, // Refetch every minute
   });
@@ -425,20 +430,19 @@ export function useGetGuildStashTab(event_id: number, tabId: string) {
   };
 }
 
-export function useUpdateGuildStashTab(qc: QueryClient, event_id: number) {
+export function useUpdateGuildStashTab(qc: QueryClient, eventId: number) {
   const m = useMutation({
-    mutationFn: (tabId: string) =>
-      guildStashApi.updateStashTab(event_id, tabId),
+    mutationFn: (tabId: string) => guildStashApi.updateStashTab(eventId, tabId),
     onSuccess: (data, tabId) => {
       qc.invalidateQueries({
         queryKey: [
           "guildStashItems",
           tabId,
-          current !== event_id ? event_id : "current",
+          current !== eventId ? eventId : "current",
         ],
       });
       qc.setQueryData(
-        ["guildStashes", current !== event_id ? event_id : "current"],
+        ["guildStashes", current !== eventId ? eventId : "current"],
         (old: GuildStashTab[] | undefined) => {
           if (!old) return [];
           return old.map((tab) => {
@@ -457,13 +461,13 @@ export function useUpdateGuildStashTab(qc: QueryClient, event_id: number) {
   };
 }
 
-export function useSwitchStashFetching(qc: QueryClient, event_id: number) {
+export function useSwitchStashFetching(qc: QueryClient, eventId: number) {
   const m = useMutation({
     mutationFn: (tabId: string) =>
-      guildStashApi.switchStashFetching(event_id, tabId),
+      guildStashApi.switchStashFetching(eventId, tabId),
     onSuccess: (data) => {
       qc.setQueryData(
-        ["guildStashes", current !== event_id ? event_id : "current"],
+        ["guildStashes", current !== eventId ? eventId : "current"],
         (old: GuildStashTab[] | undefined) => {
           if (!old) return [];
           return old.map((tab) => {
@@ -642,7 +646,10 @@ export function useDuplicateEvent(qc: QueryClient) {
 
 export function useGetValidConditionMappings(eventId: number) {
   const query = useQuery({
-    queryKey: ["validConditionMappings", eventId],
+    queryKey: [
+      "validConditionMappings",
+      current !== eventId ? eventId : "current",
+    ],
     queryFn: () => conditionApi.getValidMappings(eventId),
     enabled: !!eventId,
   });
@@ -913,10 +920,10 @@ export function preloadLadderData(qc: QueryClient) {
   }
 }
 
-export function useGetTeamGoals(event_id: number) {
+export function useGetTeamGoals(eventId: number) {
   const query = useQuery({
-    queryKey: ["teamGoals", current !== event_id ? event_id : "current"],
-    queryFn: async () => teamApi.getTeamSuggestions(event_id),
+    queryKey: ["teamGoals", current !== eventId ? eventId : "current"],
+    queryFn: async () => teamApi.getTeamSuggestions(eventId),
     enabled: () => isLoggedIn(),
   });
   return {

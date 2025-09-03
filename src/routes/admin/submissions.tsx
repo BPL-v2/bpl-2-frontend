@@ -3,17 +3,8 @@ import React, { useContext, useMemo } from "react";
 
 import { GlobalStateContext } from "@utils/context-provider";
 
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
 import { Objective, ObjectiveType, Permission, Submission } from "@client/api";
 import { submissionApi } from "@client/client";
-import {
-  CheckCircleIcon,
-  EyeSlashIcon,
-  XCircleIcon,
-} from "@heroicons/react/24/outline";
-import { flatMap, iterateObjectives } from "@utils/utils";
-import Select from "@components/select";
 import {
   useGetRules,
   useGetSubmissions,
@@ -21,11 +12,20 @@ import {
   useGetUsers,
   useReviewSubmission,
 } from "@client/query";
+import Select from "@components/select";
 import Table from "@components/table";
 import { TeamName } from "@components/team-name";
-import { ColumnDef } from "@tanstack/react-table";
+import {
+  CheckCircleIcon,
+  EyeSlashIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
 import { useQueryClient } from "@tanstack/react-query";
+import { ColumnDef } from "@tanstack/react-table";
 import { renderStringWithUrl } from "@utils/text-utils";
+import { flatMap, iterateObjectives } from "@utils/utils";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
 export const Route = createFileRoute("/admin/submissions")({

@@ -1,5 +1,5 @@
 import { GameVersion } from "@client/api";
-import BookOpenIcon from "@heroicons/react/24/outline/BookOpenIcon";
+import { BookOpenIcon } from "@heroicons/react/24/outline";
 import { BountyTabRules } from "@rules/bounties";
 import { CollectionTabRules } from "@rules/collections";
 import { DailyTabRules } from "@rules/dailies";

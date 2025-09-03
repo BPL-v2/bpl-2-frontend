@@ -1,4 +1,5 @@
-import React from "react";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import { TableSortIcon } from "@icons/table-sort";
 import {
   Column,
   ColumnDef,
@@ -14,10 +15,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { TableSortIcon } from "@icons/table-sort";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
-import Select, { SelectOption } from "./select";
+import React from "react";
 import { twMerge } from "tailwind-merge";
+import Select, { SelectOption } from "./select";
 
 function Table<T>({
   data,
@@ -140,7 +140,7 @@ function Table<T>({
           ))}
         </thead>
         <tbody
-          className={ styles?.body}
+          className={styles?.body}
           style={{
             height: `${rowVirtualizer.getTotalSize()}px`,
           }}

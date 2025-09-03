@@ -7,22 +7,22 @@ import {
   ScoringPresetCreate,
   ScoringPresetType,
 } from "@client/api";
-import { useParams } from "@tanstack/react-router";
-import { renderConditionally } from "@utils/token";
 import {
   useAddScoringPreset,
   useDeleteScoringPreset,
   useGetEvents,
   useGetScoringPresetsForEvent,
 } from "@client/query";
-import { ColumnDef } from "@tanstack/react-table";
+import { Dialog } from "@components/dialog";
+import { setFormValues, useAppForm } from "@components/form/context";
 import Table from "@components/table";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
-import { setFormValues, useAppForm } from "@components/form/context";
-import { Dialog } from "@components/dialog";
 import { useStore } from "@tanstack/react-form";
+import { useQueryClient } from "@tanstack/react-query";
+import { useParams } from "@tanstack/react-router";
+import { ColumnDef } from "@tanstack/react-table";
+import { renderConditionally } from "@utils/token";
+import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/admin/events/$eventId/scoring-presets")({
   component: renderConditionally(ScoringPresetsPage, [

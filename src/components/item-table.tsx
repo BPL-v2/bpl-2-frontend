@@ -1,6 +1,6 @@
 import { GameVersion, Team } from "@client/api";
 import { useGetEventStatus, useGetUsers } from "@client/query";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { ScoreObjective } from "@mytypes/score";
 import { getImageLocation } from "@mytypes/scoring-objective";
 import { CellContext, ColumnDef } from "@tanstack/react-table";

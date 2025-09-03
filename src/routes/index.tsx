@@ -1,22 +1,22 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useContext } from "react";
-import { GlobalStateContext } from "@utils/context-provider";
-import { VideoEmbed } from "@components/video-embed";
-import { Countdown } from "@components/countdown";
-import { DiscordFilled } from "@icons/discord";
-import { HeartIcon } from "@heroicons/react/24/solid";
 import { useGetEvents, useGetEventStatus } from "@client/query";
 import { AscendancyPortrait } from "@components/ascendancy-portrait";
-import { TeamLogo } from "@components/teamlogo";
+import { Countdown } from "@components/countdown";
 import SignupButton from "@components/signup-button";
+import { TeamLogo } from "@components/teamlogo";
+import { VideoEmbed } from "@components/video-embed";
+import { HeartIcon } from "@heroicons/react/24/outline";
+import { DiscordFilled } from "@icons/discord";
+import { createFileRoute } from "@tanstack/react-router";
+import { GlobalStateContext } from "@utils/context-provider";
 import { usePageSEO } from "@utils/use-seo";
+import { useContext } from "react";
 
 export const Route = createFileRoute("/")({
   component: Home,
 });
 
 function Home() {
-  usePageSEO('home');
+  usePageSEO("home");
   const { currentEvent } = useContext(GlobalStateContext);
   const { events } = useGetEvents();
   const nextEvent = events?.sort((a, b) => {
@@ -170,6 +170,6 @@ function Home() {
           </div>
         </>
       ) : null}
-      </div>
+    </div>
   );
 }

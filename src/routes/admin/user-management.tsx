@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import React, { useEffect } from "react";
 import { Permission, User } from "@client/api";
 import { userApi } from "@client/client";
+import Select from "@components/select";
+import Table from "@components/table";
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 import { ColumnDef, sortingFns } from "@tanstack/react-table";
-import Table from "@components/table";
 import { renderConditionally } from "@utils/token";
-import Select from "@components/select";
+import React, { useEffect } from "react";
 
 export const Route = createFileRoute("/admin/user-management")({
   component: renderConditionally(UserPage, [Permission.admin]),

@@ -1,12 +1,24 @@
 import {
   AggregationType,
+  ApprovalStatus,
   ObjectiveType,
   Score,
+  Submission,
   SubmissionCreate,
   Team,
 } from "@client/api";
-import { useGetEventStatus, useSubmitBounty } from "@client/query";
-import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import {
+  useGetEventStatus,
+  useGetSubmissions,
+  useSubmitBounty,
+} from "@client/query";
+import {
+  CheckCircleIcon,
+  EyeSlashIcon,
+  MinusCircleIcon,
+  PlusCircleIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
 import { ScoreObjective } from "@mytypes/score";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
@@ -22,6 +34,27 @@ export type SubmissionTabProps = {
   categoryName: string;
 };
 
+function SubmissionStatus({ submissions }: { submissions: Submission[] }) {
+  if (submissions.length === 0) {
+    return <MinusCircleIcon className="h-5 w-5" />;
+  }
+  if (
+    submissions.find(
+      (submission) => submission.approval_status === ApprovalStatus.APPROVED
+    )
+  ) {
+    return <CheckCircleIcon className="h-5 w-5 text-success" />;
+  }
+  if (
+    submissions.find(
+      (submission) => submission.approval_status === ApprovalStatus.PENDING
+    )
+  ) {
+    return <EyeSlashIcon className="h-5 w-5 text-warning" />;
+  }
+  return <XCircleIcon className="h-5 w-5 text-error" />;
+}
+
 function SubmissionTab({ categoryName }: SubmissionTabProps) {
   const { scores, currentEvent, preferences } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
@@ -31,10 +64,8 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
   const [showModal, setShowModal] = useState(false);
   const [selectedObjective, setSelectedObjective] = useState<ScoreObjective>();
   const formRef = useRef<HTMLFormElement>(null);
+  const { submissions = [] } = useGetSubmissions(currentEvent.id);
 
-  if (!category || !currentEvent || !currentEvent.teams) {
-    return <></>;
-  }
   const teamMap = currentEvent.teams.reduce(
     (acc: { [teamId: number]: Team }, team) => {
       acc[team.id] = team;
@@ -43,6 +74,9 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
     {}
   );
 
+  if (!category) {
+    return <></>;
+  }
   return (
     <>
       <Dialog
@@ -212,6 +246,11 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
                               scoreB.points - scoreA.points
                           )
                           .map(([teamId, score], idx) => {
+                            const s = submissions.filter(
+                              (submission) =>
+                                submission.team_id === teamId &&
+                                submission.objective_id === objective.id
+                            );
                             return (
                               <tr
                                 key={teamId}
@@ -236,12 +275,17 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
                                 </td>
                                 <td
                                   className={twMerge(
-                                    "pr-4 text-right",
+                                    "pr-4 text-right   ",
                                     idx === teamIds.length - 1 &&
                                       "rounded-br-box"
                                   )}
                                 >
-                                  {teamMap[teamId]?.name}
+                                  <div className="flex gap-2 rounded-br-box items-center justify-end">
+                                    <span className="">
+                                      {teamMap[teamId]?.name}
+                                    </span>
+                                    <SubmissionStatus submissions={s} />
+                                  </div>
                                 </td>
                               </tr>
                             );
