@@ -1,11 +1,11 @@
+import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { EmblaCarouselType } from "embla-carousel";
 import React, {
   ComponentPropsWithRef,
   useCallback,
   useEffect,
   useState,
 } from "react";
-import { EmblaCarouselType } from "embla-carousel";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 type UsePrevNextButtonsType = {
   prevBtnDisabled: boolean;

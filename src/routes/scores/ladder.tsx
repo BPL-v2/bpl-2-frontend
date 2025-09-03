@@ -19,7 +19,7 @@ import POProgressBar from "@components/po-progress";
 import Table from "@components/table";
 import { TeamName } from "@components/team-name";
 import TeamScoreDisplay from "@components/team-score";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { POPointRules } from "@rules/po-points";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { getSkillColor } from "@utils/gems";

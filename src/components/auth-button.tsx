@@ -1,13 +1,13 @@
+import { useGetUser } from "@client/query";
 import {
-  UserIcon,
   ArrowLeftStartOnRectangleIcon,
   ArrowRightEndOnRectangleIcon,
   Cog6ToothIcon,
+  UserIcon,
 } from "@heroicons/react/24/outline";
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { redirectOauth } from "@utils/oauth";
-import { useGetUser } from "@client/query";
-import { useQueryClient } from "@tanstack/react-query";
 
 const AuthButton = () => {
   const qc = useQueryClient();

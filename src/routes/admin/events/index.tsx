@@ -10,8 +10,11 @@ import { DeleteButton } from "@components/delete-button";
 import { Dialog } from "@components/dialog";
 import { setFormValues, useAppForm } from "@components/form/context";
 import Table from "@components/table";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import {
+  CheckCircleIcon,
+  PencilSquareIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";

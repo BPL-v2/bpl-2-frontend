@@ -4,27 +4,27 @@ import React, { useContext, useMemo } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { usePageSEO } from "@utils/use-seo";
 
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
 import { Objective, ObjectiveType, Permission, Submission } from "@client/api";
+import {
+  useGetRules,
+  useGetSubmissions,
+  useGetUser,
+  useGetUsers,
+  useReviewSubmission,
+} from "@client/query";
+import Table from "@components/table";
+import { TeamName } from "@components/team-name";
 import {
   CheckCircleIcon,
   EyeSlashIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
-import { iterateObjectives } from "@utils/utils";
-import Table from "@components/table";
-import { ColumnDef } from "@tanstack/react-table";
-import { TeamName } from "@components/team-name";
-import {
-  useGetUsers,
-  useGetRules,
-  useGetUser,
-  useGetSubmissions,
-  useReviewSubmission,
-} from "@client/query";
 import { useQueryClient } from "@tanstack/react-query";
+import { ColumnDef } from "@tanstack/react-table";
 import { renderStringWithUrl } from "@utils/text-utils";
+import { iterateObjectives } from "@utils/utils";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
 export const Route = createFileRoute("/submissions")({
@@ -32,7 +32,7 @@ export const Route = createFileRoute("/submissions")({
 });
 
 function SubmissionPage() {
-  usePageSEO('submissions');
+  usePageSEO("submissions");
   const { currentEvent } = useContext(GlobalStateContext);
   const qc = useQueryClient();
   const { users, isLoading: usersLoading } = useGetUsers(currentEvent.id);

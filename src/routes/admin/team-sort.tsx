@@ -1,7 +1,7 @@
 import { Permission, Signup } from "@client/api";
 import { useAddUsersToTeams, useGetSignups } from "@client/query";
 import Table from "@components/table";
-import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";
@@ -136,7 +136,7 @@ function UserSortPage() {
                 )
               );
               addUsersToTeams({
-                event_id: currentEvent?.id || 0,
+                eventId: currentEvent?.id || 0,
                 users: [
                   {
                     user_id: row.original.user.id,
@@ -404,7 +404,7 @@ function UserSortPage() {
           className="btn btn-warning"
           onClick={() => {
             addUsersToTeams({
-              event_id: currentEvent.id,
+              eventId: currentEvent.id,
               users: suggestions.map((s) => {
                 return {
                   user_id: s.user.id,

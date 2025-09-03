@@ -1,15 +1,14 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { useParams } from "@tanstack/react-router";
 import { GameVersion, Permission, Team, TeamCreate } from "@client/api";
-import { renderConditionally } from "@utils/token";
 import { useCreateTeam, useDeleteTeam, useGetEvents } from "@client/query";
-import { ColumnDef } from "@tanstack/react-table";
-import Table from "@components/table";
-import { useAppForm } from "@components/form/context";
-import { useQueryClient } from "@tanstack/react-query";
 import { Dialog } from "@components/dialog";
+import { useAppForm } from "@components/form/context";
+import Table from "@components/table";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, useParams } from "@tanstack/react-router";
+import { ColumnDef } from "@tanstack/react-table";
+import { renderConditionally } from "@utils/token";
+import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/admin/events/$eventId/teams")({
   component: renderConditionally(TeamPage, [
