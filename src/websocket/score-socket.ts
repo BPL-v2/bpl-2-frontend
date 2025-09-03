@@ -20,9 +20,9 @@ export const establishScoreSocket = (
     ) +
     `/events/${eventId}/scores/ws?token=${localStorage.getItem("auth") || ""}`;
   const ws = new WebSocket(url);
-  ws.onopen = () => {
-    console.log("WebSocket connection established", new Date());
-  };
+  // ws.onopen = () => {
+  //   console.log("WebSocket connection established", new Date());
+  // };
   ws.onmessage = (event) => {
     Object.values(JSON.parse(event.data) as ScoreDiff[]).forEach((diff) => {
       if (diff.diff_type !== "Unchanged" && diff.score.finished) {
