@@ -68,20 +68,19 @@ export function CollectionCardTable({
           })
           .map(([teamId, score], idx) => {
             const percent = (100 * score.number) / objective.required_number;
+            const isLastRow = idx === teamIds.length - 1;
+            const isPlayerTeam = teamId === eventStatus?.team_id;
+
             return (
               <tr
-                className={
-                  teamId === eventStatus?.team_id
-                    ? "bg-highlight content-highlight"
-                    : ""
-                }
+                className={isPlayerTeam ? "bg-highlight content-highlight" : ""}
                 key={teamId}
               >
                 {showPoints ? (
                   <td
                     className={twMerge(
                       "py-1 px-2",
-                      idx === teamIds.length - 1 && "rounded-bl-box"
+                      isLastRow && "rounded-bl-box"
                     )}
                   >
                     <div
@@ -102,7 +101,12 @@ export function CollectionCardTable({
                     </div>
                   </td>
                 ) : null}
-                <td className="px-2 w-full">
+                <td
+                  className={twMerge(
+                    "px-2 w-full",
+                    !showPoints && isLastRow && "rounded-bl-box"
+                  )}
+                >
                   <ProgressBar
                     value={score.number}
                     maxVal={objective.required_number}
@@ -111,7 +115,7 @@ export function CollectionCardTable({
                 <td
                   className={twMerge(
                     "text-left px-2",
-                    idx === teamIds.length - 1 && "rounded-br-box"
+                    isLastRow && "rounded-br-box"
                   )}
                 >
                   {currentEvent?.teams.find((team) => team.id === teamId)?.name}

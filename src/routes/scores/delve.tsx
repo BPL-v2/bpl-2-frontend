@@ -245,14 +245,14 @@ export function DelveTab(): JSX.Element {
                       <ObjectiveIcon
                         objective={objective}
                         gameVersion={currentEvent.game_version}
-                        className="h-8"
+                        className="h-8 w-8"
                       />
 
                       <h3 className="flex-grow text-center text-xl font-semibold mx-4">
                         {objective.name}
                       </h3>
                     </div>
-                    <div className="pb-4 mb-0 bg-base-300 rounded-b-box">
+                    <div className="rounded-b-box">
                       <CollectionCardTable
                         objective={objective}
                         showPoints={false}
