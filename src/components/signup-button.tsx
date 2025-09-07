@@ -9,6 +9,7 @@ import { TeamName } from "./team-name";
 import {
   useCreateSignup,
   useDeleteSignup,
+  useGetEvents,
   useGetEventStatus,
   useGetOwnSignup,
   useGetUser,
@@ -25,12 +26,18 @@ const SignupButton = () => {
   const [wantToHelp, setWantToHelp] = React.useState(false);
   const qc = useQueryClient();
   const { user, isLoading: userLoading, isError: userError } = useGetUser();
+  const { events } = useGetEvents();
+  const upcomingEvent = events?.sort((a, b) => {
+    return (
+      (Date.parse(a.event_start_time) || 0) - (Date.parse(b.event_start_time) || 0)
+    );
+  })[0] || currentEvent;
   const {
     eventStatus,
     isLoading: eventStatusLoading,
     isError: eventStatusError,
-  } = useGetEventStatus(currentEvent.id);
-  const { signup } = useGetOwnSignup(currentEvent.id);
+  } = useGetEventStatus(upcomingEvent.id);
+  const { signup } = useGetOwnSignup(upcomingEvent.id);
   const { deleteSignup } = useDeleteSignup(qc);
   const { createSignup, isError: signupError } = useCreateSignup(
     qc,
@@ -53,7 +60,7 @@ const SignupButton = () => {
               return;
             }
             createSignup({
-              eventId: currentEvent.id,
+              eventId: upcomingEvent.id,
               body: {
                 expected_playtime: hourValue,
                 wants_to_help: wantToHelp,
@@ -198,21 +205,24 @@ const SignupButton = () => {
         </div>
       </Dialog>
     );
-  }, [modalOpen, currentEvent.id, hourValue, needHelp, wantToHelp, signup]);
+  }, [modalOpen, upcomingEvent.id, hourValue, needHelp, wantToHelp, signup]);
 
   const userTeam = useMemo(() => {
     return (
       user &&
-      currentEvent?.teams.find((team) => team.id === eventStatus?.team_id)
+      upcomingEvent?.teams.find((team) => team.id === eventStatus?.team_id)
     );
-  }, [eventStatus, user, currentEvent]);
+  }, [eventStatus, user, upcomingEvent]);
+
+
+
   if (
     !user ||
     userLoading ||
     eventStatusLoading ||
     userError ||
     eventStatusError ||
-    new Date(currentEvent.application_start_time) > new Date()
+    new Date(upcomingEvent.application_start_time) > new Date()
   ) {
     return null;
   }
@@ -262,7 +272,7 @@ const SignupButton = () => {
               </div>
               <div
                 className={"text-error hover:bg-error hover:text-error-content"}
-                onClick={() => deleteSignup(currentEvent.id)}
+                onClick={() => deleteSignup(upcomingEvent.id)}
               >
                 Withdraw Application
               </div>
@@ -274,8 +284,8 @@ const SignupButton = () => {
   }
 
   if (
-    new Date() > new Date(currentEvent.application_end_time) ||
-    new Date() < new Date(currentEvent.application_start_time)
+    new Date() > new Date(upcomingEvent.application_end_time) ||
+    new Date() < new Date(upcomingEvent.application_start_time)
   ) {
     return;
   }
