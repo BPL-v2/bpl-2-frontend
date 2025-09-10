@@ -73,7 +73,10 @@ export function isWinnable(category: ScoreObjective): boolean {
   return true;
 }
 
-export function isFinished(objective: ScoreObjective, teamId: number): boolean {
+export function isFinished(objective: ScoreObjective, teamId?: number): boolean {
+  if (!teamId) {
+    return false;
+  }
   if (objective.scoring_preset?.scoring_method === "BONUS_PER_COMPLETION") {
     const finishedObjectives = objective.children.filter(
       (objective) => objective.team_score[teamId].finished

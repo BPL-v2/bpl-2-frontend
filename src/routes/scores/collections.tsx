@@ -62,7 +62,7 @@ export function CollectionTab(): JSX.Element {
                       {objective.extra}
                     </div>
                     <h3 className="flex-grow text-center text-xl font-medium mx-4">
-                      {`Collect ${objective.required_number} ${objective.name}`}
+                      {`${objective.required_number} ${objective.name}`}
                       {objective.extra ? (
                         <i className="text-red-600">*</i>
                       ) : null}

@@ -1,17 +1,14 @@
 import {
-  AggregationType,
   ApprovalStatus,
   ObjectiveType,
   Score,
   Submission,
-  SubmissionCreate,
   Team,
 } from "@client/api";
 import {
   useGetEventStatus,
   useGetSubmissions,
   useGetUsers,
-  useSubmitBounty,
 } from "@client/query";
 import {
   CheckCircleIcon,
@@ -24,14 +21,12 @@ import {
 import { TwitchFilled } from "@icons/twitch";
 import { YoutubeFilled } from "@icons/youtube";
 import { ScoreObjective } from "@mytypes/score";
-import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
-import { useContext, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { CollectionCardTable } from "./collection-card-table";
-import { DateTimePicker } from "./datetime-picker";
-import { Dialog } from "./dialog";
+import { SubmissionDialog } from "./submission-diablog";
 import TeamScoreDisplay from "./team-score";
 
 export type SubmissionTabProps = {
@@ -155,12 +150,9 @@ function VideoButton({ submissions }: { submissions: Submission[] }) {
 function SubmissionTab({ categoryName }: SubmissionTabProps) {
   const { scores, currentEvent, preferences } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
-  const qc = useQueryClient();
-  const { submitBounty } = useSubmitBounty(qc, currentEvent.id);
   const category = scores?.children.find((cat) => cat.name === categoryName);
   const [showModal, setShowModal] = useState(false);
   const [selectedObjective, setSelectedObjective] = useState<ScoreObjective>();
-  const formRef = useRef<HTMLFormElement>(null);
   const { submissions = [] } = useGetSubmissions(currentEvent.id);
   const { users } = useGetUsers(currentEvent.id);
   const userMap =
@@ -182,86 +174,11 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
   }
   return (
     <>
-      <Dialog
-        title={`Submission for "${selectedObjective?.name}"`}
-        open={showModal}
-        setOpen={setShowModal}
-      >
-        <form
-          ref={formRef}
-          onSubmit={(e) => {
-            e.preventDefault();
-            const values = Object.fromEntries(
-              new FormData(e.target as HTMLFormElement)
-            );
-
-            if (!selectedObjective) {
-              return;
-            }
-            const submissionCreate: SubmissionCreate = {
-              ...values,
-              timestamp: values.timestamp as string,
-              number: parseInt(values.number as string) || 1,
-              objective_id: selectedObjective.id,
-            };
-            submitBounty(submissionCreate);
-            setShowModal(false);
-          }}
-          className="form w-full"
-        >
-          <fieldset className="fieldset bg-base-300 p-6 rounded-box">
-            <DateTimePicker
-              label="Time (in your timezone)"
-              name="timestamp"
-            ></DateTimePicker>
-            {/* TODO: generalize this  */}
-            {selectedObjective?.aggregation == AggregationType.MAXIMUM && (
-              <>
-                <label className="label">Amount of Jewels dropped</label>
-                <input
-                  type="number"
-                  className="input w-full"
-                  required
-                  name="number"
-                />
-              </>
-            )}
-            {selectedObjective?.aggregation == AggregationType.MINIMUM && (
-              <>
-                <label className="label">
-                  Time taken for completion in seconds
-                </label>
-                <input
-                  type="number"
-                  className="input w-full"
-                  required
-                  name="number"
-                />
-              </>
-            )}
-            <label className="label">Link to proof</label>
-            <input type="text" className="input w-full" required name="proof" />
-            <label className="label">Comment</label>
-            <input type="text" className="input w-full" name="comment" />
-          </fieldset>
-        </form>
-        <div className="modal-action w-full">
-          <button
-            className="btn btn-soft"
-            onClick={() => {
-              setShowModal(false);
-            }}
-          >
-            Cancel
-          </button>
-          <button
-            className="btn btn-primary"
-            onClick={() => formRef.current?.requestSubmit()}
-          >
-            Submit
-          </button>
-        </div>
-      </Dialog>
+      <SubmissionDialog
+        objective={selectedObjective}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
       <div className="flex flex-col gap-4">
         <TeamScoreDisplay objective={category}></TeamScoreDisplay>
         <h1 className="text-xl">

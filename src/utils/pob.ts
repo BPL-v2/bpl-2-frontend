@@ -837,38 +837,45 @@ function parseMod(modLine: string): Mod {
 }
 
 function extractMagicBase(base: string, numMods: number): string {
-  if (base.startsWith("Synthesised ")) base = base.slice("Synthesised ".length);
+  if (base.startsWith("Synthesised ")) base = base.split("Synthesised ")[1];
   if (numMods === 0) return base;
   let end = base.indexOf(" of");
   const hasSuffix = end !== -1;
   if (!hasSuffix) end = base.length;
-  base = base.slice(0, end);
+  base = base.slice(0, end).trim();
+  const baseTypeWordCount = getBaseTypeWordCount(base);
+  const wordCount = base.split(" ").length;
   if (
     // has prefix
     numMods > 2 ||
-    (!hasSuffix && numMods === 1) ||
-    base.split(" ").length > 3 ||
-    !mayBeFullBase(base)
+    (!hasSuffix && numMods >= 1) ||
+    wordCount > baseTypeWordCount
   ) {
-    const idx = base.indexOf(" ");
-    return idx !== -1 ? base.slice(idx + 1) : base;
+    return base.split(" ").slice(-baseTypeWordCount).join(" ");
   }
   return base;
 }
 
-function mayBeFullBase(name: string): boolean {
-  let words = 2;
+function getBaseTypeWordCount(name: string): number {
+  if (
+    name.endsWith("Life Flask") ||
+    name.endsWith("Mana Flask") ||
+    name.endsWith("Hybrid Flask") ||
+    name.endsWith("Arrow Quiver") ||
+    name.endsWith("Shield") ||
+    name.endsWith("Talisman")
+  )
+    return 3;
   const counts = Object.entries(baseTypeWordCounts).flatMap(
     ([count, baseTypes]) =>
       baseTypes.map((bt) => [bt, parseInt(count)] as [string, number])
   );
   for (const [baseType, wc] of counts) {
     if (name.includes(baseType)) {
-      words = wc;
-      break;
+      return wc;
     }
   }
-  return name.trim().split(/\s+/).length === words;
+  return 2;
 }
 
 export function parseItem(item: string, slot: string | null, id: string): Item {
@@ -1087,124 +1094,7 @@ const baseTypeWordCounts = {
     "Crushing Force Magnifier",
     "Impact Force Propagator",
     "Blue Pearl Amulet",
-    "Black Maw Talisman",
-    "Lone Antler Talisman",
-    "Deep One Talisman",
-    "Undying Flesh Talisman",
-    "Rot Head Talisman",
-    "Primal Skull Talisman",
-    "Avian Twins Talisman",
-    "Avian Twins Talisman",
-    "Avian Twins Talisman",
-    "Avian Twins Talisman",
-    "Avian Twins Talisman",
-    "Avian Twins Talisman",
-    "Three Rat Talisman",
-    "Monkey Twins Talisman",
-    "Monkey Paw Talisman",
-    "Monkey Paw Talisman",
-    "Monkey Paw Talisman",
-    "Three Hands Talisman",
-    "Splintered Tower Shield",
-    "Corroded Tower Shield",
-    "Rawhide Tower Shield",
-    "Cedar Tower Shield",
-    "Copper Tower Shield",
-    "Reinforced Tower Shield",
-    "Painted Tower Shield",
-    "Buckskin Tower Shield",
-    "Mahogany Tower Shield",
-    "Bronze Tower Shield",
-    "Girded Tower Shield",
-    "Crested Tower Shield",
-    "Shagreen Tower Shield",
-    "Ebony Tower Shield",
-    "Ezomyte Tower Shield",
-    "Colossal Tower Shield",
-    "Pinnacle Tower Shield",
-    "Exothermic Tower Shield",
-    "Magmatic Tower Shield",
-    "Heat-attuned Tower Shield",
-    "Twig Spirit Shield",
-    "Yew Spirit Shield",
-    "Bone Spirit Shield",
-    "Tarnished Spirit Shield",
-    "Jingling Spirit Shield",
-    "Brass Spirit Shield",
-    "Walnut Spirit Shield",
-    "Ivory Spirit Shield",
-    "Ancient Spirit Shield",
-    "Chiming Spirit Shield",
-    "Thorium Spirit Shield",
-    "Lacewood Spirit Shield",
-    "Fossilised Spirit Shield",
-    "Vaal Spirit Shield",
-    "Harmonic Spirit Shield",
-    "Titanium Spirit Shield",
-    "Exhausting Spirit Shield",
-    "Subsuming Spirit Shield",
-    "Transfer-attuned Spirit Shield",
-    "Rotted Round Shield",
-    "Fir Round Shield",
-    "Studded Round Shield",
-    "Scarlet Round Shield",
-    "Splendid Round Shield",
-    "Maple Round Shield",
-    "Spiked Round Shield",
-    "Crimson Round Shield",
-    "Baroque Round Shield",
-    "Teak Round Shield",
-    "Spiny Round Shield",
-    "Cardinal Round Shield",
-    "Elegant Round Shield",
-    "Plank Kite Shield",
-    "Linden Kite Shield",
-    "Reinforced Kite Shield",
-    "Layered Kite Shield",
-    "Ceremonial Kite Shield",
-    "Etched Kite Shield",
-    "Steel Kite Shield",
-    "Laminated Kite Shield",
-    "Angelic Kite Shield",
-    "Branded Kite Shield",
-    "Champion Kite Shield",
-    "Mosaic Kite Shield",
-    "Archon Kite Shield",
-    "Driftwood Spiked Shield",
-    "Alloyed Spiked Shield",
-    "Burnished Spiked Shield",
-    "Ornate Spiked Shield",
-    "Redwood Spiked Shield",
-    "Compound Spiked Shield",
-    "Polished Spiked Shield",
-    "Sovereign Spiked Shield",
-    "Alder Spiked Shield",
-    "Ezomyte Spiked Shield",
-    "Mirrored Spiked Shield",
-    "Supreme Spiked Shield",
     "Full Scale Armour",
     "Fingerless Silk Gloves",
-    "Serrated Arrow Quiver",
-    "Two-Point Arrow Quiver",
-    "Sharktooth Arrow Quiver",
-    "Blunt Arrow Quiver",
-    "Fire Arrow Quiver",
-    "Broadhead Arrow Quiver",
-    "Penetrating Arrow Quiver",
-    "Spike-Point Arrow Quiver",
-    "Serrated Arrow Quiver",
-    "Fire Arrow Quiver",
-    "Sharktooth Arrow Quiver",
-    "Feathered Arrow Quiver",
-    "Penetrating Arrow Quiver",
-    "Blunt Arrow Quiver",
-    "Two-Point Arrow Quiver",
-    "Spike-Point Arrow Quiver",
-    "Blazing Arrow Quiver",
-    "Broadhead Arrow Quiver",
-    "Vile Arrow Quiver",
-    "Heavy Arrow Quiver",
-    "Primal Arrow Quiver",
-    "Serrated Arrow Quiver",
   ],
 };

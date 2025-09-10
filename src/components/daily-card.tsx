@@ -1,12 +1,15 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { CollectionCardTable } from "./collection-card-table";
 import { ObjectiveIcon } from "./objective-icon";
 import { Countdown } from "./countdown";
-import { useQueryClient } from "@tanstack/react-query";
 import { ScoreObjective } from "@mytypes/score";
-import { ScoringMethod } from "@client/api";
+import { ObjectiveType, ScoringMethod } from "@client/api";
 import { twMerge } from "tailwind-merge";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import { SubmissionDialog } from "./submission-diablog";
+import { useQueryClient } from "@tanstack/react-query";
+import { useGetEventStatus } from "@client/query";
 
 export type DailyCardProps = {
   daily: ScoreObjective;
@@ -35,7 +38,9 @@ function bonusAvailableCounter(
 
 export function DailyCard({ daily }: DailyCardProps) {
   const { currentEvent } = useContext(GlobalStateContext);
+  const [showModal, setShowModal] = useState(false);
   const qc = useQueryClient();
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
 
   if (!currentEvent || !daily.valid_from) {
     return <></>;
@@ -65,41 +70,68 @@ export function DailyCard({ daily }: DailyCardProps) {
   const isRace =
     daily.scoring_preset?.scoring_method === ScoringMethod.RANKED_TIME;
   const isAvailable = daily.valid_to && new Date(daily.valid_to) > new Date();
+  const canSubmit =
+    daily.objective_type === ObjectiveType.SUBMISSION && !!eventStatus?.team_id;
   return (
-    <div
-      className={twMerge(
-        "card bg-base-200 bborder",
-        isRace && isAvailable ? "outline-4 outline-info" : ""
-      )}
-      key={daily.id}
-    >
-      <div className="card-title rounded-t-box flex items-center py-2 px-4 bg-base-200 h-full min-h-25 bborder-b">
-        <ObjectiveIcon
-          objective={daily}
-          gameVersion={currentEvent.game_version}
-        />
-        <div className={daily.extra ? "tooltip tooltip-primary" : undefined}>
-          <div className="tooltip-content text-xl max-w-75 ">{daily.extra}</div>
+    <>
+      <SubmissionDialog
+        objective={daily}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
+      <div
+        className={twMerge(
+          "card bg-base-200 bborder",
+          isRace && isAvailable ? "outline-4 outline-info" : ""
+        )}
+        key={daily.id}
+      >
+        <div className="card-title rounded-t-box flex items-center py-2 px-4 bg-base-200 h-full min-h-25 bborder-b">
+          {canSubmit ? (
+            <div
+              className="tooltip tooltip-left lg:tooltip-top"
+              data-tip="Submit Bounty"
+            >
+              <button
+                className="rounded-full"
+                onClick={() => {
+                  setShowModal(true);
+                }}
+              >
+                <PlusCircleIcon className="h-8 w-8 cursor-pointer" />
+              </button>
+            </div>
+          ) : (
+            <ObjectiveIcon
+              objective={daily}
+              gameVersion={currentEvent.game_version}
+            />
+          )}
+          <div className={daily.extra ? "tooltip tooltip-primary" : undefined}>
+            <div className="tooltip-content text-xl max-w-75 ">
+              {daily.extra}
+            </div>
 
-          <h3 className="flex-grow text-center text-lg font-medium mx-4">
-            {isRace ? <b className="font-extrabold text-info">Race: </b> : ""}
-            {daily.name}
-            {daily.extra ? <i className="text-error">*</i> : null}
-          </h3>
+            <h3 className="flex-grow text-center text-lg font-medium mx-4">
+              {isRace ? <b className="font-extrabold text-info">Race: </b> : ""}
+              {daily.name}
+              {daily.extra ? <i className="text-error">*</i> : null}
+            </h3>
+          </div>
         </div>
-      </div>
-      <div className={twMerge("bg-base-300", isFinished && "rounded-b-box")}>
-        <CollectionCardTable objective={daily} />
-      </div>
-      {!isFinished && (
-        <div className="flex items-center justify-center rounded-b-box min-h-15">
-          {bonusAvailableCounter(daily.valid_to, () => {
-            qc.refetchQueries({
-              queryKey: ["rules", currentEvent.id],
-            });
-          })}
+        <div className={twMerge("bg-base-300", isFinished && "rounded-b-box")}>
+          <CollectionCardTable objective={daily} />
         </div>
-      )}
-    </div>
+        {!isFinished && (
+          <div className="flex items-center justify-center rounded-b-box min-h-15">
+            {bonusAvailableCounter(daily.valid_to, () => {
+              qc.refetchQueries({
+                queryKey: ["rules", currentEvent.id],
+              });
+            })}
+          </div>
+        )}
+      </div>
+    </>
   );
 }
