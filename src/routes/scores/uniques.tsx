@@ -153,25 +153,27 @@ function UniqueTab(): JSX.Element {
             </div>
           </fieldset>
         </div>
-        <div className="flex flex-col gap-4 bg-base-300/50 p-8 rounded-box pt-4">
-          <h1 className="text-3xl font-extrabold">Focus Unique Sets</h1>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
-            {focusUniqueCategory?.children
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((category) => {
-                return (
-                  <div key={`focus-unique-category-${category.id}`}>
-                    <UniqueCategoryCard
-                      objective={category}
-                      selected={category.id === selectedCategory?.id}
-                      teamId={selectedTeam}
-                      onClick={() => handleCategoryClick(category)}
-                    />
-                  </div>
-                );
-              })}
+        {focusUniqueCategory && (
+          <div className="flex flex-col gap-4 bg-base-300/50 p-8 rounded-box pt-4">
+            <h1 className="text-3xl font-extrabold">Focus Unique Sets</h1>
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
+              {focusUniqueCategory?.children
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((category) => {
+                  return (
+                    <div key={`focus-unique-category-${category.id}`}>
+                      <UniqueCategoryCard
+                        objective={category}
+                        selected={category.id === selectedCategory?.id}
+                        teamId={selectedTeam}
+                        onClick={() => handleCategoryClick(category)}
+                      />
+                    </div>
+                  );
+                })}
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="flex flex-col gap-4 bg-base-300/50 p-8 rounded-box pt-4">
           <h1 className="text-3xl font-extrabold">Unique Sets</h1>
