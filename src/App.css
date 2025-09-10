@@ -124,15 +124,15 @@
 }
 
 @utility bborder {
-  @apply border-1;
+  @apply border-2;
   @apply border-base-content/20;
 }
 @utility bborder-b {
-  @apply border-b-1;
+  @apply border-b-2;
   @apply border-base-content/20;
 }
 @utility bborder-t {
-  @apply border-t-1;
+  @apply border-t-2;
   @apply border-base-content/20;
 }
 

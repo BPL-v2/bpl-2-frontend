@@ -27,7 +27,7 @@ function getLink(item: Item) {
   return link;
 }
 
-type Probs = {
+type Props = {
   pobString: string;
 };
 
@@ -51,27 +51,21 @@ function ItemTooltip({
     if (!mouseX || !mouseY || !tooltipRef.current) {
       return;
     }
-    const tooltip = tooltipRef.current;
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-    const tooltipWidth = tooltip.scrollHeight;
-    const tooltipHeight = tooltip.scrollHeight;
+    
+    // Small delay to ensure tooltip is rendered
+    const timer = setTimeout(() => {
+      if (!tooltipRef.current) return;
+      
+      const maxWidth = 320;
+      
+      // Simple positioning: just put it at the mouse cursor with small offsets
+      let left = mouseX; // Small offset to the right
+      let top = mouseY; // Small offset below, adjusted for scroll
 
-    let left = mouseX;
-    let top = mouseY;
-    const maxWidth = 320;
-    if (left + tooltipWidth > viewportWidth) {
-      left = viewportWidth - maxWidth - 32;
-    }
-
-    // Check vertical overflow
-    if (top + tooltipHeight > viewportHeight - 16) {
-      top = viewportHeight - tooltipHeight - 16;
-    }
-    if (top < 16) {
-      top = 16;
-    }
-    setPosition({ left, top, maxWidth });
+      setPosition({ left, top, maxWidth });
+    }, 0);
+    
+    return () => clearTimeout(timer);
   }, [mouseX, mouseY, tooltipRef]);
 
   if (!item) return null;
@@ -270,10 +264,15 @@ function ItemDisplay({
   }
 
   const handleMouseEnter = () => {
+    if (!item || !itemRef.current) return;
+    
     selectionSetter(item);
+    const rect = itemRef.current.getBoundingClientRect();
+    
+    // Position tooltip to the right of the item with some spacing
     setMousePosition({
-      x: (itemRef.current?.getBoundingClientRect().right || 0) + 10,
-      y: itemRef.current?.getBoundingClientRect().top || 0,
+      x: rect.right + 10,
+      y: rect.top,
     });
   };
 
@@ -319,7 +318,7 @@ function ItemDisplay({
   );
 }
 
-export function PoB({ pobString }: Probs) {
+export function PoB({ pobString }: Props) {
   const { data: gemColors } = useFile<Record<"r" | "g" | "b" | "w", string[]>>(
     "/assets/poe1/items/gem_colors.json"
   );

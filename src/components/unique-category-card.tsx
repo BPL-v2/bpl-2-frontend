@@ -63,7 +63,10 @@ export const UniqueCategoryCard = ({
         <div className="flex-shrink-0">
           <Medal rank={objective.team_score[teamId]?.rank} size={28} />
         </div>
-        <h1 className="font-extrabold">{objective.name}</h1>
+        <div>
+          <h1 className="font-extrabold">{objective.name}</h1>
+          <h1 className="font-bold text-info">{objective.extra}</h1>
+        </div>
         <div className="hidden sm:block flex-shrink-0 text-sm"> {points} </div>
       </div>
       <div className="px-4 min-h-2">

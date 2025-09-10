@@ -16,7 +16,7 @@ function UniqueTab(): JSX.Element {
   const { currentEvent, scores, preferences, setPreferences } =
     useContext(GlobalStateContext);
   const [selectedCategory, setSelectedCategory] = useState<ScoreObjective>();
-  const [selectedTeam, setSelectedTeam] = useState<number | undefined>();
+  const [selectedTeam, setSelectedTeam] = useState<number>();
   const [categoryFilter, setCategoryFilter] = useState<string>("");
   const [shownCategories, setShownCategories] = useState<ScoreObjective[]>([]);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
@@ -24,6 +24,9 @@ function UniqueTab(): JSX.Element {
   const { rules } = Route.useSearch();
   const uniqueCategory = scores?.children.find(
     (category) => category.name === "Uniques"
+  );
+  const focusUniqueCategory = scores?.children.find(
+    (category) => category.name === "Focus Uniques"
   );
   const handleCategoryClick = (objective: ScoreObjective) => {
     if (objective.id === selectedCategory?.id) {
@@ -47,16 +50,18 @@ function UniqueTab(): JSX.Element {
   }, [eventStatus, currentEvent]);
 
   useEffect(() => {
-    if (!uniqueCategory || !selectedTeam) {
+    if (!uniqueCategory) {
       return;
     }
-    const shownCategories = uniqueCategory.children.filter(
-      (category) =>
+    const shownCategories = uniqueCategory.children.filter((category) => {
+      console.log(category);
+      return (
         category.name.toLowerCase().includes(categoryFilter.toLowerCase()) &&
         (preferences.uniqueSets.showCompleted ||
           !isFinished(category, selectedTeam)) &&
         (preferences.uniqueSets.showFirstAvailable || isWinnable(category))
-    );
+      );
+    });
     if (shownCategories.length === 1) {
       setSelectedCategory(shownCategories[0]);
     }
@@ -82,7 +87,6 @@ function UniqueTab(): JSX.Element {
   if (!uniqueCategory) {
     return <></>;
   }
-
   return (
     <>
       {rules ? (
@@ -97,78 +101,106 @@ function UniqueTab(): JSX.Element {
         selectedTeam={selectedTeam}
         setSelectedTeam={setSelectedTeam}
       />
-      <div className="flex justify-center">
-        <fieldset className="fieldset w-xl bg-base-300 p-2 md:p-4 rounded-box flex gap-12 flex-row justify-center m-2">
-          <div>
-            <legend className="fieldset-legend">Category</legend>
-            <input
-              type="search"
-              className="input input-sm "
-              placeholder=""
-              onInput={(e) => setCategoryFilter(e.currentTarget.value)}
-            />
-          </div>
-          <div>
-            <legend className="fieldset-legend">Show finished</legend>
-            <label className="fieldset-label">
+      <div className="flex flex-col gap-4 mt-4">
+        <div className="flex justify-center">
+          <fieldset className="fieldset w-xl bg-base-300 p-2 md:p-4 rounded-box flex gap-12 flex-row justify-center">
+            <div>
+              <legend className="fieldset-legend">Category</legend>
               <input
-                type="checkbox"
-                checked={preferences.uniqueSets.showCompleted}
-                className="toggle toggle-lg"
-                onChange={(e) =>
-                  setPreferences({
-                    ...preferences,
-                    uniqueSets: {
-                      ...preferences.uniqueSets,
-                      showCompleted: e.target.checked,
-                    },
-                  })
-                }
+                type="search"
+                className="input input-sm "
+                placeholder=""
+                onInput={(e) => setCategoryFilter(e.currentTarget.value)}
               />
-            </label>
-          </div>
-          <div>
-            <legend className="fieldset-legend">Show unwinnable</legend>
-            <label className="fieldset-label">
-              <input
-                type="checkbox"
-                checked={preferences.uniqueSets.showFirstAvailable}
-                className="toggle toggle-lg"
-                onChange={(e) => {
-                  setPreferences({
-                    ...preferences,
-                    uniqueSets: {
-                      ...preferences.uniqueSets,
-                      showFirstAvailable: e.target.checked,
-                    },
-                  });
-                }}
-              />
-            </label>
-          </div>
-        </fieldset>
-      </div>
-      <div className="divider divider-primary">Categories</div>
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 m-2">
-        {shownCategories
-          .sort((a, b) => a.name.localeCompare(b.name))
-          .map((category) => {
-            return (
-              <div key={`unique-category-${category.id}`}>
-                <UniqueCategoryCard
-                  objective={category}
-                  selected={category.id === selectedCategory?.id}
-                  teamId={selectedTeam}
-                  onClick={() => handleCategoryClick(category)}
+            </div>
+            <div>
+              <legend className="fieldset-legend">Show finished</legend>
+              <label className="fieldset-label">
+                <input
+                  type="checkbox"
+                  checked={preferences.uniqueSets.showCompleted}
+                  className="toggle toggle-lg"
+                  onChange={(e) =>
+                    setPreferences({
+                      ...preferences,
+                      uniqueSets: {
+                        ...preferences.uniqueSets,
+                        showCompleted: e.target.checked,
+                      },
+                    })
+                  }
                 />
-              </div>
-            );
-          })}
+              </label>
+            </div>
+            <div>
+              <legend className="fieldset-legend">Show unwinnable</legend>
+              <label className="fieldset-label">
+                <input
+                  type="checkbox"
+                  checked={preferences.uniqueSets.showFirstAvailable}
+                  className="toggle toggle-lg"
+                  onChange={(e) => {
+                    setPreferences({
+                      ...preferences,
+                      uniqueSets: {
+                        ...preferences.uniqueSets,
+                        showFirstAvailable: e.target.checked,
+                      },
+                    });
+                  }}
+                />
+              </label>
+            </div>
+          </fieldset>
+        </div>
+        <div className="flex flex-col gap-4 bg-base-300/50 p-8 rounded-box pt-4">
+          <h1 className="text-3xl font-extrabold">Focus Unique Sets</h1>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
+            {focusUniqueCategory?.children
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((category) => {
+                return (
+                  <div key={`focus-unique-category-${category.id}`}>
+                    <UniqueCategoryCard
+                      objective={category}
+                      selected={category.id === selectedCategory?.id}
+                      teamId={selectedTeam}
+                      onClick={() => handleCategoryClick(category)}
+                    />
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4 bg-base-300/50 p-8 rounded-box pt-4">
+          <h1 className="text-3xl font-extrabold">Unique Sets</h1>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 m-2">
+            {shownCategories
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((category) => {
+                return (
+                  <div key={`unique-category-${category.id}`}>
+                    <UniqueCategoryCard
+                      objective={category}
+                      selected={category.id === selectedCategory?.id}
+                      teamId={selectedTeam}
+                      onClick={() => handleCategoryClick(category)}
+                    />
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+        <div
+          ref={tableRef}
+          className="divider divider-primary text-xl font-extrabold"
+        >
+          Items in{" "}
+          {selectedCategory ? selectedCategory.name + " set" : "All Categories"}
+        </div>
+        {table}
       </div>
-      <div ref={tableRef} className="divider divider-primary">
-        Items
-      </div>
-      {table}
     </>
   );
 }

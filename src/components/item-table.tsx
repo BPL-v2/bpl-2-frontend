@@ -1,4 +1,4 @@
-import { GameVersion, Team } from "@client/api";
+import { GameVersion, ScoringMethod, Team } from "@client/api";
 import { useGetEventStatus, useGetUsers } from "@client/query";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { ScoreObjective } from "@mytypes/score";
@@ -106,6 +106,16 @@ export function ItemTable({
           <div>{objective.name}</div>
           <span className="text-sm text-primary">[{objective.extra}]</span>
         </div>
+      );
+    }
+    if (
+      objective.scoring_preset?.scoring_method ===
+      ScoringMethod.POINTS_FROM_VALUE
+    ) {
+      return (
+        <span className="text-base text-secondary font-extrabold">
+          {objective.name}
+        </span>
       );
     }
     return <>{objective.name}</>;
