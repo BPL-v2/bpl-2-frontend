@@ -73,7 +73,7 @@ const AuthButton = () => {
     <button
       className="btn btn-lg py-8 border-0 hover:text-primary-content hover:bg-primary"
       onClick={redirectOauth("poe", state.location.href)}
-      // onClick={redirectOauth("discord", state.location.href)}
+      title="Login with Path of Exile and Discord"
     >
       <ArrowRightEndOnRectangleIcon className="h-6 w-6" />
       <div className="hidden sm:block">Login</div>
