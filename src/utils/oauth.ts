@@ -2,7 +2,7 @@ import { oauthApi } from "@client/client";
 
 export function getCallbackUrl(provider: "discord" | "twitch" | "poe") {
   let callbackUrl = window.location.origin;
-  if (callbackUrl === "http://localhost") {
+  if (callbackUrl.startsWith("http://localhost")) {
     // oauth providers require https
     callbackUrl = "https://redirectmeto.com/" + callbackUrl;
   }
