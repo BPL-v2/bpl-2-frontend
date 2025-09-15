@@ -19,6 +19,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as StreamsTwitchAccountRouteImport } from './routes/streams/$twitchAccount'
 import { Route as ScoresUniquesRouteImport } from './routes/scores/uniques'
+import { Route as ScoresScarabsRouteImport } from './routes/scores/scarabs'
 import { Route as ScoresRacesRouteImport } from './routes/scores/races'
 import { Route as ScoresProgressRouteImport } from './routes/scores/progress'
 import { Route as ScoresLadderRouteImport } from './routes/scores/ladder'
@@ -97,6 +98,11 @@ const StreamsTwitchAccountRoute = StreamsTwitchAccountRouteImport.update({
 const ScoresUniquesRoute = ScoresUniquesRouteImport.update({
   id: '/uniques',
   path: '/uniques',
+  getParentRoute: () => ScoresRouteRoute,
+} as any)
+const ScoresScarabsRoute = ScoresScarabsRouteImport.update({
+  id: '/scarabs',
+  path: '/scarabs',
   getParentRoute: () => ScoresRouteRoute,
 } as any)
 const ScoresRacesRoute = ScoresRacesRouteImport.update({
@@ -273,6 +279,7 @@ export interface FileRoutesByFullPath {
   '/scores/ladder': typeof ScoresLadderRoute
   '/scores/progress': typeof ScoresProgressRoute
   '/scores/races': typeof ScoresRacesRoute
+  '/scores/scarabs': typeof ScoresScarabsRoute
   '/scores/uniques': typeof ScoresUniquesRoute
   '/streams/$twitchAccount': typeof StreamsTwitchAccountRoute
   '/admin': typeof AdminIndexRoute
@@ -314,6 +321,7 @@ export interface FileRoutesByTo {
   '/scores/ladder': typeof ScoresLadderRoute
   '/scores/progress': typeof ScoresProgressRoute
   '/scores/races': typeof ScoresRacesRoute
+  '/scores/scarabs': typeof ScoresScarabsRoute
   '/scores/uniques': typeof ScoresUniquesRoute
   '/streams/$twitchAccount': typeof StreamsTwitchAccountRoute
   '/admin': typeof AdminIndexRoute
@@ -356,6 +364,7 @@ export interface FileRoutesById {
   '/scores/ladder': typeof ScoresLadderRoute
   '/scores/progress': typeof ScoresProgressRoute
   '/scores/races': typeof ScoresRacesRoute
+  '/scores/scarabs': typeof ScoresScarabsRoute
   '/scores/uniques': typeof ScoresUniquesRoute
   '/streams/$twitchAccount': typeof StreamsTwitchAccountRoute
   '/admin/': typeof AdminIndexRoute
@@ -399,6 +408,7 @@ export interface FileRouteTypes {
     | '/scores/ladder'
     | '/scores/progress'
     | '/scores/races'
+    | '/scores/scarabs'
     | '/scores/uniques'
     | '/streams/$twitchAccount'
     | '/admin'
@@ -440,6 +450,7 @@ export interface FileRouteTypes {
     | '/scores/ladder'
     | '/scores/progress'
     | '/scores/races'
+    | '/scores/scarabs'
     | '/scores/uniques'
     | '/streams/$twitchAccount'
     | '/admin'
@@ -481,6 +492,7 @@ export interface FileRouteTypes {
     | '/scores/ladder'
     | '/scores/progress'
     | '/scores/races'
+    | '/scores/scarabs'
     | '/scores/uniques'
     | '/streams/$twitchAccount'
     | '/admin/'
@@ -596,6 +608,13 @@ declare module '@tanstack/react-router' {
       path: '/uniques'
       fullPath: '/scores/uniques'
       preLoaderRoute: typeof ScoresUniquesRouteImport
+      parentRoute: typeof ScoresRouteRoute
+    }
+    '/scores/scarabs': {
+      id: '/scores/scarabs'
+      path: '/scarabs'
+      fullPath: '/scores/scarabs'
+      preLoaderRoute: typeof ScoresScarabsRouteImport
       parentRoute: typeof ScoresRouteRoute
     }
     '/scores/races': {
@@ -815,6 +834,7 @@ interface ScoresRouteRouteChildren {
   ScoresLadderRoute: typeof ScoresLadderRoute
   ScoresProgressRoute: typeof ScoresProgressRoute
   ScoresRacesRoute: typeof ScoresRacesRoute
+  ScoresScarabsRoute: typeof ScoresScarabsRoute
   ScoresUniquesRoute: typeof ScoresUniquesRoute
 }
 
@@ -829,6 +849,7 @@ const ScoresRouteRouteChildren: ScoresRouteRouteChildren = {
   ScoresLadderRoute: ScoresLadderRoute,
   ScoresProgressRoute: ScoresProgressRoute,
   ScoresRacesRoute: ScoresRacesRoute,
+  ScoresScarabsRoute: ScoresScarabsRoute,
   ScoresUniquesRoute: ScoresUniquesRoute,
 }
 
