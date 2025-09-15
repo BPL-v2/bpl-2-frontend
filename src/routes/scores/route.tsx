@@ -35,7 +35,7 @@ type scoringTabKey =
   | "scarabs"
   | "delve";
 
-export type ScoreQueryParams = {
+type ScoreQueryParams = {
   rules: boolean;
 };
 
@@ -212,5 +212,3 @@ function ScoringPage() {
     </>
   );
 }
-
-export default ScoringPage;

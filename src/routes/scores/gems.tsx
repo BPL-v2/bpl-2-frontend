@@ -53,7 +53,7 @@ function toColor(color: string, active: boolean): React.ReactNode {
   }
 }
 
-export function GemTab(): JSX.Element {
+function GemTab(): JSX.Element {
   const { currentEvent, scores } = useContext(GlobalStateContext);
   const [color, setColor] = React.useState<"r" | "g" | "b" | undefined>();
   const { data: gemColors } = useFile<Record<"r" | "g" | "b" | "w", string[]>>(

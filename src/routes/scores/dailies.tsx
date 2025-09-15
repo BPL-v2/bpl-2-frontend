@@ -10,7 +10,7 @@ export const Route = createFileRoute("/scores/dailies")({
   component: DailyTab,
 });
 
-export function DailyTab(): JSX.Element {
+function DailyTab(): JSX.Element {
   const { scores } = useContext(GlobalStateContext);
   const dailyCategory = scores?.children.find((cat) => cat.name === "Dailies");
   const { rules } = Route.useSearch();

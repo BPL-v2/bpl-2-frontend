@@ -269,5 +269,3 @@ function SubmissionPage() {
     ></Table>
   );
 }
-
-export default SubmissionPage;

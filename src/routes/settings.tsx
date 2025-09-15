@@ -13,8 +13,8 @@ export const Route = createFileRoute("/settings")({
   component: SettingsPage,
 });
 
-export function SettingsPage() {
-  usePageSEO('settings');
+function SettingsPage() {
+  usePageSEO("settings");
   const qc = useQueryClient();
   const { user } = useGetUser();
   const { changeUserDisplayName } = useChangeUserDisplayName(qc);

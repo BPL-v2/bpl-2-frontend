@@ -22,7 +22,7 @@ export const Route = createFileRoute("/scores/for-you")({
   },
 });
 
-export function ForYouTab() {
+function ForYouTab() {
   const { currentEvent, scores } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const { user } = useGetUser();

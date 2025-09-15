@@ -7,7 +7,7 @@ export const Route = createFileRoute("/scores/bounties")({
   component: BountiesPage,
 });
 
-export function BountiesPage(): JSX.Element {
+function BountiesPage(): JSX.Element {
   const { rules } = Route.useSearch();
   return (
     <>

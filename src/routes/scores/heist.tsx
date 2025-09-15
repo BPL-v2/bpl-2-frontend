@@ -11,7 +11,7 @@ export const Route = createFileRoute("/scores/heist")({
   component: HeistTab,
 });
 
-export function HeistTab(): JSX.Element {
+function HeistTab(): JSX.Element {
   const { scores, currentEvent } = useContext(GlobalStateContext);
   const { rules } = Route.useSearch();
   const heistCategory = scores?.children.find(

@@ -26,8 +26,8 @@ function teamSort(
   };
 }
 
-export function TwitchPage() {
-  usePageSEO('streams');
+function TwitchPage() {
+  usePageSEO("streams");
   const { currentEvent } = useContext(GlobalStateContext);
   const { users } = useGetUsers(currentEvent.id);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
