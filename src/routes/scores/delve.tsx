@@ -26,7 +26,7 @@ export const Route = createFileRoute("/scores/delve")({
   },
 });
 
-export function DelveTab(): JSX.Element {
+function DelveTab(): JSX.Element {
   const { scores, currentEvent, isMobile } = useContext(GlobalStateContext);
   const { rules } = Route.useSearch();
   const { data: ladder = [] } = useGetLadder(currentEvent.id);

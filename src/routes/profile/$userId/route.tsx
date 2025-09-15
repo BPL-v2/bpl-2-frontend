@@ -20,7 +20,7 @@ export const Route = createFileRoute("/profile/$userId")({
   },
 });
 
-export function ProfilePage() {
+function ProfilePage() {
   usePageSEO("profile");
   const { userId } = useParams({ from: Route.id });
 

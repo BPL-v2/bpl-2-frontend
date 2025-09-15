@@ -11,7 +11,7 @@ export const Route = createFileRoute("/scores/scarabs")({
   component: ScarabTab,
 });
 
-export function ScarabTab(): JSX.Element {
+function ScarabTab(): JSX.Element {
   const { currentEvent, scores } = useContext(GlobalStateContext);
   const { rules } = Route.useSearch();
   useEffect(() => {

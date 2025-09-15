@@ -45,7 +45,7 @@ export const Route = createFileRoute("/scores/ladder")({
   },
 });
 
-export function LadderTab(): JSX.Element {
+function LadderTab(): JSX.Element {
   const { scores, currentEvent, isMobile, preferences, setPreferences } =
     useContext(GlobalStateContext);
   const { rules } = Route.useSearch();

@@ -22,7 +22,7 @@ export const Route = createFileRoute("/admin/team-suggestions")({
   component: TeamSuggestionsPage,
 });
 
-export function TeamSuggestionsPage() {
+function TeamSuggestionsPage() {
   const { currentEvent, scores } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const qc = useQueryClient();

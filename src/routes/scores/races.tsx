@@ -7,7 +7,7 @@ export const Route = createFileRoute("/scores/races")({
   component: RacePage,
 });
 
-export function RacePage(): JSX.Element {
+function RacePage(): JSX.Element {
   const { rules } = Route.useSearch();
   return (
     <>

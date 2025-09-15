@@ -9,8 +9,8 @@ type CollapseItems = {
   label: string;
   children: React.ReactNode;
 };
-export function RulePage() {
-  usePageSEO('rules');
+function RulePage() {
+  usePageSEO("rules");
   const ruleCollapse: CollapseItems[] = [
     {
       label:

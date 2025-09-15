@@ -26,7 +26,7 @@ export const Route = createFileRoute("/scores/collections")({
   },
 });
 
-export function CollectionTab(): JSX.Element {
+function CollectionTab(): JSX.Element {
   const { scores, currentEvent } = useContext(GlobalStateContext);
   const category = scores?.children.find((cat) => cat.name === "Collections");
   const { rules } = Route.useSearch();

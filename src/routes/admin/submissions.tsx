@@ -341,5 +341,3 @@ function SubmissionPage() {
     </div>
   );
 }
-
-export default SubmissionPage;
