@@ -27,16 +27,16 @@ const SignupButton = () => {
   const qc = useQueryClient();
   const { user, isLoading: userLoading, isError: userError } = useGetUser();
   const { events } = useGetEvents();
-  const upcomingEvent = events?.sort((a, b) => {
-    return (
-      (Date.parse(a.event_start_time) || 0) - (Date.parse(b.event_start_time) || 0)
-    );
-  })[0] || currentEvent;
-  const {
-    eventStatus,
-    isLoading: eventStatusLoading,
-    isError: eventStatusError,
-  } = useGetEventStatus(upcomingEvent.id);
+  const upcomingEvent =
+    events?.sort((a, b) => {
+      return (
+        (Date.parse(b.event_start_time) || 0) -
+        (Date.parse(a.event_start_time) || 0)
+      );
+    })[0] || currentEvent;
+  const { eventStatus, isError: eventStatusError } = useGetEventStatus(
+    upcomingEvent.id
+  );
   const { signup } = useGetOwnSignup(upcomingEvent.id);
   const { deleteSignup } = useDeleteSignup(qc);
   const { createSignup, isError: signupError } = useCreateSignup(
@@ -214,12 +214,9 @@ const SignupButton = () => {
     );
   }, [eventStatus, user, upcomingEvent]);
 
-
-
   if (
     !user ||
     userLoading ||
-    eventStatusLoading ||
     userError ||
     eventStatusError ||
     new Date(upcomingEvent.application_start_time) > new Date()
