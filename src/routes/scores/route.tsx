@@ -19,6 +19,7 @@ import { usePageSEO } from "@utils/use-seo";
 import { JSX, useContext, useEffect, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { router } from "../../main";
+import { useGetRules } from "@client/query";
 
 type scoringTabKey =
   | "ladder"
@@ -31,6 +32,7 @@ type scoringTabKey =
   | "dailies"
   | "heist"
   | "gems"
+  | "scarabs"
   | "delve";
 
 export type ScoreQueryParams = {
@@ -49,6 +51,7 @@ export const Route = createFileRoute("/scores")({
 function ScoringPage() {
   usePageSEO("scores");
   const { currentEvent } = useContext(GlobalStateContext);
+  const { rules: categories } = useGetRules(currentEvent.id);
   const { rules } = Route.useSearch();
 
   const selected = useRouterState({
@@ -130,6 +133,12 @@ function ScoringPage() {
         visible: currentEvent.game_version === GameVersion.poe1,
       },
       {
+        name: "Scarabs",
+        key: "scarabs",
+        rules: <GemTabRules />,
+        visible: currentEvent.game_version === GameVersion.poe1,
+      },
+      {
         name: "Delve",
         key: "delve",
         rules: <DelveTabRules />,
@@ -137,30 +146,53 @@ function ScoringPage() {
       },
     ];
   }, [currentEvent]);
-
+  const tabs: {
+    key: scoringTabKey;
+    name: string;
+    visible: boolean;
+    rules?: JSX.Element;
+  }[] = [
+    {
+      name: "Ladder",
+      key: "ladder",
+      visible: true,
+    },
+    {
+      name: "For You",
+      key: "for-you",
+      visible: true,
+    },
+    {
+      name: "Progress",
+      key: "progress",
+      visible: true,
+    },
+    ...scoringTabs.filter(
+      (tab) =>
+        tab.visible && categories?.children.find((c) => c.name === tab.name)
+    ),
+  ];
   return (
     <>
       <div className="flex items-center justify-between bg-base-200 mb-4 rounded-b-box">
         <ul className="menu menu-horizontal md:gap-2">
-          {scoringTabs
-            .filter((tab) => tab.visible)
-            .map((tab) => (
-              <li key={tab.key}>
-                <Link
-                  to={`/scores/${tab.key}`}
-                  search={{ rules: rules }}
-                  className={"btn btn-xs md:btn-sm text-base"}
-                  activeProps={{
-                    className: "btn-primary",
-                  }}
-                  inactiveProps={{
-                    className: "btn-ghost hover:btn-primary",
-                  }}
-                >
-                  {tab.name}
-                </Link>
-              </li>
-            ))}
+          {tabs.map((tab) => (
+            <li key={tab.key}>
+              <Link
+                to={`/scores/${tab.key}`}
+                search={{ rules: rules }}
+                className={"btn btn-xs md:btn-sm text-base"}
+                activeProps={{
+                  className: "btn-primary",
+                }}
+                inactiveProps={{
+                  className: "btn-ghost hover:btn-primary",
+                }}
+              >
+                {tab.name}
+              </Link>
+            </li>
+          ))}
         </ul>
         <Link
           to={"/scores/" + selected}

@@ -105,8 +105,11 @@ export function GemTab(): JSX.Element {
         </div>
         {gemCategory.children.map((category) => {
           return (
-            <div key={category.id} className="bg-base-200 rounded-box md:p-8">
-              <div className="divider divider-primary">{category.name}</div>
+            <div
+              key={category.id}
+              className="bg-base-200 rounded-box md:p-8 flex flex-col gap-8"
+            >
+              <h1 className="text-3xl font-extrabold">{category.name}</h1>
               <div className="flex flex-col gap-4 items-center">
                 <Ranking
                   objective={category}
