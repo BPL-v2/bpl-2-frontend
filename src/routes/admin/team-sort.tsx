@@ -1,7 +1,11 @@
 import { Permission, Signup } from "@client/api";
 import { useAddUsersToTeams, useGetSignups } from "@client/query";
 import Table from "@components/table";
-import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowDownTrayIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";
@@ -120,6 +124,19 @@ function UserSortPage() {
         size: 120,
       },
       {
+        header: "GuildLead",
+        size: 150,
+        accessorKey: "extra",
+        cell: ({ row }) => {
+          console.log(row.original);
+          return row.original.extra ? (
+            <CheckCircleIcon className="text-success size-8" />
+          ) : (
+            <XCircleIcon className="text-error size-8" />
+          );
+        },
+      },
+      {
         header: "Lead",
         accessorKey: "team_lead",
         cell: ({ row }) => (
@@ -152,7 +169,7 @@ function UserSortPage() {
       },
       {
         header: "Assign Team",
-        size: 700,
+        size: 550,
         cell: ({ row }) => {
           return (
             <div className="flex flex-wrap gap-1">
