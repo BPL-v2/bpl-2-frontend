@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import React, { useContext, useMemo } from "react";
 
 import { GlobalStateContext } from "@utils/context-provider";
+import { renderConditionally } from "@utils/token";
 
 import { Objective, ObjectiveType, Permission, Submission } from "@client/api";
 import { submissionApi } from "@client/client";
@@ -29,7 +30,10 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
 export const Route = createFileRoute("/admin/submissions")({
-  component: SubmissionPage,
+  component: renderConditionally(SubmissionPage, [
+    Permission.admin,
+    Permission.submission_judge,
+  ]),
 });
 
 function SubmissionPage() {
