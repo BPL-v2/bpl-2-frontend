@@ -152,21 +152,19 @@ function Home() {
                       <div className="card-body">
                         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 items-center h-full">
                           <TeamLogo team={team} eventId={nextEvent.id} />
-                          <div>
-                            <div className="grid grid-cols-6 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-3 2xl:grid-cols-4 gap-2 mt-8">
-                              {team.allowed_classes.map((character_class) => (
-                                <div
-                                  key={team.id + character_class}
-                                  className="tooltip tooltip-primary"
-                                  data-tip={character_class}
-                                >
-                                  <AscendancyPortrait
-                                    character_class={character_class}
-                                    className="avatar w-15 h-15 sm:w-16 sm:h-16 xl:w-20 xl:h-20 rounded-full object-cover"
-                                  ></AscendancyPortrait>
-                                </div>
-                              ))}
-                            </div>
+                          <div className="grid grid-cols-6 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-3 2xl:grid-cols-4 gap-2">
+                            {team.allowed_classes.map((character_class) => (
+                              <div
+                                key={team.id + character_class}
+                                className="tooltip tooltip-primary"
+                                data-tip={character_class}
+                              >
+                                <AscendancyPortrait
+                                  character_class={character_class}
+                                  className="size-15 sm:size-16 xl:size-18 rounded-full object-cover"
+                                ></AscendancyPortrait>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       </div>
