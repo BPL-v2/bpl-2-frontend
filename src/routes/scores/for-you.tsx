@@ -26,7 +26,7 @@ function ForYouTab() {
   const { currentEvent, scores } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const { user } = useGetUser();
-  const { ladder } = useGetLadder(101);
+  const { ladder } = useGetLadder(currentEvent.id);
   const { teamGoals = [] } = useGetTeamGoals(currentEvent.id);
   const teamGoalMap = teamGoals.reduce(
     (acc, goal) => {
