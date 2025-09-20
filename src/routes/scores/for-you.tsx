@@ -36,58 +36,58 @@ function ForYouTab() {
     },
     {} as Record<number, string>
   );
+  // @ts-ignore not using this in bpl 17.5
+  const personalObjectiveRender = useMemo(() => {
+    let char = ladder
+      ?.sort((a, b) => b.level - a.level)
+      .find((c) => c.user_id === user?.id)?.character;
 
-  // const personalObjectiveRender = useMemo(() => {
-  //   let char = ladder
-  //     ?.sort((a, b) => b.level - a.level)
-  //     .find((c) => c.user_id === user?.id)?.character;
-
-  //   if (!char) {
-  //     char = {
-  //       level: 1,
-  //       ascendancy_points: 0,
-  //       atlas_node_count: 0,
-  //       event_id: currentEvent.id,
-  //     } as Character;
-  //   }
-  //   return (
-  //     <div className="flex flex-col gap-2">
-  //       <h2 className="mt-4">Personal Objectives</h2>
-  //       <p>
-  //         Help your team out by improving your character and earn up to 9 points
-  //         for your team.
-  //       </p>
-  //       <div className="flex flex-col gap-1 text-base font-bold mt-[-1rem]">
-  //         <PoGauge
-  //           descriptions={["Lvl 40", "Lvl 60", "Lvl 80"]}
-  //           values={[
-  //             char.level >= 40 ? 1 : 0,
-  //             char.level >= 60 ? 1 : 0,
-  //             char.level >= 80 ? 1 : 0,
-  //           ]}
-  //           cap={3}
-  //         ></PoGauge>
-  //         <PoGauge
-  //           descriptions={["Cruel Lab", "Merc Lab", "Uber Lab"]}
-  //           values={[
-  //             char.ascendancy_points >= 4 ? 1 : 0,
-  //             char.ascendancy_points >= 6 ? 1 : 0,
-  //             char.ascendancy_points >= 8 ? 1 : 0,
-  //           ]}
-  //           cap={3}
-  //         ></PoGauge>
-  //         <PoGauge
-  //           descriptions={["Lvl 90", "40 Atlas Points"]}
-  //           values={[
-  //             char.level >= 90 ? 3 : 0,
-  //             char.atlas_node_count >= 40 ? 3 : 0,
-  //           ]}
-  //           cap={3}
-  //         ></PoGauge>
-  //       </div>
-  //     </div>
-  //   );
-  // }, [ladder, currentEvent.id, user?.id]);
+    if (!char) {
+      char = {
+        level: 1,
+        ascendancy_points: 0,
+        atlas_node_count: 0,
+        event_id: currentEvent.id,
+      } as Character;
+    }
+    return (
+      <div className="flex flex-col gap-2">
+        <h2 className="mt-4">Personal Objectives</h2>
+        <p>
+          Help your team out by improving your character and earn up to 9 points
+          for your team.
+        </p>
+        <div className="flex flex-col gap-1 text-base font-bold mt-[-1rem]">
+          <PoGauge
+            descriptions={["Lvl 40", "Lvl 60", "Lvl 80"]}
+            values={[
+              char.level >= 40 ? 1 : 0,
+              char.level >= 60 ? 1 : 0,
+              char.level >= 80 ? 1 : 0,
+            ]}
+            cap={3}
+          ></PoGauge>
+          <PoGauge
+            descriptions={["Cruel Lab", "Merc Lab", "Uber Lab"]}
+            values={[
+              char.ascendancy_points >= 4 ? 1 : 0,
+              char.ascendancy_points >= 6 ? 1 : 0,
+              char.ascendancy_points >= 8 ? 1 : 0,
+            ]}
+            cap={3}
+          ></PoGauge>
+          <PoGauge
+            descriptions={["Lvl 90", "40 Atlas Points"]}
+            values={[
+              char.level >= 90 ? 3 : 0,
+              char.atlas_node_count >= 40 ? 3 : 0,
+            ]}
+            cap={3}
+          ></PoGauge>
+        </div>
+      </div>
+    );
+  }, [ladder, currentEvent.id, user?.id]);
   const teamId = eventStatus?.team_id as number;
   if (teamId === null || !eventStatus) {
     return (
