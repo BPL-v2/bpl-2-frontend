@@ -7537,11 +7537,17 @@ export const StreamsApiFetchParamCreator = function (configuration?: Configurati
     return {
         /**
          * Fetches all twitch streams for the current event
+         * @param {number} event_id Event ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getStreams(options: any = {}): FetchArgs {
-            const localVarPath = `/streams`;
+        getStreams(event_id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getStreams.');
+            }
+            const localVarPath = `/events/{event_id}/streams`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
             const localVarHeaderParameter = {} as any;
@@ -7568,11 +7574,12 @@ export const StreamsApiFp = function(configuration?: Configuration) {
     return {
         /**
          * Fetches all twitch streams for the current event
+         * @param {number} event_id Event ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getStreams(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<TwitchStream>> {
-            const localVarFetchArgs = StreamsApiFetchParamCreator(configuration).getStreams(options);
+        getStreams(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<TwitchStream>> {
+            const localVarFetchArgs = StreamsApiFetchParamCreator(configuration).getStreams(event_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -7594,11 +7601,12 @@ export const StreamsApiFactory = function (configuration?: Configuration, fetch?
     return {
         /**
          * Fetches all twitch streams for the current event
+         * @param {number} event_id Event ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getStreams(options?: any) {
-            return StreamsApiFp(configuration).getStreams(options)(fetch, basePath);
+        getStreams(event_id: number, options?: any) {
+            return StreamsApiFp(configuration).getStreams(event_id, options)(fetch, basePath);
         },
     };
 };
@@ -7612,12 +7620,13 @@ export const StreamsApiFactory = function (configuration?: Configuration, fetch?
 export class StreamsApi extends BaseAPI {
     /**
      * Fetches all twitch streams for the current event
+     * @param {number} event_id Event ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof StreamsApi
      */
-    public getStreams(options?: any) {
-        return StreamsApiFp(this.configuration).getStreams(options)(this.fetch, this.basePath);
+    public getStreams(event_id: number, options?: any) {
+        return StreamsApiFp(this.configuration).getStreams(event_id, options)(this.fetch, this.basePath);
     }
 
 }
