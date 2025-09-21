@@ -13,7 +13,7 @@ export const TwitchStreamEmbed = ({
 }: TwitchStreamEmbedProps) => {
   return (
     <div
-      className="bg-base-200 rounded-field overflow-hidden"
+      className="overflow-hidden bg-base-300 rounded-b-field"
       style={{ width: `${width}px`, minHeight: `${height + 60}px` }}
     >
       <div className="relative">
