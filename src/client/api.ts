@@ -7151,18 +7151,24 @@ export const SignupApiFetchParamCreator = function (configuration?: Configuratio
             };
         },
         /**
-         * Deletes the authenticated user's signup for the event
+         * Deletes a user's signup for the event
          * @param {number} event_id Event Id
+         * @param {number} user_id User Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteSignup(event_id: number, options: any = {}): FetchArgs {
+        deleteSignup(event_id: number, user_id: number, options: any = {}): FetchArgs {
             // verify required parameter 'event_id' is not null or undefined
             if (event_id === null || event_id === undefined) {
                 throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling deleteSignup.');
             }
-            const localVarPath = `/events/{event_id}/signups/self`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
+            // verify required parameter 'user_id' is not null or undefined
+            if (user_id === null || user_id === undefined) {
+                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling deleteSignup.');
+            }
+            const localVarPath = `/events/{event_id}/signups/{user_id}`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
             const localVarHeaderParameter = {} as any;
@@ -7332,13 +7338,14 @@ export const SignupApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         * Deletes the authenticated user's signup for the event
+         * Deletes a user's signup for the event
          * @param {number} event_id Event Id
+         * @param {number} user_id User Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteSignup(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = SignupApiFetchParamCreator(configuration).deleteSignup(event_id, options);
+        deleteSignup(event_id: number, user_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = SignupApiFetchParamCreator(configuration).deleteSignup(event_id, user_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -7424,13 +7431,14 @@ export const SignupApiFactory = function (configuration?: Configuration, fetch?:
             return SignupApiFp(configuration).createSignup(event_id, body, options)(fetch, basePath);
         },
         /**
-         * Deletes the authenticated user's signup for the event
+         * Deletes a user's signup for the event
          * @param {number} event_id Event Id
+         * @param {number} user_id User Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteSignup(event_id: number, options?: any) {
-            return SignupApiFp(configuration).deleteSignup(event_id, options)(fetch, basePath);
+        deleteSignup(event_id: number, user_id: number, options?: any) {
+            return SignupApiFp(configuration).deleteSignup(event_id, user_id, options)(fetch, basePath);
         },
         /**
          * Fetches all signups for the event
@@ -7483,14 +7491,15 @@ export class SignupApi extends BaseAPI {
     }
 
     /**
-     * Deletes the authenticated user's signup for the event
+     * Deletes a user's signup for the event
      * @param {number} event_id Event Id
+     * @param {number} user_id User Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SignupApi
      */
-    public deleteSignup(event_id: number, options?: any) {
-        return SignupApiFp(this.configuration).deleteSignup(event_id, options)(this.fetch, this.basePath);
+    public deleteSignup(event_id: number, user_id: number, options?: any) {
+        return SignupApiFp(this.configuration).deleteSignup(event_id, user_id, options)(this.fetch, this.basePath);
     }
 
     /**

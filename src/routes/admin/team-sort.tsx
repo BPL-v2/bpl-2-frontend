@@ -1,5 +1,10 @@
 import { Permission, Signup } from "@client/api";
-import { useAddUsersToTeams, useGetSignups } from "@client/query";
+import {
+  useAddUsersToTeams,
+  useDeleteSignup,
+  useGetSignups,
+} from "@client/query";
+import { DeleteButton } from "@components/delete-button";
 import Table from "@components/table";
 import {
   ArrowDownTrayIcon,
@@ -60,6 +65,7 @@ function UserSortPage() {
   const [nameListFilter, setNameListFilter] = useState<string[]>([]);
   const qc = useQueryClient();
   const { signups = [], isLoading, isError } = useGetSignups(currentEvent.id);
+  const { deleteSignup } = useDeleteSignup(qc);
   const userIdToSignupMap = signups.reduce(
     (acc, signup) => {
       acc[signup.user.id] = signup;
@@ -169,6 +175,7 @@ function UserSortPage() {
       },
       {
         header: "Assign Team",
+        accessorKey: "team_id",
         size: 550,
         cell: ({ row }) => {
           return (
@@ -216,6 +223,23 @@ function UserSortPage() {
             </div>
           );
         },
+      },
+      {
+        header: "",
+        accessorKey: "user.id",
+        cell: ({ row }) => {
+          return (
+            <DeleteButton
+              onDelete={() => {
+                deleteSignup({
+                  eventId: currentEvent.id,
+                  userId: row.original.user.id,
+                });
+              }}
+            ></DeleteButton>
+          );
+        },
+        enableSorting: false,
       },
     ];
     return columns;
@@ -280,6 +304,8 @@ function UserSortPage() {
       "Team",
       "Display Name",
       "Account Name",
+      "Discord Name",
+      "Discord ID",
       "Expected Playtime",
       "Needs Help",
       "Wants to Help",
@@ -299,6 +325,8 @@ function UserSortPage() {
         teamMap[signup.team_id || 0] || "No team",
         signup.user.display_name,
         signup.user.account_name || "",
+        signup.user.discord_name || "",
+        signup.user.discord_id || "",
         signup.expected_playtime,
         signup.needs_help ? "X" : "",
         signup.wants_to_help ? "X" : "",

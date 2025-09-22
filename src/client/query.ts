@@ -188,17 +188,17 @@ export function useCreateSignup(
   };
 }
 
+
 export function useDeleteSignup(qc: QueryClient) {
   const m = useMutation({
-    mutationFn: signupApi.deleteSignup,
-    onSuccess: (_, eventId) => {
+    mutationFn: ({eventId, userId}: {eventId: number; userId: number}) => signupApi.deleteSignup(eventId, userId),
+    onSuccess: (_, {eventId}: {eventId: number; userId: number}) => {
       qc.invalidateQueries({
         queryKey: ["eventStatus", current !== eventId ? eventId : "current"],
       });
-      qc.setQueryData(
-        ["ownSignup", current !== eventId ? eventId : "current"],
-        undefined
-      );
+      qc.invalidateQueries({
+        queryKey: ["signups", current !== eventId ? eventId : "current"],
+      });
     },
   });
   return {
