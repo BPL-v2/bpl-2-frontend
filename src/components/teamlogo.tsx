@@ -15,12 +15,14 @@ export function TeamLogo({ team, eventId, ...props }: TeamLogoProps) {
       <div
         {...props}
         className={twMerge(
-          "w-full h-full text-center m-auto flex flex-col items-center justify-center text-2xl font-bold",
+          "w-full h-full flex flex-row items-center justify-center rounded-box",
           props.className
         )}
         style={{ ...props.style, backgroundColor: team.color }}
       >
-        {team.name}
+        <div className="text-center text-2xl font-bold text-base-100 ">
+          {team.name}
+        </div>
       </div>
     );
   }
