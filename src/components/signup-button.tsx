@@ -269,7 +269,9 @@ const SignupButton = () => {
               </div>
               <div
                 className={"text-error hover:bg-error hover:text-error-content"}
-                onClick={() => deleteSignup(upcomingEvent.id)}
+                onClick={() =>
+                  deleteSignup({ eventId: upcomingEvent.id, userId: user.id })
+                }
               >
                 Withdraw Application
               </div>
