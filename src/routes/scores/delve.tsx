@@ -253,10 +253,7 @@ function DelveTab(): JSX.Element {
                       </h3>
                     </div>
                     <div className="rounded-b-box">
-                      <CollectionCardTable
-                        objective={objective}
-                        showPoints={false}
-                      />
+                      <CollectionCardTable objective={objective} />
                     </div>
                   </div>
                 );
