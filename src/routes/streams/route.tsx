@@ -1,13 +1,10 @@
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import { useContext } from "react";
-import { TwitchStreamEmbed } from "@components/twitch-stream";
-import { GlobalStateContext } from "@utils/context-provider";
 import {
+  Event,
   EventStatus,
   GameVersion,
   LadderEntry,
   Team,
-  Event,
+  TwitchStream,
 } from "@client/api";
 import {
   useGetEventStatus,
@@ -15,8 +12,12 @@ import {
   useGetStreams,
   useGetUsers,
 } from "@client/query";
-import { usePageSEO } from "@utils/use-seo";
+import { TwitchStreamEmbed } from "@components/twitch-stream";
 import { ascendancies, phreciaMapping, poe2Mapping } from "@mytypes/ascendancy";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { GlobalStateContext } from "@utils/context-provider";
+import { usePageSEO } from "@utils/use-seo";
+import { useContext } from "react";
 import { twMerge } from "tailwind-merge";
 
 export const Route = createFileRoute("/streams")({
@@ -100,8 +101,8 @@ function TwitchPage() {
   usePageSEO("streams");
   const { currentEvent } = useContext(GlobalStateContext);
   const { users } = useGetUsers(currentEvent.id);
-  const { eventStatus } = useGetEventStatus(currentEvent.id);
   const { ladder = [] } = useGetLadder(currentEvent.id);
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
   const userToCharacter = ladder.reduce(
     (acc, entry) => {
       if (entry.user_id && entry.character_name) {
@@ -126,40 +127,68 @@ function TwitchPage() {
     return <div className="alert alert-error">Failed to load streams</div>;
   }
 
+  const teamStreams = streams
+    .map((stream) => {
+      const user = users?.find((u) => u.id === stream.backend_user_id);
+      if (!user) return null;
+      return {
+        stream,
+        teamId: user.team_id,
+        userId: user.id,
+      };
+    })
+    .filter((s) => s !== null)
+    .sort((a, b) => (b.stream.viewer_count || 0) - (a.stream.viewer_count || 0))
+    .reduce(
+      (acc, stream) => {
+        if (!acc[stream.teamId]) {
+          acc[stream.teamId] = [];
+        }
+        acc[stream.teamId].push(stream);
+        return acc;
+      },
+      {} as Record<
+        number,
+        { stream: TwitchStream; teamId: number; userId: number }[]
+      >
+    );
+
   return (
     <div className="flex flex-col gap-4 mt-4">
       <Outlet />
       <h1 className="text-4xl mt-4">Twitch Streams by Team</h1>
-      {currentEvent?.teams.sort(teamSort(eventStatus)).map((team) => (
-        <div key={`team-video-thumbnails-${team.id}`}>
-          <div className="divider divider-primary">{team.name}</div>
-          <div className="flex flex-wrap gap-4 justify-left">
-            {streams
-              .filter((stream) =>
-                users?.some(
-                  (user) =>
-                    user.id === stream.backend_user_id &&
-                    user.team_id === team.id
-                )
-              )
-              .sort((a, b) => (b.viewer_count || 0) - (a.viewer_count || 0))
-              .map((stream) => {
+      {Object.entries(teamStreams)
+        .sort((a, b) => {
+          const teamA = currentEvent.teams.find((t) => t.id === parseInt(a[0]));
+          const teamB = currentEvent.teams.find((t) => t.id === parseInt(b[0]));
+          if (teamA && teamB) {
+            return teamSort(eventStatus)(teamA, teamB);
+          }
+          return 0;
+        })
+        .map(([teamId, streams]) => (
+          <div key={`team-video-thumbnails-${teamId}`}>
+            <div className="divider divider-primary">
+              {currentEvent.teams.find((t) => t.id === parseInt(teamId))
+                ?.name || ""}
+            </div>
+            <div className="flex flex-wrap gap-4 justify-left">
+              {streams.map((stream) => {
+                streams.map((s) => s.teamId);
                 return (
                   <div>
                     <CharacterPortrait
-                      ladderEntry={
-                        userToCharacter[stream.backend_user_id || -1]
-                      }
+                      ladderEntry={userToCharacter[stream.userId || -1]}
                       currentEvent={currentEvent}
                     />
                     <Link
                       to={"/streams/$twitchAccount"}
-                      params={{ twitchAccount: stream.user_login ?? "" }}
+                      params={{ twitchAccount: stream.stream.user_login ?? "" }}
                       className="cursor-pointer bg-base-300 "
                       activeProps={{ className: "border-primary" }}
                     >
                       <TwitchStreamEmbed
-                        stream={stream}
+                        stream={stream.stream}
                         width={340}
                         height={170}
                       />
@@ -167,9 +196,9 @@ function TwitchPage() {
                   </div>
                 );
               })}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
     </div>
   );
 }

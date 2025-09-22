@@ -2,13 +2,12 @@ import { Score } from "@client/api";
 import { useGetEventStatus } from "@client/query";
 import { ScoreObjective } from "@mytypes/score";
 import { GlobalStateContext } from "@utils/context-provider";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 import { ProgressBar } from "./progress-bar";
 
 type CollectionCardTableProps = {
   objective: ScoreObjective;
-  showPoints?: boolean;
 };
 
 function getPlace(score: Score) {
@@ -35,12 +34,10 @@ function finishTooltip(objective: ScoreObjective, score: Score) {
   }`;
 }
 
-export function CollectionCardTable({
-  objective,
-  showPoints = true,
-}: CollectionCardTableProps) {
+export function CollectionCardTable({ objective }: CollectionCardTableProps) {
   const { currentEvent, preferences } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
+  const tableRef = useRef<HTMLTableElement>(null);
   const teamIds = currentEvent.teams
     .sort((a, b) => {
       if (a.id === eventStatus?.team_id) return -1;
@@ -52,8 +49,14 @@ export function CollectionCardTable({
     })
     .slice(0, preferences.limitTeams ? preferences.limitTeams : undefined)
     .map((team) => team.id);
+  const longestTeamName = Math.max(
+    ...currentEvent.teams
+      .filter((team) => teamIds.includes(team.id))
+      .map((team) => team.name.length)
+  );
+  console.log(longestTeamName);
   return (
-    <table key={objective.id} className="w-full">
+    <table key={objective.id} ref={tableRef}>
       <tbody className="bg-base-300">
         {Object.entries(objective.team_score)
           .filter(([teamId]) => teamIds.includes(parseInt(teamId)))
@@ -67,44 +70,42 @@ export function CollectionCardTable({
             return scoreB.points - scoreA.points;
           })
           .map(([teamId, score], idx) => {
-            const percent = (100 * score.number) / objective.required_number;
+            const isFinished = score.number / objective.required_number >= 1;
             const isLastRow = idx === teamIds.length - 1;
             const isPlayerTeam = teamId === eventStatus?.team_id;
-
             return (
               <tr
                 className={isPlayerTeam ? "bg-highlight content-highlight" : ""}
                 key={teamId}
               >
-                {showPoints ? (
-                  <td
+                <td
+                  className={twMerge(
+                    "py-1 px-2",
+                    isLastRow && "rounded-bl-box"
+                  )}
+                >
+                  <div
                     className={twMerge(
-                      "py-1 px-2",
-                      isLastRow && "rounded-bl-box"
+                      "tooltip tooltip-right",
+                      isFinished ? "tooltip-success" : "tooltip-error"
                     )}
+                    data-tip={finishTooltip(objective, score)}
                   >
                     <div
                       className={twMerge(
-                        "tooltip tooltip-right",
-                        percent < 100 ? "tooltip-error" : "tooltip-success"
+                        "text-left px-2",
+                        isFinished ? "text-success" : "text-error"
                       )}
-                      data-tip={finishTooltip(objective, score)}
                     >
-                      <div
-                        className={twMerge(
-                          "text-left px-2",
-                          percent < 100 ? "text-error" : "text-success"
-                        )}
-                      >
-                        {score.points}
-                      </div>
+                      {score.points}
                     </div>
-                  </td>
-                ) : null}
+                  </div>
+                </td>
+
                 <td
                   className={twMerge(
                     "px-2 w-full",
-                    !showPoints && isLastRow && "rounded-bl-box"
+                    isLastRow && "rounded-bl-box"
                   )}
                 >
                   <ProgressBar
@@ -117,6 +118,7 @@ export function CollectionCardTable({
                     "text-left px-2",
                     isLastRow && "rounded-br-box"
                   )}
+                  style={{ minWidth: `${longestTeamName + 2}ch` }}
                 >
                   {currentEvent?.teams.find((team) => team.id === teamId)?.name}
                 </td>
