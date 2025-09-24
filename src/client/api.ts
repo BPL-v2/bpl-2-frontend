@@ -1065,6 +1065,12 @@ export interface EventStatus {
     number_of_signups: number;
     /**
      * 
+     * @type {number}
+     * @memberof EventStatus
+     */
+    number_of_signups_before: number;
+    /**
+     * 
      * @type {string}
      * @memberof EventStatus
      */

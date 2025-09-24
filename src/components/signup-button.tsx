@@ -231,6 +231,13 @@ const SignupButton = () => {
       </span>
     );
   }
+  if (eventStatus?.application_status === ApplicationStatus.waitlisted) {
+    return (
+      "Waitlist position: " +
+      (eventStatus.number_of_signups_before - currentEvent.max_size + 1)
+    );
+  }
+
   if (eventStatus?.application_status === ApplicationStatus.applied) {
     return (
       <>
