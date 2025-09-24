@@ -40,6 +40,7 @@ function TeamPage() {
   const teamForm = useAppForm({
     defaultValues: {
       name: "",
+      abbreviation: "",
       color: "#000000",
       allowed_classes: [],
     } as TeamCreate,
@@ -54,6 +55,14 @@ function TeamPage() {
     {
       header: "Name",
       accessorKey: "name",
+    },
+    {
+      header: "Abbreviation",
+      accessorKey: "abbreviation",
+      cell: (info) =>
+        info.row.original.abbreviation ||
+        info.row.original.name.slice(0, 3).toUpperCase(),
+      size: 200,
     },
     {
       header: "Color",
@@ -113,6 +122,12 @@ function TeamPage() {
           <teamForm.AppField
             name="name"
             children={(field) => <field.TextField label="Name" required />}
+          />
+          <teamForm.AppField
+            name="abbreviation"
+            children={(field) => (
+              <field.TextField label="Abbreviation" required />
+            )}
           />
           <teamForm.AppField
             name="color"
