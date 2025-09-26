@@ -131,14 +131,11 @@ export function ItemTable({
 
     const img_location = getImageLocation(objective, gameVersion);
     if (!img_location) {
-      return <div className="w-20 h-20 sm:w-16 sm:h-16"></div>;
+      return <div className="size-20 sm:size-16"></div>;
     }
     return (
       <div className="relative flex items-center justify-center">
-        <img
-          src={img_location}
-          className="max-w-20 max-h-20 sm:max-w-16 sm:max-h-16"
-        />
+        <img src={img_location} className="max-size-20 sm:max-size-16" />
         <div
           className="absolute left-0 right-0 text-center text-lg"
           style={{
@@ -269,6 +266,20 @@ export function ItemTable({
                   const score = info.row.original.team_score[team.id];
                   const finished = score?.finished || false;
                   const user = users?.find((u) => score?.user_id === u.id);
+                  const canBeScoredMultipleTimes =
+                    info.row.original.scoring_preset?.scoring_method ===
+                    ScoringMethod.POINTS_FROM_VALUE;
+                  if (canBeScoredMultipleTimes) {
+                    return score?.points > 0 ? (
+                      <span className="text-success w-full text-center text-xl font-mono">
+                        x{score.points}
+                      </span>
+                    ) : (
+                      <span className="text-error w-full text-center text-xl font-mono">
+                        x0
+                      </span>
+                    );
+                  }
                   if (user) {
                     return (
                       <div
@@ -283,20 +294,20 @@ export function ItemTable({
                             on {new Date(score.timestamp).toLocaleString()}
                           </span>
                         </div>
-
-                        <CheckCircleIcon className="h-6 w-6 text-success" />
+                        <CheckCircleIcon className="size-6 text-success" />
                       </div>
                     );
                   } else if (finished) {
                     return (
                       <div className="flex justify-center w-full">
-                        <CheckCircleIcon className="h-6 w-6 text-success" />{" "}
+                        <span className="text-success">{score.number}</span>
+                        <CheckCircleIcon className="size-6 text-success" />
                       </div>
                     );
                   }
                   return (
                     <div className="flex justify-center w-full">
-                      <XCircleIcon className="h-6 w-6 text-error" />{" "}
+                      <XCircleIcon className="size-6 text-error" />
                     </div>
                   );
                 },
