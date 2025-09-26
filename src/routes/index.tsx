@@ -152,7 +152,7 @@ function Home() {
                       <div className="card-body">
                         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 items-center h-full">
                           <TeamLogo team={team} eventId={nextEvent.id} />
-                          <div className="grid grid-cols-6 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-3 2xl:grid-cols-4 gap-2">
+                          <div className="flex flex-row gap-1 flex-wrap md:gap-2">
                             {team.allowed_classes.map((character_class) => (
                               <div
                                 key={team.id + character_class}
@@ -161,7 +161,7 @@ function Home() {
                               >
                                 <AscendancyPortrait
                                   character_class={character_class}
-                                  className="size-15 sm:size-16 xl:size-18 rounded-full object-cover"
+                                  className="size-14 sm:size-14 xl:size-18 rounded-full object-cover"
                                 ></AscendancyPortrait>
                               </div>
                             ))}
