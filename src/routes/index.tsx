@@ -161,7 +161,7 @@ function Home() {
                               >
                                 <AscendancyPortrait
                                   character_class={character_class}
-                                  className="size-14 sm:size-14 xl:size-18 rounded-full object-cover"
+                                  className="size-14 xl:size-18 rounded-full object-cover"
                                 ></AscendancyPortrait>
                               </div>
                             ))}

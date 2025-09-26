@@ -54,7 +54,6 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
       .filter((team) => teamIds.includes(team.id))
       .map((team) => team.name.length)
   );
-  console.log(longestTeamName);
   return (
     <table key={objective.id} ref={tableRef}>
       <tbody className="bg-base-300">
@@ -102,12 +101,7 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
                   </div>
                 </td>
 
-                <td
-                  className={twMerge(
-                    "px-2 w-full",
-                    isLastRow && "rounded-bl-box"
-                  )}
-                >
+                <td className="px-2 w-full">
                   <ProgressBar
                     value={score.number}
                     maxVal={objective.required_number}
