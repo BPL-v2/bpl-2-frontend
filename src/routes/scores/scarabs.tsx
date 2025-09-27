@@ -55,7 +55,7 @@ function ScarabTab(): JSX.Element {
                   (o) => o.team_score[teamId]?.finished
                 ).length
               }
-              description="Gems:"
+              description="Scarabs:"
             />
             <ItemTable
               objective={scarabCategory}
