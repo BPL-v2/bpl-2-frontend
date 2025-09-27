@@ -45,17 +45,13 @@ function sort(
   [teamId1, score1]: [string, Score],
   [teamId2, score2]: [string, Score]
 ) {
-  if (score1.rank === score2.rank) {
-    return teamId1.localeCompare(teamId2);
+  if (score1.rank !== score2.rank) {
+    return score1.rank - score2.rank;
   }
-
-  if (score1.rank === 0) {
-    return 1;
+  if (score1.points !== score2.points) {
+    return score2.points - score1.points;
   }
-  if (score2.rank === 0) {
-    return -1;
-  }
-  return score1.rank - score2.rank;
+  return score2.number - score1.number;
 }
 
 export function Ranking({
@@ -70,10 +66,15 @@ export function Ranking({
     .sort((a, b) => {
       if (a.id === eventStatus?.team_id) return -1;
       if (b.id === eventStatus?.team_id) return 1;
-      return (
-        (objective.team_score[b.id]?.points || 0) -
-        (objective.team_score[a.id]?.points || 0)
-      );
+      const scoreA = objective.team_score[a.id];
+      const scoreB = objective.team_score[b.id];
+      if (!scoreA && !scoreB) {
+        return b.id - a.id;
+      }
+      if (scoreA.points === scoreB.points) {
+        return scoreB.number - scoreA.number;
+      }
+      return scoreB.points - scoreA.points;
     })
     .slice(0, preferences.limitTeams ? preferences.limitTeams : undefined)
     .map((team) => team.id);

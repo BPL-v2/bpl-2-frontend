@@ -40,7 +40,14 @@ const TeamScoreDisplay = ({
         }
       >
         {currentEvent.teams
-          .sort((a, b) => b.id - a.id)
+          .sort((a, b) => {
+            if (a.id === eventStatus?.team_id) return -1;
+            if (b.id === eventStatus?.team_id) return 1;
+            if (teamScores[b.id] === teamScores[a.id]) {
+              return b.id - a.id;
+            }
+            return teamScores[b.id] - teamScores[a.id];
+          })
           .slice(0, preferences.limitTeams ? preferences.limitTeams : undefined)
           .map((team) => {
             return (
