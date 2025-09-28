@@ -72,6 +72,11 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
             const isFinished = score.number / objective.required_number >= 1;
             const isLastRow = idx === teamIds.length - 1;
             const isPlayerTeam = teamId === eventStatus?.team_id;
+            const gotPoints = score.points > 0;
+
+            if (gotPoints) {
+              console.log("Team", teamId, "got points:", score.points);
+            }
             return (
               <tr
                 className={isPlayerTeam ? "bg-highlight content-highlight" : ""}
@@ -86,14 +91,22 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
                   <div
                     className={twMerge(
                       "tooltip tooltip-right",
-                      isFinished ? "tooltip-success" : "tooltip-error"
+                      gotPoints
+                        ? "tooltip-success"
+                        : isFinished
+                          ? "tooltip-warning"
+                          : "tooltip-error"
                     )}
                     data-tip={finishTooltip(objective, score)}
                   >
                     <div
                       className={twMerge(
                         "text-left px-2",
-                        isFinished ? "text-success" : "text-error"
+                        gotPoints
+                          ? "text-success"
+                          : isFinished
+                            ? "text-warning"
+                            : "text-error"
                       )}
                     >
                       {score.points}
@@ -105,6 +118,7 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
                   <ProgressBar
                     value={score.number}
                     maxVal={objective.required_number}
+                    gotPoints={gotPoints}
                   />
                 </td>
                 <td
