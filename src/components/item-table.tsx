@@ -291,7 +291,8 @@ export function ItemTable({
                         <div className="tooltip-content px-4 flex flex-col gap-1 bg-base-100">
                           <span>Scored by {user.display_name}</span>
                           <span>
-                            on {new Date(score.timestamp).toLocaleString()}
+                            on{" "}
+                            {new Date(score.timestamp * 1000).toLocaleString()}
                           </span>
                         </div>
                         <CheckCircleIcon className="size-6 text-success" />
