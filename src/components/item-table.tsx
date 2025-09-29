@@ -272,7 +272,7 @@ export function ItemTable({
                   if (canBeScoredMultipleTimes) {
                     return score?.points > 0 ? (
                       <span className="text-success w-full text-center text-xl font-mono">
-                        x{score.points}
+                        x{score.number}
                       </span>
                     ) : (
                       <span className="text-error w-full text-center text-xl font-mono">
