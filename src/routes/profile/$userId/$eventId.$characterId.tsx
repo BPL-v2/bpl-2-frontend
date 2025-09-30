@@ -140,7 +140,7 @@ function RouteComponent() {
           </span>
         </div>
       )}
-      {pobs.length > 0 && <PoB pobString={pobs[pobId].export_string} />}
+      {pobs.length > 0 && <PoB pobString={pobs[pobId]?.export_string} />}
       <Suspense
         fallback={
           <div className="bg-base-200 rounded-box justify-center p-8">
