@@ -28,7 +28,7 @@ function getLink(item: Item) {
 }
 
 type Props = {
-  pobString: string;
+  pobString?: string;
 };
 
 function ItemTooltip({
@@ -51,20 +51,20 @@ function ItemTooltip({
     if (!mouseX || !mouseY || !tooltipRef.current) {
       return;
     }
-    
+
     // Small delay to ensure tooltip is rendered
     const timer = setTimeout(() => {
       if (!tooltipRef.current) return;
-      
+
       const maxWidth = 320;
-      
+
       // Simple positioning: just put it at the mouse cursor with small offsets
       let left = mouseX; // Small offset to the right
       let top = mouseY; // Small offset below, adjusted for scroll
 
       setPosition({ left, top, maxWidth });
     }, 0);
-    
+
     return () => clearTimeout(timer);
   }, [mouseX, mouseY, tooltipRef]);
 
@@ -265,10 +265,10 @@ function ItemDisplay({
 
   const handleMouseEnter = () => {
     if (!item || !itemRef.current) return;
-    
+
     selectionSetter(item);
     const rect = itemRef.current.getBoundingClientRect();
-    
+
     // Position tooltip to the right of the item with some spacing
     setMousePosition({
       x: rect.right + 10,
@@ -322,7 +322,7 @@ export function PoB({ pobString }: Props) {
   const { data: gemColors } = useFile<Record<"r" | "g" | "b" | "w", string[]>>(
     "/assets/poe1/items/gem_colors.json"
   );
-  const pob = useMemo(() => decodePoBExport(pobString), [pobString]);
+
   const [selectedItem, setSelectedItem] = useState<Item>();
   const [mousePosition, setMousePosition] = useState<{
     x: number;
@@ -341,6 +341,11 @@ export function PoB({ pobString }: Props) {
     "Weapon 1",
     "Weapon 2",
   ];
+  if (!pobString) {
+    return;
+  }
+  const pob = decodePoBExport(pobString);
+
   const flaskSlots = ["Flask 1", "Flask 2", "Flask 3", "Flask 4", "Flask 5"];
   const jewels: Item[] = [];
   const equipment: Record<string, Item | undefined> = equipmentSlots.reduce(
