@@ -2247,6 +2247,12 @@ export interface LadderEntry {
      * @type {number}
      * @memberof LadderEntry
      */
+    last_active?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof LadderEntry
+     */
     level: number;
     /**
      * 
@@ -3596,6 +3602,215 @@ export interface UserUpdate {
     display_name: string;
 }
 
+
+/**
+ * ActivityApi - fetch parameter creator
+ * @export
+ */
+export const ActivityApiFetchParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Get calculated active times for all users in an event
+         * @param {number} event_id Event ID
+         * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEventActivities(event_id: number, threshold_seconds?: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getEventActivities.');
+            }
+            const localVarPath = `/events/{event_id}/activity`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            if (threshold_seconds !== undefined) {
+                localVarQueryParameter['threshold_seconds'] = threshold_seconds;
+            }
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Get calculated active times for a user in an event
+         * @param {number} event_id Event ID
+         * @param {number} user_id User ID
+         * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEventActivitiesForUser(event_id: number, user_id: number, threshold_seconds?: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getEventActivitiesForUser.');
+            }
+            // verify required parameter 'user_id' is not null or undefined
+            if (user_id === null || user_id === undefined) {
+                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling getEventActivitiesForUser.');
+            }
+            const localVarPath = `/events/{event_id}/activity/{user_id}`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            if (threshold_seconds !== undefined) {
+                localVarQueryParameter['threshold_seconds'] = threshold_seconds;
+            }
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ActivityApi - functional programming interface
+ * @export
+ */
+export const ActivityApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * Get calculated active times for all users in an event
+         * @param {number} event_id Event ID
+         * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEventActivities(event_id: number, threshold_seconds?: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<{ [key: string]: number; }> {
+            const localVarFetchArgs = ActivityApiFetchParamCreator(configuration).getEventActivities(event_id, threshold_seconds, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * Get calculated active times for a user in an event
+         * @param {number} event_id Event ID
+         * @param {number} user_id User ID
+         * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEventActivitiesForUser(event_id: number, user_id: number, threshold_seconds?: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<string> {
+            const localVarFetchArgs = ActivityApiFetchParamCreator(configuration).getEventActivitiesForUser(event_id, user_id, threshold_seconds, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+    }
+};
+
+/**
+ * ActivityApi - factory interface
+ * @export
+ */
+export const ActivityApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+    return {
+        /**
+         * Get calculated active times for all users in an event
+         * @param {number} event_id Event ID
+         * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEventActivities(event_id: number, threshold_seconds?: number, options?: any) {
+            return ActivityApiFp(configuration).getEventActivities(event_id, threshold_seconds, options)(fetch, basePath);
+        },
+        /**
+         * Get calculated active times for a user in an event
+         * @param {number} event_id Event ID
+         * @param {number} user_id User ID
+         * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEventActivitiesForUser(event_id: number, user_id: number, threshold_seconds?: number, options?: any) {
+            return ActivityApiFp(configuration).getEventActivitiesForUser(event_id, user_id, threshold_seconds, options)(fetch, basePath);
+        },
+    };
+};
+
+/**
+ * ActivityApi - object-oriented interface
+ * @export
+ * @class ActivityApi
+ * @extends {BaseAPI}
+ */
+export class ActivityApi extends BaseAPI {
+    /**
+     * Get calculated active times for all users in an event
+     * @param {number} event_id Event ID
+     * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ActivityApi
+     */
+    public getEventActivities(event_id: number, threshold_seconds?: number, options?: any) {
+        return ActivityApiFp(this.configuration).getEventActivities(event_id, threshold_seconds, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Get calculated active times for a user in an event
+     * @param {number} event_id Event ID
+     * @param {number} user_id User ID
+     * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ActivityApi
+     */
+    public getEventActivitiesForUser(event_id: number, user_id: number, threshold_seconds?: number, options?: any) {
+        return ActivityApiFp(this.configuration).getEventActivitiesForUser(event_id, user_id, threshold_seconds, options)(this.fetch, this.basePath);
+    }
+
+}
 
 /**
  * AtlasApi - fetch parameter creator
