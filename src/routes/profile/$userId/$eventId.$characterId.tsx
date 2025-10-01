@@ -86,20 +86,22 @@ function RouteComponent() {
   }
   return (
     <div className="w-full flex flex-col gap-4 px-2">
-      <div className="flex ">
-        <div className="text-xl font-bold tooltip tooltip-right w-auto">
-          <div className="tooltip-content p-2 font-light flex flex-col text-left gap-2">
-            <span>
-              Measured by taking activity samples when xp changes / items are
-              deposited.
-            </span>
-            <span> Will probably be lower than your /played</span>
+      {activity && eventId > 101 && (
+        <div className="flex ">
+          <div className="text-xl font-bold tooltip tooltip-right w-auto">
+            <div className="tooltip-content p-2 font-light flex flex-col text-left gap-2">
+              <span>
+                Measured by taking activity samples when xp changes / items are
+                deposited.
+              </span>
+              <span> Will probably be lower than your /played</span>
+            </div>
+            Active time:{" "}
+            {activity && Math.round((activity / 1000 / 3600) * 10) / 10} hours
+            <span className="text-error">*</span>
           </div>
-          Active time:{" "}
-          {activity && Math.round((activity / 1000 / 3600) * 10) / 10} hours
-          <span className="text-error">*</span>
         </div>
-      </div>
+      )}
       {contributions.length > 0 && user?.id === userId && (
         <div className="bg-base-300 rounded-box p-4 flex flex-col gap-4">
           <h1 className="text-xl text-left">
