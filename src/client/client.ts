@@ -1,5 +1,6 @@
 import { Configuration } from ".";
 import {
+  ActivityApiFactory,
   CharactersApiFactory,
   ConditionApiFactory,
   EventApiFactory,
@@ -49,11 +50,7 @@ export const scoringApi = ScoringApiFactory(
   authenticatedFetch,
   baseUrl
 );
-export const scoresApi = ScoresApiFactory(
-  config,
-  authenticatedFetch,
-  baseUrl
-);
+export const scoresApi = ScoresApiFactory(config, authenticatedFetch, baseUrl);
 export const conditionApi = ConditionApiFactory(
   config,
   authenticatedFetch,
@@ -69,6 +66,11 @@ export const oauthApi = OauthApiFactory(config, authenticatedFetch, baseUrl);
 export const streamApi = StreamsApiFactory(config, authenticatedFetch, baseUrl);
 export const jobApi = JobsApiFactory(config, authenticatedFetch, baseUrl);
 export const ladderApi = LadderApiFactory(config, authenticatedFetch, baseUrl);
+export const activityApi = ActivityApiFactory(
+  config,
+  authenticatedFetch,
+  baseUrl
+);
 export const characterApi = CharactersApiFactory(
   config,
   authenticatedFetch,

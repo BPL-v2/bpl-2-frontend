@@ -1,5 +1,10 @@
 import { GameVersion, ObjectiveType } from "@client/api";
-import { useGetEvents, useGetPoBs, useGetUser } from "@client/query";
+import {
+  useGetEvents,
+  useGetPoBs,
+  useGetUser,
+  useGetUserActivity,
+} from "@client/query";
 import { LazyCharacterChart } from "@components/character-chart-lazy";
 import { ObjectiveIcon } from "@components/objective-icon";
 import { PoB } from "@components/pob";
@@ -53,6 +58,10 @@ function RouteComponent() {
   const { userId, characterId, eventId } = useParams({ from: Route.id });
   const { user } = useGetUser();
   const { events = [] } = useGetEvents();
+  const { activity } = useGetUserActivity(
+    eventId,
+    user?.id == userId ? userId : 0
+  );
   const event = events.find((e) => e.id === Number(eventId));
   const { pobs = [] } = useGetPoBs(userId, characterId);
   useEffect(() => {
@@ -76,7 +85,21 @@ function RouteComponent() {
     }
   }
   return (
-    <div className="w-full flex flex-col gap-4  px-2">
+    <div className="w-full flex flex-col gap-4 px-2">
+      <div className="flex ">
+        <div className="text-xl font-bold tooltip tooltip-right w-auto">
+          <div className="tooltip-content p-2 font-light flex flex-col text-left gap-2">
+            <span>
+              Measured by taking activity samples when xp changes / items are
+              deposited.
+            </span>
+            <span> Will probably be lower than your /played</span>
+          </div>
+          Active time:{" "}
+          {activity && Math.round((activity / 1000 / 3600) * 10) / 10} hours
+          <span className="text-error">*</span>
+        </div>
+      </div>
       {contributions.length > 0 && user?.id === userId && (
         <div className="bg-base-300 rounded-box p-4 flex flex-col gap-4">
           <h1 className="text-xl text-left">

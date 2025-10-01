@@ -21,6 +21,7 @@ import {
   TeamUserCreate,
 } from "./api";
 import {
+  activityApi,
   characterApi,
   conditionApi,
   eventApi,
@@ -188,11 +189,11 @@ export function useCreateSignup(
   };
 }
 
-
 export function useDeleteSignup(qc: QueryClient) {
   const m = useMutation({
-    mutationFn: ({eventId, userId}: {eventId: number; userId: number}) => signupApi.deleteSignup(eventId, userId),
-    onSuccess: (_, {eventId}: {eventId: number; userId: number}) => {
+    mutationFn: ({ eventId, userId }: { eventId: number; userId: number }) =>
+      signupApi.deleteSignup(eventId, userId),
+    onSuccess: (_, { eventId }: { eventId: number; userId: number }) => {
       qc.invalidateQueries({
         queryKey: ["eventStatus", current !== eventId ? eventId : "current"],
       });
@@ -970,5 +971,29 @@ export function useDeleteTeamSuggestion(
   return {
     deleteTeamSuggestion: mutation.mutate,
     ...mutation,
+  };
+}
+
+export function useGetActivity(eventId: number) {
+  const query = useQuery({
+    queryKey: ["activity", current !== eventId ? eventId : "current"],
+    // queryFn: () => activityApi.getEventActivitiesForUser(eventId, 1),
+    queryFn: () => activityApi.getEventActivities(eventId),
+  });
+  return {
+    ...query,
+    activity: query.data ?? [],
+  };
+}
+export function useGetUserActivity(eventId: number, userId: number) {
+  const query = useQuery({
+    queryKey: ["activity", current !== eventId ? eventId : "current", userId],
+    // queryFn: () => activityApi.getEventActivitiesForUser(eventId, 1),
+    queryFn: () => activityApi.getEventActivitiesForUser(eventId, userId),
+    enabled: !!userId,
+  });
+  return {
+    ...query,
+    activity: query.data,
   };
 }
