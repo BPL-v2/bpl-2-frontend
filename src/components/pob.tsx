@@ -13,7 +13,7 @@ import {
   Rarity,
   Skill,
 } from "@utils/pob";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { AscendancyPortrait } from "./ascendancy-portrait";
 
