@@ -3733,7 +3733,7 @@ export const ActivityApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getEventActivitiesForUser(event_id: number, user_id: number, threshold_seconds?: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<string> {
+        getEventActivitiesForUser(event_id: number, user_id: number, threshold_seconds?: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<number> {
             const localVarFetchArgs = ActivityApiFetchParamCreator(configuration).getEventActivitiesForUser(event_id, user_id, threshold_seconds, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
