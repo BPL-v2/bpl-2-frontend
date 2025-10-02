@@ -301,7 +301,6 @@ export function ItemTable({
                   } else if (finished) {
                     return (
                       <div className="flex justify-center w-full">
-                        <span className="text-success">{score.number}</span>
                         <CheckCircleIcon className="size-6 text-success" />
                       </div>
                     );
