@@ -169,19 +169,19 @@ function ScoringPage() {
     },
     ...scoringTabs.filter(
       (tab) =>
-        tab.visible && categories?.children.find((c) => c.name === tab.name)
+        tab.visible && categories?.children.find((c) => c.name === tab.name),
     ),
   ];
   return (
     <>
-      <div className="flex items-center justify-between bg-base-200 mb-4 rounded-b-box">
+      <div className="mb-4 flex items-center justify-between rounded-b-box bg-base-200">
         <ul className="menu menu-horizontal md:gap-2">
           {tabs.map((tab) => (
             <li key={tab.key}>
               <Link
                 to={`/scores/${tab.key}`}
                 search={{ rules: rules }}
-                className={"btn btn-xs md:btn-sm text-base"}
+                className={"btn text-base btn-xs md:btn-sm"}
                 activeProps={{
                   className: "btn-primary",
                 }}
@@ -197,8 +197,8 @@ function ScoringPage() {
         <Link
           to={"/scores/" + selected}
           className={twMerge(
-            "btn w-14 md:w-36 border-1 border-secondary mx-2 justify-between",
-            rules ? "bg-secondary text-secondary-content" : "text-secondary"
+            "btn mx-2 w-14 justify-between border-1 border-secondary md:w-36",
+            rules ? "bg-secondary text-secondary-content" : "text-secondary",
           )}
           search={{ rules: !rules }}
         >

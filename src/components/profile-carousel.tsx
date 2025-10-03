@@ -62,7 +62,7 @@ export function ProfileCarousel({
                     }}
                     key={char.event_id + char.name}
                     className={
-                      "bg-base-300 cursor-pointer select-none embla__slide flex flex-row gap-4 rounded-full border-4 items-center p-1 "
+                      "embla__slide flex cursor-pointer flex-row items-center gap-4 rounded-full border-4 bg-base-300 p-1 select-none"
                     }
                     activeProps={{
                       className: "border-primary shadow-2xl",
@@ -73,11 +73,11 @@ export function ProfileCarousel({
                   >
                     <img
                       src={ascendancyObj.thumbnail}
-                      className="rounded-full h-22 w-22"
+                      className="h-22 w-22 rounded-full"
                       alt={ascendancyName}
                     />
-                    <div className="bg-base-300 text-left rounded-r-full">
-                      <p className=" text-xl font-bold">
+                    <div className="rounded-r-full bg-base-300 text-left">
+                      <p className="text-xl font-bold">
                         {event.name.split(" (PL")[0]}
                       </p>
                       <div className="text-lg">
@@ -87,7 +87,7 @@ export function ProfileCarousel({
                           <span
                             className={twMerge(
                               "font-bold",
-                              ascendancyObj.classColor
+                              ascendancyObj.classColor,
                             )}
                           >
                             {ascendancyName}

@@ -24,7 +24,7 @@ const TeamScoreDisplay = ({
       acc[team.id] = 0;
       return acc;
     },
-    {} as { [teamId: number]: number }
+    {} as { [teamId: number]: number },
   );
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const teamScores = objective ? getTotalPoints(objective) : nullScore;
@@ -36,7 +36,7 @@ const TeamScoreDisplay = ({
     <>
       <div
         className={
-          "grid grid-cols-3 md:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-1 md:gap-2 xl:gap-4 px-1 2xl:px-0"
+          "grid grid-cols-3 gap-1 px-1 md:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] md:gap-2 xl:gap-4 2xl:px-0"
         }
       >
         {currentEvent.teams
@@ -53,14 +53,14 @@ const TeamScoreDisplay = ({
             return (
               <div
                 className={twMerge(
-                  "flex rounded-box p-0 outline-2 bborder",
+                  "flex rounded-box bborder p-0 outline-2",
                   team.id === eventStatus?.team_id
-                    ? "bg-highlight content-highlight"
+                    ? "content-highlight bg-highlight"
                     : "bg-base-300",
                   team.id === selectedTeam
-                    ? "outline-primary border-transparent"
+                    ? "border-transparent outline-primary"
                     : "outline-transparent",
-                  selectedTeam && "cursor-pointer hover:bg-base-200"
+                  selectedTeam && "cursor-pointer hover:bg-base-200",
                 )}
                 key={team.id}
                 onClick={() =>
@@ -70,14 +70,14 @@ const TeamScoreDisplay = ({
                 <div className="stat p-1 md:p-4">
                   <TeamName
                     team={team}
-                    className="col-start-1 font-bold text-xl md:text-2xl"
+                    className="col-start-1 text-xl font-bold md:text-2xl"
                   />
                   <TeamLogo
                     team={team}
                     eventId={currentEvent.id}
-                    className="stat-figure row-span-2 hidden md:flex h-24 w-24"
+                    className="stat-figure row-span-2 hidden h-24 w-24 md:flex"
                   />
-                  <div className="stat-value text-xl md:text-2xl whitespace-nowrap">
+                  <div className="stat-value text-xl whitespace-nowrap md:text-2xl">
                     {teamScores[team.id]}
                     <span className="hidden md:inline">
                       {" "}

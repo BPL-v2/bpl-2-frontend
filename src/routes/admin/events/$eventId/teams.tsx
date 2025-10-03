@@ -69,7 +69,7 @@ function TeamPage() {
       accessorKey: "color",
       cell: (info) => (
         <div
-          className="w-4 h-4 rounded-full"
+          className="h-4 w-4 rounded-full"
           style={{ backgroundColor: info.row.original.color }}
         ></div>
       ),
@@ -88,7 +88,7 @@ function TeamPage() {
             className="btn btn-sm btn-error"
             onClick={() => deleteTeam(info.row.original.id)}
           >
-            <TrashIcon className="w-4 h-4" />
+            <TrashIcon className="h-4 w-4" />
           </button>
           <button
             className="btn btn-sm btn-warning"
@@ -97,7 +97,7 @@ function TeamPage() {
               setIsDialogOpen(true);
             }}
           >
-            <PencilSquareIcon className="w-4 h-4" />
+            <PencilSquareIcon className="h-4 w-4" />
           </button>
         </div>
       ),
@@ -110,14 +110,14 @@ function TeamPage() {
         title={"Create Team"}
         open={isDialogOpen}
         setOpen={setIsDialogOpen}
-        className="w-md "
+        className="w-md"
       >
         <form
           onSubmit={(e) => {
             e.preventDefault();
             teamForm.handleSubmit();
           }}
-          className="flex flex-col gap-2 bg-base-300 p-4 rounded-box w-full"
+          className="flex w-full flex-col gap-2 rounded-box bg-base-300 p-4"
         >
           <teamForm.AppField
             name="name"
@@ -180,7 +180,7 @@ function TeamPage() {
               />
             )}
           />
-          <div className="flex flex-row gap-2 justify-end mt-2">
+          <div className="mt-2 flex flex-row justify-end gap-2">
             <button
               className="btn btn-error"
               type="button"
@@ -198,7 +198,7 @@ function TeamPage() {
   }, [teamForm, isDialogOpen, event?.game_version]);
 
   if (isPending) {
-    return <div className="loading loading-spinner loading-lg"></div>;
+    return <div className="loading loading-lg loading-spinner"></div>;
   }
   if (isError) {
     return <div>Error loading events.</div>;
@@ -211,7 +211,7 @@ function TeamPage() {
     <div className="flex flex-col gap-2">
       <Table columns={columns} data={event.teams.sort((a, b) => a.id - b.id)} />
       <button
-        className="btn btn-primary self-center"
+        className="btn self-center btn-primary"
         onClick={() => {
           teamForm.reset();
           setIsDialogOpen(true);

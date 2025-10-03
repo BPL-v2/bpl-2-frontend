@@ -54,17 +54,17 @@ function TeamSuggestionsPage() {
           return category.children.filter(
             (objective) =>
               eventStatus.team_id !== undefined &&
-              !objective.team_score[eventStatus.team_id]?.finished
+              !objective.team_score[eventStatus.team_id]?.finished,
           ).length;
         },
         cell: (row) => {
           return (
             <div
-              className="tooltip tooltip-left w-full h-full cursor-help z-100"
+              className="tooltip tooltip-left z-100 h-full w-full cursor-help"
               data-tip={row.row.original.children
                 .filter(
                   (objective) =>
-                    !objective.team_score[eventStatus.team_id!]?.finished
+                    !objective.team_score[eventStatus.team_id!]?.finished,
                 )
                 .map((objective) => objective.name)
                 .join(", ")}
@@ -84,7 +84,7 @@ function TeamSuggestionsPage() {
               continue;
             }
             const missing = row.row.original.children.filter(
-              (objective) => !objective.team_score[team.id]?.finished
+              (objective) => !objective.team_score[team.id]?.finished,
             ).length;
             if (num == undefined || (missing < num && missing > 0)) {
               num = missing;
@@ -96,10 +96,10 @@ function TeamSuggestionsPage() {
           }
           return (
             <div
-              className="tooltip tooltip-right h-full cursor-help z-100"
+              className="tooltip tooltip-right z-100 h-full cursor-help"
               data-tip={row.row.original.children
                 .filter(
-                  (objective) => !objective.team_score[nextTeam!.id]?.finished
+                  (objective) => !objective.team_score[nextTeam!.id]?.finished,
                 )
                 .map((objective) => objective.name)
                 .join(", ")}
@@ -146,7 +146,7 @@ function TeamSuggestionsPage() {
             <>
               {suggestion && (
                 <form
-                  className="flex flex-row gap-2 w-full"
+                  className="flex w-full flex-row gap-2"
                   onSubmit={(e) => {
                     e.preventDefault();
                     const formData = new FormData(e.target as HTMLFormElement);
@@ -162,7 +162,7 @@ function TeamSuggestionsPage() {
                     name="extra"
                     defaultValue={
                       teamGoals.find(
-                        (ts) => ts.objective_id === suggestion.objective_id
+                        (ts) => ts.objective_id === suggestion.objective_id,
                       )?.extra
                     }
                     key={"cat-" + row.original.id}
@@ -171,7 +171,7 @@ function TeamSuggestionsPage() {
                       console.log(e);
                     }}
                   />
-                  <button type="submit" className="btn btn-primary h-full">
+                  <button type="submit" className="btn h-full btn-primary">
                     Save
                   </button>
                 </form>
@@ -271,7 +271,7 @@ function TeamSuggestionsPage() {
             <>
               {suggestion && (
                 <form
-                  className="flex flex-row gap-2 w-full"
+                  className="flex w-full flex-row gap-2"
                   onSubmit={(e) => {
                     e.preventDefault();
                     const formData = new FormData(e.target as HTMLFormElement);
@@ -287,7 +287,7 @@ function TeamSuggestionsPage() {
                     name="extra"
                     defaultValue={
                       teamGoals.find(
-                        (ts) => ts.objective_id === suggestion.objective_id
+                        (ts) => ts.objective_id === suggestion.objective_id,
                       )?.extra
                     }
                     key={"cat-" + row.original.id}
@@ -296,7 +296,7 @@ function TeamSuggestionsPage() {
                       console.log(e);
                     }}
                   />
-                  <button type="submit" className="btn btn-primary h-full">
+                  <button type="submit" className="btn h-full btn-primary">
                     Save
                   </button>
                 </form>
@@ -335,20 +335,20 @@ function TeamSuggestionsPage() {
       category.scoring_preset?.scoring_method ===
         ScoringMethod.RANKED_COMPLETION_TIME &&
       eventStatus.team_id !== undefined &&
-      !category.team_score[eventStatus.team_id]?.finished
+      !category.team_score[eventStatus.team_id]?.finished,
   );
 
   const relevantObjectives = leaves.filter(
     (objective) =>
       objective.scoring_preset?.scoring_method === ScoringMethod.RANKED_TIME &&
       !objective.team_score[eventStatus.team_id!]?.finished &&
-      (!objective.valid_from || new Date(objective.valid_from) < new Date())
+      (!objective.valid_from || new Date(objective.valid_from) < new Date()),
   );
 
   return (
-    <div className="flex flex-col gap-4 mt-4">
+    <div className="mt-4 flex flex-col gap-4">
       <form
-        className="flex flex-row gap-2 bg-base-300 rounded-box p-8"
+        className="flex flex-row gap-2 rounded-box bg-base-300 p-8"
         onSubmit={(e) => {
           e.preventDefault();
           const formData = new FormData(e.target as HTMLFormElement);
@@ -365,27 +365,27 @@ function TeamSuggestionsPage() {
               Write a message for your team members
             </span>
           </label>
-          <div className="flex flex-row gap-2 ">
+          <div className="flex flex-row gap-2">
             <textarea
-              className="textarea textarea-primary w-full h-30"
+              className="textarea h-30 w-full textarea-primary"
               name="extra"
               defaultValue={
                 teamGoals.find((ts) => ts.objective_id === scores.id)?.extra
               }
             />
-            <button type="submit" className="btn btn-primary h-full">
+            <button type="submit" className="btn h-full btn-primary">
               Save
             </button>
           </div>
         </div>
       </form>
-      <div className="divider divider-primary m-0">Categories</div>
+      <div className="divider m-0 divider-primary">Categories</div>
       <Table
         columns={categoryColumns}
         data={relevantCategories}
         className="max-h-[50vh]"
       />
-      <div className="divider divider-primary m-0">Objectives</div>
+      <div className="divider m-0 divider-primary">Objectives</div>
       <Table
         columns={objectiveColumns}
         data={relevantObjectives}

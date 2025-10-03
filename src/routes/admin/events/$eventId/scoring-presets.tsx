@@ -73,7 +73,7 @@ function ScoringPresetsPage() {
     } as ScoringPresetCreate,
     onSubmit: (data) => {
       const create = JSON.parse(
-        JSON.stringify(data.value)
+        JSON.stringify(data.value),
       ) as ScoringPresetCreate;
       if (typeof data.value.points === "string") {
         create.points = (data.value.points as never as string)
@@ -92,7 +92,7 @@ function ScoringPresetsPage() {
 
   const { scoring_method } = useStore(
     presetForm.store,
-    (state) => state.values
+    (state) => state.values,
   );
   const dialog = useMemo(() => {
     return (
@@ -103,7 +103,7 @@ function ScoringPresetsPage() {
         className="max-w-md"
       >
         <form
-          className="fieldset bg-base-300 p-6 rounded-box w-full"
+          className="fieldset w-full rounded-box bg-base-300 p-6"
           onSubmit={(e) => {
             e.preventDefault();
             presetForm.handleSubmit();
@@ -137,7 +137,7 @@ function ScoringPresetsPage() {
               />
             )}
           />
-          <div className="flex flex-row gap-2 justify-end mt-4">
+          <div className="mt-4 flex flex-row justify-end gap-2">
             <button
               type="button"
               className="btn btn-error"
@@ -204,7 +204,7 @@ function ScoringPresetsPage() {
               deleteScoringPreset(info.row.original.id);
             }}
           >
-            <TrashIcon className="w-4 h-4" />
+            <TrashIcon className="h-4 w-4" />
           </button>
           <button
             className="btn btn-sm btn-warning"
@@ -213,7 +213,7 @@ function ScoringPresetsPage() {
               setFormValues(presetForm, info.row.original);
             }}
           >
-            <PencilSquareIcon className="w-4 h-4" />
+            <PencilSquareIcon className="h-4 w-4" />
           </button>
         </div>
       ),
@@ -225,7 +225,7 @@ function ScoringPresetsPage() {
       <h1>{`Scoring Presets for Event "${event.name}"`}</h1>
       {dialog}
       <button
-        className="btn btn-primary self-center"
+        className="btn self-center btn-primary"
         onClick={() => {
           setIsDialogOpen(true);
           presetForm.reset();
@@ -237,7 +237,7 @@ function ScoringPresetsPage() {
         columns={presetColumns}
         data={scoringPresets}
         sortable={false}
-        className="w-full h-[80vh]"
+        className="h-[80vh] w-full"
       />
     </div>
   );

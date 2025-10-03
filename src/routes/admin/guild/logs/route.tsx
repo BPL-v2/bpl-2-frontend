@@ -18,7 +18,7 @@ function RouteComponent() {
   }
   return (
     <div className="flex flex-col">
-      <div className="flex items-center gap-4 m-4">
+      <div className="m-4 flex items-center gap-4">
         <div>Choose a guild:</div>
         <div className="join">
           {guilds

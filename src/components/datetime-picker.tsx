@@ -35,7 +35,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
         return "";
       }
       return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
-        date.getDate()
+        date.getDate(),
       )}`;
     };
     if (defaultValue) {
@@ -66,7 +66,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
 
   return (
     <label
-      className={twMerge("flex flex-col gap-1 items-start w-full", className)}
+      className={twMerge("flex w-full flex-col items-start gap-1", className)}
     >
       <span className="label">
         {label}

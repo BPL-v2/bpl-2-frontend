@@ -95,10 +95,10 @@ function ItemTooltip({
     <div
       ref={tooltipRef}
       className={twMerge(
-        "fixed z-30 pointer-events-none text-xs md:text-base",
-        "border-2 bg-base-100/60 md:bg-base-100/90 rounded-field flex flex-col gap text-center shadow-lg",
+        "pointer-events-none fixed z-30 text-xs md:text-base",
+        "gap flex flex-col rounded-field border-2 bg-base-100/60 text-center shadow-lg md:bg-base-100/90",
         position.left != 0 && position.top != 0 ? "block" : "hidden",
-        borderColor
+        borderColor,
       )}
       style={{
         left: `${position.left}px`,
@@ -109,9 +109,9 @@ function ItemTooltip({
     >
       <div
         className={twMerge(
-          "flex flex-col text-sm md:text-xl font-bold border-b-1 p-2 w-full",
+          "flex w-full flex-col border-b-1 p-2 text-sm font-bold md:text-xl",
           borderColor,
-          headerColor
+          headerColor,
         )}
       >
         <p>{item.name}</p>
@@ -123,8 +123,8 @@ function ItemTooltip({
         item.energyShield > 0) && (
         <div
           className={twMerge(
-            "flex flex-col p-2 border-y-1 w-full md:gap-1",
-            borderColor
+            "flex w-full flex-col border-y-1 p-2 md:gap-1",
+            borderColor,
           )}
         >
           {item.quality > 0 && (
@@ -158,8 +158,8 @@ function ItemTooltip({
       {item.implicits.length > 0 && (
         <div
           className={twMerge(
-            "flex flex-col border-y-1 p-2 w-full  md:gap-1",
-            borderColor
+            "flex w-full flex-col border-y-1 p-2 md:gap-1",
+            borderColor,
           )}
         >
           {item.implicits.map((implicit) => (
@@ -175,8 +175,8 @@ function ItemTooltip({
       {item.explicits.length > 0 && (
         <div
           className={twMerge(
-            "flex flex-col md:gap-1 border-t-1 p-2 w-full",
-            borderColor
+            "flex w-full flex-col border-t-1 p-2 md:gap-1",
+            borderColor,
           )}
         >
           {item.explicits.map((explicit) => (
@@ -284,7 +284,7 @@ function ItemDisplay({
   const img = item && (
     <>
       <img
-        className="object-contain "
+        className="object-contain"
         style={imageStyle}
         src={getLink(item)}
         alt={item?.name}
@@ -305,9 +305,9 @@ function ItemDisplay({
     <div
       key={"item-" + slot}
       className={twMerge(
-        "h-full w-full rounded-lg p-1 bg-base-200 relative flex justify-center items-center",
+        "relative flex h-full w-full items-center justify-center rounded-lg bg-base-200 p-1",
         item && "cursor-pointer",
-        slot.replaceAll(" ", "").toLowerCase()
+        slot.replaceAll(" ", "").toLowerCase(),
       )}
       ref={itemRef}
       onMouseEnter={handleMouseEnter}
@@ -320,7 +320,7 @@ function ItemDisplay({
 
 export function PoB({ pobString }: Props) {
   const { data: gemColors } = useFile<Record<"r" | "g" | "b" | "w", string[]>>(
-    "/assets/poe1/items/gem_colors.json"
+    "/assets/poe1/items/gem_colors.json",
   );
 
   const [selectedItem, setSelectedItem] = useState<Item>();
@@ -353,14 +353,14 @@ export function PoB({ pobString }: Props) {
       acc[slot] = undefined;
       return acc;
     },
-    {} as Record<string, Item | undefined>
+    {} as Record<string, Item | undefined>,
   );
   const flasks: Record<string, Item | undefined> = flaskSlots.reduce(
     (acc, slot) => {
       acc[slot] = undefined;
       return acc;
     },
-    {} as Record<string, Item | undefined>
+    {} as Record<string, Item | undefined>,
   );
   for (const item of pob.items) {
     if (!item.slot) continue;
@@ -387,14 +387,14 @@ export function PoB({ pobString }: Props) {
     pob.build.playerStats.totalDotDPS,
     pob.build.playerStats.withBleedDPS,
     pob.build.playerStats.withIgniteDPS,
-    pob.build.playerStats.withPoisonDPS
+    pob.build.playerStats.withPoisonDPS,
   );
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row gap-4 text-left min-h-170">
-        <div className="flex justify-center select-none p-4 lg:p-8 bg-base-300 rounded-box min-w-[50%]">
-          <div className="inventory gap-1 md:gap-2 mt-0 m-auto">
+      <div className="flex min-h-170 flex-col gap-4 text-left lg:flex-row">
+        <div className="flex min-w-[50%] justify-center rounded-box bg-base-300 p-4 select-none lg:p-8">
+          <div className="inventory m-auto mt-0 gap-1 md:gap-2">
             {Object.entries(equipment).map(([slot, item]) => (
               <ItemDisplay
                 key={slot}
@@ -435,13 +435,13 @@ export function PoB({ pobString }: Props) {
             })}
           </div>
         </div>
-        <div className="flex flex-col gap-4 flex-1">
-          <div className="flex flex-col gap-2 bg-base-300 p-4 md:p-8 rounded-box">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center text-xl mb-1 gap-4">
+        <div className="flex flex-1 flex-col gap-4">
+          <div className="flex flex-col gap-2 rounded-box bg-base-300 p-4 md:p-8">
+            <div className="flex items-center justify-between">
+              <div className="mb-1 flex items-center gap-4 text-xl">
                 <AscendancyPortrait
                   character_class={characterClass}
-                  className="w-14 h-14 rounded-full object-cover"
+                  className="h-14 w-14 rounded-full object-cover"
                 />
                 <h1>
                   Level {pob.build.level}{" "}
@@ -456,14 +456,14 @@ export function PoB({ pobString }: Props) {
               </div>
               <div title="Copy PoB to clipboard">
                 <ClipboardDocumentListIcon
-                  className="h-8 w-8 cursor-pointer select-none hover:text-primary  active:text-secondary active:scale-110 transition-transform duration-100"
+                  className="h-8 w-8 cursor-pointer transition-transform duration-100 select-none hover:text-primary active:scale-110 active:text-secondary"
                   onClick={() => {
                     navigator.clipboard.writeText(pobString);
                   }}
                 />
               </div>
             </div>
-            <div className="flex flex-row gap-2 justify-left flex-wrap">
+            <div className="justify-left flex flex-row flex-wrap gap-2">
               <div>
                 Life:{" "}
                 <span className="text-health">
@@ -496,8 +496,8 @@ export function PoB({ pobString }: Props) {
                   {Math.round(pob.build.playerStats.totalEHP).toLocaleString()}
                 </span>
                 {showEhpTooltip && (
-                  <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 z-30 pointer-events-none w-60">
-                    <div className="bg-base-100 py-2 px-4 text-sm whitespace-pre-line rounded-box shadow-lg">
+                  <div className="pointer-events-none absolute top-full left-1/2 z-30 mt-2 w-60 -translate-x-1/2">
+                    <div className="rounded-box bg-base-100 px-4 py-2 text-sm whitespace-pre-line shadow-lg">
                       <div>
                         <span>Physical Max Hit: </span>
                         <span className="">
@@ -545,7 +545,7 @@ export function PoB({ pobString }: Props) {
                     <span title="Spell Block">
                       {" "}
                       {Math.round(
-                        pob.build.playerStats.effectiveSpellBlockChance
+                        pob.build.playerStats.effectiveSpellBlockChance,
                       )}
                       %
                     </span>
@@ -557,14 +557,14 @@ export function PoB({ pobString }: Props) {
                   Suppression:{" "}
                   <span className="text-highlight-content">
                     {Math.round(
-                      pob.build.playerStats.effectiveSpellSuppressionChance
+                      pob.build.playerStats.effectiveSpellSuppressionChance,
                     )}
                     %
                   </span>
                 </div>
               )}
             </div>
-            <div className="flex flex-row gap-2 justify-left flex-wrap">
+            <div className="justify-left flex flex-row flex-wrap gap-2">
               <div>
                 Resistances:{" "}
                 <span className="text-fire">
@@ -646,7 +646,7 @@ export function PoB({ pobString }: Props) {
                   Movement Speed:{" "}
                   <span className="text-highlight-content">
                     {Math.round(
-                      pob.build.playerStats.effectiveMovementSpeedMod * 100
+                      pob.build.playerStats.effectiveMovementSpeedMod * 100,
                     )}
                     %
                   </span>
@@ -654,7 +654,7 @@ export function PoB({ pobString }: Props) {
               )}
             </div>
           </div>
-          <div className="columns-2 gap-2 bg-base-300 p-4 md:p-8 rounded-box text-sm h-full">
+          <div className="h-full columns-2 gap-2 rounded-box bg-base-300 p-4 text-sm md:p-8">
             {equipmentSlots
               .sort((slotA, slotB) => {
                 const mainGroup =
@@ -662,10 +662,10 @@ export function PoB({ pobString }: Props) {
                 if (mainGroup?.slot == slotA) return -1;
                 if (mainGroup?.slot == slotB) return 1;
                 const skillsA = pob.skills.skillSets[0].skills.filter(
-                  (skill) => skill.slot === slotA
+                  (skill) => skill.slot === slotA,
                 );
                 const skillsB = pob.skills.skillSets[0].skills.filter(
-                  (skill) => skill.slot === slotB
+                  (skill) => skill.slot === slotB,
                 );
                 return (
                   skillsB.flatMap((skill) => skill.gems).length -
@@ -674,17 +674,17 @@ export function PoB({ pobString }: Props) {
               })
               .map((slot) => {
                 const skills = pob.skills.skillSets[0].skills.filter(
-                  (skill) => skill.slot === slot
+                  (skill) => skill.slot === slot,
                 );
                 if (skills.length === 0) return null;
                 return (
                   <div
-                    className="break-inside-avoid mb-2 bg-base-200 px-3 py-2.5 rounded-xl flex flex-col relative"
+                    className="relative mb-2 flex break-inside-avoid flex-col rounded-xl bg-base-200 px-3 py-2.5"
                     key={`skill-${slot}`}
                   >
                     <InventoryIcon
                       slot={slot}
-                      className="absolute right-2 top-2"
+                      className="absolute top-2 right-2"
                     />
                     <div key={slot} className="flex flex-col gap-2">
                       {skills.map((skill, skillId) => {
@@ -763,7 +763,7 @@ function isMainSkill(skill: Skill, pob: PathOfBuilding): boolean {
 
 function getGemColor(
   gem: Gem,
-  gemColors?: Record<"r" | "g" | "b" | "w", string[]>
+  gemColors?: Record<"r" | "g" | "b" | "w", string[]>,
 ): string {
   if (!gemColors || !gem.gemId) {
     return "text-base-content";

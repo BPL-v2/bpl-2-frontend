@@ -21,7 +21,7 @@ export function ProgressBar({
       <progress
         className={twMerge(
           "progress mr-2",
-          gotPoints ? "progress-success" : isFinished ? "progress-warning" : ""
+          gotPoints ? "progress-success" : isFinished ? "progress-warning" : "",
         )}
         value={percent}
         max="100"

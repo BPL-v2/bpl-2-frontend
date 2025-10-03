@@ -26,7 +26,7 @@ export type StashTabLayoutWrapper =
 
 export function getLayout(
   stashType?: string,
-  layout?: StashTabLayoutWrapper
+  layout?: StashTabLayoutWrapper,
 ): StashTabLayout | undefined {
   if (!layout) return undefined;
   if (typeof layout === "boolean") {

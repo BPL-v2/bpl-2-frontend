@@ -43,11 +43,11 @@ function SubmissionPage() {
   const { rules, isLoading: rulesLoading } = useGetRules(currentEvent.id);
   const { user, isLoading: userLoading } = useGetUser();
   const { submissions = [], isLoading: submissionsLoading } = useGetSubmissions(
-    currentEvent.id
+    currentEvent.id,
   );
   const { reviewSubmission, isPending: reviewPending } = useReviewSubmission(
     qc,
-    currentEvent.id
+    currentEvent.id,
   );
 
   const objectiveMap: Record<number, Objective> = useMemo(() => {
@@ -76,7 +76,7 @@ function SubmissionPage() {
           filterVariant: "enum",
           filterPlaceholder: "Objective",
           options: Object.values(objectiveMap).map(
-            (objective) => objective.name
+            (objective) => objective.name,
           ),
         },
       },
@@ -98,7 +98,7 @@ function SubmissionPage() {
           return (
             <TeamName
               team={currentEvent?.teams.find(
-                (t) => t.id === info.row.original.team_id
+                (t) => t.id === info.row.original.team_id,
               )}
             />
           );
@@ -158,7 +158,7 @@ function SubmissionPage() {
             case "PENDING":
               return (
                 <div
-                  className="text-warning tooltip cursor-help"
+                  className="tooltip cursor-help text-warning"
                   data-tip="Pending"
                 >
                   <EyeSlashIcon className="h-6 w-6 text-warning" />
@@ -167,7 +167,7 @@ function SubmissionPage() {
             case "APPROVED":
               return (
                 <div
-                  className="text-success tooltip cursor-help"
+                  className="tooltip cursor-help text-success"
                   data-tip="Approved"
                 >
                   <CheckCircleIcon className="h-6 w-6 text-success" />
@@ -176,7 +176,7 @@ function SubmissionPage() {
             case "REJECTED":
               return (
                 <div
-                  className="text-error tooltip cursor-help"
+                  className="tooltip cursor-help text-error"
                   data-tip="Rejected"
                 >
                   <XCircleIcon className="h-6 w-6 text-error" />
@@ -204,7 +204,7 @@ function SubmissionPage() {
           return (
             <div className="flex flex-col gap-1">
               <button
-                className="btn btn-success btn-sm"
+                className="btn btn-sm btn-success"
                 onClick={() => {
                   reviewSubmission({
                     submissionId: submissionId,
@@ -214,12 +214,12 @@ function SubmissionPage() {
                 disabled={reviewPending}
               >
                 {reviewPending ? (
-                  <span className="loading loading-spinner loading-xs"></span>
+                  <span className="loading loading-xs loading-spinner"></span>
                 ) : null}
                 Approve
               </button>
               <button
-                className="btn btn-error btn-sm"
+                className="btn btn-sm btn-error"
                 onClick={() => {
                   reviewSubmission({
                     submissionId: submissionId,
@@ -229,7 +229,7 @@ function SubmissionPage() {
                 disabled={reviewPending}
               >
                 {reviewPending ? (
-                  <span className="loading loading-spinner loading-xs"></span>
+                  <span className="loading loading-xs loading-spinner"></span>
                 ) : null}
                 Reject
               </button>
@@ -252,9 +252,9 @@ function SubmissionPage() {
   // Show loading state while any data is loading
   if (usersLoading || rulesLoading || userLoading || submissionsLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex min-h-screen items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <span className="loading loading-spinner loading-lg"></span>
+          <span className="loading loading-lg loading-spinner"></span>
           <p className="text-lg">Loading submissions...</p>
         </div>
       </div>
@@ -265,13 +265,13 @@ function SubmissionPage() {
     return <div>No event selected</div>;
   }
   const submissionObjectives = flatMap(rules).filter(
-    (objective) => objective.objective_type === ObjectiveType.SUBMISSION
+    (objective) => objective.objective_type === ObjectiveType.SUBMISSION,
   );
   return (
-    <div className=" mt-4 flex flex-col">
+    <div className="mt-4 flex flex-col">
       {" "}
       <form
-        className="mb-4 bg-base-200 flex flex-col items-center"
+        className="mb-4 flex flex-col items-center bg-base-200"
         onSubmit={(e) => {
           e.preventDefault();
           const form = e.target as HTMLFormElement;
@@ -304,7 +304,7 @@ function SubmissionPage() {
             });
         }}
       >
-        <fieldset className="fieldset mb-4 m-4 w-md bg-base-300 rounded-box p-4">
+        <fieldset className="m-4 mb-4 fieldset w-md rounded-box bg-base-300 p-4">
           <label className="label">Objective</label>
           <Select
             className="w-full"
@@ -331,13 +331,13 @@ function SubmissionPage() {
               ></Select>
             </>
           ))}
-          <button className="btn btn-primary mt-2" type="submit">
+          <button className="btn mt-2 btn-primary" type="submit">
             Submit
           </button>
         </fieldset>
       </form>
       <Table<Submission>
-        className="h-[70vh] mt-4"
+        className="mt-4 h-[70vh]"
         data={submissions}
         columns={columns}
         rowClassName={() => "hover:bg-base-200/50"}

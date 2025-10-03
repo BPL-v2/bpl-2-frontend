@@ -34,7 +34,7 @@ function ForYouTab() {
       acc[goal.objective_id] = goal.extra;
       return acc;
     },
-    {} as Record<number, string>
+    {} as Record<number, string>,
   );
   // @ts-ignore not using this in bpl 17.5
   const personalObjectiveRender = useMemo(() => {
@@ -57,7 +57,7 @@ function ForYouTab() {
           Help your team out by improving your character and earn up to 9 points
           for your team.
         </p>
-        <div className="flex flex-col gap-1 text-base font-bold mt-[-1rem]">
+        <div className="mt-[-1rem] flex flex-col gap-1 text-base font-bold">
           <PoGauge
             descriptions={["Lvl 40", "Lvl 60", "Lvl 80"]}
             values={[
@@ -91,7 +91,7 @@ function ForYouTab() {
   const teamId = eventStatus?.team_id as number;
   if (teamId === null || !eventStatus) {
     return (
-      <div className="prose prose-xl text-left max-w-full flex flex-col px-4 2xl:px-0">
+      <div className="prose prose-xl flex max-w-full flex-col px-4 text-left 2xl:px-0">
         You have not been assigned to a team yet.
       </div>
     );
@@ -104,16 +104,16 @@ function ForYouTab() {
         category.scoring_preset?.scoring_method ===
           ScoringMethod.RANKED_COMPLETION_TIME &&
         eventStatus.team_id !== undefined &&
-        !category.team_score[eventStatus.team_id]?.finished
+        !category.team_score[eventStatus.team_id]?.finished,
     )
     .sort((a, b) => {
       return (
         a.children.filter(
-          (objective) => !objective.team_score[teamId]?.finished
+          (objective) => !objective.team_score[teamId]?.finished,
         ).length /
           a.children.length -
         b.children.filter(
-          (objective) => !objective.team_score[teamId]?.finished
+          (objective) => !objective.team_score[teamId]?.finished,
         ).length /
           b.children.length
       );
@@ -123,33 +123,33 @@ function ForYouTab() {
     (objective) =>
       objective.scoring_preset?.scoring_method === ScoringMethod.RANKED_TIME &&
       !objective.team_score[eventStatus.team_id!]?.finished &&
-      (!objective.valid_from || new Date(objective.valid_from) < new Date())
+      (!objective.valid_from || new Date(objective.valid_from) < new Date()),
   );
   function categoryRender(
     category: ScoreObjective,
-    teamGoalMap: Record<number, string>
+    teamGoalMap: Record<number, string>,
   ) {
     const childLeaves = category.children.filter(
-      (obj) => obj.children.length === 0
+      (obj) => obj.children.length === 0,
     );
     const totalObjectives = childLeaves.length;
     const unfinishedObjectives = childLeaves.filter(
-      (obj) => !obj.team_score[teamId]?.finished
+      (obj) => !obj.team_score[teamId]?.finished,
     );
     const teamLeadMessage = teamGoalMap[category.id];
     return (
       <div className="card bg-base-300" key={category.id}>
         <div className="card-body flex-row gap-1">
-          <div tabIndex={0} className="collapse bg-base-200 items-start">
-            <div className="card-title collapse-title flex justify-between text-lg pe-px-4 px-4">
+          <div tabIndex={0} className="collapse items-start bg-base-200">
+            <div className="pe-px-4 collapse-title card-title flex justify-between px-4 text-lg">
               <div>{category.name}</div>
-              <div className="text-primary whitespace-nowrap">
+              <div className="whitespace-nowrap text-primary">
                 {totalObjectives - unfinishedObjectives.length} /{" "}
                 {totalObjectives}
               </div>
             </div>
-            <ul className="collapse-content list not-prose">
-              <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
+            <ul className="not-prose collapse-content list">
+              <li className="p-4 pb-2 text-xs tracking-wide opacity-60">
                 Missing Items
               </li>
               {unfinishedObjectives.map((obj) => (
@@ -161,15 +161,15 @@ function ForYouTab() {
           </div>
           {teamLeadMessage && (
             <div className="tooltip">
-              <div className="tooltip-content text-lg text-error whitespace-pre-wrap text-left p-4">
+              <div className="tooltip-content p-4 text-left text-lg whitespace-pre-wrap text-error">
                 {teamLeadMessage}
               </div>
-              <EnvelopeIcon className="h-6 w-6 text-error cursor-help"></EnvelopeIcon>
+              <EnvelopeIcon className="h-6 w-6 cursor-help text-error"></EnvelopeIcon>
             </div>
           )}
         </div>
         <progress
-          className="progress progress-primary w-full rounded-b-box rounded-t-none"
+          className="progress w-full rounded-t-none rounded-b-box progress-primary"
           value={totalObjectives - unfinishedObjectives.length}
           max={totalObjectives}
         ></progress>
@@ -184,21 +184,21 @@ function ForYouTab() {
         <div className="card-body flex-row gap-1">
           <div className="card-title flex justify-between text-lg">
             <div>{obj.name}</div>
-            <div className="text-primary whitespace-nowrap">
+            <div className="whitespace-nowrap text-primary">
               {obj.team_score[teamId]?.number} / {obj.required_number}
             </div>
           </div>
           {teamLeadMessage && (
             <div className="tooltip">
-              <div className="tooltip-content text-lg text-error whitespace-pre-wrap text-left p-4">
+              <div className="tooltip-content p-4 text-left text-lg whitespace-pre-wrap text-error">
                 {teamLeadMessage}
               </div>
-              <EnvelopeIcon className="h-6 w-6 text-error cursor-help"></EnvelopeIcon>
+              <EnvelopeIcon className="h-6 w-6 cursor-help text-error"></EnvelopeIcon>
             </div>
           )}
         </div>
         <progress
-          className="progress progress-primary w-full rounded-b-box rounded-t-none"
+          className="progress w-full rounded-t-none rounded-b-box progress-primary"
           value={obj.team_score[teamId]?.number}
           max={obj.required_number}
         ></progress>
@@ -213,7 +213,7 @@ function ForYouTab() {
     }
   }
   return (
-    <div className="prose prose-lg text-left max-w-full flex flex-col px-4 2xl:px-0">
+    <div className="prose prose-lg flex max-w-full flex-col px-4 text-left 2xl:px-0">
       {/* {personalObjectiveRender} */}
       {teamGoals && (
         <div>
@@ -234,7 +234,7 @@ function ForYouTab() {
                 Your team leads have selected objectives that are urgent for you
                 to do.
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {relevantCategories
                   .filter((category) => teamGoalMap[category.id] != undefined)
                   .map((category) => categoryRender(category, teamGoalMap))}
@@ -248,7 +248,7 @@ function ForYouTab() {
       )}
       <div>
         <h3>{teamGoals ? "Remaining Objectives" : "To do"}</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {relevantCategories
             .filter((category) => teamGoalMap[category.id] == undefined)
             .map((category) => categoryRender(category, teamGoalMap))}

@@ -32,10 +32,10 @@ function Home() {
   const hasStarted = Date.parse(nextEvent.event_start_time) < now;
   const hasEnded = Date.parse(nextEvent.event_end_time) < now;
   return (
-    <div className="flex flex-col gap-8 mt-8 mx-auto">
+    <div className="mx-auto mt-8 flex flex-col gap-8">
       {!hasEnded && (
         <div className="card max-w-full bg-base-300">
-          <div className="card-body px-12 py-4 text-2xl flex flex-row gap-8 items-center">
+          <div className="card-body flex flex-row items-center gap-8 px-12 py-4 text-2xl">
             {signupsStart && (
               <>
                 <SignupButton />
@@ -52,7 +52,7 @@ function Home() {
               {Math.max(
                 (eventStatus?.number_of_signups || 0) -
                   (nextEvent?.max_size || 0),
-                0
+                0,
               )}{" "}
               / {nextEvent?.waitlist_size || 0}
             </div>
@@ -63,22 +63,22 @@ function Home() {
       <div className="card max-w-full bg-base-300">
         <div className="card-body p-12">
           <div className="card-title text-4xl">What is BPL?</div>
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 items-center">
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
             <div>
-              <p className="text-2xl mt-4 text-left">
+              <p className="mt-4 text-left text-2xl">
                 BPL is a cooperative, team-based Path of Exile community event
                 where players compete to score points in a variety of
                 categories. At the end of the event, the team with the most
                 points is the victor!
               </p>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 mt-8">
-                <button className="btn h-16 bg-discord">
+              <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
+                <button className="bg-discord btn h-16">
                   <a
                     href="https://discord.com/invite/3weG9JACgb"
                     target="_blank"
-                    className="text-white text-2xl flex items-center justify-center gap-2"
+                    className="flex items-center justify-center gap-2 text-2xl text-white"
                   >
-                    <DiscordFilled className="w-6 h-6" />
+                    <DiscordFilled className="h-6 w-6" />
                     Join the Discord
                   </a>
                 </button>
@@ -86,7 +86,7 @@ function Home() {
                   <a
                     href="https://ko-fi.com/bpl_poe"
                     target="_blank"
-                    className="text-white text-2xl flex items-center justify-center gap-2"
+                    className="flex items-center justify-center gap-2 text-2xl text-white"
                   >
                     <HeartIcon className="h-7 w-7" /> Support BPL
                   </a>
@@ -104,12 +104,12 @@ function Home() {
           <div className="card bg-base-300">
             <div className="card-body p-12">
               <div className="card-title text-4xl">Save the Date!</div>
-              <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 items-center">
-                <div className="text-2xl mt-4 grid grid-cols-2 text-left">
+              <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+                <div className="mt-4 grid grid-cols-2 text-left text-2xl">
                   <p>Applications start: </p>
                   <p>
                     {new Date(
-                      nextEvent.application_start_time
+                      nextEvent.application_start_time,
                     ).toLocaleString()}
                   </p>
                   <p>Start time: </p>
@@ -142,17 +142,17 @@ function Home() {
             <div className="card bg-base-300">
               <div className="card-body p-12">
                 <div className="card-title text-4xl">Meet the Teams</div>
-                <p className="text-2xl mt-4">
+                <p className="mt-4 text-2xl">
                   The teams only have access to a limited number of Ascendancy
                   classes
                 </p>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mt-4">
+                <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                   {nextEvent.teams.map((team) => (
                     <div key={team.id} className="card bg-base-200">
                       <div className="card-body">
-                        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 items-center h-full">
+                        <div className="grid h-full grid-cols-1 items-center gap-4 lg:grid-cols-2">
                           <TeamLogo team={team} eventId={nextEvent.id} />
-                          <div className="flex flex-row gap-1 flex-wrap md:gap-2">
+                          <div className="flex flex-row flex-wrap gap-1 md:gap-2">
                             {team.allowed_classes.map((character_class) => (
                               <div
                                 key={team.id + character_class}
@@ -161,7 +161,7 @@ function Home() {
                               >
                                 <AscendancyPortrait
                                   character_class={character_class}
-                                  className="size-14 xl:size-18 rounded-full object-cover"
+                                  className="size-14 rounded-full object-cover xl:size-18"
                                 ></AscendancyPortrait>
                               </div>
                             ))}

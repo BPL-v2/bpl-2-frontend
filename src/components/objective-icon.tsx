@@ -17,19 +17,19 @@ export function ObjectiveIcon({
   const img_location = getImageLocation(objective, gameVersion);
   const itemName = getItemName(objective);
   if (!img_location) {
-    return <div className={twMerge("w-14 h-14", className)}> </div>;
+    return <div className={twMerge("h-14 w-14", className)}> </div>;
   }
   let wikilink: string | undefined = undefined;
   if (itemName) {
     if (gameVersion === GameVersion.poe1) {
       wikilink = `https://www.poewiki.net/wiki/${itemName.replaceAll(
         " ",
-        "_"
+        "_",
       )}`;
     } else {
       wikilink = `https://www.poe2wiki.net/wiki/${itemName.replaceAll(
         " ",
-        "_"
+        "_",
       )}`;
     }
   }
@@ -37,14 +37,14 @@ export function ObjectiveIcon({
   return (
     <a
       className={twMerge(
-        "select-none flex items-center justify-center cursor-pointer w-14 h-14",
-        className
+        "flex h-14 w-14 cursor-pointer items-center justify-center select-none",
+        className,
       )}
       href={wikilink}
       target="_blank"
     >
       <img
-        className={twMerge("max-w-14 max-h-14", className)}
+        className={twMerge("max-h-14 max-w-14", className)}
         src={img_location}
         alt={itemName || img_location}
       />

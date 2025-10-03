@@ -23,7 +23,7 @@ export const ScoreUpdateCard = ({
   let title: string | null = null;
   if (meta.objective) {
     const bodyText = (
-      <div className="text-lg text-left">
+      <div className="text-left text-lg">
         {`${meta.userName} scored "${meta.objective?.name}"`}
         {meta.objective.extra ? (
           <text className="text-primary">{` [${meta.objective.extra}]`}</text>
@@ -32,7 +32,7 @@ export const ScoreUpdateCard = ({
       </div>
     );
     body = (
-      <div className="card-body flex  flex-row items-center gap-8">
+      <div className="card-body flex flex-row items-center gap-8">
         <div className="h-20 w-20">
           <ObjectiveIcon
             className=""
@@ -48,7 +48,7 @@ export const ScoreUpdateCard = ({
   } else if (meta.parent) {
     const img_location = `assets/${currentEvent.game_version}/icons/${meta.parent.name}.svg`;
     body = (
-      <div className="card-body flex gap-2 flex-row">
+      <div className="card-body flex flex-row gap-2">
         <div className="h-20 w-20">
           <img
             className="h-full w-full object-contain"
@@ -56,7 +56,7 @@ export const ScoreUpdateCard = ({
             alt={meta.parent.name}
           />
         </div>
-        <p className="text-lg text-left">
+        <p className="text-left text-lg">
           {meta.parent?.name} was finished in {meta.rank}. place
         </p>
       </div>
@@ -64,17 +64,17 @@ export const ScoreUpdateCard = ({
     title = meta.teamName + " +" + meta.points;
   }
   return (
-    <div className="card bg-base-300 ring-1 ring-primary w-full">
-      <div className="card-title rounded-t-box flex items-center pb-4 px-4 bg-base-200  mr-0">
-        <h1 className="flex-grow text-left  text-xl mx-4 mt-4">{title}</h1>
-        <div className="flex justify-end gap-2 mt-4">
+    <div className="card w-full bg-base-300 ring-1 ring-primary">
+      <div className="mr-0 card-title flex items-center rounded-t-box bg-base-200 px-4 pb-4">
+        <h1 className="mx-4 mt-4 flex-grow text-left text-xl">{title}</h1>
+        <div className="mt-4 flex justify-end gap-2">
           {closeAll ? (
-            <button className="btn btn-error btn-sm" onClick={closeAll}>
+            <button className="btn btn-sm btn-error" onClick={closeAll}>
               close all
             </button>
           ) : null}
           <button
-            className="btn btn-warning btn-sm"
+            className="btn btn-sm btn-warning"
             onClick={() => close(update)}
           >
             close

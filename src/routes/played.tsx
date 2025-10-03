@@ -19,7 +19,7 @@ function RouteComponent() {
     );
   }
   return (
-    <div className="prose text-left max-w-full p-4">
+    <div className="prose max-w-full p-4 text-left">
       <h1>Hey! Hope you had fun this BPL!</h1>
       <p>
         We are currently trying to make sure we are having more equal teams in
@@ -30,7 +30,7 @@ function RouteComponent() {
         per day. What was your actual /played in the end?
       </p>
       <form
-        className="flex flex-row gap-4 items-center"
+        className="flex flex-row items-center gap-4"
         onSubmit={(e) => {
           e.preventDefault();
           const values = new FormData(e.currentTarget);

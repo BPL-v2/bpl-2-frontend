@@ -51,7 +51,7 @@ export function CharacterChart({
 
   const { characterTimeseries = [] } = useGetCharacterTimeseries(
     characterId,
-    userId
+    userId,
   );
   const selectedPobTimestamp = pobs[pobId]?.timestamp
     ? new Date(pobs[pobId].timestamp).getTime() / 1000
@@ -62,13 +62,13 @@ export function CharacterChart({
   const data: AlignedData = [
     new Float64Array(characterTimeseries.map((c) => c.timestamp)),
     new Float64Array(
-      characterTimeseries.map((c) => getLevelFromExperience(c.xp))
+      characterTimeseries.map((c) => getLevelFromExperience(c.xp)),
     ),
     new Float64Array(characterTimeseries.map((c) => c[selectedMetric])),
   ];
   const maxMetric = Math.max(
     ...characterTimeseries.map((c) => c[selectedMetric]),
-    1
+    1,
   );
 
   const verticalLinePlugin = (): uPlot.Plugin => ({
@@ -162,9 +162,9 @@ export function CharacterChart({
   };
   return (
     state.data[0].length > 0 && (
-      <div className="bg-base-200 rounded-box justify-center">
-        <div className="hidden lg:flex flex-row bg-base-200 rounded-box justify-center p-4 gap-4">
-          <div className="bg-base-300 rounded-box p-4 w-full " ref={plotRef}>
+      <div className="justify-center rounded-box bg-base-200">
+        <div className="hidden flex-row justify-center gap-4 rounded-box bg-base-200 p-4 lg:flex">
+          <div className="w-full rounded-box bg-base-300 p-4" ref={plotRef}>
             <UplotReact
               options={state.options}
               data={state.data}
@@ -203,7 +203,7 @@ export function CharacterChart({
               }}
             />
           </div>
-          <div className="flex flex-col p-4 self-auto bg-base-300 rounded-box">
+          <div className="flex flex-col self-auto rounded-box bg-base-300 p-4">
             Shown Metric:
             {[
               "dps",
@@ -221,7 +221,7 @@ export function CharacterChart({
                 key={metric as string}
                 className={twMerge(
                   "btn m-1",
-                  selectedMetric === metric && "btn-primary"
+                  selectedMetric === metric && "btn-primary",
                 )}
                 onClick={() => setSelectedMetric(metric as keyof CharacterStat)}
               >

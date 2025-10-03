@@ -50,7 +50,7 @@ function LadderTab(): JSX.Element {
     useContext(GlobalStateContext);
   const { rules } = Route.useSearch();
   const { data: ladder, isError: ladderIsError } = useGetLadder(
-    currentEvent.id
+    currentEvent.id,
   );
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const { data: users, isError: usersIsError } = useGetUsers(currentEvent.id);
@@ -60,7 +60,7 @@ function LadderTab(): JSX.Element {
         acc[team.id] = team;
         return acc;
       }, {}) || {},
-    [currentEvent]
+    [currentEvent],
   );
 
   const getTeam = useMemo(() => {
@@ -70,7 +70,7 @@ function LadderTab(): JSX.Element {
           acc[user.id] = teamMap[user.team_id];
           return acc;
         },
-        {} as { [userId: number]: Team }
+        {} as { [userId: number]: Team },
       ) || {};
     return (userId: number | undefined): Team | undefined => {
       if (userId === undefined) {
@@ -134,12 +134,12 @@ function LadderTab(): JSX.Element {
               <div className="flex items-center gap-2">
                 <AscendancyPortrait
                   character_class={info.row.original.character_class}
-                  className="w-10 h-10 rounded-full object-cover"
+                  className="h-10 w-10 rounded-full object-cover"
                 />
                 <div className="flex flex-col">
                   <span
                     className={getSkillColor(
-                      info.row.original.character?.main_skill
+                      info.row.original.character?.main_skill,
                     )}
                   >
                     {" "}
@@ -244,7 +244,7 @@ function LadderTab(): JSX.Element {
         // @ts-ignore
         header: (
           <button
-            className="btn btn-primary btn-sm"
+            className="btn btn-sm btn-primary"
             onClick={() => {
               setPreferences({
                 ...preferences,
@@ -307,13 +307,13 @@ function LadderTab(): JSX.Element {
       ...Object.fromEntries(
         categoryNames.map((categoryName) => {
           const child = scores?.children.find(
-            (category) => category.name === categoryName
+            (category) => category.name === categoryName,
           );
           if (!child) {
             return [categoryName, 0];
           }
           return [categoryName, getTotalPoints(child)[team.id] || 0];
-        })
+        }),
       ),
     } as RowDef;
   });
@@ -343,17 +343,17 @@ function LadderTab(): JSX.Element {
   ];
 
   const objs = scores?.children.find(
-    (category) => category.name === "Personal Objectives"
+    (category) => category.name === "Personal Objectives",
   )?.children;
   const totalObjective = objs?.find(
-    (obj) => obj.scoring_preset?.point_cap || 0 > 0
+    (obj) => obj.scoring_preset?.point_cap || 0 > 0,
   );
   const checkPoints = objs?.filter((obj) => !obj.scoring_preset?.point_cap);
   return (
     <>
       {rules ? (
-        <div className="w-full bg-base-200 my-4 p-8 rounded-box">
-          <article className="prose text-left max-w-4xl">
+        <div className="my-4 w-full rounded-box bg-base-200 p-8">
+          <article className="prose max-w-4xl text-left">
             <POPointRules />
           </article>
         </div>
@@ -386,7 +386,7 @@ function LadderTab(): JSX.Element {
                 })
                 .slice(
                   0,
-                  preferences.limitTeams ? preferences.limitTeams : undefined
+                  preferences.limitTeams ? preferences.limitTeams : undefined,
                 )
 
                 .map((team) => {
@@ -406,12 +406,12 @@ function LadderTab(): JSX.Element {
                   const cap = totalObjective?.scoring_preset?.point_cap || 0;
                   const current = Math.min(
                     totalObjective?.team_score[team.id]?.number || 0,
-                    cap
+                    cap,
                   );
                   total += current;
                   return (
                     <div className="flex flex-col" key={team.id}>
-                      <div className="flex flex-row justify-start text-lg gap-2">
+                      <div className="flex flex-row justify-start gap-2 text-lg">
                         <TeamName className="font-semibold" team={team} />
                         <div className="">{`${total} = (${current} + ${extra.join(" + ")})`}</div>
                       </div>

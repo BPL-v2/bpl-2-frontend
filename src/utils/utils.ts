@@ -16,7 +16,7 @@ function getEmptyScore(): Score {
     points: 0,
     user_id: 0,
     rank: 0,
-    timestamp: new Date().getTime()/1000,
+    timestamp: new Date().getTime() / 1000,
     number: 0,
     finished: false,
   };
@@ -26,7 +26,7 @@ export function mergeScores(
   objective: Objective,
   scores: ScoreMap,
   teamsIds: number[],
-  scoringPresets: Record<number, ScoringPreset>
+  scoringPresets: Record<number, ScoringPreset>,
 ): ScoreObjective {
   return {
     ...objective,
@@ -34,7 +34,7 @@ export function mergeScores(
       ? scoringPresets[objective.scoring_preset_id]
       : undefined,
     children: objective.children.map((subObjective) =>
-      mergeScores(subObjective, scores, teamsIds, scoringPresets)
+      mergeScores(subObjective, scores, teamsIds, scoringPresets),
     ),
     team_score: teamsIds.reduce((acc: TeamScores, teamId) => {
       acc[teamId] = scores[teamId]?.[objective.id] || getEmptyScore();
@@ -49,7 +49,7 @@ export function hidePOTotal(score: ScoreObjective): ScoreObjective {
     if (child.name === "Personal Objectives") {
       const firstCheckpoint = child.children.sort(
         (a, b) =>
-          new Date(a.valid_to!).getTime() - new Date(b.valid_to!).getTime()
+          new Date(a.valid_to!).getTime() - new Date(b.valid_to!).getTime(),
       )[0];
       for (const childChild of child.children) {
         if (
@@ -64,7 +64,7 @@ export function hidePOTotal(score: ScoreObjective): ScoreObjective {
                 points: 0,
                 number: 0,
               },
-            ])
+            ]),
           );
         }
       }
@@ -110,7 +110,7 @@ export function getPotentialPoints(objective: ScoreObjective): PotentialPoints {
 }
 
 function getPotentialPointsForScoringMethod(
-  objective: ScoreObjective
+  objective: ScoreObjective,
 ): PotentialPoints {
   switch (objective.scoring_preset?.scoring_method) {
     case ScoringMethod.PRESENCE:
@@ -133,7 +133,7 @@ function getPotentialPointsForScoringMethod(
 }
 
 export function potentialPointsPresence(
-  objective: ScoreObjective
+  objective: ScoreObjective,
 ): PotentialPoints {
   const presencePoints = objective.scoring_preset!.points[0];
   return Object.keys(objective.team_score).reduce((acc, team_id) => {
@@ -143,7 +143,7 @@ export function potentialPointsPresence(
 }
 
 export function getPotentialPointsValue(
-  objective: ScoreObjective
+  objective: ScoreObjective,
 ): PotentialPoints {
   const maximum = objective.scoring_preset!.point_cap!;
   return Object.keys(objective.team_score).reduce((acc, team_id) => {
@@ -153,7 +153,7 @@ export function getPotentialPointsValue(
 }
 
 export function getPotentialPointsRanked(
-  objective: ScoreObjective
+  objective: ScoreObjective,
 ): PotentialPoints {
   let rankPossible = 0;
   for (const teamScore of Object.values(objective.team_score)) {
@@ -173,16 +173,16 @@ export function getPotentialPointsRanked(
         : possiblePointsForFinishing;
       return acc;
     },
-    {} as PotentialPoints
+    {} as PotentialPoints,
   );
 }
 
 function getPotentialBonusPointsPerChild(
-  objective: ScoreObjective
+  objective: ScoreObjective,
 ): PotentialPoints {
   const presetPoints = objective.scoring_preset!.points;
   const childCount = objective.children.filter(
-    (child) => child.children.length === 0
+    (child) => child.children.length === 0,
   ).length;
   let potential = 0;
   for (let i = 0; i < childCount; i++) {
@@ -214,7 +214,7 @@ export function rank2text(rank: number) {
 }
 
 export function flatMap<T extends Objective | ScoreObjective>(
-  objective?: T
+  objective?: T,
 ): T[] {
   if (!objective) return [];
   const objectives: T[] = [objective];
@@ -250,13 +250,13 @@ export function getVariantMap(objective: ScoreObjective): {
       }
       return acc;
     },
-    {} as { [objectiveName: string]: ScoreObjective[] }
+    {} as { [objectiveName: string]: ScoreObjective[] },
   );
 }
 
 export function iterateObjectives(
   objective: ScoreObjective | Objective | undefined,
-  callback: (obj: ScoreObjective | Objective) => void
+  callback: (obj: ScoreObjective | Objective) => void,
 ): void {
   if (!objective) {
     return;
@@ -269,7 +269,7 @@ export function iterateObjectives(
 
 export function findObjective(
   objective: ScoreObjective | Objective | undefined,
-  finder: (objective: ScoreObjective | Objective) => boolean
+  finder: (objective: ScoreObjective | Objective) => boolean,
 ): ScoreObjective | Objective | undefined {
   if (!objective) {
     return;
@@ -288,7 +288,7 @@ export function findObjective(
 export function getPath(
   objective: ScoreObjective | Objective | undefined,
   childId: number,
-  path: number[] = []
+  path: number[] = [],
 ): number[] {
   if (!objective) {
     return [];
@@ -307,7 +307,7 @@ export function getPath(
 
 export function timeSort<T, K extends keyof T>(
   timefield: K,
-  direction: "asc" | "desc"
+  direction: "asc" | "desc",
 ): (a: T & Record<K, string>, b: T & Record<K, string>) => number {
   return (a, b) => {
     const timeA = new Date(a[timefield]).getTime();

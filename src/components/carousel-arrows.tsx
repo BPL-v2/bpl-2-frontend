@@ -15,7 +15,7 @@ type UsePrevNextButtonsType = {
 };
 
 export const usePrevNextButtons = (
-  emblaApi: EmblaCarouselType | undefined
+  emblaApi: EmblaCarouselType | undefined,
 ): UsePrevNextButtonsType => {
   const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
   const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
@@ -67,7 +67,7 @@ export const NextButton: React.FC<PropType> = (props) => {
 
   return (
     <button className="cursor-pointer" type="button" {...restProps}>
-      <ChevronLeftIcon className="h-10 w-10 font-bold rotate-180" />
+      <ChevronLeftIcon className="h-10 w-10 rotate-180 font-bold" />
     </button>
   );
 };

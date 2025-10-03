@@ -31,13 +31,13 @@ function convertArrayToText(points: number[]): JSX.Element[] {
 export function POPointRules() {
   const { scores } = useContext(GlobalStateContext);
   const objs = scores?.children.find(
-    (category) => category.name === "Personal Objectives"
+    (category) => category.name === "Personal Objectives",
   )?.children;
   if (!objs) {
     return <></>;
   }
   const totalObjective = objs.find(
-    (obj) => obj.scoring_preset?.point_cap || 0 > 0
+    (obj) => obj.scoring_preset?.point_cap || 0 > 0,
   );
   const checkPoints = objs.filter((obj) => !obj.scoring_preset?.point_cap);
   return (

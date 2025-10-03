@@ -12,7 +12,7 @@ export function NumberField({
   const field = useFieldContext<number>();
   return (
     <label
-      className="flex flex-col gap-1 items-start w-full"
+      className="flex w-full flex-col items-start gap-1"
       hidden={props.hidden}
     >
       <span className="label">

@@ -569,7 +569,7 @@ export function decodePoBExport(input: string): PathOfBuilding {
   result.build.className = build.getAttribute("className") || "";
   result.build.ascendClassName = build.getAttribute("ascendClassName") || "";
   result.build.mainSocketGroup = parseInt(
-    build.getAttribute("mainSocketGroup") || "0"
+    build.getAttribute("mainSocketGroup") || "0",
   );
 
   const playerStatElements = xmlDoc.getElementsByTagName("PlayerStat");
@@ -584,7 +584,7 @@ export function decodePoBExport(input: string): PathOfBuilding {
   const skillsElement = xmlDoc.getElementsByTagName("Skills")[0];
   if (skillsElement) {
     result.skills.activeSkillSet = parseInt(
-      skillsElement.getAttribute("activeSkillSet") || "0"
+      skillsElement.getAttribute("activeSkillSet") || "0",
     );
     result.skills.sortGemsByDPS =
       skillsElement.getAttribute("sortGemsByDPS") || "";
@@ -660,7 +660,7 @@ export function decodePoBExport(input: string): PathOfBuilding {
       const specs = tree.getElementsByTagName("Spec");
       const activeSpec = Number(tree.getAttribute("activeSpec"));
       for (const socket of specs[activeSpec - 1].getElementsByTagName(
-        "Socket"
+        "Socket",
       )) {
         idToSlot[socket.getAttribute("itemId") || ""] = "Socket";
       }
@@ -685,8 +685,8 @@ export function decodePoBExport(input: string): PathOfBuilding {
         parseItem(
           text.trim(),
           idToSlot[itemElement.getAttribute("id") || ""],
-          itemElement.getAttribute("id")!
-        )
+          itemElement.getAttribute("id")!,
+        ),
       );
     }
     result.items = items;
@@ -773,7 +773,7 @@ function fixupItemName(name: string): string {
 
 function parseAltQuality(
   cmd: string,
-  arg: string
+  arg: string,
 ): { alt: string; quality: number } | undefined {
   if (!cmd.startsWith("Quality (") || !cmd.endsWith(")")) return undefined;
   const alt = cmd.slice(8, -1);
@@ -868,7 +868,7 @@ function getBaseTypeWordCount(name: string): number {
     return 3;
   const counts = Object.entries(baseTypeWordCounts).flatMap(
     ([count, baseTypes]) =>
-      baseTypes.map((bt) => [bt, parseInt(count)] as [string, number])
+      baseTypes.map((bt) => [bt, parseInt(count)] as [string, number]),
   );
   for (const [baseType, wc] of counts) {
     if (name.includes(baseType)) {

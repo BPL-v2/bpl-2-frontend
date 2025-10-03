@@ -141,7 +141,7 @@ export function useGetOwnSignup(eventId: number) {
 export function useCreateSignup(
   qc: QueryClient,
   successCallback?: () => void,
-  errorCallback?: (msg: string) => void
+  errorCallback?: (msg: string) => void,
 ) {
   const m = useMutation({
     mutationFn: ({ eventId, body }: { eventId: number; body: SignupCreate }) =>
@@ -158,7 +158,7 @@ export function useCreateSignup(
           "ownSignup",
           current !== variables.eventId ? variables.eventId : "current",
         ],
-        data
+        data,
       );
       if (successCallback) {
         successCallback();
@@ -293,7 +293,7 @@ export function useGetUserCharacters(userId: number) {
             acc[character.event_id].push(character);
             return acc;
           },
-          {} as { [eventId: number]: Character[] }
+          {} as { [eventId: number]: Character[] },
         );
         return Object.values(eventCharacters).map((characters) => {
           return characters.sort((a, b) => b.level - a.level)[0];
@@ -452,7 +452,7 @@ export function useUpdateGuildStashTab(qc: QueryClient, eventId: number) {
             }
             return tab;
           });
-        }
+        },
       );
     },
   });
@@ -477,7 +477,7 @@ export function useSwitchStashFetching(qc: QueryClient, eventId: number) {
             }
             return tab;
           });
-        }
+        },
       );
     },
   });
@@ -552,7 +552,7 @@ export function useGetScoringPresetsForEvent(eventId: number) {
 export function useAddScoringPreset(
   qc: QueryClient,
   eventId: number,
-  callback?: () => void
+  callback?: () => void,
 ) {
   const m = useMutation({
     mutationFn: (scoringPreset: ScoringPresetCreate) =>
@@ -661,7 +661,7 @@ export function useGetValidConditionMappings(eventId: number) {
         acc[key as ItemField] = query.data?.valid_operators[value] ?? [];
         return acc;
       },
-      {} as { [key in ItemField]: Operator[] }
+      {} as { [key in ItemField]: Operator[] },
     ),
     numberFieldsForObjectiveType: query.data
       ?.objective_type_to_number_fields as {
@@ -673,7 +673,7 @@ export function useGetValidConditionMappings(eventId: number) {
 export function useCreateObjective(
   qc: QueryClient,
   eventId: number,
-  callback?: () => void
+  callback?: () => void,
 ) {
   const m = useMutation({
     mutationFn: (objective: ObjectiveCreate) =>
@@ -712,7 +712,7 @@ export function useCreateBulkObjectives(
   qc: QueryClient,
   eventId: number,
   categoryId: number,
-  callback?: () => void
+  callback?: () => void,
 ) {
   const m = useMutation({
     mutationFn: (bulkObjective: BulkObjectiveCreate) => {
@@ -738,7 +738,7 @@ export function useCreateBulkObjectives(
         });
 
       return Promise.all(
-        objectives.map((obj) => objectiveApi.createObjective(eventId, obj))
+        objectives.map((obj) => objectiveApi.createObjective(eventId, obj)),
       );
     },
     onSuccess: () => {
@@ -775,7 +775,7 @@ export function useDeleteObjectiveCondition(qc: QueryClient, eventId: number) {
 export function useAddObjectiveCondition(
   qc: QueryClient,
   eventId: number,
-  callback?: () => void
+  callback?: () => void,
 ) {
   const m = useMutation({
     mutationFn: (condition: ConditionCreate) =>
@@ -798,7 +798,7 @@ export function useAddObjectiveCondition(
 export function useCreateTeam(
   qc: QueryClient,
   eventId: number,
-  callback?: () => void
+  callback?: () => void,
 ) {
   const m = useMutation({
     mutationFn: (team: TeamCreate) => teamApi.createTeam(eventId, team),
@@ -859,7 +859,7 @@ export function preloadGuildLogs(
   eventId: number,
   guildId: number,
   limit: number,
-  qc: QueryClient
+  qc: QueryClient,
 ) {
   return useMutation({
     mutationFn: () =>
@@ -873,7 +873,7 @@ export function preloadGuildLogs(
       if (!existing) {
         qc.setQueryData(
           ["guildLogs", current !== eventId ? eventId : "current", guildId],
-          data
+          data,
         );
       }
     },
@@ -935,14 +935,14 @@ export function useGetTeamGoals(eventId: number) {
 
 export function useAddTeamSuggestion(
   eventId: number,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) {
   const mutation = useMutation({
     mutationFn: (suggestion: TeamSuggestion) =>
       teamApi.createObjectiveTeamSuggestion(
         eventId,
         suggestion.objective_id!,
-        suggestion
+        suggestion,
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -957,7 +957,7 @@ export function useAddTeamSuggestion(
 }
 export function useDeleteTeamSuggestion(
   eventId: number,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) {
   const mutation = useMutation({
     mutationFn: (objectiveId: number) =>

@@ -24,7 +24,7 @@ export function AscendancyName({ character_class, ...props }: AscendancyProps) {
       className={twMerge(
         "font-semi-bold",
         ascendancy[class_name].classColor,
-        props.className
+        props.className,
       )}
     >
       {currentEvent.game_version === GameVersion.poe1

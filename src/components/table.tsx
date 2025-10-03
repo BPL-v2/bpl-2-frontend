@@ -82,11 +82,11 @@ function Table<T>({
   });
   return (
     <div ref={tableRef} className={"overflow-auto " + className}>
-      <table className={twMerge("table table-md bg-base-300", styles?.table)}>
+      <table className={twMerge("table bg-base-300 table-md", styles?.table)}>
         <thead
           className={twMerge(
-            "sticky top-0 z-1 font-bold text-lg bg-base-200",
-            styles?.header
+            "sticky top-0 z-1 bg-base-200 text-lg font-bold",
+            styles?.header,
           )}
         >
           {table.getHeaderGroups().map((headerGroup) => (
@@ -103,25 +103,25 @@ function Table<T>({
                     <div
                       className={
                         sortable && header.column.getCanSort()
-                          ? "select-none flex items-center gap-2 cursor-pointer"
+                          ? "flex cursor-pointer items-center gap-2 select-none"
                           : ""
                       }
                     >
                       {sortable && header.column.getCanSort() ? (
                         <div onClick={header.column.getToggleSortingHandler()}>
                           <TableSortIcon
-                            className="h-5 w-5 "
+                            className="h-5 w-5"
                             sort={sorting.find((sort) => sort.id === header.id)}
                           ></TableSortIcon>
                         </div>
                       ) : null}
                       <div
-                        className="flex items-center flex-row"
+                        className="flex flex-row items-center"
                         onClick={header.column.getToggleSortingHandler()}
                       >
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                         {header.column.getCanFilter() ? (
                           <div
@@ -150,8 +150,8 @@ function Table<T>({
             return (
               <tr
                 className={twMerge(
-                  "flex absolute w-full items-center hover:bg-highlight",
-                  rowClassName ? rowClassName(row) : ""
+                  "absolute flex w-full items-center hover:bg-highlight",
+                  rowClassName ? rowClassName(row) : "",
                 )}
                 style={{
                   ...(rowStyle ? rowStyle(row) : {}),
@@ -172,7 +172,7 @@ function Table<T>({
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </td>
                   );
@@ -228,7 +228,7 @@ function Filter<T>({ column }: { column: Column<T, unknown> }) {
   if (filterVariant === "boolean") {
     return (
       <div
-        className="w-8 h-8 bg-base-300 ml-2 border-1 border-primary rounded-full cursor-pointer select-none"
+        className="ml-2 h-8 w-8 cursor-pointer rounded-full border-1 border-primary bg-base-300 select-none"
         onClick={(e) => {
           const currentValue = column.getFilterValue();
           if (currentValue === undefined) {

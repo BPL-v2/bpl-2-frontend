@@ -73,8 +73,8 @@ export function ItemTable({
           acc[objectiveName] = false;
           return acc;
         },
-        {}
-      )
+        {},
+      ),
     );
   }, [objective]);
 
@@ -82,7 +82,7 @@ export function ItemTable({
     if (variantMap[objective.name] && !objective.isVariant) {
       return (
         <div
-          className="flex flex-col cursor-pointer w-full"
+          className="flex w-full cursor-pointer flex-col"
           onClick={() =>
             setShowVariants({
               ...showVariants,
@@ -113,7 +113,7 @@ export function ItemTable({
       ScoringMethod.POINTS_FROM_VALUE
     ) {
       return (
-        <span className="text-base text-secondary font-extrabold">
+        <span className="text-base font-extrabold text-secondary">
           {objective.name}
         </span>
       );
@@ -123,7 +123,7 @@ export function ItemTable({
 
   const imageOverlayedWithText = (
     objective: ExtendedScoreObjective,
-    gameVersion: GameVersion
+    gameVersion: GameVersion,
   ) => {
     if (objective.isVariant) {
       return <span className="text-primary">{objective.extra}</span>;
@@ -137,7 +137,7 @@ export function ItemTable({
       <div className="relative flex items-center justify-center">
         <img src={img_location} className="max-size-20 sm:max-size-16" />
         <div
-          className="absolute left-0 right-0 text-center text-lg"
+          className="absolute right-0 left-0 text-center text-lg"
           style={{
             textShadow: "2px 2px 4px rgba(0, 0, 0)", // Text shadow for better readability
           }}
@@ -183,7 +183,7 @@ export function ItemTable({
             <div className="w-full">
               {imageOverlayedWithText(
                 info.row.original,
-                currentEvent.game_version
+                currentEvent.game_version,
               )}
             </div>
           ),
@@ -192,7 +192,7 @@ export function ItemTable({
           header: "Completion",
           size: windowWidth - 200,
           cell: (info) => (
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-4">
               {teams.map((team) => (
                 <div
                   key={`badge-${objective.id}-${team.id}-${info.row.original.id}`}
@@ -271,11 +271,11 @@ export function ItemTable({
                     ScoringMethod.POINTS_FROM_VALUE;
                   if (canBeScoredMultipleTimes) {
                     return score?.points > 0 ? (
-                      <span className="text-success w-full text-center text-xl font-mono">
+                      <span className="w-full text-center font-mono text-xl text-success">
                         x{score.number}
                       </span>
                     ) : (
-                      <span className="text-error w-full text-center text-xl font-mono">
+                      <span className="w-full text-center font-mono text-xl text-error">
                         x0
                       </span>
                     );
@@ -284,11 +284,13 @@ export function ItemTable({
                     return (
                       <div
                         className={twMerge(
-                          "tooltip cursor-help flex justify-center items-center w-full",
-                          info.row.index == 0 ? "tooltip-bottom" : "tooltip-top"
+                          "tooltip flex w-full cursor-help items-center justify-center",
+                          info.row.index == 0
+                            ? "tooltip-bottom"
+                            : "tooltip-top",
                         )}
                       >
-                        <div className="tooltip-content px-4 flex flex-col gap-1 bg-base-100">
+                        <div className="tooltip-content flex flex-col gap-1 bg-base-100 px-4">
                           <span>Scored by {user.display_name}</span>
                           <span>
                             on{" "}
@@ -300,13 +302,13 @@ export function ItemTable({
                     );
                   } else if (finished) {
                     return (
-                      <div className="flex justify-center w-full">
+                      <div className="flex w-full justify-center">
                         <CheckCircleIcon className="size-6 text-success" />
                       </div>
                     );
                   }
                   return (
-                    <div className="flex justify-center w-full">
+                    <div className="flex w-full justify-center">
                       <XCircleIcon className="size-6 text-error" />
                     </div>
                   );
@@ -314,7 +316,7 @@ export function ItemTable({
                 meta: {
                   filterVariant: "boolean",
                 },
-              }) as ColumnDef<ExtendedScoreObjective>
+              }) as ColumnDef<ExtendedScoreObjective>,
           ),
       ];
     }
@@ -361,7 +363,7 @@ export function ItemTable({
             ? "bg-base-200 hover:bg-base-100"
             : "bg-base-300 hover:bg-base-200"
         }
-        className={className ? className : "w-full h-[70vh]"}
+        className={className ? className : "h-[70vh] w-full"}
         styles={styles}
       />
     </>

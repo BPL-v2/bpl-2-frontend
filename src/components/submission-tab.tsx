@@ -40,19 +40,19 @@ function getUrls(string: string): URL[] {
 }
 
 function getRelevantSubmission(
-  submissions: Submission[]
+  submissions: Submission[],
 ): Submission | undefined {
   if (submissions.length === 0) {
     return;
   }
   const approved = submissions.find(
-    (submission) => submission.approval_status === ApprovalStatus.APPROVED
+    (submission) => submission.approval_status === ApprovalStatus.APPROVED,
   );
   if (approved) {
     return approved;
   }
   const pending = submissions.find(
-    (submission) => submission.approval_status === ApprovalStatus.PENDING
+    (submission) => submission.approval_status === ApprovalStatus.PENDING,
   );
   if (pending) {
     return pending;
@@ -74,7 +74,7 @@ function SubmissionStatus({
 
   if (submission.approval_status === ApprovalStatus.APPROVED) {
     return (
-      <div className="tooltip tooltip-success tooltip-left">
+      <div className="tooltip tooltip-left tooltip-success">
         <span className="tooltip-content">
           Submitted by {userMap[submission.user_id]}
         </span>
@@ -84,7 +84,7 @@ function SubmissionStatus({
   }
   if (submission.approval_status === ApprovalStatus.PENDING) {
     return (
-      <div className="tooltip tooltip-warning tooltip-left" data-tip="Pending">
+      <div className="tooltip tooltip-left tooltip-warning" data-tip="Pending">
         <span className="tooltip-content">
           Submitted by {userMap[submission.user_id]} - In Review
         </span>
@@ -94,7 +94,7 @@ function SubmissionStatus({
   }
 
   return (
-    <div className="tooltip tooltip-warning tooltip-left" data-tip="Pending">
+    <div className="tooltip tooltip-left tooltip-warning" data-tip="Pending">
       <span className="tooltip-content">
         Submitted by {userMap[submission.user_id]} - Rejected by{" "}
         {userMap[submission.reviewer_id!]}
@@ -112,7 +112,7 @@ function VideoButton({ submissions }: { submissions: Submission[] }) {
   const urls = getUrls(submission?.proof);
   const youtubeUrl = urls.find(
     (url) =>
-      url.hostname.endsWith("youtube.com") || url.hostname.endsWith("youtu.be")
+      url.hostname.endsWith("youtube.com") || url.hostname.endsWith("youtu.be"),
   );
   if (youtubeUrl) {
     return (
@@ -166,7 +166,7 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
       acc[team.id] = team;
       return acc;
     },
-    {}
+    {},
   );
 
   if (!category) {
@@ -185,7 +185,7 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
           Click to see all{" "}
           <Link
             to={"/submissions"}
-            className="text-primary underline cursor-pointer"
+            className="cursor-pointer text-primary underline"
           >
             Submissions
           </Link>
@@ -194,7 +194,7 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
           {category.children
             .filter(
               (objective) =>
-                objective.objective_type == ObjectiveType.SUBMISSION
+                objective.objective_type == ObjectiveType.SUBMISSION,
             )
             .map((objective) => {
               const teamIds = currentEvent.teams
@@ -208,23 +208,23 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
                 })
                 .slice(
                   0,
-                  preferences.limitTeams ? preferences.limitTeams : undefined
+                  preferences.limitTeams ? preferences.limitTeams : undefined,
                 )
                 .map((team) => team.id);
 
               return (
-                <div className="card bg-base-300 bborder" key={objective.id}>
-                  <div className="min-h-22 h-full flex items-center justify-between bg-base-200 rounded-t-box py-2 px-4 bborder-b">
+                <div className="card bborder bg-base-300" key={objective.id}>
+                  <div className="flex h-full min-h-22 items-center justify-between rounded-t-box bborder-b bg-base-200 px-4 py-2">
                     <div
                       className={twMerge(
                         "w-full",
-                        objective.extra && "tooltip tooltip-primary"
+                        objective.extra && "tooltip tooltip-primary",
                       )}
                     >
-                      <div className="tooltip-content text-xl max-w-75">
+                      <div className="tooltip-content max-w-75 text-xl">
                         {objective.extra}
                       </div>
-                      <h3 className="flex-grow text-center text-xl font-medium mr-4">
+                      <h3 className="mr-4 flex-grow text-center text-xl font-medium">
                         {objective.name}
                         {objective.extra ? (
                           <i className="text-error">*</i>
@@ -256,38 +256,38 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
                       <tbody>
                         {Object.entries(objective.team_score)
                           .filter(([teamId]) =>
-                            teamIds.includes(parseInt(teamId))
+                            teamIds.includes(parseInt(teamId)),
                           )
                           .map(([teamId, score]) => {
                             return [parseInt(teamId), score] as [number, Score];
                           })
                           .sort(
                             ([, scoreA], [, scoreB]) =>
-                              scoreB.points - scoreA.points
+                              scoreB.points - scoreA.points,
                           )
                           .map(([teamId, score], idx) => {
                             const s = submissions.filter(
                               (submission) =>
                                 submission.team_id === teamId &&
-                                submission.objective_id === objective.id
+                                submission.objective_id === objective.id,
                             );
                             return (
                               <tr
                                 key={teamId}
                                 className={
                                   eventStatus?.team_id === teamId
-                                    ? "bg-highlight content-highlight"
+                                    ? "content-highlight bg-highlight"
                                     : "bg-base-300"
                                 }
                               >
                                 <td
                                   className={twMerge(
-                                    "pl-4 py-1 text-left",
+                                    "py-1 pl-4 text-left",
                                     idx === teamIds.length - 1 &&
                                       "rounded-bl-box",
                                     score.points == 0
                                       ? "text-error"
-                                      : "text-success"
+                                      : "text-success",
                                   )}
                                 >
                                   {score?.points || 0}{" "}
@@ -295,12 +295,12 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
                                 </td>
                                 <td
                                   className={twMerge(
-                                    "pr-4 text-right   ",
+                                    "pr-4 text-right",
                                     idx === teamIds.length - 1 &&
-                                      "rounded-br-box"
+                                      "rounded-br-box",
                                   )}
                                 >
-                                  <div className="flex gap-2 rounded-br-box items-center justify-end">
+                                  <div className="flex items-center justify-end gap-2 rounded-br-box">
                                     <span className="">
                                       {teamMap[teamId]?.name}
                                     </span>
@@ -323,20 +323,20 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
           {category.children
             .filter(
               (objective) =>
-                objective.objective_type != ObjectiveType.SUBMISSION
+                objective.objective_type != ObjectiveType.SUBMISSION,
             )
             .map((objective) => (
-              <div className="card bg-base-300 bborder" key={objective.id}>
-                <div className="min-h-22 h-full flex items-center justify-between bg-base-200 rounded-t-box px-4 bborder-b">
+              <div className="card bborder bg-base-300" key={objective.id}>
+                <div className="flex h-full min-h-22 items-center justify-between rounded-t-box bborder-b bg-base-200 px-4">
                   <div
                     className={
                       objective.extra ? "tooltip tooltip-primary" : undefined
                     }
                   >
-                    <div className="tooltip-content text-xl max-w-75">
+                    <div className="tooltip-content max-w-75 text-xl">
                       {objective.extra}
                     </div>
-                    <h3 className="flex-grow text-center m-4 text-xl font-medium mr-4">
+                    <h3 className="m-4 mr-4 flex-grow text-center text-xl font-medium">
                       {objective.name}
                       {objective.extra ? <i className="text-error">*</i> : null}
                     </h3>

@@ -12,7 +12,7 @@ export function getCallbackUrl(provider: "discord" | "twitch" | "poe") {
 
 export function redirectOauth(
   provider: "discord" | "twitch" | "poe",
-  latestUrl: string
+  latestUrl: string,
 ): () => Promise<void | Window | null> {
   return () =>
     oauthApi

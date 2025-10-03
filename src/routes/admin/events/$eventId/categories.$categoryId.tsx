@@ -47,7 +47,7 @@ import { findObjective, getPath } from "@utils/utils";
 import { twMerge } from "tailwind-merge";
 
 export const Route = createFileRoute(
-  "/admin/events/$eventId/categories/$categoryId"
+  "/admin/events/$eventId/categories/$categoryId",
 )({
   component: renderConditionally(ScoringCategoryPage, [
     Permission.admin,
@@ -104,15 +104,15 @@ export function ScoringCategoryPage(): JSX.Element {
     () => {
       setIsBulkObjectiveModalOpen(false);
       bulkObjectiveForm.reset();
-    }
+    },
   );
   const { addObjectiveCondition } = useAddObjectiveCondition(qc, eventId, () =>
-    setIsConditionModalOpen(false)
+    setIsConditionModalOpen(false),
   );
   const { deleteObjectiveCondition } = useDeleteObjectiveCondition(qc, eventId);
   const objective = findObjective(
     rules,
-    (objective) => objective.id === categoryId
+    (objective) => objective.id === categoryId,
   );
   const event = events?.find((event) => event.id === eventId);
   const path = getPath(rules, categoryId);
@@ -146,7 +146,7 @@ export function ScoringCategoryPage(): JSX.Element {
         data.value.conditions = extendConditions(
           data.value.conditions,
           data.value.item_name,
-          ItemField.NAME
+          ItemField.NAME,
         );
         delete data.value.item_name;
       }
@@ -154,7 +154,7 @@ export function ScoringCategoryPage(): JSX.Element {
         data.value.conditions = extendConditions(
           data.value.conditions,
           data.value.item_base_type,
-          ItemField.BASE_TYPE
+          ItemField.BASE_TYPE,
         );
         delete data.value.item_base_type;
       }
@@ -168,12 +168,12 @@ export function ScoringCategoryPage(): JSX.Element {
 
   const { objective_type } = useStore(
     objectiveForm.store,
-    (state) => state.values
+    (state) => state.values,
   );
 
   const { field: itemField } = useStore(
     conditionForm.store,
-    (state) => state.values
+    (state) => state.values,
   );
 
   const objectivColumns: ColumnDef<Objective>[] = useMemo(
@@ -220,7 +220,7 @@ export function ScoringCategoryPage(): JSX.Element {
         header: "Scoring Method",
         cell: ({ row }) => {
           const scoringPreset = scoringPresets.find(
-            (preset) => preset.id === row.original.scoring_preset_id
+            (preset) => preset.id === row.original.scoring_preset_id,
           );
           return <div>{scoringPreset?.name}</div>;
         },
@@ -235,15 +235,15 @@ export function ScoringCategoryPage(): JSX.Element {
               {row.original.conditions.map((condition) => {
                 return (
                   <div className="tooltip" key={"condition-" + condition.id}>
-                    <span className="tooltip-content flex flex-row gap-1 items-center">
+                    <span className="tooltip-content flex flex-row items-center gap-1">
                       <span className="text-success">{condition.field}</span>
                       <span className="text-info">{condition.operator}</span>
                       <span className="text-error">{condition.value}</span>
                     </span>
-                    <div className="badge badge-primary badge-sm whitespace-nowrap select-none pr-[1px]">
+                    <div className="badge badge-sm pr-[1px] whitespace-nowrap badge-primary select-none">
                       {condition.field}
                       <XCircleIcon
-                        className="w-4 h-4 cursor-pointer"
+                        className="h-4 w-4 cursor-pointer"
                         onClick={() => deleteObjectiveCondition(condition.id)}
                       />
                     </div>
@@ -264,7 +264,7 @@ export function ScoringCategoryPage(): JSX.Element {
                 data-tip="Edit"
               >
                 <button
-                  className="btn btn-warning btn-sm"
+                  className="btn btn-sm btn-warning"
                   onClick={() => {
                     setFormValues(objectiveForm, row.original);
                     objectiveForm.setFieldValue(
@@ -272,21 +272,21 @@ export function ScoringCategoryPage(): JSX.Element {
                       row.original.conditions.find(
                         (condition) =>
                           condition.field === ItemField.BASE_TYPE &&
-                          condition.operator === Operator.EQ
-                      )?.value
+                          condition.operator === Operator.EQ,
+                      )?.value,
                     );
                     objectiveForm.setFieldValue(
                       "item_name",
                       row.original.conditions.find(
                         (condition) =>
                           condition.field === ItemField.NAME &&
-                          condition.operator === Operator.EQ
-                      )?.value
+                          condition.operator === Operator.EQ,
+                      )?.value,
                     );
                     setIsObjectiveModalOpen(true);
                   }}
                 >
-                  <PencilSquareIcon className="w-4 h-4" />
+                  <PencilSquareIcon className="h-4 w-4" />
                 </button>
               </div>
               <div
@@ -294,10 +294,10 @@ export function ScoringCategoryPage(): JSX.Element {
                 data-tip="Delete"
               >
                 <button
-                  className="btn btn-error btn-sm"
+                  className="btn btn-sm btn-error"
                   onClick={() => deleteObjective(row.original.id)}
                 >
-                  <TrashIcon className="w-4 h-4" />
+                  <TrashIcon className="h-4 w-4" />
                 </button>
               </div>
               <div
@@ -305,10 +305,10 @@ export function ScoringCategoryPage(): JSX.Element {
                 data-tip="Duplicate"
               >
                 <button
-                  className="btn btn-info btn-sm"
+                  className="btn btn-sm btn-info"
                   onClick={() => {
                     const duplicate = JSON.parse(
-                      JSON.stringify(row.original)
+                      JSON.stringify(row.original),
                     ) as ObjectiveCreate;
                     duplicate.id = undefined;
                     duplicate.conditions = row.original.conditions.map(
@@ -317,12 +317,12 @@ export function ScoringCategoryPage(): JSX.Element {
                           ...condition,
                           id: undefined,
                         };
-                      }
+                      },
                     );
                     createObjective(duplicate);
                   }}
                 >
-                  <DocumentDuplicateIcon className="w-4 h-4" />
+                  <DocumentDuplicateIcon className="h-4 w-4" />
                 </button>
               </div>
               <div
@@ -330,16 +330,16 @@ export function ScoringCategoryPage(): JSX.Element {
                 data-tip="Add Condition"
               >
                 <button
-                  className="btn btn-success btn-sm"
+                  className="btn btn-sm btn-success"
                   onClick={() => {
                     conditionForm.setFieldValue(
                       "objective_id",
-                      row.original.id
+                      row.original.id,
                     );
                     setIsConditionModalOpen(true);
                   }}
                 >
-                  <PlusIcon className="w-4 h-4" />
+                  <PlusIcon className="h-4 w-4" />
                 </button>
               </div>
               <div
@@ -349,9 +349,9 @@ export function ScoringCategoryPage(): JSX.Element {
                 <Link
                   to={"/admin/events/$eventId/categories/$categoryId"}
                   params={{ eventId: eventId!, categoryId: row.original.id }}
-                  className="btn btn-secondary btn-sm"
+                  className="btn btn-sm btn-secondary"
                 >
-                  <FolderOpenIcon className="w-4 h-4" />
+                  <FolderOpenIcon className="h-4 w-4" />
                 </Link>
               </div>
             </div>
@@ -359,7 +359,7 @@ export function ScoringCategoryPage(): JSX.Element {
         },
       },
     ],
-    [scoringPresets, event, objectiveForm]
+    [scoringPresets, event, objectiveForm],
   );
 
   const objectiveDialog: React.ReactNode = useMemo(() => {
@@ -368,10 +368,10 @@ export function ScoringCategoryPage(): JSX.Element {
         title={"Create Objective"}
         open={isObjectiveModalOpen}
         setOpen={setIsObjectiveModalOpen}
-        className="max-w-2xl max-h-[90vh] h-[80vh]"
+        className="h-[80vh] max-h-[90vh] max-w-2xl"
       >
         <form
-          className="flex flex-col gap-2 bg-base-300 p-4 rounded-box w-full"
+          className="flex w-full flex-col gap-2 rounded-box bg-base-300 p-4"
           onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             objectiveForm.handleSubmit();
@@ -392,7 +392,7 @@ export function ScoringCategoryPage(): JSX.Element {
                 <field.SelectField
                   label="Objective Type"
                   options={Object.values(ObjectiveType).filter(
-                    (t) => t != ObjectiveType.CATEGORY
+                    (t) => t != ObjectiveType.CATEGORY,
                   )}
                   required
                 />
@@ -481,7 +481,7 @@ export function ScoringCategoryPage(): JSX.Element {
               )}
             />
           </div>
-          <div className="flex flex-row gap-2 justify-end">
+          <div className="flex flex-row justify-end gap-2">
             <button
               type="button"
               className="btn btn-error"
@@ -515,7 +515,7 @@ export function ScoringCategoryPage(): JSX.Element {
         className="max-w-lg"
       >
         <form
-          className="flex flex-col gap-2 bg-base-300 p-4 rounded-box w-full"
+          className="flex w-full flex-col gap-2 rounded-box bg-base-300 p-4"
           onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             bulkObjectiveForm.handleSubmit();
@@ -567,7 +567,7 @@ export function ScoringCategoryPage(): JSX.Element {
               />
             )}
           />
-          <div className="flex flex-row gap-2 justify-end">
+          <div className="flex flex-row justify-end gap-2">
             <button
               type="button"
               className="btn btn-error"
@@ -595,7 +595,7 @@ export function ScoringCategoryPage(): JSX.Element {
         className="max-w-lg"
       >
         <form
-          className="flex flex-col gap-2 bg-base-300 p-4 rounded-box w-full"
+          className="flex w-full flex-col gap-2 rounded-box bg-base-300 p-4"
           onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             categoryForm.handleSubmit();
@@ -631,7 +631,7 @@ export function ScoringCategoryPage(): JSX.Element {
               />
             )}
           />
-          <div className="flex flex-row gap-2 justify-end">
+          <div className="flex flex-row justify-end gap-2">
             <button
               type="button"
               className="btn btn-error"
@@ -663,7 +663,7 @@ export function ScoringCategoryPage(): JSX.Element {
         className="max-w-lg"
       >
         <form
-          className="flex flex-col gap-2 bg-base-300 p-4 rounded-box w-full"
+          className="flex w-full flex-col gap-2 rounded-box bg-base-300 p-4"
           onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             conditionForm.handleSubmit();
@@ -694,7 +694,7 @@ export function ScoringCategoryPage(): JSX.Element {
             name="value"
             children={(field) => <field.TextField label="Value" required />}
           />
-          <div className="flex flex-row gap-2 justify-end">
+          <div className="flex flex-row justify-end gap-2">
             <button
               type="button"
               className="btn btn-error"
@@ -716,7 +716,7 @@ export function ScoringCategoryPage(): JSX.Element {
   const table = useMemo(() => {
     return (
       <Table<Objective>
-        className="w-full h-[70vh]"
+        className="h-[70vh] w-full"
         columns={objectivColumns}
         data={objective?.children.sort((a, b) => a.id - b.id) || []}
         sortable={false}
@@ -728,27 +728,27 @@ export function ScoringCategoryPage(): JSX.Element {
     return <></>;
   }
   return (
-    <div className="flex flex-col gap-4 mt-4">
+    <div className="mt-4 flex flex-col gap-4">
       {objectiveDialog}
       {bulkObjectiveDialog}
       {categoryDialog}
       {conditionDialog}
-      <div className="w-full bg-base-300 flex flex-col p-4 rounded-box">
-        <h1 className="text-2xl font-bold mb-4">
+      <div className="flex w-full flex-col rounded-box bg-base-300 p-4">
+        <h1 className="mb-4 text-2xl font-bold">
           Categories and Subcategories
         </h1>
         {path.map((activeId) => {
           const activObjective = findObjective(
             rules,
-            (objective) => objective.id === activeId
+            (objective) => objective.id === activeId,
           );
           const children = activObjective?.children.filter(
-            (child) => child.children.length > 0 || child.id === categoryId
+            (child) => child.children.length > 0 || child.id === categoryId,
           );
           return (
             <div key={"category-" + activeId}>
               {path[0] !== activeId && (
-                <div className="divider divider-primary select-none my-2"></div>
+                <div className="divider my-2 divider-primary select-none"></div>
               )}
               <div className="flex flex-row flex-wrap gap-1">
                 {children?.map((objective) => (
@@ -760,7 +760,7 @@ export function ScoringCategoryPage(): JSX.Element {
                         "btn",
                         path.includes(objective.id)
                           ? "btn-primary"
-                          : " btn-dash"
+                          : "btn-dash",
                       )}
                     >
                       {objective.name}
@@ -772,7 +772,7 @@ export function ScoringCategoryPage(): JSX.Element {
           );
         })}
       </div>
-      <div className="flex flex-row gap-2 justify-center">
+      <div className="flex flex-row justify-center gap-2">
         <button
           className="btn btn-primary"
           onClick={() => {
@@ -816,7 +816,7 @@ export default ScoringCategoryPage;
 function extendConditions(
   conditions: ObjectiveConditionCreate[],
   value: string,
-  field: ItemField
+  field: ItemField,
 ) {
   let exists = false;
   const newConditions = conditions.map((condition) => {

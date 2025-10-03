@@ -35,14 +35,14 @@ const SignupButton = () => {
       );
     })[0] || currentEvent;
   const { eventStatus, isError: eventStatusError } = useGetEventStatus(
-    upcomingEvent.id
+    upcomingEvent.id,
   );
   const { signup } = useGetOwnSignup(upcomingEvent.id);
   const { deleteSignup } = useDeleteSignup(qc);
   const { createSignup, isError: signupError } = useCreateSignup(
     qc,
     () => setModalOpen(false),
-    (error) => alert(error)
+    (error) => alert(error),
   );
 
   const dialog = useMemo(() => {
@@ -74,19 +74,19 @@ const SignupButton = () => {
             });
           }}
         >
-          <fieldset className="fieldset bg-base-300 p-4 rounded-box gap-4">
+          <fieldset className="fieldset gap-4 rounded-box bg-base-300 p-4">
             <label className="fieldset-label">
               How many hours will you be able to play per day?
             </label>
             <div className="flex items-center gap-2">
-              <span className="text-lg text-base-content w-6">{hourValue}</span>
-              <div className=" w-full">
+              <span className="w-6 text-lg text-base-content">{hourValue}</span>
+              <div className="w-full">
                 <input
                   type="range"
                   min={1}
                   max="24"
                   value={hourValue}
-                  className="range range-primary w-full"
+                  className="range w-full range-primary"
                   step="1"
                   onChange={(e) => {
                     setHourValue(parseInt(e.target.value));
@@ -164,10 +164,10 @@ const SignupButton = () => {
               You need a linked discord account and join our server to apply.
             </p>
             <a
-              className="btn btn-lg bg-discord text-white text-xl mt-4"
+              className="bg-discord btn mt-4 text-xl text-white btn-lg"
               onClick={redirectOauth("discord", state.location.href)}
             >
-              <DiscordFilled className="w-6 h-6" />
+              <DiscordFilled className="h-6 w-6" />
               Link Discord account
             </a>
           </div>
@@ -189,7 +189,7 @@ const SignupButton = () => {
         )}
         <div className="modal-action w-full">
           <button
-            className="btn btn-soft btn-outline"
+            className="btn btn-outline btn-soft"
             onClick={() => {
               setModalOpen(false);
             }}
@@ -243,7 +243,7 @@ const SignupButton = () => {
       <>
         {dialog}
         <div className="dropdown">
-          <button className={"underline cursor-pointer"}>
+          <button className={"cursor-pointer underline"}>
             <span className="text-2xl">
               Signed up {eventStatus?.partner && "with "}
             </span>
@@ -253,7 +253,7 @@ const SignupButton = () => {
           </button>
           <ul
             tabIndex={0}
-            className="dropdown-content menu bg-base-300 border-2 border-base-100 z-1 shadow-2xl text-lg rounded-field"
+            className="dropdown-content menu z-1 rounded-field border-2 border-base-100 bg-base-300 text-lg shadow-2xl"
             onClick={() => {
               if (document.activeElement instanceof HTMLElement) {
                 document.activeElement?.blur();
@@ -300,7 +300,7 @@ const SignupButton = () => {
       <>
         {dialog}
         <button
-          className={"btn btn-primary btn-lg"}
+          className={"btn btn-lg btn-primary"}
           onClick={() => setModalOpen(true)}
         >
           Apply for Event

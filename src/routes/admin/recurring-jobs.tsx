@@ -32,7 +32,7 @@ function RecurringJobsPage() {
   const [showModal, setShowModal] = React.useState(false);
   const [selectedEvent, setSelectedEvent] = React.useState<Event | null>(null);
   const [selectedEndDate, setSelectedEndDate] = React.useState<Date | null>(
-    null
+    null,
   );
   const formRef = React.useRef<HTMLFormElement>(null);
 
@@ -47,7 +47,7 @@ function RecurringJobsPage() {
   React.useEffect(() => {
     if (selectedEvent) {
       setSelectedEndDate(
-        dayjs(selectedEvent.event_end_time, "YYYY-MM-DDTHH:mm:ss").toDate()
+        dayjs(selectedEvent.event_end_time, "YYYY-MM-DDTHH:mm:ss").toDate(),
       );
     }
   }, [selectedEvent]);
@@ -55,9 +55,9 @@ function RecurringJobsPage() {
   // Show loading state while any data is loading
   if (eventsLoading || jobsLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex min-h-screen items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <span className="loading loading-spinner loading-lg"></span>
+          <span className="loading loading-lg loading-spinner"></span>
           <p className="text-lg">Loading jobs...</p>
         </div>
       </div>
@@ -75,7 +75,7 @@ function RecurringJobsPage() {
         setOpen={setShowModal}
       >
         <form
-          className="space-y-4 text-left w-full"
+          className="w-full space-y-4 text-left"
           onSubmit={(e) => {
             const values = new FormData(formRef.current!);
             e.preventDefault();
@@ -89,14 +89,14 @@ function RecurringJobsPage() {
           }}
           ref={formRef}
         >
-          <fieldset className="fieldset bg-base-300 rounded-box p-4">
+          <fieldset className="fieldset rounded-box bg-base-300 p-4">
             <label className="label">Event</label>
             <Select
               name="event"
               required
               onChange={(value) => {
                 setSelectedEvent(
-                  events.find((event) => event.id === (value || 0)) || null
+                  events.find((event) => event.id === (value || 0)) || null,
                 );
               }}
               className="w-full"
@@ -141,14 +141,14 @@ function RecurringJobsPage() {
             disabled={startJobPending}
           >
             {startJobPending ? (
-              <span className="loading loading-spinner loading-sm"></span>
+              <span className="loading loading-sm loading-spinner"></span>
             ) : null}
             Submit
           </button>
         </div>
       </Dialog>
 
-      <table className="table w-full mt-4">
+      <table className="table mt-4 w-full">
         <thead className="bg-base-200">
           <tr>
             <th>Job Type</th>
@@ -175,7 +175,7 @@ function RecurringJobsPage() {
                     disabled={startJobPending}
                   >
                     {startJobPending ? (
-                      <span className="loading loading-spinner loading-xs"></span>
+                      <span className="loading loading-xs loading-spinner"></span>
                     ) : null}
                     Stop
                   </button>
@@ -186,7 +186,7 @@ function RecurringJobsPage() {
         </tbody>
       </table>
       <button
-        className="btn btn-primary mt-4"
+        className="btn mt-4 btn-primary"
         onClick={() => setShowModal(true)}
       >
         Add Job

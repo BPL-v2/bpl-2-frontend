@@ -27,8 +27,8 @@ export const StashTabUnique: React.FC<Props> = ({
   const [selectedCategory, setSelectedCategory] =
     React.useState<GuildStashTabGGG>(
       tab.children?.filter(
-        (child) => !highlightScoring || child.items?.some((i) => i.objectiveId)
-      )?.[0] || tab
+        (child) => !highlightScoring || child.items?.some((i) => i.objectiveId),
+      )?.[0] || tab,
     );
 
   return (
@@ -40,7 +40,7 @@ export const StashTabUnique: React.FC<Props> = ({
         scrollbarGutter: "stable",
       }}
     >
-      <div className="flex flex-row gap-1 mb-2 flex-wrap">
+      <div className="mb-2 flex flex-row flex-wrap gap-1">
         {tab.children
           ?.filter((child) => {
             if (highlightScoring && !child.items?.some((i) => i.objectiveId)) {
@@ -53,7 +53,9 @@ export const StashTabUnique: React.FC<Props> = ({
               key={child.id}
               className={clsx(
                 "btn btn-sm",
-                child.id === selectedCategory.id ? "btn-primary" : "bg-base-300"
+                child.id === selectedCategory.id
+                  ? "btn-primary"
+                  : "bg-base-300",
               )}
               onClick={() => setSelectedCategory(child)}
             >
@@ -71,16 +73,16 @@ export const StashTabUnique: React.FC<Props> = ({
             return (
               <div
                 className={clsx(
-                  "card basis-42 w-42 cursor-pointer",
+                  "card w-42 basis-42 cursor-pointer",
                   item.objectiveId
-                    ? "bg-base-300 border-2 border-primary"
-                    : "bg-base-200"
+                    ? "border-2 border-primary bg-base-300"
+                    : "bg-base-200",
                 )}
                 key={"item-" + idx}
                 onClick={() => onItemClick && onItemClick(item)}
               >
-                <div className="items-center card-body select-none rounded-box">
-                  <span className="text-unique font-bold h-15">
+                <div className="card-body items-center rounded-box select-none">
+                  <span className="h-15 font-bold text-unique">
                     {item.name}
                   </span>
                   <img

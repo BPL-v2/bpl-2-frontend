@@ -16,7 +16,7 @@ export const Route = createFileRoute("/scores/collections")({
     rules?.children
       .find((child) => child.name === "Collections")
       ?.children.map((objective) =>
-        getImageLocation(objective, GameVersion.poe1)
+        getImageLocation(objective, GameVersion.poe1),
       )
       .filter((url): url is string => url !== null)
       .forEach((url) => {
@@ -36,8 +36,8 @@ function CollectionTab(): JSX.Element {
   return (
     <>
       {rules ? (
-        <div className="w-full bg-base-200 my-4 p-8 rounded-box">
-          <article className="prose text-left max-w-4xl">
+        <div className="my-4 w-full rounded-box bg-base-200 p-8">
+          <article className="prose max-w-4xl text-left">
             <CollectionTabRules />
           </article>
         </div>
@@ -47,8 +47,8 @@ function CollectionTab(): JSX.Element {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {category.children.map((objective) => {
             return (
-              <div className="card bg-base-300 bborder" key={objective.id}>
-                <div className="card-title rounded-t-box flex items-center m-0 py-2 px-4 bg-base-200 h-full min-h-22 bborder-b">
+              <div className="card bborder bg-base-300" key={objective.id}>
+                <div className="m-0 card-title flex h-full min-h-22 items-center rounded-t-box bborder-b bg-base-200 px-4 py-2">
                   <ObjectiveIcon
                     objective={objective}
                     gameVersion={currentEvent.game_version}
@@ -58,10 +58,10 @@ function CollectionTab(): JSX.Element {
                       objective.extra ? "tooltip tooltip-primary" : undefined
                     }
                   >
-                    <div className="tooltip-content text-xl max-w-75 ">
+                    <div className="tooltip-content max-w-75 text-xl">
                       {objective.extra}
                     </div>
-                    <h3 className="flex-grow text-center text-xl font-medium mx-4">
+                    <h3 className="mx-4 flex-grow text-center text-xl font-medium">
                       {`${objective.required_number} ${objective.name}`}
                       {objective.extra ? (
                         <i className="text-red-600">*</i>
@@ -69,7 +69,7 @@ function CollectionTab(): JSX.Element {
                     </h3>
                   </div>
                 </div>
-                <div className="mb-0 bg-base-300 rounded-b-box">
+                <div className="mb-0 rounded-b-box bg-base-300">
                   <CollectionCardTable objective={objective} />
                 </div>
               </div>

@@ -32,7 +32,7 @@ export function CollectionTabRules() {
   const { scores } = useContext(GlobalStateContext);
 
   const collectionCategory = scores?.children.find(
-    (category) => category.name === "Collections"
+    (category) => category.name === "Collections",
   );
 
   const racePoints =

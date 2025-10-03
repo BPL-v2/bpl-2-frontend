@@ -20,7 +20,7 @@ export const UniqueCategoryCard = ({
   const totalItems = objective.children.length;
   const totalVariants = objective.children.reduce(
     (acc, variantCategory) => acc + variantCategory.children.length,
-    0
+    0,
   );
   const numItems = objective.team_score[teamId]?.number || 0;
   const numVariants = teamId
@@ -49,15 +49,15 @@ export const UniqueCategoryCard = ({
         "card cursor-pointer bborder",
         selected
           ? "bg-highlight text-highlight-content ring-3 ring-primary"
-          : "bg-base-300 hover:bg-highlight hover:text-highlight-content transition duration-200"
+          : "bg-base-300 transition duration-200 hover:bg-highlight hover:text-highlight-content",
       )}
       key={`unique-card-${objective.id}`}
       onClick={onClick}
     >
       <div
         className={twMerge(
-          "card-title rounded-t-box m-0 p-2 flex items-center justify-center sm:justify-between bborder-b min-h-4 h-full",
-          selected ? "bg-base-300" : "bg-base-200"
+          "m-0 card-title flex h-full min-h-4 items-center justify-center rounded-t-box bborder-b p-2 sm:justify-between",
+          selected ? "bg-base-300" : "bg-base-200",
         )}
       >
         <div className="flex-shrink-0">
@@ -67,15 +67,15 @@ export const UniqueCategoryCard = ({
           <h1 className="font-extrabold">{objective.name}</h1>
           <h1 className="font-bold text-info">{objective.extra}</h1>
         </div>
-        <div className="hidden sm:block flex-shrink-0 text-sm"> {points} </div>
+        <div className="hidden flex-shrink-0 text-sm sm:block"> {points} </div>
       </div>
-      <div className="px-4 min-h-2">
+      <div className="min-h-2 px-4">
         <div>
-          <div className="stat pt-2 px-0 pb-0">
+          <div className="stat px-0 pt-2 pb-0">
             <div
               className={twMerge(
                 "stat-value text-4xl",
-                numItems === totalItems ? "text-success" : "text-error"
+                numItems === totalItems ? "text-success" : "text-error",
               )}
             >
               {numItems} / {totalItems}
@@ -84,13 +84,13 @@ export const UniqueCategoryCard = ({
               <div
                 className={twMerge(
                   "stat-desc text-lg font-bold",
-                  numVariants === totalVariants ? "text-success" : "text-error"
+                  numVariants === totalVariants ? "text-success" : "text-error",
                 )}
               >
                 {`Variants: ${numVariants} / ${totalVariants}`}
               </div>
             ) : null}
-            <div className="hidden sm:block col-start-2 row-span-2 row-start-1 self-center justify-self-end select-none">
+            <div className="col-start-2 row-span-2 row-start-1 hidden self-center justify-self-end select-none sm:block">
               <CategoryIcon name={objective.name} />
             </div>
           </div>
@@ -99,7 +99,7 @@ export const UniqueCategoryCard = ({
           <progress
             className={twMerge(
               "progress my-2",
-              numItems === totalItems ? "progress-success" : "progress-error"
+              numItems === totalItems ? "progress-success" : "progress-error",
             )}
             value={numItems / totalItems}
             max="1"

@@ -31,7 +31,7 @@ function ProfilePage() {
   useEffect(() => {
     if (characterId === undefined && userCharacters.length > 0) {
       const sortedCharacter = userCharacters.sort(
-        (b, a) => a.event_id - b.event_id
+        (b, a) => a.event_id - b.event_id,
       )[0];
       router.navigate({
         to: "/profile/$userId/$eventId/$characterId",
@@ -49,8 +49,8 @@ function ProfilePage() {
   }
 
   return (
-    <div className="flex flex-col gap-4 mt-4">
-      <h1 className="text-4xl text-center font-bold">
+    <div className="mt-4 flex flex-col gap-4">
+      <h1 className="text-center text-4xl font-bold">
         {user.display_name}'s Profile
       </h1>
       {userCharacters.length > 0 && (

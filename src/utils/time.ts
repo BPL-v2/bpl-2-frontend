@@ -8,7 +8,7 @@ export function getDeltaTimeBetween(to?: number, from?: string) {
   const milliseconds = ts - fromDate;
   const days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
   const hours = Math.floor(
-    (milliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    (milliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
   );
   const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
   if (days > 0) {

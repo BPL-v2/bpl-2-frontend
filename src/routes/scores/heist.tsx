@@ -15,7 +15,7 @@ function HeistTab(): JSX.Element {
   const { scores, currentEvent } = useContext(GlobalStateContext);
   const { rules } = Route.useSearch();
   const heistCategory = scores?.children.find(
-    (category) => category.name === "Heist"
+    (category) => category.name === "Heist",
   );
   useEffect(() => {
     if (currentEvent.game_version !== GameVersion.poe1) {
@@ -28,18 +28,18 @@ function HeistTab(): JSX.Element {
 
   const heistItemRaces = heistCategory.children.filter(
     (category) =>
-      category.scoring_preset?.scoring_method === ScoringMethod.RANKED_TIME
+      category.scoring_preset?.scoring_method === ScoringMethod.RANKED_TIME,
   );
 
   const heistMultiItemRaces = heistCategory.children.filter(
-    (category) => category.children.length > 0
+    (category) => category.children.length > 0,
   );
 
   return (
     <>
       {rules ? (
-        <div className="w-full bg-base-200 my-4 md:p-8 rounded-box">
-          <article className="prose text-left max-w-4xl">
+        <div className="my-4 w-full rounded-box bg-base-200 md:p-8">
+          <article className="prose max-w-4xl text-left">
             <HeistTabRules />
           </article>
         </div>
@@ -48,7 +48,7 @@ function HeistTab(): JSX.Element {
         <div className="flex flex-col gap-8">
           <TeamScoreDisplay objective={heistCategory} />
           {heistItemRaces.map((category) => (
-            <div key={category.id} className="bg-base-200 rounded-box p-8 pt-2">
+            <div key={category.id} className="rounded-box bg-base-200 p-8 pt-2">
               <div className="divider divider-primary">{category.name}</div>
               <Ranking
                 objective={category}
@@ -62,7 +62,7 @@ function HeistTab(): JSX.Element {
           ))}
 
           {heistMultiItemRaces.map((category) => (
-            <div key={category.id} className="bg-base-200 rounded-box p-8 pt-2">
+            <div key={category.id} className="rounded-box bg-base-200 p-8 pt-2">
               <div className="divider divider-primary">{category.name}</div>
               {category.scoring_preset?.scoring_method ===
                 ScoringMethod.RANKED_TIME && (

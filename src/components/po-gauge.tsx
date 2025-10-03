@@ -9,13 +9,13 @@ type Props = {
 export function PoGauge({ descriptions, values, cap }: Props) {
   const total = Math.min(
     values.reduce((sum, value) => sum + value, 0),
-    cap
+    cap,
   );
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex items-center gap-2">
       <div className={total > 0 ? "text-success" : ""}>+{total}</div>
       <div
-        className="grid gap-1 w-full join"
+        className="join grid w-full gap-1"
         style={{
           gridTemplateColumns: `repeat(${descriptions.length}, minmax(0, 1fr))`,
         }}
@@ -24,10 +24,10 @@ export function PoGauge({ descriptions, values, cap }: Props) {
           <div
             key={index}
             className={twMerge(
-              "text-center join-item",
+              "join-item text-center",
               values[index] > 0
-                ? "text-success-content bg-success"
-                : "bg-base-300"
+                ? "bg-success text-success-content"
+                : "bg-base-300",
             )}
           >
             {description}

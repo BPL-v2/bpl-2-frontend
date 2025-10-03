@@ -44,7 +44,7 @@ export type ExtendedSignup = Signup & {
 };
 
 function toExpectedPlayTime(
-  expectedPlaytime: number
+  expectedPlaytime: number,
 ): "0-3" | "4-6" | "7-9" | "10-12" | "13+" {
   if (expectedPlaytime < 4) {
     return "0-3";
@@ -71,7 +71,7 @@ function UserSortPage() {
       acc[signup.user.id] = signup;
       return acc;
     },
-    {} as Record<number, Signup>
+    {} as Record<number, Signup>,
   );
   const { addUsersToTeams } = useAddUsersToTeams(qc);
   const [suggestions, setSuggestions] = useState<Signup[]>([]);
@@ -136,9 +136,9 @@ function UserSortPage() {
         cell: ({ row }) => {
           console.log(row.original);
           return row.original.extra ? (
-            <CheckCircleIcon className="text-success size-8" />
+            <CheckCircleIcon className="size-8 text-success" />
           ) : (
-            <XCircleIcon className="text-error size-8" />
+            <XCircleIcon className="size-8 text-error" />
           );
         },
       },
@@ -155,8 +155,8 @@ function UserSortPage() {
                 suggestions.map((signup) =>
                   signup.user.id === row.original.user.id
                     ? { ...signup, team_lead: e.target.checked }
-                    : signup
-                )
+                    : signup,
+                ),
               );
               addUsersToTeams({
                 eventId: currentEvent?.id || 0,
@@ -187,7 +187,7 @@ function UserSortPage() {
                     "btn btn-sm",
                     row.original.team_id === team.id
                       ? "btn-primary"
-                      : "btn-dash hover:bg-base-300"
+                      : "btn-dash hover:bg-base-300",
                   )}
                   onClick={() => {
                     if (row.original.team_id === team.id) {
@@ -199,8 +199,8 @@ function UserSortPage() {
                                 team_id: undefined,
                                 team_lead: false,
                               }
-                            : signup
-                        )
+                            : signup,
+                        ),
                       );
                     } else {
                       setSuggestions(
@@ -211,8 +211,8 @@ function UserSortPage() {
                                 team_id: team.id,
                                 team_lead: row.original.team_lead,
                               }
-                            : signup
-                        )
+                            : signup,
+                        ),
                       );
                     }
                   }}
@@ -249,7 +249,7 @@ function UserSortPage() {
     return <div>Error loading signups</div>;
   }
   if (isLoading) {
-    return <div className="loading loading-spinner loading-lg"></div>;
+    return <div className="loading loading-lg loading-spinner"></div>;
   }
 
   let teamRows = [...currentEvent.teams, { id: null, name: "No team" }].map(
@@ -259,7 +259,7 @@ function UserSortPage() {
         .reduce(
           (acc, signup) => {
             const expectedPlaytime = toExpectedPlayTime(
-              signup.expected_playtime
+              signup.expected_playtime,
             );
             if (!acc[expectedPlaytime]) {
               acc[expectedPlaytime] = 0;
@@ -275,8 +275,8 @@ function UserSortPage() {
             members: suggestions.filter((signup) => signup.team_id === team.id)
               .length,
             total: 0,
-          } as TeamRow
-        )
+          } as TeamRow,
+        ),
   );
 
   const totalRow = teamRows.reduce(
@@ -296,7 +296,7 @@ function UserSortPage() {
       team: "Total Signups",
       members: 0,
       key: -1,
-    } as TeamRow
+    } as TeamRow,
   );
   const exportToCSV = (signups: Signup[]) => {
     if (!signups.length) return;
@@ -317,7 +317,7 @@ function UserSortPage() {
         acc[team.id] = team.name;
         return acc;
       },
-      {} as Record<number, string>
+      {} as Record<number, string>,
     );
     const rows = signups
       .sort((a, b) => (a.team_id || 0) - (b.team_id || 0))
@@ -344,7 +344,7 @@ function UserSortPage() {
     link.href = url;
     link.setAttribute(
       "download",
-      `Signups_${(currentEvent?.name || "event").replaceAll(" ", "-")}.csv`
+      `Signups_${(currentEvent?.name || "event").replaceAll(" ", "-")}.csv`,
     );
     document.body.appendChild(link);
     link.click();
@@ -355,7 +355,7 @@ function UserSortPage() {
   return (
     <div style={{ marginTop: "20px" }}>
       <h1>Sort</h1> <div className="divider divider-primary">Teams</div>
-      <table className="table table-striped">
+      <table className="table-striped table">
         <thead className="bg-base-200">
           <tr>
             <th rowSpan={2}>Team</th>
@@ -389,12 +389,12 @@ function UserSortPage() {
         </tbody>
       </table>
       <div className="divider divider-primary">Users</div>
-      <div className="flex gap-2 bg-base-300 p-4 wrap mb-2">
+      <div className="wrap mb-2 flex gap-2 bg-base-300 p-4">
         <button
-          className="btn btn-primary "
+          className="btn btn-primary"
           onClick={() => exportToCSV(signups)}
         >
-          <ArrowDownTrayIcon className="w-4 h-4 mr-2" />
+          <ArrowDownTrayIcon className="mr-2 h-4 w-4" />
           CSV
         </button>
 
@@ -414,7 +414,7 @@ function UserSortPage() {
                 new FormData(e.currentTarget)
                   .get("nameList")
                   ?.toString()
-                  .split(" ") || []
+                  .split(" ") || [],
               );
             }}
           >
@@ -485,7 +485,7 @@ function UserSortPage() {
                 nameListFilter.some(
                   (name) =>
                     signup.user.account_name?.toLowerCase().split("#")[0] ===
-                    name.toLowerCase().split("#")[0]
+                    name.toLowerCase().split("#")[0],
                 ))
             );
           })}

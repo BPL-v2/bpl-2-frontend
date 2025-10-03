@@ -18,7 +18,7 @@ export const Route = createRootRoute({
   component: RootComponent,
   notFoundComponent: () => {
     return (
-      <div className="flex flex-col gap-8 mt-8 mx-auto">
+      <div className="mx-auto mt-8 flex flex-col gap-8">
         <h1 className="text-2xl">Could not find page</h1>
         <Link className="link link-info" to="/">
           Return to home page
@@ -84,16 +84,16 @@ function RootComponent() {
 
   return (
     <>
-      <div className="max-w-[1440px] text-center mx-auto">
-        <div className="text-xl p-0 flex items-center">
+      <div className="mx-auto max-w-[1440px] text-center">
+        <div className="flex items-center p-0 text-xl">
           <div className="navbar bg-base-200">
-            <ul className="flex flex-1 justify-left gap-1 sm:gap-2 xl:gap-4">
+            <ul className="justify-left flex flex-1 gap-1 sm:gap-2 xl:gap-4">
               {menu.map((item) => (
                 <li key={item.url}>
                   <Link
                     aria-label={item.label.toString()}
                     to={item.url}
-                    className="btn flex items-center gap-2 h-16 font-semibold text-xl btn-sm lg:btn-md"
+                    className="btn flex h-16 items-center gap-2 text-xl font-semibold btn-sm lg:btn-md"
                     activeProps={{
                       className: "btn-primary",
                     }}
@@ -110,9 +110,9 @@ function RootComponent() {
             <AuthButton />
           </div>
         </div>
-        <div className="min-h-[79vh] mb-4">
+        <div className="mb-4 min-h-[79vh]">
           {user && !user.account_name && (
-            <div className="bg-error text-error-content p-4 text-lg">
+            <div className="bg-error p-4 text-lg text-error-content">
               Looks like you haven't connected your PoE Account yet, make sure
               to connect by logging in in the top right corner to connect your
               account so that we can track your characters progress.

@@ -52,7 +52,7 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
   const longestTeamName = Math.max(
     ...currentEvent.teams
       .filter((team) => teamIds.includes(team.id))
-      .map((team) => team.name.length)
+      .map((team) => team.name.length),
   );
   return (
     <table key={objective.id} ref={tableRef}>
@@ -79,13 +79,13 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
             }
             return (
               <tr
-                className={isPlayerTeam ? "bg-highlight content-highlight" : ""}
+                className={isPlayerTeam ? "content-highlight bg-highlight" : ""}
                 key={teamId}
               >
                 <td
                   className={twMerge(
-                    "py-1 px-2",
-                    isLastRow && "rounded-bl-box"
+                    "px-2 py-1",
+                    isLastRow && "rounded-bl-box",
                   )}
                 >
                   <div
@@ -95,18 +95,18 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
                         ? "tooltip-success"
                         : isFinished
                           ? "tooltip-warning"
-                          : "tooltip-error"
+                          : "tooltip-error",
                     )}
                     data-tip={finishTooltip(objective, score)}
                   >
                     <div
                       className={twMerge(
-                        "text-left px-2",
+                        "px-2 text-left",
                         gotPoints
                           ? "text-success"
                           : isFinished
                             ? "text-warning"
-                            : "text-error"
+                            : "text-error",
                       )}
                     >
                       {score.points}
@@ -114,7 +114,7 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
                   </div>
                 </td>
 
-                <td className="px-2 w-full">
+                <td className="w-full px-2">
                   <ProgressBar
                     value={score.number}
                     maxVal={objective.required_number}
@@ -123,8 +123,8 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
                 </td>
                 <td
                   className={twMerge(
-                    "text-left px-2",
-                    isLastRow && "rounded-br-box"
+                    "px-2 text-left",
+                    isLastRow && "rounded-br-box",
                   )}
                   style={{ minWidth: `${longestTeamName + 2}ch` }}
                 >

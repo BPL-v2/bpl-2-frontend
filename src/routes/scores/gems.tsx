@@ -19,8 +19,8 @@ function toColor(color: string, active: boolean): React.ReactNode {
       return (
         <span
           className={clsx(
-            "join-item btn btn-lg",
-            active ? "bg-red-400 text-black" : "bg-base-300"
+            "btn join-item btn-lg",
+            active ? "bg-red-400 text-black" : "bg-base-300",
           )}
         >
           Red
@@ -30,8 +30,8 @@ function toColor(color: string, active: boolean): React.ReactNode {
       return (
         <span
           className={clsx(
-            "join-item btn btn-lg",
-            active ? "bg-green-400 text-black" : "bg-base-300"
+            "btn join-item btn-lg",
+            active ? "bg-green-400 text-black" : "bg-base-300",
           )}
         >
           Green
@@ -41,8 +41,8 @@ function toColor(color: string, active: boolean): React.ReactNode {
       return (
         <span
           className={clsx(
-            "join-item btn btn-lg",
-            active ? "bg-blue-400 text-black" : "bg-base-300"
+            "btn join-item btn-lg",
+            active ? "bg-blue-400 text-black" : "bg-base-300",
           )}
         >
           Blue
@@ -57,7 +57,7 @@ function GemTab(): JSX.Element {
   const { currentEvent, scores } = useContext(GlobalStateContext);
   const [color, setColor] = React.useState<"r" | "g" | "b" | undefined>();
   const { data: gemColors } = useFile<Record<"r" | "g" | "b" | "w", string[]>>(
-    "/assets/poe1/items/gem_colors.json"
+    "/assets/poe1/items/gem_colors.json",
   );
   const { rules } = Route.useSearch();
   useEffect(() => {
@@ -69,7 +69,7 @@ function GemTab(): JSX.Element {
     return <></>;
   }
   const gemCategory = scores.children.find(
-    (category) => category.name === "Gems"
+    (category) => category.name === "Gems",
   );
 
   if (!gemCategory || !gemColors) {
@@ -79,8 +79,8 @@ function GemTab(): JSX.Element {
   return (
     <>
       {rules ? (
-        <div className="w-full bg-base-200 my-4 p-8 rounded-box">
-          <article className="prose text-left max-w-4xl">
+        <div className="my-4 w-full rounded-box bg-base-200 p-8">
+          <article className="prose max-w-4xl text-left">
             <GemTabRules />
           </article>
         </div>
@@ -107,16 +107,16 @@ function GemTab(): JSX.Element {
           return (
             <div
               key={category.id}
-              className="bg-base-200 rounded-box md:p-8 flex flex-col gap-8"
+              className="flex flex-col gap-8 rounded-box bg-base-200 md:p-8"
             >
               <h1 className="text-3xl font-extrabold">{category.name}</h1>
-              <div className="flex flex-col gap-4 items-center">
+              <div className="flex flex-col items-center gap-4">
                 <Ranking
                   objective={category}
                   maximum={category.children.length}
                   actual={(teamId: number) =>
                     category.children.filter(
-                      (o) => o.team_score[teamId]?.finished
+                      (o) => o.team_score[teamId]?.finished,
                     ).length
                   }
                   description="Gems:"
@@ -126,12 +126,12 @@ function GemTab(): JSX.Element {
                   filter={(obj) => {
                     if (!color) return true;
                     const baseType = obj.conditions.find(
-                      (c) => c.field === "BASE_TYPE"
+                      (c) => c.field === "BASE_TYPE",
                     );
                     if (!baseType) return false;
                     return gemColors[color].includes(baseType.value);
                   }}
-                  className="w-full h-[50vh]"
+                  className="h-[50vh] w-full"
                   styles={{
                     header: "bg-base-100",
                   }}

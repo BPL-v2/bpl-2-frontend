@@ -17,7 +17,7 @@ export type DailyCardProps = {
 
 function bonusAvailableCounter(
   valid_to: string | null | undefined,
-  onFinish: () => void
+  onFinish: () => void,
 ) {
   if (!valid_to) {
     return null;
@@ -49,11 +49,11 @@ export function DailyCard({ daily }: DailyCardProps) {
 
   if (!isReleased) {
     return (
-      <div className="card bg-base-300 bborder" key={daily.id}>
-        <div className="rounded-t-box p-8 bg-base-200 h-full min-h-25 text-center text-xl font-semibold">
+      <div className="card bborder bg-base-300" key={daily.id}>
+        <div className="h-full min-h-25 rounded-t-box bg-base-200 p-8 text-center text-xl font-semibold">
           Daily not yet available
         </div>
-        <div className="card-body bg-base-300 p-8 rounded-b-box">
+        <div className="card-body rounded-b-box bg-base-300 p-8">
           <p className="text-center text-lg">The daily will be available in:</p>
           <div className="flex justify-center">
             <Countdown target={new Date(daily.valid_from)} />
@@ -64,7 +64,7 @@ export function DailyCard({ daily }: DailyCardProps) {
   }
   const isFinished = Object.values(daily.team_score).reduce(
     (acc, score) => score.finished && acc,
-    true
+    true,
   );
 
   const isRace =
@@ -81,12 +81,12 @@ export function DailyCard({ daily }: DailyCardProps) {
       />
       <div
         className={twMerge(
-          "card bg-base-200 bborder",
-          isRace && isAvailable ? "outline-4 outline-info" : ""
+          "card bborder bg-base-200",
+          isRace && isAvailable ? "outline-4 outline-info" : "",
         )}
         key={daily.id}
       >
-        <div className="card-title rounded-t-box flex items-center py-2 px-4 bg-base-200 h-full min-h-25 bborder-b">
+        <div className="card-title flex h-full min-h-25 items-center rounded-t-box bborder-b bg-base-200 px-4 py-2">
           {canSubmit ? (
             <div
               className="tooltip tooltip-left lg:tooltip-top"
@@ -108,11 +108,11 @@ export function DailyCard({ daily }: DailyCardProps) {
             />
           )}
           <div className={daily.extra ? "tooltip tooltip-primary" : undefined}>
-            <div className="tooltip-content text-xl max-w-75 ">
+            <div className="tooltip-content max-w-75 text-xl">
               {daily.extra}
             </div>
 
-            <h3 className="flex-grow text-center text-lg font-medium mx-4">
+            <h3 className="mx-4 flex-grow text-center text-lg font-medium">
               {isRace ? <b className="font-extrabold text-info">Race: </b> : ""}
               {daily.name}
               {daily.extra ? <i className="text-error">*</i> : null}
@@ -123,7 +123,7 @@ export function DailyCard({ daily }: DailyCardProps) {
           <CollectionCardTable objective={daily} />
         </div>
         {!isFinished && (
-          <div className="flex items-center justify-center rounded-b-box min-h-15">
+          <div className="flex min-h-15 items-center justify-center rounded-b-box">
             {bonusAvailableCounter(daily.valid_to, () => {
               qc.refetchQueries({
                 queryKey: ["rules", currentEvent.id],

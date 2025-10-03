@@ -20,8 +20,8 @@ function POProgressBar({
     <div
       {...props}
       className={twMerge(
-        "flex w-full h-7 bg-base-200 rounded-lg overflow-hidden text-success-content text-lg",
-        props.className
+        "flex h-7 w-full overflow-hidden rounded-lg bg-base-200 text-lg text-success-content",
+        props.className,
       )}
     >
       {checkpoints
@@ -30,8 +30,8 @@ function POProgressBar({
           <div
             key={index}
             className={twMerge(
-              "h-full border-r-1 min-w-25",
-              index % 2 ? "bg-success/80" : "bg-success/70"
+              "h-full min-w-25 border-r-1",
+              index % 2 ? "bg-success/80" : "bg-success/70",
             )}
             style={{ width: `${(value / max) * 100}%` }}
           >
@@ -39,7 +39,7 @@ function POProgressBar({
           </div>
         ))}
       <div
-        className="h-full border-r-1 bg-success rounded-r-lg"
+        className="h-full rounded-r-lg border-r-1 bg-success"
         style={{ width: `${(diff / max) * 100}%` }}
       >
         {diff > 0 && diff}

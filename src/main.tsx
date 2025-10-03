@@ -30,6 +30,6 @@ if (!rootElement.innerHTML) {
       <ContextWrapper>
         <RouterProvider router={router} />
       </ContextWrapper>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 }

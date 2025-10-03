@@ -213,7 +213,6 @@ html {
 
 /* POB stuff */
 
-
 .inventory {
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 4rem));

@@ -15,7 +15,7 @@ export function getMetaInfo(
   scoreDiff: ScoreDiff,
   users?: MinimalUser[],
   scores?: ScoreObjective,
-  teams?: Team[]
+  teams?: Team[],
 ): ScoreDiffMeta {
   const meta: ScoreDiffMeta = {
     teamName: "",
@@ -32,9 +32,9 @@ export function getMetaInfo(
     ) {
       const finishedObjectives = Math.min(
         meta.parent.children.filter(
-          (objective) => objective.team_score[scoreDiff.team_id].finished
+          (objective) => objective.team_score[scoreDiff.team_id].finished,
         ).length,
-        meta.parent.scoring_preset.points.length - 1
+        meta.parent.scoring_preset.points.length - 1,
       );
       meta.points += meta.parent.scoring_preset.points[finishedObjectives];
     }
@@ -43,7 +43,7 @@ export function getMetaInfo(
   meta.teamName =
     teams?.find((team) => team.id === scoreDiff.team_id)?.name || "";
   meta.userName = users?.find(
-    (user) => user.id === scoreDiff.score.user_id
+    (user) => user.id === scoreDiff.score.user_id,
   )?.display_name;
   meta.finished = scoreDiff.score.finished;
   meta.rank = scoreDiff.score.rank;
@@ -73,13 +73,16 @@ export function isWinnable(category: ScoreObjective): boolean {
   return true;
 }
 
-export function isFinished(objective: ScoreObjective, teamId?: number): boolean {
+export function isFinished(
+  objective: ScoreObjective,
+  teamId?: number,
+): boolean {
   if (!teamId) {
     return false;
   }
   if (objective.scoring_preset?.scoring_method === "BONUS_PER_COMPLETION") {
     const finishedObjectives = objective.children.filter(
-      (objective) => objective.team_score[teamId].finished
+      (objective) => objective.team_score[teamId].finished,
     ).length;
     return finishedObjectives === objective.children.length;
   }

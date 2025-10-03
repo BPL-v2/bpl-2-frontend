@@ -3,7 +3,7 @@ import { ExtendedSignup } from "../routes/admin/team-sort";
 
 export function sortUsers(
   currentEvent: Event,
-  signups: ExtendedSignup[]
+  signups: ExtendedSignup[],
 ): ExtendedSignup[] {
   const lockedSignups = signups.reduce(
     (acc, signup) => {
@@ -12,7 +12,7 @@ export function sortUsers(
       }
       return acc;
     },
-    {} as { [userId: number]: number }
+    {} as { [userId: number]: number },
   );
   let suggestion = getSortSuggestion(currentEvent, signups);
   suggestion = improveFairness(suggestion, currentEvent, lockedSignups);
@@ -23,7 +23,7 @@ export function sortUsers(
 
 const playtimeBuckets = ["0-3", "4-6", "7-9", "10-12", "13+"];
 function toBucket(
-  expectedPlaytime: number
+  expectedPlaytime: number,
 ): "0-3" | "4-6" | "7-9" | "10-12" | "13+" {
   if (expectedPlaytime < 4) {
     return "0-3";
@@ -42,7 +42,7 @@ const randSort = () => Math.random() - 0.5;
 
 function ensurePartners(
   signups: ExtendedSignup[],
-  lockedSignups: { [userId: number]: number }
+  lockedSignups: { [userId: number]: number },
 ) {
   const fixedSignups = [];
   const userToSignup = new Map<number, ExtendedSignup>();
@@ -93,7 +93,7 @@ function ensurePartners(
           continue;
         }
         const playtimeDiff = Math.abs(
-          signup.expected_playtime - signup2.expected_playtime
+          signup.expected_playtime - signup2.expected_playtime,
         );
         if (
           playtimeDiff < bestFittingPlaytimeDiff &&
@@ -115,7 +115,7 @@ function ensurePartners(
 function improveFairness(
   signups: ExtendedSignup[],
   currentEvent: Event,
-  lockedSignups: { [userId: number]: number }
+  lockedSignups: { [userId: number]: number },
 ) {
   // tries to balance out team sizes
   for (let i = 0; i < 100; i++) {
@@ -127,10 +127,10 @@ function improveFairness(
       return signups;
     }
     const minTeam = Object.keys(counts).find(
-      (key) => counts[parseInt(key)] === minval
+      (key) => counts[parseInt(key)] === minval,
     );
     const maxTeam = Object.keys(counts).find(
-      (key) => counts[parseInt(key)] === maxval
+      (key) => counts[parseInt(key)] === maxval,
     );
     for (const signup of signups.sort(randSort)) {
       if (lockedSignups[signup.user.id] || signup.partner_id) {
@@ -155,7 +155,7 @@ function improveFairness(
 
 function getTeamCounts(
   signups: ExtendedSignup[],
-  currentEvent: Event
+  currentEvent: Event,
 ): { [teamId: number]: number } {
   return signups.reduce(
     (acc, signup) => {
@@ -169,14 +169,14 @@ function getTeamCounts(
         acc[team.id] = 0;
         return acc;
       },
-      {} as { [teamId: number]: number }
-    )
+      {} as { [teamId: number]: number },
+    ),
   );
 }
 
 export function getSortSuggestion(
   currentEvent: Event,
-  signups: ExtendedSignup[]
+  signups: ExtendedSignup[],
 ) {
   const buckets: {
     [key: string]: { [teamId: number]: number };
@@ -187,24 +187,24 @@ export function getSortSuggestion(
           teamNumbers[team.id] = signups.filter(
             (signup) =>
               signup.team_id === team.id &&
-              signup.expected_playtime === parseInt(playtime)
+              signup.expected_playtime === parseInt(playtime),
           ).length;
           return teamNumbers;
         },
-        {} as { [teamId: number]: number }
+        {} as { [teamId: number]: number },
       );
       return buckets;
     },
-    {} as { [key: string]: { [teamId: number]: number } }
+    {} as { [key: string]: { [teamId: number]: number } },
   );
   buckets["total"] = currentEvent.teams.reduce(
     (teamNumbers, team) => {
       teamNumbers[team.id] = signups.filter(
-        (signup) => signup.team_id === team.id
+        (signup) => signup.team_id === team.id,
       ).length;
       return teamNumbers;
     },
-    {} as { [teamId: number]: number }
+    {} as { [teamId: number]: number },
   );
   const newSignups = [];
 

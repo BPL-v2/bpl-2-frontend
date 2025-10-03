@@ -6,7 +6,7 @@ export const establishScoreSocket = (
   eventId: number,
   setScores: (scores: ScoreMap) => void,
   setWebsocket: (ws: WebSocket) => void,
-  appendUpdates: (updates: ScoreDiff[]) => void
+  appendUpdates: (updates: ScoreDiff[]) => void,
 ) => {
   const qc = new QueryClient();
   if (!import.meta.env.VITE_PUBLIC_BPL_BACKEND_URL) {
@@ -16,7 +16,7 @@ export const establishScoreSocket = (
   const url =
     import.meta.env.VITE_PUBLIC_BPL_BACKEND_URL.replace("https", "wss").replace(
       "http",
-      "ws"
+      "ws",
     ) +
     `/events/${eventId}/scores/ws?token=${localStorage.getItem("auth") || ""}`;
   const ws = new WebSocket(url);

@@ -25,7 +25,7 @@ export const Route = createFileRoute("/streams")({
 });
 
 function teamSort(
-  eventStatus: EventStatus | undefined
+  eventStatus: EventStatus | undefined,
 ): (teamA: Team, teamB: Team) => number {
   return (teamA, teamB) => {
     if (eventStatus) {
@@ -70,7 +70,7 @@ function CharacterPortrait({
         eventId: currentEvent.id,
       }}
       className={
-        "bg-base-300 cursor-pointer select-none flex flex-row gap-4 rounded-t-box border-4 items-center p-1 "
+        "flex cursor-pointer flex-row items-center gap-4 rounded-t-box border-4 bg-base-300 p-1 select-none"
       }
       activeProps={{
         className: "border-primary shadow-2xl",
@@ -81,10 +81,10 @@ function CharacterPortrait({
     >
       <img
         src={ascendancyObj.thumbnail}
-        className="rounded-full size-14"
+        className="size-14 rounded-full"
         alt={ascendancyName}
       />
-      <div className="text-lg text-left">
+      <div className="text-left text-lg">
         <p> {character.name}</p>
         <div className="flex flex-row gap-2">
           <span>Level {character.level}</span>
@@ -113,7 +113,7 @@ function TwitchPage() {
       }
       return acc;
     },
-    {} as Record<number, LadderEntry>
+    {} as Record<number, LadderEntry>,
   );
   const {
     data: streams,
@@ -121,7 +121,7 @@ function TwitchPage() {
     isError: streamsError,
   } = useGetStreams(currentEvent.id);
   if (streamsPending) {
-    return <div className="loading loading-spinner loading-lg"></div>;
+    return <div className="loading loading-lg loading-spinner"></div>;
   }
   if (streamsError) {
     return <div className="alert alert-error">Failed to load streams</div>;
@@ -150,13 +150,13 @@ function TwitchPage() {
       {} as Record<
         number,
         { stream: TwitchStream; teamId: number; userId: number }[]
-      >
+      >,
     );
 
   return (
-    <div className="flex flex-col gap-4 mt-4">
+    <div className="mt-4 flex flex-col gap-4">
       <Outlet />
-      <h1 className="text-4xl mt-4">Twitch Streams by Team</h1>
+      <h1 className="mt-4 text-4xl">Twitch Streams by Team</h1>
       {Object.entries(teamStreams)
         .sort((a, b) => {
           const teamA = currentEvent.teams.find((t) => t.id === parseInt(a[0]));
@@ -172,7 +172,7 @@ function TwitchPage() {
               {currentEvent.teams.find((t) => t.id === parseInt(teamId))
                 ?.name || ""}
             </div>
-            <div className="flex flex-wrap gap-4 justify-left">
+            <div className="justify-left flex flex-wrap gap-4">
               {streams.map((stream) => {
                 streams.map((s) => s.teamId);
                 return (
@@ -184,7 +184,7 @@ function TwitchPage() {
                     <Link
                       to={"/streams/$twitchAccount"}
                       params={{ twitchAccount: stream.stream.user_login ?? "" }}
-                      className="cursor-pointer bg-base-300 "
+                      className="cursor-pointer bg-base-300"
                       activeProps={{ className: "border-primary" }}
                     >
                       <TwitchStreamEmbed

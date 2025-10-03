@@ -32,19 +32,19 @@ export function DelveTabRules() {
   const { scores } = useContext(GlobalStateContext);
 
   const delveCategory = scores?.children.find(
-    (category) => category.name === "Delve"
+    (category) => category.name === "Delve",
   );
 
   const fossilRaceCategory = delveCategory?.children.find(
-    (c) => c.name === "Fossil Race"
+    (c) => c.name === "Fossil Race",
   );
 
   const culmDepthObjective = delveCategory?.children.find(
-    (c) => c.name === "Culmulative Depth"
+    (c) => c.name === "Culmulative Depth",
   );
 
   const delveRace = delveCategory?.children.find(
-    (c) => c.name === "Delve Race"
+    (c) => c.name === "Delve Race",
   );
 
   return (
