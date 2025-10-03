@@ -43,7 +43,7 @@ function getCardColor(score: Score) {
 
 function sort(
   [teamId1, score1]: [string, Score],
-  [teamId2, score2]: [string, Score]
+  [teamId2, score2]: [string, Score],
 ) {
   if (score1.rank !== score2.rank) {
     return score1.rank - score2.rank;
@@ -82,8 +82,8 @@ export function Ranking({
   return (
     <div
       className={twMerge(
-        "w-full grid gap-4",
-        getGridLayout(Object.keys(teamIds).length)
+        "grid w-full gap-4",
+        getGridLayout(Object.keys(teamIds).length),
       )}
     >
       {Object.entries(objective.team_score)
@@ -112,7 +112,7 @@ export function Ranking({
                           ?.name
                       }
                     </div>
-                    <div className="text-left text-lg bg-blend-normal font-semibold">
+                    <div className="text-left text-lg font-semibold bg-blend-normal">
                       {description} {actual(teamId)} / {maximum}
                     </div>
                   </div>

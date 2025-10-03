@@ -61,7 +61,7 @@ function UserPage() {
           onClick={() => copyDiscordId(info.row.original.discord_id)}
           className="flex gap-2"
         >
-          <ClipboardDocumentCheckIcon className="cursor-pointer h-6 w-6" />
+          <ClipboardDocumentCheckIcon className="h-6 w-6 cursor-pointer" />
           {info.row.original.discord_id}
         </a>
       ),
@@ -97,8 +97,8 @@ function UserPage() {
                       prev.map((user) =>
                         user.id === info.row.original.id
                           ? { ...user, permissions: newPermissions }
-                          : user
-                      )
+                          : user,
+                      ),
                     );
                   });
               }}
@@ -141,7 +141,7 @@ function UserPage() {
               user.discord_name?.toLowerCase().includes(nameFilter) ||
               user.twitch_name?.toLowerCase().includes(nameFilter)
             ) &&
-            (!roleFilter || user.permissions.includes(roleFilter))
+            (!roleFilter || user.permissions.includes(roleFilter)),
         )}
         columns={columns}
         className="h-[70vh]"

@@ -23,7 +23,7 @@ function ScarabTab(): JSX.Element {
     return <></>;
   }
   const scarabCategory = scores.children.find(
-    (category) => category.name === "Scarabs"
+    (category) => category.name === "Scarabs",
   );
 
   if (!scarabCategory) {
@@ -33,8 +33,8 @@ function ScarabTab(): JSX.Element {
   return (
     <>
       {rules ? (
-        <div className="w-full bg-base-200 my-4 p-8 rounded-box">
-          <article className="prose text-left max-w-4xl">
+        <div className="my-4 w-full rounded-box bg-base-200 p-8">
+          <article className="prose max-w-4xl text-left">
             <GemTabRules />
           </article>
         </div>
@@ -43,23 +43,23 @@ function ScarabTab(): JSX.Element {
         <TeamScoreDisplay objective={scarabCategory} />
         <div
           key={scarabCategory.id}
-          className="bg-base-200 rounded-box md:p-8 flex flex-col gap-8"
+          className="flex flex-col gap-8 rounded-box bg-base-200 md:p-8"
         >
           <h1 className="text-3xl font-extrabold">{scarabCategory.name}</h1>
-          <div className="flex flex-col gap-4 items-center">
+          <div className="flex flex-col items-center gap-4">
             <Ranking
               objective={scarabCategory}
               maximum={scarabCategory.children.length}
               actual={(teamId: number) =>
                 scarabCategory.children.filter(
-                  (o) => o.team_score[teamId]?.finished
+                  (o) => o.team_score[teamId]?.finished,
                 ).length
               }
               description="Scarabs:"
             />
             <ItemTable
               objective={scarabCategory}
-              className="w-full h-[50vh]"
+              className="h-[50vh] w-full"
               styles={{
                 header: "bg-base-100",
               }}

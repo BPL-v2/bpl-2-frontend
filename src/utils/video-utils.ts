@@ -50,7 +50,7 @@ export function getEmbedUrl(url: string): URL | undefined {
 
 export async function getThumbnailUrl(
   url: string,
-  twitchToken: string | undefined
+  twitchToken: string | undefined,
 ): Promise<string | undefined> {
   let parsedUrl: URL;
   try {

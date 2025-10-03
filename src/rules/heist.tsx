@@ -33,23 +33,23 @@ export function HeistTabRules() {
   const { scores } = useContext(GlobalStateContext);
 
   const heistCategory = scores?.children.find(
-    (category) => category.name === "Heist"
+    (category) => category.name === "Heist",
   );
 
   const rogueGearCategory = heistCategory?.children.find(
-    (c) => c.name === "Rogue Gear"
+    (c) => c.name === "Rogue Gear",
   );
 
   const uniqueCategory = heistCategory?.children.find(
-    (c) => c.name === "Blueprint Uniques"
+    (c) => c.name === "Blueprint Uniques",
   );
 
   const experimentalItemsCategory = heistCategory?.children.find(
-    (c) => c.name === "Experimental Bases"
+    (c) => c.name === "Experimental Bases",
   );
 
   const echantingOrbObjective = heistCategory?.children.find(
-    (c) => c.name === "Enchanting Orb Race"
+    (c) => c.name === "Enchanting Orb Race",
   );
 
   return (
@@ -66,7 +66,7 @@ export function HeistTabRules() {
             {echantingOrbObjective.required_number - 2} Tempering Orbs and 2
             Tailoring Orbs would count.{" "}
             {racePointsToText(
-              echantingOrbObjective.scoring_preset?.points || []
+              echantingOrbObjective.scoring_preset?.points || [],
             )}
           </p>
         </>

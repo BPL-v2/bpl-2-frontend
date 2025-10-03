@@ -155,7 +155,7 @@ function RulePage() {
   //   },
   // ];
   return (
-    <article className="prose text-left p-4 max-w-full">
+    <article className="prose max-w-full p-4 text-left">
       <div className="divider divider-primary" id="gameplay">
         Gameplay Rules
       </div>
@@ -164,12 +164,12 @@ function RulePage() {
         there is a discrepancy between the information listed here and in the
         rules channel on Discord - the Discord one is correct.
       </p>
-      <div className="flex flex-col gap-2 mt-4">
+      <div className="mt-4 flex flex-col gap-2">
         {ruleCollapse.map((rule, index) => (
           <div
             key={rule.label + index}
             tabIndex={index}
-            className="bg-base-200 focus:bg-base-300 collapse"
+            className="collapse bg-base-200 focus:bg-base-300"
           >
             <div className="collapse-title font-semibold">{rule.label}</div>
             <div className="collapse-content text-sm">{rule.children}</div>
@@ -215,12 +215,12 @@ function RulePage() {
       <div className="divider divider-primary" id="faq">
         Frequently Asked Questions
       </div>
-      <div className="flex flex-col gap-2 mt-4">
+      <div className="mt-4 flex flex-col gap-2">
         {faqCollapse.map((faq, index) => (
           <div
             key={faq.label + index}
             tabIndex={index}
-            className="bg-base-200 focus:bg-base-300 collapse"
+            className="collapse bg-base-200 focus:bg-base-300"
           >
             <div className="collapse-title font-semibold">{faq.label}</div>
             <div className="collapse-content text-sm">{faq.children}</div>

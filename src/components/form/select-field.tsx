@@ -14,7 +14,7 @@ export function SelectField<T>({
   const field = useFieldContext<T>();
   return (
     <div className={className} hidden={props.hidden}>
-      <label className={"flex flex-col gap-1 items-start"}>
+      <label className={"flex flex-col items-start gap-1"}>
         <span className="label">
           {label}
           {props.required && <span className="text-red-500">*</span>}

@@ -11,7 +11,7 @@ export function BooleanField({
   const field = useFieldContext<boolean>();
   return (
     <label
-      className={twMerge("flex flex-col gap-1 items-start", className)}
+      className={twMerge("flex flex-col items-start gap-1", className)}
       hidden={props.hidden}
     >
       <span className="label">{label}</span>

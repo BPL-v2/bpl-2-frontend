@@ -16,10 +16,10 @@ function RouteComponent() {
     return "You do not have permission to view this page.";
   }
   return (
-    <div className="flex flex-row gap-4 mt-4">
+    <div className="mt-4 flex flex-row gap-4">
       <Link
         to={"/admin/guild/stashes"}
-        className="card bg-base-300 hover:bg-base-200 border-2 border-base-content w-100"
+        className="card w-100 border-2 border-base-content bg-base-300 hover:bg-base-200"
       >
         <div className="card-body">
           <h2 className="card-title">Stash Management</h2>
@@ -31,7 +31,7 @@ function RouteComponent() {
       </Link>
       <Link
         to={"/admin/guild/logs"}
-        className="card bg-base-300 hover:bg-base-200 border-2 border-base-content w-100"
+        className="card w-100 border-2 border-base-content bg-base-300 hover:bg-base-200"
       >
         <div className="card-body">
           <h2 className="card-title">Stash Logs</h2>

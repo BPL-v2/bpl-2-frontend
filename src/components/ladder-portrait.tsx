@@ -16,7 +16,7 @@ export function LadderPortrait({ entry, team }: Props) {
   const { currentEvent } = useContext(GlobalStateContext);
   return (
     <Link
-      className="flex flex-row gap-5 items-center w-100"
+      className="flex w-100 flex-row items-center gap-5"
       to={"/profile/$userId/$eventId/$characterId"}
       params={{
         userId: entry.character?.user_id || 0,
@@ -26,9 +26,9 @@ export function LadderPortrait({ entry, team }: Props) {
     >
       <AscendancyPortrait
         character_class={entry.character_class}
-        className="w-20 h-20 rounded-full object-cover"
+        className="h-20 w-20 rounded-full object-cover"
       />
-      <div className="flex flex-col w-full">
+      <div className="flex w-full flex-col">
         <span className="font-bold" style={{ color: team?.color || "inherit" }}>
           {entry.character_name}
         </span>

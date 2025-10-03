@@ -29,7 +29,7 @@ export const StashTabGrid: React.FC<Props> = ({
   }, [tab.items, highlightScoring]);
   return (
     <div
-      className={"grid gap-1 aspect-square h-[90vh]"}
+      className={"grid aspect-square h-[90vh] gap-1"}
       style={{
         gridTemplateColumns: `repeat(${gridNum}, minmax(0, 1fr))`,
         gridTemplateRows: `repeat(${gridNum}, minmax(0, 1fr))`,
@@ -69,8 +69,8 @@ export const StashTabGrid: React.FC<Props> = ({
               <div
                 key={`${i}-${j}-${item.id}`}
                 className={twMerge(
-                  "tooltip tooltip-bottom relative cursor-pointer",
-                  tooltipColor
+                  "tooltip relative tooltip-bottom cursor-pointer",
+                  tooltipColor,
                 )}
                 data-tip={`${item.name} ${item.typeLine}`}
                 onClick={() => onItemClick && onItemClick(item)}
@@ -81,7 +81,7 @@ export const StashTabGrid: React.FC<Props> = ({
               >
                 <img
                   key={`${i}-${j}`}
-                  className={twMerge("w-full h-full border-1", borderColor)}
+                  className={twMerge("h-full w-full border-1", borderColor)}
                   style={{
                     objectFit: "contain",
                   }}
@@ -90,8 +90,8 @@ export const StashTabGrid: React.FC<Props> = ({
                 />
                 <div
                   className={twMerge(
-                    "absolute left-0 top-0 select-none",
-                    gridNum === 24 ? "text-xs px-[2px]" : "px-[4px]"
+                    "absolute top-0 left-0 select-none",
+                    gridNum === 24 ? "px-[2px] text-xs" : "px-[4px]",
                   )}
                 >
                   {(item.stackSize || 0) > 0 ? item.stackSize : null}
@@ -102,10 +102,10 @@ export const StashTabGrid: React.FC<Props> = ({
           return (
             <div
               key={`${i}-${j}`}
-              className="col-span-1 row-span-1 bg-base-200 border-1 border-gray-700 w-full h-full select-none"
+              className="col-span-1 row-span-1 h-full w-full border-1 border-gray-700 bg-base-200 select-none"
             ></div>
           );
-        })
+        }),
       )}
     </div>
   );

@@ -15,7 +15,7 @@ import { Suspense, useContext, useEffect, useState } from "react";
 
 function getDeltaTimeAfterLeagueStart(
   timestamp?: string,
-  leagueStart?: string
+  leagueStart?: string,
 ) {
   // If either timestamp or league
   if (!timestamp || !leagueStart) {
@@ -26,7 +26,7 @@ function getDeltaTimeAfterLeagueStart(
   const milliseconds = ts - leagueStartDate;
   const days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
   const hours = Math.floor(
-    (milliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    (milliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
   );
   const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
   return `${days} days, ${hours} hours, ${minutes} mins`;
@@ -60,7 +60,7 @@ function RouteComponent() {
   const { events = [] } = useGetEvents();
   const { activity } = useGetUserActivity(
     eventId,
-    user?.id == userId ? userId : 0
+    user?.id == userId ? userId : 0,
   );
   const event = events.find((e) => e.id === Number(eventId));
   const { pobs = [] } = useGetPoBs(userId, characterId);
@@ -85,11 +85,11 @@ function RouteComponent() {
     }
   }
   return (
-    <div className="w-full flex flex-col gap-4 px-2">
+    <div className="flex w-full flex-col gap-4 px-2">
       {activity && eventId > 101 && (
-        <div className="flex ">
-          <div className="text-xl font-bold tooltip tooltip-right w-auto">
-            <div className="tooltip-content p-2 font-light flex flex-col text-left gap-2">
+        <div className="flex">
+          <div className="tooltip tooltip-right w-auto text-xl font-bold">
+            <div className="tooltip-content flex flex-col gap-2 p-2 text-left font-light">
               <span>
                 Measured by taking activity samples when xp changes / items are
                 deposited.
@@ -103,24 +103,24 @@ function RouteComponent() {
         </div>
       )}
       {contributions.length > 0 && user?.id === userId && (
-        <div className="bg-base-300 rounded-box p-4 flex flex-col gap-4">
-          <h1 className="text-xl text-left">
+        <div className="flex flex-col gap-4 rounded-box bg-base-300 p-4">
+          <h1 className="text-left text-xl">
             Item contributions:{" "}
             <span className="text-success">
               +{contributions.reduce((acc, curr) => acc + curr.score.points, 0)}
             </span>
           </h1>
-          <div className="flex flex-row gap-4 flex-wrap">
+          <div className="flex flex-row flex-wrap gap-4">
             {contributions
               .sort((a, b) => b.score.points - a.score.points)
               .map((contribution) => {
                 return (
                   <div className="tooltip">
-                    <div className="tooltip-content p-2 font-bold bg-base-100">
+                    <div className="tooltip-content bg-base-100 p-2 font-bold">
                       <div className="">{contribution.objective.name}</div>
                       <span>
                         {new Date(
-                          contribution.score.timestamp
+                          contribution.score.timestamp,
                         ).toLocaleString()}
                       </span>
                     </div>
@@ -148,19 +148,19 @@ function RouteComponent() {
         <div className="relative flex items-center justify-center">
           <input
             type="range"
-            className="range range-primary w-full  md:range-xl [--range-thumb:blue]"
+            className="range w-full range-primary [--range-thumb:blue] md:range-xl"
             min="0"
             max={pobs?.length ? pobs.length - 1 : 0}
             value={pobId}
             onChange={(e) => setPobId(Number(e.target.value))}
           />
           <span
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 px-2 py-1 rounded text-primary-content pointer-events-none select-none text-xs md:text-md"
+            className="md:text-md pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded px-2 py-1 text-xs text-primary-content select-none"
             style={{ zIndex: 2 }}
           >
             {getDeltaTimeAfterLeagueStart(
               pobs[pobId]?.timestamp,
-              event?.event_start_time
+              event?.event_start_time,
             )}
           </span>
         </div>
@@ -168,9 +168,9 @@ function RouteComponent() {
       {pobs.length > 0 && <PoB pobString={pobs[pobId]?.export_string} />}
       <Suspense
         fallback={
-          <div className="bg-base-200 rounded-box justify-center p-8">
+          <div className="justify-center rounded-box bg-base-200 p-8">
             <div className="flex items-center justify-center">
-              <span className="loading loading-spinner loading-lg"></span>
+              <span className="loading loading-lg loading-spinner"></span>
               <span className="ml-2">Loading chart...</span>
             </div>
           </div>

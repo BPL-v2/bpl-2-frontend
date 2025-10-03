@@ -43,23 +43,23 @@ export const userApi = UserApiFactory(config, authenticatedFetch, baseUrl);
 export const objectiveApi = ObjectiveApiFactory(
   config,
   authenticatedFetch,
-  baseUrl
+  baseUrl,
 );
 export const scoringApi = ScoringApiFactory(
   config,
   authenticatedFetch,
-  baseUrl
+  baseUrl,
 );
 export const scoresApi = ScoresApiFactory(config, authenticatedFetch, baseUrl);
 export const conditionApi = ConditionApiFactory(
   config,
   authenticatedFetch,
-  baseUrl
+  baseUrl,
 );
 export const submissionApi = SubmissionApiFactory(
   config,
   authenticatedFetch,
-  baseUrl
+  baseUrl,
 );
 export const signupApi = SignupApiFactory(config, authenticatedFetch, baseUrl);
 export const oauthApi = OauthApiFactory(config, authenticatedFetch, baseUrl);
@@ -69,15 +69,15 @@ export const ladderApi = LadderApiFactory(config, authenticatedFetch, baseUrl);
 export const activityApi = ActivityApiFactory(
   config,
   authenticatedFetch,
-  baseUrl
+  baseUrl,
 );
 export const characterApi = CharactersApiFactory(
   config,
   authenticatedFetch,
-  baseUrl
+  baseUrl,
 );
 export const guildStashApi = GuildStashApiFactory(
   config,
   authenticatedFetch,
-  baseUrl
+  baseUrl,
 );

@@ -70,25 +70,25 @@ function RouteComponent() {
   return (
     <div ref={ref}>
       <Dialog
-        className="max-w-xl max-h-[80vh]"
+        className="max-h-[80vh] max-w-xl"
         open={open}
         setOpen={setOpen}
         title={
           <div>
             <ClipboardDocumentCheckIcon
-              className="absolute to-0 right-6 cursor-pointer h-8 w-8 hover:text-primary"
+              className="to-0 absolute right-6 h-8 w-8 cursor-pointer hover:text-primary"
               onClick={() => {
                 if (selectedItem) {
                   navigator.clipboard.writeText(
-                    JSON.stringify(selectedItem, null, 2)
+                    JSON.stringify(selectedItem, null, 2),
                   );
                 }
               }}
             ></ClipboardDocumentCheckIcon>
             <div
               className={twMerge(
-                "flex flex-col items-center mb-[-1rem]",
-                textColor
+                "mb-[-1rem] flex flex-col items-center",
+                textColor,
               )}
             >
               {selectedItem?.name ? <p> {selectedItem?.name}</p> : null}
@@ -101,12 +101,12 @@ function RouteComponent() {
         <div className="">
           {selectedItem?.influences && (
             <>
-              <div className="flex flex-row gap-2 mb-2">
+              <div className="mb-2 flex flex-row gap-2">
                 Influences:{" "}
                 {Object.keys(selectedItem?.influences || {}).map(
                   (influence) => (
                     <span key={influence}>{influence}</span>
-                  )
+                  ),
                 )}
               </div>
             </>

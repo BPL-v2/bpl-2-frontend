@@ -56,7 +56,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
       currentEvent.id,
       setScoreData,
       setWebsocket,
-      () => {}
+      () => {},
       // setUpdates((prevUpdates) => [...newUpdates, ...prevUpdates])
     );
   }, [currentEvent]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -80,8 +80,8 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
             acc[preset.id] = preset;
             return acc;
           },
-          {} as Record<number, ScoringPreset>
-        )
+          {} as Record<number, ScoringPreset>,
+        ),
       );
       setScores(hidePOTotal(newScores));
     }

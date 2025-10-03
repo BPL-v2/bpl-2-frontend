@@ -23,7 +23,7 @@ function AdminRouteCard({
 }) {
   const { user } = useGetUser();
   const hasPermission = permissions.some((permission) =>
-    user?.permissions.includes(permission)
+    user?.permissions.includes(permission),
   );
   if (!hasPermission) {
     return null;
@@ -31,7 +31,7 @@ function AdminRouteCard({
   return (
     <Link
       to={link}
-      className="card bg-base-300 hover:bg-base-200 border-2 border-base-content"
+      className="card border-2 border-base-content bg-base-300 hover:bg-base-200"
     >
       <div className="card-body">
         <h2 className="card-title">{title}</h2>
@@ -49,9 +49,9 @@ function RouteComponent() {
     return "You do not have permission to view this page.";
   }
   return (
-    <div className="flex flex-col gap-4 mt-4">
+    <div className="mt-4 flex flex-col gap-4">
       {permissions.length > 0 && <EventPicker />}
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <AdminRouteCard
           title="Event Management"
           description="Manage new events and their settings including teams and objectives."
@@ -92,7 +92,7 @@ function RouteComponent() {
           <>
             <Link
               to={"/admin/team-suggestions"}
-              className="card bg-base-300 hover:bg-base-200 border-2 border-base-content"
+              className="card border-2 border-base-content bg-base-300 hover:bg-base-200"
             >
               <div className="card-body">
                 <h2 className="card-title">Team Content Suggestions</h2>
@@ -104,7 +104,7 @@ function RouteComponent() {
             </Link>
             <Link
               to={"/admin/guild"}
-              className="card bg-base-300 hover:bg-base-200 border-2 border-base-content"
+              className="card border-2 border-base-content bg-base-300 hover:bg-base-200"
             >
               <div className="card-body">
                 <h2 className="card-title">Guild Stashes</h2>

@@ -34,7 +34,7 @@ export function OauthCard({
     if (!connected) {
       return (
         <button
-          className={"btn btn-success btn-outline"}
+          className={"btn btn-outline btn-success"}
           onClick={redirectOauth(provider, state.location.href)}
         >
           Connect
@@ -43,7 +43,7 @@ export function OauthCard({
     }
     return (
       <button
-        className={"btn btn-error btn-outline"}
+        className={"btn btn-outline btn-error"}
         onClick={() => removeOauthProvider(provider)}
       >
         Disconnect
@@ -54,21 +54,23 @@ export function OauthCard({
   const card = (
     <div
       className={twMerge(
-        "card border-2 max-h-100 max-w-110",
+        "card max-h-100 max-w-110 border-2",
         required ? "border-error" : "border-base-100",
-        connected ? "border-success bg-base-300" : "bg-base-200 border-base-300"
+        connected
+          ? "border-success bg-base-300"
+          : "border-base-300 bg-base-200",
       )}
     >
       <div
         className={twMerge(
-          "rounded-t-box px-8 py-4 items-center justify-between flex",
-          connected ? "bg-base-200" : "bg-base-100"
+          "flex items-center justify-between rounded-t-box px-8 py-4",
+          connected ? "bg-base-200" : "bg-base-100",
         )}
       >
-        <h1 className="text-2xl font-bold text-center">{title}</h1>
+        <h1 className="text-center text-2xl font-bold">{title}</h1>
         {connectionButton}
       </div>
-      <div className="card-body grid gap-2 grid-cols-2 items-center text-lg text-left">
+      <div className="card-body grid grid-cols-2 items-center gap-2 text-left text-lg">
         <div className={!connected ? "grayscale" : ""}>{logo}</div>
         <p>{description}</p>
       </div>

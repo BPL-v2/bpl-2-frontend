@@ -49,12 +49,12 @@ export function Dialog({
       <div
         ref={boxRef}
         className={twMerge(
-          "modal-box bg-base-200 border-2 border-base-100",
-          className
+          "modal-box border-2 border-base-100 bg-base-200",
+          className,
         )}
       >
-        <h3 className="font-bold text-lg mb-8">{title}</h3>
-        <div className="w-full flex flex-col items-center">{children}</div>
+        <h3 className="mb-8 text-lg font-bold">{title}</h3>
+        <div className="flex w-full flex-col items-center">{children}</div>
       </div>
     </dialog>
   );

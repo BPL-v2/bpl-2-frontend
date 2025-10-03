@@ -6,7 +6,7 @@ import { YoutubeFilled } from "@icons/youtube";
 
 export function Footer() {
   return (
-    <footer className="footer sm:footer-horizontal bg-base-200 items-center p-4">
+    <footer className="footer items-center bg-base-200 p-4 sm:footer-horizontal">
       <aside className="grid-flow-col items-center">
         <p>
           This product isn't affiliated with or endorsed by Grinding Gear Games

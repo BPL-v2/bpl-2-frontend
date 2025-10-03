@@ -38,7 +38,7 @@ export function UniqueTabRules() {
   const { scores, currentEvent } = useContext(GlobalStateContext);
 
   const uniqueCategory = scores?.children.find(
-    (category) => category.name === "Uniques"
+    (category) => category.name === "Uniques",
   );
   const variantPoints = 5;
   const uniquePoints = 10;
@@ -57,28 +57,28 @@ export function UniqueTabRules() {
 
   const ubersCategory = uniqueCategory.children.find(
     (c) =>
-      c.scoring_preset?.scoring_method === ScoringMethod.BONUS_PER_COMPLETION
+      c.scoring_preset?.scoring_method === ScoringMethod.BONUS_PER_COMPLETION,
   );
 
   const exampleText = variantExample ? (
     <p>
       For example{" "}
       <a
-        className="text-orange-500 no-underline cursor-pointer text-nowrap"
+        className="cursor-pointer text-nowrap text-orange-500 no-underline"
         href={`${wikiBaseUrl}${variantExample.children[0].name.replaceAll(
           " ",
-          "_"
+          "_",
         )}`}
         target="_blank"
       >
         {variantExample.children[0].name}
       </a>{" "}
       is a distinct unique item with variants such as{" "}
-      <strong className="text-info text-nowrap">
+      <strong className="text-nowrap text-info">
         [{variantExample.children[0].extra}]
       </strong>{" "}
       or{" "}
-      <strong className="text-info text-nowrap">
+      <strong className="text-nowrap text-info">
         [{variantExample.children[1].extra}]
       </strong>
       . Collecting both of these would award{" "}
@@ -119,7 +119,9 @@ export function UniqueTabRules() {
             not grant any additional points and the more uniques that are found,
             the less points they award.{" "}
             {convertArrayToText(
-              ubersCategory.scoring_preset?.points?.map((p) => p + uniquePoints)
+              ubersCategory.scoring_preset?.points?.map(
+                (p) => p + uniquePoints,
+              ),
             )}
           </p>
         </>

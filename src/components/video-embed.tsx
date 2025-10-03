@@ -27,12 +27,12 @@ function getIcon(url: string): React.ReactNode {
 }
 
 export const VideoEmbed: React.FC<VideoEmbedProps> = (
-  props: VideoEmbedProps
+  props: VideoEmbedProps,
 ) => {
   const { title, url, style } = props;
   const [isOpened, setIsOpened] = React.useState(false);
   const [thumbnailUrl, setThumbnailUrl] = React.useState<string | undefined>(
-    undefined
+    undefined,
   );
   const embedUrl = getEmbedUrl(url);
 

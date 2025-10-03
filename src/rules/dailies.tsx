@@ -32,7 +32,7 @@ export function DailyTabRules() {
   const { scores } = useContext(GlobalStateContext);
 
   const dailyCategory = scores?.children.find(
-    (category) => category.name === "Dailies"
+    (category) => category.name === "Dailies",
   );
   const basePoints =
     dailyCategory?.children?.find((objective) => objective.valid_to === null)

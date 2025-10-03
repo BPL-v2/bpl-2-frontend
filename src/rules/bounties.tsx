@@ -4,7 +4,7 @@ import { GlobalStateContext } from "@utils/context-provider";
 export function BountyTabRules() {
   const { scores } = useContext(GlobalStateContext);
   const objs = scores?.children.find(
-    (category) => category.name === "Bounties"
+    (category) => category.name === "Bounties",
   )?.children;
 
   if (!objs) {

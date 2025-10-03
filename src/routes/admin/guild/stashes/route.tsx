@@ -43,22 +43,22 @@ function RouteComponent() {
   }
   return (
     <div>
-      <div className="flex flex-row gap-2 items-center justify-center mt-2">
+      <div className="mt-2 flex flex-row items-center justify-center gap-2">
         <input
           type="text"
           placeholder="Search Stash Tabs"
-          className="input input-bordered w-full max-w-xs"
+          className="input-bordered input w-full max-w-xs"
           value={stashSearch}
           onChange={(e) => setStashSearch(e.target.value)}
         />
         <button
-          className="btn btn-primary w-43"
+          className="btn w-43 btn-primary"
           onClick={() => setHideDisabled(!hideDisabled)}
         >
           {hideDisabled ? "Show" : "Hide"} Disabled Tabs
         </button>
         <button
-          className="btn btn-secondary w-53"
+          className="btn w-53 btn-secondary"
           onClick={() => {
             setHighlightScoring(!highlightScoring);
             router.navigate({
@@ -71,8 +71,8 @@ function RouteComponent() {
           {highlightScoring ? "Show" : "Hide"} Non-Objective Items
         </button>
       </div>
-      <div className="flex flex-row gap-2 mt-2 justify-center">
-        <div className="flex flex-col gap-1 overflow-y-auto h-[80vh] w-[35vw]">
+      <div className="mt-2 flex flex-row justify-center gap-2">
+        <div className="flex h-[80vh] w-[35vw] flex-col gap-1 overflow-y-auto">
           {guildStashes
             ?.filter((stash) => {
               if (stash.parent_id) return false; // Exclude child tabs
@@ -88,7 +88,7 @@ function RouteComponent() {
             .sort((a, b) => a.index || 0 - (b.index || 0))
             .map((stash) => (
               <div
-                className="tooltip tooltip-primary tooltip-bottom"
+                className="tooltip tooltip-bottom tooltip-primary"
                 data-tip={stash.user_ids.length + " users eligible to fetch"}
                 key={stash.id}
               >
@@ -108,7 +108,7 @@ function RouteComponent() {
                     to={"/admin/guild/stashes/$stashId"}
                     params={{ stashId: stash.id }}
                     key={stash.id}
-                    className="p-2 border-2 rounded-xl flex flex-row items-center gap-2 w-full justify-between text-left"
+                    className="flex w-full flex-row items-center justify-between gap-2 rounded-xl border-2 p-2 text-left"
                     style={{ borderColor: "#" + (stash.color || "000000") }}
                     activeProps={{
                       className: "bg-base-300",
@@ -122,9 +122,9 @@ function RouteComponent() {
                       src={`/assets/${currentEvent.game_version}/stashtabs/${stash.type.toLowerCase().replace("stash", "")}.png`}
                       alt={stash.type}
                     ></img>
-                    <h3 className="text-sm w-full">{stash.name}</h3>
+                    <h3 className="w-full text-sm">{stash.name}</h3>
                     <button
-                      className="btn btn-sm btn-primary whitespace-break-spaces"
+                      className="btn whitespace-break-spaces btn-sm btn-primary"
                       onClick={() => {
                         updateGuildStashTab(stash.id);
                       }}

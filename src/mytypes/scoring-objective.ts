@@ -10,13 +10,13 @@ import {
 import { ScoreObjective } from "./score";
 
 export function availableAggregationTypes(
-  objectiveType: ObjectiveType
+  objectiveType: ObjectiveType,
 ): AggregationType[] {
   if (objectiveType === ObjectiveType.ITEM) {
     return Object.values(AggregationType);
   }
   return Object.values(AggregationType).filter(
-    (type) => type !== AggregationType.EARLIEST_FRESH_ITEM
+    (type) => type !== AggregationType.EARLIEST_FRESH_ITEM,
   );
 }
 
@@ -413,13 +413,13 @@ export const anomalousBaseTypes: {
       acc[beast] = "Bestiary_Orb";
       return acc;
     },
-    {} as Record<string, string>
+    {} as Record<string, string>,
   ),
   poe2: {},
 };
 
 export function getItemName(
-  objective: ScoreObjective | Objective
+  objective: ScoreObjective | Objective,
 ): string | null {
   if (
     !objective ||
@@ -466,7 +466,7 @@ export function encode(string: string): string {
 
 export function getImageLocation(
   objective: ScoreObjective | Objective,
-  gameVersion: GameVersion = GameVersion.poe1
+  gameVersion: GameVersion = GameVersion.poe1,
 ): string | null {
   if (
     !objective ||

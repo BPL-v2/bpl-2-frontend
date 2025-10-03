@@ -35,9 +35,11 @@ export function renderStringWithUrl(string: string) {
       const url = new URL(urlString);
       string = string.replace(
         urlString,
-        `<a class="link link-info" href="${urlString}" target="_blank">${url.hostname.replace("www.", "")}</a>`
+        `<a class="link link-info" href="${urlString}" target="_blank">${url.hostname.replace("www.", "")}</a>`,
       );
     });
   }
-  return React.createElement("div", { dangerouslySetInnerHTML: { __html: string } });
+  return React.createElement("div", {
+    dangerouslySetInnerHTML: { __html: string },
+  });
 }

@@ -27,7 +27,7 @@ interface ProcessedLog extends Omit<GuildStashChangelog, "number"> {
 
 function filterMovementsAndProcessQuantities(
   logs: GuildStashChangelog[],
-  maxMinutesDiff = 10
+  maxMinutesDiff = 10,
 ): ProcessedLog[] {
   const start = performance.now();
 
@@ -123,7 +123,7 @@ function filterMovementsAndProcessQuantities(
 
   const end = performance.now();
   console.log(
-    `Filtered ${logs.length - processedLogs.length} movements and processed quantities in ${end - start}ms`
+    `Filtered ${logs.length - processedLogs.length} movements and processed quantities in ${end - start}ms`,
   );
 
   return processedLogs;
@@ -137,18 +137,18 @@ function RouteComponent() {
     currentEvent.id,
     guildId,
     200,
-    useQueryClient()
+    useQueryClient(),
   );
   useEffect(() => {
     mutation.mutate();
   }, [currentEvent.id, guildId]);
   const processedLogs = useMemo(
     () => filterMovementsAndProcessQuantities(logs),
-    [logs]
+    [logs],
   );
 
   const stashNames = Array.from(
-    new Set(processedLogs.map((log) => log.stash_name))
+    new Set(processedLogs.map((log) => log.stash_name)),
   ).filter((s) => s);
 
   const columns: ColumnDef<ProcessedLog>[] = [
@@ -223,7 +223,7 @@ function RouteComponent() {
   return (
     <div className="flex flex-col gap-4">
       <Table
-        className="w-full h-[80vh]"
+        className="h-[80vh] w-full"
         data={processedLogs.sort((a, b) => b.timestamp - a.timestamp)}
         columns={columns}
         rowClassName={(row) => {

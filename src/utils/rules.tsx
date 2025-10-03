@@ -62,14 +62,14 @@ function convertBonusPointsToText(points: number[]) {
       <span>
         The next {out[i].number} items will be awarded{" "}
         <b className="text-info">{out[i].points}</b> points.{" "}
-      </span>
+      </span>,
     );
   }
   out_text.push(
     <span>
       The remaining items will be awarded{" "}
       <b className="text-info">{out[out.length - 1].points}</b> points.
-    </span>
+    </span>,
   );
   return out_text;
 }

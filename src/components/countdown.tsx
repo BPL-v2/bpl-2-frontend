@@ -11,13 +11,13 @@ export function Countdown({ target, onEnd, size }: CountdownProps) {
   const diff = target.getTime() - new Date().getTime();
 
   const [days, setDays] = React.useState(
-    Math.floor(diff / (1000 * 60 * 60 * 24))
+    Math.floor(diff / (1000 * 60 * 60 * 24)),
   );
   const [hours, setHours] = React.useState(
-    Math.floor((diff / (1000 * 60 * 60)) % 24)
+    Math.floor((diff / (1000 * 60 * 60)) % 24),
   );
   const [minutes, setMinutes] = React.useState(
-    Math.floor((diff / 1000 / 60) % 60)
+    Math.floor((diff / 1000 / 60) % 60),
   );
   const [seconds, setSeconds] = React.useState(Math.floor((diff / 1000) % 60));
 
@@ -56,8 +56,8 @@ export function Countdown({ target, onEnd, size }: CountdownProps) {
   return (
     <div
       className={twMerge(
-        "grid grid-flow-col gap-5 text-center auto-cols-max",
-        textSize
+        "grid auto-cols-max grid-flow-col gap-5 text-center",
+        textSize,
       )}
     >
       {days > 0 && (

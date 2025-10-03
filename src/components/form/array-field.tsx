@@ -26,22 +26,22 @@ export function ArrayField({
         ({
           label: option as string,
           value: option as string,
-        }) as SelectOption<string>
+        }) as SelectOption<string>,
     );
   }, [options]);
   return (
     <label
-      className={twMerge("flex flex-col gap-1 items-start", className)}
+      className={twMerge("flex flex-col items-start gap-1", className)}
       hidden={props.hidden}
     >
       <span className="label">{label}</span>
       <select
         multiple
-        className={twMerge("select select-bordered w-full", className)}
+        className={twMerge("select-bordered select w-full", className)}
         value={field.state.value}
         onChange={(e) => {
           const selectedOptions = Array.from(e.target.selectedOptions).map(
-            (option) => option.value
+            (option) => option.value,
           );
           field.handleChange(selectedOptions);
         }}

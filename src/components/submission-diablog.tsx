@@ -38,7 +38,7 @@ export function SubmissionDialog({
         onSubmit={(e) => {
           e.preventDefault();
           const values = Object.fromEntries(
-            new FormData(e.target as HTMLFormElement)
+            new FormData(e.target as HTMLFormElement),
           );
 
           if (!objective) {
@@ -55,7 +55,7 @@ export function SubmissionDialog({
         }}
         className="form w-full"
       >
-        <fieldset className="fieldset bg-base-300 p-6 rounded-box">
+        <fieldset className="fieldset rounded-box bg-base-300 p-6">
           <DateTimePicker
             label="Time (in your timezone)"
             name="timestamp"

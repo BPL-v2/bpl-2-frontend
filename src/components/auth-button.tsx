@@ -24,7 +24,7 @@ const AuthButton = () => {
         <div
           tabIndex={0}
           className={
-            "btn btn-lg py-8 border-0 hover:text-primary-content hover:bg-primary"
+            "btn border-0 py-8 btn-lg hover:bg-primary hover:text-primary-content"
           }
         >
           <UserIcon className="h-6 w-6" />
@@ -34,7 +34,7 @@ const AuthButton = () => {
         </div>
         <ul
           tabIndex={0}
-          className="dropdown-content menu bg-base-300 border-2 border-base-100 z-1 text-lg rounded-field"
+          className="dropdown-content menu z-1 rounded-field border-2 border-base-100 bg-base-300 text-lg"
           onClick={() => {
             if (document.activeElement instanceof HTMLElement) {
               document.activeElement?.blur();
@@ -71,7 +71,7 @@ const AuthButton = () => {
   }
   return (
     <button
-      className="btn btn-lg py-8 border-0 hover:text-primary-content hover:bg-primary"
+      className="btn border-0 py-8 btn-lg hover:bg-primary hover:text-primary-content"
       onClick={redirectOauth("poe", state.location.href)}
       title="Login with Path of Exile and Discord"
     >

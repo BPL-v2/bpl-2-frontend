@@ -26,10 +26,10 @@ function SettingsPage() {
 
   return (
     <div>
-      <div className="card bg-base-200 mt-4">
+      <div className="card mt-4 bg-base-200">
         <div className="card-body">
-          <fieldset className="fieldset bg-base-200 border-base-300  p-4">
-            <legend className="fieldset-legend text-2xl font-bold text-left">
+          <fieldset className="fieldset border-base-300 bg-base-200 p-4">
+            <legend className="fieldset-legend text-left text-2xl font-bold">
               Settings
             </legend>
 
@@ -41,17 +41,17 @@ function SettingsPage() {
                 changeUserDisplayName(e.currentTarget.display_name.value);
               }}
             >
-              <div className="join gap-0 w-100">
+              <div className="join w-100 gap-0">
                 <input
                   type="text"
                   name="display_name"
                   defaultValue={user.display_name}
-                  className="input rounded-l-field focus:border-r-transparent focus:outline-transparent w-full"
+                  className="input w-full rounded-l-field focus:border-r-transparent focus:outline-transparent"
                   required
                 />
                 <button
                   type="submit"
-                  className="btn btn-primary btn-outline rounded-r-field"
+                  className="btn rounded-r-field btn-outline btn-primary"
                 >
                   Save
                 </button>
@@ -69,7 +69,7 @@ function SettingsPage() {
             </label>
             <input
               type="range"
-              className="range range-primary w-100"
+              className="range w-100 range-primary"
               min={0}
               max={20}
               value={preferences.limitTeams}
@@ -83,7 +83,7 @@ function SettingsPage() {
           </fieldset>
         </div>
       </div>
-      <div className="card bg-base-200 mt-4">
+      <div className="card mt-4 bg-base-200">
         <div className="card-body">
           <h2 className="card-title text-2xl font-bold">OAuth Accounts</h2>
           <div style={{ textAlign: "left" }}>
@@ -98,7 +98,7 @@ function SettingsPage() {
               event.
             </p>
           </div>
-          <div className="flex flex-wrap gap-4 mt-4 mb-4 justify-items-center">
+          <div className="mt-4 mb-4 flex flex-wrap justify-items-center gap-4">
             <OauthCard
               title="Path of Exile"
               provider="poe"

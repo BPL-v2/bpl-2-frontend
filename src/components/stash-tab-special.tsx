@@ -16,7 +16,7 @@ type Props = {
 
 function getMapping(
   item: DisplayItem,
-  layout: StashTabLayout
+  layout: StashTabLayout,
 ): StashTabLayoutItem | undefined {
   const key = layout[`${item.x},${item.y}`]
     ? `${item.x},${item.y}`
@@ -26,7 +26,7 @@ function getMapping(
 
 function getStyle(
   mapping: StashTabLayoutItem,
-  size: number
+  size: number,
 ): React.CSSProperties {
   const itemSize = size / 14;
   const canvasSize = size / 600; // Base size for the layout
@@ -46,7 +46,7 @@ export const StashTabSpecial: React.FC<Props> = ({
 }) => {
   const layout = getLayout(
     tab?.type,
-    tab?.metadata?.layout as StashTabLayoutWrapper
+    tab?.metadata?.layout as StashTabLayoutWrapper,
   );
 
   // Collect all unique sections from the layout, but only keep those with at least one non-hidden layout item
@@ -57,13 +57,13 @@ export const StashTabSpecial: React.FC<Props> = ({
         Object.values(layout)
           .filter((mapping) => !mapping.hidden)
           .map((mapping) => mapping.section)
-          .filter((section) => section !== undefined)
-      )
+          .filter((section) => section !== undefined),
+      ),
     );
   }, [layout]);
   // Section state
   const [selectedSection, setSelectedSection] = useState<string>(
-    sections.length > 0 ? sections[0] : ""
+    sections.length > 0 ? sections[0] : "",
   );
 
   useEffect(() => {
@@ -93,7 +93,7 @@ export const StashTabSpecial: React.FC<Props> = ({
           ([, mapping]) =>
             !mapping.hidden &&
             (mapping.section === selectedSection ||
-              mapping.section === undefined)
+              mapping.section === undefined),
         )
       : Object.entries(layout).filter(([, mapping]) => !mapping.hidden);
 
@@ -116,7 +116,7 @@ export const StashTabSpecial: React.FC<Props> = ({
   return (
     <div className="relative">
       {sections.length > 0 && (
-        <div className="join mb-4 absolute top-2 left-2 z-10">
+        <div className="absolute top-2 left-2 z-10 mb-4 join">
           {sections.map((section) => (
             <button
               key={section}
@@ -132,7 +132,7 @@ export const StashTabSpecial: React.FC<Props> = ({
         </div>
       )}
       <div
-        className="relative border border-base-300 rounded-lg bg-base-200"
+        className="relative rounded-lg border border-base-300 bg-base-200"
         style={{ width: size, height: size }}
       >
         {filteredLayout.map(([key, mapping]: [string, StashTabLayoutItem]) => {
@@ -140,7 +140,7 @@ export const StashTabSpecial: React.FC<Props> = ({
             <div
               id={`empty-${key}`}
               key={`empty-${key}`}
-              className="absolute bg-base-300 rounded border border-base-200 select-none"
+              className="absolute rounded border border-base-200 bg-base-300 select-none"
               style={{
                 ...getStyle(mapping, size),
                 pointerEvents: "none",
@@ -157,23 +157,23 @@ export const StashTabSpecial: React.FC<Props> = ({
           return (
             <div
               key={idx}
-              className="absolute cursor-pointer rounded border border-base-300 bg-base-100 p-1 flex items-center justify-center  select-none"
+              className="absolute flex cursor-pointer items-center justify-center rounded border border-base-300 bg-base-100 p-1 select-none"
               style={getStyle(mapping, size)}
               onClick={() => onItemClick?.(item)}
             >
               <div
-                className="tooltip tooltip-white tooltip-bottom relative cursor-pointer"
+                className="tooltip-white tooltip relative tooltip-bottom cursor-pointer"
                 data-tip={`${item.name} ${item.typeLine}`}
               >
                 <img
                   src={item.icon!}
                   alt={item.name}
                   tabIndex={0}
-                  className="max-w-full max-h-full object-contain"
+                  className="max-h-full max-w-full object-contain"
                 />{" "}
                 <div
                   className={
-                    "absolute left-[2px] top-[2px] select-none text-xs text-white"
+                    "absolute top-[2px] left-[2px] text-xs text-white select-none"
                   }
                 >
                   {(item.stackSize || 0) > 0 ? item.stackSize : null}

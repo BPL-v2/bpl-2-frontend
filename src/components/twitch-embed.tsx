@@ -53,7 +53,7 @@ const TwitchEmbed: React.FC<TwitchEmbedProps> = ({
               height: dimensions.height,
               channel,
               parent,
-            }
+            },
           );
         } else {
           // Update the channel if the instance already exists

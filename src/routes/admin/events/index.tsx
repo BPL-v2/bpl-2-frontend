@@ -76,11 +76,11 @@ function EventPage() {
       header: "Dates",
       size: 340,
       cell: (info) => (
-        <div className="grid grid-cols-2 gap-0 w-full text-xs">
+        <div className="grid w-full grid-cols-2 gap-0 text-xs">
           <div className="text-left">Application Start: </div>
           <div className="text-right font-mono">
             {new Date(
-              info.row.original.application_start_time
+              info.row.original.application_start_time,
             ).toLocaleString()}
           </div>
           <div className="text-left">Application End: </div>
@@ -151,9 +151,9 @@ function EventPage() {
       header: "Actions",
       size: 450,
       cell: (info) => (
-        <div className="flex flex-row gap-2 flex-wrap">
+        <div className="flex flex-row flex-wrap gap-2">
           <button
-            className="btn btn-warning btn-sm"
+            className="btn btn-sm btn-warning"
             onClick={() => {
               setFormValues(form, info.row.original);
               setIsOpen(true);
@@ -238,7 +238,7 @@ function EventPage() {
         className="max-w-xl"
       >
         <form
-          className="fieldset bg-base-300 p-6 rounded-box"
+          className="fieldset rounded-box bg-base-300 p-6"
           onSubmit={(e) => {
             e.preventDefault();
             form.handleSubmit();
@@ -312,7 +312,7 @@ function EventPage() {
               children={(field) => <field.BooleanField label="Is Locked" />}
             />
           </div>
-          <div className="flex flex-row justify-end gap-4 mt-4">
+          <div className="mt-4 flex flex-row justify-end gap-4">
             <button
               type="button"
               className="btn btn-error"
@@ -332,7 +332,7 @@ function EventPage() {
         data={events?.sort((a, b) => b.id - a.id) ?? []}
       />
       <button
-        className="btn btn-success self-center"
+        className="btn self-center btn-success"
         onClick={() => setIsOpen(true)}
       >
         Create new Event

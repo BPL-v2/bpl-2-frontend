@@ -29,7 +29,7 @@ function RouteComponent() {
   const { currentEvent, scores, preferences } = useContext(GlobalStateContext);
   const plotRef = useRef<HTMLDivElement>(null);
   const [timeFormat, setTimeFormat] = useState<"relative" | "absolute">(
-    "absolute"
+    "absolute",
   );
   const [deviationFromAvg, setDeviationFromAvg] = useState(false);
   const fontColor = preferences.theme === "dark" ? "white" : "black";
@@ -40,7 +40,7 @@ function RouteComponent() {
       acc[team.id] = team;
       return acc;
     },
-    {} as Record<number, Team | undefined>
+    {} as Record<number, Team | undefined>,
   );
   const uniqueCategories =
     scores?.children
@@ -50,7 +50,7 @@ function RouteComponent() {
           acc[curr.id] = curr;
           return acc;
         },
-        {} as Record<number, ScoreObjective>
+        {} as Record<number, ScoreObjective>,
       ) || {};
 
   const childIdToUniqueCategory = Object.values(uniqueCategories).reduce(
@@ -63,7 +63,7 @@ function RouteComponent() {
       });
       return acc;
     },
-    {} as Record<number, ScoreObjective>
+    {} as Record<number, ScoreObjective>,
   );
   const flatScores = flatMap(scores);
 
@@ -74,7 +74,7 @@ function RouteComponent() {
       }
       return acc;
     },
-    {} as Record<number, ScoreObjective>
+    {} as Record<number, ScoreObjective>,
   );
 
   const scoreRows: ScoreRow[] = flatScores
@@ -83,7 +83,7 @@ function RouteComponent() {
         objective: s,
         team: teamMap[parseInt(teamId)],
         ...score,
-      }))
+      })),
     )
     .filter((s) => s.points > 0);
 
@@ -93,7 +93,7 @@ function RouteComponent() {
       acc[team.id] = 0;
       return acc;
     },
-    {} as Record<number, number>
+    {} as Record<number, number>,
   );
   currentVal[0] = 0;
 
@@ -101,7 +101,7 @@ function RouteComponent() {
     .filter(
       (s) =>
         s.objective.scoring_preset?.scoring_method !=
-        ScoringMethod.POINTS_FROM_VALUE
+        ScoringMethod.POINTS_FROM_VALUE,
     )
     .sort((a, b) => a.timestamp - b.timestamp)) {
     if (!scoreRow.team) continue;
@@ -109,7 +109,7 @@ function RouteComponent() {
     currentVal[0] =
       currentEvent.teams.reduce(
         (acc, team) => acc + (currentVal[team.id] || 0),
-        0
+        0,
       ) / currentEvent.teams.length;
     if (!timestamp2Scores[scoreRow.timestamp]) {
       timestamp2Scores[scoreRow.timestamp] = { ...currentVal };
@@ -123,7 +123,7 @@ function RouteComponent() {
       acc[team.id] = [];
       return acc;
     },
-    {} as Record<number, number[]>
+    {} as Record<number, number[]>,
   );
   teamData[0] = []; // For the average score
   const eventStart = new Date(currentEvent.event_start_time).getTime() / 1000;
@@ -206,7 +206,7 @@ function RouteComponent() {
       cell: ({ row }) => {
         if (row.original.objective.objective_type == ObjectiveType.ITEM) {
           return (
-            <div className="flex justify-between w-full">
+            <div className="flex w-full justify-between">
               {childIdToUniqueCategory[row.original.objective.id] && (
                 <CategoryIcon
                   name={childIdToUniqueCategory[row.original.objective.id].name}
@@ -214,7 +214,7 @@ function RouteComponent() {
                   width={48}
                 />
               )}
-              <div className="flex items-center justify-center w-12">
+              <div className="flex w-12 items-center justify-center">
                 <ObjectiveIcon
                   objective={row.original.objective}
                   gameVersion={currentEvent.game_version}
@@ -226,7 +226,7 @@ function RouteComponent() {
         }
         if (iconMap[row.original.objective.name]) {
           return (
-            <div className="flex justify-left w-full">
+            <div className="justify-left flex w-full">
               <CategoryIcon
                 name={row.original.objective.name}
                 height={48}
@@ -243,7 +243,7 @@ function RouteComponent() {
       accessorKey: "team.name",
       header: "",
       cell: ({ row }) => (
-        <TeamName className={"font-bold text-lg"} team={row.original.team} />
+        <TeamName className={"text-lg font-bold"} team={row.original.team} />
       ),
       filterFn: "includesString",
       meta: {
@@ -259,14 +259,14 @@ function RouteComponent() {
       header: "",
       size: 300,
       cell: ({ row }) => (
-        <div className="flex flex-col gap-1 py-3 min-h-[3rem] max-w-[280px] overflow-hidden">
+        <div className="flex min-h-[3rem] max-w-[280px] flex-col gap-1 overflow-hidden py-3">
           <span className="truncate whitespace-nowrap">
             {row.original.objective.name}
           </span>
           {row.original.objective.objective_type == ObjectiveType.ITEM &&
             row.original.objective.extra && (
               <span
-                className="text-info truncate whitespace-nowrap block cursor-help"
+                className="block cursor-help truncate whitespace-nowrap text-info"
                 title={row.original.objective.extra}
               >
                 [{row.original.objective.extra}]
@@ -317,7 +317,7 @@ function RouteComponent() {
             <span>
               {getDeltaTimeBetween(
                 row.original.timestamp,
-                currentEvent.event_start_time
+                currentEvent.event_start_time,
               )}
             </span>
           );
@@ -334,7 +334,7 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col gap-4">
-      <fieldset className="fieldset bg-base-100 border-base-300 rounded-box border p-4 flex flex-row gap-10 w-80">
+      <fieldset className="fieldset flex w-80 flex-row gap-10 rounded-box border border-base-300 bg-base-100 p-4">
         <legend className="fieldset-legend"></legend>
         <label className="label w-30">
           <input
@@ -372,8 +372,8 @@ function RouteComponent() {
           .sort((a, b) => b.timestamp - a.timestamp)}
         className="h-[70vh]"
       ></Table>
-      <div className="h-[1000px] bg-base-300 p-4 rounded-box mt-4">
-        <fieldset className="fieldset bg-base-200 absolute p-2 px-4 rounded-box ml-8">
+      <div className="mt-4 h-[1000px] rounded-box bg-base-300 p-4">
+        <fieldset className="absolute ml-8 fieldset rounded-box bg-base-200 p-2 px-4">
           <label className="label text-highlight-content">
             <input
               type="checkbox"

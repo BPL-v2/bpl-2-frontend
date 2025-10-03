@@ -60,7 +60,7 @@ export function hasPermission(permissions: Permission[]): boolean {
 
 export function renderConditionally(
   component: () => JSX.Element,
-  permissions: Permission[]
+  permissions: Permission[],
 ): () => JSX.Element | undefined {
   if (hasPermission(permissions)) {
     return component;

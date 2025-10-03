@@ -23,10 +23,10 @@ function UniqueTab(): JSX.Element {
   const tableRef = useRef<HTMLDivElement>(null);
   const { rules } = Route.useSearch();
   const uniqueCategory = scores?.children.find(
-    (category) => category.name === "Uniques"
+    (category) => category.name === "Uniques",
   );
   const focusUniqueCategory = scores?.children.find(
-    (category) => category.name === "Focus Uniques"
+    (category) => category.name === "Focus Uniques",
   );
   const handleCategoryClick = (objective: ScoreObjective) => {
     if (objective.id === selectedCategory?.id) {
@@ -90,8 +90,8 @@ function UniqueTab(): JSX.Element {
   return (
     <>
       {rules ? (
-        <div className="w-full bg-base-200 my-4 p-8 rounded-box">
-          <article className="prose text-left max-w-4xl">
+        <div className="my-4 w-full rounded-box bg-base-200 p-8">
+          <article className="prose max-w-4xl text-left">
             <UniqueTabRules />
           </article>
         </div>
@@ -101,14 +101,14 @@ function UniqueTab(): JSX.Element {
         selectedTeam={selectedTeam}
         setSelectedTeam={setSelectedTeam}
       />
-      <div className="flex flex-col gap-4 mt-4">
+      <div className="mt-4 flex flex-col gap-4">
         <div className="flex justify-center">
-          <fieldset className="fieldset w-xl bg-base-300 p-2 md:p-4 rounded-box flex gap-12 flex-row justify-center">
+          <fieldset className="fieldset flex w-xl flex-row justify-center gap-12 rounded-box bg-base-300 p-2 md:p-4">
             <div>
               <legend className="fieldset-legend">Category</legend>
               <input
                 type="search"
-                className="input input-sm "
+                className="input input-sm"
                 placeholder=""
                 onInput={(e) => setCategoryFilter(e.currentTarget.value)}
               />
@@ -154,7 +154,7 @@ function UniqueTab(): JSX.Element {
           </fieldset>
         </div>
         {focusUniqueCategory && (
-          <div className="flex flex-col gap-4 bg-base-300/50 p-8 rounded-box pt-4">
+          <div className="flex flex-col gap-4 rounded-box bg-base-300/50 p-8 pt-4">
             <h1 className="text-3xl font-extrabold">Focus Unique Sets</h1>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
               {focusUniqueCategory?.children
@@ -175,9 +175,9 @@ function UniqueTab(): JSX.Element {
           </div>
         )}
 
-        <div className="flex flex-col gap-4 bg-base-300/50 p-8 rounded-box pt-4">
+        <div className="flex flex-col gap-4 rounded-box bg-base-300/50 p-8 pt-4">
           <h1 className="text-3xl font-extrabold">Unique Sets</h1>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 m-2">
+          <div className="m-2 grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
             {shownCategories
               .sort((a, b) => a.name.localeCompare(b.name))
               .map((category) => {

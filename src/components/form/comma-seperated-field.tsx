@@ -15,7 +15,7 @@ export function CommaSeperatedField<T>({
 } & React.InputHTMLAttributes<HTMLInputElement>) {
   const field = useFieldContext<T[]>();
   const [stringValue, setStringValue] = useState<string>(
-    field.state.value?.map(toString).join(",") || ""
+    field.state.value?.map(toString).join(",") || "",
   );
   const [isInitializing, setIsInitializing] = useState(true);
   useEffect(() => {
@@ -27,7 +27,7 @@ export function CommaSeperatedField<T>({
 
   return (
     <label
-      className="flex flex-col gap-1 items-start w-full"
+      className="flex w-full flex-col items-start gap-1"
       hidden={props.hidden}
     >
       <span className="label">
@@ -42,7 +42,7 @@ export function CommaSeperatedField<T>({
             e.target.value
               .split(",")
               .filter((v) => v.trim())
-              .map(fromString)
+              .map(fromString),
           );
         }}
         className={twMerge("input w-full", className)}

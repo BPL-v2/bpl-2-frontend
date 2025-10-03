@@ -32,7 +32,7 @@ export function RaceTabRules() {
   const { scores } = useContext(GlobalStateContext);
 
   const raceCategory = scores?.children.find(
-    (category) => category.name === "Races"
+    (category) => category.name === "Races",
   );
   // const scoringPresets = Object.entries(
   //   raceCategory?.children.reduce((acc, objective) => {

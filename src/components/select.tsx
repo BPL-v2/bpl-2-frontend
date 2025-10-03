@@ -36,7 +36,7 @@ export default function Select<T>({
 }: SelectProps<T>) {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<SelectOption<T> | undefined>(
-    value ? { label: value.toString(), value: value as T } : undefined
+    value ? { label: value.toString(), value: value as T } : undefined,
   );
   const cleanOptions = useMemo(() => {
     if (!options || options.length === 0) {
@@ -50,7 +50,7 @@ export default function Select<T>({
         ({
           label: option as string,
           value: option as T,
-        }) as SelectOption<T>
+        }) as SelectOption<T>,
     );
   }, [options]);
 
@@ -102,12 +102,12 @@ export default function Select<T>({
         </ComboboxButton>
         <ComboboxOptions
           anchor="bottom"
-          className="w-(--input-width) rounded-box bg-base-100 border-2 border-gray-200 p-1 z-1000"
+          className="z-1000 w-(--input-width) rounded-box border-2 border-gray-200 bg-base-100 p-1"
         >
           {selected && !required && (
             <ComboboxOption
               value={null}
-              className="group cursor-pointer rounded-lg px-3 py-2 select-none text-error data-focus:bg-error data-focus:text-error-content"
+              className="group cursor-pointer rounded-lg px-3 py-2 text-error select-none data-focus:bg-error data-focus:text-error-content"
             >
               Clear Selection
             </ComboboxOption>
@@ -116,7 +116,7 @@ export default function Select<T>({
             <ComboboxOption
               key={name + "-option-" + idx}
               value={option.value}
-              className="group cursor-pointer rounded-lg px-3 py-2 select-none data-selected:bg-primary data-selected:text-primary-content hover:bg-base-300"
+              className="group cursor-pointer rounded-lg px-3 py-2 select-none hover:bg-base-300 data-selected:bg-primary data-selected:text-primary-content"
             >
               {option.label}
             </ComboboxOption>
