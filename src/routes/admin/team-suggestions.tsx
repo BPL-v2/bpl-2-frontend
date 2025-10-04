@@ -166,10 +166,6 @@ function TeamSuggestionsPage() {
                       )?.extra
                     }
                     key={"cat-" + row.original.id}
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      console.log(e);
-                    }}
                   />
                   <button type="submit" className="btn h-full btn-primary">
                     Save
@@ -265,7 +261,6 @@ function TeamSuggestionsPage() {
           teamGoals.find((ts) => ts.objective_id === category.id),
         enableSorting: false,
         cell: ({ row, getValue }) => {
-          console.log(getValue());
           const suggestion = getValue() as TeamSuggestion | undefined;
           return (
             <>
@@ -291,10 +286,6 @@ function TeamSuggestionsPage() {
                       )?.extra
                     }
                     key={"cat-" + row.original.id}
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      console.log(e);
-                    }}
                   />
                   <button type="submit" className="btn h-full btn-primary">
                     Save

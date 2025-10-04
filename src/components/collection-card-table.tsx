@@ -73,10 +73,6 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
             const isLastRow = idx === teamIds.length - 1;
             const isPlayerTeam = teamId === eventStatus?.team_id;
             const gotPoints = score.points > 0;
-
-            if (gotPoints) {
-              console.log("Team", teamId, "got points:", score.points);
-            }
             return (
               <tr
                 className={isPlayerTeam ? "content-highlight bg-highlight" : ""}

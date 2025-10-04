@@ -136,6 +136,22 @@
   @apply border-base-content/20;
 }
 
+@utility bg-card {
+  @apply bg-gradient-to-t;
+  @apply from-base-200;
+  @apply to-base-300;
+  @apply border-highlight;
+  @apply shadow-xl;
+}
+
+@utility bg-card-highlight {
+  @apply bg-gradient-to-t;
+  @apply from-base-300;
+  @apply to-highlight;
+  @apply border-highlight;
+  @apply shadow-xl;
+}
+
 @utility input {
   @apply border-2 focus:outline-none;
 }

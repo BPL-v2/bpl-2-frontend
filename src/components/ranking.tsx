@@ -37,7 +37,7 @@ function getCardColor(score: Score) {
     case 3:
       return "text-black/70 bg-bronze-metallic";
     default:
-      return "bg-base-300";
+      return "bg-card";
   }
 }
 

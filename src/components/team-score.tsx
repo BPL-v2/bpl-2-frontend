@@ -55,8 +55,8 @@ const TeamScoreDisplay = ({
                 className={twMerge(
                   "flex rounded-box bborder p-0 outline-2",
                   team.id === eventStatus?.team_id
-                    ? "content-highlight bg-highlight"
-                    : "bg-base-300",
+                    ? "content-highlight bg-card-highlight"
+                    : "bg-card",
                   team.id === selectedTeam
                     ? "border-transparent outline-primary"
                     : "outline-transparent",

@@ -46,18 +46,18 @@ export const UniqueCategoryCard = ({
   return (
     <div
       className={twMerge(
-        "card cursor-pointer bborder",
+        "card cursor-pointer bborder border-highlight bg-gradient-to-t shadow-xl hover:text-highlight-content",
         selected
-          ? "bg-highlight text-highlight-content ring-3 ring-primary"
-          : "bg-base-300 transition duration-200 hover:bg-highlight hover:text-highlight-content",
+          ? "from-base-200 to-highlight text-highlight-content ring-3 ring-primary"
+          : "from-base-100 to-base-300",
       )}
       key={`unique-card-${objective.id}`}
       onClick={onClick}
     >
       <div
         className={twMerge(
-          "m-0 card-title flex h-full min-h-4 items-center justify-center rounded-t-box bborder-b p-2 sm:justify-between",
-          selected ? "bg-base-300" : "bg-base-200",
+          "m-0 card-title flex h-full min-h-4 items-center justify-center rounded-t-box bborder-b bg-base-300/50 p-2 sm:justify-between",
+          selected ? "border-0 bg-highlight" : "",
         )}
       >
         <div className="flex-shrink-0">
