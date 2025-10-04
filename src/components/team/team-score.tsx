@@ -75,7 +75,7 @@ const TeamScoreDisplay = ({
                   <TeamLogo
                     team={team}
                     eventId={currentEvent.id}
-                    className="stat-figure row-span-2 hidden h-24 w-24 md:flex"
+                    className="stat-figure row-span-2 hidden size-24 md:flex"
                   />
                   <div className="stat-value text-xl whitespace-nowrap md:text-2xl">
                     {teamScores[team.id]}

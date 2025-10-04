@@ -1,15 +1,14 @@
 import { GameVersion, LadderEntry, Score, Team } from "@client/api";
 import { preloadLadderData, useGetLadder, useGetUsers } from "@client/query";
-import { AscendancyName } from "@components/ascendancy-name";
-import { AscendancyPortrait } from "@components/ascendancy-portrait";
-import { CollectionCardTable } from "@components/collection-card-table";
-import { ExperienceBar } from "@components/experience-bar";
-import { LadderPortrait } from "@components/ladder-portrait";
+import { AscendancyName } from "@components/character/ascendancy-name";
+import { AscendancyPortrait } from "@components/character/ascendancy-portrait";
+import { CollectionCardTable } from "@components/cards/collection-card-table";
+import { ExperienceBar } from "@components/character/experience-bar";
 import { ObjectiveIcon } from "@components/objective-icon";
 import { Ranking } from "@components/ranking";
-import Table from "@components/table";
-import { TeamName } from "@components/team-name";
-import TeamScoreDisplay from "@components/team-score";
+import Table from "@components/table/table";
+import { TeamName } from "@components/team/team-name";
+import TeamScoreDisplay from "@components/team/team-score";
 import { ascendancies } from "@mytypes/ascendancy";
 import { ScoreObjective, TeamScore } from "@mytypes/score";
 import { DelveTabRules } from "@rules/delve";
@@ -17,6 +16,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ColumnDef, sortingFns } from "@tanstack/react-table";
 import { GlobalStateContext } from "@utils/context-provider";
 import { JSX, useContext, useMemo } from "react";
+import { LadderPortrait } from "@components/character/ladder-portrait";
 
 export const Route = createFileRoute("/scores/delve")({
   component: DelveTab,
@@ -113,7 +113,7 @@ function DelveTab(): JSX.Element {
             <div className="flex items-center gap-2">
               <AscendancyPortrait
                 character_class={info.row.original.character_class}
-                className="h-8 w-8 rounded-full object-cover"
+                className="size-8 rounded-full object-cover"
               />
               <AscendancyName
                 character_class={info.row.original.character_class}
@@ -245,7 +245,7 @@ function DelveTab(): JSX.Element {
                       <ObjectiveIcon
                         objective={objective}
                         gameVersion={currentEvent.game_version}
-                        className="h-8 w-8"
+                        className="size-8"
                       />
 
                       <h3 className="mx-4 flex-grow text-center text-xl font-semibold">

@@ -1,4 +1,4 @@
-import { OauthCard } from "@components/oauth-card";
+import { OauthCard } from "@components/cards/oauth-card";
 import { TwitchFilled } from "@icons/twitch";
 import { DiscordFilled } from "@icons/discord";
 import { ThemePicker } from "@components/theme-picker";

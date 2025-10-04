@@ -2,11 +2,11 @@ import { createFileRoute, Outlet } from "@tanstack/react-router";
 import "uplot/dist/uPlot.min.css";
 
 import { useGetUserById, useGetUserCharacters } from "@client/query";
-import { ProfileCarousel } from "@components/profile-carousel";
 import { useParams } from "@tanstack/react-router";
 import { usePageSEO } from "@utils/use-seo";
 import { useEffect } from "react";
 import { router } from "../../../main";
+import { ProfileCarousel } from "@components/carousel/profile-carousel";
 
 export const Route = createFileRoute("/profile/$userId")({
   component: ProfilePage,

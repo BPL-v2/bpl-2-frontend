@@ -1,6 +1,6 @@
 import { Action, GuildStashChangelog } from "@client/api";
 import { preloadGuildLogs, useGetGuildLogs } from "@client/query";
-import Table from "@components/table";
+import Table from "@components/table/table";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";

@@ -4,8 +4,8 @@ import {
   useDeleteSignup,
   useGetSignups,
 } from "@client/query";
-import { DeleteButton } from "@components/delete-button";
-import Table from "@components/table";
+import { DeleteButton } from "@components/form/delete-button";
+import Table from "@components/table/table";
 import {
   ArrowDownTrayIcon,
   CheckCircleIcon,
@@ -393,7 +393,7 @@ function UserSortPage() {
           className="btn btn-primary"
           onClick={() => exportToCSV(signups)}
         >
-          <ArrowDownTrayIcon className="mr-2 h-4 w-4" />
+          <ArrowDownTrayIcon className="mr-2 size-4" />
           CSV
         </button>
 

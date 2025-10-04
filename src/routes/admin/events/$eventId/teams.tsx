@@ -2,7 +2,7 @@ import { GameVersion, Permission, Team, TeamCreate } from "@client/api";
 import { useCreateTeam, useDeleteTeam, useGetEvents } from "@client/query";
 import { Dialog } from "@components/dialog";
 import { useAppForm } from "@components/form/context";
-import Table from "@components/table";
+import Table from "@components/table/table";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useParams } from "@tanstack/react-router";
@@ -69,7 +69,7 @@ function TeamPage() {
       accessorKey: "color",
       cell: (info) => (
         <div
-          className="h-4 w-4 rounded-full"
+          className="size-4 rounded-full"
           style={{ backgroundColor: info.row.original.color }}
         ></div>
       ),
@@ -88,7 +88,7 @@ function TeamPage() {
             className="btn btn-sm btn-error"
             onClick={() => deleteTeam(info.row.original.id)}
           >
-            <TrashIcon className="h-4 w-4" />
+            <TrashIcon className="size-4" />
           </button>
           <button
             className="btn btn-sm btn-warning"
@@ -97,7 +97,7 @@ function TeamPage() {
               setIsDialogOpen(true);
             }}
           >
-            <PencilSquareIcon className="h-4 w-4" />
+            <PencilSquareIcon className="size-4" />
           </button>
         </div>
       ),

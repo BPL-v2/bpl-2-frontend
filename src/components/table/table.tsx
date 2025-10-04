@@ -17,7 +17,7 @@ import {
 import { useVirtualizer } from "@tanstack/react-virtual";
 import React from "react";
 import { twMerge } from "tailwind-merge";
-import Select, { SelectOption } from "./select";
+import Select, { SelectOption } from "../form/select";
 
 function Table<T>({
   data,
@@ -234,7 +234,7 @@ function Filter<T>({ column }: { column: Column<T, unknown> }) {
   if (filterVariant === "boolean") {
     return (
       <div
-        className="ml-2 h-8 w-8 cursor-pointer rounded-full border-1 border-primary bg-base-300 select-none"
+        className="ml-2 size-8 cursor-pointer rounded-full border-1 border-primary bg-base-300 select-none"
         onClick={(e) => {
           const currentValue = column.getFilterValue();
           if (currentValue === undefined) {

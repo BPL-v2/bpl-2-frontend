@@ -1,8 +1,8 @@
+import { CategoryIcon } from "@icons/category-icons";
 import { Medal } from "@icons/medal";
 import { ScoreObjective } from "@mytypes/score";
 import { getPotentialPoints, getTotalPoints } from "@utils/utils";
 import { twMerge } from "tailwind-merge";
-import { CategoryIcon } from "../icons/category-icons";
 
 type UniqueCategoryCardProps = {
   objective: ScoreObjective;

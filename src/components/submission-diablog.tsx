@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useContext, useRef } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { AggregationType, SubmissionCreate } from "@client/api";
-import { DateTimePicker } from "./datetime-picker";
+import { DateTimePicker } from "./form/datetime-picker";
 
 type SubmissionDialogProps = {
   objective?: ScoreObjective;

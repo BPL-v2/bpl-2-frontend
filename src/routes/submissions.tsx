@@ -12,8 +12,8 @@ import {
   useGetUsers,
   useReviewSubmission,
 } from "@client/query";
-import Table from "@components/table";
-import { TeamName } from "@components/team-name";
+import Table from "@components/table/table";
+import { TeamName } from "@components/team/team-name";
 import {
   CheckCircleIcon,
   EyeSlashIcon,
@@ -157,7 +157,7 @@ function SubmissionPage() {
                   className="tooltip cursor-help text-warning"
                   data-tip="Pending"
                 >
-                  <EyeSlashIcon className="h-6 w-6 text-warning" />
+                  <EyeSlashIcon className="size-6 text-warning" />
                 </div>
               );
             case "APPROVED":
@@ -166,7 +166,7 @@ function SubmissionPage() {
                   className="tooltip cursor-help text-success"
                   data-tip="Approved"
                 >
-                  <CheckCircleIcon className="h-6 w-6 text-success" />
+                  <CheckCircleIcon className="size-6 text-success" />
                 </div>
               );
             case "REJECTED":
@@ -175,7 +175,7 @@ function SubmissionPage() {
                   className="tooltip cursor-help text-error"
                   data-tip="Rejected"
                 >
-                  <XCircleIcon className="h-6 w-6 text-error" />
+                  <XCircleIcon className="size-6 text-error" />
                 </div>
               );
             default:

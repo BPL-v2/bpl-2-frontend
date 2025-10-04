@@ -4,7 +4,7 @@ import { ScoreObjective } from "@mytypes/score";
 import { GlobalStateContext } from "@utils/context-provider";
 import { useContext, useRef } from "react";
 import { twMerge } from "tailwind-merge";
-import { ProgressBar } from "./progress-bar";
+import { ProgressBar } from "../progress-bar";
 
 type CollectionCardTableProps = {
   objective: ScoreObjective;

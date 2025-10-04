@@ -30,7 +30,7 @@ import {
   useGetValidConditionMappings,
 } from "@client/query";
 import { setFormValues, useAppForm } from "@components/form/context";
-import Table from "@components/table";
+import Table from "@components/table/table";
 import {
   DocumentDuplicateIcon,
   FolderOpenIcon,
@@ -243,7 +243,7 @@ export function ScoringCategoryPage(): JSX.Element {
                     <div className="badge badge-sm pr-[1px] whitespace-nowrap badge-primary select-none">
                       {condition.field}
                       <XCircleIcon
-                        className="h-4 w-4 cursor-pointer"
+                        className="size-4 cursor-pointer"
                         onClick={() => deleteObjectiveCondition(condition.id)}
                       />
                     </div>
@@ -286,7 +286,7 @@ export function ScoringCategoryPage(): JSX.Element {
                     setIsObjectiveModalOpen(true);
                   }}
                 >
-                  <PencilSquareIcon className="h-4 w-4" />
+                  <PencilSquareIcon className="size-4" />
                 </button>
               </div>
               <div
@@ -297,7 +297,7 @@ export function ScoringCategoryPage(): JSX.Element {
                   className="btn btn-sm btn-error"
                   onClick={() => deleteObjective(row.original.id)}
                 >
-                  <TrashIcon className="h-4 w-4" />
+                  <TrashIcon className="size-4" />
                 </button>
               </div>
               <div
@@ -322,7 +322,7 @@ export function ScoringCategoryPage(): JSX.Element {
                     createObjective(duplicate);
                   }}
                 >
-                  <DocumentDuplicateIcon className="h-4 w-4" />
+                  <DocumentDuplicateIcon className="size-4" />
                 </button>
               </div>
               <div
@@ -339,7 +339,7 @@ export function ScoringCategoryPage(): JSX.Element {
                     setIsConditionModalOpen(true);
                   }}
                 >
-                  <PlusIcon className="h-4 w-4" />
+                  <PlusIcon className="size-4" />
                 </button>
               </div>
               <div
@@ -351,7 +351,7 @@ export function ScoringCategoryPage(): JSX.Element {
                   params={{ eventId: eventId!, categoryId: row.original.id }}
                   className="btn btn-sm btn-secondary"
                 >
-                  <FolderOpenIcon className="h-4 w-4" />
+                  <FolderOpenIcon className="size-4" />
                 </Link>
               </div>
             </div>

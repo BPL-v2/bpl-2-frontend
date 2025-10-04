@@ -1,7 +1,6 @@
 import { GameVersion, Objective } from "@client/api";
-import { CollectionCardTable } from "@components/collection-card-table";
-import { ObjectiveIcon } from "@components/objective-icon";
-import TeamScoreDisplay from "@components/team-score";
+import { CollectionCard } from "@components/cards/collection-card";
+import TeamScoreDisplay from "@components/team/team-score";
 import { getImageLocation } from "@mytypes/scoring-objective";
 import { CollectionTabRules } from "@rules/collections";
 import { createFileRoute } from "@tanstack/react-router";
@@ -45,36 +44,9 @@ function CollectionTab(): JSX.Element {
       <div className="flex flex-col gap-4">
         <TeamScoreDisplay objective={category}></TeamScoreDisplay>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {category.children.map((objective) => {
-            return (
-              <div className="card bborder bg-base-300" key={objective.id}>
-                <div className="m-0 card-title flex h-full min-h-22 items-center rounded-t-box bborder-b bg-base-200 px-4 py-2">
-                  <ObjectiveIcon
-                    objective={objective}
-                    gameVersion={currentEvent.game_version}
-                  />
-                  <div
-                    className={
-                      objective.extra ? "tooltip tooltip-primary" : undefined
-                    }
-                  >
-                    <div className="tooltip-content max-w-75 text-xl">
-                      {objective.extra}
-                    </div>
-                    <h3 className="mx-4 flex-grow text-center text-xl font-medium">
-                      {`${objective.required_number} ${objective.name}`}
-                      {objective.extra ? (
-                        <i className="text-red-600">*</i>
-                      ) : null}
-                    </h3>
-                  </div>
-                </div>
-                <div className="mb-0 rounded-b-box bg-base-300">
-                  <CollectionCardTable objective={objective} />
-                </div>
-              </div>
-            );
-          })}
+          {category.children.map((objective) => (
+            <CollectionCard key={objective.id} objective={objective} />
+          ))}
         </div>
       </div>
     </>

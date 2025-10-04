@@ -17,7 +17,7 @@ export function ObjectiveIcon({
   const img_location = getImageLocation(objective, gameVersion);
   const itemName = getItemName(objective);
   if (!img_location) {
-    return <div className={twMerge("h-14 w-14", className)}> </div>;
+    return <div className={twMerge("size-14", className)}> </div>;
   }
   let wikilink: string | undefined = undefined;
   if (itemName) {
@@ -37,7 +37,7 @@ export function ObjectiveIcon({
   return (
     <a
       className={twMerge(
-        "flex h-14 w-14 cursor-pointer items-center justify-center select-none",
+        "flex size-14 cursor-pointer items-center justify-center select-none",
         className,
       )}
       href={wikilink}

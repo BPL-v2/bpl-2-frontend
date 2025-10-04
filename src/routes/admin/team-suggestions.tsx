@@ -5,7 +5,7 @@ import {
   useGetEventStatus,
   useGetTeamGoals,
 } from "@client/query";
-import Table from "@components/table";
+import Table from "@components/table/table";
 import { ScoreObjective } from "@mytypes/score";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -358,7 +358,7 @@ function TeamSuggestionsPage() {
           </label>
           <div className="flex flex-row gap-2">
             <textarea
-              className="textarea h-30 w-full textarea-primary"
+              className="textarea size-full textarea-primary"
               name="extra"
               defaultValue={
                 teamGoals.find((ts) => ts.objective_id === scores.id)?.extra

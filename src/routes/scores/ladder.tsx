@@ -11,19 +11,19 @@ import {
   useGetLadder,
   useGetUsers,
 } from "@client/query";
-import { AscendancyName } from "@components/ascendancy-name";
-import { AscendancyPortrait } from "@components/ascendancy-portrait";
-import { ExperienceBar } from "@components/experience-bar";
-import { LadderPortrait } from "@components/ladder-portrait";
-import POProgressBar from "@components/po-progress";
-import Table from "@components/table";
-import { TeamName } from "@components/team-name";
-import TeamScoreDisplay from "@components/team-score";
+import { AscendancyName } from "@components/character/ascendancy-name";
+import { AscendancyPortrait } from "@components/character/ascendancy-portrait";
+import { ExperienceBar } from "@components/character/experience-bar";
+import POProgressBar from "@components/personal-objective/po-progress";
+import Table from "@components/table/table";
+import { TeamName } from "@components/team/team-name";
+import TeamScoreDisplay from "@components/team/team-score";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { POPointRules } from "@rules/po-points";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { getSkillColor } from "@utils/gems";
 import { calcPersonalPoints } from "@utils/personal-points";
+import { LadderPortrait } from "@components/character/ladder-portrait";
 
 type RowDef = {
   total: number;
@@ -134,7 +134,7 @@ function LadderTab(): JSX.Element {
               <div className="flex items-center gap-2">
                 <AscendancyPortrait
                   character_class={info.row.original.character_class}
-                  className="h-10 w-10 rounded-full object-cover"
+                  className="size-10 rounded-full object-cover"
                 />
                 <div className="flex flex-col">
                   <span
@@ -196,9 +196,9 @@ function LadderTab(): JSX.Element {
           accessorFn: (row) => calcPersonalPoints(row) == 9,
           cell: (info) =>
             info.getValue() ? (
-              <CheckCircleIcon className="h-6 w-6 text-success" />
+              <CheckCircleIcon className="size-6 text-success" />
             ) : (
-              <XCircleIcon className="h-6 w-6 text-error" />
+              <XCircleIcon className="size-6 text-error" />
             ),
           enableSorting: false,
           meta: {
@@ -211,9 +211,9 @@ function LadderTab(): JSX.Element {
           accessorFn: (row) => row.character?.pantheon,
           cell: (info) =>
             info.row.original.character?.pantheon ? (
-              <CheckCircleIcon className="h-6 w-6 text-success" />
+              <CheckCircleIcon className="size-6 text-success" />
             ) : (
-              <XCircleIcon className="h-6 w-6 text-error" />
+              <XCircleIcon className="size-6 text-error" />
             ),
           enableSorting: false,
           meta: {
@@ -224,9 +224,9 @@ function LadderTab(): JSX.Element {
           accessorFn: (row) => (row.character?.ascendancy_points || 0) > 6,
           cell: (info) =>
             (info.row.original.character?.ascendancy_points || 0) > 6 ? (
-              <CheckCircleIcon className="h-6 w-6 text-success" />
+              <CheckCircleIcon className="size-6 text-success" />
             ) : (
-              <XCircleIcon className="h-6 w-6 text-error" />
+              <XCircleIcon className="size-6 text-error" />
             ),
           enableSorting: false,
           header: "Uber Lab",

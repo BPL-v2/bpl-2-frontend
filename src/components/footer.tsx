@@ -20,7 +20,7 @@ export function Footer() {
           target="_blank"
           className="cursor-pointer hover:text-primary"
         >
-          <DiscordFilled className="h-6 w-6" />
+          <DiscordFilled className="size-6" />
         </a>
         <a
           aria-label="GitHub"
@@ -28,7 +28,7 @@ export function Footer() {
           target="_blank"
           className="cursor-pointer hover:text-primary"
         >
-          <GithubFilled className="h-6 w-6" />
+          <GithubFilled className="size-6" />
         </a>
         <a
           aria-label="Twitch"
@@ -36,7 +36,7 @@ export function Footer() {
           target="_blank"
           className="cursor-pointer hover:text-primary"
         >
-          <TwitchFilled className="h-6 w-6" />
+          <TwitchFilled className="size-6" />
         </a>
         <a
           aria-label="YouTube"
@@ -44,7 +44,7 @@ export function Footer() {
           target="_blank"
           className="cursor-pointer hover:text-primary"
         >
-          <YoutubeFilled className="h-6 w-6" />
+          <YoutubeFilled className="size-6" />
         </a>
         <a
           aria-label="Twitter"
@@ -52,7 +52,7 @@ export function Footer() {
           target="_blank"
           className="cursor-pointer hover:text-primary"
         >
-          <TwitterFilled className="h-6 w-6" />
+          <TwitterFilled className="size-6" />
         </a>
       </nav>
     </footer>

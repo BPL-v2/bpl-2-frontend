@@ -1,15 +1,15 @@
 import { useContext, useState } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
-import { CollectionCardTable } from "./collection-card-table";
-import { ObjectiveIcon } from "./objective-icon";
-import { Countdown } from "./countdown";
 import { ScoreObjective } from "@mytypes/score";
 import { ObjectiveType, ScoringMethod } from "@client/api";
 import { twMerge } from "tailwind-merge";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
-import { SubmissionDialog } from "./submission-diablog";
 import { useQueryClient } from "@tanstack/react-query";
 import { useGetEventStatus } from "@client/query";
+import { Countdown } from "@components/countdown";
+import { SubmissionDialog } from "@components/submission-diablog";
+import { ObjectiveIcon } from "@components/objective-icon";
+import { CollectionCardTable } from "./collection-card-table";
 
 export type DailyCardProps = {
   daily: ScoreObjective;
@@ -49,7 +49,7 @@ export function DailyCard({ daily }: DailyCardProps) {
 
   if (!isReleased) {
     return (
-      <div className="card bborder bg-base-300" key={daily.id}>
+      <div className="card bborder bg-base-300 shadow-xl" key={daily.id}>
         <div className="h-full min-h-25 rounded-t-box bg-base-200 p-8 text-center text-xl font-semibold">
           Daily not yet available
         </div>
@@ -74,14 +74,16 @@ export function DailyCard({ daily }: DailyCardProps) {
     daily.objective_type === ObjectiveType.SUBMISSION && !!eventStatus?.team_id;
   return (
     <>
-      <SubmissionDialog
-        objective={daily}
-        showModal={showModal}
-        setShowModal={setShowModal}
-      />
+      {canSubmit && (
+        <SubmissionDialog
+          objective={daily}
+          showModal={showModal}
+          setShowModal={setShowModal}
+        />
+      )}
       <div
         className={twMerge(
-          "card bborder bg-base-200",
+          "card bborder bg-base-200 shadow-xl",
           isRace && isAvailable ? "outline-4 outline-info" : "",
         )}
         key={daily.id}
@@ -98,7 +100,7 @@ export function DailyCard({ daily }: DailyCardProps) {
                   setShowModal(true);
                 }}
               >
-                <PlusCircleIcon className="h-8 w-8 cursor-pointer" />
+                <PlusCircleIcon className="size-8 cursor-pointer" />
               </button>
             </div>
           ) : (

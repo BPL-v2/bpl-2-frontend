@@ -1,10 +1,10 @@
 import { JSX, useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
-import TeamScoreDisplay from "@components/team-score";
-import { DailyCard } from "@components/daily-card";
+import TeamScoreDisplay from "@components/team/team-score";
 import { createFileRoute } from "@tanstack/react-router";
 import { DailyTabRules } from "@rules/dailies";
 import { ScoreObjective } from "@mytypes/score";
+import { DailyCard } from "@components/cards/daily-card";
 
 export const Route = createFileRoute("/scores/dailies")({
   component: DailyTab,

@@ -1,5 +1,5 @@
 import { useFieldContext } from "./context";
-import { SelectOption } from "@components/select";
+import { SelectOption } from "@components/form/select";
 import { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 

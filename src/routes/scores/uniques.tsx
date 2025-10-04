@@ -1,7 +1,7 @@
 import { useGetEventStatus } from "@client/query";
-import { ItemTable } from "@components/item-table";
-import TeamScoreDisplay from "@components/team-score";
-import { UniqueCategoryCard } from "@components/unique-category-card";
+import { ItemTable } from "@components/table/item-table";
+import TeamScoreDisplay from "@components/team/team-score";
+import { UniqueCategoryCard } from "@components/cards/unique-category-card";
 import { isFinished, isWinnable, ScoreObjective } from "@mytypes/score";
 import { UniqueTabRules } from "@rules/uniques";
 import { createFileRoute } from "@tanstack/react-router";
