@@ -103,7 +103,7 @@ function SettingsPage() {
               title="Path of Exile"
               provider="poe"
               description="We need permission to request your Path of Exile character information on your behalf."
-              connected={!!user?.account_name}
+              accountName={user?.account_name}
               required={true}
               logo={
                 <img
@@ -117,7 +117,8 @@ function SettingsPage() {
               title="Discord"
               provider="discord"
               description="We need your discord id to identify you in the discord server."
-              connected={!!user?.discord_id}
+              accountName={user?.discord_name}
+              accountId={user?.discord_id}
               required={true}
               logo={<DiscordFilled className="text-[#5865f2]"></DiscordFilled>}
             ></OauthCard>
@@ -125,7 +126,8 @@ function SettingsPage() {
               title="Twitch"
               provider="twitch"
               description="If you connect your Twitch account, we will display your stream during the event."
-              connected={!!user?.twitch_id}
+              accountName={user?.twitch_name}
+              accountId={user?.twitch_id}
               logo={<TwitchFilled className="text-[#9146ff]"></TwitchFilled>}
             ></OauthCard>
           </div>
