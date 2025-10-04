@@ -363,7 +363,7 @@ export function ItemTable({
             ? "bg-base-200 hover:bg-base-100"
             : "bg-base-300 hover:bg-base-200"
         }
-        className={className ? className : "h-[70vh] w-full"}
+        className={className ? className : "max-h-[70vh] w-full"}
         styles={styles}
       />
     </>

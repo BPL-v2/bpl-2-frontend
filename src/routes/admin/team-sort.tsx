@@ -134,7 +134,6 @@ function UserSortPage() {
         size: 150,
         accessorKey: "extra",
         cell: ({ row }) => {
-          console.log(row.original);
           return row.original.extra ? (
             <CheckCircleIcon className="size-8 text-success" />
           ) : (

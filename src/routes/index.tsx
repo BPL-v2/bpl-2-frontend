@@ -34,7 +34,7 @@ function Home() {
   return (
     <div className="mx-auto mt-8 flex flex-col gap-8">
       {!hasEnded && (
-        <div className="card max-w-full bg-base-300">
+        <div className="card max-w-full bg-card">
           <div className="card-body flex flex-row items-center gap-8 px-12 py-4 text-2xl">
             {signupsStart && (
               <>
@@ -60,7 +60,7 @@ function Home() {
         </div>
       )}
 
-      <div className="card max-w-full bg-base-300">
+      <div className="card max-w-full bg-card">
         <div className="card-body p-12">
           <div className="card-title text-4xl">What is BPL?</div>
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
@@ -101,7 +101,7 @@ function Home() {
       </div>
       {nextEvent && !hasEnded ? (
         <>
-          <div className="card bg-base-300">
+          <div className="card bg-card">
             <div className="card-body p-12">
               <div className="card-title text-4xl">Save the Date!</div>
               <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
@@ -139,7 +139,7 @@ function Home() {
             </div>
           </div>
           {nextEvent.teams.length > 0 && (
-            <div className="card bg-base-300">
+            <div className="card bg-card">
               <div className="card-body p-12">
                 <div className="card-title text-4xl">Meet the Teams</div>
                 <p className="mt-4 text-2xl">

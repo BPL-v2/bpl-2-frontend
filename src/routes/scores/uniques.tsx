@@ -54,7 +54,6 @@ function UniqueTab(): JSX.Element {
       return;
     }
     const shownCategories = uniqueCategory.children.filter((category) => {
-      console.log(category);
       return (
         category.name.toLowerCase().includes(categoryFilter.toLowerCase()) &&
         (preferences.uniqueSets.showCompleted ||
@@ -103,7 +102,7 @@ function UniqueTab(): JSX.Element {
       />
       <div className="mt-4 flex flex-col gap-4">
         <div className="flex justify-center">
-          <fieldset className="fieldset flex w-xl flex-row justify-center gap-12 rounded-box bg-base-300 p-2 md:p-4">
+          <fieldset className="fieldset flex w-xl flex-row justify-center gap-12 rounded-box bg-base-200 p-2 md:p-4">
             <div>
               <legend className="fieldset-legend">Category</legend>
               <input
@@ -154,7 +153,7 @@ function UniqueTab(): JSX.Element {
           </fieldset>
         </div>
         {focusUniqueCategory && (
-          <div className="flex flex-col gap-4 rounded-box bg-base-300/50 p-8 pt-4">
+          <div className="flex flex-col gap-4 rounded-box bg-base-200 p-8 pt-4">
             <h1 className="text-3xl font-extrabold">Focus Unique Sets</h1>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
               {focusUniqueCategory?.children
@@ -175,7 +174,7 @@ function UniqueTab(): JSX.Element {
           </div>
         )}
 
-        <div className="flex flex-col gap-4 rounded-box bg-base-300/50 p-8 pt-4">
+        <div className="flex flex-col gap-4 rounded-box bg-base-200 p-8 pt-4">
           <h1 className="text-3xl font-extrabold">Unique Sets</h1>
           <div className="m-2 grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
             {shownCategories
@@ -198,8 +197,7 @@ function UniqueTab(): JSX.Element {
           ref={tableRef}
           className="divider divider-primary text-xl font-extrabold"
         >
-          Items in{" "}
-          {selectedCategory ? selectedCategory.name + " set" : "All Categories"}
+          {(selectedCategory ? selectedCategory.name : "All") + " Items"}
         </div>
         {table}
       </div>

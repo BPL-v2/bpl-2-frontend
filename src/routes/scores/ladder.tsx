@@ -338,7 +338,7 @@ function LadderTab(): JSX.Element {
       key: `column-${categoryName}`,
       // @ts-ignore
       sorter: (a, b) => a[categoryName] - b[categoryName],
-      size: 125,
+      size: 160,
     })),
   ];
 

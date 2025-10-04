@@ -81,17 +81,27 @@ function Table<T>({
     overscan: 5,
   });
   return (
-    <div ref={tableRef} className={"overflow-auto " + className}>
-      <table className={twMerge("table bg-base-300 table-md", styles?.table)}>
+    <div
+      ref={tableRef}
+      className={twMerge(
+        "overflow-auto rounded-box border border-base-content/20 shadow-xl",
+        className,
+      )}
+    >
+      <table className={twMerge("table bg-base-300", styles?.table)}>
         <thead
           className={twMerge(
-            "sticky top-0 z-1 bg-base-200 text-lg font-bold",
+            "sticky top-0 z-1 bg-base-200 text-lg text-highlight-content",
             styles?.header,
           )}
         >
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id} className="flex w-full">
               {headerGroup.headers.map((header) => {
+                const canSort = sortable && header.column.getCanSort();
+                const isSorting = !!sorting.find(
+                  (sort) => sort.id === header.id,
+                );
                 return (
                   <th
                     key={header.id}
@@ -102,35 +112,31 @@ function Table<T>({
                   >
                     <div
                       className={
-                        sortable && header.column.getCanSort()
-                          ? "flex cursor-pointer items-center gap-2 select-none"
+                        canSort
+                          ? "flex cursor-pointer items-center gap-1 select-none"
                           : ""
                       }
+                      onClick={header.column.getToggleSortingHandler()}
                     >
-                      {sortable && header.column.getCanSort() ? (
-                        <div onClick={header.column.getToggleSortingHandler()}>
-                          <TableSortIcon
-                            className="h-5 w-5"
-                            sort={sorting.find((sort) => sort.id === header.id)}
-                          ></TableSortIcon>
-                        </div>
-                      ) : null}
+                      {canSort && (
+                        <TableSortIcon
+                          className="size-5"
+                          sort={sorting.find((sort) => sort.id === header.id)}
+                        ></TableSortIcon>
+                      )}
                       <div
-                        className="flex flex-row items-center"
-                        onClick={header.column.getToggleSortingHandler()}
+                        className={twMerge(
+                          "flex flex-row items-center",
+                          isSorting ? "text-primary" : "",
+                        )}
                       >
                         {flexRender(
                           header.column.columnDef.header,
                           header.getContext(),
                         )}
-                        {header.column.getCanFilter() ? (
-                          <div
-                            onClick={(e) => e.stopPropagation()}
-                            className="select-none"
-                          >
-                            <Filter column={header.column} />
-                          </div>
-                        ) : null}
+                        {header.column.getCanFilter() && (
+                          <Filter column={header.column} />
+                        )}
                       </div>
                     </div>
                   </th>
