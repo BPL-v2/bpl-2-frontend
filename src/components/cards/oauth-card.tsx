@@ -7,7 +7,8 @@ import { twMerge } from "tailwind-merge";
 
 type OauthCardProps = {
   required?: boolean;
-  connected: boolean;
+  accountId?: string;
+  accountName?: string;
   provider: "discord" | "twitch" | "poe";
   title: string;
   description: string;
@@ -19,7 +20,8 @@ export function OauthCard({
   required,
   provider,
   description,
-  connected,
+  accountId,
+  accountName,
   title,
   logo,
   allowDisconnect = true,
@@ -28,13 +30,13 @@ export function OauthCard({
   const qc = useQueryClient();
   const { removeOauthProvider } = useRemoveOauthProvider(qc);
   const connectionButton = useMemo(() => {
-    if (connected && !allowDisconnect) {
+    if (accountName && !allowDisconnect) {
       return null;
     }
-    if (!connected) {
+    if (!accountName) {
       return (
         <button
-          className={"btn btn-outline btn-success"}
+          className={"btn border-2 btn-outline btn-success"}
           onClick={redirectOauth(provider, state.location.href)}
         >
           Connect
@@ -43,40 +45,47 @@ export function OauthCard({
     }
     return (
       <button
-        className={"btn btn-outline btn-error"}
+        className={"btn border-2 btn-outline btn-error"}
         onClick={() => removeOauthProvider(provider)}
       >
         Disconnect
       </button>
     );
-  }, [connected, allowDisconnect, provider]);
+  }, [accountName, allowDisconnect, provider]);
 
   const card = (
     <div
       className={twMerge(
-        "max-size-110 card border-2",
-        required ? "border-error" : "border-base-100",
-        connected
-          ? "border-success bg-base-300"
-          : "border-base-300 bg-base-200",
+        "card max-w-110 border-2 border-base-300 bg-gradient-to-t from-base-300 to-base-200 shadow-xl",
+        required ? "border-error" : "",
+        accountName ? "border-success" : "",
       )}
     >
       <div
         className={twMerge(
-          "flex items-center justify-between rounded-t-box px-8 py-4",
-          connected ? "bg-base-200" : "bg-base-100",
+          "flex min-h-22 justify-between rounded-t-box border-b-2 border-base-300 px-8 py-4",
+          accountName ? "bg-base-100/50" : "bg-base-200/50",
         )}
       >
-        <h1 className="text-center text-2xl font-bold">{title}</h1>
+        <div className="flex flex-col text-left">
+          <h1 className="text-2xl font-bold">{title}</h1>
+          {accountName && (
+            <div className="tooltip tooltip-bottom" data-tip={accountId}>
+              Connected as {accountName}
+            </div>
+          )}
+        </div>
         {connectionButton}
       </div>
-      <div className="card-body grid grid-cols-2 items-center gap-2 text-left text-lg">
-        <div className={!connected ? "grayscale" : ""}>{logo}</div>
-        <p>{description}</p>
+      <div className="card-body">
+        <div className="grid grid-cols-2 gap-8 text-left text-lg">
+          <div className={!accountName ? "grayscale" : ""}>{logo}</div>
+          <p>{description}</p>
+        </div>
       </div>
     </div>
   );
-  if (!required || connected) {
+  if (!required || accountName) {
     return card;
   }
   return (
