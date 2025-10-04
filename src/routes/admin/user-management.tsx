@@ -2,8 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { Permission, User } from "@client/api";
 import { userApi } from "@client/client";
-import Select from "@components/select";
-import Table from "@components/table";
+import Select from "@components/form/select";
+import Table from "@components/table/table";
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 import { ColumnDef, sortingFns } from "@tanstack/react-table";
 import { renderConditionally } from "@utils/token";
@@ -61,7 +61,7 @@ function UserPage() {
           onClick={() => copyDiscordId(info.row.original.discord_id)}
           className="flex gap-2"
         >
-          <ClipboardDocumentCheckIcon className="h-6 w-6 cursor-pointer" />
+          <ClipboardDocumentCheckIcon className="size-6 cursor-pointer" />
           {info.row.original.discord_id}
         </a>
       ),

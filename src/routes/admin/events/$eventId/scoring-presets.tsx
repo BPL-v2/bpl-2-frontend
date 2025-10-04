@@ -15,7 +15,7 @@ import {
 } from "@client/query";
 import { Dialog } from "@components/dialog";
 import { setFormValues, useAppForm } from "@components/form/context";
-import Table from "@components/table";
+import Table from "@components/table/table";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useStore } from "@tanstack/react-form";
 import { useQueryClient } from "@tanstack/react-query";
@@ -204,7 +204,7 @@ function ScoringPresetsPage() {
               deleteScoringPreset(info.row.original.id);
             }}
           >
-            <TrashIcon className="h-4 w-4" />
+            <TrashIcon className="size-4" />
           </button>
           <button
             className="btn btn-sm btn-warning"
@@ -213,7 +213,7 @@ function ScoringPresetsPage() {
               setFormValues(presetForm, info.row.original);
             }}
           >
-            <PencilSquareIcon className="h-4 w-4" />
+            <PencilSquareIcon className="size-4" />
           </button>
         </div>
       ),

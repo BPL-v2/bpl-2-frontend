@@ -1,7 +1,7 @@
 import { Event, JobType, Permission, RecurringJob } from "@client/api";
 import { useGetEvents, useGetJobs, useStartJob } from "@client/query";
 import { Dialog } from "@components/dialog";
-import Select from "@components/select";
+import Select from "@components/form/select";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { renderConditionally } from "@utils/token";

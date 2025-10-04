@@ -61,7 +61,7 @@ export const DotButton: React.FC<DotButtonProps> = ({ onClick, active }) => {
     <button
       type="button"
       className={twMerge(
-        "h-6 w-6 rounded-full border-2",
+        "size-6 rounded-full border-2",
         active ? "border-white" : "border-base-300",
       )}
       onClick={onClick}

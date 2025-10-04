@@ -6,7 +6,7 @@ import {
   useGetTeamGoals,
   useGetUser,
 } from "@client/query";
-import { PoGauge } from "@components/po-gauge";
+import { PoGauge } from "@components/personal-objective/po-gauge";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { ScoreObjective } from "@mytypes/score";
 import { createFileRoute } from "@tanstack/react-router";
@@ -164,7 +164,7 @@ function ForYouTab() {
               <div className="tooltip-content p-4 text-left text-lg whitespace-pre-wrap text-error">
                 {teamLeadMessage}
               </div>
-              <EnvelopeIcon className="h-6 w-6 cursor-help text-error"></EnvelopeIcon>
+              <EnvelopeIcon className="size-6 cursor-help text-error"></EnvelopeIcon>
             </div>
           )}
         </div>
@@ -193,7 +193,7 @@ function ForYouTab() {
               <div className="tooltip-content p-4 text-left text-lg whitespace-pre-wrap text-error">
                 {teamLeadMessage}
               </div>
-              <EnvelopeIcon className="h-6 w-6 cursor-help text-error"></EnvelopeIcon>
+              <EnvelopeIcon className="size-6 cursor-help text-error"></EnvelopeIcon>
             </div>
           )}
         </div>
@@ -220,7 +220,7 @@ function ForYouTab() {
           {scores && teamGoalMap[scores.id] && (
             <>
               <h3 className="flex items-center gap-2">
-                <EnvelopeIcon className="h-8 w-8" /> Your team leads have left a
+                <EnvelopeIcon className="size-8" /> Your team leads have left a
                 message for you:
               </h3>
               <p className="whitespace-pre-wrap text-info">

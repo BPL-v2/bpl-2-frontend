@@ -1,9 +1,9 @@
 import { DisplayItem } from "@client/api";
 import { useGetGuildStashTab, useGetRules } from "@client/query";
 import { Dialog } from "@components/dialog";
-import { StashTabGrid } from "@components/stash-tab-grid";
-import { StashTabSpecial } from "@components/stash-tab-special";
-import { StashTabUnique } from "@components/stash-tab-unique";
+import { StashTabGrid } from "@components/stash/stash-tab-grid";
+import { StashTabSpecial } from "@components/stash/stash-tab-special";
+import { StashTabUnique } from "@components/stash/stash-tab-unique";
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 import { createFileRoute, useParams, useSearch } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
@@ -76,7 +76,7 @@ function RouteComponent() {
         title={
           <div>
             <ClipboardDocumentCheckIcon
-              className="to-0 absolute right-6 h-8 w-8 cursor-pointer hover:text-primary"
+              className="to-0 absolute right-6 size-8 cursor-pointer hover:text-primary"
               onClick={() => {
                 if (selectedItem) {
                   navigator.clipboard.writeText(

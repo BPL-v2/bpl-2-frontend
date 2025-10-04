@@ -202,7 +202,7 @@ function ScoringPage() {
           )}
           search={{ rules: !rules }}
         >
-          <BookOpenIcon className="h-6 w-6" />
+          <BookOpenIcon className="size-6" />
           <span className="hidden md:block">
             {rules ? "Hide" : "Show"} Rules
           </span>

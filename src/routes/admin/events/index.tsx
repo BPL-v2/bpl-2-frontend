@@ -6,10 +6,10 @@ import {
   useDuplicateEvent,
   useGetEvents,
 } from "@client/query";
-import { DeleteButton } from "@components/delete-button";
+import { DeleteButton } from "@components/form/delete-button";
 import { Dialog } from "@components/dialog";
 import { setFormValues, useAppForm } from "@components/form/context";
-import Table from "@components/table";
+import Table from "@components/table/table";
 import {
   CheckCircleIcon,
   PencilSquareIcon,
@@ -116,9 +116,9 @@ function EventPage() {
       accessorKey: "is_current",
       cell: (info) =>
         info.row.original.is_current ? (
-          <CheckCircleIcon className="h-6 w-6 text-success" />
+          <CheckCircleIcon className="size-6 text-success" />
         ) : (
-          <XCircleIcon className="h-6 w-6 text-error" />
+          <XCircleIcon className="size-6 text-error" />
         ),
       enableSorting: false,
       size: 80,
@@ -128,9 +128,9 @@ function EventPage() {
       accessorKey: "is_public",
       cell: (info) =>
         info.row.original.is_public ? (
-          <CheckCircleIcon className="h-6 w-6 text-success" />
+          <CheckCircleIcon className="size-6 text-success" />
         ) : (
-          <XCircleIcon className="h-6 w-6 text-error" />
+          <XCircleIcon className="size-6 text-error" />
         ),
       enableSorting: false,
       size: 70,
@@ -140,9 +140,9 @@ function EventPage() {
       accessorKey: "is_locked",
       cell: (info) =>
         info.row.original.is_locked ? (
-          <CheckCircleIcon className="h-6 w-6 text-success" />
+          <CheckCircleIcon className="size-6 text-success" />
         ) : (
-          <XCircleIcon className="h-6 w-6 text-error" />
+          <XCircleIcon className="size-6 text-error" />
         ),
       enableSorting: false,
       size: 70,
@@ -159,7 +159,7 @@ function EventPage() {
               setIsOpen(true);
             }}
           >
-            <PencilSquareIcon className="h-6 w-6" />
+            <PencilSquareIcon className="size-6" />
           </button>
           <DeleteButton
             onDelete={() => deleteEvent(info.row.original.id)}

@@ -130,7 +130,7 @@ function RouteComponent() {
                       }}
                     >
                       {dayjs(stash.last_fetch).fromNow()}
-                      <ArrowPathIcon className="h-4 w-4" />
+                      <ArrowPathIcon className="size-4" />
                     </button>
                   </Link>
                 </div>

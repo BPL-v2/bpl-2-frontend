@@ -1,7 +1,7 @@
 import { ObjectiveType, Score, ScoringMethod, Team } from "@client/api";
 import { ObjectiveIcon } from "@components/objective-icon";
-import Table from "@components/table";
-import { TeamName } from "@components/team-name";
+import Table from "@components/table/table";
+import { TeamName } from "@components/team/team-name";
 import { CategoryIcon, iconMap } from "@icons/category-icons";
 import { ScoreObjective } from "@mytypes/score";
 import { createFileRoute } from "@tanstack/react-router";

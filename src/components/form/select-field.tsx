@@ -1,4 +1,4 @@
-import Select, { SelectOption } from "@components/select";
+import Select, { SelectOption } from "@components/form/select";
 import { useFieldContext } from "./context";
 
 export function SelectField<T>({

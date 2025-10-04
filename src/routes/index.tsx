@@ -1,8 +1,8 @@
 import { useGetEvents, useGetEventStatus } from "@client/query";
-import { AscendancyPortrait } from "@components/ascendancy-portrait";
+import { AscendancyPortrait } from "@components/character/ascendancy-portrait";
 import { Countdown } from "@components/countdown";
 import SignupButton from "@components/signup-button";
-import { TeamLogo } from "@components/teamlogo";
+import { TeamLogo } from "@components/team/teamlogo";
 // import { VideoEmbed } from "@components/video-embed";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { DiscordFilled } from "@icons/discord";
@@ -78,7 +78,7 @@ function Home() {
                     target="_blank"
                     className="flex items-center justify-center gap-2 text-2xl text-white"
                   >
-                    <DiscordFilled className="h-6 w-6" />
+                    <DiscordFilled className="size-6" />
                     Join the Discord
                   </a>
                 </button>
@@ -88,7 +88,7 @@ function Home() {
                     target="_blank"
                     className="flex items-center justify-center gap-2 text-2xl text-white"
                   >
-                    <HeartIcon className="h-7 w-7" /> Support BPL
+                    <HeartIcon className="size-7" /> Support BPL
                   </a>
                 </button>
               </div>

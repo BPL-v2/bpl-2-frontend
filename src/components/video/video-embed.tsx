@@ -17,11 +17,11 @@ function getIcon(url: string): React.ReactNode {
   }
 
   if (parsedUrl.hostname === "www.youtube.com") {
-    return <YoutubeFilled className="h-16 w-16" brandColor />;
+    return <YoutubeFilled className="size-16" brandColor />;
   } else if (parsedUrl.hostname === "youtu.be") {
-    return <YoutubeFilled className="h-16 w-16" brandColor />;
+    return <YoutubeFilled className="size-16" brandColor />;
   } else if (parsedUrl.hostname === "www.twitch.tv") {
-    return <TwitchFilled className="h-16 w-16" brandColor />;
+    return <TwitchFilled className="size-16" brandColor />;
   }
   return;
 }
@@ -101,7 +101,7 @@ export const VideoEmbed: React.FC<VideoEmbedProps> = (
           }}
           aria-label="Play"
         >
-          {!icon ? <PlayCircleIcon className="h-6 w-6" /> : icon}
+          {!icon ? <PlayCircleIcon className="size-6" /> : icon}
         </button>
       </div>
     </>

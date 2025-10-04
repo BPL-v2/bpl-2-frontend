@@ -20,7 +20,7 @@ function POProgressBar({
     <div
       {...props}
       className={twMerge(
-        "flex h-7 w-full overflow-hidden rounded-lg bg-base-200 text-lg text-success-content",
+        "flex size-full overflow-hidden rounded-lg bg-base-200 text-lg text-success-content",
         props.className,
       )}
     >

@@ -57,7 +57,7 @@ export const PrevButton: React.FC<PropType> = (props) => {
 
   return (
     <button className="cursor-pointer" type="button" {...restProps}>
-      <ChevronLeftIcon className="h-10 w-10 font-bold" />
+      <ChevronLeftIcon className="size-10 font-bold" />
     </button>
   );
 };
@@ -67,7 +67,7 @@ export const NextButton: React.FC<PropType> = (props) => {
 
   return (
     <button className="cursor-pointer" type="button" {...restProps}>
-      <ChevronLeftIcon className="h-10 w-10 rotate-180 font-bold" />
+      <ChevronLeftIcon className="size-10 rotate-180 font-bold" />
     </button>
   );
 };

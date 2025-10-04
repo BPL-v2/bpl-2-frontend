@@ -37,7 +37,7 @@ function getCardColor(score: Score) {
     case 3:
       return "text-black/70 bg-bronze-metallic";
     default:
-      return "bg-card";
+      return "";
   }
 }
 
@@ -46,6 +46,8 @@ function sort(
   [teamId2, score2]: [string, Score],
 ) {
   if (score1.rank !== score2.rank) {
+    if (score1.rank === 0) return 1;
+    if (score2.rank === 0) return -1;
     return score1.rank - score2.rank;
   }
   if (score1.points !== score2.points) {
@@ -68,13 +70,18 @@ export function Ranking({
       if (b.id === eventStatus?.team_id) return 1;
       const scoreA = objective.team_score[a.id];
       const scoreB = objective.team_score[b.id];
-      if (!scoreA && !scoreB) {
-        return b.id - a.id;
+      const pointsA = scoreA ? scoreA.points : -1;
+      const pointsB = scoreB ? scoreB.points : -1;
+      if (pointsA === pointsB) {
+        const numberA = scoreA ? scoreA.number : -1;
+        const numberB = scoreB ? scoreB.number : -1;
+        if (numberA === numberB) {
+          return b.id - a.id;
+        }
+        return numberB - numberA;
       }
-      if (scoreA.points === scoreB.points) {
-        return scoreB.number - scoreA.number;
-      }
-      return scoreB.points - scoreA.points;
+
+      return pointsB - pointsA;
     })
     .slice(0, preferences.limitTeams ? preferences.limitTeams : undefined)
     .map((team) => team.id);
@@ -93,18 +100,14 @@ export function Ranking({
           const teamId = parseInt(teamIdstr);
           return (
             <div
-              className={"card bborder " + getCardColor(score)}
+              className={twMerge(
+                "card bborder bg-card shadow-xl",
+                getCardColor(score),
+              )}
               key={"score-" + teamId}
             >
               <div className="card-body">
                 <div className="flex flex-row items-center justify-between">
-                  {/* <div className="stat-figure row-span-2 hidden lg:block">
-                    <div className="avatar online">
-                      <div className="w-20">
-                        <TeamLogo team={team} eventId={currentEvent.id} />
-                      </div>
-                    </div>
-                  </div> */}
                   <div className="flex flex-col px-4">
                     <div className="card-title flex items-center text-2xl">
                       {

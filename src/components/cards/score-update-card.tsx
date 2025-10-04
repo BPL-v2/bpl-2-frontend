@@ -1,9 +1,9 @@
 import { JSX, useContext } from "react";
 import { getMetaInfo } from "@mytypes/score";
 import { GlobalStateContext } from "@utils/context-provider";
-import { ObjectiveIcon } from "./objective-icon";
 import { ScoreDiff } from "@client/api";
 import { useGetUsers } from "@client/query";
+import { ObjectiveIcon } from "@components/objective-icon";
 
 type ScoreUpdateCardProps = {
   update: ScoreDiff;
@@ -33,9 +33,8 @@ export const ScoreUpdateCard = ({
     );
     body = (
       <div className="card-body flex flex-row items-center gap-8">
-        <div className="h-20 w-20">
+        <div className="size-20">
           <ObjectiveIcon
-            className=""
             objective={meta.objective}
             gameVersion={currentEvent.game_version}
           />
@@ -49,7 +48,7 @@ export const ScoreUpdateCard = ({
     const img_location = `assets/${currentEvent.game_version}/icons/${meta.parent.name}.svg`;
     body = (
       <div className="card-body flex flex-row gap-2">
-        <div className="h-20 w-20">
+        <div className="size-20">
           <img
             className="h-full w-full object-contain"
             src={img_location}

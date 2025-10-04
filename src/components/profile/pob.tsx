@@ -2,6 +2,7 @@
 // Licensed under GNU AGPL v3.0: https://www.gnu.org/licenses/agpl-3.0.html
 // Copyright (c) Dav1dde and contributors
 import { useFile } from "@client/query";
+import { AscendancyPortrait } from "@components/character/ascendancy-portrait";
 import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
 import { InventoryIcon } from "@icons/inventory-icons";
 import { encode } from "@mytypes/scoring-objective";
@@ -15,7 +16,6 @@ import {
 } from "@utils/pob";
 import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { AscendancyPortrait } from "./ascendancy-portrait";
 
 function getLink(item: Item) {
   let link = "/assets/poe1/items/";
@@ -441,7 +441,7 @@ export function PoB({ pobString }: Props) {
               <div className="mb-1 flex items-center gap-4 text-xl">
                 <AscendancyPortrait
                   character_class={characterClass}
-                  className="h-14 w-14 rounded-full object-cover"
+                  className="size-14 rounded-full object-cover"
                 />
                 <h1>
                   Level {pob.build.level}{" "}
@@ -456,7 +456,7 @@ export function PoB({ pobString }: Props) {
               </div>
               <div title="Copy PoB to clipboard">
                 <ClipboardDocumentListIcon
-                  className="h-8 w-8 cursor-pointer transition-transform duration-100 select-none hover:text-primary active:scale-110 active:text-secondary"
+                  className="size-8 cursor-pointer transition-transform duration-100 select-none hover:text-primary active:scale-110 active:text-secondary"
                   onClick={() => {
                     navigator.clipboard.writeText(pobString);
                   }}

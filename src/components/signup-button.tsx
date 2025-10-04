@@ -5,7 +5,7 @@ import { DiscordFilled } from "@icons/discord";
 import { Dialog } from "./dialog";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { redirectOauth } from "@utils/oauth";
-import { TeamName } from "./team-name";
+import { TeamName } from "./team/team-name";
 import {
   useCreateSignup,
   useDeleteSignup,
@@ -167,7 +167,7 @@ const SignupButton = () => {
               className="bg-discord btn mt-4 text-xl text-white btn-lg"
               onClick={redirectOauth("discord", state.location.href)}
             >
-              <DiscordFilled className="h-6 w-6" />
+              <DiscordFilled className="size-6" />
               Link Discord account
             </a>
           </div>

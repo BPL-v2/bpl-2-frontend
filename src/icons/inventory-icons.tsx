@@ -102,7 +102,7 @@ export function InventoryIcon({
     <svg
       viewBox="0 0 16 16"
       {...props}
-      className={twMerge("h-6 w-6 fill-base-content", props.className)}
+      className={twMerge("size-6 fill-base-content", props.className)}
     >
       {mappy[slot]}
     </svg>

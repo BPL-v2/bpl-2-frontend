@@ -33,7 +33,7 @@ export function DeleteButton({
         className={twMerge("btn btn-error", props.className)}
         onClick={onDelete}
       >
-        <TrashIcon className="h-6 w-6" />
+        <TrashIcon className="size-6" />
       </button>
     );
   }
@@ -65,7 +65,7 @@ export function DeleteButton({
             setIsConfirmed(false);
           }}
         >
-          <TrashIcon className="h-6 w-6" />
+          <TrashIcon className="size-6" />
         </button>
       </div>
     );
@@ -77,7 +77,7 @@ export function DeleteButton({
       className={twMerge("btn btn-error", props.className)}
       onClick={() => setIsConfirmed(true)}
     >
-      <TrashIcon className="h-6 w-6" />
+      <TrashIcon className="size-6" />
     </button>
   );
 }

@@ -45,7 +45,7 @@ function RootComponent() {
         label: <div className="text-4xl font-bold">BPL</div>,
         icon: (
           <img
-            className="h-10 w-8"
+            className="size-8"
             src="/assets/app-logos/bpl-logo.webp"
             alt="bpl-logo"
           />
@@ -55,25 +55,25 @@ function RootComponent() {
       },
       {
         label: "Scoring",
-        icon: <ChartBarIcon className="h-6 w-6" />,
+        icon: <ChartBarIcon className="size-6" />,
         url: "/scores/ladder",
         visible: true,
       },
       {
         label: "Streams",
-        icon: <TwitchFilled className="h-6 w-6" />,
+        icon: <TwitchFilled className="size-6" />,
         url: "/streams",
         visible: true,
       },
       {
         label: "Rules",
-        icon: <BookOpenIcon className="h-6 w-6" />,
+        icon: <BookOpenIcon className="size-6" />,
         url: "/rules",
         visible: true,
       },
       {
         label: "Admin",
-        icon: <Cog6ToothIcon className="h-6 w-6" />,
+        icon: <Cog6ToothIcon className="size-6" />,
         url: "/admin",
         visible:
           (user?.permissions?.length || 0) > 0 || eventStatus?.is_team_lead,

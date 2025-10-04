@@ -12,7 +12,7 @@ import {
   useGetStreams,
   useGetUsers,
 } from "@client/query";
-import { TwitchStreamEmbed } from "@components/twitch-stream";
+import { TwitchStreamEmbed } from "@components/video/twitch-stream";
 import { ascendancies, phreciaMapping, poe2Mapping } from "@mytypes/ascendancy";
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";

@@ -12,7 +12,7 @@ import {
 } from "@utils/utils";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { ObjectiveIcon } from "./objective-icon";
+import { ObjectiveIcon } from "../objective-icon";
 import Table from "./table";
 
 export type ItemTableProps = {

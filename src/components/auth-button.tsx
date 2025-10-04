@@ -27,7 +27,7 @@ const AuthButton = () => {
             "btn border-0 py-8 btn-lg hover:bg-primary hover:text-primary-content"
           }
         >
-          <UserIcon className="h-6 w-6" />
+          <UserIcon className="size-6" />
           <div className="hidden sm:block">
             {user ? user.display_name : "Login"}
           </div>
@@ -43,14 +43,14 @@ const AuthButton = () => {
         >
           <li>
             <Link to={"/settings"} className="flex flex-row gap-2">
-              <Cog6ToothIcon className="h-6 w-6" /> Settings
+              <Cog6ToothIcon className="size-6" /> Settings
             </Link>
             <Link
               to={"/profile/$userId"}
               params={{ userId: user.id }}
               className="flex flex-row gap-2"
             >
-              <UserIcon className="h-6 w-6" /> Profile
+              <UserIcon className="size-6" /> Profile
             </Link>
           </li>
           <li className="text-error">
@@ -61,7 +61,7 @@ const AuthButton = () => {
                 qc.setQueryData(["user"], null);
               }}
             >
-              <ArrowLeftStartOnRectangleIcon className="h-6 w-6" />
+              <ArrowLeftStartOnRectangleIcon className="size-6" />
               Logout
             </div>
           </li>
@@ -75,7 +75,7 @@ const AuthButton = () => {
       onClick={redirectOauth("poe", state.location.href)}
       title="Login with Path of Exile and Discord"
     >
-      <ArrowRightEndOnRectangleIcon className="h-6 w-6" />
+      <ArrowRightEndOnRectangleIcon className="size-6" />
       <div className="hidden sm:block">Login</div>
     </button>
   );

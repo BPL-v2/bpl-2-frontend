@@ -73,7 +73,7 @@ export function ProfileCarousel({
                   >
                     <img
                       src={ascendancyObj.thumbnail}
-                      className="h-22 w-22 rounded-full"
+                      className="size-22 rounded-full"
                       alt={ascendancyName}
                     />
                     <div className="rounded-r-full bg-base-300 text-left">

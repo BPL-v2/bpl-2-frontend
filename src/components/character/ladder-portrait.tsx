@@ -1,11 +1,11 @@
 import { LadderEntry, Team } from "@client/api";
-import { AscendancyName } from "./ascendancy-name";
-import { AscendancyPortrait } from "./ascendancy-portrait";
-import { ExperienceBar } from "./experience-bar";
 import { getSkillColor } from "@utils/gems";
 import { Link } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
 import { useContext } from "react";
+import { AscendancyName } from "./ascendancy-name";
+import { AscendancyPortrait } from "./ascendancy-portrait";
+import { ExperienceBar } from "./experience-bar";
 
 interface Props {
   entry: LadderEntry;
@@ -26,7 +26,7 @@ export function LadderPortrait({ entry, team }: Props) {
     >
       <AscendancyPortrait
         character_class={entry.character_class}
-        className="h-20 w-20 rounded-full object-cover"
+        className="size-20 rounded-full object-cover"
       />
       <div className="flex w-full flex-col">
         <span className="font-bold" style={{ color: team?.color || "inherit" }}>

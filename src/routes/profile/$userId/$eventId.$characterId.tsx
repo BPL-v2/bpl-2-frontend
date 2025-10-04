@@ -5,9 +5,9 @@ import {
   useGetUser,
   useGetUserActivity,
 } from "@client/query";
-import { LazyCharacterChart } from "@components/character-chart-lazy";
 import { ObjectiveIcon } from "@components/objective-icon";
-import { PoB } from "@components/pob";
+import { LazyCharacterChart } from "@components/profile/character-chart-lazy";
+import { PoB } from "@components/profile/pob";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
 import { flatMap } from "@utils/utils";
