@@ -6,9 +6,9 @@ import {
   useGetTeamGoals,
   useGetUser,
 } from "@client/query";
+import ProgressCard from "@components/cards/progress-card";
 import { PoGauge } from "@components/personal-objective/po-gauge";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
-import { ScoreObjective } from "@mytypes/score";
 import { createFileRoute } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
 import { flatMap } from "@utils/utils";
@@ -119,92 +119,20 @@ function ForYouTab() {
       );
     });
 
-  const relevantObjectives = objectives.filter(
-    (objective) =>
-      objective.scoring_preset?.scoring_method === ScoringMethod.RANKED_TIME &&
-      !objective.team_score[eventStatus.team_id!]?.finished &&
-      (!objective.valid_from || new Date(objective.valid_from) < new Date()),
-  );
-  function categoryRender(
-    category: ScoreObjective,
-    teamGoalMap: Record<number, string>,
-  ) {
-    const childLeaves = category.children.filter(
-      (obj) => obj.children.length === 0,
-    );
-    const totalObjectives = childLeaves.length;
-    const unfinishedObjectives = childLeaves.filter(
-      (obj) => !obj.team_score[teamId]?.finished,
-    );
-    const teamLeadMessage = teamGoalMap[category.id];
-    return (
-      <div className="card bg-base-300" key={category.id}>
-        <div className="card-body flex-row gap-1">
-          <div tabIndex={0} className="collapse items-start bg-base-200">
-            <div className="pe-px-4 collapse-title card-title flex justify-between px-4 text-lg">
-              <div>{category.name}</div>
-              <div className="whitespace-nowrap text-primary">
-                {totalObjectives - unfinishedObjectives.length} /{" "}
-                {totalObjectives}
-              </div>
-            </div>
-            <ul className="not-prose collapse-content list">
-              <li className="p-4 pb-2 text-xs tracking-wide opacity-60">
-                Missing Items
-              </li>
-              {unfinishedObjectives.map((obj) => (
-                <li className="list-row" key={obj.id}>
-                  {obj.name}
-                </li>
-              ))}
-            </ul>
-          </div>
-          {teamLeadMessage && (
-            <div className="tooltip">
-              <div className="tooltip-content p-4 text-left text-lg whitespace-pre-wrap text-error">
-                {teamLeadMessage}
-              </div>
-              <EnvelopeIcon className="size-6 cursor-help text-error"></EnvelopeIcon>
-            </div>
-          )}
-        </div>
-        <progress
-          className="progress w-full rounded-t-none rounded-b-box progress-primary"
-          value={totalObjectives - unfinishedObjectives.length}
-          max={totalObjectives}
-        ></progress>
-      </div>
-    );
-  }
-
-  function objRender(obj: ScoreObjective, teamGoalMap: Record<number, string>) {
-    const teamLeadMessage = teamGoalMap[obj.id];
-    return (
-      <div className="card bg-base-300" key={obj.id}>
-        <div className="card-body flex-row gap-1">
-          <div className="card-title flex justify-between text-lg">
-            <div>{obj.name}</div>
-            <div className="whitespace-nowrap text-primary">
-              {obj.team_score[teamId]?.number} / {obj.required_number}
-            </div>
-          </div>
-          {teamLeadMessage && (
-            <div className="tooltip">
-              <div className="tooltip-content p-4 text-left text-lg whitespace-pre-wrap text-error">
-                {teamLeadMessage}
-              </div>
-              <EnvelopeIcon className="size-6 cursor-help text-error"></EnvelopeIcon>
-            </div>
-          )}
-        </div>
-        <progress
-          className="progress w-full rounded-t-none rounded-b-box progress-primary"
-          value={obj.team_score[teamId]?.number}
-          max={obj.required_number}
-        ></progress>
-      </div>
-    );
-  }
+  const relevantObjectives = objectives
+    .filter(
+      (objective) =>
+        objective.scoring_preset?.scoring_method ===
+          ScoringMethod.RANKED_TIME &&
+        !objective.team_score[eventStatus.team_id!]?.finished &&
+        (!objective.valid_from || new Date(objective.valid_from) < new Date()),
+    )
+    .sort((a, b) => {
+      return (
+        (b.team_score[teamId]?.number ?? 0) / b.required_number -
+        (a.team_score[teamId]?.number ?? 0) / a.required_number
+      );
+    });
   let suggestionsExist = false;
   for (const entry of Object.entries(teamGoalMap)) {
     if (entry[0] != String(scores?.id)) {
@@ -234,13 +162,17 @@ function ForYouTab() {
                 Your team leads have selected objectives that are urgent for you
                 to do.
               </h3>
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {relevantCategories
                   .filter((category) => teamGoalMap[category.id] != undefined)
-                  .map((category) => categoryRender(category, teamGoalMap))}
+                  .map((category) => (
+                    <ProgressCard key={category.id} category={category} />
+                  ))}
                 {relevantObjectives
                   .filter((obj) => teamGoalMap[obj.id] != undefined)
-                  .map((obj) => objRender(obj, teamGoalMap))}
+                  .map((obj) => (
+                    <ProgressCard key={obj.id} category={obj} />
+                  ))}
               </div>
             </>
           )}
@@ -248,13 +180,17 @@ function ForYouTab() {
       )}
       <div>
         <h3>{teamGoals ? "Remaining Objectives" : "To do"}</h3>
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {relevantCategories
             .filter((category) => teamGoalMap[category.id] == undefined)
-            .map((category) => categoryRender(category, teamGoalMap))}
+            .map((category) => (
+              <ProgressCard key={category.id} category={category} />
+            ))}
           {relevantObjectives
             .filter((obj) => teamGoalMap[obj.id] == undefined)
-            .map((obj) => objRender(obj, teamGoalMap))}
+            .map((obj) => (
+              <ProgressCard key={obj.id} category={obj} />
+            ))}
         </div>
       </div>
     </div>

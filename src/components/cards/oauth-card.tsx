@@ -54,7 +54,7 @@ export function OauthCard({
   const card = (
     <div
       className={twMerge(
-        "card max-h-100 max-w-110 border-2",
+        "max-size-110 card border-2",
         required ? "border-error" : "border-base-100",
         connected
           ? "border-success bg-base-300"

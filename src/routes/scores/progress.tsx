@@ -334,7 +334,7 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col gap-4">
-      <fieldset className="fieldset flex w-80 flex-row gap-10 rounded-box border border-base-300 bg-base-100 p-4">
+      <fieldset className="fieldset flex w-80 flex-row gap-10 rounded-box border border-base-300 bg-base-200 p-4 text-highlight-content">
         <legend className="fieldset-legend"></legend>
         <label className="label w-30">
           <input

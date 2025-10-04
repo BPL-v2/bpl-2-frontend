@@ -44,7 +44,7 @@ export function ObjectiveIcon({
       target="_blank"
     >
       <img
-        className={twMerge("max-h-14 max-w-14", className)}
+        className={twMerge("max-size-14", className)}
         src={img_location}
         alt={itemName || img_location}
       />

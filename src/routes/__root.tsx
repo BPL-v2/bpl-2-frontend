@@ -45,7 +45,7 @@ function RootComponent() {
         label: <div className="text-4xl font-bold">BPL</div>,
         icon: (
           <img
-            className="size-8"
+            className="h-12"
             src="/assets/app-logos/bpl-logo.webp"
             alt="bpl-logo"
           />

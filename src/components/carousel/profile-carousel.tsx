@@ -65,7 +65,7 @@ export function ProfileCarousel({
                       "embla__slide flex cursor-pointer flex-row items-center gap-4 rounded-full border-4 bg-base-300 p-1 select-none"
                     }
                     activeProps={{
-                      className: "border-primary shadow-2xl",
+                      className: "border-primary ",
                     }}
                     inactiveProps={{
                       className: "border-transparent",
