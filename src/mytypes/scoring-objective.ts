@@ -3,22 +3,10 @@ import {
   GameVersion,
   Operator,
   ObjectiveType,
-  AggregationType,
   ItemField,
   Condition,
 } from "@client/api";
 import { ScoreObjective } from "./score";
-
-export function availableAggregationTypes(
-  objectiveType: ObjectiveType,
-): AggregationType[] {
-  if (objectiveType === ObjectiveType.ITEM) {
-    return Object.values(AggregationType);
-  }
-  return Object.values(AggregationType).filter(
-    (type) => type !== AggregationType.EARLIEST_FRESH_ITEM,
-  );
-}
 
 export function operatorToString(operator: Operator): string {
   switch (operator) {

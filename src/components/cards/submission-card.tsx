@@ -178,8 +178,8 @@ export function SubmissionCard({ objective }: SubmissionCardProps) {
         showModal={showModal}
         setShowModal={setShowModal}
       />
-      <div className="card bborder bg-base-300 shadow-xl" key={objective.id}>
-        <div className="flex h-full min-h-22 items-center justify-between rounded-t-box bborder-b bg-base-200 px-4 py-2">
+      <div className="card bborder bg-card shadow-xl" key={objective.id}>
+        <div className="flex h-full min-h-22 items-center justify-between rounded-t-box bborder-b bg-base-300/50 px-4 py-2">
           <div
             className={twMerge(
               "w-full",
@@ -233,14 +233,14 @@ export function SubmissionCard({ objective }: SubmissionCardProps) {
                       key={teamId}
                       className={
                         eventStatus?.team_id === teamId
-                          ? "content-highlight bg-highlight"
-                          : "bg-base-300"
+                          ? "content-highlight bg-highlight/70"
+                          : ""
                       }
                     >
                       <td
                         className={twMerge(
                           "py-1 pl-4 text-left",
-                          idx === teamIds.length - 1 && "rounded-bl-box",
+                          idx === teamIds.length - 1 && "rounded-bl-xl",
                           score.points == 0 ? "text-error" : "text-success",
                         )}
                       >
@@ -250,10 +250,10 @@ export function SubmissionCard({ objective }: SubmissionCardProps) {
                       <td
                         className={twMerge(
                           "pr-4 text-right",
-                          idx === teamIds.length - 1 && "rounded-br-box",
+                          idx === teamIds.length - 1 && "rounded-br-xl",
                         )}
                       >
-                        <div className="flex items-center justify-end gap-2 rounded-br-box">
+                        <div className="flex items-center justify-end gap-2 rounded-br-xl">
                           <span className="">{teamMap[teamId]?.name}</span>
                           <VideoButton submissions={s} />
                           <SubmissionStatus submissions={s} userMap={userMap} />

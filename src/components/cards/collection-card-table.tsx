@@ -8,6 +8,7 @@ import { ProgressBar } from "../progress-bar";
 
 type CollectionCardTableProps = {
   objective: ScoreObjective;
+  roundedBottom?: boolean;
 };
 
 function getPlace(score: Score) {
@@ -34,7 +35,10 @@ function finishTooltip(objective: ScoreObjective, score: Score) {
   }`;
 }
 
-export function CollectionCardTable({ objective }: CollectionCardTableProps) {
+export function CollectionCardTable({
+  objective,
+  roundedBottom = false,
+}: CollectionCardTableProps) {
   const { currentEvent, preferences } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const tableRef = useRef<HTMLTableElement>(null);
@@ -56,7 +60,7 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
   );
   return (
     <table key={objective.id} ref={tableRef}>
-      <tbody className="bg-base-300">
+      <tbody>
         {Object.entries(objective.team_score)
           .filter(([teamId]) => teamIds.includes(parseInt(teamId)))
           .map(([teamId, score]) => {
@@ -70,19 +74,18 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
           })
           .map(([teamId, score], idx) => {
             const isFinished = score.number / objective.required_number >= 1;
-            const isLastRow = idx === teamIds.length - 1;
+            const isLastRow = roundedBottom && idx === teamIds.length - 1;
             const isPlayerTeam = teamId === eventStatus?.team_id;
             const gotPoints = score.points > 0;
             return (
               <tr
-                className={isPlayerTeam ? "content-highlight bg-highlight" : ""}
+                className={
+                  isPlayerTeam ? "content-highlight bg-highlight/70" : ""
+                }
                 key={teamId}
               >
                 <td
-                  className={twMerge(
-                    "px-2 py-1",
-                    isLastRow && "rounded-bl-box",
-                  )}
+                  className={twMerge("px-2 py-1", isLastRow && "rounded-bl-xl")}
                 >
                   <div
                     className={twMerge(
@@ -120,7 +123,7 @@ export function CollectionCardTable({ objective }: CollectionCardTableProps) {
                 <td
                   className={twMerge(
                     "px-2 text-left",
-                    isLastRow && "rounded-br-box",
+                    isLastRow && "rounded-br-xl",
                   )}
                   style={{ minWidth: `${longestTeamName + 2}ch` }}
                 >
