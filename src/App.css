@@ -54,9 +54,9 @@
   default: false;
   prefersdark: false;
   color-scheme: "light";
-  --color-base-100: oklch(82% 0.034 265);
-  --color-base-200: oklch(90% 0.034 265);
-  --color-base-300: oklch(97% 0.034 265);
+  --color-base-100: oklch(90% 0.034 265);
+  --color-base-200: oklch(93% 0.034 265);
+  --color-base-300: oklch(96% 0.034 265);
   --color-base-content: oklch(41.886% 0.053 255.824);
   --color-primary: oklch(60% 0.262 276.966);
   --color-primary-content: oklch(91.372% 0.051 257.57);

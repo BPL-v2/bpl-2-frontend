@@ -1,4 +1,9 @@
-import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
+import {
+  Link,
+  Outlet,
+  createRootRoute,
+  useRouterState,
+} from "@tanstack/react-router";
 import { JSX, useContext, useMemo } from "react";
 import "../App.css";
 
@@ -13,6 +18,7 @@ import { GlobalStateContext } from "@utils/context-provider";
 import { useGetEventStatus, useGetUser } from "@client/query";
 import { Footer } from "@components/footer";
 import { TwitchFilled } from "@icons/twitch";
+import { twMerge } from "tailwind-merge";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -31,6 +37,7 @@ export const Route = createRootRoute({
 type MenuItem = {
   label: string | JSX.Element;
   url: string;
+  path: string;
   icon?: JSX.Element;
   visible?: boolean;
 };
@@ -51,76 +58,88 @@ function RootComponent() {
           />
         ),
         url: "/",
+        path: "",
         visible: true,
       },
       {
         label: "Scoring",
         icon: <ChartBarIcon className="size-6" />,
         url: "/scores/ladder",
+        path: "scores",
         visible: true,
       },
       {
         label: "Streams",
         icon: <TwitchFilled className="size-6" />,
         url: "/streams",
+        path: "streams",
         visible: true,
       },
       {
         label: "Rules",
         icon: <BookOpenIcon className="size-6" />,
         url: "/rules",
+        path: "rules",
         visible: true,
       },
       {
         label: "Admin",
         icon: <Cog6ToothIcon className="size-6" />,
         url: "/admin",
+        path: "admin",
         visible:
           (user?.permissions?.length || 0) > 0 || eventStatus?.is_team_lead,
       },
     ];
     return menu.filter((item) => item.visible);
   }, [eventStatus, user]);
+  const selected = useRouterState({
+    select: (state) => state.location.pathname.split("/")[1],
+  });
 
   return (
     <>
       <div className="mx-auto max-w-[1440px] text-center">
-        <div className="flex items-center p-0 text-xl">
-          <div className="navbar bg-base-200">
-            <ul className="justify-left flex flex-1 gap-1 sm:gap-2 xl:gap-4">
-              {menu.map((item) => (
-                <li key={item.url}>
-                  <Link
-                    aria-label={item.label.toString()}
-                    to={item.url}
-                    className="btn flex h-16 items-center gap-2 text-xl font-semibold btn-sm lg:btn-md"
-                    activeProps={{
-                      className: "btn-primary",
-                    }}
-                    inactiveProps={{
-                      className: "btn-ghost hover:btn-primary",
-                    }}
-                  >
-                    {item.icon}
-                    <div className="hidden lg:block">{item.label}</div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <AuthButton />
-          </div>
-        </div>
-        <div className="mb-4 min-h-[79vh]">
-          {user && !user.account_name && (
-            <div className="bg-error p-4 text-lg text-error-content">
-              Looks like you haven't connected your PoE Account yet, make sure
-              to connect by logging in in the top right corner to connect your
-              account so that we can track your characters progress.
+        <div className="flex h-[100vh] flex-col justify-between gap-8">
+          <div>
+            <div
+              className={twMerge(
+                "navbar bg-base-300",
+                selected == "scores" ? "" : "rounded-b-box shadow-xl",
+              )}
+            >
+              <ul className="justify-left flex flex-1 gap-1 sm:gap-2 xl:gap-4">
+                {menu.map((item) => (
+                  <li key={item.url}>
+                    <Link
+                      aria-label={item.label.toString()}
+                      to={item.url}
+                      className={twMerge(
+                        "btn flex h-16 items-center gap-2 text-xl font-semibold btn-sm lg:btn-md",
+                        selected === item.path
+                          ? "btn-primary"
+                          : "btn-ghost hover:btn-primary",
+                      )}
+                    >
+                      {item.icon}
+                      <div className="hidden lg:block">{item.label}</div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <AuthButton />
             </div>
-          )}
-          <Outlet />
+            {user && !user.account_name && (
+              <div className="bg-error p-4 text-lg text-error-content">
+                Looks like you haven't connected your PoE Account yet, make sure
+                to connect by logging in in the top right corner to connect your
+                account so that we can track your characters progress.
+              </div>
+            )}
+            <Outlet />
+          </div>
+          <Footer></Footer>
         </div>
-        <Footer></Footer>
       </div>
     </>
   );
