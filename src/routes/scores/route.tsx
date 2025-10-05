@@ -174,7 +174,7 @@ function ScoringPage() {
   ];
   return (
     <>
-      <div className="mb-4 flex items-center justify-between rounded-b-box bg-base-200">
+      <div className="mb-4 flex items-center justify-between rounded-b-box bg-base-300 shadow-xl">
         <ul className="menu menu-horizontal md:gap-2">
           {tabs.map((tab) => (
             <li key={tab.key}>

@@ -8,12 +8,14 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { redirectOauth } from "@utils/oauth";
+import { twMerge } from "tailwind-merge";
 
 const AuthButton = () => {
   const qc = useQueryClient();
   const state = useRouterState();
   const { user } = useGetUser();
 
+  const page = state.location.href.split("/")[1];
   if (
     user &&
     user.token_expiry_timestamp &&
@@ -23,9 +25,10 @@ const AuthButton = () => {
       <div className="dropdown dropdown-end">
         <div
           tabIndex={0}
-          className={
-            "btn border-0 py-8 btn-lg hover:bg-primary hover:text-primary-content"
-          }
+          className={twMerge(
+            "btn border-0 py-8 btn-lg hover:bg-primary hover:text-primary-content",
+            page === "settings" ? "btn-primary" : "btn-ghost",
+          )}
         >
           <UserIcon className="size-6" />
           <div className="hidden sm:block">
