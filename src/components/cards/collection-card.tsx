@@ -12,8 +12,8 @@ export function CollectionCard({ objective }: CollectionCardProps) {
   const { currentEvent } = useContext(GlobalStateContext);
 
   return (
-    <div className="card bborder bg-base-300 shadow-xl" key={objective.id}>
-      <div className="m-0 card-title flex h-full min-h-22 items-center rounded-t-box bborder-b bg-base-200 px-4 py-2">
+    <div className="card bborder bg-card shadow-xl" key={objective.id}>
+      <div className="m-0 card-title flex h-full min-h-22 items-center rounded-t-box bborder-b bg-base-300/50 px-4 py-2">
         <ObjectiveIcon
           objective={objective}
           gameVersion={currentEvent.game_version}
@@ -30,8 +30,8 @@ export function CollectionCard({ objective }: CollectionCardProps) {
           </h3>
         </div>
       </div>
-      <div className="mb-0 rounded-b-box bg-base-300">
-        <CollectionCardTable objective={objective} />
+      <div className="mb-0 rounded-b-box">
+        <CollectionCardTable objective={objective} roundedBottom />
       </div>
     </div>
   );

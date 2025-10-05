@@ -49,11 +49,11 @@ export function DailyCard({ daily }: DailyCardProps) {
 
   if (!isReleased) {
     return (
-      <div className="card bborder bg-base-300 shadow-xl" key={daily.id}>
-        <div className="h-full min-h-25 rounded-t-box bg-base-200 p-8 text-center text-xl font-semibold">
+      <div className="card bborder bg-card shadow-xl" key={daily.id}>
+        <div className="h-full min-h-25 rounded-t-box p-8 text-center text-xl font-semibold">
           Daily not yet available
         </div>
-        <div className="card-body rounded-b-box bg-base-300 p-8">
+        <div className="card-body rounded-b-box p-8">
           <p className="text-center text-lg">The daily will be available in:</p>
           <div className="flex justify-center">
             <Countdown target={new Date(daily.valid_from)} />
@@ -83,12 +83,12 @@ export function DailyCard({ daily }: DailyCardProps) {
       )}
       <div
         className={twMerge(
-          "card bborder bg-base-200 shadow-xl",
+          "card bborder bg-card shadow-xl",
           isRace && isAvailable ? "outline-4 outline-info" : "",
         )}
         key={daily.id}
       >
-        <div className="card-title flex h-full min-h-25 items-center rounded-t-box bborder-b bg-base-200 px-4 py-2">
+        <div className="card-title flex h-full min-h-25 items-center rounded-t-box bborder-b bg-base-300/50 px-4 py-2">
           {canSubmit ? (
             <div
               className="tooltip tooltip-left lg:tooltip-top"
@@ -121,7 +121,7 @@ export function DailyCard({ daily }: DailyCardProps) {
             </h3>
           </div>
         </div>
-        <div className={twMerge("bg-base-300", isFinished && "rounded-b-box")}>
+        <div className={isFinished ? "rounded-b-box" : ""}>
           <CollectionCardTable objective={daily} />
         </div>
         {!isFinished && (
