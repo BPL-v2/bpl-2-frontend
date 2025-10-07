@@ -9,6 +9,7 @@ import {
   preloadLadderData,
   useGetEventStatus,
   useGetLadder,
+  useGetStreams,
   useGetUsers,
 } from "@client/query";
 import { AscendancyName } from "@components/character/ascendancy-name";
@@ -29,6 +30,8 @@ import { getSkillColor } from "@utils/gems";
 import { calcPersonalPoints } from "@utils/personal-points";
 import { LadderPortrait } from "@components/character/ladder-portrait";
 import { twMerge } from "tailwind-merge";
+import { defaultPreferences } from "@mytypes/preferences";
+import { TwitchFilled } from "@icons/twitch";
 
 type RowDef = {
   total: number;
@@ -58,6 +61,17 @@ function LadderTab(): JSX.Element {
     currentEvent.id,
   );
   const { eventStatus } = useGetEventStatus(currentEvent.id);
+  const { streams = [] } = useGetStreams(currentEvent.id);
+  const showAlwaysLadder = ["Stream"];
+  const streamsByUser = streams.reduce(
+    (acc, stream) => {
+      if (stream.backend_user_id) {
+        acc[stream.backend_user_id] = stream;
+      }
+      return acc;
+    },
+    {} as { [userId: number]: (typeof streams)[0] },
+  );
   const { data: users = [], isError: usersIsError } = useGetUsers(
     currentEvent.id,
   );
@@ -99,6 +113,27 @@ function LadderTab(): JSX.Element {
           accessorKey: "rank",
           header: "#",
           size: 50,
+        },
+        {
+          id: "Stream",
+          header: "",
+          cell: (info) =>
+            streamsByUser[info.row.original.character?.user_id || 0] &&
+            info.row.original.twitch_account && (
+              <Link
+                to={"/streams/$twitchAccount"}
+                params={{
+                  twitchAccount: info.row.original.twitch_account,
+                }}
+              >
+                <TwitchFilled className="size-5" brandColor />
+              </Link>
+            ),
+          enableSorting: false,
+          size: 30,
+          meta: {
+            filterVariant: "boolean",
+          },
         },
         {
           id: "Account",
@@ -334,7 +369,8 @@ function LadderTab(): JSX.Element {
     return columns.filter((col) => {
       return (
         isMobile ||
-        preferences.ladder[col.id as keyof typeof preferences.ladder]
+        preferences.ladder[col.id as keyof typeof preferences.ladder] ||
+        showAlwaysLadder.includes(col.id as string)
       );
     });
   }, [isMobile, currentEvent, preferences, getTeam, setPreferences]);
@@ -481,7 +517,7 @@ function LadderTab(): JSX.Element {
       <div className="divider divider-primary">Ladder</div>
       {!isMobile && (
         <div className="mb-4 flex flex-wrap gap-2">
-          {Object.keys(preferences.ladder).map((label) => {
+          {Object.keys(defaultPreferences.ladder).map((label) => {
             const key = label as keyof typeof preferences.ladder;
             return (
               <button
