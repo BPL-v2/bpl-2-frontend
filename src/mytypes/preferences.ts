@@ -28,6 +28,7 @@ export type Preferences = {
     "P.O.": boolean;
   };
   limitTeams: number;
+  version?: number;
 };
 export const defaultPreferences: Preferences = {
   theme: "dark",
@@ -59,6 +60,7 @@ export const defaultPreferences: Preferences = {
     "P.O.": false,
   },
   limitTeams: 0,
+  version: 0,
 };
 
 export function initPreferences(): Preferences {
@@ -67,6 +69,9 @@ export function initPreferences(): Preferences {
     return defaultPreferences;
   }
   const parsedPreferences = JSON.parse(playerPreferences);
+  if (parsedPreferences.version === undefined) {
+    parsedPreferences.ladder = defaultPreferences.ladder;
+  }
   return {
     ...defaultPreferences,
     ...parsedPreferences,
