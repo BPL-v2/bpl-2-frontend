@@ -37,7 +37,10 @@ export function LadderPortrait({ entry, team }: Props) {
         >
           {entry.character?.main_skill}
         </span>
-        <AscendancyName character_class={entry.character_class} />
+        <AscendancyName
+          character_class={entry.character_class}
+          className="font-bold"
+        />
         <div className="flex items-center gap-1">
           lvl
           <ExperienceBar experience={entry.experience} level={entry.level} />
