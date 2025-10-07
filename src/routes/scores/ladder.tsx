@@ -1,6 +1,6 @@
-import { LadderEntry, Team } from "@client/api";
+import { CharacterStat, LadderEntry, Team } from "@client/api";
 import { getRootCategoryNames } from "@mytypes/scoring-category";
-import { ColumnDef, sortingFns } from "@tanstack/react-table";
+import { CellContext, ColumnDef, sortingFns } from "@tanstack/react-table";
 import { GlobalStateContext } from "@utils/context-provider";
 import { getTotalPoints } from "@utils/utils";
 import { JSX, useContext, useMemo } from "react";
@@ -18,12 +18,17 @@ import POProgressBar from "@components/personal-objective/po-progress";
 import Table from "@components/table/table";
 import { TeamName } from "@components/team/team-name";
 import TeamScoreDisplay from "@components/team/team-score";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowTopRightOnSquareIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
 import { POPointRules } from "@rules/po-points";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { getSkillColor } from "@utils/gems";
 import { calcPersonalPoints } from "@utils/personal-points";
 import { LadderPortrait } from "@components/character/ladder-portrait";
+import { twMerge } from "tailwind-merge";
 
 type RowDef = {
   total: number;
@@ -53,7 +58,9 @@ function LadderTab(): JSX.Element {
     currentEvent.id,
   );
   const { eventStatus } = useGetEventStatus(currentEvent.id);
-  const { data: users, isError: usersIsError } = useGetUsers(currentEvent.id);
+  const { data: users = [], isError: usersIsError } = useGetUsers(
+    currentEvent.id,
+  );
   const teamMap = useMemo(
     () =>
       currentEvent?.teams?.reduce((acc: { [teamId: number]: Team }, team) => {
@@ -88,6 +95,35 @@ function LadderTab(): JSX.Element {
     if (!isMobile) {
       columns = [
         {
+          id: "Rank",
+          accessorKey: "rank",
+          header: "#",
+          size: 50,
+        },
+        {
+          id: "Account",
+          accessorKey: "account_name",
+          header: "",
+          cell: (info) => (
+            <a
+              className="flex cursor-pointer items-center gap-1 hover:text-primary"
+              href={`https://www.pathofexile.com/account/view-profile/${info.row.original.account_name.replace("#", "-")}/characters`}
+              target="_blank"
+            >
+              <ArrowTopRightOnSquareIcon className="inline size-4" />
+              {info.row.original.account_name}
+            </a>
+          ),
+          enableSorting: false,
+          size: 250,
+          filterFn: "includesString",
+          meta: {
+            filterVariant: "string",
+            filterPlaceholder: "Account",
+          },
+        },
+        {
+          id: "Character",
           accessorKey: "character_name",
           header: "",
           enableSorting: false,
@@ -100,24 +136,27 @@ function LadderTab(): JSX.Element {
           cell: (info) => (
             <Link
               to={"/profile/$userId/$eventId/$characterId"}
+              className="flex items-center gap-1 hover:text-primary"
               params={{
                 userId: info.row.original.character?.user_id || 0,
                 characterId: info.row.original.character?.id || "",
                 eventId: currentEvent.id,
               }}
             >
+              <ArrowTopRightOnSquareIcon className="inline size-4" />
               {info.row.original.character_name}
             </Link>
           ),
         },
         {
+          id: "Team",
           accessorFn: (row) => getTeam(row.user_id)?.name,
           header: " ",
           cell: (info) => (
             <TeamName team={getTeam(info.row.original.user_id)} />
           ),
           enableSorting: false,
-          size: 250,
+          size: 200,
           filterFn: "includesString",
           meta: {
             filterVariant: "enum",
@@ -126,7 +165,7 @@ function LadderTab(): JSX.Element {
           },
         },
         {
-          id: "ascendancy",
+          id: "Ascendancy",
           accessorFn: (row) => row.character_class + row.character?.main_skill,
           header: "",
           cell: (info) => {
@@ -161,52 +200,78 @@ function LadderTab(): JSX.Element {
           },
         },
         {
-          accessorFn: (row) => row.stats?.dps || 0,
-          header: "DPS",
-          cell: (info) => info.getValue<number>().toLocaleString(),
-        },
-
-        {
-          accessorFn: (row) => row.stats?.ehp || 0,
-          header: "EHP",
-
-          cell: (info) => {
-            const ehp = info.getValue<number>();
-            if (ehp == 2147483647) return "inf";
-            return ehp.toLocaleString();
-          },
-        },
-
-        {
+          id: "Level",
           accessorKey: "experience",
           header: "Level",
           cell: (info) => (
             <ExperienceBar
               experience={info.row.original.experience}
               level={info.row.original.level}
+              width={60}
+              className="text-lg font-bold"
             />
           ),
           sortingFn: sortingFns.basic,
-          size: 150,
+          size: 120,
         },
-      ];
-      if (preferences.ladder?.showPoPoints) {
-        columns.push({
-          header: "P.O. Finished",
-          accessorFn: (row) => calcPersonalPoints(row) == 9,
-          cell: (info) =>
-            info.getValue() ? (
-              <CheckCircleIcon className="size-6 text-success" />
-            ) : (
-              <XCircleIcon className="size-6 text-error" />
+        {
+          id: "Delve",
+          accessorKey: "delve",
+          header: "Delve",
+          size: 100,
+        },
+        ...[
+          "DPS",
+          "EHP",
+          "Armour",
+          "Evasion",
+          "ES",
+          "Ele max hit",
+          "Phys max hit",
+          "HP",
+          "Mana",
+          "Movement Speed",
+        ].map((stat) => {
+          const key = stat
+            .replaceAll(" ", "_")
+            .toLowerCase() as keyof CharacterStat;
+          return {
+            id: stat,
+            accessorFn: (row: LadderEntry) => row.stats?.[key] || 0,
+            header: () => (
+              <div
+                className="tooltip tooltip-bottom w-18 overflow-hidden text-ellipsis"
+                data-tip={stat}
+              >
+                <span className="">{stat}</span>
+              </div>
             ),
-          enableSorting: false,
-          meta: {
-            filterVariant: "boolean",
-          },
-          size: 170,
-        });
-        columns.push({
+            cell: (info: CellContext<LadderEntry, unknown>) => {
+              const value = info.getValue<number>();
+              if (value === undefined) {
+                return 0;
+              }
+              if (value === 2147483647) {
+                return "inf";
+              }
+              return value.toLocaleString();
+            },
+            size: 100,
+            sortingFn: sortingFns.basic,
+            meta: {
+              filterVariant: "number",
+            },
+          };
+        }),
+        {
+          id: "P.O.",
+          header: "P.O.",
+          accessorFn: (row) => calcPersonalPoints(row),
+          cell: (info) => info.getValue(),
+          size: 90,
+        },
+        {
+          id: "Pantheon",
           header: "Pantheon",
           accessorFn: (row) => row.character?.pantheon,
           cell: (info) =>
@@ -219,8 +284,9 @@ function LadderTab(): JSX.Element {
           meta: {
             filterVariant: "boolean",
           },
-        });
-        columns.push({
+        },
+        {
+          id: "Uber Lab",
           accessorFn: (row) => (row.character?.ascendancy_points || 0) > 6,
           cell: (info) =>
             (info.row.original.character?.ascendancy_points || 0) > 6 ? (
@@ -233,34 +299,13 @@ function LadderTab(): JSX.Element {
           meta: {
             filterVariant: "boolean",
           },
-        });
-        columns.push({
+        },
+        {
+          id: "Atlas",
           accessorFn: (row) => row.character?.atlas_node_count || 0,
-          header: "Atlas Points",
-          sortingFn: sortingFns.basic,
-        });
-      }
-      columns.push({
-        // @ts-ignore
-        header: (
-          <button
-            className="btn btn-sm btn-primary"
-            onClick={() => {
-              setPreferences({
-                ...preferences,
-                ladder: {
-                  ...preferences.ladder,
-                  showPoPoints: !preferences.ladder.showPoPoints,
-                },
-              });
-            }}
-          >
-            P.O.
-          </button>
-        ),
-        width: 10,
-        id: "showPoPoints",
-      });
+          header: "Atlas",
+        },
+      ];
     } else {
       columns = [
         {
@@ -282,11 +327,16 @@ function LadderTab(): JSX.Element {
             />
           ),
           enableSorting: false,
-          size: 400,
+          size: 375,
         },
       ];
     }
-    return columns;
+    return columns.filter((col) => {
+      return (
+        isMobile ||
+        preferences.ladder[col.id as keyof typeof preferences.ladder]
+      );
+    });
   }, [isMobile, currentEvent, preferences, getTeam, setPreferences]);
 
   if (ladderIsError || usersIsError) {
@@ -429,6 +479,35 @@ function LadderTab(): JSX.Element {
         </div>
       )}
       <div className="divider divider-primary">Ladder</div>
+      {!isMobile && (
+        <div className="mb-4 flex flex-wrap gap-2">
+          {Object.keys(preferences.ladder).map((label) => {
+            const key = label as keyof typeof preferences.ladder;
+            return (
+              <button
+                key={label}
+                onClick={() => {
+                  setPreferences({
+                    ...preferences,
+                    ladder: {
+                      ...preferences.ladder,
+                      [label]: !preferences.ladder[key],
+                    },
+                  });
+                }}
+                className={twMerge(
+                  "btn rounded-xl px-2 btn-sm",
+                  preferences.ladder[key]
+                    ? "btn-primary"
+                    : "border-primary bg-base-100/0 text-primary",
+                )}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      )}
       <Table
         data={ladder?.sort((a, b) => a.rank - b.rank) || []}
         columns={ladderColumns}
