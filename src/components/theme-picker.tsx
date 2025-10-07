@@ -1,6 +1,16 @@
 import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 
+export function toTheme(theme: string) {
+  if (theme === "system") {
+    return window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+  return theme;
+}
+
 export function ThemePicker() {
   const { preferences, setPreferences } = useContext(GlobalStateContext);
 
@@ -9,7 +19,12 @@ export function ThemePicker() {
       <input
         type="checkbox"
         className="theme-controller"
-        defaultChecked={preferences.theme === "light"}
+        defaultChecked={
+          !(
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+          )
+        }
         value={preferences.theme}
         onChange={(e) => {
           const newPreferences = {
@@ -20,7 +35,7 @@ export function ThemePicker() {
           localStorage.setItem("preferences", JSON.stringify(newPreferences));
           document
             .querySelector("html")
-            ?.setAttribute("data-theme", newPreferences.theme);
+            ?.setAttribute("data-theme", toTheme(newPreferences.theme));
         }}
       />
       <svg

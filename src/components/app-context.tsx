@@ -14,6 +14,7 @@ import { ContextProvider } from "@utils/context-provider";
 import { hidePOTotal, mergeScores, ScoreMap } from "@utils/utils";
 import { useEffect, useState } from "react";
 import { establishScoreSocket } from "../websocket/score-socket";
+import { toTheme } from "./theme-picker";
 
 function ContextWrapper({ children }: { children: React.ReactNode }) {
   // initialize with a dummy event so that we can start making api calls
@@ -90,7 +91,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     document
       .querySelector("html")
-      ?.setAttribute("data-theme", preferences.theme);
+      ?.setAttribute("data-theme", toTheme(preferences.theme));
   }, [preferences.theme]);
 
   useEffect(() => {

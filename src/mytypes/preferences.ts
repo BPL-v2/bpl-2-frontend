@@ -31,7 +31,7 @@ export type Preferences = {
   version?: number;
 };
 export const defaultPreferences: Preferences = {
-  theme: "dark",
+  theme: "system",
   uniqueSets: {
     showCompleted: true,
     showFirstAvailable: true,
