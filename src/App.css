@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 @plugin "daisyui" {
-  themes: false;
+  themes: all;
 }
 
 @plugin "daisyui/theme" {
@@ -37,16 +37,6 @@
   --border: 1px;
   --depth: 0;
   --noise: 0;
-  --color-highlight: oklch(40% 0.034 265.754);
-  --color-highlight-content: oklch(100% 0 0);
-
-  --color-health: var(--color-rose-500);
-  --color-mana: var(--color-blue-400);
-  --color-energy-shield: var(--color-cyan-200);
-  --color-lightning: var(--color-yellow-300);
-  --color-fire: var(--color-orange-400);
-  --color-cold: var(--color-blue-400);
-  --color-chaos: var(--color-fuchsia-500);
 }
 
 @plugin "daisyui/theme" {
@@ -54,9 +44,9 @@
   default: false;
   prefersdark: false;
   color-scheme: "light";
-  --color-base-100: oklch(90% 0.034 265);
-  --color-base-200: oklch(93% 0.034 265);
-  --color-base-300: oklch(96% 0.034 265);
+  --color-base-100: oklch(100% 0 0);
+  --color-base-200: oklch(97% 0.015 265);
+  --color-base-300: oklch(93% 0.015 265);
   --color-base-content: oklch(41.886% 0.053 255.824);
   --color-primary: oklch(60% 0.262 276.966);
   --color-primary-content: oklch(91.372% 0.051 257.57);
@@ -82,21 +72,6 @@
   --border: 1px;
   --depth: 0;
   --noise: 0;
-  --color-highlight: oklch(100% 0.034 265);
-  --color-highlight-content: oklch(0% 0 0);
-
-  --color-health: var(--color-rose-600);
-  --color-mana: var(--color-blue-500);
-  --color-energy-shield: var(--color-cyan-500);
-  --color-lightning: var(--color-amber-500);
-  --color-fire: var(--color-orange-700);
-  --color-cold: var(--color-blue-500);
-  --color-chaos: var(--color-fuchsia-600);
-  --color-rare: var(--color-yellow-400);
-
-  --color-strength: var(--color-rose-600);
-  --color-dexterity: var(--color-lime-500);
-  --color-intelligence: var(--color-blue-600);
 }
 
 @theme {
@@ -119,8 +94,28 @@
   --color-dexterity: var(--color-lime-400);
   --color-intelligence: var(--color-blue-400);
 
-  --color-highlight: oklch(0% 0 0);
-  --color-highlight-content: oklch(100% 0 0);
+  --color-highlight: light-dark(oklch(100% 0 0), oklch(40% 0.034 265.754));
+  --color-highlight-content: light-dark(oklch(0% 0 0), oklch(100% 0 0));
+  --color-strength: light-dark(var(--color-rose-600), var(--color-rose-500));
+  --color-dexterity: light-dark(var(--color-lime-600), var(--color-lime-400));
+  --color-intelligence: light-dark(
+    var(--color-blue-600),
+    var(--color-blue-400)
+  );
+
+  --color-health: light-dark(var(--color-rose-600), var(--color-rose-500));
+  --color-mana: light-dark(var(--color-blue-500), var(--color-blue-400));
+  --color-energy-shield: light-dark(
+    var(--color-cyan-500),
+    var(--color-cyan-200)
+  );
+  --color-lightning: light-dark(
+    var(--color-amber-500),
+    var(--color-yellow-300)
+  );
+  --color-fire: light-dark(var(--color-orange-700), var(--color-orange-400));
+  --color-cold: light-dark(var(--color-blue-500), var(--color-blue-400));
+  --color-chaos: light-dark(var(--color-fuchsia-600), var(--color-fuchsia-500));
 }
 
 @utility bborder {
