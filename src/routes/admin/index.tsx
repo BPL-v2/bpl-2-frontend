@@ -83,6 +83,12 @@ function RouteComponent() {
           permissions={[Permission.admin, Permission.submission_judge]}
         />
         <AdminRouteCard
+          title="User Activity"
+          description="Monitor user activity in event."
+          link="/admin/activity"
+          permissions={[Permission.admin]}
+        />
+        <AdminRouteCard
           title="Monitoring"
           description="View the status of the server and its components."
           link="https://v2202503259898322516.goodsrv.de/monitoring"

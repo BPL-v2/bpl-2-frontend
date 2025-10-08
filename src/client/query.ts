@@ -974,7 +974,7 @@ export function useDeleteTeamSuggestion(
   };
 }
 
-export function useGetActivity(eventId: number) {
+export function useGetActivitiesForEvent(eventId: number) {
   const query = useQuery({
     queryKey: ["activity", current !== eventId ? eventId : "current"],
     // queryFn: () => activityApi.getEventActivitiesForUser(eventId, 1),
@@ -982,7 +982,7 @@ export function useGetActivity(eventId: number) {
   });
   return {
     ...query,
-    activity: query.data ?? [],
+    activities: query.data ?? [],
   };
 }
 export function useGetUserActivity(eventId: number, userId: number) {
