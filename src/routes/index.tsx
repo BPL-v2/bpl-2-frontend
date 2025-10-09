@@ -19,18 +19,22 @@ function Home() {
   usePageSEO("home");
   const { currentEvent } = useContext(GlobalStateContext);
   const { events } = useGetEvents();
-  const nextEvent =
-    events?.sort((a, b) => {
-      return (
-        (Date.parse(b.event_start_time) || 0) -
-        (Date.parse(a.event_start_time) || 0)
-      );
-    })[0] || currentEvent;
+  const nextEvent = events?.sort(
+    (a, b) =>
+      (Date.parse(b.event_start_time) || 0) -
+      (Date.parse(a.event_start_time) || 0),
+  )[0];
   const { eventStatus } = useGetEventStatus(nextEvent?.id || currentEvent.id);
   const now = Date.now();
-  const signupsStart = new Date() >= new Date(nextEvent.application_start_time);
-  const hasStarted = Date.parse(nextEvent.event_start_time) < now;
-  const hasEnded = Date.parse(nextEvent.event_end_time) < now;
+  const signupsStart = nextEvent
+    ? new Date() >= new Date(nextEvent.application_start_time)
+    : false;
+  const hasStarted = nextEvent
+    ? Date.parse(nextEvent.event_start_time) < now
+    : false;
+  const hasEnded = nextEvent
+    ? Date.parse(nextEvent.event_end_time) < now
+    : true;
   return (
     <div className="mx-auto mt-8 flex flex-col gap-8">
       {!hasEnded && (
