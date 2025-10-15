@@ -26,13 +26,13 @@ type ScoreRow = {
 } & Score;
 
 function RouteComponent() {
-  const { currentEvent, scores, preferences } = useContext(GlobalStateContext);
+  const { currentEvent, scores } = useContext(GlobalStateContext);
   const plotRef = useRef<HTMLDivElement>(null);
   const [timeFormat, setTimeFormat] = useState<"relative" | "absolute">(
     "absolute",
   );
   const [deviationFromAvg, setDeviationFromAvg] = useState(false);
-  const fontColor = preferences.theme === "dark" ? "white" : "black";
+  const fontColor = getComputedStyle(document.documentElement).getPropertyValue('--color-base-content');
 
   const [onlyShowRanked, setOnlyShowRanked] = useState(false);
   const teamMap = currentEvent.teams.reduce(
