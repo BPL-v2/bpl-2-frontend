@@ -48,7 +48,12 @@ function CharacterPortrait({
   currentEvent: Event;
 }) {
   const character = ladderEntry?.character;
-  if (!ladderEntry || !character) return null;
+  const style =
+    "flex cursor-pointer flex-row items-center gap-4 rounded-t-box  bg-base-300 p-2 select-none border-transparent";
+  if (!ladderEntry || !character)
+    return (
+      <div className={twMerge("h-18 skeleton rounded-b-none", style)}></div>
+    );
   let ascendancyName = character?.ascendancy;
   let ascendancyObj;
   if (currentEvent.game_version === GameVersion.poe2) {
@@ -69,15 +74,7 @@ function CharacterPortrait({
         userId: ladderEntry.user_id || 0,
         eventId: currentEvent.id,
       }}
-      className={
-        "flex cursor-pointer flex-row items-center gap-4 rounded-t-box border-4 bg-base-300 p-1 select-none"
-      }
-      activeProps={{
-        className: "border-primary shadow-2xl",
-      }}
-      inactiveProps={{
-        className: "border-transparent",
-      }}
+      className={style}
     >
       <img
         src={ascendancyObj.thumbnail}
