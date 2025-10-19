@@ -22,7 +22,8 @@ export const TwitchStreamEmbed = ({
             src={stream.thumbnail_url
               .replace("{height}", String(height))
               .replace("{width}", String(width))}
-            alt={stream.title}
+            style={{ height: height }}
+            className="skeleton rounded-none"
           />
         ) : null}
         <div className="absolute top-2 left-2 rounded-md bg-red-600 px-2 text-sm font-bold text-white">
