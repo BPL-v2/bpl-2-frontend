@@ -94,7 +94,7 @@ const SignupButton = () => {
                 />
               </div>
             </div>
-            {/* <label className="fieldset-label">
+            <label className="fieldset-label">
               Do you want to play with another person? (PoE account name
               required)
             </label>
@@ -104,8 +104,8 @@ const SignupButton = () => {
                 type="text"
                 className="input input-bordered w-full bg-base-200"
               />
-            </div> */}
-            <label className="fieldset-label text-info">
+            </div>
+            {/* <label className="fieldset-label text-info">
               <input
                 type="checkbox"
                 id="extra"
@@ -113,7 +113,7 @@ const SignupButton = () => {
                 className="checkbox checkbox-info"
               />
               Are you owner of a guild with unlocked guild stashes?
-            </label>
+            </label> */}
             <label className="fieldset-label">
               <input
                 type="checkbox"

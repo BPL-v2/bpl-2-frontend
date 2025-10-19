@@ -6,11 +6,7 @@ import {
 } from "@client/query";
 import { DeleteButton } from "@components/form/delete-button";
 import Table from "@components/table/table";
-import {
-  ArrowDownTrayIcon,
-  CheckCircleIcon,
-  XCircleIcon,
-} from "@heroicons/react/24/outline";
+import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";
@@ -104,11 +100,11 @@ function UserSortPage() {
 
   const sortColumns = useMemo(() => {
     const columns: ColumnDef<Signup>[] = [
-      // {
-      //   header: "Partners",
-      //   accessorFn: (row) => partnerMap.get(row.user.id),
-      //   size: 120,
-      // },
+      {
+        header: "Partners",
+        accessorFn: (row) => partnerMap.get(row.user.id),
+        size: 120,
+      },
       {
         header: "ID",
         accessorKey: "user.id",
@@ -129,18 +125,18 @@ function UserSortPage() {
         accessorKey: "expected_playtime",
         size: 120,
       },
-      {
-        header: "GuildLead",
-        size: 150,
-        accessorKey: "extra",
-        cell: ({ row }) => {
-          return row.original.extra ? (
-            <CheckCircleIcon className="size-8 text-success" />
-          ) : (
-            <XCircleIcon className="size-8 text-error" />
-          );
-        },
-      },
+      // {
+      //   header: "GuildLead",
+      //   size: 150,
+      //   accessorKey: "extra",
+      //   cell: ({ row }) => {
+      //     return row.original.extra ? (
+      //       <CheckCircleIcon className="size-8 text-success" />
+      //     ) : (
+      //       <XCircleIcon className="size-8 text-error" />
+      //     );
+      //   },
+      // },
       {
         header: "Lead",
         accessorKey: "team_lead",
