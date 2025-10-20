@@ -460,3 +460,50 @@ html {
     padding-left: var(--slide-spacing-lg);
   }
 }
+
+.passiveTree circle[active] {
+  stroke: var(--color-info);
+  fill: var(--color-info);
+  stroke-width: 30;
+}
+
+.passiveTree path[active] {
+  stroke: var(--color-info);
+  stroke-width: 30;
+}
+
+.passiveTree line[active] {
+  stroke: var(--color-info);
+  stroke-width: 30;
+}
+
+.passiveTree .mastery {
+  fill: none;
+}
+
+.passiveTree .mastery[active] {
+  fill: var(--color-info);
+}
+
+.passiveTree .ascendancy {
+  fill: none;
+  stroke: none;
+}
+
+.passiveTree .ascendancy[active] {
+  stroke: var(--color-info);
+  fill: var(--color-info);
+}
+
+.passiveTree .ascendancy[shown] {
+  stroke: var(--color-base-300);
+  fill: var(--color-base-300);
+}
+
+.passiveTree .isolated {
+  fill: none;
+}
+
+.passiveTree .isolated[active] {
+  fill: var(--color-success);
+}

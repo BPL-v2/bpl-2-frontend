@@ -158,10 +158,16 @@ export interface Build {
   ascendClassName: string;
 }
 
+export interface Spec {
+  masteryEffects: Record<number, number>;
+  nodes: Set<number>;
+}
+
 export interface PathOfBuilding {
   build: Build;
   skills: Skills;
   items: Item[];
+  spec: Spec;
 }
 
 export enum Rarity {
@@ -559,8 +565,37 @@ export function decodePoBExport(input: string): PathOfBuilding {
       defaultGemQuality: "",
       skillSets: [],
     },
+    spec: {
+      masteryEffects: {},
+      nodes: new Set(),
+    },
     items: [],
   };
+
+  const spec = xmlDoc.getElementsByTagName("Spec")[0];
+  result.spec.masteryEffects =
+    spec
+      .getAttribute("masteryEffects")
+      ?.slice(1, -1)
+      .split("},{")
+      .map((pair) => pair.split(",").map((num) => parseInt(num)))
+      .reduce(
+        (acc, [key, value]) => {
+          acc[key] = value;
+          return acc;
+        },
+        {} as Record<number, number>,
+      ) || {};
+  result.spec.nodes =
+    spec
+      .getAttribute("nodes")
+      ?.split(",")
+      .map((num) => parseInt(num))
+      .reduce((acc, node) => {
+        acc.add(node);
+        return acc;
+      }, new Set<number>()) || new Set<number>();
+
   const build = xmlDoc.getElementsByTagName("Build")[0];
   result.build.bandit = build.getAttribute("bandit") || "";
   result.build.level = parseInt(build.getAttribute("level") || "0");
