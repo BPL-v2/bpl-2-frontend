@@ -487,11 +487,16 @@ export function useSwitchStashFetching(qc: QueryClient, eventId: number) {
   };
 }
 
-export function useFile<T>(filePath: string) {
+export function useFile<T>(filePath: string, format: "text" | "json" = "json") {
   return useQuery({
     queryKey: [filePath],
     queryFn: async () =>
-      fetch(filePath).then((res) => res.json() as Promise<T>),
+      fetch(filePath).then((res) => {
+        if (format === "json") {
+          return res.json() as Promise<T>;
+        }
+        return res.text() as Promise<T>;
+      }),
     refetchOnMount: false,
   });
 }
