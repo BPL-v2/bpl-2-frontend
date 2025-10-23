@@ -32,7 +32,9 @@ function RouteComponent() {
     "absolute",
   );
   const [deviationFromAvg, setDeviationFromAvg] = useState(false);
-  const fontColor = getComputedStyle(document.documentElement).getPropertyValue('--color-base-content');
+  const fontColor = getComputedStyle(document.documentElement).getPropertyValue(
+    "--color-base-content",
+  );
 
   const [onlyShowRanked, setOnlyShowRanked] = useState(false);
   const teamMap = currentEvent.teams.reduce(
@@ -210,8 +212,7 @@ function RouteComponent() {
               {childIdToUniqueCategory[row.original.objective.id] && (
                 <CategoryIcon
                   name={childIdToUniqueCategory[row.original.objective.id].name}
-                  height={48}
-                  width={48}
+                  size={48}
                 />
               )}
               <div className="flex w-12 items-center justify-center">
@@ -227,11 +228,7 @@ function RouteComponent() {
         if (iconMap[row.original.objective.name]) {
           return (
             <div className="justify-left flex w-full">
-              <CategoryIcon
-                name={row.original.objective.name}
-                height={48}
-                width={48}
-              />
+              <CategoryIcon name={row.original.objective.name} size={48} />
             </div>
           );
         }

@@ -973,6 +973,12 @@ export interface Event {
     name: string;
     /**
      * 
+     * @type {string}
+     * @memberof Event
+     */
+    patch?: string;
+    /**
+     * 
      * @type {Array<Team>}
      * @memberof Event
      */
@@ -1057,6 +1063,12 @@ export interface EventCreate {
      * @memberof EventCreate
      */
     name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof EventCreate
+     */
+    patch?: string;
     /**
      * 
      * @type {number}

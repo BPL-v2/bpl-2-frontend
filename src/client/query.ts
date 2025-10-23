@@ -300,6 +300,7 @@ export function useGetUserCharacters(userId: number) {
         });
       }),
     enabled: !!userId,
+    refetchOnMount: false,
   });
   return {
     ...query,
@@ -315,6 +316,7 @@ export function useGetCharacterTimeseries(characterId: string, userId: number) {
         .getCharacterHistory(userId, characterId)
         .then((data) => data.sort((a, b) => a.timestamp - b.timestamp)),
     enabled: !!userId && !!characterId,
+    staleTime: 5 * 60 * 1000,
   });
   return {
     ...query,
@@ -840,6 +842,9 @@ export function useGetPoBs(userId: number, characterId: string) {
     queryKey: ["pobExport", userId, characterId],
     queryFn: () => characterApi.getPoBs(userId, characterId),
     enabled: !!userId && !!characterId,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    staleTime: 5 * 60 * 1000,
   });
   return {
     ...query,
@@ -916,14 +921,49 @@ export function useGetScore(eventId: number) {
   };
 }
 
-export function preloadLadderData(qc: QueryClient) {
-  if (!qc.getQueryData(["ladder", "current"])) {
+export function preload(
+  qc: QueryClient,
+  key: any[],
+  queryFn: () => Promise<any>,
+) {
+  if (!qc.getQueryData(key)) {
     qc.prefetchQuery({
-      queryKey: ["ladder", "current"],
-      //@ts-ignore
-      queryFn: async () => ladderApi.getLadder("current"),
+      queryKey: key,
+      queryFn: queryFn,
     });
   }
+}
+
+export function preloadLadderData(qc: QueryClient) {
+  preload(
+    qc,
+    ["ladder", "current"], //@ts-ignore
+    () => ladderApi.getLadder("current"),
+  );
+}
+
+export function preloadCharacterData(
+  userId: number,
+  characterId: string,
+  eventId: number,
+  qc: QueryClient,
+) {
+  preload(qc, ["pobExport", userId, characterId], () =>
+    characterApi.getPoBs(userId, characterId),
+  );
+  preload(qc, ["activity", eventId, userId], () =>
+    activityApi.getEventActivitiesForUser(eventId, userId),
+  );
+  preload(
+    qc,
+    ["atlasProgress", current !== eventId ? eventId : "current", userId],
+    () => userApi.getAtlasProgression(eventId, userId),
+  );
+  preload(qc, ["characterTimeseries", characterId, userId], () =>
+    characterApi
+      .getCharacterHistory(userId, characterId)
+      .then((data) => data.sort((a, b) => a.timestamp - b.timestamp)),
+  );
 }
 
 export function useGetTeamGoals(eventId: number) {
@@ -982,7 +1022,6 @@ export function useDeleteTeamSuggestion(
 export function useGetActivitiesForEvent(eventId: number) {
   const query = useQuery({
     queryKey: ["activity", current !== eventId ? eventId : "current"],
-    // queryFn: () => activityApi.getEventActivitiesForUser(eventId, 1),
     queryFn: () => activityApi.getEventActivities(eventId),
   });
   return {
@@ -992,13 +1031,32 @@ export function useGetActivitiesForEvent(eventId: number) {
 }
 export function useGetUserActivity(eventId: number, userId: number) {
   const query = useQuery({
-    queryKey: ["activity", current !== eventId ? eventId : "current", userId],
-    // queryFn: () => activityApi.getEventActivitiesForUser(eventId, 1),
+    queryKey: ["activity", eventId, userId],
     queryFn: () => activityApi.getEventActivitiesForUser(eventId, userId),
     enabled: !!userId,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    staleTime: 5 * 60 * 1000,
   });
   return {
     ...query,
     activity: query.data,
+  };
+}
+
+export function useGetUserAtlasProgress(eventId: number, userId: number) {
+  const query = useQuery({
+    queryKey: [
+      "atlasProgress",
+      current !== eventId ? eventId : "current",
+      userId,
+    ],
+    queryFn: () => userApi.getAtlasProgression(eventId, userId),
+    enabled: !!userId,
+    refetchOnMount: false,
+  });
+  return {
+    ...query,
+    atlasProgress: query.data,
   };
 }

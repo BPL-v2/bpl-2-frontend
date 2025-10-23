@@ -542,8 +542,7 @@ function pobstringToXml(pob: string): Document {
   return xmlDoc;
 }
 
-export function decodePoBExport(input: string): PathOfBuilding {
-  const xmlDoc = pobstringToXml(input);
+export function decodePoBExport(input?: string): PathOfBuilding {
   const result: PathOfBuilding = {
     build: {
       playerStats: {} as PlayerStats,
@@ -571,6 +570,10 @@ export function decodePoBExport(input: string): PathOfBuilding {
     },
     items: [],
   };
+  if (!input || input.length === 0) {
+    return result;
+  }
+  const xmlDoc = pobstringToXml(input);
 
   const spec = xmlDoc.getElementsByTagName("Spec")[0];
   result.spec.masteryEffects =
