@@ -1,5 +1,6 @@
 import { GameVersion, ObjectiveType } from "@client/api";
 import {
+  preloadCharacterData,
   useGetEvents,
   useGetPoBs,
   useGetUser,
@@ -51,6 +52,14 @@ export const Route = createFileRoute("/profile/$userId/$eventId/$characterId")({
       eventId: String(params.eventId),
     }),
   },
+
+  loader: async ({
+    // @ts-ignore context is not typed
+    context: { queryClient },
+    params: { userId, characterId, eventId },
+  }) => {
+    preloadCharacterData(userId, characterId, eventId, queryClient);
+  },
 });
 
 function RouteComponent() {
@@ -62,8 +71,9 @@ function RouteComponent() {
     eventId,
     user?.id == userId ? userId : 0,
   );
-  const event = events.find((e) => e.id === Number(eventId));
   const { pobs = [] } = useGetPoBs(userId, characterId);
+  const event = events.find((e) => e.id === Number(eventId));
+
   useEffect(() => {
     if (pobs.length > 0) {
       setPobId(pobs.length - 1);
@@ -84,8 +94,46 @@ function RouteComponent() {
       }
     }
   }
+
   return (
     <div className="flex w-full flex-col gap-4 px-2">
+      {/* <div className="flex flex-row justify-between gap-2">
+        <Tree version={"3.26"} nodes={pob.spec.nodes} type="passives" />
+        {[0, 1, 2].map((i) => {
+          var progress =
+            atlasProgress.find((ap) => ap.index === i)?.nodes || [];
+          progress = progress.slice(0, Math.max(0, progress.length - pobId));
+          return (
+            <Tree
+              version={"3.26"}
+              nodes={new Set<number>(progress)}
+              type="atlas"
+              index={i + 1}
+            />
+          );
+        })}
+      </div> */}
+      {/* <div className="flex flex-col justify-between gap-2">
+        {[
+          "3.18",
+          "3.19",
+          "3.20",
+          "3.21",
+          "3.22",
+          "3.23",
+          "3.24",
+          "3.25",
+          "3.26",
+        ].map((version) => (
+          <Tree
+            key={version}
+            version={version}
+            nodes={pob.spec.nodes}
+            type="atlas"
+          />
+        ))}
+      </div> */}
+
       {activity && eventId > 101 && (
         <div className="flex">
           <div className="tooltip tooltip-right w-auto text-xl font-bold">

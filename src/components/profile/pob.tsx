@@ -3,7 +3,10 @@
 // Copyright (c) Dav1dde and contributors
 import { useFile } from "@client/query";
 import { AscendancyPortrait } from "@components/character/ascendancy-portrait";
-import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowsPointingInIcon,
+  ClipboardDocumentListIcon,
+} from "@heroicons/react/24/outline";
 import { InventoryIcon } from "@icons/inventory-icons";
 import { encode } from "@mytypes/scoring-objective";
 import {
@@ -14,8 +17,9 @@ import {
   Rarity,
   Skill,
 } from "@utils/pob";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import Tree from "./tree";
 
 function getLink(item: Item) {
   let link = "/assets/poe1/items/";
@@ -322,7 +326,7 @@ export function PoB({ pobString }: Props) {
   const { data: gemColors } = useFile<Record<"r" | "g" | "b" | "w", string[]>>(
     "/assets/poe1/items/gem_colors.json",
   );
-
+  const [treeExpanded, setTreeExpanded] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item>();
   const [mousePosition, setMousePosition] = useState<{
     x: number;
@@ -341,9 +345,6 @@ export function PoB({ pobString }: Props) {
     "Weapon 1",
     "Weapon 2",
   ];
-  if (!pobString) {
-    return;
-  }
   const pob = decodePoBExport(pobString);
 
   const flaskSlots = ["Flask 1", "Flask 2", "Flask 3", "Flask 4", "Flask 5"];
@@ -389,25 +390,48 @@ export function PoB({ pobString }: Props) {
     pob.build.playerStats.withIgniteDPS,
     pob.build.playerStats.withPoisonDPS,
   );
-
+  const tree = useMemo(() => {
+    if (!pob.spec.nodes) return null;
+    return (
+      <div
+        className={
+          treeExpanded ? "" : "w-[40%] cursor-zoom-in rounded-box bg-base-300"
+        }
+      >
+        <Tree
+          version={"3.25"}
+          nodes={pob.spec.nodes}
+          type="passives"
+          ascendancy={pob.build.ascendClassName}
+          children=" "
+          tooltip={treeExpanded}
+          // className={"h-[75vh] w-[75vh]"}
+          showUnallocated={true}
+          onClick={() => setTreeExpanded(true)}
+        />
+      </div>
+    );
+  }, [pob.spec.nodes, pob.build.ascendClassName, treeExpanded]);
+  if (!pobString) {
+    return null;
+  }
   return (
     <>
-      <div className="flex min-h-170 flex-col gap-4 text-left lg:flex-row">
-        <div className="flex min-w-[50%] justify-center rounded-box bg-base-300 p-4 select-none lg:p-8">
-          <div className="inventory m-auto mt-0 gap-1 md:gap-2">
-            {Object.entries(equipment).map(([slot, item]) => (
-              <ItemDisplay
-                key={slot}
-                item={item}
-                slot={slot}
-                selection={selectedItem}
-                selectionSetter={setSelectedItem}
-                mousePosition={mousePosition}
-                setMousePosition={setMousePosition}
-              />
-            ))}
-            <div className="flasks">
-              {Object.entries(flasks).map(([slot, item]) => (
+      <div className="flex flex-col gap-4">
+        {treeExpanded && (
+          <div className="relative w-full rounded-box bg-base-300 p-4">
+            {tree}
+            <ArrowsPointingInIcon
+              className="absolute top-2 right-2 size-8 cursor-pointer rounded-full border-2 border-base-content p-1 hover:border-info hover:text-info"
+              onClick={() => setTreeExpanded(false)}
+            />
+          </div>
+        )}
+
+        <div className="flex min-h-170 flex-col gap-4 text-left lg:flex-row">
+          <div className="flex w-full justify-center rounded-box bg-base-300 p-4 select-none lg:w-[40%] lg:p-8">
+            <div className="inventory m-auto mt-0 gap-1 md:gap-2">
+              {Object.entries(equipment).map(([slot, item]) => (
                 <ItemDisplay
                   key={slot}
                   item={item}
@@ -418,298 +442,323 @@ export function PoB({ pobString }: Props) {
                   setMousePosition={setMousePosition}
                 />
               ))}
-            </div>
-            <div className="col-span-full"></div>
-            {jewels.map((item) => {
-              return (
-                <ItemDisplay
-                  key={item.id}
-                  item={item}
-                  slot={item?.slot}
-                  selection={selectedItem}
-                  selectionSetter={setSelectedItem}
-                  mousePosition={mousePosition}
-                  setMousePosition={setMousePosition}
-                />
-              );
-            })}
-          </div>
-        </div>
-        <div className="flex flex-1 flex-col gap-4">
-          <div className="flex flex-col gap-2 rounded-box bg-base-300 p-4 md:p-8">
-            <div className="flex items-center justify-between">
-              <div className="mb-1 flex items-center gap-4 text-xl">
-                <AscendancyPortrait
-                  character_class={characterClass}
-                  className="size-14 rounded-full object-cover"
-                />
-                <h1>
-                  Level {pob.build.level}{" "}
-                  {
-                    pob.skills.skillSets[0].skills[
-                      pob.build.mainSocketGroup - 1
-                    ]?.gems.find((gem) => !gem.variantId.includes("Support"))
-                      ?.nameSpec
-                  }{" "}
-                  {characterClass}
-                </h1>
+              <div className="flasks">
+                {Object.entries(flasks).map(([slot, item]) => (
+                  <ItemDisplay
+                    key={slot}
+                    item={item}
+                    slot={slot}
+                    selection={selectedItem}
+                    selectionSetter={setSelectedItem}
+                    mousePosition={mousePosition}
+                    setMousePosition={setMousePosition}
+                  />
+                ))}
               </div>
-              <div title="Copy PoB to clipboard">
-                <ClipboardDocumentListIcon
-                  className="size-8 cursor-pointer transition-transform duration-100 select-none hover:text-primary active:scale-110 active:text-secondary"
-                  onClick={() => {
-                    navigator.clipboard.writeText(pobString);
-                  }}
-                />
-              </div>
-            </div>
-            <div className="justify-left flex flex-row flex-wrap gap-2">
-              <div>
-                Life:{" "}
-                <span className="text-health">
-                  {pob.build.playerStats.life.toLocaleString()}
-                </span>
-              </div>
-              {pob.build.playerStats.energyShield > 0 && (
-                <div>
-                  ES:{" "}
-                  <span className="text-energy-shield">
-                    {pob.build.playerStats.energyShield.toLocaleString()}
-                  </span>
-                </div>
-              )}
-              {pob.build.playerStats.mana > 0 && (
-                <div>
-                  Mana:{" "}
-                  <span className="text-mana">
-                    {pob.build.playerStats.mana.toLocaleString()}
-                  </span>
-                </div>
-              )}
-              <div
-                className="relative"
-                onMouseEnter={() => setShowEhpTooltip(true)}
-                onMouseLeave={() => setShowEhpTooltip(false)}
-              >
-                <span title="Total effective Health Pool">eHP: </span>
-                <span className="underline decoration-dotted">
-                  {Math.round(pob.build.playerStats.totalEHP).toLocaleString()}
-                </span>
-                {showEhpTooltip && (
-                  <div className="pointer-events-none absolute top-full left-1/2 z-30 mt-2 w-60 -translate-x-1/2">
-                    <div className="rounded-box bg-base-100 px-4 py-2 text-sm whitespace-pre-line shadow-lg">
-                      <div>
-                        <span>Physical Max Hit: </span>
-                        <span className="">
-                          {pob.build.playerStats.physicalMaximumHitTaken.toLocaleString()}
-                        </span>
-                      </div>
-                      <div>
-                        <span>Fire Max Hit: </span>
-                        <span className="text-fire">
-                          {pob.build.playerStats.fireMaximumHitTaken.toLocaleString()}
-                        </span>
-                      </div>
-                      <div>
-                        <span>Cold Max Hit: </span>
-                        <span className="text-cold">
-                          {pob.build.playerStats.coldMaximumHitTaken.toLocaleString()}
-                        </span>
-                      </div>
-                      <div>
-                        <span>Lightning Max Hit: </span>
-                        <span className="text-lightning">
-                          {pob.build.playerStats.lightningMaximumHitTaken.toLocaleString()}
-                        </span>
-                      </div>
-                      <div>
-                        <span>Chaos Max Hit: </span>
-                        <span className="text-chaos">
-                          {pob.build.playerStats.chaosMaximumHitTaken.toLocaleString()}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-              {(pob.build.playerStats.effectiveBlockChance > 20 ||
-                pob.build.playerStats.effectiveBlockChance > 20) && (
-                <div>
-                  Block:{" "}
-                  <span className="text-highlight-content">
-                    <span title="Attack Block">
-                      {" "}
-                      {Math.round(pob.build.playerStats.effectiveBlockChance)}%
-                    </span>
-                    /
-                    <span title="Spell Block">
-                      {" "}
-                      {Math.round(
-                        pob.build.playerStats.effectiveSpellBlockChance,
-                      )}
-                      %
-                    </span>
-                  </span>
-                </div>
-              )}
-              {pob.build.playerStats.effectiveSpellSuppressionChance > 25 && (
-                <div>
-                  Suppression:{" "}
-                  <span className="text-highlight-content">
-                    {Math.round(
-                      pob.build.playerStats.effectiveSpellSuppressionChance,
-                    )}
-                    %
-                  </span>
-                </div>
-              )}
-            </div>
-            <div className="justify-left flex flex-row flex-wrap gap-2">
-              <div>
-                Resistances:{" "}
-                <span className="text-fire">
-                  {pob.build.playerStats.fireResist.toLocaleString()}%
-                </span>
-                /
-                <span className="text-cold">
-                  {pob.build.playerStats.coldResist.toLocaleString()}%
-                </span>
-                /
-                <span className="text-lightning">
-                  {pob.build.playerStats.lightningResist.toLocaleString()}%
-                </span>
-                /
-                <span className="text-chaos">
-                  {pob.build.playerStats.chaosResist.toLocaleString()}%
-                </span>
-              </div>
-              {pob.build.playerStats.armour > 0 &&
-                pob.build.playerStats.physicalDamageReduction > 5 && (
-                  <div>
-                    Armour:{" "}
-                    <span className="text-highlight-content">
-                      {pob.build.playerStats.armour.toLocaleString()}
-                    </span>
-                  </div>
-                )}
-              {pob.build.playerStats.meleeEvadeChance > 5 && (
-                <div>
-                  Evasion:{" "}
-                  <span className="text-highlight-content">
-                    {pob.build.playerStats.evasion.toLocaleString()}
-                  </span>
-                </div>
-              )}
-              {pob.build.playerStats.ward > 200 && (
-                <div>
-                  Ward:{" "}
-                  <span className="text-highlight-content">
-                    {pob.build.playerStats.ward.toLocaleString()}
-                  </span>
-                </div>
-              )}{" "}
-            </div>
-            <div className="flex flex-row gap-2">
-              <div>
-                DPS:{" "}
-                <span className="text-highlight-content">
-                  {Math.round(highestDps).toLocaleString()}
-                </span>
-              </div>
-              <div>
-                Speed:{" "}
-                <span className="text-highlight-content">
-                  {pob.build.playerStats.speed?.toFixed(2)}
-                </span>
-              </div>
-              {pob.build.playerStats.critMultiplier > 1.6 && (
-                <>
-                  <div>
-                    Crit Chance:{" "}
-                    <span className="text-highlight-content">
-                      {pob.build.playerStats.critChance
-                        ?.toFixed(2)
-                        .toLocaleString()}
-                      %
-                    </span>
-                  </div>
-                  <div>
-                    Crit Multi:{" "}
-                    <span className="text-highlight-content">
-                      {pob.build.playerStats.critMultiplier?.toFixed(2)}
-                    </span>
-                  </div>
-                </>
-              )}
-              {pob.build.playerStats.effectiveMovementSpeedMod > 2 && (
-                <div>
-                  Movement Speed:{" "}
-                  <span className="text-highlight-content">
-                    {Math.round(
-                      pob.build.playerStats.effectiveMovementSpeedMod * 100,
-                    )}
-                    %
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="h-full columns-2 gap-2 rounded-box bg-base-300 p-4 text-sm md:p-8">
-            {equipmentSlots
-              .sort((slotA, slotB) => {
-                const mainGroup =
-                  pob.skills.skillSets[0].skills[pob.build.mainSocketGroup - 1];
-                if (mainGroup?.slot == slotA) return -1;
-                if (mainGroup?.slot == slotB) return 1;
-                const skillsA = pob.skills.skillSets[0].skills.filter(
-                  (skill) => skill.slot === slotA,
-                );
-                const skillsB = pob.skills.skillSets[0].skills.filter(
-                  (skill) => skill.slot === slotB,
-                );
+              <div className="col-span-full"></div>
+              {jewels.map((item) => {
                 return (
-                  skillsB.flatMap((skill) => skill.gems).length -
-                  skillsA.flatMap((skill) => skill.gems).length
-                );
-              })
-              .map((slot) => {
-                const skills = pob.skills.skillSets[0].skills.filter(
-                  (skill) => skill.slot === slot,
-                );
-                if (skills.length === 0) return null;
-                return (
-                  <div
-                    className="relative mb-2 flex break-inside-avoid flex-col rounded-xl bg-base-200 px-3 py-2.5"
-                    key={`skill-${slot}`}
-                  >
-                    <InventoryIcon
-                      slot={slot}
-                      className="absolute top-2 right-2"
-                    />
-                    <div key={slot} className="flex flex-col gap-2">
-                      {skills.map((skill, skillId) => {
-                        return (
-                          <div
-                            key={`skill-${slot}-${skillId}`}
-                            className="flex flex-col"
-                          >
-                            {skill.gems.map((gem, gemId) => (
-                              <SkillGem
-                                key={`gem-${slot}-${skillId}-${gemId}`}
-                                id={gemId}
-                                gem={gem}
-                                skillGroup={skill}
-                                pob={pob}
-                                gemColors={gemColors}
-                              />
-                            ))}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
+                  <ItemDisplay
+                    key={item.id}
+                    item={item}
+                    slot={item?.slot}
+                    selection={selectedItem}
+                    selectionSetter={setSelectedItem}
+                    mousePosition={mousePosition}
+                    setMousePosition={setMousePosition}
+                  />
                 );
               })}
+            </div>
+          </div>
+          <div className="flex flex-1 flex-col gap-4">
+            <div className="flex flex-row gap-4">
+              {!treeExpanded && tree}
+              <div className="flex w-full flex-col gap-2 rounded-box bg-base-300 p-4 md:p-8">
+                <div className="flex items-center justify-between">
+                  <div className="mb-1 flex items-center gap-4 text-xl">
+                    <AscendancyPortrait
+                      character_class={characterClass}
+                      className="size-14 rounded-full object-cover"
+                    />
+                    <h1>
+                      Level {pob.build.level}{" "}
+                      {
+                        pob.skills.skillSets[0].skills[
+                          pob.build.mainSocketGroup - 1
+                        ]?.gems.find(
+                          (gem) => !gem.variantId.includes("Support"),
+                        )?.nameSpec
+                      }{" "}
+                      {characterClass}
+                    </h1>
+                  </div>
+                  <div title="Copy PoB to clipboard">
+                    <ClipboardDocumentListIcon
+                      className="size-8 cursor-pointer transition-transform duration-100 select-none hover:text-primary active:scale-110 active:text-secondary"
+                      onClick={() => {
+                        if (pobString) navigator.clipboard.writeText(pobString);
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="justify-left flex flex-row flex-wrap gap-2">
+                  <div>
+                    Life:{" "}
+                    <span className="text-health">
+                      {pob.build.playerStats.life.toLocaleString()}
+                    </span>
+                  </div>
+                  {pob.build.playerStats.energyShield > 0 && (
+                    <div>
+                      ES:{" "}
+                      <span className="text-energy-shield">
+                        {pob.build.playerStats.energyShield.toLocaleString()}
+                      </span>
+                    </div>
+                  )}
+                  {pob.build.playerStats.mana > 0 && (
+                    <div>
+                      Mana:{" "}
+                      <span className="text-mana">
+                        {pob.build.playerStats.mana.toLocaleString()}
+                      </span>
+                    </div>
+                  )}
+                  <div
+                    className="relative"
+                    onMouseEnter={() => setShowEhpTooltip(true)}
+                    onMouseLeave={() => setShowEhpTooltip(false)}
+                  >
+                    <span title="Total effective Health Pool">eHP: </span>
+                    <span className="underline decoration-dotted">
+                      {Math.round(
+                        pob.build.playerStats.totalEHP,
+                      ).toLocaleString()}
+                    </span>
+                    {showEhpTooltip && (
+                      <div className="pointer-events-none absolute top-full left-1/2 z-30 mt-2 w-60 -translate-x-1/2">
+                        <div className="rounded-box bg-base-100 px-4 py-2 text-sm whitespace-pre-line shadow-lg">
+                          <div>
+                            <span>Physical Max Hit: </span>
+                            <span className="">
+                              {pob.build.playerStats.physicalMaximumHitTaken.toLocaleString()}
+                            </span>
+                          </div>
+                          <div>
+                            <span>Fire Max Hit: </span>
+                            <span className="text-fire">
+                              {pob.build.playerStats.fireMaximumHitTaken.toLocaleString()}
+                            </span>
+                          </div>
+                          <div>
+                            <span>Cold Max Hit: </span>
+                            <span className="text-cold">
+                              {pob.build.playerStats.coldMaximumHitTaken.toLocaleString()}
+                            </span>
+                          </div>
+                          <div>
+                            <span>Lightning Max Hit: </span>
+                            <span className="text-lightning">
+                              {pob.build.playerStats.lightningMaximumHitTaken.toLocaleString()}
+                            </span>
+                          </div>
+                          <div>
+                            <span>Chaos Max Hit: </span>
+                            <span className="text-chaos">
+                              {pob.build.playerStats.chaosMaximumHitTaken.toLocaleString()}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  {(pob.build.playerStats.effectiveBlockChance > 20 ||
+                    pob.build.playerStats.effectiveBlockChance > 20) && (
+                    <div>
+                      Block:{" "}
+                      <span className="text-highlight-content">
+                        <span title="Attack Block">
+                          {" "}
+                          {Math.round(
+                            pob.build.playerStats.effectiveBlockChance,
+                          )}
+                          %
+                        </span>
+                        /
+                        <span title="Spell Block">
+                          {" "}
+                          {Math.round(
+                            pob.build.playerStats.effectiveSpellBlockChance,
+                          )}
+                          %
+                        </span>
+                      </span>
+                    </div>
+                  )}
+                  {pob.build.playerStats.effectiveSpellSuppressionChance >
+                    25 && (
+                    <div>
+                      Suppression:{" "}
+                      <span className="text-highlight-content">
+                        {Math.round(
+                          pob.build.playerStats.effectiveSpellSuppressionChance,
+                        )}
+                        %
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="justify-left flex flex-row flex-wrap gap-2">
+                  <div>
+                    Resistances:{" "}
+                    <span className="text-fire">
+                      {pob.build.playerStats.fireResist.toLocaleString()}%
+                    </span>
+                    /
+                    <span className="text-cold">
+                      {pob.build.playerStats.coldResist.toLocaleString()}%
+                    </span>
+                    /
+                    <span className="text-lightning">
+                      {pob.build.playerStats.lightningResist.toLocaleString()}%
+                    </span>
+                    /
+                    <span className="text-chaos">
+                      {pob.build.playerStats.chaosResist.toLocaleString()}%
+                    </span>
+                  </div>
+                  {pob.build.playerStats.armour > 0 &&
+                    pob.build.playerStats.physicalDamageReduction > 5 && (
+                      <div>
+                        Armour:{" "}
+                        <span className="text-highlight-content">
+                          {pob.build.playerStats.armour.toLocaleString()}
+                        </span>
+                      </div>
+                    )}
+                  {pob.build.playerStats.meleeEvadeChance > 5 && (
+                    <div>
+                      Evasion:{" "}
+                      <span className="text-highlight-content">
+                        {pob.build.playerStats.evasion.toLocaleString()}
+                      </span>
+                    </div>
+                  )}
+                  {pob.build.playerStats.ward > 200 && (
+                    <div>
+                      Ward:{" "}
+                      <span className="text-highlight-content">
+                        {pob.build.playerStats.ward.toLocaleString()}
+                      </span>
+                    </div>
+                  )}{" "}
+                </div>
+                <div className="flex flex-row gap-2">
+                  <div>
+                    DPS:{" "}
+                    <span className="text-highlight-content">
+                      {Math.round(highestDps).toLocaleString()}
+                    </span>
+                  </div>
+                  <div>
+                    Speed:{" "}
+                    <span className="text-highlight-content">
+                      {pob.build.playerStats.speed?.toFixed(2)}
+                    </span>
+                  </div>
+                  {pob.build.playerStats.critMultiplier > 1.6 && (
+                    <>
+                      <div>
+                        Crit Chance:{" "}
+                        <span className="text-highlight-content">
+                          {pob.build.playerStats.critChance
+                            ?.toFixed(2)
+                            .toLocaleString()}
+                          %
+                        </span>
+                      </div>
+                      <div>
+                        Crit Multi:{" "}
+                        <span className="text-highlight-content">
+                          {pob.build.playerStats.critMultiplier?.toFixed(2)}
+                        </span>
+                      </div>
+                    </>
+                  )}
+                  {pob.build.playerStats.effectiveMovementSpeedMod > 2 && (
+                    <div>
+                      Movement Speed:{" "}
+                      <span className="text-highlight-content">
+                        {Math.round(
+                          pob.build.playerStats.effectiveMovementSpeedMod * 100,
+                        )}
+                        %
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="h-full columns-2 gap-2 rounded-box bg-base-300 p-4 text-sm md:p-8">
+              {equipmentSlots
+                .sort((slotA, slotB) => {
+                  const mainGroup =
+                    pob.skills.skillSets[0].skills[
+                      pob.build.mainSocketGroup - 1
+                    ];
+                  if (mainGroup?.slot == slotA) return -1;
+                  if (mainGroup?.slot == slotB) return 1;
+                  const skillsA = pob.skills.skillSets[0].skills.filter(
+                    (skill) => skill.slot === slotA,
+                  );
+                  const skillsB = pob.skills.skillSets[0].skills.filter(
+                    (skill) => skill.slot === slotB,
+                  );
+                  return (
+                    skillsB.flatMap((skill) => skill.gems).length -
+                    skillsA.flatMap((skill) => skill.gems).length
+                  );
+                })
+                .map((slot) => {
+                  const skills = pob.skills.skillSets[0].skills.filter(
+                    (skill) => skill.slot === slot,
+                  );
+                  if (skills.length === 0) return null;
+                  return (
+                    <div
+                      className="relative mb-2 flex break-inside-avoid flex-col rounded-xl bg-base-200 px-3 py-2.5"
+                      key={`skill-${slot}`}
+                    >
+                      <InventoryIcon
+                        slot={slot}
+                        className="absolute top-2 right-2"
+                      />
+                      <div key={slot} className="flex flex-col gap-2">
+                        {skills.map((skill, skillId) => {
+                          return (
+                            <div
+                              key={`skill-${slot}-${skillId}`}
+                              className="flex flex-col"
+                            >
+                              {skill.gems.map((gem, gemId) => (
+                                <SkillGem
+                                  key={`gem-${slot}-${skillId}-${gemId}`}
+                                  id={gemId}
+                                  gem={gem}
+                                  skillGroup={skill}
+                                  pob={pob}
+                                  gemColors={gemColors}
+                                />
+                              ))}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
           </div>
         </div>
       </div>

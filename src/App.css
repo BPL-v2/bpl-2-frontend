@@ -94,7 +94,7 @@
   --color-dexterity: var(--color-lime-400);
   --color-intelligence: var(--color-blue-400);
 
-  --color-highlight: light-dark(oklch(100% 0 0), oklch(40% 0.034 265.754));
+  --color-highlight: light-dark(oklch(100% 0 0), oklch(45% 0.034 265.754));
   --color-highlight-content: light-dark(oklch(0% 0 0), oklch(100% 0 0));
   --color-strength: light-dark(var(--color-rose-600), var(--color-rose-500));
   --color-dexterity: light-dark(var(--color-lime-600), var(--color-lime-400));
@@ -464,25 +464,28 @@ html {
 .passiveTree circle[active] {
   stroke: var(--color-info);
   fill: var(--color-info);
-  stroke-width: 30;
+  r: 60;
+  stroke-width: 100;
+  stroke-opacity: 0;
+}
+.passiveTree circle:hover {
+  fill: red;
+  r: 100;
+  cursor: pointer;
 }
 
 .passiveTree path[active] {
   stroke: var(--color-info);
-  stroke-width: 30;
+  stroke-width: 50;
 }
 
 .passiveTree line[active] {
   stroke: var(--color-info);
-  stroke-width: 30;
+  stroke-width: 50;
 }
 
 .passiveTree .mastery {
   fill: none;
-}
-
-.passiveTree .mastery[active] {
-  fill: var(--color-info);
 }
 
 .passiveTree .ascendancy {
@@ -490,20 +493,17 @@ html {
   stroke: none;
 }
 
-.passiveTree .ascendancy[active] {
-  stroke: var(--color-info);
-  fill: var(--color-info);
-}
-
-.passiveTree .ascendancy[shown] {
-  stroke: var(--color-base-300);
-  fill: var(--color-base-300);
-}
-
 .passiveTree .isolated {
   fill: none;
 }
 
-.passiveTree .isolated[active] {
-  fill: var(--color-success);
+.passiveTree #connections {
+  stroke: var(--color-highlight);
+  stroke-width: 30;
+  fill: none;
+}
+
+.passiveTree #nodes {
+  fill: var(--color-highlight);
+  r: 70;
 }
