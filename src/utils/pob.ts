@@ -887,7 +887,6 @@ function extractMagicBase(base: string, numMods: number): string {
   if (!hasSuffix) end = base.length;
   base = base.slice(0, end).trim();
   const baseTypeWordCount = getBaseTypeWordCount(base);
-  console.log("baseTypeWordCount", baseTypeWordCount, base);
   const wordCount = base.split(" ").length;
   if (
     // has prefix

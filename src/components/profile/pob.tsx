@@ -96,13 +96,6 @@ function ItemTooltip({
       borderColor = "border-normal";
       break;
   }
-  const hasRow1 =
-    item.armour > 0 ||
-    item.evasion > 0 ||
-    item.energyShield > 0 ||
-    item.quality > 0;
-  const hasRow2 = item.implicits.length > 0;
-  const hasRow3 = item.explicits.length > 0;
   return (
     <div
       ref={tooltipRef}
@@ -128,7 +121,10 @@ function ItemTooltip({
         <p>{item.name}</p>
         <p>{item.name.includes(item.base) ? "" : item.base}</p>
       </div>
-      {hasRow1 && (
+      {(item.armour > 0 ||
+        item.evasion > 0 ||
+        item.energyShield > 0 ||
+        item.quality > 0) && (
         <div
           className={twMerge(
             "flex w-full flex-col border-t-2 p-2 md:gap-1",
@@ -163,11 +159,10 @@ function ItemTooltip({
           )}
         </div>
       )}
-      {hasRow2 && (
+      {item.implicits.length > 0 && (
         <div
           className={twMerge(
-            "flex w-full flex-col p-2 md:gap-1",
-            !hasRow1 ? "border-t-2" : "",
+            "flex w-full flex-col border-t-2 p-2 md:gap-1",
             borderColor,
           )}
         >
@@ -181,11 +176,11 @@ function ItemTooltip({
           ))}
         </div>
       )}
-      {hasRow3 && (
+      {item.explicits.length > 0 && (
         <div
           className={twMerge(
-            "flex w-full flex-col p-2 md:gap-1",
-            hasRow1 || hasRow2 ? borderColor + " border-t-2" : "",
+            "flex w-full flex-col border-t-2 p-2 md:gap-1",
+            borderColor,
           )}
         >
           {item.explicits.map((explicit) => (
@@ -244,7 +239,7 @@ function ItemDisplay({
       key={"item-" + slot}
       className={twMerge(
         "relative flex h-full w-full items-center justify-center rounded-lg bg-base-200 p-1",
-        item && "cursor-pointer",
+        item && "cursor-help",
         slot.replaceAll(" ", "").toLowerCase(),
       )}
       ref={itemRef}
@@ -253,7 +248,7 @@ function ItemDisplay({
     >
       {item && (
         <img
-          className={twMerge("flex items-center object-contain p-1")}
+          className="flex h-full w-full items-center object-contain p-1"
           src={getLink(item)}
           alt={item?.name}
         />

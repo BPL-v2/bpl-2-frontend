@@ -62,7 +62,7 @@ export function ProfileCarousel({
                     }}
                     key={char.event_id + char.name}
                     className={
-                      "embla__slide flex cursor-pointer flex-row items-center gap-4 rounded-full border-4 bg-base-300 p-1 select-none"
+                      "embla__slide flex cursor-pointer flex-row items-center gap-4 rounded-full border-4 bg-base-300 px-1 select-none"
                     }
                     activeProps={{
                       className: "border-primary ",
@@ -76,7 +76,7 @@ export function ProfileCarousel({
                       className="size-22 rounded-full"
                       alt={ascendancyName}
                     />
-                    <div className="rounded-r-full bg-base-300 text-left">
+                    <div className="rounded-r-full text-left">
                       <p className="text-xl font-bold">
                         {event.name.split(" (PL")[0]}
                       </p>
