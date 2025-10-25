@@ -133,8 +133,7 @@ function RouteComponent() {
           />
         ))}
       </div> */}
-
-      {activity && eventId > 101 && (
+      {activity && eventId > 101 ? (
         <div className="flex">
           <div className="tooltip tooltip-right w-auto text-xl font-bold">
             <div className="tooltip-content flex flex-col gap-2 p-2 text-left font-light">
@@ -149,7 +148,7 @@ function RouteComponent() {
             <span className="text-error">*</span>
           </div>
         </div>
-      )}
+      ) : null}
       {contributions.length > 0 && user?.id === userId && (
         <div className="flex flex-col gap-4 rounded-box bg-base-300 p-4">
           <h1 className="text-left text-xl">

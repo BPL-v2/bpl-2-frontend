@@ -51,7 +51,7 @@ function ProfilePage() {
   return (
     <div className="mt-4 flex flex-col gap-4">
       <h1 className="text-center text-4xl font-bold">
-        {user.display_name}'s Profile
+        {user.display_name.split("#")[0]}
       </h1>
       {userCharacters.length > 0 && (
         <div>

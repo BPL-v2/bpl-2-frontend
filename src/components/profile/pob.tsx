@@ -37,40 +37,42 @@ type Props = {
 
 function ItemTooltip({
   item,
-  mouseX,
-  mouseY,
+  itemX,
+  itemY,
 }: {
   item?: Item;
-  mouseX?: number;
-  mouseY?: number;
+  itemX?: number;
+  itemY?: number;
 }) {
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({
-    left: mouseX,
-    top: mouseY,
-    maxWidth: 0,
+    left: itemX,
+    top: (itemY || 0) > 10 ? itemY : 10,
+    maxWidth: 320,
   });
+  useEffect(() => {
+    setPosition({
+      left: itemX,
+      top: (itemY || 0) > 10 ? itemY : 10,
+      maxWidth: 320,
+    });
+  }, [item, itemX, itemY]);
 
   useEffect(() => {
-    if (!mouseX || !mouseY || !tooltipRef.current) {
-      return;
+    if (!tooltipRef.current) return;
+
+    let top = position.top;
+    let left = position.left;
+    if (
+      window.innerHeight < tooltipRef.current.getBoundingClientRect().bottom
+    ) {
+      top = window.innerHeight - tooltipRef.current!.offsetHeight - 10;
     }
-
-    // Small delay to ensure tooltip is rendered
-    const timer = setTimeout(() => {
-      if (!tooltipRef.current) return;
-
-      const maxWidth = 320;
-
-      // Simple positioning: just put it at the mouse cursor with small offsets
-      let left = mouseX; // Small offset to the right
-      let top = mouseY; // Small offset below, adjusted for scroll
-
-      setPosition({ left, top, maxWidth });
-    }, 0);
-
-    return () => clearTimeout(timer);
-  }, [mouseX, mouseY, tooltipRef]);
+    if (window.innerWidth < tooltipRef.current.getBoundingClientRect().right) {
+      left = window.innerWidth - tooltipRef.current!.offsetWidth - 30;
+    }
+    setPosition((pos) => ({ ...pos, left, top }));
+  }, [position.left, position.top]);
 
   if (!item) return null;
 
@@ -94,13 +96,19 @@ function ItemTooltip({
       borderColor = "border-normal";
       break;
   }
-
+  const hasRow1 =
+    item.armour > 0 ||
+    item.evasion > 0 ||
+    item.energyShield > 0 ||
+    item.quality > 0;
+  const hasRow2 = item.implicits.length > 0;
+  const hasRow3 = item.explicits.length > 0;
   return (
     <div
       ref={tooltipRef}
       className={twMerge(
         "pointer-events-none fixed z-30 text-xs md:text-base",
-        "gap flex flex-col rounded-field border-2 bg-base-100/60 text-center shadow-lg md:bg-base-100/90",
+        "gap flex flex-col rounded-lg border-2 bg-base-100/80 text-center shadow-lg md:bg-base-100/90",
         position.left != 0 && position.top != 0 ? "block" : "hidden",
         borderColor,
       )}
@@ -113,21 +121,17 @@ function ItemTooltip({
     >
       <div
         className={twMerge(
-          "flex w-full flex-col border-b-1 p-2 text-sm font-bold md:text-xl",
-          borderColor,
+          "flex w-full flex-col p-2 text-sm font-bold md:text-xl",
           headerColor,
         )}
       >
         <p>{item.name}</p>
         <p>{item.name.includes(item.base) ? "" : item.base}</p>
       </div>
-      {(item.quality > 0 ||
-        item.armour > 0 ||
-        item.evasion > 0 ||
-        item.energyShield > 0) && (
+      {hasRow1 && (
         <div
           className={twMerge(
-            "flex w-full flex-col border-y-1 p-2 md:gap-1",
+            "flex w-full flex-col border-t-2 p-2 md:gap-1",
             borderColor,
           )}
         >
@@ -138,7 +142,7 @@ function ItemTooltip({
               </span>
               <span className="text-magic">+{item.quality}% </span>
             </div>
-          )}{" "}
+          )}
           {item.armour > 0 && (
             <div>
               <span className="text-base-content/70">Armour: </span>
@@ -159,10 +163,11 @@ function ItemTooltip({
           )}
         </div>
       )}
-      {item.implicits.length > 0 && (
+      {hasRow2 && (
         <div
           className={twMerge(
-            "flex w-full flex-col border-y-1 p-2 md:gap-1",
+            "flex w-full flex-col p-2 md:gap-1",
+            !hasRow1 ? "border-t-2" : "",
             borderColor,
           )}
         >
@@ -176,11 +181,11 @@ function ItemTooltip({
           ))}
         </div>
       )}
-      {item.explicits.length > 0 && (
+      {hasRow3 && (
         <div
           className={twMerge(
-            "flex w-full flex-col border-t-1 p-2 md:gap-1",
-            borderColor,
+            "flex w-full flex-col p-2 md:gap-1",
+            hasRow1 || hasRow2 ? borderColor + " border-t-2" : "",
           )}
         >
           {item.explicits.map((explicit) => (
@@ -206,74 +211,24 @@ function ItemTooltip({
 type ItemDisplayProps = {
   item?: Item;
   slot: string | null;
-  selection?: Item;
   selectionSetter: (item?: Item) => void;
-  mousePosition?: { x: number; y: number };
   setMousePosition: (pos?: { x: number; y: number }) => void;
 };
 
 function ItemDisplay({
   item,
   slot,
-  selection,
   selectionSetter,
-  mousePosition,
   setMousePosition,
 }: ItemDisplayProps) {
-  const [imageStyle, setImageStyle] = useState<React.CSSProperties>({
-    maxWidth: "90%",
-    maxHeight: "90%",
-    objectFit: "contain" as const,
-  });
   const itemRef = useRef<HTMLImageElement>(null);
-
-  const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
-    if (!slot || !item) return;
-
-    const isWeaponSlot =
-      slot.toLowerCase().includes("weapon") ||
-      slot.toLowerCase().includes("offhand");
-
-    if (isWeaponSlot) {
-      const img = event.currentTarget;
-      const aspectRatio = img.naturalHeight / img.naturalWidth;
-      let width = 100;
-      let height = 100;
-      if (aspectRatio >= 3.1) {
-        // 4x1
-        width = width / 2;
-      } else if (aspectRatio >= 2.2) {
-        // 3x1
-        height = (height * 3) / 4;
-        width = width / 2;
-      } else if (aspectRatio >= 1.8) {
-        // 4x2
-      } else if (aspectRatio >= 1.3) {
-        // 3x2
-        height = (height * 3) / 4;
-      } else if (aspectRatio >= 0.9) {
-        // 2x2
-        height = height / 2;
-      }
-      setImageStyle({
-        width: `${width}%`,
-        height: `${height}%`,
-      });
-    }
-  };
-
-  if (!item && !slot) return null;
   if (!slot) {
     slot = item?.slot || "Unknown";
   }
-
   const handleMouseEnter = () => {
     if (!item || !itemRef.current) return;
-
     selectionSetter(item);
     const rect = itemRef.current.getBoundingClientRect();
-
-    // Position tooltip to the right of the item with some spacing
     setMousePosition({
       x: rect.right + 10,
       y: rect.top,
@@ -284,27 +239,6 @@ function ItemDisplay({
     selectionSetter(undefined);
     setMousePosition(undefined);
   };
-
-  const img = item && (
-    <>
-      <img
-        className="object-contain"
-        style={imageStyle}
-        src={getLink(item)}
-        alt={item?.name}
-        loading="lazy"
-        onLoad={handleImageLoad}
-      />
-      {selection?.id === item.id && (
-        <ItemTooltip
-          item={selection}
-          mouseX={mousePosition?.x}
-          mouseY={mousePosition?.y}
-        />
-      )}
-    </>
-  );
-
   return (
     <div
       key={"item-" + slot}
@@ -317,7 +251,13 @@ function ItemDisplay({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {img}
+      {item && (
+        <img
+          className={twMerge("flex items-center object-contain p-1")}
+          src={getLink(item)}
+          alt={item?.name}
+        />
+      )}
     </div>
   );
 }
@@ -328,7 +268,7 @@ export function PoB({ pobString }: Props) {
   );
   const [treeExpanded, setTreeExpanded] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item>();
-  const [mousePosition, setMousePosition] = useState<{
+  const [itemPosition, setItemPosition] = useState<{
     x: number;
     y: number;
   }>();
@@ -345,7 +285,7 @@ export function PoB({ pobString }: Props) {
     "Weapon 1",
     "Weapon 2",
   ];
-  const pob = decodePoBExport(pobString);
+  const pob = useMemo(() => decodePoBExport(pobString), [pobString]);
 
   const flaskSlots = ["Flask 1", "Flask 2", "Flask 3", "Flask 4", "Flask 5"];
   const jewels: Item[] = [];
@@ -399,7 +339,7 @@ export function PoB({ pobString }: Props) {
         }
       >
         <Tree
-          version={"3.25"}
+          version={pob.spec.treeVersion}
           nodes={pob.spec.nodes}
           type="passives"
           ascendancy={pob.build.ascendClassName}
@@ -417,6 +357,13 @@ export function PoB({ pobString }: Props) {
   }
   return (
     <>
+      {selectedItem && (
+        <ItemTooltip
+          item={selectedItem}
+          itemX={itemPosition?.x}
+          itemY={itemPosition?.y}
+        />
+      )}
       <div className="flex flex-col gap-4">
         {treeExpanded && (
           <div className="relative w-full rounded-box bg-base-300 p-4">
@@ -436,10 +383,8 @@ export function PoB({ pobString }: Props) {
                   key={slot}
                   item={item}
                   slot={slot}
-                  selection={selectedItem}
                   selectionSetter={setSelectedItem}
-                  mousePosition={mousePosition}
-                  setMousePosition={setMousePosition}
+                  setMousePosition={setItemPosition}
                 />
               ))}
               <div className="flasks">
@@ -448,10 +393,8 @@ export function PoB({ pobString }: Props) {
                     key={slot}
                     item={item}
                     slot={slot}
-                    selection={selectedItem}
                     selectionSetter={setSelectedItem}
-                    mousePosition={mousePosition}
-                    setMousePosition={setMousePosition}
+                    setMousePosition={setItemPosition}
                   />
                 ))}
               </div>
@@ -462,10 +405,8 @@ export function PoB({ pobString }: Props) {
                     key={item.id}
                     item={item}
                     slot={item?.slot}
-                    selection={selectedItem}
                     selectionSetter={setSelectedItem}
-                    mousePosition={mousePosition}
-                    setMousePosition={setMousePosition}
+                    setMousePosition={setItemPosition}
                   />
                 );
               })}

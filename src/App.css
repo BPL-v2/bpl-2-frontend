@@ -243,6 +243,7 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
+  aspect-ratio: 2;
   height: 100%;
   width: 100%;
   /* Remove fixed aspect-ratio to allow dynamic sizing */

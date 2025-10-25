@@ -161,6 +161,7 @@ export interface Build {
 export interface Spec {
   masteryEffects: Record<number, number>;
   nodes: Set<number>;
+  treeVersion: string;
 }
 
 export interface PathOfBuilding {
@@ -534,6 +535,7 @@ function pobstringToXml(pob: string): Document {
     bytes[i] = decoded.charCodeAt(i);
   }
   const xmlString = new TextDecoder().decode(pako.inflate(bytes));
+  // console.log(xmlString);
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(xmlString, "text/xml");
   if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
@@ -567,6 +569,7 @@ export function decodePoBExport(input?: string): PathOfBuilding {
     spec: {
       masteryEffects: {},
       nodes: new Set(),
+      treeVersion: "",
     },
     items: [],
   };
@@ -598,7 +601,9 @@ export function decodePoBExport(input?: string): PathOfBuilding {
         acc.add(node);
         return acc;
       }, new Set<number>()) || new Set<number>();
-
+  result.spec.treeVersion = (spec.getAttribute("treeVersion") || "")
+    .split("_")
+    .join(".");
   const build = xmlDoc.getElementsByTagName("Build")[0];
   result.build.bandit = build.getAttribute("bandit") || "";
   result.build.level = parseInt(build.getAttribute("level") || "0");
@@ -882,6 +887,7 @@ function extractMagicBase(base: string, numMods: number): string {
   if (!hasSuffix) end = base.length;
   base = base.slice(0, end).trim();
   const baseTypeWordCount = getBaseTypeWordCount(base);
+  console.log("baseTypeWordCount", baseTypeWordCount, base);
   const wordCount = base.split(" ").length;
   if (
     // has prefix
@@ -1121,7 +1127,6 @@ const baseTypeWordCounts = {
     "Steelhead",
     "Piledriver",
     "Meatgrinder",
-    "Ring",
     "Tricorne",
     "Sallet",
     "Chestplate",

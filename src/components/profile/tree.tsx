@@ -210,10 +210,10 @@ export default function Tree({
         {...props}
         className={twMerge(
           "passiveTree aspect-square w-full p-2",
-          // props.className,
+          props.className,
         )}
       >
-        <div {...props} className={twMerge("relative", props.className)}>
+        <div {...props} className={"relative"}>
           {baseTree}
           {newTree}
         </div>
