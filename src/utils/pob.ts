@@ -165,6 +165,7 @@ export interface Spec {
 }
 
 export interface PathOfBuilding {
+  export: string;
   build: Build;
   skills: Skills;
   items: Item[];
@@ -546,6 +547,7 @@ function pobstringToXml(pob: string): Document {
 
 export function decodePoBExport(input?: string): PathOfBuilding {
   const result: PathOfBuilding = {
+    export: input || "",
     build: {
       playerStats: {} as PlayerStats,
       bandit: "",

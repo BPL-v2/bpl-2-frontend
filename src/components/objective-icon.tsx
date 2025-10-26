@@ -37,7 +37,8 @@ export function ObjectiveIcon({
   return (
     <a
       className={twMerge(
-        "flex size-14 cursor-pointer items-center justify-center select-none",
+        "flex size-14 items-center justify-center",
+        wikilink && "cursor-pointer",
         className,
       )}
       href={wikilink}

@@ -110,7 +110,9 @@ export default function Tree({
   const { data: json } = useFile<CompactTree>(
     `/assets/trees/json/${type}/${version}.json`,
   );
-
+  if (type === "atlas") {
+    nodes.add(29045); // add root node
+  }
   const baseTree = useMemo(() => {
     if (!svg || !showUnallocated) {
       return "";
@@ -176,10 +178,6 @@ export default function Tree({
     };
   }, [newTree, tooltip, selectedElement]);
 
-  if (type === "atlas") {
-    nodes.add(29045); // add root node
-  }
-
   function renderNodeDetails(nodeId?: number) {
     if (!json || !nodeId) {
       return null;
@@ -213,7 +211,7 @@ export default function Tree({
           props.className,
         )}
       >
-        <div {...props} className={"relative"}>
+        <div {...props} className={twMerge("relative", props.className)}>
           {baseTree}
           {newTree}
         </div>
