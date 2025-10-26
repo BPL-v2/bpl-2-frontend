@@ -37,7 +37,7 @@ const AuthButton = () => {
         </button>
         <ul
           tabIndex={0}
-          className="dropdown-content menu z-1 rounded-field border-2 border-base-100 bg-base-300 text-lg"
+          className="dropdown-content menu z-1000 rounded-field border-2 border-base-100 bg-base-300 text-lg"
           onClick={() => {
             if (document.activeElement instanceof HTMLElement) {
               document.activeElement?.blur();
