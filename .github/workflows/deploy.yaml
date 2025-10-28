@@ -19,7 +19,7 @@ jobs:
 
       - name: Get latest tag
         id: get_tag
-        run: echo "::set-output name=tag::$(git describe --tags --abbrev=0)"
+        run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
 
       - name: Login to Docker Hub
         run: |
