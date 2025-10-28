@@ -91,7 +91,7 @@ function RouteComponent() {
         <AdminRouteCard
           title="Monitoring"
           description="View the status of the server and its components."
-          link="https://v2202503259898322516.goodsrv.de/monitoring"
+          link="https://bpl-poe.com/monitoring"
           permissions={[Permission.admin]}
         />
         {eventStatus && eventStatus.is_team_lead && (
