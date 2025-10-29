@@ -914,6 +914,9 @@ export function useGetScore(eventId: number) {
         return acc;
       }, {} as ScoreMap);
     },
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    staleTime: 5 * 60 * 1000,
   });
   return {
     ...query,
