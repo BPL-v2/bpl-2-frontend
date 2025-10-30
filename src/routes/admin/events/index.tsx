@@ -40,6 +40,7 @@ function EventPage() {
   const form = useAppForm({
     defaultValues: {
       name: "",
+      patch: "",
       game_version: GameVersion.poe1,
       application_start_time: new Date().toISOString(),
       application_end_time: new Date().toISOString(),
@@ -258,6 +259,10 @@ function EventPage() {
                 />
               )}
             />
+            <form.AppField
+              name="patch"
+              children={(field) => <field.TextField label="Patch" />}
+            />
           </div>
           <div className="flex flex-row gap-4">
             <form.AppField
@@ -292,7 +297,6 @@ function EventPage() {
               name="max_size"
               children={(field) => <field.NumberField label="Max Size" />}
             />
-
             <form.AppField
               name="waitlist_size"
               children={(field) => <field.NumberField label="Waitlist Size" />}
