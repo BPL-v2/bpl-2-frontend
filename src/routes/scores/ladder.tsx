@@ -558,7 +558,7 @@ function LadderTab(): JSX.Element {
       )}
       <div className="divider divider-primary">Ladder</div>
       {!isMobile && (
-        <div className="mb-4 flex flex-wrap gap-2">
+        <div className="mb-4 flex flex-wrap justify-between gap-1">
           {Object.keys(defaultPreferences.ladder).map((label) => {
             const key = label as keyof typeof preferences.ladder;
             return (
@@ -574,7 +574,7 @@ function LadderTab(): JSX.Element {
                   });
                 }}
                 className={twMerge(
-                  "btn rounded-xl px-2 btn-sm",
+                  "btn rounded-lg px-2 btn-sm",
                   preferences.ladder[key]
                     ? "btn-primary"
                     : "border-primary bg-base-100/0 text-primary",
