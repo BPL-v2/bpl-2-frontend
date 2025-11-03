@@ -17,3 +17,6 @@ done
 
 # Replace portable-fetch with isomorphic-fetch in src/client/api.ts
 sed -i "s/portable-fetch/isomorphic-fetch/g" src/client/api.ts
+
+# Fix the isomorphic-fetch import to use default export instead of namespace import
+sed -i 's/import \* as portableFetch from "isomorphic-fetch";/import portableFetch from "isomorphic-fetch";/g' src/client/api.ts
