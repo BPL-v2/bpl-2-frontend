@@ -22,6 +22,7 @@ import TeamScoreDisplay from "@components/team/team-score";
 import {
   ArrowTopRightOnSquareIcon,
   CheckCircleIcon,
+  ClipboardDocumentListIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 import { POPointRules } from "@rules/po-points";
@@ -83,7 +84,14 @@ function LadderTab(): JSX.Element {
       }, {}) || {},
     [currentEvent],
   );
-
+  const userMap = useMemo(
+    () =>
+      users?.reduce((acc: { [userId: number]: (typeof users)[0] }, user) => {
+        acc[user.id] = user;
+        return acc;
+      }, {}) || {},
+    [users],
+  );
   const getTeam = useMemo(() => {
     const userToTeam =
       users?.reduce(
@@ -155,6 +163,40 @@ function LadderTab(): JSX.Element {
           meta: {
             filterVariant: "string",
             filterPlaceholder: "Account",
+          },
+        },
+        {
+          id: "Discord",
+          accessorFn: (row) => {
+            if (!row.user_id) return "";
+            const user = userMap[row.user_id];
+            if (!user || !user.discord_name || !user.discord_id) return "";
+            return user.discord_name + `#` + user.discord_id;
+          },
+          header: "",
+          cell: (info) => {
+            const user = userMap[info.row.original.user_id || 0];
+            if (!user || !user.discord_name || !user.discord_id) {
+              return "null";
+            }
+            return (
+              <div className="flex items-center gap-2">
+                <ClipboardDocumentListIcon
+                  className="size-6 transition-transform duration-100 select-none hover:cursor-pointer hover:text-primary active:scale-110 active:text-secondary"
+                  onClick={() =>
+                    navigator.clipboard.writeText("<@" + user.discord_id + "> ")
+                  }
+                />
+                {user.discord_name}
+              </div>
+            );
+          },
+          enableSorting: false,
+          size: 200,
+          filterFn: "includesString",
+          meta: {
+            filterVariant: "string",
+            filterPlaceholder: "Discord",
           },
         },
         {
@@ -373,7 +415,7 @@ function LadderTab(): JSX.Element {
         showAlwaysLadder.includes(col.id as string)
       );
     });
-  }, [isMobile, currentEvent, preferences, getTeam, setPreferences]);
+  }, [isMobile, currentEvent, preferences, userMap, getTeam, setPreferences]);
 
   if (ladderIsError || usersIsError) {
     return (

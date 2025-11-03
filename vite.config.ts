@@ -15,11 +15,13 @@ export default defineConfig({
       target: "react",
       autoCodeSplitting: true,
     }),
-    react({
-      babel: {
-        plugins: ["babel-plugin-react-compiler"],
-      },
-    }),
+    react(),
+    // Disabling react compiler until we can fix the issues with table
+    // react({
+    //   babel: {
+    //     plugins: ["babel-plugin-react-compiler"],
+    //   },
+    // }),
     tailwindcss(),
   ],
   preview: {

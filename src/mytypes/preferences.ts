@@ -7,6 +7,7 @@ export type Preferences = {
   ladder: {
     Rank: boolean;
     Account: boolean;
+    Discord: boolean;
     Character: boolean;
     Team: boolean;
     Ascendancy: boolean;
@@ -39,6 +40,7 @@ export const defaultPreferences: Preferences = {
   ladder: {
     Rank: true,
     Account: false,
+    Discord: false,
     Character: true,
     Team: true,
     Ascendancy: true,

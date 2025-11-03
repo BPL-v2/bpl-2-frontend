@@ -2329,6 +2329,18 @@ export interface MinimalUser {
      * @type {string}
      * @memberof MinimalUser
      */
+    discord_id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MinimalUser
+     */
+    discord_name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MinimalUser
+     */
     display_name: string;
     /**
      * 
@@ -2336,6 +2348,12 @@ export interface MinimalUser {
      * @memberof MinimalUser
      */
     id: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof MinimalUser
+     */
+    poe_account_name?: string;
 }
 
 /**
