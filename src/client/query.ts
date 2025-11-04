@@ -4,7 +4,6 @@ import { ScoreMap } from "@utils/utils";
 import { BulkObjectiveCreate } from "../routes/admin/events/$eventId/categories.$categoryId";
 import {
   Character,
-  ConditionCreate,
   EventCreate,
   GuildStashTab,
   ItemField,
@@ -23,7 +22,6 @@ import {
 import {
   activityApi,
   characterApi,
-  conditionApi,
   eventApi,
   guildStashApi,
   jobApi,
@@ -658,7 +656,7 @@ export function useGetValidConditionMappings(eventId: number) {
       "validConditionMappings",
       current !== eventId ? eventId : "current",
     ],
-    queryFn: () => conditionApi.getValidMappings(eventId),
+    queryFn: () => objectiveApi.getValidMappings(eventId),
     enabled: !!eventId,
   });
   return {
@@ -760,45 +758,6 @@ export function useCreateBulkObjectives(
   return {
     createBulkObjectives: m.mutate,
     createBulkObjectivesPending: m.isPending,
-  };
-}
-
-export function useDeleteObjectiveCondition(qc: QueryClient, eventId: number) {
-  const m = useMutation({
-    mutationFn: (conditionId: number) =>
-      conditionApi.deleteCondition(eventId, conditionId),
-    onSuccess: () => {
-      qc.invalidateQueries({
-        queryKey: ["rules", current !== eventId ? eventId : "current"],
-      });
-    },
-  });
-  return {
-    deleteObjectiveCondition: m.mutate,
-    deleteObjectiveConditionPending: m.isPending,
-  };
-}
-
-export function useAddObjectiveCondition(
-  qc: QueryClient,
-  eventId: number,
-  callback?: () => void,
-) {
-  const m = useMutation({
-    mutationFn: (condition: ConditionCreate) =>
-      conditionApi.createCondition(eventId, condition),
-    onSuccess: () => {
-      qc.invalidateQueries({
-        queryKey: ["rules", current !== eventId ? eventId : "current"],
-      });
-      if (callback) {
-        callback();
-      }
-    },
-  });
-  return {
-    addObjectiveCondition: m.mutate,
-    addObjectiveConditionPending: m.isPending,
   };
 }
 

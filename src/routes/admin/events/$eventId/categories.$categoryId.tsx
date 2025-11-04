@@ -3,12 +3,11 @@ import React, { JSX, useMemo, useState } from "react";
 
 import {
   AggregationType,
-  ConditionCreate,
+  Condition,
   GameVersion,
   ItemField,
   NumberField,
   Objective,
-  ObjectiveConditionCreate,
   ObjectiveCreate,
   ObjectiveType,
   ObjectiveValidation,
@@ -20,11 +19,9 @@ import { ObjectiveIcon } from "@components/objective-icon";
 import { useParams } from "@tanstack/react-router";
 
 import {
-  useAddObjectiveCondition,
   useCreateBulkObjectives,
   useCreateObjective,
   useDeleteObjective,
-  useDeleteObjectiveCondition,
   useGetEvents,
   useGetObjectiveValidations,
   useGetRules,
@@ -89,6 +86,9 @@ export function ScoringCategoryPage(): JSX.Element {
   const [isBulkObjectiveModalOpen, setIsBulkObjectiveModalOpen] =
     useState(false);
   const [isConditionModalOpen, setIsConditionModalOpen] = useState(false);
+  const [editedObjective, setEditedObjective] = useState<Objective | null>(
+    null,
+  );
   const { events } = useGetEvents();
   const { scoringPresets } = useGetScoringPresetsForEvent(eventId);
   const { rules } = useGetRules(eventId);
@@ -107,6 +107,8 @@ export function ScoringCategoryPage(): JSX.Element {
   const { createObjective } = useCreateObjective(qc, eventId, () => {
     setIsObjectiveModalOpen(false);
     setIsCategoryModalOpen(false);
+    setEditedObjective(null);
+    setIsConditionModalOpen(false);
     objectiveForm.reset();
   });
   const { createBulkObjectives } = useCreateBulkObjectives(
@@ -118,10 +120,6 @@ export function ScoringCategoryPage(): JSX.Element {
       bulkObjectiveForm.reset();
     },
   );
-  const { addObjectiveCondition } = useAddObjectiveCondition(qc, eventId, () =>
-    setIsConditionModalOpen(false),
-  );
-  const { deleteObjectiveCondition } = useDeleteObjectiveCondition(qc, eventId);
   const objective = findObjective(
     rules,
     (objective) => objective.id === categoryId,
@@ -174,8 +172,25 @@ export function ScoringCategoryPage(): JSX.Element {
     },
   });
   const conditionForm = useAppForm({
-    defaultValues: {} as ConditionCreate,
-    onSubmit: (data) => addObjectiveCondition(data.value),
+    defaultValues: {} as Condition,
+    onSubmit: (data) => {
+      if (!editedObjective) return;
+      const editedObjectiveConditions = [
+        ...editedObjective.conditions.filter(
+          (condition) =>
+            !(
+              condition.field === data.value.field &&
+              condition.operator === data.value.operator
+            ),
+        ),
+        data.value,
+      ];
+      const objectiveCreate: ObjectiveCreate = {
+        ...editedObjective,
+        conditions: editedObjectiveConditions,
+      };
+      createObjective(objectiveCreate);
+    },
   });
 
   const { objective_type } = useStore(
@@ -265,17 +280,24 @@ export function ScoringCategoryPage(): JSX.Element {
             <div className="flex flex-col gap-1">
               {row.original.conditions.map((condition) => {
                 return (
-                  <div className="tooltip" key={"condition-" + condition.id}>
+                  <div className="tooltip" key={"condition-" + condition.field}>
                     <span className="tooltip-content flex flex-row items-center gap-1">
                       <span className="text-success">{condition.field}</span>
                       <span className="text-info">{condition.operator}</span>
                       <span className="text-error">{condition.value}</span>
                     </span>
-                    <div className="badge badge-sm pr-[1px] whitespace-nowrap badge-primary select-none">
+                    <div className="badge badge-sm pr-px whitespace-nowrap badge-primary select-none">
                       {condition.field}
                       <XCircleIcon
                         className="size-4 cursor-pointer"
-                        onClick={() => deleteObjectiveCondition(condition.id)}
+                        onClick={() =>
+                          createObjective({
+                            ...row.original,
+                            conditions: row.original.conditions.filter(
+                              (c) => c !== condition,
+                            ),
+                          })
+                        }
                       />
                     </div>
                   </div>
@@ -363,10 +385,7 @@ export function ScoringCategoryPage(): JSX.Element {
                 <button
                   className="btn btn-sm btn-success"
                   onClick={() => {
-                    conditionForm.setFieldValue(
-                      "objective_id",
-                      row.original.id,
-                    );
+                    setEditedObjective(row.original);
                     setIsConditionModalOpen(true);
                   }}
                 >
@@ -686,6 +705,7 @@ export function ScoringCategoryPage(): JSX.Element {
     if (operatorForField && itemField) {
       operatorOptions = operatorForField[itemField];
     }
+    console.log("Rendering Condition Dialog with itemField:", objective);
     return (
       <Dialog
         title="Create Condition"
@@ -855,7 +875,7 @@ export function ScoringCategoryPage(): JSX.Element {
 export default ScoringCategoryPage;
 
 function extendConditions(
-  conditions: ObjectiveConditionCreate[],
+  conditions: Condition[],
   value: string,
   field: ItemField,
 ) {

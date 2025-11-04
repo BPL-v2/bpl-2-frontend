@@ -413,12 +413,6 @@ export interface Condition {
     field: ItemField;
     /**
      * 
-     * @type {number}
-     * @memberof Condition
-     */
-    id: number;
-    /**
-     * 
      * @type {Operator}
      * @memberof Condition
      */
@@ -427,44 +421,6 @@ export interface Condition {
      * 
      * @type {string}
      * @memberof Condition
-     */
-    value: string;
-}
-
-/**
- * 
- * @export
- * @interface ConditionCreate
- */
-export interface ConditionCreate {
-    /**
-     * 
-     * @type {ItemField}
-     * @memberof ConditionCreate
-     */
-    field: ItemField;
-    /**
-     * 
-     * @type {number}
-     * @memberof ConditionCreate
-     */
-    id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ConditionCreate
-     */
-    objective_id: number;
-    /**
-     * 
-     * @type {Operator}
-     * @memberof ConditionCreate
-     */
-    operator: Operator;
-    /**
-     * 
-     * @type {string}
-     * @memberof ConditionCreate
      */
     value: string;
 }
@@ -2524,46 +2480,6 @@ export interface Objective {
 /**
  * 
  * @export
- * @interface ObjectiveConditionCreate
- */
-export interface ObjectiveConditionCreate {
-    /**
-     * 
-     * @type {ObjectiveConditionCreateField}
-     * @memberof ObjectiveConditionCreate
-     */
-    field: ObjectiveConditionCreateField;
-    /**
-     * 
-     * @type {number}
-     * @memberof ObjectiveConditionCreate
-     */
-    id?: number;
-    /**
-     * 
-     * @type {ObjectiveConditionCreateField}
-     * @memberof ObjectiveConditionCreate
-     */
-    operator: ObjectiveConditionCreateField;
-    /**
-     * 
-     * @type {string}
-     * @memberof ObjectiveConditionCreate
-     */
-    value: string;
-}
-
-/**
- * 
- * @export
- * @interface ObjectiveConditionCreateField
- */
-export interface ObjectiveConditionCreateField {
-}
-
-/**
- * 
- * @export
  * @interface ObjectiveCreate
  */
 export interface ObjectiveCreate {
@@ -2575,10 +2491,10 @@ export interface ObjectiveCreate {
     aggregation: AggregationType;
     /**
      * 
-     * @type {Array<ObjectiveConditionCreate>}
+     * @type {Array<Condition>}
      * @memberof ObjectiveCreate
      */
-    conditions: Array<ObjectiveConditionCreate>;
+    conditions: Array<Condition>;
     /**
      * 
      * @type {string}
@@ -3344,16 +3260,24 @@ export interface SubmissionCreate {
 export interface SubmissionReview {
     /**
      * 
-     * @type {ObjectiveConditionCreateField}
+     * @type {SubmissionReviewApprovalStatus}
      * @memberof SubmissionReview
      */
-    approval_status: ObjectiveConditionCreateField;
+    approval_status: SubmissionReviewApprovalStatus;
     /**
      * 
      * @type {string}
      * @memberof SubmissionReview
      */
     review_comment?: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface SubmissionReviewApprovalStatus
+ */
+export interface SubmissionReviewApprovalStatus {
 }
 
 /**
@@ -4332,359 +4256,6 @@ export class CharactersApi extends BaseAPI {
      */
     public getUserCharacters(user_id: number, options?: any) {
         return CharactersApiFp(this.configuration).getUserCharacters(user_id, options)(this.fetch, this.basePath);
-    }
-
-}
-
-/**
- * ConditionApi - fetch parameter creator
- * @export
- */
-export const ConditionApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Creates a condition
-         * @param {number} event_id Event Id
-         * @param {ConditionCreate} condition Condition to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCondition(event_id: number, condition: ConditionCreate, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createCondition.');
-            }
-            // verify required parameter 'condition' is not null or undefined
-            if (condition === null || condition === undefined) {
-                throw new RequiredError('condition','Required parameter condition was null or undefined when calling createCondition.');
-            }
-            const localVarPath = `/events/{event_id}/conditions`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"ConditionCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(condition || {}) : (condition || "");
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Deletes a condition
-         * @param {number} event_id Event Id
-         * @param {number} id Condition Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCondition(event_id: number, id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling deleteCondition.');
-            }
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteCondition.');
-            }
-            const localVarPath = `/events/{event_id}/conditions/{id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Get valid mappings for conditions
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getValidMappings(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getValidMappings.');
-            }
-            const localVarPath = `/events/{event_id}/conditions/valid-mappings`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Test an item for completion
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        testConditions(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling testConditions.');
-            }
-            const localVarPath = `/events/{event_id}/conditions/test`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * ConditionApi - functional programming interface
- * @export
- */
-export const ConditionApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Creates a condition
-         * @param {number} event_id Event Id
-         * @param {ConditionCreate} condition Condition to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCondition(event_id: number, condition: ConditionCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Condition> {
-            const localVarFetchArgs = ConditionApiFetchParamCreator(configuration).createCondition(event_id, condition, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Deletes a condition
-         * @param {number} event_id Event Id
-         * @param {number} id Condition Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCondition(event_id: number, id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = ConditionApiFetchParamCreator(configuration).deleteCondition(event_id, id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Get valid mappings for conditions
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getValidMappings(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ConditionMappings> {
-            const localVarFetchArgs = ConditionApiFetchParamCreator(configuration).getValidMappings(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Test an item for completion
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        testConditions(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Item> {
-            const localVarFetchArgs = ConditionApiFetchParamCreator(configuration).testConditions(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
-};
-
-/**
- * ConditionApi - factory interface
- * @export
- */
-export const ConditionApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Creates a condition
-         * @param {number} event_id Event Id
-         * @param {ConditionCreate} condition Condition to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCondition(event_id: number, condition: ConditionCreate, options?: any) {
-            return ConditionApiFp(configuration).createCondition(event_id, condition, options)(fetch, basePath);
-        },
-        /**
-         * Deletes a condition
-         * @param {number} event_id Event Id
-         * @param {number} id Condition Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCondition(event_id: number, id: number, options?: any) {
-            return ConditionApiFp(configuration).deleteCondition(event_id, id, options)(fetch, basePath);
-        },
-        /**
-         * Get valid mappings for conditions
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getValidMappings(event_id: number, options?: any) {
-            return ConditionApiFp(configuration).getValidMappings(event_id, options)(fetch, basePath);
-        },
-        /**
-         * Test an item for completion
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        testConditions(event_id: number, options?: any) {
-            return ConditionApiFp(configuration).testConditions(event_id, options)(fetch, basePath);
-        },
-    };
-};
-
-/**
- * ConditionApi - object-oriented interface
- * @export
- * @class ConditionApi
- * @extends {BaseAPI}
- */
-export class ConditionApi extends BaseAPI {
-    /**
-     * Creates a condition
-     * @param {number} event_id Event Id
-     * @param {ConditionCreate} condition Condition to create
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ConditionApi
-     */
-    public createCondition(event_id: number, condition: ConditionCreate, options?: any) {
-        return ConditionApiFp(this.configuration).createCondition(event_id, condition, options)(this.fetch, this.basePath);
-    }
-
-    /**
-     * Deletes a condition
-     * @param {number} event_id Event Id
-     * @param {number} id Condition Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ConditionApi
-     */
-    public deleteCondition(event_id: number, id: number, options?: any) {
-        return ConditionApiFp(this.configuration).deleteCondition(event_id, id, options)(this.fetch, this.basePath);
-    }
-
-    /**
-     * Get valid mappings for conditions
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ConditionApi
-     */
-    public getValidMappings(event_id: number, options?: any) {
-        return ConditionApiFp(this.configuration).getValidMappings(event_id, options)(this.fetch, this.basePath);
-    }
-
-    /**
-     * Test an item for completion
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ConditionApi
-     */
-    public testConditions(event_id: number, options?: any) {
-        return ConditionApiFp(this.configuration).testConditions(event_id, options)(this.fetch, this.basePath);
     }
 
 }
@@ -6811,6 +6382,42 @@ export const ObjectiveApiFetchParamCreator = function (configuration?: Configura
             };
         },
         /**
+         * Get valid mappings for conditions
+         * @param {number} event_id Event Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getValidMappings(event_id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getValidMappings.');
+            }
+            const localVarPath = `/events/{event_id}/objectives/valid-mappings`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Validates item objectives for an event seeing if there are completions on trade
          * @param {number} event_id Event Id
          * @param {ValidationRequest} body Validation request
@@ -6950,6 +6557,24 @@ export const ObjectiveApiFp = function(configuration?: Configuration) {
             };
         },
         /**
+         * Get valid mappings for conditions
+         * @param {number} event_id Event Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getValidMappings(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ConditionMappings> {
+            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).getValidMappings(event_id, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
          * Validates item objectives for an event seeing if there are completions on trade
          * @param {number} event_id Event Id
          * @param {ValidationRequest} body Validation request
@@ -7024,6 +6649,15 @@ export const ObjectiveApiFactory = function (configuration?: Configuration, fetc
          */
         getObjectiveValidations(event_id: number, options?: any) {
             return ObjectiveApiFp(configuration).getObjectiveValidations(event_id, options)(fetch, basePath);
+        },
+        /**
+         * Get valid mappings for conditions
+         * @param {number} event_id Event Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getValidMappings(event_id: number, options?: any) {
+            return ObjectiveApiFp(configuration).getValidMappings(event_id, options)(fetch, basePath);
         },
         /**
          * Validates item objectives for an event seeing if there are completions on trade
@@ -7101,6 +6735,17 @@ export class ObjectiveApi extends BaseAPI {
      */
     public getObjectiveValidations(event_id: number, options?: any) {
         return ObjectiveApiFp(this.configuration).getObjectiveValidations(event_id, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Get valid mappings for conditions
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ObjectiveApi
+     */
+    public getValidMappings(event_id: number, options?: any) {
+        return ObjectiveApiFp(this.configuration).getValidMappings(event_id, options)(this.fetch, this.basePath);
     }
 
     /**

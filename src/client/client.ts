@@ -2,7 +2,6 @@ import { Configuration } from ".";
 import {
   ActivityApiFactory,
   CharactersApiFactory,
-  ConditionApiFactory,
   EventApiFactory,
   GuildStashApiFactory,
   JobsApiFactory,
@@ -51,11 +50,6 @@ export const scoringApi = ScoringApiFactory(
   baseUrl,
 );
 export const scoresApi = ScoresApiFactory(config, authenticatedFetch, baseUrl);
-export const conditionApi = ConditionApiFactory(
-  config,
-  authenticatedFetch,
-  baseUrl,
-);
 export const submissionApi = SubmissionApiFactory(
   config,
   authenticatedFetch,
