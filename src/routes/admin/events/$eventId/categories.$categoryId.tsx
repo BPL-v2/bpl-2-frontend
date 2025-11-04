@@ -35,7 +35,6 @@ import { setFormValues, useAppForm } from "@components/form/context";
 import Table from "@components/table/table";
 import {
   ClipboardDocumentListIcon,
-  ClipboardIcon,
   DocumentDuplicateIcon,
   FolderOpenIcon,
   PencilSquareIcon,
