@@ -2663,6 +2663,32 @@ export enum ObjectiveType {
 /**
  * 
  * @export
+ * @interface ObjectiveValidation
+ */
+export interface ObjectiveValidation {
+    /**
+     * 
+     * @type {Item}
+     * @memberof ObjectiveValidation
+     */
+    item: Item;
+    /**
+     * 
+     * @type {number}
+     * @memberof ObjectiveValidation
+     */
+    objective_id: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ObjectiveValidation
+     */
+    timestamp: string;
+}
+
+/**
+ * 
+ * @export
  * @enum {string}
  */
 export enum Operator {
@@ -3656,6 +3682,20 @@ export interface UserUpdate {
      * @memberof UserUpdate
      */
     display_name: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface ValidationRequest
+ */
+export interface ValidationRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof ValidationRequest
+     */
+    timeout_seconds: number;
 }
 
 
@@ -6742,6 +6782,71 @@ export const ObjectiveApiFetchParamCreator = function (configuration?: Configura
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Gets objective validations for an event
+         * @param {number} event_id Event Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getObjectiveValidations(event_id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getObjectiveValidations.');
+            }
+            const localVarPath = `/events/{event_id}/objectives/validations`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Validates item objectives for an event seeing if there are completions on trade
+         * @param {number} event_id Event Id
+         * @param {ValidationRequest} body Validation request
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        validateObjectives(event_id: number, body: ValidationRequest, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling validateObjectives.');
+            }
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling validateObjectives.');
+            }
+            const localVarPath = `/events/{event_id}/objectives/validations`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"ValidationRequest" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -6826,6 +6931,43 @@ export const ObjectiveApiFp = function(configuration?: Configuration) {
                 });
             };
         },
+        /**
+         * Gets objective validations for an event
+         * @param {number} event_id Event Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getObjectiveValidations(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<ObjectiveValidation>> {
+            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).getObjectiveValidations(event_id, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * Validates item objectives for an event seeing if there are completions on trade
+         * @param {number} event_id Event Id
+         * @param {ValidationRequest} body Validation request
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        validateObjectives(event_id: number, body: ValidationRequest, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).validateObjectives(event_id, body, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response;
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
     }
 };
 
@@ -6873,6 +7015,25 @@ export const ObjectiveApiFactory = function (configuration?: Configuration, fetc
          */
         getObjectiveTreeForEvent(event_id: number, options?: any) {
             return ObjectiveApiFp(configuration).getObjectiveTreeForEvent(event_id, options)(fetch, basePath);
+        },
+        /**
+         * Gets objective validations for an event
+         * @param {number} event_id Event Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getObjectiveValidations(event_id: number, options?: any) {
+            return ObjectiveApiFp(configuration).getObjectiveValidations(event_id, options)(fetch, basePath);
+        },
+        /**
+         * Validates item objectives for an event seeing if there are completions on trade
+         * @param {number} event_id Event Id
+         * @param {ValidationRequest} body Validation request
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        validateObjectives(event_id: number, body: ValidationRequest, options?: any) {
+            return ObjectiveApiFp(configuration).validateObjectives(event_id, body, options)(fetch, basePath);
         },
     };
 };
@@ -6929,6 +7090,29 @@ export class ObjectiveApi extends BaseAPI {
      */
     public getObjectiveTreeForEvent(event_id: number, options?: any) {
         return ObjectiveApiFp(this.configuration).getObjectiveTreeForEvent(event_id, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Gets objective validations for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ObjectiveApi
+     */
+    public getObjectiveValidations(event_id: number, options?: any) {
+        return ObjectiveApiFp(this.configuration).getObjectiveValidations(event_id, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Validates item objectives for an event seeing if there are completions on trade
+     * @param {number} event_id Event Id
+     * @param {ValidationRequest} body Validation request
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ObjectiveApi
+     */
+    public validateObjectives(event_id: number, body: ValidationRequest, options?: any) {
+        return ObjectiveApiFp(this.configuration).validateObjectives(event_id, body, options)(this.fetch, this.basePath);
     }
 
 }

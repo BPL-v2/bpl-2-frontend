@@ -11,6 +11,7 @@ import {
   ObjectiveConditionCreate,
   ObjectiveCreate,
   ObjectiveType,
+  ObjectiveValidation,
   Operator,
   Permission,
 } from "@client/api";
@@ -25,6 +26,7 @@ import {
   useDeleteObjective,
   useDeleteObjectiveCondition,
   useGetEvents,
+  useGetObjectiveValidations,
   useGetRules,
   useGetScoringPresetsForEvent,
   useGetValidConditionMappings,
@@ -32,6 +34,8 @@ import {
 import { setFormValues, useAppForm } from "@components/form/context";
 import Table from "@components/table/table";
 import {
+  ClipboardDocumentListIcon,
+  ClipboardIcon,
   DocumentDuplicateIcon,
   FolderOpenIcon,
   PencilSquareIcon,
@@ -45,6 +49,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { renderConditionally } from "@utils/token";
 import { findObjective, getPath } from "@utils/utils";
 import { twMerge } from "tailwind-merge";
+import { objectiveApi } from "@client/client";
 
 export const Route = createFileRoute(
   "/admin/events/$eventId/categories/$categoryId",
@@ -90,6 +95,14 @@ export function ScoringCategoryPage(): JSX.Element {
   const { rules } = useGetRules(eventId);
   const { operatorForField, numberFieldsForObjectiveType } =
     useGetValidConditionMappings(eventId);
+  const { objectiveValidations } = useGetObjectiveValidations(eventId);
+  const validationMap = objectiveValidations.reduce(
+    (map, validation) => {
+      map[validation.objective_id] = validation;
+      return map;
+    },
+    {} as Record<number, ObjectiveValidation>,
+  );
 
   const { deleteObjective } = useDeleteObjective(qc, eventId);
   const { createObjective } = useCreateObjective(qc, eventId, () => {
@@ -190,6 +203,25 @@ export function ScoringCategoryPage(): JSX.Element {
           );
         },
         size: 80,
+      },
+      {
+        header: "Validated",
+        cell: ({ row }) => {
+          const validation = validationMap[row.original.id];
+          return validation ? (
+            <ClipboardDocumentListIcon
+              className="size-6 cursor-pointer text-success transition-transform duration-100 select-none hover:text-primary active:scale-110 active:text-secondary"
+              onClick={() =>
+                navigator.clipboard.writeText(
+                  JSON.stringify(validation.item, null, 2),
+                )
+              }
+            />
+          ) : (
+            <span className="text-error">✗</span>
+          );
+        },
+        size: 100,
       },
       {
         header: "Name",
@@ -804,6 +836,16 @@ export function ScoringCategoryPage(): JSX.Element {
           onClick={() => setIsBulkObjectiveModalOpen(true)}
         >
           Create Objectives in bulk
+        </button>
+        <button
+          className="btn btn-success"
+          onClick={() =>
+            objectiveApi
+              .validateObjectives(eventId, { timeout_seconds: 300 })
+              .then(() => qc.invalidateQueries())
+          }
+        >
+          Validate Objectives
         </button>
       </div>
       {table}

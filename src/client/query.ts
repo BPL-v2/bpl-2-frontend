@@ -1063,3 +1063,18 @@ export function useGetUserAtlasProgress(eventId: number, userId: number) {
     atlasProgress: query.data,
   };
 }
+
+export function useGetObjectiveValidations(eventId: number) {
+  const query = useQuery({
+    queryKey: [
+      "objectiveValidations",
+      current !== eventId ? eventId : "current",
+    ],
+    queryFn: () => objectiveApi.getObjectiveValidations(eventId),
+    enabled: !!eventId,
+  });
+  return {
+    ...query,
+    objectiveValidations: query.data ?? [],
+  };
+}
