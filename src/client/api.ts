@@ -675,6 +675,18 @@ export interface DisplayItem {
     memoryItem?: boolean;
     /**
      * 
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    mutated?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DisplayItem
+     */
+    mutatedMods?: Array<string>;
+    /**
+     * 
      * @type {string}
      * @memberof DisplayItem
      */
@@ -1636,6 +1648,18 @@ export interface Item {
     memoryItem?: boolean;
     /**
      * 
+     * @type {boolean}
+     * @memberof Item
+     */
+    mutated?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof Item
+     */
+    mutatedMods?: Array<string>;
+    /**
+     * 
      * @type {string}
      * @memberof Item
      */
@@ -1877,7 +1901,9 @@ export enum ItemField {
     RITUAL_VESSEL_BOSSES = 'RITUAL_VESSEL_BOSSES',
     RITUAL_VESSEL_MAP = 'RITUAL_VESSEL_MAP',
     FACETOR_LENS_EXP = 'FACETOR_LENS_EXP',
-    MEMORY_STRANDS = 'MEMORY_STRANDS'
+    MEMORY_STRANDS = 'MEMORY_STRANDS',
+    IS_FOULBORN = 'IS_FOULBORN',
+    FOULBORN_MODS = 'FOULBORN_MODS'
 }
 
 /**

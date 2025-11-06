@@ -28,3 +28,7 @@ swagger-codegen*
 tsconfig.tsbuildinfo
 # Local Netlify folder
 .netlify
+
+#WTF????
+
+*.ts-E
