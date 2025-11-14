@@ -27,7 +27,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build --build-arg VITE_PUBLIC_BPL_BACKEND_URL=https://bpl-poe.com/api -t ${{ vars.DOCKER_USERNAME }}/bpl2-frontend:${{ steps.get_tag.outputs.tag }} .
+          docker build --build-arg VITE_PUBLIC_BPL_BACKEND_URL=https://bpl-poe.com/api -t ${{ vars.DOCKER_USERNAME }}/frontend:${{ steps.get_tag.outputs.tag }} .
 
       - name: Push Docker image
         run: |
