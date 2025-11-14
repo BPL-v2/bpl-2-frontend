@@ -3,7 +3,7 @@ import { AscendancyPortrait } from "@components/character/ascendancy-portrait";
 import { Countdown } from "@components/countdown";
 import SignupButton from "@components/signup-button";
 import { TeamLogo } from "@components/team/teamlogo";
-// import { VideoEmbed } from "@components/video-embed";
+import { VideoEmbed } from "@components/video/video-embed";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { DiscordFilled } from "@icons/discord";
 import { createFileRoute } from "@tanstack/react-router";
@@ -97,9 +97,9 @@ function Home() {
                 </button>
               </div>
             </div>
-            {/* <div className="w-full aspect-video">
-              <VideoEmbed url="https://www.youtube.com/watch?v=lMBYcR8MGOw" />
-            </div> */}
+            <div className="aspect-video w-full">
+              <VideoEmbed url="https://www.youtube.com/watch?v=fBhLOtgnHF8" />
+            </div>
           </div>
         </div>
       </div>
