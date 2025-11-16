@@ -88,7 +88,7 @@ export function DailyCard({ daily }: DailyCardProps) {
         )}
         key={daily.id}
       >
-        <div className="card-title flex h-full min-h-25 items-center rounded-t-box bborder-b bg-base-300/50 px-4 py-2">
+        <div className="m-0 card-title flex h-full min-h-22 items-center rounded-t-box bborder-b bg-base-300/50 px-4 py-2">
           {canSubmit ? (
             <div
               className="tooltip tooltip-left lg:tooltip-top"
@@ -107,6 +107,7 @@ export function DailyCard({ daily }: DailyCardProps) {
             <ObjectiveIcon
               objective={daily}
               gameVersion={currentEvent.game_version}
+              className="h-full w-14"
             />
           )}
           <div className={daily.extra ? "tooltip tooltip-primary" : undefined}>
@@ -114,7 +115,7 @@ export function DailyCard({ daily }: DailyCardProps) {
               {daily.extra}
             </div>
 
-            <h3 className="mx-4 flex-grow text-center text-lg font-medium">
+            <h3 className="mx-4 grow text-center text-lg font-medium">
               {isRace ? <b className="font-extrabold text-info">Race: </b> : ""}
               {daily.name}
               {daily.extra ? <i className="text-error">*</i> : null}

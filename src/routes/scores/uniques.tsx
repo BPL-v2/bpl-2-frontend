@@ -160,7 +160,10 @@ function UniqueTab(): JSX.Element {
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map((category) => {
                   return (
-                    <div key={`focus-unique-category-${category.id}`}>
+                    <div
+                      key={`focus-unique-category-${category.id}`}
+                      className="h-full"
+                    >
                       <UniqueCategoryCard
                         objective={category}
                         selected={category.id === selectedCategory?.id}

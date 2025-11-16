@@ -24,7 +24,7 @@ export function CollectionCard({ objective }: CollectionCardProps) {
           <div className="tooltip-content max-w-75 text-xl">
             {objective.extra}
           </div>
-          <h3 className="mx-4 flex-grow text-center text-xl font-medium">
+          <h3 className="mx-4 grow text-center text-xl font-medium">
             {`${objective.required_number} ${objective.name}`}
             {objective.extra ? <i className="text-red-600">*</i> : null}
           </h3>

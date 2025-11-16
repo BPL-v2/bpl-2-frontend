@@ -197,7 +197,7 @@ function ScoringPage() {
         <Link
           to={"/scores/" + selected}
           className={twMerge(
-            "btn mx-2 w-14 justify-between border-1 border-secondary md:w-36",
+            "btn mx-2 w-14 justify-between border border-secondary md:w-36",
             rules ? "bg-secondary text-secondary-content" : "text-secondary",
           )}
           search={{ rules: !rules }}

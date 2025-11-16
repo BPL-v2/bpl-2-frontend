@@ -477,6 +477,9 @@ function LadderTab(): JSX.Element {
     (obj) => obj.scoring_preset?.point_cap || 0 > 0,
   );
   const checkPoints = objs?.filter((obj) => !obj.scoring_preset?.point_cap);
+  const firstCheckpointCompleted =
+    checkPoints?.some((obj) => new Date(obj.valid_to || "") < new Date()) ||
+    false;
   return (
     <>
       {rules ? (
@@ -498,62 +501,71 @@ function LadderTab(): JSX.Element {
           ></Table>
         </>
       )}
-      <div className="divider divider-primary">Personal Objective Points</div>
-      {totalObjective && checkPoints && (
-        <div className="card bg-base-300">
-          <div className="card-body">
-            <div className="flex flex-col gap-2">
-              {currentEvent.teams
-                .sort((a, b) => {
-                  if (a.id === eventStatus?.team_id) return -1;
-                  if (b.id === eventStatus?.team_id) return 1;
-                  return (
-                    (totalObjective.team_score[b.id]?.number || 0) -
-                    (totalObjective.team_score[a.id]?.number || 0)
-                  );
-                })
-                .slice(
-                  0,
-                  preferences.limitTeams ? preferences.limitTeams : undefined,
-                )
-
-                .map((team) => {
-                  const values = [];
-                  const extra = [];
-                  let total = 0;
-                  for (const obj of checkPoints) {
-                    const teamScore = obj.team_score[team.id];
-                    if (!teamScore || !teamScore.points) {
-                      continue;
-                    }
-                    const number = teamScore.number;
-                    total += teamScore.points;
-                    values.push(number);
-                    extra.push(teamScore.points);
-                  }
-                  const cap = totalObjective?.scoring_preset?.point_cap || 0;
-                  const current = Math.min(
-                    totalObjective?.team_score[team.id]?.number || 0,
-                    cap,
-                  );
-                  total += current;
-                  return (
-                    <div className="flex flex-col" key={team.id}>
-                      <div className="flex flex-row justify-start gap-2 text-lg">
-                        <TeamName className="font-semibold" team={team} />
-                        <div className="">{`${total} = (${current} + ${extra.join(" + ")})`}</div>
-                      </div>
-                      <POProgressBar
-                        checkpoints={values}
-                        extra={extra}
-                        max={cap}
-                        current={current}
-                      />
-                    </div>
-                  );
-                })}
-            </div>
+      {firstCheckpointCompleted && (
+        <div>
+          <div className="divider divider-primary">
+            Personal Objective Points
           </div>
+          {totalObjective && checkPoints && (
+            <div className="card bg-base-300">
+              <div className="card-body">
+                <div className="flex flex-col gap-2">
+                  {currentEvent.teams
+                    .sort((a, b) => {
+                      if (a.id === eventStatus?.team_id) return -1;
+                      if (b.id === eventStatus?.team_id) return 1;
+                      return (
+                        (totalObjective.team_score[b.id]?.number || 0) -
+                        (totalObjective.team_score[a.id]?.number || 0)
+                      );
+                    })
+                    .slice(
+                      0,
+                      preferences.limitTeams
+                        ? preferences.limitTeams
+                        : undefined,
+                    )
+
+                    .map((team) => {
+                      const values = [];
+                      const extra = [];
+                      let total = 0;
+                      for (const obj of checkPoints) {
+                        const teamScore = obj.team_score[team.id];
+                        if (!teamScore || !teamScore.points) {
+                          continue;
+                        }
+                        const number = teamScore.number;
+                        total += teamScore.points;
+                        values.push(number);
+                        extra.push(teamScore.points);
+                      }
+                      const cap =
+                        totalObjective?.scoring_preset?.point_cap || 0;
+                      const current = Math.min(
+                        totalObjective?.team_score[team.id]?.number || 0,
+                        cap,
+                      );
+                      total += current;
+                      return (
+                        <div className="flex flex-col" key={team.id}>
+                          <div className="flex flex-row justify-start gap-2 text-lg">
+                            <TeamName className="font-semibold" team={team} />
+                            <div className="">{`${total} = (${current} + ${extra.join(" + ")})`}</div>
+                          </div>
+                          <POProgressBar
+                            checkpoints={values}
+                            extra={extra}
+                            max={cap}
+                            current={current}
+                          />
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
       <div className="divider divider-primary">Ladder</div>

@@ -348,6 +348,7 @@ export const iconMap: Record<string, (props: IconProps[]) => string> = {
   Beyond: Beyond,
   Blight: Blight,
   Breach: Breach,
+  Keepers: Breach,
   Delve: Delve,
   Heist: Heist,
   Incursion: Incursion,
@@ -397,6 +398,10 @@ const defaultStyles: Record<string, IconProps[]> = {
   Beyond: [{ strokeWidth: 2, fill: "#821733", stroke: "#f5d6d6" }],
   Blight: [{ strokeWidth: 2, fill: "#998800", stroke: "#f5f3d5" }],
   Breach: [
+    { strokeWidth: 2, fill: "#822617", stroke: "#ffe0cc" },
+    { strokeWidth: 2, fill: "#cc0000", stroke: "#ffe0cc" },
+  ],
+  Keepers: [
     { strokeWidth: 2, fill: "#822617", stroke: "#ffe0cc" },
     { strokeWidth: 2, fill: "#cc0000", stroke: "#ffe0cc" },
   ],
