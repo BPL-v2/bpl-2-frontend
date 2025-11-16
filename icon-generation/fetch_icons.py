@@ -47,10 +47,10 @@ def get_base_name(gem) -> Optional[str]:
 def get_gem_dict() -> dict[str, list[Gem]]:
     response = request.urlopen(
         "https://repoe-fork.github.io/gems_minimal.min.json")
-    full_gems: dict = json.loads(response.read())
+    full_gems: list = json.loads(response.read())
     gems: dict[str, list[Gem]] = {}
     gem_colors = {"r": set(), "g": set(), "b": set(), "w": set()}
-    for gem in full_gems.values():
+    for gem in full_gems:
         base_name = get_base_name(gem)
         if base_name is not None:
             if base_name not in gems:
