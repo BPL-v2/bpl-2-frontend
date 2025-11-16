@@ -105,9 +105,7 @@ function Table<T>({
                 return (
                   <th
                     key={header.id}
-                    style={{
-                      width: header.getSize(),
-                    }}
+                    style={{ width: header.getSize() }}
                     className="flex items-center"
                   >
                     <div
@@ -171,10 +169,8 @@ function Table<T>({
                   return (
                     <td
                       key={cell.id}
-                      style={{
-                        display: "flex",
-                        width: cell.column.getSize(),
-                      }}
+                      className="flex items-center self-stretch"
+                      style={{ width: cell.column.getSize() }}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
