@@ -31,6 +31,7 @@ import { Route as ScoresDailiesRouteImport } from './routes/scores/dailies'
 import { Route as ScoresCollectionsRouteImport } from './routes/scores/collections'
 import { Route as ScoresBountiesRouteImport } from './routes/scores/bounties'
 import { Route as AdminUserManagementRouteImport } from './routes/admin/user-management'
+import { Route as AdminTimingsRouteImport } from './routes/admin/timings'
 import { Route as AdminTeamSuggestionsRouteImport } from './routes/admin/team-suggestions'
 import { Route as AdminTeamSortRouteImport } from './routes/admin/team-sort'
 import { Route as AdminSubmissionsRouteImport } from './routes/admin/submissions'
@@ -161,6 +162,11 @@ const AdminUserManagementRoute = AdminUserManagementRouteImport.update({
   path: '/admin/user-management',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminTimingsRoute = AdminTimingsRouteImport.update({
+  id: '/admin/timings',
+  path: '/admin/timings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminTeamSuggestionsRoute = AdminTeamSuggestionsRouteImport.update({
   id: '/admin/team-suggestions',
   path: '/admin/team-suggestions',
@@ -275,6 +281,7 @@ export interface FileRoutesByFullPath {
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/team-sort': typeof AdminTeamSortRoute
   '/admin/team-suggestions': typeof AdminTeamSuggestionsRoute
+  '/admin/timings': typeof AdminTimingsRoute
   '/admin/user-management': typeof AdminUserManagementRoute
   '/scores/bounties': typeof ScoresBountiesRoute
   '/scores/collections': typeof ScoresCollectionsRoute
@@ -318,6 +325,7 @@ export interface FileRoutesByTo {
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/team-sort': typeof AdminTeamSortRoute
   '/admin/team-suggestions': typeof AdminTeamSuggestionsRoute
+  '/admin/timings': typeof AdminTimingsRoute
   '/admin/user-management': typeof AdminUserManagementRoute
   '/scores/bounties': typeof ScoresBountiesRoute
   '/scores/collections': typeof ScoresCollectionsRoute
@@ -362,6 +370,7 @@ export interface FileRoutesById {
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/team-sort': typeof AdminTeamSortRoute
   '/admin/team-suggestions': typeof AdminTeamSuggestionsRoute
+  '/admin/timings': typeof AdminTimingsRoute
   '/admin/user-management': typeof AdminUserManagementRoute
   '/scores/bounties': typeof ScoresBountiesRoute
   '/scores/collections': typeof ScoresCollectionsRoute
@@ -407,6 +416,7 @@ export interface FileRouteTypes {
     | '/admin/submissions'
     | '/admin/team-sort'
     | '/admin/team-suggestions'
+    | '/admin/timings'
     | '/admin/user-management'
     | '/scores/bounties'
     | '/scores/collections'
@@ -450,6 +460,7 @@ export interface FileRouteTypes {
     | '/admin/submissions'
     | '/admin/team-sort'
     | '/admin/team-suggestions'
+    | '/admin/timings'
     | '/admin/user-management'
     | '/scores/bounties'
     | '/scores/collections'
@@ -493,6 +504,7 @@ export interface FileRouteTypes {
     | '/admin/submissions'
     | '/admin/team-sort'
     | '/admin/team-suggestions'
+    | '/admin/timings'
     | '/admin/user-management'
     | '/scores/bounties'
     | '/scores/collections'
@@ -537,6 +549,7 @@ export interface RootRouteChildren {
   AdminSubmissionsRoute: typeof AdminSubmissionsRoute
   AdminTeamSortRoute: typeof AdminTeamSortRoute
   AdminTeamSuggestionsRoute: typeof AdminTeamSuggestionsRoute
+  AdminTimingsRoute: typeof AdminTimingsRoute
   AdminUserManagementRoute: typeof AdminUserManagementRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminGuildLogsRouteRoute: typeof AdminGuildLogsRouteRouteWithChildren
@@ -705,6 +718,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/user-management'
       fullPath: '/admin/user-management'
       preLoaderRoute: typeof AdminUserManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/timings': {
+      id: '/admin/timings'
+      path: '/admin/timings'
+      fullPath: '/admin/timings'
+      preLoaderRoute: typeof AdminTimingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/team-suggestions': {
@@ -939,6 +959,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminSubmissionsRoute: AdminSubmissionsRoute,
   AdminTeamSortRoute: AdminTeamSortRoute,
   AdminTeamSuggestionsRoute: AdminTeamSuggestionsRoute,
+  AdminTimingsRoute: AdminTimingsRoute,
   AdminUserManagementRoute: AdminUserManagementRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminGuildLogsRouteRoute: AdminGuildLogsRouteRouteWithChildren,

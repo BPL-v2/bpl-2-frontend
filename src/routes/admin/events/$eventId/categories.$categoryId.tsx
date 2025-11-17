@@ -409,7 +409,7 @@ export function ScoringCategoryPage(): JSX.Element {
         },
       },
     ],
-    [scoringPresets, event, objectiveForm],
+    [scoringPresets, event, objectiveForm, validationMap],
   );
 
   const objectiveDialog: React.ReactNode = useMemo(() => {

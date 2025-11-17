@@ -14,6 +14,7 @@ import {
   StreamsApiFactory,
   SubmissionApiFactory,
   TeamApiFactory,
+  TimingApiFactory,
   UserApiFactory,
 } from "./api";
 
@@ -75,3 +76,5 @@ export const guildStashApi = GuildStashApiFactory(
   authenticatedFetch,
   baseUrl,
 );
+
+export const timingApi = TimingApiFactory(config, authenticatedFetch, baseUrl);

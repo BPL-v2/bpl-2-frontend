@@ -94,6 +94,12 @@ function RouteComponent() {
           link="https://bpl-poe.com/monitoring"
           permissions={[Permission.admin]}
         />
+        <AdminRouteCard
+          title="Timings"
+          description="Configure the delays after our poe client updates user data."
+          link="/admin/timings"
+          permissions={[Permission.admin]}
+        />
         {eventStatus && eventStatus.is_team_lead && (
           <>
             <Link

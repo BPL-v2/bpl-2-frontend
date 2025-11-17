@@ -3458,6 +3458,72 @@ export interface TeamUserCreate {
 /**
  * 
  * @export
+ * @interface Timing
+ */
+export interface Timing {
+    /**
+     * 
+     * @type {string}
+     * @memberof Timing
+     */
+    description: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Timing
+     */
+    duration_seconds: number;
+    /**
+     * 
+     * @type {TimingKey}
+     * @memberof Timing
+     */
+    key: TimingKey;
+}
+
+/**
+ * 
+ * @export
+ * @interface TimingCreate
+ */
+export interface TimingCreate {
+    /**
+     * 
+     * @type {number}
+     * @memberof TimingCreate
+     */
+    duration_seconds: number;
+    /**
+     * 
+     * @type {TimingKey}
+     * @memberof TimingCreate
+     */
+    key: TimingKey;
+}
+
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+export enum TimingKey {
+    delay_after_character_is_refetched = 'delay_after_character_is_refetched',
+    delay_after_po_relevant_character_is_refetched = 'delay_after_po_relevant_character_is_refetched',
+    delay_after_inactive_character_is_refetched = 'delay_after_inactive_character_is_refetched',
+    delay_after_league_account_is_refetched = 'delay_after_league_account_is_refetched',
+    delay_after_po_relevant_league_account_is_refetched = 'delay_after_po_relevant_league_account_is_refetched',
+    delay_after_inactive_league_account_is_refetched = 'delay_after_inactive_league_account_is_refetched',
+    delay_after_pob_is_recalculated = 'delay_after_pob_is_recalculated',
+    delay_after_character_name_is_refetched = 'delay_after_character_name_is_refetched',
+    character_inactivity_duration = 'character_inactivity_duration',
+    ladder_update_interval = 'ladder_update_interval',
+    guildstash_update_interval = 'guildstash_update_interval',
+    public_stash_update_interval = 'public_stash_update_interval'
+}
+
+/**
+ * 
+ * @export
  * @interface TwitchStream
  */
 export interface TwitchStream {
@@ -8991,6 +9057,184 @@ export class TeamApi extends BaseAPI {
      */
     public getTeams(event_id: number, options?: any) {
         return TeamApiFp(this.configuration).getTeams(event_id, options)(this.fetch, this.basePath);
+    }
+
+}
+
+/**
+ * TimingApi - fetch parameter creator
+ * @export
+ */
+export const TimingApiFetchParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Retrieve the current timing configurations for various operations.
+         * @summary Get timing configurations
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTimings(options: any = {}): FetchArgs {
+            const localVarPath = `/timings`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Update the timing configurations for various operations.
+         * @summary Set timing configurations
+         * @param {Array<TimingCreate>} timings List of timing configurations
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setTimings(timings: Array<TimingCreate>, options: any = {}): FetchArgs {
+            // verify required parameter 'timings' is not null or undefined
+            if (timings === null || timings === undefined) {
+                throw new RequiredError('timings','Required parameter timings was null or undefined when calling setTimings.');
+            }
+            const localVarPath = `/timings`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"Array&lt;TimingCreate&gt;" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(timings || {}) : (timings || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * TimingApi - functional programming interface
+ * @export
+ */
+export const TimingApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * Retrieve the current timing configurations for various operations.
+         * @summary Get timing configurations
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTimings(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Timing>> {
+            const localVarFetchArgs = TimingApiFetchParamCreator(configuration).getTimings(options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * Update the timing configurations for various operations.
+         * @summary Set timing configurations
+         * @param {Array<TimingCreate>} timings List of timing configurations
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setTimings(timings: Array<TimingCreate>, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = TimingApiFetchParamCreator(configuration).setTimings(timings, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response;
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+    }
+};
+
+/**
+ * TimingApi - factory interface
+ * @export
+ */
+export const TimingApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+    return {
+        /**
+         * Retrieve the current timing configurations for various operations.
+         * @summary Get timing configurations
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTimings(options?: any) {
+            return TimingApiFp(configuration).getTimings(options)(fetch, basePath);
+        },
+        /**
+         * Update the timing configurations for various operations.
+         * @summary Set timing configurations
+         * @param {Array<TimingCreate>} timings List of timing configurations
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setTimings(timings: Array<TimingCreate>, options?: any) {
+            return TimingApiFp(configuration).setTimings(timings, options)(fetch, basePath);
+        },
+    };
+};
+
+/**
+ * TimingApi - object-oriented interface
+ * @export
+ * @class TimingApi
+ * @extends {BaseAPI}
+ */
+export class TimingApi extends BaseAPI {
+    /**
+     * Retrieve the current timing configurations for various operations.
+     * @summary Get timing configurations
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TimingApi
+     */
+    public getTimings(options?: any) {
+        return TimingApiFp(this.configuration).getTimings(options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Update the timing configurations for various operations.
+     * @summary Set timing configurations
+     * @param {Array<TimingCreate>} timings List of timing configurations
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TimingApi
+     */
+    public setTimings(timings: Array<TimingCreate>, options?: any) {
+        return TimingApiFp(this.configuration).setTimings(timings, options)(this.fetch, this.basePath);
     }
 
 }

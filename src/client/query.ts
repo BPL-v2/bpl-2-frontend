@@ -18,6 +18,7 @@ import {
   TeamCreate,
   TeamSuggestion,
   TeamUserCreate,
+  TimingCreate,
 } from "./api";
 import {
   activityApi,
@@ -33,6 +34,7 @@ import {
   streamApi,
   submissionApi,
   teamApi,
+  timingApi,
   userApi,
 } from "./client";
 
@@ -1035,5 +1037,29 @@ export function useGetObjectiveValidations(eventId: number) {
   return {
     ...query,
     objectiveValidations: query.data ?? [],
+  };
+}
+
+export function useGetTimings() {
+  const query = useQuery({
+    queryKey: ["timings"],
+    queryFn: () => timingApi.getTimings(),
+  });
+  return {
+    ...query,
+    timings: query.data ?? [],
+  };
+}
+
+export function useSetTimings(qc: QueryClient) {
+  const m = useMutation({
+    mutationFn: (timings: TimingCreate[]) => timingApi.setTimings(timings),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["timings"] });
+    },
+  });
+  return {
+    setTimings: m.mutate,
+    setTimingsPending: m.isPending,
   };
 }
