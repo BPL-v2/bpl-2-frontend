@@ -9,14 +9,14 @@ type Props = {
   type: "atlas" | "passives";
   index?: number;
   showUnallocated?: boolean;
-  ascendancy?: string;
+  ascendancies?: string[];
   tooltip?: boolean;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 function filterActiveConnections(
   line: string,
   nodes: Set<number>,
-  ascendancy?: string,
+  ascendancies: string[],
 ): string {
   const idMatch = line.match(/c-(\d+)-(\d+)/);
   if (!idMatch) {
@@ -25,8 +25,14 @@ function filterActiveConnections(
   const id1 = parseInt(idMatch[1]);
   const id2 = parseInt(idMatch[2]);
   if (!nodes.has(id1) || !nodes.has(id2)) {
-    if (ascendancy && line.includes(ascendancy)) {
-      return line.replace("ascendancy", "");
+    const isAscendancy = ascendancies.some((asc) => line.includes(asc));
+    for (const asc of ascendancies) {
+      if (line.includes(asc)) {
+        line = line.replace("ascendancy", "");
+      }
+    }
+    if (isAscendancy) {
+      return line;
     } else {
       return "";
     }
@@ -37,29 +43,26 @@ function filterActiveConnections(
 function filterActiveNodes(
   line: string,
   nodes: Set<number>,
-  ascendancy?: string,
+  ascendancies: string[],
 ): string {
   const idMatch = line.match(/id="n-(\d+)"/);
   if (!idMatch) {
     return line;
   }
-  if (line.includes("mastery")) {
-    // const circleMatch = line.match(
-    //   /<circle[^>]*cx="([^"]*)"[^>]*cy="([^"]*)"[^>]*>/,
-    // );
-    // if (circleMatch) {
-    //   const cx = parseFloat(circleMatch[1]) - 80;
-    //   const cy = parseFloat(circleMatch[2]) - 80;
-    //   return `<g transform="translate(${cx}, ${cy}) scale(0.8)" filter="grayscale(1)">${svg}</g>`;
-    // }
-  }
 
   const nodeId = parseInt(idMatch[1]);
   if (!nodes.has(nodeId)) {
-    if (ascendancy && line.includes(ascendancy)) {
-      return line.replace("ascendancy", "");
+    const isAscendancy = ascendancies.some((asc) => line.includes(asc));
+    for (const asc of ascendancies) {
+      if (line.includes(asc)) {
+        line = line.replace("ascendancy", "");
+      }
     }
-    return "";
+    if (isAscendancy) {
+      return line;
+    } else {
+      return "";
+    }
   }
   line = line.replace(`id="n`, `id="xn`);
   return line.slice(undefined, line.length - 2) + " active />";
@@ -68,7 +71,7 @@ function filterActiveNodes(
 function filterActiveTree(
   data: string,
   nodes: Set<number>,
-  ascendancy?: string,
+  ascendancies: string[] = [],
 ): string {
   var atConnectors = false;
   var atNodes = false;
@@ -81,9 +84,9 @@ function filterActiveTree(
       continue;
     }
     if (atConnectors) {
-      line = filterActiveConnections(line, nodes, ascendancy);
+      line = filterActiveConnections(line, nodes, ascendancies);
     } else if (atNodes) {
-      line = filterActiveNodes(line, nodes, ascendancy);
+      line = filterActiveNodes(line, nodes, ascendancies);
     }
     newData.push(line);
   }
@@ -95,7 +98,7 @@ export default function Tree({
   nodes,
   type,
   index = -1,
-  ascendancy,
+  ascendancies = [],
   showUnallocated = true,
   tooltip = false,
   ...props
@@ -110,6 +113,16 @@ export default function Tree({
   const { data: json } = useFile<CompactTree>(
     `/assets/trees/json/${type}/${version}.json`,
   );
+  const bloodline = Object.entries(json?.nodes || {})
+    .filter(
+      ([key, node]) =>
+        nodes.has(Number(key)) && node.name?.includes("Bloodline"),
+    )
+    .map(([key, node]) => node.name?.replaceAll(" Bloodline", ""))?.[0];
+
+  if (bloodline) {
+    ascendancies.push(bloodline);
+  }
   if (type === "atlas") {
     nodes.add(29045); // add root node
   }
@@ -128,11 +141,11 @@ export default function Tree({
       <div
         className="absolute inset-0"
         dangerouslySetInnerHTML={{
-          __html: filterActiveTree(svg, nodes, ascendancy),
+          __html: filterActiveTree(svg, nodes, ascendancies),
         }}
       />
     );
-  }, [svg, nodes]);
+  }, [svg, nodes, ascendancies]);
   useEffect(() => {
     if (!tooltip) {
       return;

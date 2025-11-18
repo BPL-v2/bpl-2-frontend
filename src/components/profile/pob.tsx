@@ -23,7 +23,7 @@ export function PoB({ pobString }: Props) {
         version={pob.spec.treeVersion}
         nodes={pob.spec.nodes}
         type="passives"
-        ascendancy={pob.build.ascendClassName}
+        ascendancies={[pob.build.ascendClassName]}
         children=" "
         tooltip={treeExpanded}
         showUnallocated={true}

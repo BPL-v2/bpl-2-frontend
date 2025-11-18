@@ -81,6 +81,7 @@
   --color-fractured: #a29162;
   --color-crafted: #b4b4ff;
   --color-corrupted: #d20000;
+  --color-mutated: rgb(205, 34, 133);
 
   --color-health: var(--color-rose-500);
   --color-mana: var(--color-blue-400);

@@ -23,6 +23,7 @@ export function CharacterItems({ pob }: { pob: PathOfBuilding }) {
   ];
   const flaskSlots = ["Flask 1", "Flask 2", "Flask 3", "Flask 4", "Flask 5"];
   const jewels: Item[] = [];
+  const grafts: Item[] = [];
   const equipment = equipmentSlots.reduce(
     (acc, slot) => {
       acc[slot] = undefined;
@@ -45,7 +46,20 @@ export function CharacterItems({ pob }: { pob: PathOfBuilding }) {
       equipment[item.slot] = item;
     } else if (flaskSlots.includes(item.slot)) {
       flasks[item.slot] = item;
+    } else if (item.slot.includes("Graft")) {
+      grafts.push(item);
     }
+  }
+  function toItemdisplay([slot, item]: [string | null, Item | undefined]) {
+    return (
+      <ItemDisplay
+        key={item?.id}
+        item={item}
+        slot={slot}
+        selectionSetter={setSelectedItem}
+        setMousePosition={setItemPosition}
+      />
+    );
   }
 
   return (
@@ -58,38 +72,17 @@ export function CharacterItems({ pob }: { pob: PathOfBuilding }) {
         />
       )}
       <div className="inventory m-auto mt-0 gap-1 md:gap-2">
-        {Object.entries(equipment).map(([slot, item]) => (
-          <ItemDisplay
-            key={slot}
-            item={item}
-            slot={slot}
-            selectionSetter={setSelectedItem}
-            setMousePosition={setItemPosition}
-          />
-        ))}
+        {Object.entries(equipment).map(toItemdisplay)}
         <div className="flasks">
-          {Object.entries(flasks).map(([slot, item]) => (
-            <ItemDisplay
-              key={slot}
-              item={item}
-              slot={slot}
-              selectionSetter={setSelectedItem}
-              setMousePosition={setItemPosition}
-            />
-          ))}
+          {Object.entries(flasks).map(toItemdisplay)}
         </div>
         <div className="col-span-full"></div>
-        {jewels.map((item) => {
-          return (
-            <ItemDisplay
-              key={item.id}
-              item={item}
-              slot={item?.slot}
-              selectionSetter={setSelectedItem}
-              setMousePosition={setItemPosition}
-            />
-          );
-        })}
+        {grafts
+          .map((item) => [item.slot, item] as [string, Item])
+          .map(toItemdisplay)}
+        {jewels
+          .map((item) => [item.slot, item] as [string, Item])
+          .map(toItemdisplay)}
       </div>
     </div>
   );

@@ -12,7 +12,8 @@ type ItemDisplayProps = {
 function getLink(item: Item) {
   let link = "/assets/poe1/items/";
   if (item.rarity === Rarity.Unique) {
-    link += "uniques/" + encode(item.name) + ".webp";
+    link +=
+      "uniques/" + encode(item.name.replaceAll("Foulborn ", "")) + ".webp";
   } else {
     link += "basetypes/" + encode(item.base.split(" (")[0]) + ".webp";
   }

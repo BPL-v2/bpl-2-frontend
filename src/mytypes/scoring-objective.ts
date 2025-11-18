@@ -419,9 +419,9 @@ export function getItemName(
   for (const condition of objective.conditions) {
     if (condition.field === ItemField.NAME) {
       if (condition.operator === Operator.EQ) {
-        return condition.value;
+        return condition.value.replaceAll("Foulborn ", "");
       } else if (condition.operator === Operator.IN) {
-        return condition.value.split(",")[0];
+        return condition.value.split(",")[0].replaceAll("Foulborn ", "");
       }
     } else if (condition.field === ItemField.BASE_TYPE) {
       if (condition.operator === Operator.EQ) {

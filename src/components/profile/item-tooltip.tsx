@@ -140,7 +140,7 @@ export function ItemTooltip({ item, itemX, itemY }: Props) {
           ))}
         </div>
       )}
-      {item.explicits.length > 0 && (
+      {(item.explicits.length > 0 || item.mutatedMods.length > 0) && (
         <div
           className={twMerge(
             "flex w-full flex-col border-t-2 p-2 md:gap-1",
@@ -159,6 +159,11 @@ export function ItemTooltip({ item, itemX, itemY }: Props) {
               }
             >
               {explicit.line}
+            </span>
+          ))}
+          {item.mutatedMods.map((mutated) => (
+            <span key={mutated.line} className={"text-mutated"}>
+              {mutated.line}
             </span>
           ))}
         </div>
