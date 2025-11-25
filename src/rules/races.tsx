@@ -65,11 +65,6 @@ export function RaceTabRules() {
       </p>
       <h3 className="text-warning">Notes</h3>
       <p className="text-warning">
-        Races that include killing a boss need to be completed deathless. This
-        means your character can't die during the boss fight, but you are
-        allowed to die anytime beforehand.
-      </p>
-      <p className="text-warning">
         Item, delve and pantheon bounties are tracked automatically and do not
         need to be submitted manually. It is still advised to take a screenshot
         of your completion in case there are disputes as the tracking can be off
