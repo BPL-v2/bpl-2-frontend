@@ -64,8 +64,10 @@ function HeistTab(): JSX.Element {
           {heistMultiItemRaces.map((category) => (
             <div key={category.id} className="rounded-box bg-base-200 p-8 pt-2">
               <div className="divider divider-primary">{category.name}</div>
-              {category.scoring_preset?.scoring_method ===
-                ScoringMethod.RANKED_TIME && (
+              {(category.scoring_preset?.scoring_method ===
+                ScoringMethod.RANKED_TIME ||
+                category.scoring_preset?.scoring_method ===
+                  ScoringMethod.RANKED_COMPLETION_TIME) && (
                 <Ranking
                   objective={category}
                   maximum={category.required_number}
