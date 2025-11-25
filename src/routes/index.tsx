@@ -98,7 +98,7 @@ function Home() {
               </div>
             </div>
             <div className="aspect-video w-full">
-              <VideoEmbed url="https://www.youtube.com/watch?v=fBhLOtgnHF8" />
+              <VideoEmbed url="https://www.youtube.com/watch?v=zZAxSOkqPOo" />
             </div>
           </div>
         </div>
