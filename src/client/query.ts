@@ -258,7 +258,14 @@ export function useGetScoringPresets(eventId: number) {
 export function useGetUser() {
   const query = useQuery({
     queryKey: ["user"],
-    queryFn: async () => userApi.getUser(),
+    queryFn: async () =>
+      userApi.getUser().then((user) => {
+        if (new Date(user.token_expiry_timestamp || 0) < new Date()) {
+          localStorage.removeItem("auth");
+          return null;
+        }
+        return user;
+      }),
     enabled: () => isLoggedIn(),
     refetchOnMount: false,
   });
