@@ -70,9 +70,11 @@ function HeistTab(): JSX.Element {
                   ScoringMethod.RANKED_COMPLETION_TIME) && (
                 <Ranking
                   objective={category}
-                  maximum={category.required_number}
+                  maximum={category.children.length}
                   actual={(teamId: number) =>
-                    category.team_score[teamId]?.number || 0
+                    category.children.filter(
+                      (o) => o.team_score[teamId]?.finished,
+                    ).length
                   }
                   description={"Items:"}
                 />
