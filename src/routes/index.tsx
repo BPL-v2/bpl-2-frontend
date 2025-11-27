@@ -63,7 +63,16 @@ function Home() {
           </div>
         </div>
       )}
-
+      <div className="card max-w-full bg-card-highlight">
+        <div className="card-body p-12">
+          <div className="card-title text-4xl">Ongoing Technical Issues</div>
+          <div>
+            We are currently experiencing issues with our signup system. We are
+            working to resolve the issue as quickly as possible. Thank you for
+            your patience.
+          </div>
+        </div>
+      </div>
       <div className="card max-w-full bg-card">
         <div className="card-body p-12">
           <div className="card-title text-4xl">What is BPL?</div>
