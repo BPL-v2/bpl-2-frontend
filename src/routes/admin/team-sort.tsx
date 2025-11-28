@@ -115,7 +115,7 @@ function UserSortPage() {
         accessorKey: "timestamp",
         size: 200,
         cell: ({ row }) => {
-          return new Date(row.original.user.timestamp).toLocaleString();
+          return new Date(row.original.timestamp).toLocaleString();
         },
       },
       {
