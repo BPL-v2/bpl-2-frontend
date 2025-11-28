@@ -111,6 +111,14 @@ function UserSortPage() {
         size: 100,
       },
       {
+        header: "Timestamp",
+        accessorKey: "user.timestamp",
+        size: 200,
+        cell: ({ row }) => {
+          return new Date(row.original.user.timestamp).toLocaleString();
+        },
+      },
+      {
         header: "Name",
         accessorKey: "user.display_name",
         size: 200,
