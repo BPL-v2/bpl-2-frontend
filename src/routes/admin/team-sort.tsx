@@ -305,6 +305,7 @@ function UserSortPage() {
     if (!signups.length) return;
     const headers = [
       "Team",
+      "Timestamp",
       "Display Name",
       "Account Name",
       "Discord Name",
@@ -326,6 +327,7 @@ function UserSortPage() {
       .sort((a, b) => (a.team_id || 0) - (b.team_id || 0))
       .map((signup) => [
         teamMap[signup.team_id || 0] || "No team",
+        signup.timestamp,
         signup.user.display_name,
         signup.user.account_name || "",
         signup.user.discord_name || "",
