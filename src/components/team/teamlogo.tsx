@@ -8,8 +8,7 @@ interface TeamLogoProps extends React.ImgHTMLAttributes<HTMLImageElement> {
 }
 
 export function TeamLogo({ team, eventId, ...props }: TeamLogoProps) {
-  // TODO: CHANGE BACK TO 0 ONCE LOGOS ARE AVAILABLE
-  const [errorCount, setErrorCount] = useState(1);
+  const [errorCount, setErrorCount] = useState(0);
   if (!team?.name) return null;
   if (errorCount == 1) {
     return (
