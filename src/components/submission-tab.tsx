@@ -14,16 +14,6 @@ function SubmissionTab({ categoryName }: SubmissionTabProps) {
   const { scores } = useContext(GlobalStateContext);
   const category = scores?.children.find((cat) => cat.name === categoryName);
 
-  useEffect(() => {
-    category?.children
-      .filter(
-        (objective) => objective.objective_type == ObjectiveType.SUBMISSION,
-      )
-      .forEach((objective) => {
-        console.log("Submission Objective:", objective);
-      });
-  }, [category]);
-
   if (!category) {
     return <></>;
   }
