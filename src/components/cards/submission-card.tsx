@@ -17,7 +17,7 @@ import { TwitchFilled } from "@icons/twitch";
 import { YoutubeFilled } from "@icons/youtube";
 import { ScoreObjective } from "@mytypes/score";
 import { GlobalStateContext } from "@utils/context-provider";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 function getUrls(string: string): URL[] {
@@ -170,6 +170,14 @@ export function SubmissionCard({ objective }: SubmissionCardProps) {
     })
     .slice(0, preferences.limitTeams ? preferences.limitTeams : undefined)
     .map((team) => team.id);
+
+  useEffect(() => {
+    console.log("Rendering SubmissionCard for objective:", objective);
+    console.log("Current event status:", eventStatus);
+    if (eventStatus?.team_id) {
+      console.log("Adding submission button for team:", eventStatus.team_id);
+    }
+  }, [objective, eventStatus]);
 
   return (
     <>
