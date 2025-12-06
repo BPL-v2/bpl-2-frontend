@@ -1,7 +1,7 @@
 import { ObjectiveType } from "@client/api";
 import { Link } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { SubmissionCard } from "./cards/submission-card";
 import TeamScoreDisplay from "./team/team-score";
 import { CollectionCard } from "./cards/collection-card";

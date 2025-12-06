@@ -17,7 +17,7 @@ import { TwitchFilled } from "@icons/twitch";
 import { YoutubeFilled } from "@icons/youtube";
 import { ScoreObjective } from "@mytypes/score";
 import { GlobalStateContext } from "@utils/context-provider";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 function getUrls(string: string): URL[] {
