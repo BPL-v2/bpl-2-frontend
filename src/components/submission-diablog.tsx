@@ -63,7 +63,7 @@ export function SubmissionDialog({
           {/* TODO: generalize this  */}
           {objective?.aggregation == AggregationType.MAXIMUM && (
             <>
-              <label className="label">Area Level</label>
+              <label className="label">Number of Timeless Jewels dropped</label>
               <input
                 type="number"
                 className="input w-full"
