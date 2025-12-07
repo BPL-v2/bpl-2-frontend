@@ -1,12 +1,13 @@
 import { JSX, useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
+import { ScoringMethod } from "@client/api";
 
 function convertArrayToText(points: number[]): JSX.Element[] {
   const textParts = points.map((point, index) => {
     if (index === 0) {
       return (
         <span key={index}>
-          the first team to complete the daily will be awarded{" "}
+          The first team to complete race dailies will be awarded{" "}
           <b className="text-info">{point}</b> points
         </span>
       );
@@ -35,13 +36,16 @@ export function DailyTabRules() {
     (category) => category.name === "Dailies",
   );
   const basePoints =
-    dailyCategory?.children?.find((objective) => objective.valid_to === null)
-      ?.scoring_preset?.points || [];
+    dailyCategory?.children?.find(
+      (objective) =>
+        objective.scoring_preset?.scoring_method === ScoringMethod.PRESENCE,
+    )?.scoring_preset?.points || [];
 
   const racePoints =
-    dailyCategory?.children?.find((objective) => objective.valid_to !== null)
-      ?.scoring_preset?.points || [];
-
+    dailyCategory?.children?.find(
+      (objective) =>
+        objective.scoring_preset?.scoring_method === ScoringMethod.RANKED_TIME,
+    )?.scoring_preset?.points || [];
   return (
     <>
       <h3> Releases </h3>
@@ -56,8 +60,8 @@ export function DailyTabRules() {
       </p>
       <h3>Points</h3>
       <p>
-        Every daily grants <b className="text-info">{basePoints[0]}</b> points
-        on completion. If it is a race daily, {convertArrayToText(racePoints)}.
+        Regular dailies grant <b className="text-info">{basePoints[0]}</b>{" "}
+        points on completion. {convertArrayToText(racePoints)}.
       </p>
       <h3 className="text-warning">Notes </h3>
       <p className="text-warning">
