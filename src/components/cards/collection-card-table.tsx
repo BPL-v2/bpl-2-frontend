@@ -77,6 +77,9 @@ export function CollectionCardTable({
             const isLastRow = roundedBottom && idx === teamIds.length - 1;
             const isPlayerTeam = teamId === eventStatus?.team_id;
             const gotPoints = score.points > 0;
+            const isHidden =
+              objective.hide_progress &&
+              !objective.team_score[teamId]?.finished;
             return (
               <tr
                 className={
@@ -114,11 +117,15 @@ export function CollectionCardTable({
                 </td>
 
                 <td className="w-full px-2">
-                  <ProgressBar
-                    value={score.number}
-                    maxVal={objective.required_number}
-                    gotPoints={gotPoints}
-                  />
+                  {!isHidden ? (
+                    <ProgressBar
+                      value={score.number}
+                      maxVal={objective.required_number}
+                      gotPoints={gotPoints}
+                    />
+                  ) : (
+                    "Hidden Progress"
+                  )}
                 </td>
                 <td
                   className={twMerge(
