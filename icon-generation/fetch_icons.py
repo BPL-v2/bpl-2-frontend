@@ -1,4 +1,3 @@
-from io import BytesIO
 import os
 from typing import Optional, TypedDict
 from urllib import request
@@ -84,6 +83,7 @@ def download():
         response = request.urlopen(
             f"{baseUrl}/base_items.min.json")
         base_items: ItemDict = json.loads(response.read())
+        save_basetypes(f"public/assets/{version}/items/basetypes.json", base_items)
 
         response = request.urlopen(
             f"{baseUrl}/uniques.min.json")
@@ -96,6 +96,15 @@ def download():
             save_image(base, f"public/assets/{version}/items/basetypes",
                        baseUrl, gems if version == "poe1" else {})
 
+def save_basetypes(filename: str, base_items: ItemDict):
+    names = [
+        item["name"] for item in base_items.values()
+        if item["domain"] != "undefined" and "DO NOT USE" not in item["name"] and "UNUSED" not in item["name"]
+    ]
+    
+    with open(filename, "w") as f:
+        json.dump(sorted(names, key=lambda s: len(s), reverse=True), f, separators=(',', ':'))
+    
 
 anomalous_uniques = [
     "Sekhema's Resolve",

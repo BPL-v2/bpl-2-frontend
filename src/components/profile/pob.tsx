@@ -3,19 +3,28 @@
 // Copyright (c) Dav1dde and contributors
 import { ArrowsPointingInIcon } from "@heroicons/react/24/outline";
 import { decodePoBExport } from "@utils/pob";
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import Tree from "./tree";
 import { CharacterItems } from "./character-items";
 import { CharacterSkills } from "./character-skills";
 import { CharacterStats } from "./character-stats";
+import { useFile } from "@client/query";
+import { GlobalStateContext } from "@utils/context-provider";
 
 type Props = {
   pobString?: string;
 };
 
 export function PoB({ pobString }: Props) {
+  const { currentEvent } = useContext(GlobalStateContext);
   const [treeExpanded, setTreeExpanded] = useState(false);
-  const pob = useMemo(() => decodePoBExport(pobString), [pobString]);
+  const { data: baseTypes = [] } = useFile<string[]>(
+    `/assets/${currentEvent.game_version}/items/basetypes.json`,
+  );
+  const pob = useMemo(
+    () => decodePoBExport(pobString, baseTypes),
+    [pobString, baseTypes],
+  );
   const passiveTree = useMemo(() => {
     if (!pob.spec.nodes) return null;
     return (

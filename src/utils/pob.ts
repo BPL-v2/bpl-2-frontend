@@ -547,8 +547,10 @@ function pobstringToXml(pob: string): Document {
   return xmlDoc;
 }
 
-export function decodePoBExport(input?: string): PathOfBuilding {
-
+export function decodePoBExport(
+  input?: string,
+  baseTypes?: string[],
+): PathOfBuilding {
   const result: PathOfBuilding = {
     export: input || "",
     build: {
@@ -733,6 +735,7 @@ export function decodePoBExport(input?: string): PathOfBuilding {
           text.trim(),
           idToSlot[itemElement.getAttribute("id") || ""],
           itemElement.getAttribute("id")!,
+          baseTypes,
         ),
       );
     }
@@ -890,49 +893,31 @@ function parseMod(modLine: string): Mod {
   return { fractured, crafted, mutated, line: line.trim(), tag, variant };
 }
 
-function extractMagicBase(base: string, numMods: number): string {
+function extractMagicBase(
+  base: string,
+  numMods: number,
+  baseTypes?: string[],
+): string {
   if (base.startsWith("Synthesised ")) base = base.split("Synthesised ")[1];
   if (numMods === 0) return base;
   let end = base.indexOf(" of");
   const hasSuffix = end !== -1;
   if (!hasSuffix) end = base.length;
   base = base.slice(0, end).trim();
-  const baseTypeWordCount = getBaseTypeWordCount(base);
-  const wordCount = base.split(" ").length;
-  if (
-    // has prefix
-    numMods > 2 ||
-    (!hasSuffix && numMods >= 1) ||
-    wordCount > baseTypeWordCount
-  ) {
-    return base.split(" ").slice(-baseTypeWordCount).join(" ");
+  for (const baseType of baseTypes || []) {
+    if (base.includes(baseType)) {
+      return baseType;
+    }
   }
   return base;
 }
 
-function getBaseTypeWordCount(name: string): number {
-  if (
-    name.endsWith("Life Flask") ||
-    name.endsWith("Mana Flask") ||
-    name.endsWith("Hybrid Flask") ||
-    name.endsWith("Arrow Quiver") ||
-    name.endsWith("Shield") ||
-    name.endsWith("Talisman")
-  )
-    return 3;
-  const counts = Object.entries(baseTypeWordCounts).flatMap(
-    ([count, baseTypes]) =>
-      baseTypes.map((bt) => [bt, parseInt(count)] as [string, number]),
-  );
-  for (const [baseType, wc] of counts) {
-    if (name.includes(baseType)) {
-      return wc;
-    }
-  }
-  return 2;
-}
-
-export function parseItem(item: string, slot: string | null, id: string): Item {
+export function parseItem(
+  item: string,
+  slot: string | null,
+  id: string,
+  baseTypeDimensions?: string[],
+): Item {
   const lines = item.split("\n");
   if (!lines[0].startsWith("Rarity: ")) throw new Error("expected rarity");
   const rarity = parseRarity(lines[0].slice(8));
@@ -1066,7 +1051,7 @@ export function parseItem(item: string, slot: string | null, id: string): Item {
 
   // Magic base fix
   if (rarity === Rarity.Magic) {
-    base = extractMagicBase(base, explicits.length);
+    base = extractMagicBase(base, explicits.length, baseTypeDimensions);
   }
 
   // Fractured influence
@@ -1106,55 +1091,3 @@ export function parseItem(item: string, slot: string | null, id: string): Item {
     id,
   };
 }
-
-const baseTypeWordCounts = {
-  1: [
-    "Stiletto",
-    "Skean",
-    "Poignard",
-    "Trisula",
-    "Ambusher",
-    "Sai",
-    "Awl",
-    "Blinder",
-    "Gouger",
-    "Cleaver",
-    "Tomahawk",
-    "Sabre",
-    "Cutlass",
-    "Baselard",
-    "Grappler",
-    "Gladius",
-    "Smallsword",
-    "Estoc",
-    "Pecoraro",
-    "Tenderizer",
-    "Gavel",
-    "Pernach",
-    "Sekhem",
-    "Quarterstaff",
-    "Lathi",
-    "Woodsplitter",
-    "Poleaxe",
-    "Labrys",
-    "Fleshripper",
-    "Longsword",
-    "Mallet",
-    "Sledgehammer",
-    "Steelhead",
-    "Piledriver",
-    "Meatgrinder",
-    "Tricorne",
-    "Sallet",
-    "Chestplate",
-  ],
-  3: [
-    "Great White Claw",
-    "Blunt Force Condenser",
-    "Crushing Force Magnifier",
-    "Impact Force Propagator",
-    "Blue Pearl Amulet",
-    "Full Scale Armour",
-    "Fingerless Silk Gloves",
-  ],
-};

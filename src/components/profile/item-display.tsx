@@ -59,7 +59,7 @@ export function ItemDisplay({
     >
       {item && (
         <img
-          className="flex h-full w-full items-center object-contain p-1"
+          className="flex aspect-square h-full w-full items-center object-contain p-1"
           src={getLink(item)}
           alt={item?.name}
         />
