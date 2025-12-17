@@ -107,7 +107,6 @@ export function DailyCard({ daily }: DailyCardProps) {
             <ObjectiveIcon
               objective={daily}
               gameVersion={currentEvent.game_version}
-              className="h-full w-14"
             />
           )}
           <div className={daily.extra ? "tooltip tooltip-primary" : undefined}>
