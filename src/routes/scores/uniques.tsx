@@ -18,6 +18,7 @@ function UniqueTab(): JSX.Element {
   const [selectedCategory, setSelectedCategory] = useState<ScoreObjective>();
   const [selectedTeam, setSelectedTeam] = useState<number>();
   const [categoryFilter, setCategoryFilter] = useState<string>("");
+  const [itemFilter, setItemfilter] = useState<string>("");
   const [shownCategories, setShownCategories] = useState<ScoreObjective[]>([]);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const tableRef = useRef<HTMLDivElement>(null);
@@ -53,19 +54,39 @@ function UniqueTab(): JSX.Element {
     if (!uniqueCategory) {
       return;
     }
-    const shownCategories = uniqueCategory.children.filter((category) => {
-      return (
-        category.name.toLowerCase().includes(categoryFilter.toLowerCase()) &&
-        (preferences.uniqueSets.showCompleted ||
-          !isFinished(category, selectedTeam)) &&
-        (preferences.uniqueSets.showFirstAvailable || isWinnable(category))
-      );
-    });
+    console.log("Filtering uniques to item:", itemFilter);
+    const shownCategories = uniqueCategory.children
+      .filter((category) => {
+        return (
+          category.name.toLowerCase().includes(categoryFilter.toLowerCase()) &&
+          category.children.some((item) =>
+            item.name.toLowerCase().includes(itemFilter.toLowerCase().trim()),
+          ) &&
+          (preferences.uniqueSets.showCompleted ||
+            !isFinished(category, selectedTeam)) &&
+          (preferences.uniqueSets.showFirstAvailable || isWinnable(category))
+        );
+      })
+      .map((category) => {
+        return {
+          ...category,
+          children: category.children.filter((item) => {
+            return item.name
+              .toLowerCase()
+              .includes(itemFilter.toLowerCase().trim());
+          }),
+        };
+      });
+    if (shownCategories.length === 0) {
+      setSelectedCategory(undefined);
+      setShownCategories([]);
+      return;
+    }
     if (shownCategories.length === 1) {
       setSelectedCategory(shownCategories[0]);
     }
     setShownCategories(shownCategories);
-  }, [uniqueCategory, categoryFilter, preferences, selectedTeam]);
+  }, [uniqueCategory, categoryFilter, itemFilter, preferences, selectedTeam]);
 
   const table = useMemo(() => {
     if (!uniqueCategory) {
@@ -73,15 +94,16 @@ function UniqueTab(): JSX.Element {
     }
     if (!selectedCategory) {
       const cat = { ...uniqueCategory, children: [] } as ScoreObjective;
-      for (const child of uniqueCategory.children) {
+      for (const child of shownCategories) {
         for (const grandChild of child.children) {
           cat.children.push(grandChild);
         }
       }
       return <ItemTable objective={cat} />;
     }
+
     return <ItemTable objective={selectedCategory}></ItemTable>;
-  }, [selectedCategory, uniqueCategory]);
+  }, [selectedCategory, uniqueCategory, shownCategories]);
 
   if (!uniqueCategory) {
     return <></>;
@@ -102,7 +124,7 @@ function UniqueTab(): JSX.Element {
       />
       <div className="mt-4 flex flex-col gap-4">
         <div className="flex justify-center">
-          <fieldset className="fieldset flex w-xl flex-row justify-center gap-12 rounded-box bg-base-200 p-2 md:p-4">
+          <fieldset className="fieldset flex w-3xl flex-row justify-center gap-12 rounded-box bg-base-200 p-2 md:p-4">
             <div>
               <legend className="fieldset-legend">Category</legend>
               <input
@@ -111,6 +133,27 @@ function UniqueTab(): JSX.Element {
                 placeholder=""
                 onInput={(e) => setCategoryFilter(e.currentTarget.value)}
               />
+            </div>
+            <div>
+              <legend className="fieldset-legend">Item Search</legend>
+              <label className="fieldset-label">
+                <input
+                  type="search"
+                  className="input input-sm"
+                  placeholder=""
+                  value={itemFilter}
+                  onPaste={(e) => {
+                    const paste = e.clipboardData.getData("text");
+                    if (paste.split("\n").length > 2) {
+                      setItemfilter(paste.split("\n")[2]);
+                      e.preventDefault();
+                    }
+                  }}
+                  onChange={(e) => {
+                    setItemfilter(e.target.value);
+                  }}
+                />
+              </label>
             </div>
             <div>
               <legend className="fieldset-legend">Show finished</legend>
