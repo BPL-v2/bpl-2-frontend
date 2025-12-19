@@ -54,7 +54,6 @@ function UniqueTab(): JSX.Element {
     if (!uniqueCategory) {
       return;
     }
-    console.log("Filtering uniques to item:", itemFilter);
     const shownCategories = uniqueCategory.children
       .filter((category) => {
         return (
@@ -77,12 +76,12 @@ function UniqueTab(): JSX.Element {
           }),
         };
       });
-    if (shownCategories.length === 0) {
+    if (
+      (itemFilter && shownCategories.length > 1) ||
+      shownCategories.length === 0
+    ) {
       setSelectedCategory(undefined);
-      setShownCategories([]);
-      return;
-    }
-    if (shownCategories.length === 1) {
+    } else if (shownCategories.length === 1) {
       setSelectedCategory(shownCategories[0]);
     }
     setShownCategories(shownCategories);
