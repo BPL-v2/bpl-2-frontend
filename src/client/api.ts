@@ -1080,13 +1080,19 @@ export interface EventStatus {
      * @type {string}
      * @memberof EventStatus
      */
-    partner?: string;
+    partner_wish?: string;
     /**
      * 
      * @type {number}
      * @memberof EventStatus
      */
     team_id?: number;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof EventStatus
+     */
+    users_who_want_to_sign_up_with_you?: Array<string>;
 }
 
 /**
@@ -2991,6 +2997,12 @@ export interface Signup {
      * @memberof Signup
      */
     partner?: NonSensitiveUser;
+    /**
+     * 
+     * @type {string}
+     * @memberof Signup
+     */
+    partnerWish?: string;
     /**
      * 
      * @type {number}

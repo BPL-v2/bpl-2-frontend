@@ -24,6 +24,7 @@ const SignupButton = () => {
   const [hourValue, setHourValue] = React.useState(1);
   const [needHelp, setNeedHelp] = React.useState(false);
   const [wantToHelp, setWantToHelp] = React.useState(false);
+  const [partnerWish, setPartnerWish] = React.useState("");
   const qc = useQueryClient();
   const { user, isLoading: userLoading, isError: userError } = useGetUser();
   const { events } = useGetEvents();
@@ -54,18 +55,18 @@ const SignupButton = () => {
           onSubmit={(e) => {
             e.preventDefault();
             const formData = new FormData(e.target as HTMLFormElement);
-            const partnerName = formData.get("partner_name") as string;
             if (!user?.discord_id) {
               alert("You need to link your Discord account to apply.");
               return;
             }
+            console.log(partnerWish);
             createSignup({
               eventId: upcomingEvent.id,
               body: {
                 expected_playtime: hourValue,
                 wants_to_help: wantToHelp,
                 needs_help: needHelp,
-                partner_account_name: partnerName,
+                partner_account_name: partnerWish,
                 extra:
                   formData.get("extra") === "on"
                     ? JSON.stringify({ guild_owner: true })
@@ -98,11 +99,13 @@ const SignupButton = () => {
               Do you want to play with another person? (PoE account name
               required)
             </label>
-            <div className=" w-full">
+            <div className="w-full">
               <input
                 name="partner_name"
                 type="text"
-                className="input input-bordered w-full bg-base-200"
+                className="input-bordered input w-full bg-base-200"
+                defaultValue={partnerWish}
+                onChange={(e) => setPartnerWish(e.target.value)}
               />
             </div>
             {/* <label className="fieldset-label text-info">
@@ -189,7 +192,7 @@ const SignupButton = () => {
         )}
         <div className="modal-action w-full">
           <button
-            className="btn btn-outline btn-soft"
+            className="btn btn-outline"
             onClick={() => {
               setModalOpen(false);
             }}
@@ -205,7 +208,15 @@ const SignupButton = () => {
         </div>
       </Dialog>
     );
-  }, [modalOpen, upcomingEvent.id, hourValue, needHelp, wantToHelp, signup]);
+  }, [
+    modalOpen,
+    upcomingEvent.id,
+    hourValue,
+    needHelp,
+    wantToHelp,
+    partnerWish,
+    signup,
+  ]);
 
   const userTeam = useMemo(() => {
     return (
@@ -237,6 +248,10 @@ const SignupButton = () => {
       (eventStatus.number_of_signups_before - currentEvent.max_size + 1)
     );
   }
+  const partner = eventStatus?.partner_wish;
+  const partnerConfirmed = eventStatus?.users_who_want_to_sign_up_with_you
+    ?.map((u) => u.toLowerCase().split("#")[0])
+    ?.includes(partner?.toLowerCase().split("#")[0] || "");
 
   if (eventStatus?.application_status === ApplicationStatus.applied) {
     return (
@@ -245,10 +260,13 @@ const SignupButton = () => {
         <div className="dropdown">
           <button className={"cursor-pointer underline"}>
             <span className="text-2xl">
-              Signed up {eventStatus?.partner && "with "}
+              Signed up {partnerConfirmed && "with "}
             </span>
-            {eventStatus?.partner && (
-              <span className="text-info">{eventStatus?.partner}</span>
+            {partnerConfirmed && <span className="text-info">{partner}</span>}
+            {partner && !partnerConfirmed && (
+              <span className="text-warning">
+                ({partner} has not confirmed yet)
+              </span>
             )}
           </button>
           <ul
@@ -269,6 +287,7 @@ const SignupButton = () => {
                   setHourValue(signup?.expected_playtime ?? 1);
                   setNeedHelp(signup?.needs_help ?? false);
                   setWantToHelp(signup?.wants_to_help ?? false);
+                  setPartnerWish(eventStatus?.partner_wish || "");
                   setModalOpen(true);
                 }}
               >
