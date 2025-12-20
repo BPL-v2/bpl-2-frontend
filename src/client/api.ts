@@ -2224,7 +2224,8 @@ export enum JobType {
     EvaluateStashChanges = 'EvaluateStashChanges',
     FetchCharacterData = 'FetchCharacterData',
     FetchGuildStashes = 'FetchGuildStashes',
-    DetermineGuildStashAccess = 'DetermineGuildStashAccess'
+    DetermineGuildStashAccess = 'DetermineGuildStashAccess',
+    RefreshPoETokens = 'RefreshPoETokens'
 }
 
 /**
