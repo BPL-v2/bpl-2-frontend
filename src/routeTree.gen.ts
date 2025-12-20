@@ -50,7 +50,7 @@ import { Route as AdminGuildStashesStashIdRouteImport } from './routes/admin/gui
 import { Route as AdminGuildLogsGuildIdRouteImport } from './routes/admin/guild/logs/$guildId'
 import { Route as AdminEventsEventIdTeamsRouteImport } from './routes/admin/events/$eventId/teams'
 import { Route as AdminEventsEventIdScoringPresetsRouteImport } from './routes/admin/events/$eventId/scoring-presets'
-import { Route as AdminEventsEventIdCategoriesCategoryIdRouteImport } from './routes/admin/events/$eventId/categories.$categoryId'
+import { Route as AdminEventsEventIdObjectivesObjectiveIdRouteImport } from './routes/admin/events/$eventId/objectives.$objectiveId'
 
 const SubmissionsRoute = SubmissionsRouteImport.update({
   id: '/submissions',
@@ -260,10 +260,10 @@ const AdminEventsEventIdScoringPresetsRoute =
     path: '/admin/events/$eventId/scoring-presets',
     getParentRoute: () => rootRouteImport,
   } as any)
-const AdminEventsEventIdCategoriesCategoryIdRoute =
-  AdminEventsEventIdCategoriesCategoryIdRouteImport.update({
-    id: '/admin/events/$eventId/categories/$categoryId',
-    path: '/admin/events/$eventId/categories/$categoryId',
+const AdminEventsEventIdObjectivesObjectiveIdRoute =
+  AdminEventsEventIdObjectivesObjectiveIdRouteImport.update({
+    id: '/admin/events/$eventId/objectives/$objectiveId',
+    path: '/admin/events/$eventId/objectives/$objectiveId',
     getParentRoute: () => rootRouteImport,
   } as any)
 
@@ -309,7 +309,7 @@ export interface FileRoutesByFullPath {
   '/admin/guild/logs/$guildId': typeof AdminGuildLogsGuildIdRoute
   '/admin/guild/stashes/$stashId': typeof AdminGuildStashesStashIdRoute
   '/profile/$userId/$eventId/$characterId': typeof ProfileUserIdEventIdCharacterIdRoute
-  '/admin/events/$eventId/categories/$categoryId': typeof AdminEventsEventIdCategoriesCategoryIdRoute
+  '/admin/events/$eventId/objectives/$objectiveId': typeof AdminEventsEventIdObjectivesObjectiveIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -353,7 +353,7 @@ export interface FileRoutesByTo {
   '/admin/guild/logs/$guildId': typeof AdminGuildLogsGuildIdRoute
   '/admin/guild/stashes/$stashId': typeof AdminGuildStashesStashIdRoute
   '/profile/$userId/$eventId/$characterId': typeof ProfileUserIdEventIdCharacterIdRoute
-  '/admin/events/$eventId/categories/$categoryId': typeof AdminEventsEventIdCategoriesCategoryIdRoute
+  '/admin/events/$eventId/objectives/$objectiveId': typeof AdminEventsEventIdObjectivesObjectiveIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -398,7 +398,7 @@ export interface FileRoutesById {
   '/admin/guild/logs/$guildId': typeof AdminGuildLogsGuildIdRoute
   '/admin/guild/stashes/$stashId': typeof AdminGuildStashesStashIdRoute
   '/profile/$userId/$eventId/$characterId': typeof ProfileUserIdEventIdCharacterIdRoute
-  '/admin/events/$eventId/categories/$categoryId': typeof AdminEventsEventIdCategoriesCategoryIdRoute
+  '/admin/events/$eventId/objectives/$objectiveId': typeof AdminEventsEventIdObjectivesObjectiveIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -444,7 +444,7 @@ export interface FileRouteTypes {
     | '/admin/guild/logs/$guildId'
     | '/admin/guild/stashes/$stashId'
     | '/profile/$userId/$eventId/$characterId'
-    | '/admin/events/$eventId/categories/$categoryId'
+    | '/admin/events/$eventId/objectives/$objectiveId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -488,7 +488,7 @@ export interface FileRouteTypes {
     | '/admin/guild/logs/$guildId'
     | '/admin/guild/stashes/$stashId'
     | '/profile/$userId/$eventId/$characterId'
-    | '/admin/events/$eventId/categories/$categoryId'
+    | '/admin/events/$eventId/objectives/$objectiveId'
   id:
     | '__root__'
     | '/'
@@ -532,7 +532,7 @@ export interface FileRouteTypes {
     | '/admin/guild/logs/$guildId'
     | '/admin/guild/stashes/$stashId'
     | '/profile/$userId/$eventId/$characterId'
-    | '/admin/events/$eventId/categories/$categoryId'
+    | '/admin/events/$eventId/objectives/$objectiveId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -561,7 +561,7 @@ export interface RootRouteChildren {
   AdminGuildIndexRoute: typeof AdminGuildIndexRoute
   AdminEventsEventIdScoringPresetsRoute: typeof AdminEventsEventIdScoringPresetsRoute
   AdminEventsEventIdTeamsRoute: typeof AdminEventsEventIdTeamsRoute
-  AdminEventsEventIdCategoriesCategoryIdRoute: typeof AdminEventsEventIdCategoriesCategoryIdRoute
+  AdminEventsEventIdObjectivesObjectiveIdRoute: typeof AdminEventsEventIdObjectivesObjectiveIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -853,11 +853,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminEventsEventIdScoringPresetsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/events/$eventId/categories/$categoryId': {
-      id: '/admin/events/$eventId/categories/$categoryId'
-      path: '/admin/events/$eventId/categories/$categoryId'
-      fullPath: '/admin/events/$eventId/categories/$categoryId'
-      preLoaderRoute: typeof AdminEventsEventIdCategoriesCategoryIdRouteImport
+    '/admin/events/$eventId/objectives/$objectiveId': {
+      id: '/admin/events/$eventId/objectives/$objectiveId'
+      path: '/admin/events/$eventId/objectives/$objectiveId'
+      fullPath: '/admin/events/$eventId/objectives/$objectiveId'
+      preLoaderRoute: typeof AdminEventsEventIdObjectivesObjectiveIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -971,8 +971,8 @@ const rootRouteChildren: RootRouteChildren = {
   AdminGuildIndexRoute: AdminGuildIndexRoute,
   AdminEventsEventIdScoringPresetsRoute: AdminEventsEventIdScoringPresetsRoute,
   AdminEventsEventIdTeamsRoute: AdminEventsEventIdTeamsRoute,
-  AdminEventsEventIdCategoriesCategoryIdRoute:
-    AdminEventsEventIdCategoriesCategoryIdRoute,
+  AdminEventsEventIdObjectivesObjectiveIdRoute:
+    AdminEventsEventIdObjectivesObjectiveIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

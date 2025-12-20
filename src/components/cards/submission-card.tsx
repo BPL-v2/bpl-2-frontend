@@ -189,24 +189,21 @@ export function SubmissionCard({ objective }: SubmissionCardProps) {
             <div className="tooltip-content max-w-75 text-xl">
               {objective.extra}
             </div>
-            <h3 className="mr-4 flex-grow text-center text-xl font-medium">
+            <h3 className="mr-4 grow text-center text-xl font-medium">
               {objective.name}
               {objective.extra ? <i className="text-error">*</i> : null}
             </h3>
           </div>
-          {eventStatus?.team_id ? (
-            <div
-              className="tooltip tooltip-left lg:tooltip-top"
-              data-tip="Submit Bounty"
-            >
-              <button
-                className="rounded-full"
-                onClick={() => setShowModal(true)}
-              >
-                <PlusCircleIcon className="size-8 cursor-pointer" />
-              </button>
-            </div>
-          ) : null}
+          {/* {eventStatus?.team_id ? ( */}
+          <div
+            className="tooltip tooltip-left lg:tooltip-top"
+            data-tip="Submit Bounty"
+          >
+            <button className="rounded-full" onClick={() => setShowModal(true)}>
+              <PlusCircleIcon className="size-8 cursor-pointer" />
+            </button>
+          </div>
+          {/* ) : null} */}
         </div>
         <div className="rounded-b-box">
           <table key={objective.id} className="w-full border-collapse">

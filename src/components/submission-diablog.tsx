@@ -60,22 +60,11 @@ export function SubmissionDialog({
             label="Time (in your timezone)"
             name="timestamp"
           ></DateTimePicker>
-          {/* TODO: generalize this  */}
-          {objective?.aggregation == AggregationType.MAXIMUM && (
-            <>
-              <label className="label">Number of Timeless Jewels dropped</label>
-              <input
-                type="number"
-                className="input w-full"
-                required
-                name="number"
-              />
-            </>
-          )}
-          {objective?.aggregation == AggregationType.MINIMUM && (
+          {(objective?.aggregation == AggregationType.MAXIMUM ||
+            objective?.aggregation == AggregationType.MINIMUM) && (
             <>
               <label className="label">
-                Time taken for completion in seconds
+                {objective?.number_field_explanation || "Submission Value"}
               </label>
               <input
                 type="number"

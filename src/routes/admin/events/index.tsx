@@ -152,9 +152,9 @@ function EventPage() {
       header: "Actions",
       size: 450,
       cell: (info) => (
-        <div className="flex flex-row flex-wrap gap-2">
+        <div className="flex flex-row flex-wrap gap-1">
           <button
-            className="btn btn-sm btn-warning"
+            className="btn btn-xs btn-warning"
             onClick={() => {
               setFormValues(form, info.row.original);
               setIsOpen(true);
@@ -165,10 +165,10 @@ function EventPage() {
           <DeleteButton
             onDelete={() => deleteEvent(info.row.original.id)}
             requireConfirmation
-            className="btn-sm"
+            className="btn-xs"
           />
           <button
-            className="btn btn-sm"
+            className="btn btn-xs"
             onClick={() =>
               duplicateEvent({
                 eventId: info.row.original.id,
@@ -188,14 +188,14 @@ function EventPage() {
           <Link
             to="/admin/events/$eventId/teams"
             params={{ eventId: info.row.original.id }}
-            className="btn btn-sm"
+            className="btn btn-xs"
           >
             Teams
           </Link>
           <Link
             to="/admin/events/$eventId/scoring-presets"
             params={{ eventId: info.row.original.id }}
-            className="btn btn-sm"
+            className="btn btn-xs"
           >
             Scoring Presets
           </Link>
@@ -205,17 +205,17 @@ function EventPage() {
                 .getObjectiveTreeForEvent(info.row.original.id)
                 .then((baseObjective) => {
                   navigate({
-                    to: "/admin/events/$eventId/categories/$categoryId",
+                    to: "/admin/events/$eventId/objectives/$objectiveId",
                     params: {
                       eventId: info.row.original.id,
-                      categoryId: baseObjective.id,
+                      objectiveId: baseObjective.id,
                     },
                   });
                 });
             }}
-            className="btn btn-sm"
+            className="btn btn-xs"
           >
-            Categories
+            Objectives
           </button>
         </div>
       ),

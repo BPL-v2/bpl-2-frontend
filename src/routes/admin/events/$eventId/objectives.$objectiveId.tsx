@@ -48,7 +48,7 @@ import { twMerge } from "tailwind-merge";
 import { objectiveApi } from "@client/client";
 
 export const Route = createFileRoute(
-  "/admin/events/$eventId/categories/$categoryId",
+  "/admin/events/$eventId/objectives/$objectiveId",
 )({
   component: renderConditionally(ScoringCategoryPage, [
     Permission.admin,
@@ -57,11 +57,11 @@ export const Route = createFileRoute(
   params: {
     parse: (params) => ({
       eventId: Number(params.eventId),
-      categoryId: Number(params.categoryId),
+      objectiveId: Number(params.objectiveId),
     }),
     stringify: (params) => ({
       eventId: params.eventId.toString(),
-      categoryId: params.categoryId.toString(),
+      objectiveId: params.objectiveId.toString(),
     }),
   },
 });
@@ -80,7 +80,7 @@ export type BulkObjectiveCreate = {
 
 export function ScoringCategoryPage(): JSX.Element {
   const qc = useQueryClient();
-  const { eventId, categoryId } = useParams({ from: Route.id });
+  const { eventId, objectiveId } = useParams({ from: Route.id });
   const [isObjectiveModalOpen, setIsObjectiveModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isBulkObjectiveModalOpen, setIsBulkObjectiveModalOpen] =
@@ -114,7 +114,7 @@ export function ScoringCategoryPage(): JSX.Element {
   const { createBulkObjectives } = useCreateBulkObjectives(
     qc,
     eventId,
-    categoryId,
+    objectiveId,
     () => {
       setIsBulkObjectiveModalOpen(false);
       bulkObjectiveForm.reset();
@@ -122,10 +122,10 @@ export function ScoringCategoryPage(): JSX.Element {
   );
   const objective = findObjective(
     rules,
-    (objective) => objective.id === categoryId,
+    (objective) => objective.id === objectiveId,
   );
   const event = events?.find((event) => event.id === eventId);
-  const path = getPath(rules, categoryId);
+  const path = getPath(rules, objectiveId);
   const bulkObjectiveForm = useAppForm({
     defaultValues: {} as BulkObjectiveCreate,
     onSubmit: (data) => createBulkObjectives(data.value),
@@ -137,9 +137,10 @@ export function ScoringCategoryPage(): JSX.Element {
       name: "",
       extra: "",
       number_field: NumberField.FINISHED_OBJECTIVES,
+      number_field_explanation: null,
       required_number: 1,
       conditions: [],
-      parent_id: categoryId,
+      parent_id: objectiveId,
       objective_type: ObjectiveType.CATEGORY,
     } as unknown as ObjectiveCreate,
     onSubmit: (data) => createObjective(data.value),
@@ -148,7 +149,7 @@ export function ScoringCategoryPage(): JSX.Element {
     defaultValues: {
       required_number: 1,
       conditions: [],
-      parent_id: categoryId,
+      parent_id: objectiveId,
       hide_progress: false,
     } as unknown as ExtendedObjectiveCreate,
     onSubmit: (data) => {
@@ -219,7 +220,7 @@ export function ScoringCategoryPage(): JSX.Element {
         size: 80,
       },
       {
-        header: "Validated",
+        header: "Valid.",
         cell: ({ row }) => {
           const validation = validationMap[row.original.id];
           return validation ? (
@@ -235,7 +236,7 @@ export function ScoringCategoryPage(): JSX.Element {
             <span className="text-error">✗</span>
           );
         },
-        size: 100,
+        size: 60,
       },
       {
         header: "Name",
@@ -245,7 +246,7 @@ export function ScoringCategoryPage(): JSX.Element {
       {
         header: "Extra",
         accessorKey: "extra",
-        size: 200,
+        size: 190,
       },
       {
         header: "Num",
@@ -260,7 +261,7 @@ export function ScoringCategoryPage(): JSX.Element {
       {
         header: "Aggregation",
         accessorKey: "aggregation",
-        size: 200,
+        size: 150,
       },
       {
         header: "Scoring Method",
@@ -317,7 +318,7 @@ export function ScoringCategoryPage(): JSX.Element {
                 data-tip="Edit"
               >
                 <button
-                  className="btn btn-sm btn-warning"
+                  className="btn btn-xs btn-warning"
                   onClick={() => {
                     setFormValues(objectiveForm, row.original);
                     objectiveForm.setFieldValue(
@@ -347,7 +348,7 @@ export function ScoringCategoryPage(): JSX.Element {
                 data-tip="Delete"
               >
                 <button
-                  className="btn btn-sm btn-error"
+                  className="btn btn-xs btn-error"
                   onClick={() => deleteObjective(row.original.id)}
                 >
                   <TrashIcon className="size-4" />
@@ -358,7 +359,7 @@ export function ScoringCategoryPage(): JSX.Element {
                 data-tip="Duplicate"
               >
                 <button
-                  className="btn btn-sm btn-info"
+                  className="btn btn-xs btn-info"
                   onClick={() => {
                     const duplicate = JSON.parse(
                       JSON.stringify(row.original),
@@ -383,7 +384,7 @@ export function ScoringCategoryPage(): JSX.Element {
                 data-tip="Add Condition"
               >
                 <button
-                  className="btn btn-sm btn-success"
+                  className="btn btn-xs btn-success"
                   onClick={() => {
                     setEditedObjective(row.original);
                     setIsConditionModalOpen(true);
@@ -397,9 +398,9 @@ export function ScoringCategoryPage(): JSX.Element {
                 data-tip="Open as Category"
               >
                 <Link
-                  to={"/admin/events/$eventId/categories/$categoryId"}
-                  params={{ eventId: eventId!, categoryId: row.original.id }}
-                  className="btn btn-sm btn-secondary"
+                  to={"/admin/events/$eventId/objectives/$objectiveId"}
+                  params={{ eventId: eventId!, objectiveId: row.original.id }}
+                  className="btn btn-xs btn-secondary"
                 >
                   <FolderOpenIcon className="size-4" />
                 </Link>
@@ -411,7 +412,6 @@ export function ScoringCategoryPage(): JSX.Element {
     ],
     [scoringPresets, event, objectiveForm, validationMap],
   );
-
   const objectiveDialog: React.ReactNode = useMemo(() => {
     return (
       <Dialog
@@ -469,6 +469,15 @@ export function ScoringCategoryPage(): JSX.Element {
                       : []
                   }
                   required
+                  hidden={!objective_type}
+                />
+              )}
+            />
+            <objectiveForm.AppField
+              name="number_field_explanation"
+              children={(field) => (
+                <field.TextField
+                  label="Submission Value Explanation"
                   hidden={!objective_type}
                 />
               )}
@@ -699,13 +708,11 @@ export function ScoringCategoryPage(): JSX.Element {
       </Dialog>
     );
   }, [scoringPresets, isCategoryModalOpen, categoryForm]);
-
   const conditionDialog: React.ReactNode = useMemo(() => {
     let operatorOptions: Operator[] = [];
     if (operatorForField && itemField) {
       operatorOptions = operatorForField[itemField];
     }
-    console.log("Rendering Condition Dialog with itemField:", objective);
     return (
       <Dialog
         title="Create Condition"
@@ -775,7 +782,7 @@ export function ScoringCategoryPage(): JSX.Element {
     );
   }, [objective?.children, objectivColumns]);
 
-  if (!categoryId) {
+  if (!objectiveId) {
     return <></>;
   }
   return (
@@ -794,7 +801,7 @@ export function ScoringCategoryPage(): JSX.Element {
             (objective) => objective.id === activeId,
           );
           const children = activObjective?.children.filter(
-            (child) => child.children.length > 0 || child.id === categoryId,
+            (child) => child.children.length > 0 || child.id === objectiveId,
           );
           return (
             <div key={"category-" + activeId}>
@@ -805,8 +812,8 @@ export function ScoringCategoryPage(): JSX.Element {
                 {children?.map((objective) => (
                   <div key={"category-child-" + objective.id}>
                     <Link
-                      to={"/admin/events/$eventId/categories/$categoryId"}
-                      params={{ eventId: eventId!, categoryId: objective.id }}
+                      to={"/admin/events/$eventId/objectives/$objectiveId"}
+                      params={{ eventId: eventId!, objectiveId: objective.id }}
                       className={twMerge(
                         "btn",
                         path.includes(objective.id)

@@ -2468,6 +2468,12 @@ export interface Objective {
     number_field: NumberField;
     /**
      * 
+     * @type {string}
+     * @memberof Objective
+     */
+    number_field_explanation?: string;
+    /**
+     * 
      * @type {ObjectiveType}
      * @memberof Objective
      */
@@ -2558,6 +2564,12 @@ export interface ObjectiveCreate {
      * @memberof ObjectiveCreate
      */
     number_field: NumberField;
+    /**
+     * 
+     * @type {string}
+     * @memberof ObjectiveCreate
+     */
+    number_field_explanation?: string;
     /**
      * 
      * @type {ObjectiveType}

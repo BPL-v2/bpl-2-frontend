@@ -1,7 +1,7 @@
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { isLoggedIn } from "@utils/token";
 import { ScoreMap } from "@utils/utils";
-import { BulkObjectiveCreate } from "../routes/admin/events/$eventId/categories.$categoryId";
+import { BulkObjectiveCreate } from "../routes/admin/events/$eventId/objectives.$objectiveId";
 import {
   Character,
   EventCreate,
