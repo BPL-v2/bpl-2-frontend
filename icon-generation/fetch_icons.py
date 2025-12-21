@@ -90,11 +90,15 @@ def download():
         uniques: ItemDict = json.loads(response.read())
 
         for unique in uniques.values():
+            if "[DNT" in unique["name"] or "DO NOT USE" in unique["name"] or "UNUSED" in unique["name"]:
+                continue
             save_image(
                 unique, f"public/assets/{version}/items/uniques", baseUrl, {})
         for base in base_items.values():
+            if "[DNT" in base["name"] or "DO NOT USE" in base["name"] or "UNUSED" in base["name"]:
+                continue
             save_image(base, f"public/assets/{version}/items/basetypes",
-                       baseUrl, gems if version == "poe1" else {})
+                        baseUrl, gems if version == "poe1" else {})
 
 def save_basetypes(filename: str, base_items: ItemDict):
     names = [
