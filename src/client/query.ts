@@ -922,9 +922,6 @@ export function preloadCharacterData(
   preload(qc, ["pobExport", userId, characterId], () =>
     characterApi.getPoBs(userId, characterId),
   );
-  preload(qc, ["activity", eventId, userId], () =>
-    activityApi.getEventActivitiesForUser(eventId, userId),
-  );
   preload(
     qc,
     ["atlasProgress", current !== eventId ? eventId : "current", userId],
@@ -1004,7 +1001,7 @@ export function useGetUserActivity(eventId: number, userId: number) {
   const query = useQuery({
     queryKey: ["activity", eventId, userId],
     queryFn: () => activityApi.getEventActivitiesForUser(eventId, userId),
-    enabled: !!userId,
+    enabled: userId != 0,
     refetchOnMount: false,
     refetchOnReconnect: false,
     staleTime: 5 * 60 * 1000,
