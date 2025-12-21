@@ -78,8 +78,8 @@ export function CollectionCardTable({
             const isPlayerTeam = teamId === eventStatus?.team_id;
             const gotPoints = score.points > 0;
             const isHidden =
-              objective.hide_progress &&
-              !objective.team_score[teamId]?.finished;
+              objective.hide_progress && !isFinished && !isPlayerTeam;
+
             return (
               <tr
                 className={
