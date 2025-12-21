@@ -221,6 +221,7 @@ export interface Item {
   corrupted: boolean;
   selectedVariant: string;
   implicits: Mod[];
+  enchants: Mod[];
   explicits: Mod[];
   mutatedMods: Mod[];
   slot: string | null;
@@ -941,6 +942,7 @@ export function parseItem(
   let influence1: Influence | undefined, influence2: Influence | undefined;
   let selectedVariant = "";
   const implicits: Mod[] = [];
+  const enchants: Mod[] = [];
 
   while (idx < lines.length) {
     const line = lines[idx];
@@ -980,7 +982,11 @@ export function parseItem(
         case "Implicits": {
           const num = parseInt(arg) || 0;
           for (let i = 0; i < num; i++) {
-            implicits.push(parseMod(lines[idx + 1 + i]));
+            if (lines[idx + 1 + i].startsWith("{crafted}")) {
+              enchants.push(parseMod(lines[idx + 1 + i]));
+            } else {
+              implicits.push(parseMod(lines[idx + 1 + i]));
+            }
           }
           idx += num;
           break;
@@ -1086,6 +1092,7 @@ export function parseItem(
     selectedVariant,
     implicits,
     explicits,
+    enchants,
     mutatedMods,
     slot,
     id,

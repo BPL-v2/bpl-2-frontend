@@ -18,6 +18,7 @@ export function CharacterItems({ pob }: { pob: PathOfBuilding }) {
     "Amulet",
     "Ring 1",
     "Ring 2",
+    "Ring 3",
     "Weapon 1",
     "Weapon 2",
   ];

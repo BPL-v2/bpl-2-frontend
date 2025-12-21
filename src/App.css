@@ -231,8 +231,8 @@ html {
   grid-template-areas:
     "Weapon  Weapon .       Helm       Helm       .      Offhand Offhand"
     "Weapon  Weapon .       Helm       Helm       .      Offhand Offhand"
-    "Weapon  Weapon .       BodyArmour BodyArmour Amulet Offhand Offhand"
-    "Weapon  Weapon RingL   BodyArmour BodyArmour RingR  Offhand Offhand"
+    "Weapon  Weapon Ring3   BodyArmour BodyArmour Amulet Offhand Offhand"
+    "Weapon  Weapon Ring1   BodyArmour BodyArmour Ring2  Offhand Offhand"
     ".       Gloves Gloves  BodyArmour BodyArmour Boots  Boots   ."
     ".       Gloves Gloves  Belt       Belt       Boots  Boots   ."
     "Trinket flasks flasks  flasks     flasks     flasks flasks  ."
@@ -270,7 +270,15 @@ html {
 }
 
 .ring1 {
-  grid-area: RingL;
+  grid-area: Ring1;
+  aspect-ratio: 1;
+}
+.ring2 {
+  grid-area: Ring2;
+  aspect-ratio: 1;
+}
+.ring3 {
+  grid-area: Ring3;
   aspect-ratio: 1;
 }
 
@@ -279,11 +287,6 @@ html {
   aspect-ratio: 3/2;
   height: 100%;
   width: 100%;
-}
-
-.ring2 {
-  grid-area: RingR;
-  aspect-ratio: 1;
 }
 
 .gloves {

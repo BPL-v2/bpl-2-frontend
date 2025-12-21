@@ -44,6 +44,9 @@ export function ItemDisplay({
     selectionSetter(undefined);
     setMousePosition(undefined);
   };
+  if (!item && slot === "Ring 3") {
+    return;
+  }
 
   return (
     <div

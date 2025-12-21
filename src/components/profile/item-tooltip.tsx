@@ -10,7 +10,7 @@ type Props = {
 
 export function ItemTooltip({ item, itemX, itemY }: Props) {
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const maxWidth = 400;
+  const maxWidth = Math.min(window.innerWidth - 40, 400);
   const [position, setPosition] = useState({
     left: itemX,
     top: (itemY || 0) > 10 ? itemY : 10,
@@ -123,6 +123,20 @@ export function ItemTooltip({ item, itemX, itemY }: Props) {
           )}
         </div>
       )}
+      {item.enchants.length > 0 && (
+        <div
+          className={twMerge(
+            "flex w-full flex-col border-t-2 p-2 md:gap-1",
+            borderColor,
+          )}
+        >
+          {item.enchants.map((enchant) => (
+            <span key={enchant.line} className={"text-crafted"}>
+              {enchant.line}
+            </span>
+          ))}
+        </div>
+      )}
       {item.implicits.length > 0 && (
         <div
           className={twMerge(
@@ -131,10 +145,7 @@ export function ItemTooltip({ item, itemX, itemY }: Props) {
           )}
         >
           {item.implicits.map((implicit) => (
-            <span
-              key={implicit.line}
-              className={implicit.crafted ? "text-crafted" : "text-magic"}
-            >
+            <span key={implicit.line} className={"text-magic"}>
               {implicit.line}
             </span>
           ))}
