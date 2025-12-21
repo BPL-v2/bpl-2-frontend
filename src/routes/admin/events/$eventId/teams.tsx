@@ -42,6 +42,7 @@ function TeamPage() {
       name: "",
       abbreviation: "",
       color: "#000000",
+      discord_role_id: undefined,
       allowed_classes: [],
     } as TeamCreate,
     onSubmit: (data) => createTeam(data.value as TeamCreate),
@@ -78,6 +79,12 @@ function TeamPage() {
       header: "Allowed Classes",
       accessorKey: "allowed_classes",
       cell: (info) => info.row.original.allowed_classes.join(", "),
+      size: 300,
+    },
+    {
+      header: "Discord Role ID",
+      accessorKey: "discord_role_id",
+      cell: (info) => info.row.original.discord_role_id,
       size: 300,
     },
     {
@@ -132,6 +139,10 @@ function TeamPage() {
           <teamForm.AppField
             name="color"
             children={(field) => <field.ColorField label="Color" />}
+          />
+          <teamForm.AppField
+            name="discord_role_id"
+            children={(field) => <field.TextField label="Discord Role ID" />}
           />
           <teamForm.AppField
             name="allowed_classes"
