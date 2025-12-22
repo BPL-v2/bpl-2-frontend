@@ -4,6 +4,7 @@ import {
   CharactersApiFactory,
   EventApiFactory,
   GuildStashApiFactory,
+  ItemWishesApiFactory,
   JobsApiFactory,
   LadderApiFactory,
   OauthApiFactory,
@@ -78,3 +79,8 @@ export const guildStashApi = GuildStashApiFactory(
 );
 
 export const timingApi = TimingApiFactory(config, authenticatedFetch, baseUrl);
+export const wishApi = ItemWishesApiFactory(
+  config,
+  authenticatedFetch,
+  baseUrl,
+);

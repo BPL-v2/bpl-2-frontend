@@ -2,7 +2,6 @@ import {
   Objective,
   GameVersion,
   Operator,
-  ObjectiveType,
   ItemField,
   Condition,
 } from "@client/api";
@@ -409,11 +408,7 @@ export const anomalousBaseTypes: {
 export function getItemName(
   objective: ScoreObjective | Objective,
 ): string | null {
-  if (
-    !objective ||
-    !objective.objective_type ||
-    objective.objective_type !== ObjectiveType.ITEM
-  ) {
+  if (!objective) {
     return null;
   }
   for (const condition of objective.conditions) {
@@ -456,11 +451,7 @@ export function getImageLocation(
   objective: ScoreObjective | Objective,
   gameVersion: GameVersion = GameVersion.poe1,
 ): string | null {
-  if (
-    !objective ||
-    !objective.objective_type ||
-    objective.objective_type !== ObjectiveType.ITEM
-  ) {
+  if (!objective) {
     return null;
   }
   // has to be this complicated because we want to privilege the name over the base type
@@ -473,7 +464,10 @@ export function getImageLocation(
 
   for (const condition of objective.conditions) {
     if (condition.field === ItemField.NAME) {
-      attributes.name = getFirstConditionValue(condition);
+      attributes.name = getFirstConditionValue(condition).replaceAll(
+        "Foulborn ",
+        "",
+      );
     } else if (condition.field === ItemField.BASE_TYPE) {
       attributes.base_type = getFirstConditionValue(condition);
     } else if (condition.field === ItemField.ITEM_CLASS) {

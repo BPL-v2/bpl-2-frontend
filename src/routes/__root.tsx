@@ -3,8 +3,9 @@ import {
   Outlet,
   createRootRoute,
   useRouterState,
+  useSearch,
 } from "@tanstack/react-router";
-import { JSX, useContext, useMemo } from "react";
+import { JSX, useContext, useEffect, useMemo } from "react";
 import "../App.css";
 
 import AuthButton from "@components/auth-button";
@@ -19,6 +20,7 @@ import { useGetEventStatus, useGetUser } from "@client/query";
 import { Footer } from "@components/footer";
 import { TwitchFilled } from "@icons/twitch";
 import { twMerge } from "tailwind-merge";
+import { router } from "../main";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -96,11 +98,19 @@ function RootComponent() {
   const selected = useRouterState({
     select: (state) => state.location.pathname.split("/")[1],
   });
-
+  const { hello }: { hello: string | undefined } = useSearch({
+    from: Route.id,
+  });
+  useEffect(() => {
+    if (hello) {
+      localStorage.setItem("referrer", hello);
+    }
+    router.navigate({ to: router.state.location.pathname, replace: true });
+  }, [hello]);
   return (
     <>
       <div className="mx-auto max-w-[1440px] text-center">
-        <div className="flex h-[100vh] flex-col justify-between gap-8">
+        <div className="flex h-screen flex-col justify-between gap-8">
           <div>
             <div
               className={twMerge(

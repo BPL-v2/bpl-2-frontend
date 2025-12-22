@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-import { Permission } from "@client/api";
+import { Permission, Signup } from "@client/api";
 import { renderConditionally } from "@utils/token";
 import { useContext } from "react";
 import {
   useGetActivitiesForEvent,
   useGetLadder,
+  useGetSignups,
   useGetUsers,
 } from "@client/query";
 import { GlobalStateContext } from "@utils/context-provider";
@@ -21,13 +22,34 @@ function ActivityPage() {
   const { activities } = useGetActivitiesForEvent(currentEvent?.id);
   const { users = [] } = useGetUsers(currentEvent.id);
   const { ladder = [] } = useGetLadder(currentEvent.id);
+  const { signups = [] } = useGetSignups(currentEvent.id);
+  const signupMap = signups.reduce(
+    (map, signup) => {
+      map[String(signup.user.id)] = signup;
+      return map;
+    },
+    {} as Record<string, (typeof signups)[0]>,
+  );
   const pointMap = getTotalPoints(scores);
   const userMap = users.reduce(
     (map, user) => {
-      map[String(user.id)] = user;
+      map[String(user.id)] = { user: user, signup: signupMap[String(user.id)] };
       return map;
     },
-    {} as Record<string, (typeof users)[0]>,
+    {} as Record<
+      string,
+      {
+        user: {
+          team_id: number;
+          discord_id?: string;
+          discord_name?: string;
+          display_name: string;
+          id: number;
+          poe_account_name?: string;
+        };
+        signup: Signup;
+      }
+    >,
   );
   const ladderMap = ladder.reduce(
     (map, entry) => {
@@ -38,7 +60,7 @@ function ActivityPage() {
   );
   const userActivities = [];
   for (const [userId, activeMilliseconds] of Object.entries(activities)) {
-    const user = userMap[userId];
+    const user = userMap[userId].user;
     if (user) {
       userActivities.push({
         name: user.display_name,
@@ -46,6 +68,7 @@ function ActivityPage() {
         activeHours: activeMilliseconds / (1000 * 60 * 60),
         ladderEntry: ladderMap[userId],
         teamId: user.team_id,
+        duo: !!userMap[userId].signup.partner_id,
       });
     }
   }
@@ -58,16 +81,22 @@ function ActivityPage() {
   const hoursOfEvent = daysOfEvent * 24;
   const teamTableData = userActivities.reduce(
     (map, activity) => {
-      const teamId = activity.teamId;
+      const teamId = activity.teamId as number;
       if (!map[teamId]) {
         map[teamId] = {
           totalActiveHours: 0,
           activeMembers: 0,
           degens: 0,
           teamId: teamId,
+          totalActiveDuoHours: 0,
+          numberDuoMembers: 0,
         };
       }
       map[teamId].totalActiveHours += activity.activeHours;
+      map[teamId].totalActiveDuoHours += activity.duo
+        ? activity.activeHours
+        : 0;
+      map[teamId].numberDuoMembers += activity.duo ? 1 : 0;
       map[teamId].activeMembers += 1;
       if (activity.activeHours > 10 * daysOfEvent) {
         map[teamId].degens += 1;
@@ -81,6 +110,8 @@ function ActivityPage() {
         totalActiveHours: number;
         activeMembers: number;
         degens: number;
+        totalActiveDuoHours: number;
+        numberDuoMembers: number;
       }
     >,
   );
@@ -125,6 +156,16 @@ function ActivityPage() {
             accessorKey: "totalActiveHours",
             cell: (info) => Math.round(info.getValue() as number),
             size: 200,
+          },
+          {
+            header: "Duo Hours/day",
+            accessorKey: "numberDuoMembers",
+            accessorFn: (row) =>
+              row.numberDuoMembers > 0
+                ? row.totalActiveDuoHours / row.numberDuoMembers / daysOfEvent
+                : 0,
+            cell: (info) => (info.getValue() as number).toFixed(2),
+            size: 150,
           },
         ]}
       />
@@ -181,17 +222,20 @@ function ActivityPage() {
           {
             header: "Active Hours",
             accessorKey: "activeHours",
+            id: "activeHours",
             cell: (info) => (info.getValue() as number).toFixed(2),
           },
           {
             header: "Hours/day",
             accessorKey: "activeHours",
+            id: "hoursPerDay",
             cell: (info) =>
               ((info.getValue() as number) / (hoursOfEvent / 24)).toFixed(2),
           },
           {
             header: "Percentage Active",
             accessorKey: "activeHours",
+            id: "percentageActive",
             cell: (info) =>
               (((info.getValue() as number) / hoursOfEvent) * 100).toFixed(2) +
               "%",

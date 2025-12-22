@@ -216,7 +216,7 @@ export interface CallbackBody {
      * @type {string}
      * @memberof CallbackBody
      */
-    redirect_url: string;
+    referrer?: string;
     /**
      * 
      * @type {string}
@@ -488,6 +488,12 @@ export interface DisplayItem {
      */
     baseType?: string;
     /**
+     * PoE2 only
+     * @type {Array<string>}
+     * @memberof DisplayItem
+     */
+    bondedMods?: Array<string>;
+    /**
      * 
      * @type {string}
      * @memberof DisplayItem
@@ -517,6 +523,24 @@ export interface DisplayItem {
      * @memberof DisplayItem
      */
     delve?: boolean;
+    /**
+     * PoE2 only
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    desecrated?: boolean;
+    /**
+     * PoE2 only
+     * @type {Array<string>}
+     * @memberof DisplayItem
+     */
+    desecratedMods?: Array<string>;
+    /**
+     * PoE2 only
+     * @type {boolean}
+     * @memberof DisplayItem
+     */
+    doubleCorrupted?: boolean;
     /**
      * 
      * @type {boolean}
@@ -721,6 +745,12 @@ export interface DisplayItem {
      * @memberof DisplayItem
      */
     rewards?: Array<ItemReward>;
+    /**
+     * PoE2 only
+     * @type {Array<string>}
+     * @memberof DisplayItem
+     */
+    runeMods?: Array<string>;
     /**
      * 
      * @type {boolean}
@@ -1473,6 +1503,12 @@ export interface Item {
      */
     baseType?: string;
     /**
+     * PoE2 only
+     * @type {Array<string>}
+     * @memberof Item
+     */
+    bondedMods?: Array<string>;
+    /**
      * 
      * @type {string}
      * @memberof Item
@@ -1502,6 +1538,24 @@ export interface Item {
      * @memberof Item
      */
     delve?: boolean;
+    /**
+     * PoE2 only
+     * @type {boolean}
+     * @memberof Item
+     */
+    desecrated?: boolean;
+    /**
+     * PoE2 only
+     * @type {Array<string>}
+     * @memberof Item
+     */
+    desecratedMods?: Array<string>;
+    /**
+     * PoE2 only
+     * @type {boolean}
+     * @memberof Item
+     */
+    doubleCorrupted?: boolean;
     /**
      * 
      * @type {boolean}
@@ -1695,6 +1749,12 @@ export interface Item {
      */
     rewards?: Array<ItemReward>;
     /**
+     * PoE2 only
+     * @type {Array<string>}
+     * @memberof Item
+     */
+    runeMods?: Array<string>;
+    /**
      * 
      * @type {boolean}
      * @memberof Item
@@ -1842,22 +1902,10 @@ export interface Item {
 export interface ItemExtended {
     /**
      * 
-     * @type {string}
-     * @memberof ItemExtended
-     */
-    category?: string;
-    /**
-     * 
      * @type {number}
      * @memberof ItemExtended
      */
     prefixes?: number;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof ItemExtended
-     */
-    subcategories?: Array<string>;
     /**
      * 
      * @type {number}
@@ -1981,6 +2029,64 @@ export interface ItemIncubatedItem {
      * @memberof ItemIncubatedItem
      */
     total?: number;
+}
+
+/**
+ * 
+ * @export
+ * @interface ItemJewelData
+ */
+export interface ItemJewelData {
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemJewelData
+     */
+    radius?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemJewelData
+     */
+    radiusMin?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemJewelData
+     */
+    radiusVisual?: string;
+    /**
+     * 
+     * @type {ItemJewelDataSubgraph}
+     * @memberof ItemJewelData
+     */
+    subgraph?: ItemJewelDataSubgraph;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemJewelData
+     */
+    type?: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface ItemJewelDataSubgraph
+ */
+export interface ItemJewelDataSubgraph {
+    /**
+     * 
+     * @type {{ [key: string]: PassiveGroup; }}
+     * @memberof ItemJewelDataSubgraph
+     */
+    groups?: { [key: string]: PassiveGroup; };
+    /**
+     * 
+     * @type {{ [key: string]: PassiveNode; }}
+     * @memberof ItemJewelDataSubgraph
+     */
+    nodes?: { [key: string]: PassiveNode; };
 }
 
 /**
@@ -2179,6 +2285,88 @@ export interface ItemUltimatumMod {
 /**
  * 
  * @export
+ * @interface ItemWish
+ */
+export interface ItemWish {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ItemWish
+     */
+    fulfilled: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemWish
+     */
+    id?: number;
+    /**
+     * 
+     * @type {ItemField}
+     * @memberof ItemWish
+     */
+    item_field: ItemField;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemWish
+     */
+    priority?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemWish
+     */
+    user_id: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemWish
+     */
+    value: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface ItemWishRequest
+ */
+export interface ItemWishRequest {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ItemWishRequest
+     */
+    fulfilled?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemWishRequest
+     */
+    id?: number;
+    /**
+     * 
+     * @type {ItemField}
+     * @memberof ItemWishRequest
+     */
+    item_field: ItemField;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemWishRequest
+     */
+    priority?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemWishRequest
+     */
+    value: string;
+}
+
+/**
+ * 
+ * @export
  * @interface JobCreate
  */
 export interface JobCreate {
@@ -2306,6 +2494,20 @@ export interface LadderEntry {
      * @memberof LadderEntry
      */
     user_id?: number;
+}
+
+/**
+ * 
+ * @export
+ * @interface Metadata
+ */
+export interface Metadata {
+    /**
+     * 
+     * @type {string}
+     * @memberof Metadata
+     */
+    version?: string;
 }
 
 /**
@@ -2673,6 +2875,382 @@ export enum Operator {
 /**
  * 
  * @export
+ * @interface PassiveGroup
+ */
+export interface PassiveGroup {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PassiveGroup
+     */
+    isProxy?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PassiveGroup
+     */
+    nodes?: Array<string>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof PassiveGroup
+     */
+    orbits?: Array<number>;
+    /**
+     * 
+     * @type {string}
+     * @memberof PassiveGroup
+     */
+    proxy?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PassiveGroup
+     */
+    x?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PassiveGroup
+     */
+    y?: number;
+}
+
+/**
+ * 
+ * @export
+ * @interface PassiveNode
+ */
+export interface PassiveNode {
+    /**
+     * 
+     * @type {string}
+     * @memberof PassiveNode
+     */
+    activeEffectImage?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PassiveNode
+     */
+    activeIcon?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PassiveNode
+     */
+    ascendancyName?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PassiveNode
+     */
+    classStartIndex?: number;
+    /**
+     * 
+     * @type {PassiveNodeExpansionJewel}
+     * @memberof PassiveNode
+     */
+    expansionJewel?: PassiveNodeExpansionJewel;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PassiveNode
+     */
+    flavourText?: Array<string>;
+    /**
+     * 
+     * @type {number}
+     * @memberof PassiveNode
+     */
+    grantedDexterity?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PassiveNode
+     */
+    grantedIntelligence?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PassiveNode
+     */
+    grantedPassivePoints?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PassiveNode
+     */
+    grantedStrength?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PassiveNode
+     */
+    group?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PassiveNode
+     */
+    icon?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PassiveNode
+     */
+    _in?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof PassiveNode
+     */
+    inactiveIcon?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PassiveNode
+     */
+    isAscendancyStart?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PassiveNode
+     */
+    isBlighted?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PassiveNode
+     */
+    isJewelSocket?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PassiveNode
+     */
+    isKeystone?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PassiveNode
+     */
+    isMastery?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PassiveNode
+     */
+    isMultipleChoice?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PassiveNode
+     */
+    isMultipleChoiceOption?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PassiveNode
+     */
+    isNotable?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PassiveNode
+     */
+    isProxy?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PassiveNode
+     */
+    isTattoo?: boolean;
+    /**
+     * 
+     * @type {Array<PassiveNodeMasteryEffect>}
+     * @memberof PassiveNode
+     */
+    masteryEffects?: Array<PassiveNodeMasteryEffect>;
+    /**
+     * 
+     * @type {string}
+     * @memberof PassiveNode
+     */
+    name?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PassiveNode
+     */
+    orbit?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PassiveNode
+     */
+    orbitIndex?: number;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PassiveNode
+     */
+    out?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PassiveNode
+     */
+    recipe?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PassiveNode
+     */
+    reminderText?: Array<string>;
+    /**
+     * actually an int but it's a string in the ggg response
+     * @type {string}
+     * @memberof PassiveNode
+     */
+    skill?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PassiveNode
+     */
+    stats?: Array<string>;
+}
+
+/**
+ * 
+ * @export
+ * @interface PassiveNodeExpansionJewel
+ */
+export interface PassiveNodeExpansionJewel {
+    /**
+     * 
+     * @type {number}
+     * @memberof PassiveNodeExpansionJewel
+     */
+    index?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PassiveNodeExpansionJewel
+     */
+    parent?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PassiveNodeExpansionJewel
+     */
+    proxy?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PassiveNodeExpansionJewel
+     */
+    size?: number;
+}
+
+/**
+ * 
+ * @export
+ * @interface PassiveNodeMasteryEffect
+ */
+export interface PassiveNodeMasteryEffect {
+    /**
+     * 
+     * @type {number}
+     * @memberof PassiveNodeMasteryEffect
+     */
+    effect?: number;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PassiveNodeMasteryEffect
+     */
+    reminderText?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PassiveNodeMasteryEffect
+     */
+    stats?: Array<string>;
+}
+
+/**
+ * 
+ * @export
+ * @interface Passives
+ */
+export interface Passives {
+    /**
+     * 
+     * @type {string}
+     * @memberof Passives
+     */
+    alternate_ascendancy?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Passives
+     */
+    bandit_choice?: string;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof Passives
+     */
+    hashes?: Array<number>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof Passives
+     */
+    hashes_ex?: Array<number>;
+    /**
+     * 
+     * @type {{ [key: string]: ItemJewelData; }}
+     * @memberof Passives
+     */
+    jewel_data?: { [key: string]: ItemJewelData; };
+    /**
+     * 
+     * @type {{ [key: string]: number; }}
+     * @memberof Passives
+     */
+    mastery_effects?: { [key: string]: number; };
+    /**
+     * 
+     * @type {string}
+     * @memberof Passives
+     */
+    pantheon_major?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Passives
+     */
+    pantheon_minor?: string;
+    /**
+     * 
+     * @type {{ [key: string]: PassiveNode; }}
+     * @memberof Passives
+     */
+    skill_overrides?: { [key: string]: PassiveNode; };
+    /**
+     * 
+     * @type {ItemSocketItem}
+     * @memberof Passives
+     */
+    specialisation?: ItemSocketItem;
+}
+
+/**
+ * 
+ * @export
  * @enum {string}
  */
 export enum Permission {
@@ -2718,6 +3296,18 @@ export interface PoB {
      * @memberof PoB
      */
     timestamp: string;
+}
+
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+export enum Realm {
+    pc = 'pc',
+    sony = 'sony',
+    xbox = 'xbox',
+    poe2 = 'poe2'
 }
 
 /**
@@ -3090,6 +3680,32 @@ export interface SignupCreate {
      * @memberof SignupCreate
      */
     wants_to_help?: boolean;
+}
+
+/**
+ * 
+ * @export
+ * @interface Specialisations
+ */
+export interface Specialisations {
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof Specialisations
+     */
+    set1?: Array<number>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof Specialisations
+     */
+    set2?: Array<number>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof Specialisations
+     */
+    shapeshift?: Array<number>;
 }
 
 /**
@@ -4202,6 +4818,40 @@ export const CharactersApiFetchParamCreator = function (configuration?: Configur
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Update character details
+         * @param {number} user_id User ID
+         * @param {string} character_id Character ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCharacter(user_id: number, character_id: string, options: any = {}): FetchArgs {
+            // verify required parameter 'user_id' is not null or undefined
+            if (user_id === null || user_id === undefined) {
+                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling updateCharacter.');
+            }
+            // verify required parameter 'character_id' is not null or undefined
+            if (character_id === null || character_id === undefined) {
+                throw new RequiredError('character_id','Required parameter character_id was null or undefined when calling updateCharacter.');
+            }
+            const localVarPath = `/users/{user_id}/characters/{character_id}`
+                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)))
+                .replace(`{${"character_id"}}`, encodeURIComponent(String(character_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'PATCH' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -4285,6 +4935,25 @@ export const CharactersApiFp = function(configuration?: Configuration) {
                 });
             };
         },
+        /**
+         * Update character details
+         * @param {number} user_id User ID
+         * @param {string} character_id Character ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCharacter(user_id: number, character_id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Character> {
+            const localVarFetchArgs = CharactersApiFetchParamCreator(configuration).updateCharacter(user_id, character_id, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
     }
 };
 
@@ -4331,6 +5000,16 @@ export const CharactersApiFactory = function (configuration?: Configuration, fet
          */
         getUserCharacters(user_id: number, options?: any) {
             return CharactersApiFp(configuration).getUserCharacters(user_id, options)(fetch, basePath);
+        },
+        /**
+         * Update character details
+         * @param {number} user_id User ID
+         * @param {string} character_id Character ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCharacter(user_id: number, character_id: string, options?: any) {
+            return CharactersApiFp(configuration).updateCharacter(user_id, character_id, options)(fetch, basePath);
         },
     };
 };
@@ -4386,6 +5065,18 @@ export class CharactersApi extends BaseAPI {
      */
     public getUserCharacters(user_id: number, options?: any) {
         return CharactersApiFp(this.configuration).getUserCharacters(user_id, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Update character details
+     * @param {number} user_id User ID
+     * @param {string} character_id Character ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CharactersApi
+     */
+    public updateCharacter(user_id: number, character_id: string, options?: any) {
+        return CharactersApiFp(this.configuration).updateCharacter(user_id, character_id, options)(this.fetch, this.basePath);
     }
 
 }
@@ -5775,6 +6466,288 @@ export class GuildStashApi extends BaseAPI {
      */
     public updateStashTab(eventId: number, stash_id: string, options?: any) {
         return GuildStashApiFp(this.configuration).updateStashTab(eventId, stash_id, options)(this.fetch, this.basePath);
+    }
+
+}
+
+/**
+ * ItemWishesApi - fetch parameter creator
+ * @export
+ */
+export const ItemWishesApiFetchParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Delete an item wish for a user in a team
+         * @param {number} event_id Event ID
+         * @param {number} team_id Team ID
+         * @param {number} wish_id Wish ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteItemWish(event_id: number, team_id: number, wish_id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling deleteItemWish.');
+            }
+            // verify required parameter 'team_id' is not null or undefined
+            if (team_id === null || team_id === undefined) {
+                throw new RequiredError('team_id','Required parameter team_id was null or undefined when calling deleteItemWish.');
+            }
+            // verify required parameter 'wish_id' is not null or undefined
+            if (wish_id === null || wish_id === undefined) {
+                throw new RequiredError('wish_id','Required parameter wish_id was null or undefined when calling deleteItemWish.');
+            }
+            const localVarPath = `/events/{event_id}/teams/{team_id}/item_wishes/{wish_id}`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+                .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)))
+                .replace(`{${"wish_id"}}`, encodeURIComponent(String(wish_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Get item wishes for a team in an event
+         * @param {number} event_id Event ID
+         * @param {number} team_id Team ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getItemWishesForTeam(event_id: number, team_id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getItemWishesForTeam.');
+            }
+            // verify required parameter 'team_id' is not null or undefined
+            if (team_id === null || team_id === undefined) {
+                throw new RequiredError('team_id','Required parameter team_id was null or undefined when calling getItemWishesForTeam.');
+            }
+            const localVarPath = `/events/{event_id}/teams/{team_id}/item_wishes`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+                .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Save an item wish for a user in a team
+         * @param {number} event_id Event ID
+         * @param {number} team_id Team ID
+         * @param {ItemWishRequest} item_wish Item Wish
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveItemWish(event_id: number, team_id: number, item_wish: ItemWishRequest, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling saveItemWish.');
+            }
+            // verify required parameter 'team_id' is not null or undefined
+            if (team_id === null || team_id === undefined) {
+                throw new RequiredError('team_id','Required parameter team_id was null or undefined when calling saveItemWish.');
+            }
+            // verify required parameter 'item_wish' is not null or undefined
+            if (item_wish === null || item_wish === undefined) {
+                throw new RequiredError('item_wish','Required parameter item_wish was null or undefined when calling saveItemWish.');
+            }
+            const localVarPath = `/events/{event_id}/teams/{team_id}/item_wishes`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+                .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"ItemWishRequest" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(item_wish || {}) : (item_wish || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ItemWishesApi - functional programming interface
+ * @export
+ */
+export const ItemWishesApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * Delete an item wish for a user in a team
+         * @param {number} event_id Event ID
+         * @param {number} team_id Team ID
+         * @param {number} wish_id Wish ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteItemWish(event_id: number, team_id: number, wish_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = ItemWishesApiFetchParamCreator(configuration).deleteItemWish(event_id, team_id, wish_id, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response;
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * Get item wishes for a team in an event
+         * @param {number} event_id Event ID
+         * @param {number} team_id Team ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getItemWishesForTeam(event_id: number, team_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<ItemWish>> {
+            const localVarFetchArgs = ItemWishesApiFetchParamCreator(configuration).getItemWishesForTeam(event_id, team_id, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * Save an item wish for a user in a team
+         * @param {number} event_id Event ID
+         * @param {number} team_id Team ID
+         * @param {ItemWishRequest} item_wish Item Wish
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveItemWish(event_id: number, team_id: number, item_wish: ItemWishRequest, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ItemWish> {
+            const localVarFetchArgs = ItemWishesApiFetchParamCreator(configuration).saveItemWish(event_id, team_id, item_wish, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+    }
+};
+
+/**
+ * ItemWishesApi - factory interface
+ * @export
+ */
+export const ItemWishesApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+    return {
+        /**
+         * Delete an item wish for a user in a team
+         * @param {number} event_id Event ID
+         * @param {number} team_id Team ID
+         * @param {number} wish_id Wish ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteItemWish(event_id: number, team_id: number, wish_id: number, options?: any) {
+            return ItemWishesApiFp(configuration).deleteItemWish(event_id, team_id, wish_id, options)(fetch, basePath);
+        },
+        /**
+         * Get item wishes for a team in an event
+         * @param {number} event_id Event ID
+         * @param {number} team_id Team ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getItemWishesForTeam(event_id: number, team_id: number, options?: any) {
+            return ItemWishesApiFp(configuration).getItemWishesForTeam(event_id, team_id, options)(fetch, basePath);
+        },
+        /**
+         * Save an item wish for a user in a team
+         * @param {number} event_id Event ID
+         * @param {number} team_id Team ID
+         * @param {ItemWishRequest} item_wish Item Wish
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveItemWish(event_id: number, team_id: number, item_wish: ItemWishRequest, options?: any) {
+            return ItemWishesApiFp(configuration).saveItemWish(event_id, team_id, item_wish, options)(fetch, basePath);
+        },
+    };
+};
+
+/**
+ * ItemWishesApi - object-oriented interface
+ * @export
+ * @class ItemWishesApi
+ * @extends {BaseAPI}
+ */
+export class ItemWishesApi extends BaseAPI {
+    /**
+     * Delete an item wish for a user in a team
+     * @param {number} event_id Event ID
+     * @param {number} team_id Team ID
+     * @param {number} wish_id Wish ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ItemWishesApi
+     */
+    public deleteItemWish(event_id: number, team_id: number, wish_id: number, options?: any) {
+        return ItemWishesApiFp(this.configuration).deleteItemWish(event_id, team_id, wish_id, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Get item wishes for a team in an event
+     * @param {number} event_id Event ID
+     * @param {number} team_id Team ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ItemWishesApi
+     */
+    public getItemWishesForTeam(event_id: number, team_id: number, options?: any) {
+        return ItemWishesApiFp(this.configuration).getItemWishesForTeam(event_id, team_id, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Save an item wish for a user in a team
+     * @param {number} event_id Event ID
+     * @param {number} team_id Team ID
+     * @param {ItemWishRequest} item_wish Item Wish
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ItemWishesApi
+     */
+    public saveItemWish(event_id: number, team_id: number, item_wish: ItemWishRequest, options?: any) {
+        return ItemWishesApiFp(this.configuration).saveItemWish(event_id, team_id, item_wish, options)(this.fetch, this.basePath);
     }
 
 }

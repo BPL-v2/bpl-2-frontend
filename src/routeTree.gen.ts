@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WishlistRouteImport } from './routes/wishlist'
 import { Route as SubmissionsRouteImport } from './routes/submissions'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RulesRouteImport } from './routes/rules'
@@ -52,6 +53,11 @@ import { Route as AdminEventsEventIdTeamsRouteImport } from './routes/admin/even
 import { Route as AdminEventsEventIdScoringPresetsRouteImport } from './routes/admin/events/$eventId/scoring-presets'
 import { Route as AdminEventsEventIdObjectivesObjectiveIdRouteImport } from './routes/admin/events/$eventId/objectives.$objectiveId'
 
+const WishlistRoute = WishlistRouteImport.update({
+  id: '/wishlist',
+  path: '/wishlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SubmissionsRoute = SubmissionsRouteImport.update({
   id: '/submissions',
   path: '/submissions',
@@ -275,6 +281,7 @@ export interface FileRoutesByFullPath {
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
   '/submissions': typeof SubmissionsRoute
+  '/wishlist': typeof WishlistRoute
   '/profile/$userId': typeof ProfileUserIdRouteRouteWithChildren
   '/admin/activity': typeof AdminActivityRoute
   '/admin/recurring-jobs': typeof AdminRecurringJobsRoute
@@ -319,6 +326,7 @@ export interface FileRoutesByTo {
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
   '/submissions': typeof SubmissionsRoute
+  '/wishlist': typeof WishlistRoute
   '/profile/$userId': typeof ProfileUserIdRouteRouteWithChildren
   '/admin/activity': typeof AdminActivityRoute
   '/admin/recurring-jobs': typeof AdminRecurringJobsRoute
@@ -364,6 +372,7 @@ export interface FileRoutesById {
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
   '/submissions': typeof SubmissionsRoute
+  '/wishlist': typeof WishlistRoute
   '/profile/$userId': typeof ProfileUserIdRouteRouteWithChildren
   '/admin/activity': typeof AdminActivityRoute
   '/admin/recurring-jobs': typeof AdminRecurringJobsRoute
@@ -410,6 +419,7 @@ export interface FileRouteTypes {
     | '/rules'
     | '/settings'
     | '/submissions'
+    | '/wishlist'
     | '/profile/$userId'
     | '/admin/activity'
     | '/admin/recurring-jobs'
@@ -454,6 +464,7 @@ export interface FileRouteTypes {
     | '/rules'
     | '/settings'
     | '/submissions'
+    | '/wishlist'
     | '/profile/$userId'
     | '/admin/activity'
     | '/admin/recurring-jobs'
@@ -498,6 +509,7 @@ export interface FileRouteTypes {
     | '/rules'
     | '/settings'
     | '/submissions'
+    | '/wishlist'
     | '/profile/$userId'
     | '/admin/activity'
     | '/admin/recurring-jobs'
@@ -543,6 +555,7 @@ export interface RootRouteChildren {
   RulesRoute: typeof RulesRoute
   SettingsRoute: typeof SettingsRoute
   SubmissionsRoute: typeof SubmissionsRoute
+  WishlistRoute: typeof WishlistRoute
   ProfileUserIdRouteRoute: typeof ProfileUserIdRouteRouteWithChildren
   AdminActivityRoute: typeof AdminActivityRoute
   AdminRecurringJobsRoute: typeof AdminRecurringJobsRoute
@@ -566,6 +579,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/wishlist': {
+      id: '/wishlist'
+      path: '/wishlist'
+      fullPath: '/wishlist'
+      preLoaderRoute: typeof WishlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/submissions': {
       id: '/submissions'
       path: '/submissions'
@@ -953,6 +973,7 @@ const rootRouteChildren: RootRouteChildren = {
   RulesRoute: RulesRoute,
   SettingsRoute: SettingsRoute,
   SubmissionsRoute: SubmissionsRoute,
+  WishlistRoute: WishlistRoute,
   ProfileUserIdRouteRoute: ProfileUserIdRouteRouteWithChildren,
   AdminActivityRoute: AdminActivityRoute,
   AdminRecurringJobsRoute: AdminRecurringJobsRoute,

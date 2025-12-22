@@ -4,10 +4,12 @@ import { twMerge } from "tailwind-merge";
 export function TextField({
   label,
   className,
+  options,
   ...props
 }: {
   label: string;
   className?: string;
+  options?: string[];
 } & React.InputHTMLAttributes<HTMLInputElement>) {
   const field = useFieldContext<string>();
   return (
@@ -21,11 +23,17 @@ export function TextField({
       </span>
       <input
         type="text"
+        list={`${label}-options`}
         value={field.state.value || ""}
         onChange={(e) => field.handleChange(e.target.value)}
         className={twMerge("input w-full", className)}
         {...props}
       />
+      <datalist id={`${label}-options`}>
+        {options?.map((option) => (
+          <option value={option} />
+        ))}
+      </datalist>
     </label>
   );
 }
