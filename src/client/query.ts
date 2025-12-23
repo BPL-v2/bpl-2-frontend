@@ -24,6 +24,7 @@ import {
 } from "./api";
 import {
   activityApi,
+  atlasApi,
   characterApi,
   eventApi,
   guildStashApi,
@@ -1148,5 +1149,18 @@ export function useDeleteItemWish(
   return {
     deleteItemWish: m.mutate,
     deleteItemWishPending: m.isPending,
+  };
+}
+
+export function useGetTeamAtlas(eventId: number) {
+  const query = useQuery({
+    queryKey: ["teamAtlas", current !== eventId ? eventId : "current"],
+    queryFn: () => atlasApi.getTeamAtlasesForEvent(eventId),
+    enabled: () => isLoggedIn(),
+    refetchOnMount: false,
+  });
+  return {
+    ...query,
+    teamAtlas: query.data,
   };
 }

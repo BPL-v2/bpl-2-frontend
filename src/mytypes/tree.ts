@@ -10,4 +10,7 @@ type CompactGroup = {
 type CompactNode = {
   name?: string;
   stats?: string[];
+  isMastery?: boolean;
+  isKeystone?: boolean;
+  isNotable?: boolean;
 };

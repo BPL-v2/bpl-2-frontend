@@ -1,6 +1,7 @@
 import { Configuration } from ".";
 import {
   ActivityApiFactory,
+  AtlasApiFactory,
   CharactersApiFactory,
   EventApiFactory,
   GuildStashApiFactory,
@@ -84,3 +85,5 @@ export const wishApi = ItemWishesApiFactory(
   authenticatedFetch,
   baseUrl,
 );
+
+export const atlasApi = AtlasApiFactory(config, authenticatedFetch, baseUrl);

@@ -1,3 +1,4 @@
+import { TeamAtlasTree } from "@components/profile/team-atlas-tree";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/team/atlas")({
@@ -5,5 +6,5 @@ export const Route = createFileRoute("/team/atlas")({
 });
 
 function RouteComponent() {
-  return <div>Hello "/team/atlas"!</div>;
+  return <TeamAtlasTree />;
 }

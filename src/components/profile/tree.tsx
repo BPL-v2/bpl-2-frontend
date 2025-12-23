@@ -1,22 +1,28 @@
 import { useFile } from "@client/query";
 import { CompactTree } from "@mytypes/tree";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 type Props = {
   version: string;
   nodes: Set<number>;
+  nodeCounts?: Record<number, number>;
   type: "atlas" | "passives";
   index?: number;
   showUnallocated?: boolean;
   ascendancies?: string[];
   tooltip?: boolean;
+  changeNodeStyle?: (node: number) => string;
+  changeLineStyle?: (node1: number, node2: number) => string;
+  selectedNodes?: Set<number>;
+  setSelectedNodes?: (nodes: Set<number>) => void;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 function filterActiveConnections(
   line: string,
   nodes: Set<number>,
   ascendancies: string[],
+  changeLineStyle?: (node1: number, node2: number) => string,
 ): string {
   const idMatch = line.match(/c-(\d+)-(\d+)/);
   if (!idMatch) {
@@ -37,6 +43,15 @@ function filterActiveConnections(
       return "";
     }
   }
+  if (changeLineStyle) {
+    const style = changeLineStyle(id1, id2);
+    if (style) {
+      return (
+        line.slice(undefined, line.length - 2) + ` style="${style}"` + " />"
+      );
+    }
+  }
+
   return line.slice(undefined, line.length - 2) + ` active />`;
 }
 
@@ -44,6 +59,7 @@ function filterActiveNodes(
   line: string,
   nodes: Set<number>,
   ascendancies: string[],
+  changeNodeStyle?: (node: number) => string,
 ): string {
   const idMatch = line.match(/id="n-(\d+)"/);
   if (!idMatch) {
@@ -65,13 +81,24 @@ function filterActiveNodes(
     }
   }
   line = line.replace(`id="n`, `id="xn`);
+  if (changeNodeStyle) {
+    const style = changeNodeStyle(nodeId);
+    if (style) {
+      return (
+        line.slice(undefined, line.length - 2) + ` style="${style}"` + " />"
+      );
+    }
+  }
+
   return line.slice(undefined, line.length - 2) + " active />";
 }
 
 function filterActiveTree(
   data: string,
   nodes: Set<number>,
-  ascendancies: string[] = [],
+  ascendancies: string[],
+  changeNodeStyle?: (node: number) => string,
+  changeLineStyle?: (node1: number, node2: number) => string,
 ): string {
   var atConnectors = false;
   var atNodes = false;
@@ -84,9 +111,14 @@ function filterActiveTree(
       continue;
     }
     if (atConnectors) {
-      line = filterActiveConnections(line, nodes, ascendancies);
+      line = filterActiveConnections(
+        line,
+        nodes,
+        ascendancies,
+        changeLineStyle,
+      );
     } else if (atNodes) {
-      line = filterActiveNodes(line, nodes, ascendancies);
+      line = filterActiveNodes(line, nodes, ascendancies, changeNodeStyle);
     }
     newData.push(line);
   }
@@ -99,13 +131,21 @@ export default function Tree({
   type,
   index = -1,
   ascendancies = [],
+  nodeCounts,
   showUnallocated = true,
   tooltip = false,
+  changeNodeStyle,
+  changeLineStyle,
+  selectedNodes,
+  setSelectedNodes,
   ...props
 }: Props) {
   const [hoveredNode, setHoveredNode] = useState<number>();
-  const [selectedNode, setSelectedNode] = useState<number>();
-  const [selectedElement, setSelectedElement] = useState<HTMLElement>();
+  const [nodeCoordinates, setNodeCoordinates] = useState<{
+    x: number;
+    y: number;
+  }>({ x: 0, y: 0 });
+  const activeTreeRef = useRef<HTMLDivElement>(null);
   const { data: svg } = useFile<string>(
     `/assets/trees/svg/${type}/${version}.svg`,
     "text",
@@ -125,7 +165,11 @@ export default function Tree({
   }
   if (type === "atlas") {
     nodes.add(29045); // add root node
+    if (nodeCounts) {
+      nodeCounts[29045] = 1;
+    }
   }
+
   const baseTree = useMemo(() => {
     if (!svg || !showUnallocated) {
       return "";
@@ -139,77 +183,120 @@ export default function Tree({
     }
     return (
       <div
+        ref={activeTreeRef}
         className="absolute inset-0"
         dangerouslySetInnerHTML={{
-          __html: filterActiveTree(svg, nodes, ascendancies),
+          __html: filterActiveTree(
+            svg,
+            nodes,
+            ascendancies,
+            changeNodeStyle,
+            changeLineStyle,
+          ),
         }}
       />
     );
   }, [svg, nodes, ascendancies]);
+
+  const nodeMap: Record<number, SVGCircleElement> = {};
+  if (activeTreeRef.current) {
+    const circles = activeTreeRef.current.getElementsByTagName("circle");
+    for (const circle of circles) {
+      const nodeId = parseInt(circle.id.replace("xn-", ""), 10);
+      nodeMap[nodeId] = circle;
+    }
+  }
+
   useEffect(() => {
-    if (!tooltip) {
+    if (!tooltip || !nodeMap) {
       return;
     }
     const cleanupFunctions: (() => void)[] = [];
-    const windowClickHandler = () => {
-      setSelectedNode(undefined);
-      selectedElement?.setAttribute("style", "fill: var(--color-info)");
-      setSelectedElement(undefined);
-    };
-    window.addEventListener("click", windowClickHandler);
-    cleanupFunctions.push(() => {
-      window.removeEventListener("click", windowClickHandler);
-    });
-    for (const node of nodes) {
-      const element = document.getElementById(`xn-${node}`);
-      if (element) {
-        const clickHandler = (e: Event) => {
-          setSelectedNode(node);
-          selectedElement?.setAttribute("style", "fill: var(--color-info)");
-          element.setAttribute("style", "fill: red");
-          setSelectedElement(element);
-          e.stopPropagation();
-        };
-        const hoverHandler = () => {
-          setHoveredNode(node);
-        };
-        const hoverOutHandler = () => {
-          setHoveredNode(undefined);
-        };
-        element.addEventListener("click", clickHandler);
-        element.addEventListener("mouseover", hoverHandler);
-        element.addEventListener("mouseout", hoverOutHandler);
-        cleanupFunctions.push(() => {
-          element.removeEventListener("click", clickHandler);
-          element.removeEventListener("mouseover", hoverHandler);
-          element.removeEventListener("mouseout", hoverOutHandler);
-        });
+    // const windowClickHandler = () => {
+    //   setSelectedNode(undefined);
+    //   selectedElement?.setAttribute("style", "fill: var(--color-info)");
+    //   setSelectedElement(undefined);
+    // };
+    // window.addEventListener("click", windowClickHandler);
+    // cleanupFunctions.push(() => {
+    //   window.removeEventListener("click", windowClickHandler);
+    // });
+
+    for (const element of activeTreeRef.current?.getElementsByTagName(
+      "circle",
+    ) || []) {
+      // const element = document.getElementById(`xn-${node}`);
+      const node = parseInt(element.id.replace("xn-", ""), 10);
+      if (selectedNodes?.has(node)) {
+        element.setAttribute("selected", "");
+      } else {
+        element.removeAttribute("selected");
       }
+      const clickHandler = (e: Event) => {
+        if (selectedNodes?.has(node)) {
+          const newSet = new Set(selectedNodes);
+          newSet.delete(node);
+          setSelectedNodes && setSelectedNodes(newSet);
+          e.stopPropagation();
+          return;
+        }
+        setSelectedNodes &&
+          setSelectedNodes(new Set([...(selectedNodes || []), node]));
+        e.stopPropagation();
+      };
+      const hoverHandler = () => {
+        setHoveredNode(node);
+        const rect = element.getBoundingClientRect();
+        setNodeCoordinates({ x: rect.x, y: rect.y });
+      };
+      const hoverOutHandler = () => {
+        setHoveredNode(undefined);
+      };
+      element.addEventListener("click", clickHandler);
+      element.addEventListener("mouseover", hoverHandler);
+      element.addEventListener("mouseout", hoverOutHandler);
+      cleanupFunctions.push(() => {
+        element.removeEventListener("click", clickHandler);
+        element.removeEventListener("mouseover", hoverHandler);
+        element.removeEventListener("mouseout", hoverOutHandler);
+      });
     }
     return () => {
       cleanupFunctions.forEach((cleanup) => cleanup());
     };
-  }, [newTree, tooltip, selectedElement]);
+  }, [newTree, tooltip, selectedNodes, activeTreeRef]);
 
-  function renderNodeDetails(nodeId?: number) {
-    if (!json || !nodeId) {
-      return null;
+  function renderNodeDetails(
+    nodeId?: number,
+    nodeCoordinates?: { x: number; y: number },
+  ) {
+    if (!json || !nodeId || !nodeCoordinates) {
+      return;
     }
     const node = json.nodes[nodeId];
-    if (!node) {
-      return <div>No data for node {nodeId}</div>;
+    if (!node || !node.name) {
+      return;
     }
     return (
-      <div className="p-6">
-        <h2 className="text-center text-2xl font-bold">{node.name}</h2>
-        <div className="p-4">
-          {node.stats && node.stats.length > 0 && (
-            <ul className="text-left text-lg">
-              {node.stats.map((stat, index) => (
-                <li key={index}>{stat}</li>
-              ))}
-            </ul>
-          )}
+      <div
+        className="pointer-events-none fixed z-50 rounded-box border-2 border-highlight bg-base-300/95"
+        style={{
+          top: nodeCoordinates.y + 20,
+          left: nodeCoordinates.x - 200,
+          width: 400,
+        }}
+      >
+        <div className="p-2">
+          <h2 className="text-center text-lg font-bold">{node.name}</h2>
+          <div className="p-1">
+            {node.stats && node.stats.length > 0 && (
+              <ul className="text-left">
+                {node.stats.map((stat, index) => (
+                  <li key={index}>{stat}</li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -229,17 +316,7 @@ export default function Tree({
           {newTree}
         </div>
       </div>
-      {tooltip && (
-        <div className="m-4 mx-8 h-full w-full rounded-box bg-base-200">
-          {(hoveredNode || selectedNode) && (
-            <div className="p-4">
-              {selectedNode
-                ? renderNodeDetails(selectedNode)
-                : renderNodeDetails(hoveredNode)}
-            </div>
-          )}
-        </div>
-      )}
+      {renderNodeDetails(hoveredNode, nodeCoordinates)}
     </div>
   );
 }
