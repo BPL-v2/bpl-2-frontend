@@ -4,7 +4,7 @@ import { createFileRoute, useParams, useSearch } from "@tanstack/react-router";
 export type ScoreQueryParams = {
   highlightScoring: boolean;
 };
-export const Route = createFileRoute("/admin/guild/stashes/$stashId")({
+export const Route = createFileRoute("/team/stashes/$stashId")({
   component: RouteComponent,
   validateSearch: (search: Record<string, boolean>): ScoreQueryParams => {
     return {

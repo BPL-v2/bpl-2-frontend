@@ -144,7 +144,7 @@ function UniqueTab(): JSX.Element {
                   onPaste={(e) => {
                     const paste = e.clipboardData.getData("text");
                     if (paste.split("\n").length > 2) {
-                      setItemfilter(paste.split("\n")[2]);
+                      setItemfilter(paste.split("\n")[2].trim());
                       e.preventDefault();
                     }
                   }}

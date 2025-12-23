@@ -9,15 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WishlistRouteImport } from './routes/wishlist'
 import { Route as SubmissionsRouteImport } from './routes/submissions'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RulesRouteImport } from './routes/rules'
 import { Route as PlayedRouteImport } from './routes/played'
+import { Route as TeamRouteRouteImport } from './routes/team/route'
 import { Route as StreamsRouteRouteImport } from './routes/streams/route'
 import { Route as ScoresRouteRouteImport } from './routes/scores/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as TeamWishlistRouteImport } from './routes/team/wishlist'
+import { Route as TeamAtlasRouteImport } from './routes/team/atlas'
 import { Route as StreamsTwitchAccountRouteImport } from './routes/streams/$twitchAccount'
 import { Route as ScoresUniquesRouteImport } from './routes/scores/uniques'
 import { Route as ScoresScarabsRouteImport } from './routes/scores/scarabs'
@@ -38,9 +40,11 @@ import { Route as AdminTeamSortRouteImport } from './routes/admin/team-sort'
 import { Route as AdminSubmissionsRouteImport } from './routes/admin/submissions'
 import { Route as AdminRecurringJobsRouteImport } from './routes/admin/recurring-jobs'
 import { Route as AdminActivityRouteImport } from './routes/admin/activity'
+import { Route as TeamStashesRouteRouteImport } from './routes/team/stashes/route'
 import { Route as ProfileUserIdRouteRouteImport } from './routes/profile/$userId/route'
 import { Route as AdminGuildIndexRouteImport } from './routes/admin/guild/index'
 import { Route as AdminEventsIndexRouteImport } from './routes/admin/events/index'
+import { Route as TeamStashesStashIdRouteImport } from './routes/team/stashes/$stashId'
 import { Route as AuthTwitchCallbackRouteImport } from './routes/auth/twitch.callback'
 import { Route as AuthPoeCallbackRouteImport } from './routes/auth/poe.callback'
 import { Route as AuthDiscordCallbackRouteImport } from './routes/auth/discord.callback'
@@ -53,11 +57,6 @@ import { Route as AdminEventsEventIdTeamsRouteImport } from './routes/admin/even
 import { Route as AdminEventsEventIdScoringPresetsRouteImport } from './routes/admin/events/$eventId/scoring-presets'
 import { Route as AdminEventsEventIdObjectivesObjectiveIdRouteImport } from './routes/admin/events/$eventId/objectives.$objectiveId'
 
-const WishlistRoute = WishlistRouteImport.update({
-  id: '/wishlist',
-  path: '/wishlist',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SubmissionsRoute = SubmissionsRouteImport.update({
   id: '/submissions',
   path: '/submissions',
@@ -76,6 +75,11 @@ const RulesRoute = RulesRouteImport.update({
 const PlayedRoute = PlayedRouteImport.update({
   id: '/played',
   path: '/played',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeamRouteRoute = TeamRouteRouteImport.update({
+  id: '/team',
+  path: '/team',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StreamsRouteRoute = StreamsRouteRouteImport.update({
@@ -97,6 +101,16 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const TeamWishlistRoute = TeamWishlistRouteImport.update({
+  id: '/wishlist',
+  path: '/wishlist',
+  getParentRoute: () => TeamRouteRoute,
+} as any)
+const TeamAtlasRoute = TeamAtlasRouteImport.update({
+  id: '/atlas',
+  path: '/atlas',
+  getParentRoute: () => TeamRouteRoute,
 } as any)
 const StreamsTwitchAccountRoute = StreamsTwitchAccountRouteImport.update({
   id: '/$twitchAccount',
@@ -198,6 +212,11 @@ const AdminActivityRoute = AdminActivityRouteImport.update({
   path: '/admin/activity',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TeamStashesRouteRoute = TeamStashesRouteRouteImport.update({
+  id: '/stashes',
+  path: '/stashes',
+  getParentRoute: () => TeamRouteRoute,
+} as any)
 const ProfileUserIdRouteRoute = ProfileUserIdRouteRouteImport.update({
   id: '/profile/$userId',
   path: '/profile/$userId',
@@ -212,6 +231,11 @@ const AdminEventsIndexRoute = AdminEventsIndexRouteImport.update({
   id: '/admin/events/',
   path: '/admin/events/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const TeamStashesStashIdRoute = TeamStashesStashIdRouteImport.update({
+  id: '/$stashId',
+  path: '/$stashId',
+  getParentRoute: () => TeamStashesRouteRoute,
 } as any)
 const AuthTwitchCallbackRoute = AuthTwitchCallbackRouteImport.update({
   id: '/auth/twitch/callback',
@@ -277,12 +301,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/scores': typeof ScoresRouteRouteWithChildren
   '/streams': typeof StreamsRouteRouteWithChildren
+  '/team': typeof TeamRouteRouteWithChildren
   '/played': typeof PlayedRoute
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
   '/submissions': typeof SubmissionsRoute
-  '/wishlist': typeof WishlistRoute
   '/profile/$userId': typeof ProfileUserIdRouteRouteWithChildren
+  '/team/stashes': typeof TeamStashesRouteRouteWithChildren
   '/admin/activity': typeof AdminActivityRoute
   '/admin/recurring-jobs': typeof AdminRecurringJobsRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
@@ -303,12 +328,15 @@ export interface FileRoutesByFullPath {
   '/scores/scarabs': typeof ScoresScarabsRoute
   '/scores/uniques': typeof ScoresUniquesRoute
   '/streams/$twitchAccount': typeof StreamsTwitchAccountRoute
+  '/team/atlas': typeof TeamAtlasRoute
+  '/team/wishlist': typeof TeamWishlistRoute
   '/admin': typeof AdminIndexRoute
   '/admin/guild/logs': typeof AdminGuildLogsRouteRouteWithChildren
   '/admin/guild/stashes': typeof AdminGuildStashesRouteRouteWithChildren
   '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/auth/poe/callback': typeof AuthPoeCallbackRoute
   '/auth/twitch/callback': typeof AuthTwitchCallbackRoute
+  '/team/stashes/$stashId': typeof TeamStashesStashIdRoute
   '/admin/events': typeof AdminEventsIndexRoute
   '/admin/guild': typeof AdminGuildIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
@@ -322,12 +350,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/scores': typeof ScoresRouteRouteWithChildren
   '/streams': typeof StreamsRouteRouteWithChildren
+  '/team': typeof TeamRouteRouteWithChildren
   '/played': typeof PlayedRoute
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
   '/submissions': typeof SubmissionsRoute
-  '/wishlist': typeof WishlistRoute
   '/profile/$userId': typeof ProfileUserIdRouteRouteWithChildren
+  '/team/stashes': typeof TeamStashesRouteRouteWithChildren
   '/admin/activity': typeof AdminActivityRoute
   '/admin/recurring-jobs': typeof AdminRecurringJobsRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
@@ -348,12 +377,15 @@ export interface FileRoutesByTo {
   '/scores/scarabs': typeof ScoresScarabsRoute
   '/scores/uniques': typeof ScoresUniquesRoute
   '/streams/$twitchAccount': typeof StreamsTwitchAccountRoute
+  '/team/atlas': typeof TeamAtlasRoute
+  '/team/wishlist': typeof TeamWishlistRoute
   '/admin': typeof AdminIndexRoute
   '/admin/guild/logs': typeof AdminGuildLogsRouteRouteWithChildren
   '/admin/guild/stashes': typeof AdminGuildStashesRouteRouteWithChildren
   '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/auth/poe/callback': typeof AuthPoeCallbackRoute
   '/auth/twitch/callback': typeof AuthTwitchCallbackRoute
+  '/team/stashes/$stashId': typeof TeamStashesStashIdRoute
   '/admin/events': typeof AdminEventsIndexRoute
   '/admin/guild': typeof AdminGuildIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
@@ -368,12 +400,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/scores': typeof ScoresRouteRouteWithChildren
   '/streams': typeof StreamsRouteRouteWithChildren
+  '/team': typeof TeamRouteRouteWithChildren
   '/played': typeof PlayedRoute
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
   '/submissions': typeof SubmissionsRoute
-  '/wishlist': typeof WishlistRoute
   '/profile/$userId': typeof ProfileUserIdRouteRouteWithChildren
+  '/team/stashes': typeof TeamStashesRouteRouteWithChildren
   '/admin/activity': typeof AdminActivityRoute
   '/admin/recurring-jobs': typeof AdminRecurringJobsRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
@@ -394,12 +427,15 @@ export interface FileRoutesById {
   '/scores/scarabs': typeof ScoresScarabsRoute
   '/scores/uniques': typeof ScoresUniquesRoute
   '/streams/$twitchAccount': typeof StreamsTwitchAccountRoute
+  '/team/atlas': typeof TeamAtlasRoute
+  '/team/wishlist': typeof TeamWishlistRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/guild/logs': typeof AdminGuildLogsRouteRouteWithChildren
   '/admin/guild/stashes': typeof AdminGuildStashesRouteRouteWithChildren
   '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/auth/poe/callback': typeof AuthPoeCallbackRoute
   '/auth/twitch/callback': typeof AuthTwitchCallbackRoute
+  '/team/stashes/$stashId': typeof TeamStashesStashIdRoute
   '/admin/events/': typeof AdminEventsIndexRoute
   '/admin/guild/': typeof AdminGuildIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
@@ -415,12 +451,13 @@ export interface FileRouteTypes {
     | '/'
     | '/scores'
     | '/streams'
+    | '/team'
     | '/played'
     | '/rules'
     | '/settings'
     | '/submissions'
-    | '/wishlist'
     | '/profile/$userId'
+    | '/team/stashes'
     | '/admin/activity'
     | '/admin/recurring-jobs'
     | '/admin/submissions'
@@ -441,12 +478,15 @@ export interface FileRouteTypes {
     | '/scores/scarabs'
     | '/scores/uniques'
     | '/streams/$twitchAccount'
+    | '/team/atlas'
+    | '/team/wishlist'
     | '/admin'
     | '/admin/guild/logs'
     | '/admin/guild/stashes'
     | '/auth/discord/callback'
     | '/auth/poe/callback'
     | '/auth/twitch/callback'
+    | '/team/stashes/$stashId'
     | '/admin/events'
     | '/admin/guild'
     | '/admin/events/$eventId/scoring-presets'
@@ -460,12 +500,13 @@ export interface FileRouteTypes {
     | '/'
     | '/scores'
     | '/streams'
+    | '/team'
     | '/played'
     | '/rules'
     | '/settings'
     | '/submissions'
-    | '/wishlist'
     | '/profile/$userId'
+    | '/team/stashes'
     | '/admin/activity'
     | '/admin/recurring-jobs'
     | '/admin/submissions'
@@ -486,12 +527,15 @@ export interface FileRouteTypes {
     | '/scores/scarabs'
     | '/scores/uniques'
     | '/streams/$twitchAccount'
+    | '/team/atlas'
+    | '/team/wishlist'
     | '/admin'
     | '/admin/guild/logs'
     | '/admin/guild/stashes'
     | '/auth/discord/callback'
     | '/auth/poe/callback'
     | '/auth/twitch/callback'
+    | '/team/stashes/$stashId'
     | '/admin/events'
     | '/admin/guild'
     | '/admin/events/$eventId/scoring-presets'
@@ -505,12 +549,13 @@ export interface FileRouteTypes {
     | '/'
     | '/scores'
     | '/streams'
+    | '/team'
     | '/played'
     | '/rules'
     | '/settings'
     | '/submissions'
-    | '/wishlist'
     | '/profile/$userId'
+    | '/team/stashes'
     | '/admin/activity'
     | '/admin/recurring-jobs'
     | '/admin/submissions'
@@ -531,12 +576,15 @@ export interface FileRouteTypes {
     | '/scores/scarabs'
     | '/scores/uniques'
     | '/streams/$twitchAccount'
+    | '/team/atlas'
+    | '/team/wishlist'
     | '/admin/'
     | '/admin/guild/logs'
     | '/admin/guild/stashes'
     | '/auth/discord/callback'
     | '/auth/poe/callback'
     | '/auth/twitch/callback'
+    | '/team/stashes/$stashId'
     | '/admin/events/'
     | '/admin/guild/'
     | '/admin/events/$eventId/scoring-presets'
@@ -551,11 +599,11 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ScoresRouteRoute: typeof ScoresRouteRouteWithChildren
   StreamsRouteRoute: typeof StreamsRouteRouteWithChildren
+  TeamRouteRoute: typeof TeamRouteRouteWithChildren
   PlayedRoute: typeof PlayedRoute
   RulesRoute: typeof RulesRoute
   SettingsRoute: typeof SettingsRoute
   SubmissionsRoute: typeof SubmissionsRoute
-  WishlistRoute: typeof WishlistRoute
   ProfileUserIdRouteRoute: typeof ProfileUserIdRouteRouteWithChildren
   AdminActivityRoute: typeof AdminActivityRoute
   AdminRecurringJobsRoute: typeof AdminRecurringJobsRoute
@@ -579,13 +627,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/wishlist': {
-      id: '/wishlist'
-      path: '/wishlist'
-      fullPath: '/wishlist'
-      preLoaderRoute: typeof WishlistRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/submissions': {
       id: '/submissions'
       path: '/submissions'
@@ -612,6 +653,13 @@ declare module '@tanstack/react-router' {
       path: '/played'
       fullPath: '/played'
       preLoaderRoute: typeof PlayedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/team': {
+      id: '/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof TeamRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/streams': {
@@ -641,6 +689,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/team/wishlist': {
+      id: '/team/wishlist'
+      path: '/wishlist'
+      fullPath: '/team/wishlist'
+      preLoaderRoute: typeof TeamWishlistRouteImport
+      parentRoute: typeof TeamRouteRoute
+    }
+    '/team/atlas': {
+      id: '/team/atlas'
+      path: '/atlas'
+      fullPath: '/team/atlas'
+      preLoaderRoute: typeof TeamAtlasRouteImport
+      parentRoute: typeof TeamRouteRoute
     }
     '/streams/$twitchAccount': {
       id: '/streams/$twitchAccount'
@@ -782,6 +844,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminActivityRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/team/stashes': {
+      id: '/team/stashes'
+      path: '/stashes'
+      fullPath: '/team/stashes'
+      preLoaderRoute: typeof TeamStashesRouteRouteImport
+      parentRoute: typeof TeamRouteRoute
+    }
     '/profile/$userId': {
       id: '/profile/$userId'
       path: '/profile/$userId'
@@ -802,6 +871,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/events'
       preLoaderRoute: typeof AdminEventsIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/team/stashes/$stashId': {
+      id: '/team/stashes/$stashId'
+      path: '/$stashId'
+      fullPath: '/team/stashes/$stashId'
+      preLoaderRoute: typeof TeamStashesStashIdRouteImport
+      parentRoute: typeof TeamStashesRouteRoute
     }
     '/auth/twitch/callback': {
       id: '/auth/twitch/callback'
@@ -929,6 +1005,33 @@ const StreamsRouteRouteWithChildren = StreamsRouteRoute._addFileChildren(
   StreamsRouteRouteChildren,
 )
 
+interface TeamStashesRouteRouteChildren {
+  TeamStashesStashIdRoute: typeof TeamStashesStashIdRoute
+}
+
+const TeamStashesRouteRouteChildren: TeamStashesRouteRouteChildren = {
+  TeamStashesStashIdRoute: TeamStashesStashIdRoute,
+}
+
+const TeamStashesRouteRouteWithChildren =
+  TeamStashesRouteRoute._addFileChildren(TeamStashesRouteRouteChildren)
+
+interface TeamRouteRouteChildren {
+  TeamStashesRouteRoute: typeof TeamStashesRouteRouteWithChildren
+  TeamAtlasRoute: typeof TeamAtlasRoute
+  TeamWishlistRoute: typeof TeamWishlistRoute
+}
+
+const TeamRouteRouteChildren: TeamRouteRouteChildren = {
+  TeamStashesRouteRoute: TeamStashesRouteRouteWithChildren,
+  TeamAtlasRoute: TeamAtlasRoute,
+  TeamWishlistRoute: TeamWishlistRoute,
+}
+
+const TeamRouteRouteWithChildren = TeamRouteRoute._addFileChildren(
+  TeamRouteRouteChildren,
+)
+
 interface ProfileUserIdRouteRouteChildren {
   ProfileUserIdEventIdCharacterIdRoute: typeof ProfileUserIdEventIdCharacterIdRoute
 }
@@ -969,11 +1072,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ScoresRouteRoute: ScoresRouteRouteWithChildren,
   StreamsRouteRoute: StreamsRouteRouteWithChildren,
+  TeamRouteRoute: TeamRouteRouteWithChildren,
   PlayedRoute: PlayedRoute,
   RulesRoute: RulesRoute,
   SettingsRoute: SettingsRoute,
   SubmissionsRoute: SubmissionsRoute,
-  WishlistRoute: WishlistRoute,
   ProfileUserIdRouteRoute: ProfileUserIdRouteRouteWithChildren,
   AdminActivityRoute: AdminActivityRoute,
   AdminRecurringJobsRoute: AdminRecurringJobsRoute,

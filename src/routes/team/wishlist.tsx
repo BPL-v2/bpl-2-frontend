@@ -37,7 +37,7 @@ import { flatMap } from "@utils/utils";
 import { useContext, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-export const Route = createFileRoute("/wishlist")({
+export const Route = createFileRoute("/team/wishlist")({
   component: RouteComponent,
 });
 
@@ -56,6 +56,7 @@ type WishRow = {
 
 function RouteComponent() {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [itemFilter, setItemfilter] = useState<string>("");
   const { currentEvent } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const { rules } = useGetRules(currentEvent.id);
@@ -388,14 +389,33 @@ function RouteComponent() {
   });
   return (
     <div className="p-4">
-      <button
-        className="btn mb-4"
-        onClick={() => {
-          setDialogOpen(true);
-        }}
-      >
-        Add Item Wish
-      </button>
+      <div className="flex flex-row gap-4">
+        <input
+          type="search"
+          className="input"
+          placeholder="Paste item to see if anyone wants it..."
+          value={itemFilter}
+          onPaste={(e) => {
+            const paste = e.clipboardData.getData("text");
+            if (paste.split("\n").length > 2) {
+              setItemfilter(paste.split("\n")[2].trim());
+              e.preventDefault();
+            }
+          }}
+          onChange={(e) => {
+            setItemfilter(e.target.value);
+          }}
+        />
+
+        <button
+          className="btn mb-4"
+          onClick={() => {
+            setDialogOpen(true);
+          }}
+        >
+          Add Item Wish
+        </button>
+      </div>
       <Dialog
         title="Add Item Wish"
         open={dialogOpen}
@@ -450,12 +470,22 @@ function RouteComponent() {
       </Dialog>
       <Table
         columns={columns}
-        data={rows.sort((a, b) => {
-          if (a.user?.id != b.user?.id) {
-            return a.user?.id - b.user?.id;
-          }
-          return a.wish.id - b.wish.id;
-        })}
+        data={rows
+          .filter((row) => {
+            if (!itemFilter) {
+              return true;
+            }
+            return (
+              row.wish.value.toLowerCase().includes(itemFilter.toLowerCase()) &&
+              !row.wish.fulfilled
+            );
+          })
+          .sort((a, b) => {
+            if (a.user?.id != b.user?.id) {
+              return a.user?.id - b.user?.id;
+            }
+            return a.wish.priority - b.wish.priority;
+          })}
       />
     </div>
   );

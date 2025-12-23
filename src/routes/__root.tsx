@@ -13,6 +13,7 @@ import {
   BookOpenIcon,
   ChartBarIcon,
   Cog6ToothIcon,
+  UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import { GlobalStateContext } from "@utils/context-provider";
 
@@ -71,6 +72,13 @@ function RootComponent() {
         visible: true,
       },
       {
+        label: "Team",
+        icon: <UserGroupIcon className="size-6" />,
+        url: "/team/wishlist",
+        path: "team",
+        visible: true,
+      },
+      {
         label: "Streams",
         icon: <TwitchFilled className="size-6" />,
         url: "/streams",
@@ -115,7 +123,9 @@ function RootComponent() {
             <div
               className={twMerge(
                 "navbar bg-base-300",
-                selected == "scores" ? "" : "rounded-b-box shadow-xl",
+                selected == "scores" || selected == "team"
+                  ? ""
+                  : "rounded-b-box shadow-xl",
               )}
             >
               <ul className="justify-left flex flex-1 gap-1 sm:gap-2 xl:gap-4">

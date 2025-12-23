@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { GuildStashSelect } from "@components/pages/guildstash-select";
 
-export const Route = createFileRoute("/admin/guild/stashes")({
+export const Route = createFileRoute("/team/stashes")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  return <GuildStashSelect path="/admin/guild/stashes/$stashId" />;
+  return <GuildStashSelect path="/team/stashes/$stashId" />;
 }
