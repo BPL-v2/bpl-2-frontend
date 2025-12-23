@@ -4,10 +4,10 @@ import { ScoreMap } from "@utils/utils";
 import { BulkObjectiveCreate } from "../routes/admin/events/$eventId/objectives.$objectiveId";
 import {
   Character,
+  CreateItemWish,
   EventCreate,
   GuildStashTab,
   ItemField,
-  ItemWishRequest,
   JobType,
   NumberField,
   ObjectiveCreate,
@@ -20,6 +20,7 @@ import {
   TeamSuggestion,
   TeamUserCreate,
   TimingCreate,
+  UpdateItemWish,
 } from "./api";
 import {
   activityApi,
@@ -1084,31 +1085,16 @@ export function useGetWishlist(eventId: number, teamId?: number) {
   };
 }
 
-export function useSaveItemWish(
+export function useCreateItemWish(
   qc: QueryClient,
   eventId: number,
   teamId?: number,
 ) {
   const m = useMutation({
-    mutationFn: (item_wish: ItemWishRequest) => {
-      if (teamId) return wishApi.saveItemWish(eventId, teamId, item_wish);
+    mutationFn: (item_wish: CreateItemWish) => {
+      if (teamId) return wishApi.createItemWish(eventId, teamId, item_wish);
       return Promise.reject("No team ID provided");
     },
-    // onMutate(variables, context) {
-    //   qc.setQueryData(["wishlist"], (old: ItemWishRequest[] | undefined) => {
-    //     if (!old) return [];
-    //     const existingIndex = old.findIndex(
-    //       (wish) => wish.id === variables.id,
-    //     );
-    //     if (existingIndex !== -1) {
-    //       const newWishlist = [...old];
-    //       newWishlist[existingIndex] = variables;
-    //       return newWishlist;
-    //     } else {
-    //       return [...old, variables];
-    //     }
-    //   });
-    // },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["wishlist"] });
     },
@@ -1119,6 +1105,32 @@ export function useSaveItemWish(
   };
 }
 
+export function useUpdateItemWish(
+  qc: QueryClient,
+  eventId: number,
+  teamId?: number,
+) {
+  const m = useMutation({
+    mutationFn: ({
+      wishId,
+      item_wish,
+    }: {
+      wishId: number;
+      item_wish: UpdateItemWish;
+    }) => {
+      if (teamId)
+        return wishApi.changeItemWish(eventId, teamId, wishId, item_wish);
+      return Promise.reject("No team ID provided");
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["wishlist"] });
+    },
+  });
+  return {
+    updateItemWish: m.mutate,
+    updateItemWishPending: m.isPending,
+  };
+}
 export function useDeleteItemWish(
   qc: QueryClient,
   eventId: number,

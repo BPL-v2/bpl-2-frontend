@@ -454,6 +454,32 @@ export interface ConditionMappings {
 /**
  * 
  * @export
+ * @interface CreateItemWish
+ */
+export interface CreateItemWish {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof CreateItemWish
+     */
+    build_enabling?: boolean;
+    /**
+     * 
+     * @type {ItemField}
+     * @memberof CreateItemWish
+     */
+    item_field: ItemField;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateItemWish
+     */
+    value: string;
+}
+
+/**
+ * 
+ * @export
  * @enum {string}
  */
 export enum Difftype {
@@ -2293,13 +2319,19 @@ export interface ItemWish {
      * @type {boolean}
      * @memberof ItemWish
      */
+    build_enabling: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ItemWish
+     */
     fulfilled: boolean;
     /**
      * 
      * @type {number}
      * @memberof ItemWish
      */
-    id?: number;
+    id: number;
     /**
      * 
      * @type {ItemField}
@@ -2311,7 +2343,7 @@ export interface ItemWish {
      * @type {number}
      * @memberof ItemWish
      */
-    priority?: number;
+    priority: number;
     /**
      * 
      * @type {number}
@@ -2322,44 +2354,6 @@ export interface ItemWish {
      * 
      * @type {string}
      * @memberof ItemWish
-     */
-    value: string;
-}
-
-/**
- * 
- * @export
- * @interface ItemWishRequest
- */
-export interface ItemWishRequest {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ItemWishRequest
-     */
-    fulfilled?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemWishRequest
-     */
-    id?: number;
-    /**
-     * 
-     * @type {ItemField}
-     * @memberof ItemWishRequest
-     */
-    item_field: ItemField;
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemWishRequest
-     */
-    priority?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemWishRequest
      */
     value: string;
 }
@@ -4276,6 +4270,32 @@ export interface TwitchStream {
      * @memberof TwitchStream
      */
     viewer_count?: number;
+}
+
+/**
+ * 
+ * @export
+ * @interface UpdateItemWish
+ */
+export interface UpdateItemWish {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UpdateItemWish
+     */
+    build_enabling?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UpdateItemWish
+     */
+    fulfilled?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof UpdateItemWish
+     */
+    priority?: number;
 }
 
 /**
@@ -6477,6 +6497,98 @@ export class GuildStashApi extends BaseAPI {
 export const ItemWishesApiFetchParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * Change an item wish for a user in a team
+         * @param {number} event_id Event ID
+         * @param {number} team_id Team ID
+         * @param {number} wish_id Wish ID
+         * @param {UpdateItemWish} item_wish Item Wish
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        changeItemWish(event_id: number, team_id: number, wish_id: number, item_wish: UpdateItemWish, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling changeItemWish.');
+            }
+            // verify required parameter 'team_id' is not null or undefined
+            if (team_id === null || team_id === undefined) {
+                throw new RequiredError('team_id','Required parameter team_id was null or undefined when calling changeItemWish.');
+            }
+            // verify required parameter 'wish_id' is not null or undefined
+            if (wish_id === null || wish_id === undefined) {
+                throw new RequiredError('wish_id','Required parameter wish_id was null or undefined when calling changeItemWish.');
+            }
+            // verify required parameter 'item_wish' is not null or undefined
+            if (item_wish === null || item_wish === undefined) {
+                throw new RequiredError('item_wish','Required parameter item_wish was null or undefined when calling changeItemWish.');
+            }
+            const localVarPath = `/events/{event_id}/teams/{team_id}/item_wishes/{wish_id}`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+                .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)))
+                .replace(`{${"wish_id"}}`, encodeURIComponent(String(wish_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'PATCH' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"UpdateItemWish" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(item_wish || {}) : (item_wish || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Create an item wish for a user in a team
+         * @param {number} event_id Event ID
+         * @param {number} team_id Team ID
+         * @param {CreateItemWish} item_wish Item Wish
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createItemWish(event_id: number, team_id: number, item_wish: CreateItemWish, options: any = {}): FetchArgs {
+            // verify required parameter 'event_id' is not null or undefined
+            if (event_id === null || event_id === undefined) {
+                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createItemWish.');
+            }
+            // verify required parameter 'team_id' is not null or undefined
+            if (team_id === null || team_id === undefined) {
+                throw new RequiredError('team_id','Required parameter team_id was null or undefined when calling createItemWish.');
+            }
+            // verify required parameter 'item_wish' is not null or undefined
+            if (item_wish === null || item_wish === undefined) {
+                throw new RequiredError('item_wish','Required parameter item_wish was null or undefined when calling createItemWish.');
+            }
+            const localVarPath = `/events/{event_id}/teams/{team_id}/item_wishes`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+                .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"CreateItemWish" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(item_wish || {}) : (item_wish || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Delete an item wish for a user in a team
          * @param {number} event_id Event ID
          * @param {number} team_id Team ID
@@ -6550,49 +6662,6 @@ export const ItemWishesApiFetchParamCreator = function (configuration?: Configur
                 options: localVarRequestOptions,
             };
         },
-        /**
-         * Save an item wish for a user in a team
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
-         * @param {ItemWishRequest} item_wish Item Wish
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        saveItemWish(event_id: number, team_id: number, item_wish: ItemWishRequest, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling saveItemWish.');
-            }
-            // verify required parameter 'team_id' is not null or undefined
-            if (team_id === null || team_id === undefined) {
-                throw new RequiredError('team_id','Required parameter team_id was null or undefined when calling saveItemWish.');
-            }
-            // verify required parameter 'item_wish' is not null or undefined
-            if (item_wish === null || item_wish === undefined) {
-                throw new RequiredError('item_wish','Required parameter item_wish was null or undefined when calling saveItemWish.');
-            }
-            const localVarPath = `/events/{event_id}/teams/{team_id}/item_wishes`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"ItemWishRequest" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(item_wish || {}) : (item_wish || "");
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
     }
 };
 
@@ -6602,6 +6671,47 @@ export const ItemWishesApiFetchParamCreator = function (configuration?: Configur
  */
 export const ItemWishesApiFp = function(configuration?: Configuration) {
     return {
+        /**
+         * Change an item wish for a user in a team
+         * @param {number} event_id Event ID
+         * @param {number} team_id Team ID
+         * @param {number} wish_id Wish ID
+         * @param {UpdateItemWish} item_wish Item Wish
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        changeItemWish(event_id: number, team_id: number, wish_id: number, item_wish: UpdateItemWish, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ItemWish> {
+            const localVarFetchArgs = ItemWishesApiFetchParamCreator(configuration).changeItemWish(event_id, team_id, wish_id, item_wish, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * Create an item wish for a user in a team
+         * @param {number} event_id Event ID
+         * @param {number} team_id Team ID
+         * @param {CreateItemWish} item_wish Item Wish
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createItemWish(event_id: number, team_id: number, item_wish: CreateItemWish, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ItemWish> {
+            const localVarFetchArgs = ItemWishesApiFetchParamCreator(configuration).createItemWish(event_id, team_id, item_wish, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
         /**
          * Delete an item wish for a user in a team
          * @param {number} event_id Event ID
@@ -6641,26 +6751,6 @@ export const ItemWishesApiFp = function(configuration?: Configuration) {
                 });
             };
         },
-        /**
-         * Save an item wish for a user in a team
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
-         * @param {ItemWishRequest} item_wish Item Wish
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        saveItemWish(event_id: number, team_id: number, item_wish: ItemWishRequest, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ItemWish> {
-            const localVarFetchArgs = ItemWishesApiFetchParamCreator(configuration).saveItemWish(event_id, team_id, item_wish, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
     }
 };
 
@@ -6670,6 +6760,29 @@ export const ItemWishesApiFp = function(configuration?: Configuration) {
  */
 export const ItemWishesApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
     return {
+        /**
+         * Change an item wish for a user in a team
+         * @param {number} event_id Event ID
+         * @param {number} team_id Team ID
+         * @param {number} wish_id Wish ID
+         * @param {UpdateItemWish} item_wish Item Wish
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        changeItemWish(event_id: number, team_id: number, wish_id: number, item_wish: UpdateItemWish, options?: any) {
+            return ItemWishesApiFp(configuration).changeItemWish(event_id, team_id, wish_id, item_wish, options)(fetch, basePath);
+        },
+        /**
+         * Create an item wish for a user in a team
+         * @param {number} event_id Event ID
+         * @param {number} team_id Team ID
+         * @param {CreateItemWish} item_wish Item Wish
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createItemWish(event_id: number, team_id: number, item_wish: CreateItemWish, options?: any) {
+            return ItemWishesApiFp(configuration).createItemWish(event_id, team_id, item_wish, options)(fetch, basePath);
+        },
         /**
          * Delete an item wish for a user in a team
          * @param {number} event_id Event ID
@@ -6691,17 +6804,6 @@ export const ItemWishesApiFactory = function (configuration?: Configuration, fet
         getItemWishesForTeam(event_id: number, team_id: number, options?: any) {
             return ItemWishesApiFp(configuration).getItemWishesForTeam(event_id, team_id, options)(fetch, basePath);
         },
-        /**
-         * Save an item wish for a user in a team
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
-         * @param {ItemWishRequest} item_wish Item Wish
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        saveItemWish(event_id: number, team_id: number, item_wish: ItemWishRequest, options?: any) {
-            return ItemWishesApiFp(configuration).saveItemWish(event_id, team_id, item_wish, options)(fetch, basePath);
-        },
     };
 };
 
@@ -6712,6 +6814,33 @@ export const ItemWishesApiFactory = function (configuration?: Configuration, fet
  * @extends {BaseAPI}
  */
 export class ItemWishesApi extends BaseAPI {
+    /**
+     * Change an item wish for a user in a team
+     * @param {number} event_id Event ID
+     * @param {number} team_id Team ID
+     * @param {number} wish_id Wish ID
+     * @param {UpdateItemWish} item_wish Item Wish
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ItemWishesApi
+     */
+    public changeItemWish(event_id: number, team_id: number, wish_id: number, item_wish: UpdateItemWish, options?: any) {
+        return ItemWishesApiFp(this.configuration).changeItemWish(event_id, team_id, wish_id, item_wish, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Create an item wish for a user in a team
+     * @param {number} event_id Event ID
+     * @param {number} team_id Team ID
+     * @param {CreateItemWish} item_wish Item Wish
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ItemWishesApi
+     */
+    public createItemWish(event_id: number, team_id: number, item_wish: CreateItemWish, options?: any) {
+        return ItemWishesApiFp(this.configuration).createItemWish(event_id, team_id, item_wish, options)(this.fetch, this.basePath);
+    }
+
     /**
      * Delete an item wish for a user in a team
      * @param {number} event_id Event ID
@@ -6735,19 +6864,6 @@ export class ItemWishesApi extends BaseAPI {
      */
     public getItemWishesForTeam(event_id: number, team_id: number, options?: any) {
         return ItemWishesApiFp(this.configuration).getItemWishesForTeam(event_id, team_id, options)(this.fetch, this.basePath);
-    }
-
-    /**
-     * Save an item wish for a user in a team
-     * @param {number} event_id Event ID
-     * @param {number} team_id Team ID
-     * @param {ItemWishRequest} item_wish Item Wish
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ItemWishesApi
-     */
-    public saveItemWish(event_id: number, team_id: number, item_wish: ItemWishRequest, options?: any) {
-        return ItemWishesApiFp(this.configuration).saveItemWish(event_id, team_id, item_wish, options)(this.fetch, this.basePath);
     }
 
 }

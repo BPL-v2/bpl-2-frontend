@@ -2,6 +2,7 @@ import {
   Condition,
   GameVersion,
   ItemField,
+  ItemWish,
   MinimalUser,
   Objective,
   Operator,
@@ -14,13 +15,19 @@ import {
   useGetUser,
   useGetUsers,
   useGetWishlist,
-  useSaveItemWish,
+  useCreateItemWish,
+  useUpdateItemWish,
 } from "@client/query";
 import { Dialog } from "@components/dialog";
 import { useAppForm } from "@components/form/context";
 import { ObjectiveIcon } from "@components/objective-icon";
 import Table from "@components/table/table";
-import { ExclamationCircleIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {
+  ExclamationCircleIcon,
+  MinusIcon,
+  PlusIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";
@@ -34,18 +41,17 @@ export const Route = createFileRoute("/wishlist")({
   component: RouteComponent,
 });
 
-type Wish = {
+type UniqueInfo = {
   condition: Condition;
   tier: number | null;
   is_drop_restricted: boolean | null;
   is_point_unique: boolean;
-  is_fulfilled: boolean;
-  id: number;
 };
 
 type WishRow = {
   user: MinimalUser;
-  wish: Wish;
+  wish: ItemWish;
+  uniqueInfo: UniqueInfo;
 };
 
 function RouteComponent() {
@@ -87,7 +93,12 @@ function RouteComponent() {
     eventStatus?.team_id,
   );
   const qc = useQueryClient();
-  const { saveItemWish } = useSaveItemWish(
+  const { saveItemWish } = useCreateItemWish(
+    qc,
+    currentEvent.id,
+    eventStatus?.team_id,
+  );
+  const { updateItemWish } = useUpdateItemWish(
     qc,
     currentEvent.id,
     eventStatus?.team_id,
@@ -128,16 +139,14 @@ function RouteComponent() {
         ? uniques[wish.value]?.is_drop_restricted
         : null,
       is_point_unique: pointUniques.includes(wish.value),
-      is_fulfilled: wish.fulfilled,
-      id: wish.id,
     };
-    rowMap[wish.user_id].push(itemInfo);
+    rowMap[wish.user_id].push({ wish: wish, uniqueInfo: itemInfo });
   }
   const rows: WishRow[] = [];
   for (const [userId, wishes] of Object.entries(rowMap)) {
     const user = userMap[Number(userId)];
     for (const wish of wishes) {
-      rows.push({ user, wish });
+      rows.push({ user, wish: wish.wish, uniqueInfo: wish.uniqueInfo });
     }
   }
   const columns: ColumnDef<WishRow>[] = [
@@ -154,26 +163,25 @@ function RouteComponent() {
     },
     {
       header: "",
-      id: "icon",
-      size: 100,
-      enableSorting: false,
+      accessorKey: "uniqueInfo.condition.value",
+      size: 350,
+      filterFn: "includesString",
       cell: (info) => {
         return (
-          <ObjectiveIcon
-            className="h-8"
-            objective={
-              { conditions: [info.row.original.wish.condition] } as Objective
-            }
-            gameVersion={GameVersion.poe1}
-          ></ObjectiveIcon>
+          <div className="flex items-center gap-1">
+            <ObjectiveIcon
+              className="h-8"
+              objective={
+                {
+                  conditions: [info.row.original.uniqueInfo.condition],
+                } as Objective
+              }
+              gameVersion={GameVersion.poe1}
+            ></ObjectiveIcon>
+            {info.row.original.uniqueInfo.condition.value}
+          </div>
         );
       },
-    },
-    {
-      header: "",
-      accessorKey: "wish.condition.value",
-      size: 300,
-      filterFn: "includesString",
       enableSorting: false,
       meta: {
         filterVariant: "string",
@@ -182,10 +190,10 @@ function RouteComponent() {
     },
     {
       header: "Tier",
-      accessorKey: "wish.tier",
+      accessorKey: "uniqueInfo.tier",
       size: 80,
       cell: (info) => {
-        const tier = info.row.original.wish.tier;
+        const tier = info.row.original.uniqueInfo.tier;
         if (tier === null || tier === undefined) {
           return;
         }
@@ -205,9 +213,9 @@ function RouteComponent() {
     {
       header: "Count",
       id: "count",
-      size: 100,
+      size: 70,
       cell: (info) => {
-        const wishValue = info.row.original.wish.condition.value;
+        const wishValue = info.row.original.uniqueInfo.condition.value;
         const count = wishCounter[wishValue] || 0;
         if (count < 2) {
           return;
@@ -217,39 +225,106 @@ function RouteComponent() {
     },
     {
       header: "Point Item",
-      accessorKey: "wish.is_point_unique",
-      size: 150,
+      accessorKey: "uniqueInfo.is_point_unique",
+      size: 100,
       cell: (info) => {
-        return info.row.original.wish.is_point_unique ? (
+        return info.row.original.uniqueInfo.is_point_unique ? (
           <ExclamationCircleIcon className="size-5 text-error"></ExclamationCircleIcon>
         ) : null;
       },
+      enableSorting: false,
     },
     {
-      header: "Fulfilled",
-      accessorKey: "wish.is_fulfilled",
+      header: "Build Enabling",
+      accessorKey: "wish.build_enabling",
       size: 150,
       cell: (info) => {
         return (
           <input
             type="checkbox"
-            defaultChecked={info.row.original.wish.is_fulfilled}
+            defaultChecked={info.row.original.wish.build_enabling}
             disabled={user?.id != info.row.original.user?.id}
             className={twMerge(
               "checkbox border-2",
-              info.row.original.wish.is_fulfilled ? "checkbox-success" : "",
+              info.row.original.wish.build_enabling ? "checkbox-success" : "",
             )}
             onChange={async (e) => {
-              saveItemWish({
-                id: info.row.original.wish.id,
-                fulfilled: e.target.checked,
-                item_field: info.row.original.wish.condition.field,
-                value: info.row.original.wish.condition.value,
+              updateItemWish({
+                wishId: info.row.original.wish.id,
+                item_wish: {
+                  build_enabling: e.target.checked,
+                },
               });
             }}
           />
         );
       },
+      enableSorting: false,
+    },
+    {
+      header: "Priority",
+      accessorKey: "wish.priority",
+      size: 100,
+      cell: (info) => {
+        return (
+          <div className="flex items-center gap-1">
+            <span>{info.row.original.wish.priority}</span>
+            {eventStatus?.is_team_lead && (
+              <div className="flex flex-col gap-0.5">
+                <PlusIcon
+                  onClick={() => {
+                    updateItemWish({
+                      wishId: info.row.original.wish.id,
+                      item_wish: {
+                        priority: info.row.original.wish.priority + 1,
+                      },
+                    });
+                  }}
+                  className="size-3 cursor-pointer border text-success"
+                ></PlusIcon>
+                <MinusIcon
+                  onClick={() => {
+                    updateItemWish({
+                      wishId: info.row.original.wish.id,
+                      item_wish: {
+                        priority: info.row.original.wish.priority - 1,
+                      },
+                    });
+                  }}
+                  className="size-3 cursor-pointer border text-error"
+                ></MinusIcon>
+              </div>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      header: "Fulfilled",
+      accessorKey: "wish.fulfilled",
+      size: 150,
+      cell: (info) => {
+        return (
+          <input
+            type="checkbox"
+            defaultChecked={info.row.original.wish.fulfilled}
+            disabled={user?.id != info.row.original.user?.id}
+            className={twMerge(
+              "checkbox border-2",
+              info.row.original.wish.fulfilled ? "checkbox-success" : "",
+            )}
+            onChange={async (e) => {
+              updateItemWish({
+                wishId: info.row.original.wish.id,
+                item_wish: {
+                  fulfilled: e.target.checked,
+                },
+              });
+            }}
+          />
+        );
+      },
+      enableSorting: false,
     },
     {
       header: "",
@@ -279,7 +354,6 @@ function RouteComponent() {
           .map((item) => item.name)
           .forEach((itemName) =>
             saveItemWish({
-              fulfilled: false,
               item_field: ItemField.NAME,
               value: itemName,
             }),
@@ -291,7 +365,6 @@ function RouteComponent() {
           .map((gem) => gem.nameSpec)
           .forEach((itemName) =>
             saveItemWish({
-              fulfilled: false,
               item_field: ItemField.BASE_TYPE,
               value: itemName,
             }),
@@ -299,14 +372,12 @@ function RouteComponent() {
       }
       if (data.value.unique_name) {
         saveItemWish({
-          fulfilled: false,
           item_field: ItemField.NAME,
           value: data.value.unique_name,
         });
       }
       if (data.value.gem_name) {
         saveItemWish({
-          fulfilled: false,
           item_field: ItemField.BASE_TYPE,
           value: data.value.gem_name,
         });
