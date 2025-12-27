@@ -64,6 +64,7 @@ function ScoringPage() {
         search: {
           rules: rules,
         },
+        replace: true,
       });
     }
   }, [rules, selected]);

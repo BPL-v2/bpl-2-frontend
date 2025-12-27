@@ -66,7 +66,7 @@ export function renderConditionally(
     return component;
   } else {
     return () => {
-      router.navigate({ to: "/" });
+      router.navigate({ to: "/", replace: true });
       return undefined;
     };
   }

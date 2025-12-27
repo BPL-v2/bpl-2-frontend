@@ -6,6 +6,15 @@ import { JSX, useContext, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import Table from "@components/table/table";
 import { GlobalStateContext } from "@utils/context-provider";
+import { Link } from "@tanstack/react-router";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
+
+function getRealAtlasPoints(nodes: number[]): number {
+  if (nodes.includes(65225)) {
+    return nodes.length - 20;
+  }
+  return nodes.length;
+}
 
 export function TeamAtlasTree() {
   const { currentEvent } = useContext(GlobalStateContext);
@@ -105,7 +114,7 @@ export function TeamAtlasTree() {
           }}
           className={twMerge(
             "flex h-full w-full cursor-pointer flex-wrap",
-            idx === row.original.primaryIndex && "rounded-lg bg-white/10",
+            idx === row.original.primary_index && "rounded-lg bg-white/10",
             idx === selectedAtlas[0] &&
               row.original.user_id === selectedAtlas[1] &&
               "rounded-lg outline-2 outline-white",
@@ -136,16 +145,8 @@ export function TeamAtlasTree() {
       );
     };
 
-  const teamNodes = teamAtlas
-    .map(
-      (ta) =>
-        Object.entries(ta.trees).sort(([ia, a], [ib, b]) => {
-          if (a.length !== b.length) {
-            return b.length - a.length;
-          }
-          return ia.localeCompare(ib);
-        })[0][1],
-    )
+  const primaryAtlases = teamAtlas
+    .map((ta) => ta.trees[ta.primary_index])
     .filter((tree) => {
       if (!selectedLeagueMechanics) {
         return true;
@@ -170,55 +171,78 @@ export function TeamAtlasTree() {
     })
     .map((nodes) => new Set(nodes));
   return (
-    <div className="bg-base-200 p-8">
-      <div className="flex flex-row justify-between px-4">
+    <div className="card bg-base-200 p-8">
+      <div className="flex flex-row justify-center gap-8">
         <div className="mb-8 grid auto-rows-min grid-cols-5 items-start gap-2">
-          {Object.keys(leagueNodes).map((name) => (
-            <div
-              className="tooltip lg:[&:after]:hidden lg:[&:before]:hidden"
-              data-tip={aliases[name] || name}
-              key={name}
-            >
-              <div
-                key={name}
-                className={twMerge(
-                  "flex aspect-square cursor-pointer flex-col items-center justify-center rounded-box bg-base-300 p-2 lg:justify-between",
-                  selectedLeagueMechanics.includes(name) &&
-                    "tooltip bg-highlight outline-2 outline-highlight-content",
-                )}
-                onClick={() => {
-                  if (selectedLeagueMechanics.includes(name)) {
-                    setSelectedLeagueMechanics((prev) =>
-                      prev.filter((n) => n !== name),
-                    );
-                  } else {
-                    setSelectedLeagueMechanics((prev) => [...prev, name]);
+          {Object.keys(leagueNodes)
+            .sort((a, b) => a.localeCompare(b))
+            .map((name) => {
+              let countOfAtlasWithMechanic = 0;
+              for (const atlas of primaryAtlases) {
+                for (const nodeId of leagueNodes[name]) {
+                  if (atlas.has(nodeId)) {
+                    countOfAtlasWithMechanic += 1;
+                    break;
                   }
-                }}
-              >
-                <span
-                  className={twMerge(
-                    "hidden text-xs lg:block",
-                    selectedLeagueMechanics.includes(name) &&
-                      "text-highlight-content",
-                  )}
-                >
-                  {aliases[name] || name}
-                </span>
-                <CategoryIcon
-                  name={iconAliases[name] || name}
+                }
+              }
+              return (
+                <div
+                  className="tooltip xl:[&:after]:hidden xl:[&:before]:hidden"
+                  data-tip={`${aliases[name] || name} (${countOfAtlasWithMechanic} Atlases)`}
                   key={name}
-                  className="size-6 lg:size-14"
-                />
-              </div>
-            </div>
-          ))}
+                >
+                  <div
+                    key={name}
+                    className={twMerge(
+                      "flex cursor-pointer flex-col items-center justify-center gap-1 rounded-box bg-base-300 p-2 xl:justify-between",
+                      selectedLeagueMechanics.includes(name) &&
+                        "tooltip bg-highlight outline-2 outline-highlight-content",
+                      countOfAtlasWithMechanic === 0 && "opacity-30 grayscale",
+                    )}
+                    onClick={() => {
+                      if (selectedLeagueMechanics.includes(name)) {
+                        setSelectedLeagueMechanics((prev) =>
+                          prev.filter((n) => n !== name),
+                        );
+                      } else {
+                        setSelectedLeagueMechanics((prev) => [...prev, name]);
+                      }
+                    }}
+                  >
+                    <span
+                      className={twMerge(
+                        "hidden text-xs xl:block",
+                        selectedLeagueMechanics.includes(name) &&
+                          "text-highlight-content",
+                      )}
+                    >
+                      {aliases[name] || name}
+                    </span>
+                    <CategoryIcon
+                      name={iconAliases[name] || name}
+                      key={name}
+                      className={twMerge("size-6 xl:size-12")}
+                    />
+                    <span
+                      className={twMerge(
+                        "hidden text-xs xl:block",
+                        selectedLeagueMechanics.includes(name) &&
+                          "text-highlight-content",
+                      )}
+                    >
+                      {countOfAtlasWithMechanic} Atlases
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
         </div>
-        <div className="w-[60%]">
+        <div className="w-[65%]">
           <ComposedTree
             nodes={
               selectedAtlas.length == 0
-                ? teamNodes
+                ? primaryAtlases
                 : [
                     new Set(
                       teamAtlas.find((ta) => ta.user_id === selectedAtlas[1])
@@ -233,7 +257,7 @@ export function TeamAtlasTree() {
           />
         </div>
       </div>
-      <p className="p-2">
+      <p className="-mt-6 mb-2">
         <span
           className="tooltip cursor-help"
           data-tip="Latest atlas tree that some of its nodes changed"
@@ -255,6 +279,16 @@ export function TeamAtlasTree() {
               filterVariant: "string",
               filterPlaceholder: "Player",
             },
+            cell: ({ row }: any) => (
+              <Link
+                to={`/profile/$userId`}
+                params={{ userId: row.original.user_id }}
+                className="flex link items-center gap-1 link-hover"
+              >
+                <ArrowTopRightOnSquareIcon className="inline size-4" />
+                {row.original.player}
+              </Link>
+            ),
           },
           { header: "Points", accessorKey: "points", size: 100 },
           {
@@ -290,26 +324,21 @@ export function TeamAtlasTree() {
             user_id: ta.user_id,
             player: userMap[ta.user_id]?.display_name || `User ${ta.user_id}`,
             points: Object.values(ta.trees).reduce(
-              (acc, tree) => Math.max(acc, tree.length),
+              (acc, tree) => Math.max(acc, getRealAtlasPoints(tree)),
               0,
             ),
             trees: ta.trees,
-            primaryIndex: Object.entries(ta.trees).reduce(
-              (biggestIdx, [key, tree], currentIdx) =>
-                tree.length > Object.values(ta.trees)[biggestIdx].length
-                  ? currentIdx
-                  : biggestIdx,
-              0,
-            ),
+            primary_index: ta.primary_index,
           }))
           .filter((row) => {
+            console.log(row.primary_index);
             if (
               selectedLeagueMechanics.length === 0 &&
               selectedNodes.size === 0
             ) {
               return true;
             }
-            const treeNodes = row.trees[row.primaryIndex];
+            const treeNodes = row.trees[row.primary_index];
             for (const mechanic of selectedLeagueMechanics) {
               const leagueNodeIds = leagueNodes[mechanic];
               if (!leagueNodeIds) {

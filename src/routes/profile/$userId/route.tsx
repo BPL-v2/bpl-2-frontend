@@ -40,6 +40,7 @@ function ProfilePage() {
           userId: userId,
           eventId: sortedCharacter.event_id,
         },
+        replace: true,
       });
     }
   }, [userCharacters, characterId, userId]);

@@ -34,6 +34,7 @@ export function Callback({
     if (!state || !code || !provider) {
       router.navigate({
         to: "/",
+        replace: true,
       });
       return;
     }
@@ -61,6 +62,7 @@ export function Callback({
 
         router.navigate({
           to: resp.last_path,
+          replace: true,
         });
       })
       .catch((err) => {

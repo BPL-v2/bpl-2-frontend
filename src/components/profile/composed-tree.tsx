@@ -78,7 +78,7 @@ export function ComposedTree({
     return "";
   };
   const colorSegments = [];
-  for (let i = 0; i <= 1; i += 0.05) {
+  for (let i = 0; i <= 1; i += 0.025) {
     colorSegments.push({
       value: i,
       color: calculateColor(i),
@@ -87,33 +87,38 @@ export function ComposedTree({
 
   return (
     <div>
-      <div className="">
-        <div className="mb-2 text-sm">Node Frequency</div>
-        <div className="flex gap-2">
-          <span className="text-xs">0%</span>
+      <div className="flex flex-col gap-2">
+        <div className="relative text-xs font-extrabold text-black">
+          <div className="absolute flex w-full flex-row justify-between px-2">
+            <span>0%</span>
+            <span>Node Frequency</span>
+            <span>100%</span>
+          </div>
           <div className="flex h-4 flex-1 overflow-hidden rounded-full">
             {colorSegments.map((segment, index) => (
               <div
                 key={index}
-                className="flex-1"
+                className="flex-1 px-2"
                 style={{ backgroundColor: segment.color }}
                 title={`${(segment.value * 100).toFixed(0)}%`}
               ></div>
             ))}
           </div>
-          <span className="text-xs">100%</span>
         </div>
-        <div className="mt-2 text-sm">
-          {filteredNodes} Atlas Tree{filteredNodes === 1 ? "" : "s"}
-        </div>
-        <div
-          className="mt-2 cursor-pointer text-sm text-info hover:underline"
-          onClick={() => setSelectedNodes(new Set())}
-        >
-          Unselect all
+        <div className="flex flex-row justify-center gap-4 text-xs">
+          <span>
+            {filteredNodes} Atlas Tree{filteredNodes === 1 ? "" : "s"}
+          </span>
+          <span
+            className="cursor-pointer text-info hover:underline"
+            onClick={() => setSelectedNodes(new Set())}
+          >
+            Unselect all
+          </span>
         </div>
       </div>
       <Tree
+        className="-mt-1"
         version={version}
         nodes={allNodes}
         type={type}

@@ -53,6 +53,7 @@ export function GuildStashSelect({ path }: { path: path }) {
               to: path,
               params: { stashId },
               search: { highlightScoring: !highlightScoring },
+              replace: true,
             });
           }}
         >

@@ -152,13 +152,7 @@ export interface Atlas {
      * @type {number}
      * @memberof Atlas
      */
-    event_id: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Atlas
-     */
-    index: number;
+    primary_index: number;
     /**
      * 
      * @type {{ [key: string]: Array<number>; }}
