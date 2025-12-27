@@ -469,19 +469,18 @@ const defaultStyles: Record<string, IconProps[]> = {
   Mercenaries: [{ strokeWidth: 1, fill: "#996800", stroke: "#fff0cc" }],
 };
 
-interface IconRendererProps {
+interface IconRendererProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
-  size?: number;
-  style?: "default" | "mono";
+  color?: "default" | "mono";
 }
 
 export function SvgForCategory(
   name: string,
-  style?: IconRendererProps["style"],
+  color?: IconRendererProps["color"],
 ) {
   const innerSvg = iconMap[name];
   const styles = defaultStyles[name];
-  if (style === "mono") {
+  if (color === "mono") {
     styles.forEach((s) => {
       s.fill = "#ffffff";
       s.stroke = "#ffffff";
@@ -495,11 +494,14 @@ export function SvgForCategory(
   return `<svg viewBox="0 0 200 200" > ${innerSvg(styles)} </svg>`;
 }
 
-export function CategoryIcon({ name, style, size }: IconRendererProps) {
+export function CategoryIcon({ ...props }: IconRendererProps) {
   return (
     <div
-      style={{ width: size || 48, height: size || 48 }}
-      dangerouslySetInnerHTML={{ __html: SvgForCategory(name, style) || "" }}
+      className="size-12"
+      {...props}
+      dangerouslySetInnerHTML={{
+        __html: SvgForCategory(props.name, props.color) || "",
+      }}
     />
   );
 }

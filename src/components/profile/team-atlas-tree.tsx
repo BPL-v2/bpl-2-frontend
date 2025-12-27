@@ -83,6 +83,7 @@ export function TeamAtlasTree() {
   const renderAtlasColumn =
     (idx: number, selectedLeagueMechanics: string[]) =>
     ({ row }: any): JSX.Element => {
+      const treeNodes = row.original.trees[idx];
       return (
         <div
           onClick={() => {
@@ -96,7 +97,7 @@ export function TeamAtlasTree() {
             setSelectedAtlas([idx, row.original.user_id]);
           }}
           className={twMerge(
-            "flex h-full w-full cursor-pointer flex-wrap gap-2",
+            "flex h-full w-full cursor-pointer flex-wrap",
             idx === row.original.primaryIndex && "rounded-lg bg-white/10",
             idx === selectedAtlas[0] &&
               row.original.user_id === selectedAtlas[1] &&
@@ -104,29 +105,25 @@ export function TeamAtlasTree() {
           )}
         >
           {Object.entries(leagueNodes).map(([name, nodes]) => {
-            const treeNodes = row.original.trees[idx];
-
-            if (
-              treeNodes &&
-              nodes.some((nodeId: number) => treeNodes.includes(nodeId))
-            ) {
-              return (
-                <div
-                  key={name}
-                  className={twMerge(
-                    "flex items-center p-1",
-                    selectedLeagueMechanics?.includes(name) &&
-                      "rounded-lg bg-base-200",
-                  )}
-                >
-                  <CategoryIcon
-                    name={iconAliases[name] || name}
-                    key={name}
-                    size={20}
-                  />
-                </div>
-              );
+            if (!nodes.some((nodeId: number) => treeNodes?.includes(nodeId))) {
+              return;
             }
+            return (
+              <div
+                key={name}
+                className={twMerge(
+                  "flex items-center rounded-lg p-1",
+                  selectedLeagueMechanics?.includes(name) &&
+                    "bg-base-200 outline outline-highlight-content",
+                )}
+              >
+                <CategoryIcon
+                  name={iconAliases[name] || name}
+                  key={name}
+                  className="size-6"
+                />
+              </div>
+            );
           })}
         </div>
       );
@@ -168,12 +165,12 @@ export function TeamAtlasTree() {
   return (
     <div className="bg-base-200 p-8">
       <div className="flex flex-row justify-between px-4">
-        <div className="mb-8 grid max-h-screen grid-cols-4 gap-1">
-          {Object.entries(leagueNodes).map(([name, nodes]) => (
+        <div className="mb-8 grid max-h-[60vh] grid-cols-4 gap-1 lg:max-h-screen">
+          {Object.keys(leagueNodes).map((name) => (
             <div
               key={name}
               className={twMerge(
-                "flex w-18 cursor-pointer flex-col items-center justify-between rounded-box bg-base-300 p-2",
+                "flex cursor-pointer flex-col items-center justify-center rounded-box bg-base-300 p-2 lg:justify-between",
                 selectedLeagueMechanics.includes(name) &&
                   "bg-highlight outline-2 outline-highlight-content",
               )}
@@ -189,18 +186,22 @@ export function TeamAtlasTree() {
             >
               <span
                 className={twMerge(
-                  "text-xs",
+                  "hidden text-xs lg:block",
                   selectedLeagueMechanics.includes(name) &&
                     "text-highlight-content",
                 )}
               >
                 {aliases[name] || name}
               </span>
-              <CategoryIcon name={iconAliases[name] || name} key={name} />
+              <CategoryIcon
+                name={iconAliases[name] || name}
+                key={name}
+                className="size-6 lg:size-14"
+              />
             </div>
           ))}
         </div>
-        <div className="h-screen w-[60%]">
+        <div className="h-full w-[60%]">
           <ComposedTree
             nodes={
               selectedAtlas.length == 0

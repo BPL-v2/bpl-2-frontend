@@ -55,7 +55,7 @@ function RootComponent() {
         label: <div className="text-4xl font-bold">BPL</div>,
         icon: (
           <img
-            className="h-12 w-9"
+            className="h-8"
             src="/assets/app-logos/bpl-logo.webp"
             alt="bpl-logo"
           />
@@ -123,9 +123,9 @@ function RootComponent() {
             <div
               className={twMerge(
                 "navbar bg-base-300",
-                selected == "scores" || selected == "team"
-                  ? ""
-                  : "rounded-b-box shadow-xl",
+                selected != "scores" &&
+                  selected != "team" &&
+                  "rounded-b-box shadow-xl",
               )}
             >
               <ul className="justify-left flex flex-1 gap-1 sm:gap-2 xl:gap-4">
@@ -135,7 +135,7 @@ function RootComponent() {
                       aria-label={item.label.toString()}
                       to={item.url}
                       className={twMerge(
-                        "btn flex h-16 items-center gap-2 text-xl font-semibold btn-sm lg:btn-md",
+                        "btn flex h-10 items-center gap-2 text-xl font-semibold btn-xs lg:h-16",
                         selected === item.path
                           ? "btn-primary"
                           : "btn-ghost hover:btn-primary",

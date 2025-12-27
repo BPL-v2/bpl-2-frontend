@@ -212,7 +212,6 @@ function RouteComponent() {
               {childIdToUniqueCategory[row.original.objective.id] && (
                 <CategoryIcon
                   name={childIdToUniqueCategory[row.original.objective.id].name}
-                  size={48}
                 />
               )}
               <div className="flex w-12 items-center justify-center">
