@@ -208,24 +208,22 @@ export default function Tree({
   }
 
   useEffect(() => {
-    if (!tooltip || !nodeMap) {
+    if (!tooltip || !activeTreeRef.current) {
       return;
     }
     const cleanupFunctions: (() => void)[] = [];
-    // const windowClickHandler = () => {
-    //   setSelectedNode(undefined);
-    //   selectedElement?.setAttribute("style", "fill: var(--color-info)");
-    //   setSelectedElement(undefined);
-    // };
-    // window.addEventListener("click", windowClickHandler);
-    // cleanupFunctions.push(() => {
-    //   window.removeEventListener("click", windowClickHandler);
-    // });
+    const container = activeTreeRef.current;
+    const containerLeaveHandler = () => {
+      setHoveredNode(undefined);
+    };
+    container.addEventListener("mouseleave", containerLeaveHandler);
+    cleanupFunctions.push(() => {
+      container.removeEventListener("mouseleave", containerLeaveHandler);
+    });
 
-    for (const element of activeTreeRef.current?.getElementsByTagName(
+    for (const element of activeTreeRef.current.getElementsByTagName(
       "circle",
-    ) || []) {
-      // const element = document.getElementById(`xn-${node}`);
+    )) {
       const node = parseInt(element.id.replace("xn-", ""), 10);
       if (selectedNodes?.has(node)) {
         element.setAttribute("selected", "");
@@ -253,18 +251,18 @@ export default function Tree({
         setHoveredNode(undefined);
       };
       element.addEventListener("click", clickHandler);
-      element.addEventListener("mouseover", hoverHandler);
-      element.addEventListener("mouseout", hoverOutHandler);
+      element.addEventListener("mouseenter", hoverHandler);
+      element.addEventListener("mouseleave", hoverOutHandler);
       cleanupFunctions.push(() => {
         element.removeEventListener("click", clickHandler);
-        element.removeEventListener("mouseover", hoverHandler);
-        element.removeEventListener("mouseout", hoverOutHandler);
+        element.removeEventListener("mouseenter", hoverHandler);
+        element.removeEventListener("mouseleave", hoverOutHandler);
       });
     }
     return () => {
       cleanupFunctions.forEach((cleanup) => cleanup());
     };
-  }, [newTree, tooltip, selectedNodes, activeTreeRef]);
+  }, [newTree, tooltip, selectedNodes, setSelectedNodes]);
 
   function renderNodeDetails(
     nodeId?: number,

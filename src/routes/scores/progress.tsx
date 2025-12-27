@@ -227,7 +227,7 @@ function RouteComponent() {
         if (iconMap[row.original.objective.name]) {
           return (
             <div className="justify-left flex w-full">
-              <CategoryIcon name={row.original.objective.name} size={48} />
+              <CategoryIcon name={row.original.objective.name} />
             </div>
           );
         }

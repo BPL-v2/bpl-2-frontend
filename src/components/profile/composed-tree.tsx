@@ -1,10 +1,11 @@
-import { useState } from "react";
 import Tree from "./tree";
 
 type Props = {
   version: string;
   nodes: Set<number>[];
   type: "atlas" | "passives";
+  selectedNodes: Set<number>;
+  setSelectedNodes: (nodes: Set<number>) => void;
 };
 
 function calculateColor(value: number): string {
@@ -22,8 +23,13 @@ function calculateColor(value: number): string {
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   }
 }
-export function ComposedTree({ version, nodes, type }: Props) {
-  const [selectedNodes, setSelectedNodes] = useState<Set<number>>(new Set());
+export function ComposedTree({
+  version,
+  nodes,
+  type,
+  selectedNodes,
+  setSelectedNodes,
+}: Props) {
   const nodeCounts: Record<number, number> = {};
   const allNodes = new Set<number>();
   let skip = false;
