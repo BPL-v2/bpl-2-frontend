@@ -459,6 +459,7 @@ function LadderTab(): JSX.Element {
       cell: ({ row }) => {
         return row.original.total;
       },
+      size: 120,
     },
     ...categoryNames.map((categoryName) => ({
       header: categoryName == "Personal Objectives" ? "P.O." : categoryName,
@@ -466,7 +467,7 @@ function LadderTab(): JSX.Element {
       key: `column-${categoryName}`,
       // @ts-ignore
       sorter: (a, b) => a[categoryName] - b[categoryName],
-      size: 160,
+      size: 130,
     })),
   ];
 

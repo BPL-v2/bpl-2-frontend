@@ -230,7 +230,7 @@ function Filter<T>({ column }: { column: Column<T, unknown> }) {
   if (filterVariant === "boolean") {
     return (
       <div
-        className="ml-2 size-8 cursor-pointer rounded-full border-1 border-primary bg-base-300 select-none"
+        className="ml-2 size-8 cursor-pointer rounded-full border border-primary bg-base-300 select-none"
         onClick={(e) => {
           const currentValue = column.getFilterValue();
           if (currentValue === undefined) {
