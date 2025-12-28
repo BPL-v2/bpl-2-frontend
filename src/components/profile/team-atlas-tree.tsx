@@ -331,7 +331,6 @@ export function TeamAtlasTree() {
             primary_index: ta.primary_index,
           }))
           .filter((row) => {
-            console.log(row.primary_index);
             if (
               selectedLeagueMechanics.length === 0 &&
               selectedNodes.size === 0

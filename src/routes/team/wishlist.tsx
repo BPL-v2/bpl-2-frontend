@@ -62,15 +62,15 @@ function RouteComponent() {
   const { rules } = useGetRules(currentEvent.id);
   const { data: uniques } = useFile<
     Record<string, { base_type: string; is_drop_restricted: boolean }>
-  >("assets/poe1/items/uniques.json");
+  >("/assets/poe1/items/uniques.json");
   const { data: uniqueTiers = {} } = useFile<Record<string, number>>(
-    "assets/poe1/items/unique_tiers.json",
+    "/assets/poe1/items/unique_tiers.json",
   );
   const altGems =
     rules?.children
-      .filter((obj) => (obj.name = "Gems"))
+      .filter((obj) => obj.name === "Gems")
       .flatMap((obj) => obj.children)
-      .filter((obj) => (obj.name = "Transfigured Gems"))
+      .filter((obj) => obj.name === "Transfigured Gems")
       .flatMap((obj) => obj.children)
       .map((obj) => obj.conditions[0].value) || [];
   const pointUniques = flatMap(rules)

@@ -31,7 +31,7 @@ export function TextField({
       />
       <datalist id={`${label}-options`}>
         {options?.map((option) => (
-          <option value={option} />
+          <option key={Math.random() + option} value={option} />
         ))}
       </datalist>
     </label>
