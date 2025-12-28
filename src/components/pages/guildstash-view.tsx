@@ -4,17 +4,29 @@ import { Dialog } from "@components/dialog";
 import { StashTabGrid } from "@components/stash/stash-tab-grid";
 import { StashTabSpecial } from "@components/stash/stash-tab-special";
 import { StashTabUnique } from "@components/stash/stash-tab-unique";
+import { StashTabUnordered } from "@components/stash/stash-tab-unordered";
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 import { GlobalStateContext } from "@utils/context-provider";
 import { findObjective } from "@utils/utils";
 import { useContext, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-type StashType = "Grid" | "Special" | "Unique";
+type StashType = "Grid" | "Special" | "Unique" | "Unordered";
 export type ScoreQueryParams = {
   highlightScoring: boolean;
 };
 
+function fixDivcardMods(mod: string): string[] {
+  let cleaned = mod;
+  while (/\u003c[^>]+\u003e/.test(cleaned)) {
+    cleaned = cleaned.replace(/\u003c[^>]+\u003e/g, "");
+  }
+  cleaned = cleaned.replace(/[{}]/g, "");
+  return cleaned
+    .split("\r\n")
+    .map((line) => line.replace(/\{([^}]+)\}/g, "$1"))
+    .filter((line) => line.trim());
+}
 export function GuildStashView({
   highlightScoring,
   stashId,
@@ -47,6 +59,8 @@ export function GuildStashView({
     type = "Grid";
   } else if (currentTab.type === "UniqueStash") {
     type = "Unique";
+  } else if (currentTab.type === "DivinationCardStash") {
+    type = "Unordered";
   }
   let textColor = "text-white";
   switch (selectedItem?.rarity) {
@@ -148,11 +162,13 @@ export function GuildStashView({
             <>
               <div className="divider m-0"></div>
               <div className="flex flex-col">
-                {selectedItem.explicitMods?.map((mod, idx) => (
-                  <span className="text-magic" key={idx}>
-                    {mod}
-                  </span>
-                ))}
+                {selectedItem.explicitMods
+                  ?.flatMap((mod) => fixDivcardMods(mod))
+                  .map((mod, idx) => (
+                    <span className="text-magic" key={idx}>
+                      {mod}
+                    </span>
+                  ))}
                 {selectedItem.craftedMods?.map((mod, idx) => (
                   <p className="text-crafted" key={idx}>
                     {mod}
@@ -198,6 +214,17 @@ export function GuildStashView({
       )}
       {type == "Unique" && (
         <StashTabUnique
+          tab={currentTab}
+          size={1000}
+          onItemClick={(item) => {
+            setSelectedItem(item);
+            setOpen(true);
+          }}
+          highlightScoring={highlightScoring}
+        />
+      )}
+      {type == "Unordered" && (
+        <StashTabUnordered
           tab={currentTab}
           size={1000}
           onItemClick={(item) => {

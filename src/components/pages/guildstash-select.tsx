@@ -25,7 +25,7 @@ export function GuildStashSelect({ path }: { path: path }) {
   const { switchStashFetching } = useSwitchStashFetching(qc, currentEvent.id);
   const { updateGuildStashTab } = useUpdateGuildStashTab(qc, currentEvent.id);
   const [hideDisabled, setHideDisabled] = useState(true);
-  const [highlightScoring, setHighlightScoring] = useState(true);
+  const [highlightScoring, setHighlightScoring] = useState(false);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const [stashSearch, setStashSearch] = useState("");
   dayjs.extend(relativeTime);

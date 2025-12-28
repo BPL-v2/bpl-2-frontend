@@ -198,7 +198,7 @@ export function TeamAtlasTree() {
                       "flex cursor-pointer flex-col items-center justify-center gap-1 rounded-box bg-base-300 p-2 xl:justify-between",
                       selectedLeagueMechanics.includes(name) &&
                         "tooltip bg-highlight outline-2 outline-highlight-content",
-                      countOfAtlasWithMechanic === 0 && "opacity-30 grayscale",
+                      countOfAtlasWithMechanic === 0 && "opacity-20",
                     )}
                     onClick={() => {
                       if (selectedLeagueMechanics.includes(name)) {
