@@ -76,7 +76,7 @@ function RootComponent() {
         icon: <UserGroupIcon className="size-6" />,
         url: "/team/atlas",
         path: "team",
-        visible: true,
+        visible: !!eventStatus?.team_id,
       },
       {
         label: "Streams",
