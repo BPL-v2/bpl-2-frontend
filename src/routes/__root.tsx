@@ -74,7 +74,7 @@ function RootComponent() {
       {
         label: "Team",
         icon: <UserGroupIcon className="size-6" />,
-        url: "/team/wishlist",
+        url: "/team/atlas",
         path: "team",
         visible: true,
       },
