@@ -72,13 +72,6 @@ function RootComponent() {
         visible: true,
       },
       {
-        label: "Team",
-        icon: <UserGroupIcon className="size-6" />,
-        url: "/team/atlas",
-        path: "team",
-        visible: !!eventStatus?.team_id,
-      },
-      {
         label: "Streams",
         icon: <TwitchFilled className="size-6" />,
         url: "/streams",
@@ -91,6 +84,13 @@ function RootComponent() {
         url: "/rules",
         path: "rules",
         visible: true,
+      },
+      {
+        label: "Team",
+        icon: <UserGroupIcon className="size-6" />,
+        url: "/team/atlas",
+        path: "team",
+        visible: !!eventStatus?.team_id,
       },
       {
         label: "Admin",
