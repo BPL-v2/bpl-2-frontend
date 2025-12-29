@@ -110,15 +110,13 @@ function Table<T>({
                   >
                     <div
                       className={
-                        canSort
-                          ? "flex cursor-pointer items-center gap-1 select-none"
-                          : ""
+                        canSort ? "flex cursor-pointer items-center gap-1" : ""
                       }
                       onClick={header.column.getToggleSortingHandler()}
                     >
                       {canSort && (
                         <TableSortIcon
-                          className="size-5"
+                          className="size-5 select-none"
                           sort={sorting.find((sort) => sort.id === header.id)}
                         ></TableSortIcon>
                       )}

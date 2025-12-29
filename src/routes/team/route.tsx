@@ -14,8 +14,8 @@ function RouteComponent() {
     rules?: JSX.Element;
   }[] = [
     {
-      name: "Wishlist",
-      key: "wishlist",
+      name: "Atlas",
+      key: "atlas",
       visible: true,
     },
     {
@@ -24,8 +24,8 @@ function RouteComponent() {
       visible: true,
     },
     {
-      name: "Atlas",
-      key: "atlas",
+      name: "Wishlist",
+      key: "wishlist",
       visible: true,
     },
   ];
