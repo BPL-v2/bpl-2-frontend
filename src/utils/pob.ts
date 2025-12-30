@@ -533,12 +533,7 @@ function setPlayerStat(stats: PlayerStats, stat: string, value: number): void {
 }
 
 function pobstringToXml(pob: string): Document {
-  const decoded = atob(pob.replace(/-/g, "+").replace(/_/g, "/"));
-  const bytes = new Uint8Array(decoded.length);
-  for (let i = 0; i < decoded.length; i++) {
-    bytes[i] = decoded.charCodeAt(i);
-  }
-  const xmlString = new TextDecoder().decode(pako.inflate(bytes));
+  const xmlString = pobstringToXmlString(pob);
   console.log(xmlString);
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(xmlString, "text/xml");
@@ -546,6 +541,25 @@ function pobstringToXml(pob: string): Document {
     throw new Error("Failed to parse XML");
   }
   return xmlDoc;
+}
+
+export function pobstringToXmlString(pob: string): string {
+  const decoded = atob(pob.replace(/-/g, "+").replace(/_/g, "/"));
+  const bytes = new Uint8Array(decoded.length);
+  for (let i = 0; i < decoded.length; i++) {
+    bytes[i] = decoded.charCodeAt(i);
+  }
+  return new TextDecoder().decode(pako.inflate(bytes));
+}
+
+export function xmlStringToPobstring(xmlString: string): string {
+  const xmlBytes = new TextEncoder().encode(xmlString);
+  const compressedBytes = pako.deflate(xmlBytes, { level: 9 });
+  let binary = "";
+  for (let i = 0; i < compressedBytes.length; i++) {
+    binary += String.fromCharCode(compressedBytes[i]);
+  }
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_");
 }
 
 export function decodePoBExport(

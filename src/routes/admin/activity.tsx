@@ -68,7 +68,7 @@ function ActivityPage() {
         activeHours: activeMilliseconds / (1000 * 60 * 60),
         ladderEntry: ladderMap[userId],
         teamId: user.team_id,
-        duo: !!userMap[userId].signup.partner_id,
+        duo: !!userMap[userId].signup?.partner_id,
       });
     }
   }
@@ -191,7 +191,7 @@ function ActivityPage() {
           },
           {
             header: "Level",
-            accessorKey: "ladderEntry.character.level",
+            accessorKey: "ladderEntry.level",
             size: 100,
           },
           {
@@ -199,16 +199,15 @@ function ActivityPage() {
             accessorKey: "ladderEntry",
             cell: (info) => {
               const entry = info.getValue() as (typeof ladder)[0] | undefined;
-              if (!entry || !entry.character || !entry.user_id) {
+              if (!entry || !entry.user_id) {
+                console.log(entry);
                 return "";
               }
               return (
                 <Link
-                  to={`/profile/$userId/$eventId/$characterId`}
+                  to={`/profile/$userId`}
                   params={{
                     userId: entry.user_id,
-                    eventId: currentEvent.id,
-                    characterId: entry.character.id,
                   }}
                   className=""
                   target="_blank"
