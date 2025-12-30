@@ -3,6 +3,7 @@ import {
   ActivityApiFactory,
   AtlasApiFactory,
   CharactersApiFactory,
+  EngagementApiFactory,
   EventApiFactory,
   GuildStashApiFactory,
   ItemWishesApiFactory,
@@ -87,3 +88,9 @@ export const wishApi = ItemWishesApiFactory(
 );
 
 export const atlasApi = AtlasApiFactory(config, authenticatedFetch, baseUrl);
+
+export const engagementApi = EngagementApiFactory(
+  config,
+  authenticatedFetch,
+  baseUrl,
+);

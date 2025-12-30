@@ -920,6 +920,20 @@ export interface DisplayItem {
 /**
  * 
  * @export
+ * @interface EngagementAdd
+ */
+export interface EngagementAdd {
+    /**
+     * 
+     * @type {string}
+     * @memberof EngagementAdd
+     */
+    name: string;
+}
+
+/**
+ * 
+ * @export
  * @interface Event
  */
 export interface Event {
@@ -971,6 +985,12 @@ export interface Event {
      * @memberof Event
      */
     is_locked: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Event
+     */
+    is_main_event: boolean;
     /**
      * 
      * @type {boolean}
@@ -1063,6 +1083,12 @@ export interface EventCreate {
      * @memberof EventCreate
      */
     is_locked?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof EventCreate
+     */
+    is_main_event?: boolean;
     /**
      * 
      * @type {boolean}
@@ -5091,6 +5117,119 @@ export class CharactersApi extends BaseAPI {
      */
     public updateCharacter(user_id: number, character_id: string, options?: any) {
         return CharactersApiFp(this.configuration).updateCharacter(user_id, character_id, options)(this.fetch, this.basePath);
+    }
+
+}
+
+/**
+ * EngagementApi - fetch parameter creator
+ * @export
+ */
+export const EngagementApiFetchParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Add a new engagement or increment existing engagement number
+         * @param {EngagementAdd} engagement Engagement to add
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addEngagement(engagement: EngagementAdd, options: any = {}): FetchArgs {
+            // verify required parameter 'engagement' is not null or undefined
+            if (engagement === null || engagement === undefined) {
+                throw new RequiredError('engagement','Required parameter engagement was null or undefined when calling addEngagement.');
+            }
+            const localVarPath = `/engagement`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"EngagementAdd" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(engagement || {}) : (engagement || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * EngagementApi - functional programming interface
+ * @export
+ */
+export const EngagementApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * Add a new engagement or increment existing engagement number
+         * @param {EngagementAdd} engagement Engagement to add
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addEngagement(engagement: EngagementAdd, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = EngagementApiFetchParamCreator(configuration).addEngagement(engagement, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response;
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+    }
+};
+
+/**
+ * EngagementApi - factory interface
+ * @export
+ */
+export const EngagementApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+    return {
+        /**
+         * Add a new engagement or increment existing engagement number
+         * @param {EngagementAdd} engagement Engagement to add
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addEngagement(engagement: EngagementAdd, options?: any) {
+            return EngagementApiFp(configuration).addEngagement(engagement, options)(fetch, basePath);
+        },
+    };
+};
+
+/**
+ * EngagementApi - object-oriented interface
+ * @export
+ * @class EngagementApi
+ * @extends {BaseAPI}
+ */
+export class EngagementApi extends BaseAPI {
+    /**
+     * Add a new engagement or increment existing engagement number
+     * @param {EngagementAdd} engagement Engagement to add
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EngagementApi
+     */
+    public addEngagement(engagement: EngagementAdd, options?: any) {
+        return EngagementApiFp(this.configuration).addEngagement(engagement, options)(this.fetch, this.basePath);
     }
 
 }

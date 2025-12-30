@@ -22,6 +22,7 @@ import { Footer } from "@components/footer";
 import { TwitchFilled } from "@icons/twitch";
 import { twMerge } from "tailwind-merge";
 import { router } from "../main";
+import { engagementApi } from "@client/client";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -112,6 +113,7 @@ function RootComponent() {
   useEffect(() => {
     if (hello) {
       localStorage.setItem("referrer", hello);
+      engagementApi.addEngagement({ name: hello });
     }
     router.navigate({ to: router.state.location.pathname, replace: true });
   }, [hello]);
