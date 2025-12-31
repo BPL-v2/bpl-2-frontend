@@ -100,7 +100,16 @@ function SkillGem({
     }
   }
   return (
-    <span className={twMerge("truncate", position, text)}>{gem.nameSpec}</span>
+    <span
+      className={twMerge(
+        "truncate",
+        position,
+        text,
+        gem.changedFromLastSnapshot && "bg-success/20",
+      )}
+    >
+      {gem.nameSpec}
+    </span>
   );
 }
 

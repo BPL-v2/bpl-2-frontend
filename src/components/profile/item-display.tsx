@@ -55,6 +55,8 @@ export function ItemDisplay({
         "relative flex h-full w-full items-center justify-center rounded-lg bg-base-200 p-1",
         item && "cursor-help",
         slot.replaceAll(" ", "").toLowerCase(),
+        item?.modsChangedFromLastSnapshot && "outline outline-info",
+        item?.changedFromLastSnapshot && "outline outline-success",
       )}
       ref={itemRef}
       onMouseEnter={handleMouseEnter}

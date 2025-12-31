@@ -61,7 +61,6 @@ export default defineConfig({
             "@tanstack/react-table",
             "@tanstack/react-virtual",
           ],
-          "@heroicons": ["@heroicons/react"],
           "@embla": ["embla-carousel-react"],
           "@headlessui": ["@headlessui/react"],
           "@vendor": [

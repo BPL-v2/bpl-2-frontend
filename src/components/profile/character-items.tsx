@@ -54,7 +54,7 @@ export function CharacterItems({ pob }: { pob: PathOfBuilding }) {
   function toItemdisplay([slot, item]: [string | null, Item | undefined]) {
     return (
       <ItemDisplay
-        key={item?.id}
+        key={item?.id + "-" + slot}
         item={item}
         slot={slot}
         selectionSetter={setSelectedItem}
@@ -79,9 +79,11 @@ export function CharacterItems({ pob }: { pob: PathOfBuilding }) {
         </div>
         <div className="col-span-full"></div>
         {grafts
+          .sort((a, b) => a.slot!.localeCompare(b.slot!))
           .map((item) => [item.slot, item] as [string, Item])
           .map(toItemdisplay)}
         {jewels
+          .sort((a, b) => a.name.localeCompare(b.name))
           .map((item) => [item.slot, item] as [string, Item])
           .map(toItemdisplay)}
       </div>

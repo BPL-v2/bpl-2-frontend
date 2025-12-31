@@ -1,6 +1,7 @@
 import { GameVersion, ObjectiveType } from "@client/api";
 import {
   preloadCharacterData,
+  useFile,
   useGetEvents,
   useGetPoBs,
   useGetUser,
@@ -11,8 +12,13 @@ import { LazyCharacterChart } from "@components/profile/character-chart-lazy";
 import { PoB } from "@components/profile/pob";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
+import {
+  decodePoBExport,
+  determineDifferences,
+  PathOfBuilding,
+} from "@utils/pob";
 import { flatMap } from "@utils/utils";
-import { Suspense, useContext, useEffect, useState } from "react";
+import { Suspense, useContext, useEffect, useMemo, useState } from "react";
 
 function getDeltaTimeAfterLeagueStart(
   timestamp?: string,
@@ -63,7 +69,7 @@ export const Route = createFileRoute("/profile/$userId/$eventId/$characterId")({
 });
 
 function RouteComponent() {
-  const { scores } = useContext(GlobalStateContext);
+  const { scores, currentEvent } = useContext(GlobalStateContext);
   const { userId, characterId, eventId } = useParams({ from: Route.id });
   const { user } = useGetUser();
   const { events = [] } = useGetEvents();
@@ -73,8 +79,21 @@ function RouteComponent() {
   );
   const { pobs = [] } = useGetPoBs(userId, characterId);
   const event = events.find((e) => e.id === Number(eventId));
-  // const { atlasProgress = [] } = useGetUserAtlasProgress(eventId, userId);
-  // const [showAtlas, setShowAtlas] = useState<boolean>(false);
+  const { data: baseTypes = [] } = useFile<string[]>(
+    `/assets/${currentEvent.game_version}/items/basetypes.json`,
+  );
+  const decodedPobs = useMemo(() => {
+    if (!baseTypes || baseTypes.length === 0) return [];
+    const decoded: PathOfBuilding[] = [];
+    for (const pob of pobs) {
+      const dec = decodePoBExport(pob.export_string, baseTypes);
+      if (decoded.length > 0) {
+        determineDifferences(decoded[decoded.length - 1], dec);
+      }
+      decoded.push(dec);
+    }
+    return decoded;
+  }, [pobs, baseTypes]);
 
   useEffect(() => {
     if (pobs.length > 0) {
@@ -195,7 +214,7 @@ function RouteComponent() {
           })}
         </div>
       )} */}
-      {pobs.length > 0 && <PoB pobString={pobs[pobId]?.export_string} />}
+      {pobs.length > 0 && <PoB pob={decodedPobs[pobId]} />}
       <Suspense
         fallback={
           <div className="justify-center rounded-box bg-base-200 p-8">

@@ -119,6 +119,7 @@ export interface Gem {
   count: string;
   level: string;
   skillPart?: number;
+  changedFromLastSnapshot: boolean;
 }
 
 export interface Skill {
@@ -162,6 +163,10 @@ export interface Spec {
   masteryEffects: Record<number, number>;
   nodes: Set<number>;
   treeVersion: string;
+  changesFromLastSnapshot?: {
+    addedNodes: Set<number>;
+    removedNodes: Set<number>;
+  };
 }
 
 export interface PathOfBuilding {
@@ -198,6 +203,7 @@ export interface Mod {
   crafted: boolean;
   mutated: boolean;
   line: string;
+  changedFromLastSnapshot: boolean;
   tag?: string;
   variant?: string;
 }
@@ -225,6 +231,8 @@ export interface Item {
   explicits: Mod[];
   mutatedMods: Mod[];
   slot: string | null;
+  changedFromLastSnapshot: boolean;
+  modsChangedFromLastSnapshot: boolean;
 }
 
 function setPlayerStat(stats: PlayerStats, stat: string, value: number): void {
@@ -534,7 +542,7 @@ function setPlayerStat(stats: PlayerStats, stat: string, value: number): void {
 
 function pobstringToXml(pob: string): Document {
   const xmlString = pobstringToXmlString(pob);
-  console.log(xmlString);
+  // console.log(xmlString);
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(xmlString, "text/xml");
   if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
@@ -560,6 +568,90 @@ export function xmlStringToPobstring(xmlString: string): string {
     binary += String.fromCharCode(compressedBytes[i]);
   }
   return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_");
+}
+
+export function determineDifferences(
+  pob1: PathOfBuilding,
+  pob2: PathOfBuilding,
+) {
+  pob2.spec.changesFromLastSnapshot = {
+    addedNodes: pob2.spec.nodes.difference(pob1.spec.nodes),
+    removedNodes: pob1.spec.nodes.difference(pob2.spec.nodes),
+  };
+  const pob1slot2items = pob1.items.reduce(
+    (acc, item) => {
+      if (item.slot) {
+        acc[item.slot] = item;
+      }
+      return acc;
+    },
+    {} as Record<string, Item>,
+  );
+  const jewels = pob1.items.filter(
+    (item) =>
+      item.slot &&
+      (item.slot.includes("Abyssal") || item.slot.includes("Socket")),
+  );
+  for (const item of pob2.items) {
+    if (item.slot && pob1slot2items[item.slot]) {
+      let oldItem = pob1slot2items[item.slot];
+      if (item.slot.includes("Abyssal") || item.slot.includes("Socket")) {
+        // find matching jewel by id
+        const matchingJewel = jewels.find((jewel) => jewel.name === item.name);
+        if (matchingJewel) {
+          oldItem = matchingJewel;
+        } else {
+          item.changedFromLastSnapshot = true;
+          continue;
+        }
+      }
+      determineModDifferences(oldItem.implicits, item.implicits);
+      determineModDifferences(oldItem.enchants, item.enchants);
+      determineModDifferences(oldItem.explicits, item.explicits);
+      item.modsChangedFromLastSnapshot =
+        item.implicits.some((mod) => mod.changedFromLastSnapshot) ||
+        item.enchants.some((mod) => mod.changedFromLastSnapshot) ||
+        item.explicits.some((mod) => mod.changedFromLastSnapshot);
+      if (oldItem.name !== item.name) {
+        item.changedFromLastSnapshot = true;
+      }
+    } else {
+      item.changedFromLastSnapshot = true;
+    }
+  }
+  const slot2gems = pob1.skills.skillSets
+    .flatMap((set) => set.skills)
+    .reduce(
+      (acc, skill) => {
+        if (!acc[skill.slot]) {
+          acc[skill.slot] = [];
+        }
+        acc[skill.slot].push(...skill.gems);
+        return acc;
+      },
+      {} as Record<string, Gem[]>,
+    );
+  for (const skillSet of pob2.skills.skillSets) {
+    for (const skill of skillSet.skills) {
+      if (slot2gems[skill.slot]) {
+        for (const gem of skill.gems) {
+          const matchingGem = slot2gems[skill.slot].find(
+            (g) => g.gemId === gem.gemId && g.variantId === gem.variantId,
+          );
+          if (!matchingGem) {
+            gem.changedFromLastSnapshot = true;
+          }
+        }
+      }
+    }
+  }
+}
+
+function determineModDifferences(oldMods: Mod[], newMods: Mod[]): void {
+  const oldModLines = oldMods.map((mod) => mod.line);
+  for (const mod of newMods) {
+    mod.changedFromLastSnapshot = !oldModLines.includes(mod.line);
+  }
 }
 
 export function decodePoBExport(
@@ -697,6 +789,7 @@ export function decodePoBExport(
             skillId: gemElement.getAttribute("skillId") || "",
             count: gemElement.getAttribute("count") || "",
             level: gemElement.getAttribute("level") || "",
+            changedFromLastSnapshot: false,
           };
 
           const skillPart = gemElement.getAttribute("skillPart");
@@ -905,7 +998,15 @@ function parseMod(modLine: string): Mod {
       }
     }
   }
-  return { fractured, crafted, mutated, line: line.trim(), tag, variant };
+  return {
+    fractured,
+    crafted,
+    mutated,
+    line: line.trim(),
+    changedFromLastSnapshot: false,
+    tag,
+    variant,
+  };
 }
 
 function extractMagicBase(
@@ -1110,5 +1211,7 @@ export function parseItem(
     mutatedMods,
     slot,
     id,
+    changedFromLastSnapshot: false,
+    modsChangedFromLastSnapshot: false,
   };
 }

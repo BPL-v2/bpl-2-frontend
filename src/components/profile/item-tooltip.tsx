@@ -131,7 +131,15 @@ export function ItemTooltip({ item, itemX, itemY }: Props) {
           )}
         >
           {item.enchants.map((enchant) => (
-            <span key={enchant.line} className={"text-crafted"}>
+            <span
+              key={enchant.line}
+              className={twMerge(
+                "text-crafted",
+                !item.changedFromLastSnapshot &&
+                  enchant.changedFromLastSnapshot &&
+                  "bg-info/30",
+              )}
+            >
               {enchant.line}
             </span>
           ))}
@@ -145,7 +153,15 @@ export function ItemTooltip({ item, itemX, itemY }: Props) {
           )}
         >
           {item.implicits.map((implicit) => (
-            <span key={implicit.line} className={"text-magic"}>
+            <span
+              key={implicit.line}
+              className={twMerge(
+                "text-magic",
+                !item.changedFromLastSnapshot &&
+                  implicit.changedFromLastSnapshot &&
+                  "bg-info/30",
+              )}
+            >
               {implicit.line}
             </span>
           ))}
@@ -161,13 +177,14 @@ export function ItemTooltip({ item, itemX, itemY }: Props) {
           {item.explicits.map((explicit) => (
             <span
               key={explicit.line}
-              className={
-                explicit.crafted
-                  ? "text-crafted"
-                  : explicit.fractured
-                    ? "text-fractured"
-                    : "text-magic"
-              }
+              className={twMerge(
+                "text-magic",
+                explicit.crafted && "text-crafted",
+                explicit.fractured && "text-fractured",
+                !item.changedFromLastSnapshot &&
+                  explicit.changedFromLastSnapshot &&
+                  "bg-info/30",
+              )}
             >
               {explicit.line}
             </span>

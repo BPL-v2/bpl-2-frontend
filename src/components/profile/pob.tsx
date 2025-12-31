@@ -2,31 +2,21 @@
 // Licensed under GNU AGPL v3.0: https://www.gnu.org/licenses/agpl-3.0.html
 // Copyright (c) Dav1dde and contributors
 import { ArrowsPointingInIcon } from "@heroicons/react/24/outline";
-import { decodePoBExport } from "@utils/pob";
-import { useContext, useMemo, useState } from "react";
+import { PathOfBuilding } from "@utils/pob";
+import { useMemo, useState } from "react";
 import Tree from "./tree";
 import { CharacterItems } from "./character-items";
 import { CharacterSkills } from "./character-skills";
 import { CharacterStats } from "./character-stats";
-import { useFile } from "@client/query";
-import { GlobalStateContext } from "@utils/context-provider";
 
 type Props = {
-  pobString?: string;
+  pob?: PathOfBuilding;
 };
 
-export function PoB({ pobString }: Props) {
-  const { currentEvent } = useContext(GlobalStateContext);
+export function PoB({ pob }: Props) {
   const [treeExpanded, setTreeExpanded] = useState(false);
-  const { data: baseTypes = [] } = useFile<string[]>(
-    `/assets/${currentEvent.game_version}/items/basetypes.json`,
-  );
-  const pob = useMemo(
-    () => decodePoBExport(pobString, baseTypes),
-    [pobString, baseTypes],
-  );
   const passiveTree = useMemo(() => {
-    if (!pob.spec.nodes) return null;
+    if (!pob) return null;
     return (
       <Tree
         version={pob.spec.treeVersion}
@@ -38,8 +28,8 @@ export function PoB({ pobString }: Props) {
         showUnallocated={true}
       />
     );
-  }, [pob.spec.nodes, pob.build.ascendClassName, treeExpanded]);
-  if (!pobString) {
+  }, [pob, treeExpanded]);
+  if (!pob) {
     return null;
   }
   return (
