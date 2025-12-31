@@ -131,17 +131,7 @@ function SubmissionPage() {
         header: "Value",
         accessorKey: "number",
         cell: (info) => {
-          // const scoringMethod =
-          //   getObjective(info).scoring_preset?.scoring_method;
-          // console.log(getObjective(info).scoring_preset_id);
-          // if (
-          //   !scoringMethod ||
-          //   (scoringMethod !== ScoringMethod.RANKED_VALUE &&
-          //     scoringMethod !== ScoringMethod.RANKED_REVERSE)
-          // ) {
-          //   return;
-          // }
-          return info.getValue();
+          return info.row.original.number > 1 ? info.row.original.number : "";
         },
         size: 100,
       },

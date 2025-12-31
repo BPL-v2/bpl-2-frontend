@@ -59,7 +59,6 @@ const SignupButton = () => {
               alert("You need to link your Discord account to apply.");
               return;
             }
-            console.log(partnerWish);
             createSignup({
               eventId: upcomingEvent.id,
               body: {

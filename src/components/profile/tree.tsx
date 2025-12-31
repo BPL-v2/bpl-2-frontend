@@ -44,17 +44,12 @@ function filterActiveConnections(
   }
 
   if (!nodes.has(id1) || !nodes.has(id2)) {
-    const isAscendancy = ascendancies.some((asc) => line.includes(asc));
     for (const asc of ascendancies) {
       if (line.includes(asc)) {
         line = line.replace("ascendancy", "");
       }
     }
-    if (isAscendancy) {
-      return line;
-    } else {
-      return "";
-    }
+    return line;
   }
   if (changeLineStyle) {
     const style = changeLineStyle(id1, id2);
@@ -92,17 +87,12 @@ function filterActiveNodes(
     return line.slice(undefined, line.length - 2) + " removed />";
   }
   if (!nodes.has(nodeId)) {
-    const isAscendancy = ascendancies.some((asc) => line.includes(asc));
     for (const asc of ascendancies) {
       if (line.includes(asc)) {
         line = line.replace("ascendancy", "");
       }
     }
-    if (isAscendancy) {
-      return line;
-    } else {
-      return "";
-    }
+    return line;
   }
   line = line.replace(`id="n`, `id="xn`);
   if (changeNodeStyle) {
@@ -181,8 +171,6 @@ export default function Tree({
   removedNodes,
   ...props
 }: Props) {
-  console.log(masteryMap);
-
   const [hoveredNode, setHoveredNode] = useState<number>();
   const [nodeCoordinates, setNodeCoordinates] = useState<{
     x: number;
@@ -212,13 +200,6 @@ export default function Tree({
       nodeCounts[29045] = 1;
     }
   }
-
-  const baseTree = useMemo(() => {
-    if (!svg || !showUnallocated) {
-      return "";
-    }
-    return <div dangerouslySetInnerHTML={{ __html: svg || "" }} />;
-  }, [svg, showUnallocated]);
 
   const newTree = useMemo(() => {
     if (!svg || nodes.size === 0) {
@@ -260,7 +241,10 @@ export default function Tree({
     for (const element of activeTreeRef.current.getElementsByTagName(
       "circle",
     )) {
-      const node = parseInt(element.id.replace("xn-", ""), 10);
+      const node = parseInt(
+        element.id.replace("xn-", "").replace("n-", ""),
+        10,
+      );
       if (selectedNodes?.has(node)) {
         element.setAttribute("selected", "");
       } else {
@@ -314,24 +298,22 @@ export default function Tree({
     }
     return (
       <div
-        className="pointer-events-none fixed z-50 rounded-box border-2 border-highlight bg-base-300/95"
+        className="pointer-events-none card fixed z-50 rounded-box bg-base-200/90 shadow-lg"
         style={{
           top: nodeCoordinates.y + 20,
           left: nodeCoordinates.x - 200,
           width: 400,
         }}
       >
-        <div className="p-2">
-          <h2 className="text-center text-lg font-bold">{node.name}</h2>
-          <div className="p-1">
-            {node.stats && node.stats.length > 0 && (
-              <ul className="text-left">
-                {node.stats.map((stat, index) => (
-                  <li key={index}>{stat}</li>
-                ))}
-              </ul>
-            )}
-          </div>
+        <div className="card-body">
+          <h2 className="card-title text-xl font-bold">{node.name}</h2>
+          {node.stats && node.stats.length > 0 && (
+            <ul className="text-left">
+              {node.stats.map((stat, index) => (
+                <li key={index}>{stat}</li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     );
@@ -347,7 +329,6 @@ export default function Tree({
         )}
       >
         <div {...props} className={twMerge("relative", props.className)}>
-          {baseTree}
           {newTree}
         </div>
       </div>
