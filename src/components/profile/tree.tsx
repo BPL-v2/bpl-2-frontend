@@ -188,7 +188,6 @@ export default function Tree({
     x: number;
     y: number;
   }>({ x: 0, y: 0 });
-  const baseTreeRef = useRef<HTMLDivElement>(null);
   const activeTreeRef = useRef<HTMLDivElement>(null);
   const { data: svg } = useFile<string>(
     `/assets/trees/svg/${type}/${version}.svg`,
