@@ -467,12 +467,21 @@ html {
 }
 
 .passiveTree circle[active] {
-  stroke: var(--color-info);
   fill: var(--color-info);
-  r: 60;
   stroke-width: 100;
   stroke-opacity: 0;
 }
+.passiveTree circle[added] {
+  fill: var(--color-success);
+  stroke-width: 100;
+  stroke-opacity: 0;
+}
+.passiveTree circle[removed] {
+  fill: var(--color-error);
+  stroke-width: 100;
+  stroke-opacity: 0;
+}
+
 .passiveTree circle:hover {
   fill: red;
   r: 100;
@@ -481,12 +490,27 @@ html {
 
 .passiveTree path[active] {
   stroke: var(--color-info);
-  stroke-width: 50;
+  stroke-width: 40;
 }
-
 .passiveTree line[active] {
   stroke: var(--color-info);
-  stroke-width: 50;
+  stroke-width: 40;
+}
+.passiveTree path[added] {
+  stroke: var(--color-success);
+  stroke-width: 40;
+}
+.passiveTree line[added] {
+  stroke: var(--color-success);
+  stroke-width: 40;
+}
+.passiveTree path[removed] {
+  stroke: var(--color-error);
+  stroke-width: 40;
+}
+.passiveTree line[removed] {
+  stroke: var(--color-error);
+  stroke-width: 40;
 }
 
 .passiveTree .mastery {

@@ -484,7 +484,7 @@ function RouteComponent() {
             if (a.user?.id != b.user?.id) {
               return a.user?.id - b.user?.id;
             }
-            return a.wish.priority - b.wish.priority;
+            return a.wish.value.localeCompare(b.wish.value);
           })}
       />
     </div>

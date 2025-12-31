@@ -21,11 +21,14 @@ export function PoB({ pob }: Props) {
       <Tree
         version={pob.spec.treeVersion}
         nodes={pob.spec.nodes}
+        masteryMap={pob.spec.masteryEffects}
         type="passives"
         ascendancies={[pob.build.ascendClassName]}
         children=" "
         tooltip={treeExpanded}
         showUnallocated={true}
+        newNodes={pob.spec.changesFromLastSnapshot?.addedNodes}
+        removedNodes={pob.spec.changesFromLastSnapshot?.removedNodes}
       />
     );
   }, [pob, treeExpanded]);
@@ -35,12 +38,14 @@ export function PoB({ pob }: Props) {
   return (
     <div className="flex flex-col gap-4">
       {treeExpanded && (
-        <div className="relative w-full rounded-box bg-base-300 p-4">
-          {passiveTree}
-          <ArrowsPointingInIcon
-            className="absolute top-2 right-2 size-8 cursor-pointer rounded-full border-2 border-base-content p-1 hover:border-info hover:text-info"
-            onClick={() => setTreeExpanded(false)}
-          />
+        <div className="relative flex w-full justify-center rounded-box bg-base-300 p-4">
+          <div className="w-[60%]">
+            {passiveTree}
+            <ArrowsPointingInIcon
+              className="absolute top-4 right-4 size-8 cursor-pointer rounded-full border-2 border-base-content p-1 hover:border-info hover:text-info"
+              onClick={() => setTreeExpanded(false)}
+            />
+          </div>
         </div>
       )}
       <div className="flex min-h-170 flex-col gap-4 text-left lg:flex-row">

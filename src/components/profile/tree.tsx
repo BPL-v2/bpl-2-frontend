@@ -6,6 +6,7 @@ import { twMerge } from "tailwind-merge";
 type Props = {
   version: string;
   nodes: Set<number>;
+  masteryMap?: Record<number, number>;
   nodeCounts?: Record<number, number>;
   type: "atlas" | "passives";
   index?: number;
@@ -16,6 +17,8 @@ type Props = {
   changeLineStyle?: (node1: number, node2: number) => string;
   selectedNodes?: Set<number>;
   setSelectedNodes?: (nodes: Set<number>) => void;
+  newNodes?: Set<number>;
+  removedNodes?: Set<number>;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 function filterActiveConnections(
@@ -23,6 +26,8 @@ function filterActiveConnections(
   nodes: Set<number>,
   ascendancies: string[],
   changeLineStyle?: (node1: number, node2: number) => string,
+  newNodes?: Set<number>,
+  removedNodes?: Set<number>,
 ): string {
   const idMatch = line.match(/c-(\d+)-(\d+)/);
   if (!idMatch) {
@@ -30,6 +35,14 @@ function filterActiveConnections(
   }
   const id1 = parseInt(idMatch[1]);
   const id2 = parseInt(idMatch[2]);
+
+  if (
+    (removedNodes?.has(id1) && (nodes.has(id2) || removedNodes.has(id2))) ||
+    (removedNodes?.has(id2) && (nodes.has(id1) || removedNodes.has(id1)))
+  ) {
+    return line.slice(undefined, line.length - 2) + " removed />";
+  }
+
   if (!nodes.has(id1) || !nodes.has(id2)) {
     const isAscendancy = ascendancies.some((asc) => line.includes(asc));
     for (const asc of ascendancies) {
@@ -51,6 +64,12 @@ function filterActiveConnections(
       );
     }
   }
+  if (
+    (newNodes?.has(id1) && (newNodes?.has(id2) || nodes.has(id2))) ||
+    (newNodes?.has(id2) && (newNodes?.has(id1) || nodes.has(id1)))
+  ) {
+    return line.slice(undefined, line.length - 2) + " added />";
+  }
 
   return line.slice(undefined, line.length - 2) + ` active />`;
 }
@@ -60,6 +79,8 @@ function filterActiveNodes(
   nodes: Set<number>,
   ascendancies: string[],
   changeNodeStyle?: (node: number) => string,
+  newNodes?: Set<number>,
+  removedNodes?: Set<number>,
 ): string {
   const idMatch = line.match(/id="n-(\d+)"/);
   if (!idMatch) {
@@ -67,6 +88,9 @@ function filterActiveNodes(
   }
 
   const nodeId = parseInt(idMatch[1]);
+  if (removedNodes?.has(nodeId)) {
+    return line.slice(undefined, line.length - 2) + " removed />";
+  }
   if (!nodes.has(nodeId)) {
     const isAscendancy = ascendancies.some((asc) => line.includes(asc));
     for (const asc of ascendancies) {
@@ -89,6 +113,9 @@ function filterActiveNodes(
       );
     }
   }
+  if (newNodes?.has(nodeId)) {
+    return line.slice(undefined, line.length - 2) + " added />";
+  }
 
   return line.slice(undefined, line.length - 2) + " active />";
 }
@@ -99,6 +126,8 @@ function filterActiveTree(
   ascendancies: string[],
   changeNodeStyle?: (node: number) => string,
   changeLineStyle?: (node1: number, node2: number) => string,
+  newNodes?: Set<number>,
+  removedNodes?: Set<number>,
 ): string {
   var atConnectors = false;
   var atNodes = false;
@@ -116,9 +145,18 @@ function filterActiveTree(
         nodes,
         ascendancies,
         changeLineStyle,
+        newNodes,
+        removedNodes,
       );
     } else if (atNodes) {
-      line = filterActiveNodes(line, nodes, ascendancies, changeNodeStyle);
+      line = filterActiveNodes(
+        line,
+        nodes,
+        ascendancies,
+        changeNodeStyle,
+        newNodes,
+        removedNodes,
+      );
     }
     newData.push(line);
   }
@@ -128,6 +166,7 @@ function filterActiveTree(
 export default function Tree({
   version,
   nodes,
+  masteryMap = {},
   type,
   index = -1,
   ascendancies = [],
@@ -138,13 +177,18 @@ export default function Tree({
   changeLineStyle,
   selectedNodes,
   setSelectedNodes,
+  newNodes,
+  removedNodes,
   ...props
 }: Props) {
+  console.log(masteryMap);
+
   const [hoveredNode, setHoveredNode] = useState<number>();
   const [nodeCoordinates, setNodeCoordinates] = useState<{
     x: number;
     y: number;
   }>({ x: 0, y: 0 });
+  const baseTreeRef = useRef<HTMLDivElement>(null);
   const activeTreeRef = useRef<HTMLDivElement>(null);
   const { data: svg } = useFile<string>(
     `/assets/trees/svg/${type}/${version}.svg`,
@@ -192,20 +236,13 @@ export default function Tree({
             ascendancies,
             changeNodeStyle,
             changeLineStyle,
+            newNodes,
+            removedNodes,
           ),
         }}
       />
     );
   }, [svg, nodes, ascendancies]);
-
-  const nodeMap: Record<number, SVGCircleElement> = {};
-  if (activeTreeRef.current) {
-    const circles = activeTreeRef.current.getElementsByTagName("circle");
-    for (const circle of circles) {
-      const nodeId = parseInt(circle.id.replace("xn-", ""), 10);
-      nodeMap[nodeId] = circle;
-    }
-  }
 
   useEffect(() => {
     if (!tooltip || !activeTreeRef.current) {
@@ -268,6 +305,7 @@ export default function Tree({
     nodeId?: number,
     nodeCoordinates?: { x: number; y: number },
   ) {
+    console.log("renderNodeDetails", nodeId);
     if (!json || !nodeId || !nodeCoordinates) {
       return;
     }
@@ -314,7 +352,10 @@ export default function Tree({
           {newTree}
         </div>
       </div>
-      {renderNodeDetails(hoveredNode, nodeCoordinates)}
+      {renderNodeDetails(
+        hoveredNode ? masteryMap[hoveredNode] || hoveredNode : undefined,
+        nodeCoordinates,
+      )}
     </div>
   );
 }
