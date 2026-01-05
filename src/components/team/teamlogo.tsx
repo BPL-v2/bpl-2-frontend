@@ -18,7 +18,11 @@ export function TeamLogo({ team, eventId, ...props }: TeamLogoProps) {
           "flex h-full w-full flex-row items-center justify-center rounded-box",
           props.className,
         )}
-        style={{ ...props.style, backgroundColor: team.color }}
+        style={{
+          ...props.style,
+          backgroundColor:
+            team.color !== "#000000" ? team.color : "var(--color-highlight)",
+        }}
       >
         <div className="text-center text-2xl font-bold text-base-100">
           {team.name}

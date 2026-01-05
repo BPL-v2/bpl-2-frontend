@@ -8,7 +8,10 @@ export function TeamName({ team, ...props }: TeamNameProps) {
     return <span {...props}>-</span>;
   }
   return (
-    <span {...props} style={{ color: team.color }}>
+    <span
+      {...props}
+      style={team.color !== "#000000" ? { color: team.color } : undefined}
+    >
       {team.name}
     </span>
   );

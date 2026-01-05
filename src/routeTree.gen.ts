@@ -33,6 +33,7 @@ import { Route as ScoresDelveRouteImport } from './routes/scores/delve'
 import { Route as ScoresDailiesRouteImport } from './routes/scores/dailies'
 import { Route as ScoresCollectionsRouteImport } from './routes/scores/collections'
 import { Route as ScoresBountiesRouteImport } from './routes/scores/bounties'
+import { Route as ScoresBingoRouteImport } from './routes/scores/bingo'
 import { Route as AdminUserManagementRouteImport } from './routes/admin/user-management'
 import { Route as AdminTimingsRouteImport } from './routes/admin/timings'
 import { Route as AdminTeamSuggestionsRouteImport } from './routes/admin/team-suggestions'
@@ -177,6 +178,11 @@ const ScoresBountiesRoute = ScoresBountiesRouteImport.update({
   path: '/bounties',
   getParentRoute: () => ScoresRouteRoute,
 } as any)
+const ScoresBingoRoute = ScoresBingoRouteImport.update({
+  id: '/bingo',
+  path: '/bingo',
+  getParentRoute: () => ScoresRouteRoute,
+} as any)
 const AdminUserManagementRoute = AdminUserManagementRouteImport.update({
   id: '/admin/user-management',
   path: '/admin/user-management',
@@ -315,6 +321,7 @@ export interface FileRoutesByFullPath {
   '/admin/team-suggestions': typeof AdminTeamSuggestionsRoute
   '/admin/timings': typeof AdminTimingsRoute
   '/admin/user-management': typeof AdminUserManagementRoute
+  '/scores/bingo': typeof ScoresBingoRoute
   '/scores/bounties': typeof ScoresBountiesRoute
   '/scores/collections': typeof ScoresCollectionsRoute
   '/scores/dailies': typeof ScoresDailiesRoute
@@ -364,6 +371,7 @@ export interface FileRoutesByTo {
   '/admin/team-suggestions': typeof AdminTeamSuggestionsRoute
   '/admin/timings': typeof AdminTimingsRoute
   '/admin/user-management': typeof AdminUserManagementRoute
+  '/scores/bingo': typeof ScoresBingoRoute
   '/scores/bounties': typeof ScoresBountiesRoute
   '/scores/collections': typeof ScoresCollectionsRoute
   '/scores/dailies': typeof ScoresDailiesRoute
@@ -414,6 +422,7 @@ export interface FileRoutesById {
   '/admin/team-suggestions': typeof AdminTeamSuggestionsRoute
   '/admin/timings': typeof AdminTimingsRoute
   '/admin/user-management': typeof AdminUserManagementRoute
+  '/scores/bingo': typeof ScoresBingoRoute
   '/scores/bounties': typeof ScoresBountiesRoute
   '/scores/collections': typeof ScoresCollectionsRoute
   '/scores/dailies': typeof ScoresDailiesRoute
@@ -465,6 +474,7 @@ export interface FileRouteTypes {
     | '/admin/team-suggestions'
     | '/admin/timings'
     | '/admin/user-management'
+    | '/scores/bingo'
     | '/scores/bounties'
     | '/scores/collections'
     | '/scores/dailies'
@@ -514,6 +524,7 @@ export interface FileRouteTypes {
     | '/admin/team-suggestions'
     | '/admin/timings'
     | '/admin/user-management'
+    | '/scores/bingo'
     | '/scores/bounties'
     | '/scores/collections'
     | '/scores/dailies'
@@ -563,6 +574,7 @@ export interface FileRouteTypes {
     | '/admin/team-suggestions'
     | '/admin/timings'
     | '/admin/user-management'
+    | '/scores/bingo'
     | '/scores/bounties'
     | '/scores/collections'
     | '/scores/dailies'
@@ -795,6 +807,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScoresBountiesRouteImport
       parentRoute: typeof ScoresRouteRoute
     }
+    '/scores/bingo': {
+      id: '/scores/bingo'
+      path: '/bingo'
+      fullPath: '/scores/bingo'
+      preLoaderRoute: typeof ScoresBingoRouteImport
+      parentRoute: typeof ScoresRouteRoute
+    }
     '/admin/user-management': {
       id: '/admin/user-management'
       path: '/admin/user-management'
@@ -960,6 +979,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface ScoresRouteRouteChildren {
+  ScoresBingoRoute: typeof ScoresBingoRoute
   ScoresBountiesRoute: typeof ScoresBountiesRoute
   ScoresCollectionsRoute: typeof ScoresCollectionsRoute
   ScoresDailiesRoute: typeof ScoresDailiesRoute
@@ -975,6 +995,7 @@ interface ScoresRouteRouteChildren {
 }
 
 const ScoresRouteRouteChildren: ScoresRouteRouteChildren = {
+  ScoresBingoRoute: ScoresBingoRoute,
   ScoresBountiesRoute: ScoresBountiesRoute,
   ScoresCollectionsRoute: ScoresCollectionsRoute,
   ScoresDailiesRoute: ScoresDailiesRoute,

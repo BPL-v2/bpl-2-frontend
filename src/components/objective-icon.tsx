@@ -17,7 +17,8 @@ export function ObjectiveIcon({
   const img_location = getImageLocation(objective, gameVersion);
   const itemName = getItemName(objective);
   if (!img_location) {
-    return <div className={twMerge("size-14", className)}> </div>;
+    return;
+    // return <div className={twMerge("size-14", className)}> </div>;
   }
   let wikilink: string | undefined = undefined;
   if (itemName) {

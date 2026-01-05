@@ -81,6 +81,47 @@ export class RequiredError extends Error {
 /**
  * 
  * @export
+ * @interface AchievementCreate
+ */
+export interface AchievementCreate {
+    /**
+     * 
+     * @type {AchievementName}
+     * @memberof AchievementCreate
+     */
+    name: AchievementName;
+    /**
+     * 
+     * @type {number}
+     * @memberof AchievementCreate
+     */
+    user_id: number;
+}
+
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+export enum AchievementName {
+    Participated_in_an_event = 'Participated in an event',
+    Won_an_event = 'Won an event',
+    Teamlead = 'Teamlead',
+    MVP = 'MVP',
+    Played_5_leagues = 'Played 5 leagues',
+    Played_10_leagues = 'Played 10 leagues',
+    Reached_level_90 = 'Reached level 90',
+    Reached_level_95 = 'Reached level 95',
+    Reached_level_100 = 'Reached level 100',
+    Submitted_a_bounty = 'Submitted a bounty',
+    Submitted_a_point_unique = 'Submitted a point unique',
+    Played_5_different_ascendancies = 'Played 5 different ascendancies',
+    Played_10_different_ascendancies = 'Played 10 different ascendancies'
+}
+
+/**
+ * 
+ * @export
  * @enum {string}
  */
 export enum Action {
@@ -110,6 +151,7 @@ export interface AddGuildStashHistoryResponse {
  */
 export enum AggregationType {
     SUM_LATEST = 'SUM_LATEST',
+    LATEST = 'LATEST',
     EARLIEST = 'EARLIEST',
     EARLIEST_FRESH_ITEM = 'EARLIEST_FRESH_ITEM',
     MAXIMUM = 'MAXIMUM',
@@ -2426,8 +2468,7 @@ export enum JobType {
     EvaluateStashChanges = 'EvaluateStashChanges',
     FetchCharacterData = 'FetchCharacterData',
     FetchGuildStashes = 'FetchGuildStashes',
-    DetermineGuildStashAccess = 'DetermineGuildStashAccess',
-    RefreshPoETokens = 'RefreshPoETokens'
+    DetermineGuildStashAccess = 'DetermineGuildStashAccess'
 }
 
 /**
@@ -2624,7 +2665,29 @@ export enum NumberField {
     DELVE_DEPTH_PAST_100 = 'DELVE_DEPTH_PAST_100',
     PANTHEON = 'PANTHEON',
     ASCENDANCY = 'ASCENDANCY',
+    FULLY_ASCENDED = 'FULLY_ASCENDED',
+    BLOODLINE_ASCENDANCY = 'BLOODLINE_ASCENDANCY',
     PLAYER_SCORE = 'PLAYER_SCORE',
+    WEAPON_QUALITY = 'WEAPON_QUALITY',
+    ARMOR_QUALITY = 'ARMOR_QUALITY',
+    FLASK_QUALITY = 'FLASK_QUALITY',
+    EVASION = 'EVASION',
+    ENERGY_SHIELD = 'ENERGY_SHIELD',
+    ARMOUR = 'ARMOUR',
+    HP = 'HP',
+    MANA = 'MANA',
+    FULL_DPS = 'FULL_DPS',
+    PRIME_ASCENDANCY = 'PRIME_ASCENDANCY',
+    EHP = 'EHP',
+    INC_MOVEMENT_SPEED = 'INC_MOVEMENT_SPEED',
+    PHYS_MAX_HIT = 'PHYS_MAX_HIT',
+    ELE_MAX_HIT = 'ELE_MAX_HIT',
+    ATLAS_POINTS = 'ATLAS_POINTS',
+    INFLUENCE_EQUIPPED = 'INFLUENCE_EQUIPPED',
+    FOULBORN_EQUIPPED = 'FOULBORN_EQUIPPED',
+    GEMS_EQUIPPED = 'GEMS_EQUIPPED',
+    CORRUPTED_ITEMS_EQUIPPED = 'CORRUPTED_ITEMS_EQUIPPED',
+    JEWELS_WITH_IMPLICITS_EQUIPPED = 'JEWELS_WITH_IMPLICITS_EQUIPPED',
     SUBMISSION_VALUE = 'SUBMISSION_VALUE',
     FINISHED_OBJECTIVES = 'FINISHED_OBJECTIVES'
 }
@@ -3465,7 +3528,8 @@ export enum ScoringMethod {
     RANKED_REVERSE = 'RANKED_REVERSE',
     RANKED_COMPLETION_TIME = 'RANKED_COMPLETION_TIME',
     BONUS_PER_COMPLETION = 'BONUS_PER_COMPLETION',
-    BINGO_3 = 'BINGO_3'
+    BINGO_3 = 'BINGO_3',
+    BINGO_BOARD = 'BINGO_BOARD'
 }
 
 /**
@@ -4408,6 +4472,253 @@ export interface ValidationRequest {
     timeout_seconds: number;
 }
 
+
+/**
+ * AchievementApi - fetch parameter creator
+ * @export
+ */
+export const AchievementApiFetchParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Add new achievement to the system.
+         * @summary Add achievement
+         * @param {AchievementCreate} achievements Achievement to add
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addAchievement(achievements: AchievementCreate, options: any = {}): FetchArgs {
+            // verify required parameter 'achievements' is not null or undefined
+            if (achievements === null || achievements === undefined) {
+                throw new RequiredError('achievements','Required parameter achievements was null or undefined when calling addAchievement.');
+            }
+            const localVarPath = `/achievements`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"AchievementCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(achievements || {}) : (achievements || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Retrieve all user achievements in the system.
+         * @summary Get achievements
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAchievements(options: any = {}): FetchArgs {
+            const localVarPath = `/achievements`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Update achievements for all users based on their current progress.
+         * @summary Update achievements
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateAchievements(options: any = {}): FetchArgs {
+            const localVarPath = `/achievements`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'PATCH' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * AchievementApi - functional programming interface
+ * @export
+ */
+export const AchievementApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * Add new achievement to the system.
+         * @summary Add achievement
+         * @param {AchievementCreate} achievements Achievement to add
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addAchievement(achievements: AchievementCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = AchievementApiFetchParamCreator(configuration).addAchievement(achievements, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response;
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * Retrieve all user achievements in the system.
+         * @summary Get achievements
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAchievements(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<{ [key: string]: Array<number>; }> {
+            const localVarFetchArgs = AchievementApiFetchParamCreator(configuration).getAchievements(options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * Update achievements for all users based on their current progress.
+         * @summary Update achievements
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateAchievements(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = AchievementApiFetchParamCreator(configuration).updateAchievements(options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response;
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+    }
+};
+
+/**
+ * AchievementApi - factory interface
+ * @export
+ */
+export const AchievementApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+    return {
+        /**
+         * Add new achievement to the system.
+         * @summary Add achievement
+         * @param {AchievementCreate} achievements Achievement to add
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addAchievement(achievements: AchievementCreate, options?: any) {
+            return AchievementApiFp(configuration).addAchievement(achievements, options)(fetch, basePath);
+        },
+        /**
+         * Retrieve all user achievements in the system.
+         * @summary Get achievements
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAchievements(options?: any) {
+            return AchievementApiFp(configuration).getAchievements(options)(fetch, basePath);
+        },
+        /**
+         * Update achievements for all users based on their current progress.
+         * @summary Update achievements
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateAchievements(options?: any) {
+            return AchievementApiFp(configuration).updateAchievements(options)(fetch, basePath);
+        },
+    };
+};
+
+/**
+ * AchievementApi - object-oriented interface
+ * @export
+ * @class AchievementApi
+ * @extends {BaseAPI}
+ */
+export class AchievementApi extends BaseAPI {
+    /**
+     * Add new achievement to the system.
+     * @summary Add achievement
+     * @param {AchievementCreate} achievements Achievement to add
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AchievementApi
+     */
+    public addAchievement(achievements: AchievementCreate, options?: any) {
+        return AchievementApiFp(this.configuration).addAchievement(achievements, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Retrieve all user achievements in the system.
+     * @summary Get achievements
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AchievementApi
+     */
+    public getAchievements(options?: any) {
+        return AchievementApiFp(this.configuration).getAchievements(options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * Update achievements for all users based on their current progress.
+     * @summary Update achievements
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AchievementApi
+     */
+    public updateAchievements(options?: any) {
+        return AchievementApiFp(this.configuration).updateAchievements(options)(this.fetch, this.basePath);
+    }
+
+}
 
 /**
  * ActivityApi - fetch parameter creator

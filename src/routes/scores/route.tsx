@@ -33,7 +33,8 @@ type scoringTabKey =
   | "heist"
   | "gems"
   | "scarabs"
-  | "delve";
+  | "delve"
+  | "bingo";
 
 type ScoreQueryParams = {
   rules: boolean;
@@ -144,6 +145,12 @@ function ScoringPage() {
         key: "delve",
         rules: <DelveTabRules />,
         visible: currentEvent.game_version === GameVersion.poe1,
+      },
+      {
+        name: "Bingo",
+        key: "bingo",
+        rules: <></>,
+        visible: true,
       },
     ];
   }, [currentEvent]);

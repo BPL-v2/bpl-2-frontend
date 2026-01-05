@@ -5,6 +5,17 @@ interface ProgressBarProps extends React.HTMLAttributes<HTMLElement> {
   maxVal: number;
   gotPoints?: boolean;
 }
+
+function formatNumbers(num1: number, num2: number): string {
+  if (num2 >= 1_000_000) {
+    return `${(num1 / 1_000_000).toFixed(1)}M / ${(num2 / 1_000_000).toFixed(num2 % 1_000_000 ? 1 : 0)}M`;
+  } else if (num2 >= 1_000) {
+    return `${(num1 / 1_000).toFixed(1)}K / ${(num2 / 1_000).toFixed(num2 % 1_000 ? 1 : 0)}K`;
+  } else {
+    return `${num1} / ${num2}`;
+  }
+}
+
 export function ProgressBar({
   value,
   maxVal,
@@ -31,7 +42,10 @@ export function ProgressBar({
           gotPoints ? "text-success" : isFinished ? "text-warning" : ""
         }
       >
-        {value}/{maxVal}
+        {/* dont line break */}
+        <span className="whitespace-nowrap">
+          {formatNumbers(value, maxVal)}
+        </span>
       </div>
     </div>
   );

@@ -127,6 +127,8 @@ function getPotentialPointsForScoringMethod(
       return getPotentialPointsValue(objective);
     case ScoringMethod.BONUS_PER_COMPLETION:
       return getPotentialBonusPointsPerChild(objective);
+    case ScoringMethod.BINGO_BOARD:
+      return getPotentialPointsRanked(objective);
     default:
       return {};
   }
