@@ -1,7 +1,7 @@
 import { CategoryIcon } from "@icons/category-icons";
 import { Medal } from "@icons/medal";
 import { ScoreObjective } from "@mytypes/score";
-import { getPotentialPoints, getTotalPoints } from "@utils/utils";
+import { getPotentialPoints, getTotalPoints, isFinished } from "@utils/utils";
 import { twMerge } from "tailwind-merge";
 
 type UniqueCategoryCardProps = {
@@ -23,13 +23,13 @@ export const UniqueCategoryCard = ({
     (acc, variantCategory) => acc + variantCategory.children.length,
     0,
   );
-  const numItems = objective.team_score[teamId]?.number || 0;
+  const numItems = objective.team_score[teamId]?.completions[0]?.number || 0;
   const numVariants = teamId
     ? objective.children.reduce((acc, subCategory) => {
         return (
           acc +
           subCategory.children.reduce((numVariants, child) => {
-            if (child.team_score[teamId]?.finished) {
+            if (isFinished(child.team_score[teamId])) {
               return numVariants + 1;
             }
             return numVariants;
@@ -65,7 +65,10 @@ export const UniqueCategoryCard = ({
           )}
         >
           <div className="shrink-0">
-            <Medal rank={objective.team_score[teamId]?.rank} size={28} />
+            <Medal
+              rank={objective.team_score[teamId].completions[0].rank}
+              size={28}
+            />
           </div>
           <div>
             <h1 className="font-extrabold">{objective.name}</h1>

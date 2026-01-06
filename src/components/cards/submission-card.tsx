@@ -17,6 +17,7 @@ import { TwitchFilled } from "@icons/twitch";
 import { YoutubeFilled } from "@icons/youtube";
 import { ScoreObjective } from "@mytypes/score";
 import { GlobalStateContext } from "@utils/context-provider";
+import { totalPoints } from "@utils/utils";
 import { useContext, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -161,8 +162,8 @@ export function SubmissionCard({ objective }: SubmissionCardProps) {
     .sort((a, b) => {
       if (a.id === eventStatus?.team_id) return -1;
       if (b.id === eventStatus?.team_id) return 1;
-      const pointsA = objective.team_score[a.id]?.points || 0;
-      const pointsB = objective.team_score[b.id]?.points || 0;
+      const pointsA = totalPoints(objective.team_score[a.id]);
+      const pointsB = totalPoints(objective.team_score[b.id]);
       if (pointsB !== pointsA) {
         return pointsB - pointsA;
       }
@@ -214,8 +215,8 @@ export function SubmissionCard({ objective }: SubmissionCardProps) {
                   return [parseInt(teamId), score] as [number, Score];
                 })
                 .sort(([teamIdA, scoreA], [teamIdB, scoreB]) => {
-                  if (scoreB.points !== scoreA.points) {
-                    return scoreB.points - scoreA.points;
+                  if (totalPoints(scoreB) !== totalPoints(scoreA)) {
+                    return totalPoints(scoreB) - totalPoints(scoreA);
                   }
                   return teamIdA - teamIdB;
                 })
@@ -238,11 +239,14 @@ export function SubmissionCard({ objective }: SubmissionCardProps) {
                         className={twMerge(
                           "py-1 pl-4 text-left",
                           idx === teamIds.length - 1 && "rounded-bl-xl",
-                          score.points == 0 ? "text-error" : "text-success",
+                          totalPoints(score) == 0
+                            ? "text-error"
+                            : "text-success",
                         )}
                       >
-                        {score?.points || 0}{" "}
-                        {score.number > 1 && `(${score.number})`}
+                        {totalPoints(score)}{" "}
+                        {score.completions[0].number > 1 &&
+                          `(${score.completions[0].number})`}
                       </td>
                       <td
                         className={twMerge(

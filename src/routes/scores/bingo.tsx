@@ -4,6 +4,7 @@ import TeamScoreDisplay from "@components/team/team-score";
 import { BingoTabRules } from "@rules/bingo";
 import { createFileRoute } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
+import { isFinished } from "@utils/utils";
 import { useContext, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -65,7 +66,7 @@ function RouteComponent() {
                   return (
                     <div
                       className={twMerge(
-                        child.team_score[selectedTeam || 0]?.finished &&
+                        isFinished(child.team_score[selectedTeam || 0]) &&
                           "bg-success outline-8 outline-success",
                       )}
                     >

@@ -36,7 +36,7 @@ export function CollectionTabRules() {
   );
 
   const racePoints =
-    collectionCategory?.children[0]?.scoring_preset?.points || [];
+    collectionCategory?.children[0]?.scoring_presets[0]?.points || [];
 
   return (
     <>

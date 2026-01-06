@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { Score } from "@client/api";
-import { rank2text } from "@utils/utils";
+import { isFinished, rank2text, totalPoints } from "@utils/utils";
 // import { TeamLogo } from "./teamlogo";
 import { useGetEventStatus } from "@client/query";
 import { twMerge } from "tailwind-merge";
@@ -29,7 +29,7 @@ function getGridLayout(numTeams: number) {
 }
 
 function getCardColor(score: Score) {
-  switch (score.rank) {
+  switch (score.completions[0].rank) {
     case 1:
       return "text-black/70 bg-gold-metallic";
     case 2:
@@ -45,15 +45,15 @@ function sort(
   [teamId1, score1]: [string, Score],
   [teamId2, score2]: [string, Score],
 ) {
-  if (score1.rank !== score2.rank) {
-    if (score1.rank === 0) return 1;
-    if (score2.rank === 0) return -1;
-    return score1.rank - score2.rank;
+  if (score1.completions[0].rank !== score2.completions[0].rank) {
+    if (score1.completions[0].rank === 0) return 1;
+    if (score2.completions[0].rank === 0) return -1;
+    return score1.completions[0].rank - score2.completions[0].rank;
   }
-  if (score1.points !== score2.points) {
-    return score2.points - score1.points;
+  if (totalPoints(score1) !== totalPoints(score2)) {
+    return totalPoints(score2) - totalPoints(score1);
   }
-  return score2.number - score1.number;
+  return score2.completions[0].number - score1.completions[0].number;
 }
 
 export function Ranking({
@@ -70,11 +70,11 @@ export function Ranking({
       if (b.id === eventStatus?.team_id) return 1;
       const scoreA = objective.team_score[a.id];
       const scoreB = objective.team_score[b.id];
-      const pointsA = scoreA ? scoreA.points : -1;
-      const pointsB = scoreB ? scoreB.points : -1;
+      const pointsA = scoreA ? totalPoints(scoreA) : -1;
+      const pointsB = scoreB ? totalPoints(scoreB) : -1;
       if (pointsA === pointsB) {
-        const numberA = scoreA ? scoreA.number : -1;
-        const numberB = scoreB ? scoreB.number : -1;
+        const numberA = scoreA ? scoreA.completions[0].number : -1;
+        const numberB = scoreB ? scoreB.completions[0].number : -1;
         if (numberA === numberB) {
           return b.id - a.id;
         }
@@ -122,13 +122,15 @@ export function Ranking({
                   <div className="">
                     {
                       <div className="text-lg font-semibold">
-                        {rank2text(score.rank)}
+                        {rank2text(score.completions[0].rank)}
                       </div>
                     }
-                    <div className="text-xl font-bold">{score.points} pts</div>
+                    <div className="text-xl font-bold">
+                      {totalPoints(score)} pts
+                    </div>
                   </div>
                 </div>
-                {score.finished ? null : (
+                {isFinished(score) ? null : (
                   <div className="text-left">
                     <progress
                       className="progress progress-primary"

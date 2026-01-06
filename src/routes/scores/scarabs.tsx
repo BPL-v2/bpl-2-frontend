@@ -6,6 +6,7 @@ import { GameVersion } from "@client/api";
 import { createFileRoute } from "@tanstack/react-router";
 import { Ranking } from "@components/ranking";
 import { GemTabRules } from "@rules/gems";
+import { isFinished } from "@utils/utils";
 
 export const Route = createFileRoute("/scores/scarabs")({
   component: ScarabTab,
@@ -51,8 +52,8 @@ function ScarabTab(): JSX.Element {
               objective={scarabCategory}
               maximum={scarabCategory.children.length}
               actual={(teamId: number) =>
-                scarabCategory.children.filter(
-                  (o) => o.team_score[teamId]?.finished,
+                scarabCategory.children.filter((o) =>
+                  isFinished(o.team_score[teamId]),
                 ).length
               }
               description="Scarabs:"

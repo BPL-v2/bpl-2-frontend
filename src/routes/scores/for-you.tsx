@@ -11,7 +11,7 @@ import { PoGauge } from "@components/personal-objective/po-gauge";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { createFileRoute } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
-import { flatMap } from "@utils/utils";
+import { flatMap, isFinished } from "@utils/utils";
 import { useContext, useMemo } from "react";
 
 export const Route = createFileRoute("/scores/for-you")({
@@ -101,19 +101,19 @@ function ForYouTab() {
   const relevantCategories = objectives
     .filter(
       (category) =>
-        category.scoring_preset?.scoring_method ===
+        category.scoring_presets[0]?.scoring_method ===
           ScoringMethod.RANKED_COMPLETION_TIME &&
         eventStatus.team_id !== undefined &&
-        !category.team_score[eventStatus.team_id]?.finished,
+        !isFinished(category.team_score[eventStatus.team_id]),
     )
     .sort((a, b) => {
       return (
         a.children.filter(
-          (objective) => !objective.team_score[teamId]?.finished,
+          (objective) => !isFinished(objective.team_score[teamId]),
         ).length /
           a.children.length -
         b.children.filter(
-          (objective) => !objective.team_score[teamId]?.finished,
+          (objective) => !isFinished(objective.team_score[teamId]),
         ).length /
           b.children.length
       );
@@ -122,15 +122,16 @@ function ForYouTab() {
   const relevantObjectives = objectives
     .filter(
       (objective) =>
-        objective.scoring_preset?.scoring_method ===
+        objective.scoring_presets[0]?.scoring_method ===
           ScoringMethod.RANKED_TIME &&
-        !objective.team_score[eventStatus.team_id!]?.finished &&
+        !isFinished(objective.team_score[eventStatus.team_id!]) &&
         (!objective.valid_from || new Date(objective.valid_from) < new Date()),
     )
     .sort((a, b) => {
       return (
-        (b.team_score[teamId]?.number ?? 0) / b.required_number -
-        (a.team_score[teamId]?.number ?? 0) / a.required_number
+        (b.team_score[teamId]?.completions[0]?.number ?? 0) /
+          b.required_number -
+        (a.team_score[teamId]?.completions[0]?.number ?? 0) / a.required_number
       );
     });
   let suggestionsExist = false;

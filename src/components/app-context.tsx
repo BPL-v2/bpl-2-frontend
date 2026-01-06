@@ -1,10 +1,9 @@
-import { Event, GameVersion, ScoringPreset } from "@client/api";
+import { Event, GameVersion } from "@client/api";
 import {
   useGetEvents,
   useGetEventStatus,
   useGetRules,
   useGetScore,
-  useGetScoringPresets,
   useGetUser,
   useGetUsers,
 } from "@client/query";
@@ -32,7 +31,6 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
   const { events } = useGetEvents();
   const { rules } = useGetRules(currentEvent.id);
   const { score = {} } = useGetScore(currentEvent.id);
-  const { scoringPresets } = useGetScoringPresets(currentEvent.id);
   useGetUsers(currentEvent.id);
   useGetUser();
   useGetEventStatus(currentEvent.id);
@@ -71,22 +69,15 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (rules && scoreData && currentEvent && scoringPresets) {
+    if (rules && scoreData && currentEvent) {
       const newScores = mergeScores(
         rules,
         score,
         currentEvent?.teams.map((team) => team.id),
-        scoringPresets.reduce(
-          (acc, preset) => {
-            acc[preset.id] = preset;
-            return acc;
-          },
-          {} as Record<number, ScoringPreset>,
-        ),
       );
       setScores(hidePOTotal(newScores));
     }
-  }, [rules, currentEvent, scoringPresets, score, scoreData]);
+  }, [rules, currentEvent, score, scoreData]);
 
   useEffect(() => {
     document

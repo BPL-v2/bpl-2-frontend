@@ -267,7 +267,7 @@ export function ScoringCategoryPage(): JSX.Element {
         header: "Scoring Method",
         cell: ({ row }) => {
           const scoringPreset = scoringPresets.find(
-            (preset) => preset.id === row.original.scoring_preset_id,
+            (preset) => preset.id === row.original.scoring_presets[0]?.id,
           );
           return <div>{scoringPreset?.name}</div>;
         },
@@ -518,7 +518,7 @@ export function ScoringCategoryPage(): JSX.Element {
               name="valid_to"
               children={(field) => <field.DateTimeField label="Valid To" />}
             />
-            <objectiveForm.AppField
+            {/* <objectiveForm.AppField
               name="scoring_preset_id"
               children={(field) => (
                 <field.SelectField
@@ -529,7 +529,7 @@ export function ScoringCategoryPage(): JSX.Element {
                   }))}
                 />
               )}
-            />
+            /> */}
             <objectiveForm.AppField
               name="hide_progress"
               children={(field) => (
@@ -678,7 +678,7 @@ export function ScoringCategoryPage(): JSX.Element {
               />
             )}
           />
-          <categoryForm.AppField
+          {/* <categoryForm.AppField
             name="scoring_preset_id"
             children={(field) => (
               <field.SelectField
@@ -689,7 +689,7 @@ export function ScoringCategoryPage(): JSX.Element {
                 }))}
               />
             )}
-          />
+          /> */}
           <div className="flex flex-row justify-end gap-2">
             <button
               type="button"

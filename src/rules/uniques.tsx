@@ -55,9 +55,10 @@ export function UniqueTabRules() {
     .flatMap((c) => c.children)
     .find((c) => c.children.length >= 2);
 
-  const ubersCategory = uniqueCategory.children.find(
-    (c) =>
-      c.scoring_preset?.scoring_method === ScoringMethod.BONUS_PER_COMPLETION,
+  const ubersCategory = uniqueCategory.children.find((c) =>
+    c.scoring_presets.some(
+      (preset) => preset.scoring_method === ScoringMethod.BONUS_PER_COMPLETION,
+    ),
   );
 
   const exampleText = variantExample ? (
@@ -119,7 +120,7 @@ export function UniqueTabRules() {
             not grant any additional points and the more uniques that are found,
             the less points they award.{" "}
             {convertArrayToText(
-              ubersCategory.scoring_preset?.points?.map(
+              ubersCategory.scoring_presets[0]?.points?.map(
                 (p) => p + uniquePoints,
               ),
             )}

@@ -136,7 +136,7 @@ function SubmissionPage() {
         accessorKey: "number",
         cell: (info) => {
           // const scoringMethod =
-          //   getObjective(info).scoring_preset?.scoring_method;
+          //   getObjective(info).scoring_presets[0]?.scoring_method;
           // console.log(getObjective(info).scoring_preset_id);
           // if (
           //   !scoringMethod ||

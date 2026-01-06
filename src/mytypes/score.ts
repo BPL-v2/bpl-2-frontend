@@ -1,5 +1,6 @@
-import { MinimalUser, Objective, Score, ScoreDiff, Team } from "@client/api";
+import { MinimalUser, Objective, ScoreDiff, Team, Score } from "@client/api";
 import { getSubObjective } from "./scoring-objective";
+import { isFinished } from "@utils/utils";
 
 export type ScoreDiffMeta = {
   parent?: ScoreObjective;
@@ -26,32 +27,39 @@ export function getMetaInfo(
   meta.objective = getSubObjective(scores, scoreDiff.objective_id);
   if (meta.objective) {
     meta.parent = getSubObjective(scores, meta.objective.parent_id);
-    if (
-      meta.parent &&
-      meta.parent.scoring_preset?.scoring_method === "BONUS_PER_COMPLETION"
-    ) {
+    const bonusPerCompletionPreset = meta.parent?.scoring_presets.find(
+      (preset) => preset.scoring_method === "BONUS_PER_COMPLETION",
+    );
+    if (meta.parent && bonusPerCompletionPreset) {
       const finishedObjectives = Math.min(
-        meta.parent.children.filter(
-          (objective) => objective.team_score[scoreDiff.team_id].finished,
+        meta.parent.children.filter((objective) =>
+          isFinished(objective.team_score[scoreDiff.team_id]),
         ).length,
-        meta.parent.scoring_preset.points.length - 1,
+        bonusPerCompletionPreset.points.length - 1,
       );
-      meta.points += meta.parent.scoring_preset.points[finishedObjectives];
+      meta.points += bonusPerCompletionPreset.points[finishedObjectives];
     }
   }
 
   meta.teamName =
     teams?.find((team) => team.id === scoreDiff.team_id)?.name || "";
   meta.userName = users?.find(
-    (user) => user.id === scoreDiff.score.user_id,
+    (user) => user.id === scoreDiff.score.completions[0].user_id,
   )?.display_name;
-  meta.finished = scoreDiff.score.finished;
-  meta.rank = scoreDiff.score.rank;
-  meta.points += scoreDiff.score.points;
+  meta.finished = scoreDiff.score.completions[0].finished;
+  meta.rank = scoreDiff.score.completions[0].rank;
+  meta.points += scoreDiff.score.completions[0].points;
   return meta;
 }
 
 export type TeamScore = { [teamId: number]: Score };
+export function points(score: Score): number {
+  let points = score.bonus_points;
+  for (const completion of score.completions) {
+    points += completion.points;
+  }
+  return points;
+}
 
 export type ScoreObjective = Omit<Objective, "children"> & {
   team_score: TeamScore;
@@ -60,34 +68,37 @@ export type ScoreObjective = Omit<Objective, "children"> & {
 
 export function isWinnable(category: ScoreObjective): boolean {
   if (
-    category.scoring_preset?.scoring_method === "BONUS_PER_COMPLETION" ||
+    category.scoring_presets.some(
+      (preset) => preset.scoring_method === "BONUS_PER_COMPLETION",
+    ) ||
     category.children.length === 0
   ) {
     return false;
   }
   for (const teamId in category.team_score) {
-    if (category.team_score[teamId].finished) {
+    if (isFinished(category.team_score[teamId])) {
       return false;
     }
   }
   return true;
 }
 
-export function isFinished(
-  objective: ScoreObjective,
-  teamId?: number,
-): boolean {
+export function hasEnded(objective: ScoreObjective, teamId?: number): boolean {
   if (!teamId) {
     return false;
   }
-  if (objective.scoring_preset?.scoring_method === "BONUS_PER_COMPLETION") {
-    const finishedObjectives = objective.children.filter(
-      (objective) => objective.team_score[teamId].finished,
+  if (
+    objective.scoring_presets.some(
+      (preset) => preset.scoring_method === "BONUS_PER_COMPLETION",
+    )
+  ) {
+    const finishedObjectives = objective.children.filter((objective) =>
+      isFinished(objective.team_score[teamId]),
     ).length;
     return finishedObjectives === objective.children.length;
   }
   for (const child of objective.children) {
-    if (!child.team_score[teamId].finished) {
+    if (!isFinished(child.team_score[teamId])) {
       return false;
     }
   }

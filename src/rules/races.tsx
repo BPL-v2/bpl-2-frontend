@@ -41,7 +41,7 @@ export function RaceTabRules() {
   //     return acc;
   //   }, {} as Record<string, ScoringPreset | undefined>) || {}
   // );
-  const racePoints = raceCategory?.children[0].scoring_preset?.points || [];
+  const racePoints = raceCategory?.children[0].scoring_presets[0]?.points || [];
   return (
     <>
       <h3>Points</h3>

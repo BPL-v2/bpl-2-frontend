@@ -1,4 +1,4 @@
-import { ObjectiveType, Score, ScoringMethod, Team } from "@client/api";
+import { ObjectiveType, ScoringMethod, Team, Completion } from "@client/api";
 import { ObjectiveIcon } from "@components/objective-icon";
 import Table from "@components/table/table";
 import { TeamName } from "@components/team/team-name";
@@ -23,7 +23,7 @@ export const Route = createFileRoute("/scores/progress")({
 type ScoreRow = {
   team: Team | undefined;
   objective: ScoreObjective;
-} & Score;
+} & Completion;
 
 function RouteComponent() {
   const { currentEvent, scores } = useContext(GlobalStateContext);
@@ -81,11 +81,15 @@ function RouteComponent() {
 
   const scoreRows: ScoreRow[] = flatScores
     .flatMap((s) =>
-      Object.entries(s.team_score).map(([teamId, score]) => ({
-        objective: s,
-        team: teamMap[parseInt(teamId)],
-        ...score,
-      })),
+      Object.entries(s.team_score).flatMap(([teamId, score]) => {
+        return score.completions.map((completion) => {
+          return {
+            objective: s,
+            team: teamMap[parseInt(teamId)],
+            ...completion,
+          };
+        });
+      }),
     )
     .filter((s) => s.points > 0);
 
@@ -102,8 +106,8 @@ function RouteComponent() {
   for (const scoreRow of scoreRows
     .filter(
       (s) =>
-        s.objective.scoring_preset?.scoring_method !=
-        ScoringMethod.POINTS_FROM_VALUE,
+        s.objective.scoring_presets.find((preset) => preset.id === s.preset_id)
+          ?.scoring_method != ScoringMethod.POINTS_FROM_VALUE,
     )
     .sort((a, b) => a.timestamp - b.timestamp)) {
     if (!scoreRow.team) continue;
@@ -299,7 +303,7 @@ function RouteComponent() {
       accessorKey: "rank",
       header: "Rank",
       cell: ({ row }) => (
-        <span>{row.original.rank > 0 && <>{row.original.rank}</>}</span>
+        <span>{row.original.rank && <>{row.original.rank}</>}</span>
       ),
       size: 100,
       enableSorting: false,
@@ -361,14 +365,14 @@ function RouteComponent() {
               return false;
             }
             if (onlyShowRanked) {
-              return s.rank > 0;
+              return !!s.rank;
             }
             return true;
           })
           .sort((a, b) => b.timestamp - a.timestamp)}
         className="h-[70vh]"
       ></Table>
-      <div className="mt-4 h-[1000px] rounded-box bg-base-300 p-4">
+      <div className="mt-4 h-250 rounded-box bg-base-300 p-4">
         <fieldset className="absolute ml-8 fieldset rounded-box bg-base-200 p-2 px-4">
           <label className="label text-highlight-content">
             <input

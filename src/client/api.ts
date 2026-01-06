@@ -438,6 +438,56 @@ export interface CharacterStat {
 /**
  * 
  * @export
+ * @interface Completion
+ */
+export interface Completion {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Completion
+     */
+    finished: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof Completion
+     */
+    number: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Completion
+     */
+    points: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Completion
+     */
+    preset_id: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Completion
+     */
+    rank: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Completion
+     */
+    timestamp: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Completion
+     */
+    user_id?: number;
+}
+
+/**
+ * 
+ * @export
  * @interface Condition
  */
 export interface Condition {
@@ -2668,8 +2718,9 @@ export enum NumberField {
     FULLY_ASCENDED = 'FULLY_ASCENDED',
     BLOODLINE_ASCENDANCY = 'BLOODLINE_ASCENDANCY',
     PLAYER_SCORE = 'PLAYER_SCORE',
+    HAS_RARE_ASCENDANCY_PAST_90 = 'HAS_RARE_ASCENDANCY_PAST_90',
     WEAPON_QUALITY = 'WEAPON_QUALITY',
-    ARMOR_QUALITY = 'ARMOR_QUALITY',
+    ARMOUR_QUALITY = 'ARMOUR_QUALITY',
     FLASK_QUALITY = 'FLASK_QUALITY',
     EVASION = 'EVASION',
     ENERGY_SHIELD = 'ENERGY_SHIELD',
@@ -2677,7 +2728,6 @@ export enum NumberField {
     HP = 'HP',
     MANA = 'MANA',
     FULL_DPS = 'FULL_DPS',
-    PRIME_ASCENDANCY = 'PRIME_ASCENDANCY',
     EHP = 'EHP',
     INC_MOVEMENT_SPEED = 'INC_MOVEMENT_SPEED',
     PHYS_MAX_HIT = 'PHYS_MAX_HIT',
@@ -2772,16 +2822,10 @@ export interface Objective {
     required_number: number;
     /**
      * 
-     * @type {ScoringPreset}
+     * @type {Array<ScoringPreset>}
      * @memberof Objective
      */
-    scoring_preset?: ScoringPreset;
-    /**
-     * 
-     * @type {number}
-     * @memberof Objective
-     */
-    scoring_preset_id?: number;
+    scoring_presets: Array<ScoringPreset>;
     /**
      * 
      * @type {string}
@@ -2870,10 +2914,10 @@ export interface ObjectiveCreate {
     required_number: number;
     /**
      * 
-     * @type {number}
+     * @type {Array<number>}
      * @memberof ObjectiveCreate
      */
-    scoring_preset_id?: number;
+    scoring_preset_ids?: Array<number>;
     /**
      * 
      * @type {string}
@@ -3441,40 +3485,16 @@ export interface ReportPlaytimeRequest {
 export interface Score {
     /**
      * 
-     * @type {boolean}
-     * @memberof Score
-     */
-    finished: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof Score
      */
-    number: number;
+    bonus_points: number;
     /**
      * 
-     * @type {number}
+     * @type {Array<Completion>}
      * @memberof Score
      */
-    points: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Score
-     */
-    rank: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Score
-     */
-    timestamp: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Score
-     */
-    user_id?: number;
+    completions: Array<Completion>;
 }
 
 /**

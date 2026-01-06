@@ -9,6 +9,9 @@ import {
   ExtendedScoreObjective,
   flatMapUniques,
   getVariantMap,
+  isFinished,
+  lastTimestamp,
+  totalPoints,
 } from "@utils/utils";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -57,8 +60,8 @@ export function ItemTable({
       if (a.id === eventStatus?.team_id) return -1;
       if (b.id === eventStatus?.team_id) return 1;
       return (
-        (objective.team_score[b.id]?.points || 0) -
-        (objective.team_score[a.id]?.points || 0)
+        totalPoints(objective.team_score[b.id]) -
+        totalPoints(objective.team_score[a.id])
       );
     })
     .slice(0, preferences.limitTeams ? preferences.limitTeams : undefined)
@@ -109,7 +112,7 @@ export function ItemTable({
       );
     }
     if (
-      objective.scoring_preset?.scoring_method ===
+      objective.scoring_presets[0]?.scoring_method ===
       ScoringMethod.POINTS_FROM_VALUE
     ) {
       return (
@@ -150,7 +153,7 @@ export function ItemTable({
 
   const badgeClass = (objective: ExtendedScoreObjective, teamID: number) => {
     let className = "badge gap-2 w-full font-semibold py-3 ring-2";
-    if (objective.team_score[teamID]?.finished) {
+    if (isFinished(objective.team_score[teamID])) {
       className += " bg-success text-success-content";
     } else {
       className += " bg-error text-error-content";
@@ -249,7 +252,7 @@ export function ItemTable({
                       <div className="text-sm text-info">
                         {objectives
                           .filter((o) => (filter ? filter(o) : true))
-                          .filter((o) => o.team_score[team.id]?.finished)
+                          .filter((o) => isFinished(o.team_score[team.id]))
                           ?.length || 0}{" "}
                         /{" "}
                         {
@@ -264,15 +267,17 @@ export function ItemTable({
                 size: 200,
                 cell: (info: CellContext<ExtendedScoreObjective, string>) => {
                   const score = info.row.original.team_score[team.id];
-                  const finished = score?.finished || false;
-                  const user = users?.find((u) => score?.user_id === u.id);
+                  const finished = isFinished(score) || false;
+                  const user = users?.find(
+                    (u) => score?.completions[0]?.user_id === u.id,
+                  );
                   const canBeScoredMultipleTimes =
-                    info.row.original.scoring_preset?.scoring_method ===
+                    info.row.original.scoring_presets[0]?.scoring_method ===
                     ScoringMethod.POINTS_FROM_VALUE;
                   if (canBeScoredMultipleTimes) {
-                    return score?.points > 0 ? (
+                    return totalPoints(score) > 0 ? (
                       <span className="w-full text-center font-mono text-xl text-success">
-                        x{score.number}
+                        x{score.completions[0].number}
                       </span>
                     ) : (
                       <span className="w-full text-center font-mono text-xl text-error">
@@ -294,7 +299,9 @@ export function ItemTable({
                           <span>Scored by {user.display_name}</span>
                           <span>
                             on{" "}
-                            {new Date(score.timestamp * 1000).toLocaleString()}
+                            {new Date(
+                              lastTimestamp(score) * 1000,
+                            ).toLocaleString()}
                           </span>
                         </div>
                         <CheckCircleIcon className="size-6 text-success" />

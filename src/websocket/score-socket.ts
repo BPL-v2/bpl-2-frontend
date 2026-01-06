@@ -1,6 +1,6 @@
 import { ScoreDiff } from "@client/api";
 import { QueryClient } from "@tanstack/react-query";
-import { ScoreMap } from "@utils/utils";
+import { isFinished, ScoreMap } from "@utils/utils";
 
 export const establishScoreSocket = (
   eventId: number,
@@ -22,14 +22,16 @@ export const establishScoreSocket = (
   const ws = new WebSocket(url);
   ws.onmessage = (event) => {
     Object.values(JSON.parse(event.data) as ScoreDiff[]).forEach((diff) => {
-      if (diff.diff_type !== "Unchanged" && diff.score.finished) {
+      if (diff.diff_type !== "Unchanged" && isFinished(diff.score)) {
         if (
           diff.diff_type === "Added" ||
-          (diff.field_diff?.includes("Finished") && diff.score.finished)
+          (diff.field_diff?.includes("Finished") && isFinished(diff.score))
         ) {
           qc.setQueryData(["score", eventId], (previous: ScoreMap) => {
             if (!previous)
-              return { [diff.team_id]: { [diff.objective_id]: diff.score } };
+              return {
+                [diff.team_id]: { [diff.objective_id]: diff.score },
+              };
             return {
               ...previous,
               [diff.team_id]: {
@@ -49,7 +51,9 @@ export const establishScoreSocket = (
       } else {
         qc.setQueryData(["score", eventId], (previous: ScoreMap) => {
           if (!previous)
-            return { [diff.team_id]: { [diff.objective_id]: diff.score } };
+            return {
+              [diff.team_id]: { [diff.objective_id]: diff.score },
+            };
           return {
             ...previous,
             [diff.team_id]: {

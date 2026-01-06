@@ -65,7 +65,7 @@ export const ScoreUpdateCard = ({
   return (
     <div className="card w-full bg-base-300 ring-1 ring-primary">
       <div className="mr-0 card-title flex items-center rounded-t-box bg-base-200 px-4 pb-4">
-        <h1 className="mx-4 mt-4 flex-grow text-left text-xl">{title}</h1>
+        <h1 className="mx-4 mt-4 grow text-left text-xl">{title}</h1>
         <div className="mt-4 flex justify-end gap-2">
           {closeAll ? (
             <button className="btn btn-sm btn-error" onClick={closeAll}>

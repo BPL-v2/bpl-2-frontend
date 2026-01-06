@@ -66,7 +66,7 @@ export function HeistTabRules() {
             {echantingOrbObjective.required_number - 2} Tempering Orbs and 2
             Tailoring Orbs would count.{" "}
             {racePointsToText(
-              echantingOrbObjective.scoring_preset?.points || [],
+              echantingOrbObjective.scoring_presets[0]?.points || [],
             )}
           </p>
         </>

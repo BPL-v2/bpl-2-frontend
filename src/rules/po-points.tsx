@@ -37,9 +37,9 @@ export function POPointRules() {
     return <></>;
   }
   const totalObjective = objs.find(
-    (obj) => obj.scoring_preset?.point_cap || 0 > 0,
+    (obj) => obj.scoring_presets[0]?.point_cap || 0 > 0,
   );
-  const checkPoints = objs.filter((obj) => !obj.scoring_preset?.point_cap);
+  const checkPoints = objs.filter((obj) => !obj.scoring_presets[0]?.point_cap);
   return (
     <>
       <h3>Personal Objective Points</h3>
@@ -48,7 +48,7 @@ export function POPointRules() {
         their character. Each player can earn a maximum of{" "}
         <b className="text-info">9</b> points for a team score maximum of{" "}
         <b className="text-info">
-          {totalObjective?.scoring_preset?.point_cap}{" "}
+          {totalObjective?.scoring_presets[0]?.point_cap}{" "}
         </b>{" "}
         points per team. These are the challenges that can be completed to earn
         points:
@@ -87,7 +87,9 @@ export function POPointRules() {
             During the event there will be {checkPoints.length} checkpoints,
             awarding the team that has made the most progress in the specified
             time period with extra points.{" "}
-            {convertArrayToText(checkPoints[0].scoring_preset?.points || [])}
+            {convertArrayToText(
+              checkPoints[0].scoring_presets[0]?.points || [],
+            )}
           </p>
         </>
       )}

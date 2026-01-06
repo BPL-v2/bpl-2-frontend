@@ -10,6 +10,7 @@ import { Countdown } from "@components/countdown";
 import { SubmissionDialog } from "@components/submission-diablog";
 import { ObjectiveIcon } from "@components/objective-icon";
 import { CollectionCardTable } from "./collection-card-table";
+import { isFinished } from "@utils/utils";
 
 export type DailyCardProps = {
   daily: ScoreObjective;
@@ -62,13 +63,13 @@ export function DailyCard({ daily }: DailyCardProps) {
       </div>
     );
   }
-  const isFinished = Object.values(daily.team_score).reduce(
-    (acc, score) => score.finished && acc,
+  const finished = Object.values(daily.team_score).reduce(
+    (acc, score) => isFinished(score) && acc,
     true,
   );
 
   const isRace =
-    daily.scoring_preset?.scoring_method === ScoringMethod.RANKED_TIME;
+    daily.scoring_presets[0]?.scoring_method === ScoringMethod.RANKED_TIME;
   const isAvailable = daily.valid_to && new Date(daily.valid_to) > new Date();
   const canSubmit =
     daily.objective_type === ObjectiveType.SUBMISSION && !!eventStatus?.team_id;
@@ -121,10 +122,10 @@ export function DailyCard({ daily }: DailyCardProps) {
             </h3>
           </div>
         </div>
-        <div className={isFinished ? "rounded-b-box" : ""}>
+        <div className={finished ? "rounded-b-box" : ""}>
           <CollectionCardTable objective={daily} />
         </div>
-        {!isFinished && (
+        {!finished && (
           <div className="flex min-h-15 items-center justify-center rounded-b-box">
             {bonusAvailableCounter(daily.valid_to, () => {
               qc.refetchQueries({

@@ -10,7 +10,7 @@ export function BountyTabRules() {
   if (!objs) {
     return <></>;
   }
-  const bountyPoints = objs[0]?.scoring_preset?.points || [];
+  const bountyPoints = objs[0]?.scoring_presets[0]?.points || [];
   return (
     <>
       <h3>Points</h3>

@@ -6,6 +6,7 @@ import { GameVersion, ScoringMethod } from "@client/api";
 import { Ranking } from "@components/ranking";
 import { createFileRoute } from "@tanstack/react-router";
 import { HeistTabRules } from "@rules/heist";
+import { isFinished } from "@utils/utils";
 
 export const Route = createFileRoute("/scores/heist")({
   component: HeistTab,
@@ -28,7 +29,7 @@ function HeistTab(): JSX.Element {
 
   const heistItemRaces = heistCategory.children.filter(
     (category) =>
-      category.scoring_preset?.scoring_method === ScoringMethod.RANKED_TIME,
+      category.scoring_presets[0]?.scoring_method === ScoringMethod.RANKED_TIME,
   );
 
   const heistMultiItemRaces = heistCategory.children.filter(
@@ -54,7 +55,7 @@ function HeistTab(): JSX.Element {
                 objective={category}
                 maximum={category.required_number}
                 actual={(teamId: number) =>
-                  category.team_score[teamId]?.number || 0
+                  category.team_score[teamId]?.completions[0]?.number || 0
                 }
                 description={"Items:"}
               />
@@ -64,16 +65,16 @@ function HeistTab(): JSX.Element {
           {heistMultiItemRaces.map((category) => (
             <div key={category.id} className="rounded-box bg-base-200 p-8 pt-2">
               <div className="divider divider-primary">{category.name}</div>
-              {(category.scoring_preset?.scoring_method ===
+              {(category.scoring_presets[0]?.scoring_method ===
                 ScoringMethod.RANKED_TIME ||
-                category.scoring_preset?.scoring_method ===
+                category.scoring_presets[0]?.scoring_method ===
                   ScoringMethod.RANKED_COMPLETION_TIME) && (
                 <Ranking
                   objective={category}
                   maximum={category.children.length}
                   actual={(teamId: number) =>
-                    category.children.filter(
-                      (o) => o.team_score[teamId]?.finished,
+                    category.children.filter((o) =>
+                      isFinished(o.team_score[teamId]),
                     ).length
                   }
                   description={"Items:"}

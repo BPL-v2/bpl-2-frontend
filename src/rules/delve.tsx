@@ -56,7 +56,9 @@ export function DelveTabRules() {
             The teams race to finish the fossil collection, where the required
             amount of each of the {fossilRaceCategory.children.length} Fossils
             has to be collected.{" "}
-            {racePointsToText(fossilRaceCategory.scoring_preset?.points || [])}
+            {racePointsToText(
+              fossilRaceCategory.scoring_presets[0]?.points || [],
+            )}
           </p>
         </>
       )}

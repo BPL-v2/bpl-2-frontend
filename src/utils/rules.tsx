@@ -75,7 +75,7 @@ function convertBonusPointsToText(points: number[]) {
 }
 
 function getRacePointsRules(category: ScoreObjective) {
-  const preset = category?.scoring_preset;
+  const preset = category?.scoring_presets[0];
   if (!preset)
     return (
       <p>Finishing this category first does not award additional points.</p>
@@ -90,7 +90,7 @@ function getRacePointsRules(category: ScoreObjective) {
 }
 
 function getItemPointsRules(category: ScoreObjective) {
-  const preset = category?.children?.[0]?.scoring_preset;
+  const preset = category?.children?.[0]?.scoring_presets[0];
   if (!preset) return null;
   if (preset.points.length === 1 && preset.points[0] === 0) {
     return null;

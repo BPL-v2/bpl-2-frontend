@@ -17,7 +17,7 @@ import {
   determineDifferences,
   PathOfBuilding,
 } from "@utils/pob";
-import { flatMap } from "@utils/utils";
+import { flatMap, lastTimestamp, totalPoints } from "@utils/utils";
 import { Suspense, useContext, useEffect, useMemo, useState } from "react";
 
 function getDeltaTimeAfterLeagueStart(
@@ -110,7 +110,7 @@ function RouteComponent() {
     )
       continue;
     for (const score of Object.values(objective.team_score)) {
-      if (score.user_id === userId && score.points > 0) {
+      if (score.completions[0].user_id === userId && totalPoints(score) > 0) {
         contributions.push({ objective: objective, score: score });
       }
     }
@@ -139,12 +139,16 @@ function RouteComponent() {
           <h1 className="text-left text-xl">
             Item contributions:{" "}
             <span className="text-success">
-              +{contributions.reduce((acc, curr) => acc + curr.score.points, 0)}
+              +
+              {contributions.reduce(
+                (acc, curr) => acc + totalPoints(curr.score),
+                0,
+              )}
             </span>
           </h1>
           <div className="flex flex-row flex-wrap gap-4">
             {contributions
-              .sort((a, b) => b.score.points - a.score.points)
+              .sort((a, b) => totalPoints(b.score) - totalPoints(a.score))
               .map((contribution) => {
                 return (
                   <div className="tooltip">
@@ -152,7 +156,7 @@ function RouteComponent() {
                       <div className="">{contribution.objective.name}</div>
                       <span>
                         {new Date(
-                          contribution.score.timestamp,
+                          lastTimestamp(contribution.score),
                         ).toLocaleString()}
                       </span>
                     </div>
@@ -167,7 +171,7 @@ function RouteComponent() {
                       />
                       <p className="text-success">
                         {" "}
-                        +{contribution.score.points}
+                        +{totalPoints(contribution.score)}
                       </p>
                     </div>
                   </div>

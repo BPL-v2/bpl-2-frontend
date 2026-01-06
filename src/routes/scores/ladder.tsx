@@ -2,7 +2,7 @@ import { CharacterStat, LadderEntry, Team } from "@client/api";
 import { getRootCategoryNames } from "@mytypes/scoring-category";
 import { CellContext, ColumnDef, sortingFns } from "@tanstack/react-table";
 import { GlobalStateContext } from "@utils/context-provider";
-import { getTotalPoints } from "@utils/utils";
+import { getTotalPoints, totalPoints } from "@utils/utils";
 import { JSX, useContext, useMemo } from "react";
 
 import {
@@ -475,9 +475,9 @@ function LadderTab(): JSX.Element {
     (category) => category.name === "Personal Objectives",
   )?.children;
   const totalObjective = objs?.find(
-    (obj) => obj.scoring_preset?.point_cap || 0 > 0,
+    (obj) => obj.scoring_presets[0]?.point_cap || 0 > 0,
   );
-  const checkPoints = objs?.filter((obj) => !obj.scoring_preset?.point_cap);
+  const checkPoints = objs?.filter((obj) => !obj.scoring_presets[0]?.point_cap);
   const firstCheckpointCompleted =
     checkPoints?.some((obj) => new Date(obj.valid_to || "") < new Date()) ||
     false;
@@ -516,8 +516,10 @@ function LadderTab(): JSX.Element {
                       if (a.id === eventStatus?.team_id) return -1;
                       if (b.id === eventStatus?.team_id) return 1;
                       return (
-                        (totalObjective.team_score[b.id]?.number || 0) -
-                        (totalObjective.team_score[a.id]?.number || 0)
+                        (totalObjective.team_score[b.id]?.completions[0]
+                          ?.number || 0) -
+                        (totalObjective.team_score[a.id]?.completions[0]
+                          ?.number || 0)
                       );
                     })
                     .slice(
@@ -533,18 +535,19 @@ function LadderTab(): JSX.Element {
                       let total = 0;
                       for (const obj of checkPoints) {
                         const teamScore = obj.team_score[team.id];
-                        if (!teamScore || !teamScore.points) {
+                        if (!teamScore || !totalPoints(teamScore)) {
                           continue;
                         }
-                        const number = teamScore.number;
-                        total += teamScore.points;
+                        const number = teamScore.completions[0].number;
+                        total += totalPoints(teamScore);
                         values.push(number);
-                        extra.push(teamScore.points);
+                        extra.push(totalPoints(teamScore));
                       }
                       const cap =
-                        totalObjective?.scoring_preset?.point_cap || 0;
+                        totalObjective?.scoring_presets[0]?.point_cap || 0;
                       const current = Math.min(
-                        totalObjective?.team_score[team.id]?.number || 0,
+                        totalObjective?.team_score[team.id]?.completions[0]
+                          ?.number || 0,
                         cap,
                       );
                       total += current;

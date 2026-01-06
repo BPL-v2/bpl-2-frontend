@@ -38,14 +38,15 @@ export function DailyTabRules() {
   const basePoints =
     dailyCategory?.children?.find(
       (objective) =>
-        objective.scoring_preset?.scoring_method === ScoringMethod.PRESENCE,
-    )?.scoring_preset?.points || [];
+        objective.scoring_presets[0]?.scoring_method === ScoringMethod.PRESENCE,
+    )?.scoring_presets[0]?.points || [];
 
   const racePoints =
     dailyCategory?.children?.find(
       (objective) =>
-        objective.scoring_preset?.scoring_method === ScoringMethod.RANKED_TIME,
-    )?.scoring_preset?.points || [];
+        objective.scoring_presets[0]?.scoring_method ===
+        ScoringMethod.RANKED_TIME,
+    )?.scoring_presets[0]?.points || [];
   return (
     <>
       <h3> Releases </h3>

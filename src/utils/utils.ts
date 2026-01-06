@@ -1,40 +1,67 @@
 import {
   AggregationType,
   Objective,
-  Score,
   ScoringMethod,
   ScoringPreset,
+  Score,
 } from "@client/api";
 import { ScoreObjective } from "@mytypes/score";
 
 type TeamScores = { [teamId: number]: Score };
 
-export type ScoreMap = { [teamId: number]: { [objectiveId: number]: Score } };
+export type ScoreMap = {
+  [teamId: number]: { [objectiveId: number]: Score };
+};
 
 function getEmptyScore(): Score {
   return {
-    points: 0,
-    user_id: 0,
-    rank: 0,
-    timestamp: new Date().getTime() / 1000,
-    number: 0,
-    finished: false,
+    completions: [
+      {
+        finished: false,
+        points: 0,
+        rank: 0,
+        number: 0,
+        timestamp: 0,
+        preset_id: 0,
+      },
+    ],
+    bonus_points: 0,
   };
+}
+export function lastTimestamp(score?: Score): number {
+  let timestamp = 0;
+  for (const completion of score?.completions || []) {
+    if (completion.timestamp > timestamp) {
+      timestamp = completion.timestamp;
+    }
+  }
+  return timestamp;
+}
+
+export function isFinished(score?: Score): boolean {
+  return score?.completions.every((completion) => completion.finished) || false;
+}
+
+export function totalPoints(score?: Score): number {
+  if (!score) {
+    return 0;
+  }
+  let points = score.bonus_points;
+  for (const completion of score.completions) {
+    points += completion.points;
+  }
+  return points;
 }
 
 export function mergeScores(
   objective: Objective,
   scores: ScoreMap,
   teamsIds: number[],
-  scoringPresets: Record<number, ScoringPreset>,
 ): ScoreObjective {
   return {
     ...objective,
-    scoring_preset: objective.scoring_preset_id
-      ? scoringPresets[objective.scoring_preset_id]
-      : undefined,
     children: objective.children.map((subObjective) =>
-      mergeScores(subObjective, scores, teamsIds, scoringPresets),
+      mergeScores(subObjective, scores, teamsIds),
     ),
     team_score: teamsIds.reduce((acc: TeamScores, teamId) => {
       acc[teamId] = scores[teamId]?.[objective.id] || getEmptyScore();
@@ -82,7 +109,7 @@ export function getTotalPoints(objective?: ScoreObjective): {
   }
   const points: { [teamId: number]: number } = {};
   for (const [teamId, teamScore] of Object.entries(objective.team_score)) {
-    points[parseInt(teamId)] = teamScore.points;
+    points[parseInt(teamId)] = totalPoints(teamScore);
   }
   for (const child of objective.children) {
     const childPoints = getTotalPoints(child);
@@ -112,23 +139,40 @@ export function getPotentialPoints(objective: ScoreObjective): PotentialPoints {
 function getPotentialPointsForScoringMethod(
   objective: ScoreObjective,
 ): PotentialPoints {
-  switch (objective.scoring_preset?.scoring_method) {
+  const potentialPoints: PotentialPoints = {};
+  for (const preset of objective.scoring_presets || []) {
+    const presetPoints = getPotentialPointsForSinglePreset(objective, preset);
+    for (const [teamId, teamPoints] of Object.entries(presetPoints)) {
+      if (!potentialPoints[parseInt(teamId)]) {
+        potentialPoints[parseInt(teamId)] = 0;
+      }
+      potentialPoints[parseInt(teamId)] += teamPoints;
+    }
+  }
+  return potentialPoints;
+}
+
+function getPotentialPointsForSinglePreset(
+  objective: ScoreObjective,
+  preset: ScoringPreset,
+): PotentialPoints {
+  switch (preset.scoring_method) {
     case ScoringMethod.PRESENCE:
-      return potentialPointsPresence(objective);
+      return potentialPointsPresence(objective, preset);
     case ScoringMethod.RANKED_COMPLETION_TIME:
-      return getPotentialPointsRanked(objective);
+      return getPotentialPointsRanked(objective, preset);
     case ScoringMethod.RANKED_TIME:
-      return getPotentialPointsRanked(objective);
+      return getPotentialPointsRanked(objective, preset);
     case ScoringMethod.RANKED_REVERSE:
-      return getPotentialPointsRanked(objective);
+      return getPotentialPointsRanked(objective, preset);
     case ScoringMethod.RANKED_VALUE:
-      return getPotentialPointsRanked(objective);
+      return getPotentialPointsRanked(objective, preset);
     case ScoringMethod.POINTS_FROM_VALUE:
-      return getPotentialPointsValue(objective);
+      return getPotentialPointsValue(objective, preset);
     case ScoringMethod.BONUS_PER_COMPLETION:
-      return getPotentialBonusPointsPerChild(objective);
+      return getPotentialBonusPointsPerChild(objective, preset);
     case ScoringMethod.BINGO_BOARD:
-      return getPotentialPointsRanked(objective);
+      return getPotentialPointsRanked(objective, preset);
     default:
       return {};
   }
@@ -136,42 +180,43 @@ function getPotentialPointsForScoringMethod(
 
 export function potentialPointsPresence(
   objective: ScoreObjective,
+  preset: ScoringPreset,
 ): PotentialPoints {
-  const presencePoints = objective.scoring_preset!.points[0];
   return Object.keys(objective.team_score).reduce((acc, team_id) => {
-    acc[parseInt(team_id)] = presencePoints;
+    acc[parseInt(team_id)] = preset.points[0];
     return acc;
   }, {} as PotentialPoints);
 }
 
 export function getPotentialPointsValue(
   objective: ScoreObjective,
+  preset: ScoringPreset,
 ): PotentialPoints {
-  const maximum = objective.scoring_preset!.point_cap!;
   return Object.keys(objective.team_score).reduce((acc, team_id) => {
-    acc[parseInt(team_id)] = maximum;
+    acc[parseInt(team_id)] = preset.point_cap!;
     return acc;
   }, {} as PotentialPoints);
 }
 
 export function getPotentialPointsRanked(
   objective: ScoreObjective,
+  preset: ScoringPreset,
 ): PotentialPoints {
   let rankPossible = 0;
   for (const teamScore of Object.values(objective.team_score)) {
-    if (teamScore.finished) {
+    if (isFinished(teamScore)) {
       rankPossible += 1;
     }
   }
-  const presetPoints = objective.scoring_preset!.points;
+  const presetPoints = preset.points;
   const possiblePointsForFinishing =
     rankPossible < presetPoints.length
       ? presetPoints[rankPossible]
       : presetPoints[presetPoints.length - 1];
   return Object.entries(objective.team_score).reduce(
     (acc, [team_id, score]) => {
-      acc[parseInt(team_id)] = score.finished
-        ? score.points
+      acc[parseInt(team_id)] = isFinished(score)
+        ? totalPoints(score)
         : possiblePointsForFinishing;
       return acc;
     },
@@ -181,8 +226,9 @@ export function getPotentialPointsRanked(
 
 function getPotentialBonusPointsPerChild(
   objective: ScoreObjective,
+  preset: ScoringPreset,
 ): PotentialPoints {
-  const presetPoints = objective.scoring_preset!.points;
+  const presetPoints = preset.points;
   const childCount = objective.children.filter(
     (child) => child.children.length === 0,
   ).length;

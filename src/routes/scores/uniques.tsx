@@ -2,7 +2,7 @@ import { useGetEventStatus } from "@client/query";
 import { ItemTable } from "@components/table/item-table";
 import TeamScoreDisplay from "@components/team/team-score";
 import { UniqueCategoryCard } from "@components/cards/unique-category-card";
-import { isFinished, isWinnable, ScoreObjective } from "@mytypes/score";
+import { hasEnded, isWinnable, ScoreObjective } from "@mytypes/score";
 import { UniqueTabRules } from "@rules/uniques";
 import { createFileRoute } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
@@ -62,7 +62,7 @@ function UniqueTab(): JSX.Element {
             item.name.toLowerCase().includes(itemFilter.toLowerCase().trim()),
           ) &&
           (preferences.uniqueSets.showCompleted ||
-            !isFinished(category, selectedTeam)) &&
+            !hasEnded(category, selectedTeam)) &&
           (preferences.uniqueSets.showFirstAvailable || isWinnable(category))
         );
       })
