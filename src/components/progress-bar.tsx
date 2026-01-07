@@ -33,6 +33,7 @@ export function ProgressBar({
         className={twMerge(
           "progress mr-2",
           gotPoints ? "progress-success" : isFinished ? "progress-warning" : "",
+          props.className,
         )}
         value={percent}
         max="100"

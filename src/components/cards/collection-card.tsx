@@ -5,15 +5,16 @@ import { GlobalStateContext } from "@utils/context-provider";
 import { useContext } from "react";
 import { twMerge } from "tailwind-merge";
 
-export interface CollectionCardProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+export interface CollectionCardProps extends React.HTMLAttributes<HTMLDivElement> {
   objective: ScoreObjective;
   ignoreExtra?: boolean;
+  showPoints?: boolean;
 }
 
 export function CollectionCard({
   objective,
   ignoreExtra = false,
+  showPoints = true,
   ...props
 }: CollectionCardProps) {
   const { currentEvent } = useContext(GlobalStateContext);
@@ -49,7 +50,11 @@ export function CollectionCard({
         </div>
       </div>
       <div className="mb-0 rounded-b-box">
-        <CollectionCardTable objective={objective} roundedBottom />
+        <CollectionCardTable
+          objective={objective}
+          showPoints={showPoints}
+          roundedBottom
+        />
       </div>
     </div>
   );

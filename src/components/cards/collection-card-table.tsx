@@ -10,6 +10,7 @@ import { totalPoints } from "@utils/utils";
 type CollectionCardTableProps = {
   objective: ScoreObjective;
   roundedBottom?: boolean;
+  showPoints?: boolean;
 };
 
 function getPlace(score: Score) {
@@ -39,6 +40,7 @@ function finishTooltip(objective: ScoreObjective, score: Score) {
 export function CollectionCardTable({
   objective,
   roundedBottom = false,
+  showPoints = true,
 }: CollectionCardTableProps) {
   const { currentEvent, preferences } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
@@ -91,36 +93,46 @@ export function CollectionCardTable({
                 }
                 key={teamId}
               >
-                <td
-                  className={twMerge("px-2 py-1", isLastRow && "rounded-bl-xl")}
-                >
-                  <div
+                {showPoints && (
+                  <td
                     className={twMerge(
-                      "tooltip tooltip-right",
-                      gotPoints
-                        ? "tooltip-success"
-                        : isFinished
-                          ? "tooltip-warning"
-                          : "tooltip-error",
+                      "px-2 py-1",
+                      isLastRow && "rounded-bl-xl",
                     )}
-                    data-tip={finishTooltip(objective, score)}
                   >
                     <div
                       className={twMerge(
-                        "px-2 text-left",
+                        "tooltip tooltip-right",
                         gotPoints
-                          ? "text-success"
+                          ? "tooltip-success"
                           : isFinished
-                            ? "text-warning"
-                            : "text-error",
+                            ? "tooltip-warning"
+                            : "tooltip-error",
                       )}
+                      data-tip={finishTooltip(objective, score)}
                     >
-                      {totalPoints(score)}
+                      <div
+                        className={twMerge(
+                          "px-2 text-left",
+                          gotPoints
+                            ? "text-success"
+                            : isFinished
+                              ? "text-warning"
+                              : "text-error",
+                        )}
+                      >
+                        {totalPoints(score)}
+                      </div>
                     </div>
-                  </div>
-                </td>
+                  </td>
+                )}
 
-                <td className="w-full px-2">
+                <td
+                  className={twMerge(
+                    "w-full px-2",
+                    isLastRow && !showPoints && "rounded-bl-xl",
+                  )}
+                >
                   {!isHidden ? (
                     <ProgressBar
                       value={score.completions[0].number}

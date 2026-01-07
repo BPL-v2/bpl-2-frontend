@@ -1,5 +1,5 @@
 import { useGetEventStatus } from "@client/query";
-import { CollectionCard } from "@components/cards/collection-card";
+import { ProgressBar } from "@components/progress-bar";
 import TeamScoreDisplay from "@components/team/team-score";
 import { BingoTabRules } from "@rules/bingo";
 import { createFileRoute } from "@tanstack/react-router";
@@ -70,12 +70,29 @@ function RouteComponent() {
                           "bg-success outline-8 outline-success",
                       )}
                     >
-                      <CollectionCard
+                      {/* <CollectionCard
                         key={child.id}
                         objective={child}
                         ignoreExtra
+                        showPoints={false}
                         className="h-full w-full"
-                      />
+                      /> */}
+                      <div className="card h-full bg-card">
+                        <h2 className="m-0 card-title flex h-full min-h-22 items-center rounded-t-box bborder-b bg-base-300/50 px-4 py-2">
+                          {child.required_number.toLocaleString()} {child.name}
+                        </h2>
+                        <div className="w-full p-4 px-4">
+                          <ProgressBar
+                            value={
+                              child.team_score[selectedTeam || 0]
+                                ?.completions[0]?.number
+                            }
+                            maxVal={child.required_number}
+                            gotPoints={false}
+                            className="h-5"
+                          />
+                        </div>
+                      </div>
                     </div>
                   );
                 }
@@ -90,32 +107,6 @@ function RouteComponent() {
               }),
             )
             .flat()}
-          {/* {category.children
-        .sort((a, b) => {
-          const aMatch = a.extra?.match(regex);
-          const bMatch = b.extra?.match(regex);
-          if (aMatch && bMatch) {
-            const aRow = parseInt(aMatch[1], 10);
-            const aCol = parseInt(aMatch[2], 10);
-            const bRow = parseInt(bMatch[1], 10);
-            const bCol = parseInt(bMatch[2], 10);
-            if (aRow === bRow) {
-              return aCol - bCol;
-            }
-            return aRow - bRow;
-          }
-          return 0;
-        })
-        .map((c) => (
-          <div key={c.id} className="rounded-box border-3 border-red-500">
-            <CollectionCard
-              key={c.id}
-              objective={c}
-              ignoreExtra
-              className="h-full w-full"
-            />
-          </div>
-        ))} */}
         </div>
       </div>
     </>
