@@ -204,7 +204,11 @@ export function getPotentialPointsRanked(
 ): PotentialPoints {
   let rankPossible = 0;
   for (const teamScore of Object.values(objective.team_score)) {
-    if (isFinished(teamScore)) {
+    if (
+      teamScore.completions.some(
+        (comp) => comp.preset_id === preset.id && comp.finished,
+      )
+    ) {
       rankPossible += 1;
     }
   }
@@ -215,8 +219,11 @@ export function getPotentialPointsRanked(
       : presetPoints[presetPoints.length - 1];
   return Object.entries(objective.team_score).reduce(
     (acc, [team_id, score]) => {
-      acc[parseInt(team_id)] = isFinished(score)
-        ? totalPoints(score)
+      acc[parseInt(team_id)] = score.completions.some(
+        (comp) => comp.preset_id === preset.id && comp.finished,
+      )
+        ? score.completions.find((comp) => comp.preset_id === preset.id)
+            ?.points || 0
         : possiblePointsForFinishing;
       return acc;
     },
