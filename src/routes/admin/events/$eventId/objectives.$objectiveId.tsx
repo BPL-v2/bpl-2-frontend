@@ -398,6 +398,8 @@ export function ScoringCategoryPage(): JSX.Element {
                         };
                       },
                     );
+                    duplicate.scoring_preset_ids =
+                      row.original.scoring_presets.map((preset) => preset.id);
                     createObjective(duplicate);
                   }}
                 >
