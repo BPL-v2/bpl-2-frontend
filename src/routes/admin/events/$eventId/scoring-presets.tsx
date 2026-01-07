@@ -5,7 +5,6 @@ import {
   ScoringMethod,
   ScoringPreset,
   ScoringPresetCreate,
-  ScoringPresetType,
 } from "@client/api";
 import {
   useAddScoringPreset,
@@ -69,7 +68,6 @@ function ScoringPresetsPage() {
   const presetForm = useAppForm({
     defaultValues: {
       points: [] as number[],
-      type: ScoringPresetType.OBJECTIVE,
     } as ScoringPresetCreate,
     onSubmit: (data) => {
       const create = JSON.parse(
@@ -116,6 +114,10 @@ function ScoringPresetsPage() {
           <presetForm.AppField
             name="points"
             children={(field) => <field.TextField label="Points" required />}
+          />
+          <presetForm.AppField
+            name="extra"
+            children={(field) => <field.TextField label="Extra" />}
           />
           <presetForm.AppField
             name="scoring_method"

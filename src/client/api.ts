@@ -2917,7 +2917,7 @@ export interface ObjectiveCreate {
      * @type {Array<number>}
      * @memberof ObjectiveCreate
      */
-    scoring_preset_ids?: Array<number>;
+    scoring_preset_ids: Array<number>;
     /**
      * 
      * @type {string}
@@ -3566,6 +3566,12 @@ export interface ScoringPreset {
     description: string;
     /**
      * 
+     * @type {string}
+     * @memberof ScoringPreset
+     */
+    extra?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ScoringPreset
      */
@@ -3594,12 +3600,6 @@ export interface ScoringPreset {
      * @memberof ScoringPreset
      */
     scoring_method: ScoringMethod;
-    /**
-     * 
-     * @type {ScoringPresetType}
-     * @memberof ScoringPreset
-     */
-    type: ScoringPresetType;
 }
 
 /**
@@ -3614,6 +3614,12 @@ export interface ScoringPresetCreate {
      * @memberof ScoringPresetCreate
      */
     description?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ScoringPresetCreate
+     */
+    extra?: string;
     /**
      * 
      * @type {number}
@@ -3644,22 +3650,6 @@ export interface ScoringPresetCreate {
      * @memberof ScoringPresetCreate
      */
     scoring_method: ScoringMethod;
-    /**
-     * 
-     * @type {ScoringPresetType}
-     * @memberof ScoringPresetCreate
-     */
-    type: ScoringPresetType;
-}
-
-/**
- * 
- * @export
- * @enum {string}
- */
-export enum ScoringPresetType {
-    OBJECTIVE = 'OBJECTIVE',
-    CATEGORY = 'CATEGORY'
 }
 
 /**

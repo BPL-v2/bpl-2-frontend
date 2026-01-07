@@ -743,7 +743,7 @@ export function useCreateBulkObjectives(
             objective_type: ObjectiveType.ITEM,
             aggregation: bulkObjective.aggregation_method,
             number_field: NumberField.STACK_SIZE,
-            scoring_preset_id: bulkObjective.scoring_preset_id,
+            scoring_preset_ids: bulkObjective.scoring_preset_ids,
             parent_id: categoryId,
             conditions: [
               {

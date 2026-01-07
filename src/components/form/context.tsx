@@ -6,6 +6,7 @@ import { CommaSeperatedField } from "./comma-seperated-field";
 import { DateTimeField } from "./date-time-field";
 import { NumberField } from "./number-field";
 import { SelectField } from "./select-field";
+import { MultiSelectField } from "./multi-select-field";
 import { TextField } from "./text-field";
 export const { fieldContext, formContext, useFieldContext } =
   createFormHookContexts();
@@ -18,6 +19,7 @@ export const { useAppForm } = createFormHook({
     DateTimeField,
     BooleanField,
     SelectField,
+    MultiSelectField,
     ColorField,
     ArrayField,
     CommaSeperatedField,

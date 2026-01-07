@@ -73,7 +73,7 @@ type ExtendedObjectiveCreate = ObjectiveCreate & {
 
 export type BulkObjectiveCreate = {
   nameList: string;
-  scoring_preset_id: number;
+  scoring_preset_ids: number[];
   aggregation_method: AggregationType;
   item_field: ItemField;
 };
@@ -142,6 +142,7 @@ export function ScoringCategoryPage(): JSX.Element {
       conditions: [],
       parent_id: objectiveId,
       objective_type: ObjectiveType.CATEGORY,
+      scoring_preset_ids: [],
     } as unknown as ObjectiveCreate,
     onSubmit: (data) => createObjective(data.value),
   });
@@ -151,6 +152,7 @@ export function ScoringCategoryPage(): JSX.Element {
       conditions: [],
       parent_id: objectiveId,
       hide_progress: false,
+      scoring_preset_ids: [],
     } as unknown as ExtendedObjectiveCreate,
     onSubmit: (data) => {
       if (data.value.item_name) {
@@ -188,6 +190,9 @@ export function ScoringCategoryPage(): JSX.Element {
       ];
       const objectiveCreate: ObjectiveCreate = {
         ...editedObjective,
+        scoring_preset_ids: editedObjective.scoring_presets.map(
+          (preset) => preset.id,
+        ),
         conditions: editedObjectiveConditions,
       };
       createObjective(objectiveCreate);
@@ -266,10 +271,12 @@ export function ScoringCategoryPage(): JSX.Element {
       {
         header: "Scoring Method",
         cell: ({ row }) => {
-          const scoringPreset = scoringPresets.find(
-            (preset) => preset.id === row.original.scoring_presets[0]?.id,
-          );
-          return <div>{scoringPreset?.name}</div>;
+          return scoringPresets
+            .filter((preset) =>
+              row.original.scoring_presets.map((p) => p.id).includes(preset.id),
+            )
+            .map((preset) => preset.name)
+            .join(", ");
         },
       },
       {
@@ -281,19 +288,33 @@ export function ScoringCategoryPage(): JSX.Element {
             <div className="flex flex-col gap-1">
               {row.original.conditions.map((condition) => {
                 return (
-                  <div className="tooltip" key={"condition-" + condition.field}>
+                  <div
+                    className="tooltip"
+                    key={
+                      "condition-" +
+                      condition.field +
+                      "-" +
+                      condition.operator +
+                      "-" +
+                      condition.value
+                    }
+                  >
                     <span className="tooltip-content flex flex-row items-center gap-1">
                       <span className="text-success">{condition.field}</span>
                       <span className="text-info">{condition.operator}</span>
                       <span className="text-error">{condition.value}</span>
                     </span>
-                    <div className="badge badge-sm pr-px whitespace-nowrap badge-primary select-none">
+                    <div className="badge pr-px badge-sm whitespace-nowrap badge-primary select-none">
                       {condition.field}
                       <XCircleIcon
                         className="size-4 cursor-pointer"
                         onClick={() =>
                           createObjective({
                             ...row.original,
+                            scoring_preset_ids:
+                              row.original.scoring_presets.map(
+                                (preset) => preset.id,
+                              ),
                             conditions: row.original.conditions.filter(
                               (c) => c !== condition,
                             ),
@@ -336,6 +357,10 @@ export function ScoringCategoryPage(): JSX.Element {
                           condition.field === ItemField.NAME &&
                           condition.operator === Operator.EQ,
                       )?.value,
+                    );
+                    objectiveForm.setFieldValue(
+                      "scoring_preset_ids",
+                      row.original.scoring_presets.map((preset) => preset.id),
                     );
                     setIsObjectiveModalOpen(true);
                   }}
@@ -518,18 +543,18 @@ export function ScoringCategoryPage(): JSX.Element {
               name="valid_to"
               children={(field) => <field.DateTimeField label="Valid To" />}
             />
-            {/* <objectiveForm.AppField
-              name="scoring_preset_id"
+            <objectiveForm.AppField
+              name="scoring_preset_ids"
               children={(field) => (
-                <field.SelectField
-                  label="Scoring Preset"
+                <field.MultiSelectField
+                  label="Scoring Presets"
                   options={scoringPresets.map((preset) => ({
                     label: preset.name,
                     value: preset.id,
                   }))}
                 />
               )}
-            /> */}
+            />
             <objectiveForm.AppField
               name="hide_progress"
               children={(field) => (
@@ -591,10 +616,10 @@ export function ScoringCategoryPage(): JSX.Element {
             )}
           />
           <bulkObjectiveForm.AppField
-            name="scoring_preset_id"
+            name="scoring_preset_ids"
             children={(field) => (
-              <field.SelectField
-                label="Scoring Preset"
+              <field.MultiSelectField
+                label="Scoring Presets"
                 className="w-full"
                 required
                 options={scoringPresets.map((preset) => ({
@@ -678,8 +703,8 @@ export function ScoringCategoryPage(): JSX.Element {
               />
             )}
           />
-          {/* <categoryForm.AppField
-            name="scoring_preset_id"
+          <categoryForm.AppField
+            name="scoring_preset_ids"
             children={(field) => (
               <field.SelectField
                 label="Scoring Preset"
@@ -689,7 +714,7 @@ export function ScoringCategoryPage(): JSX.Element {
                 }))}
               />
             )}
-          /> */}
+          />
           <div className="flex flex-row justify-end gap-2">
             <button
               type="button"
@@ -844,6 +869,10 @@ export function ScoringCategoryPage(): JSX.Element {
           className="btn btn-primary"
           onClick={() => {
             setFormValues(categoryForm, objective);
+            categoryForm.setFieldValue(
+              "scoring_preset_ids",
+              objective?.scoring_presets.map((preset) => preset.id) || [],
+            );
             setIsCategoryModalOpen(true);
           }}
         >
