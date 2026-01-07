@@ -34,7 +34,7 @@ export function ArrayField({
       className={twMerge("flex flex-col items-start gap-1", className)}
       hidden={props.hidden}
     >
-      <span className="label">{label}</span>
+      <span className="label px-2">{label}</span>
       <select
         multiple
         className={twMerge("select-bordered select w-full", className)}

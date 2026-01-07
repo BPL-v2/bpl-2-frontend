@@ -56,6 +56,7 @@ export function MultiSelect<T>({
             }
             required={required}
             name={name}
+            autoComplete="off"
           />
           {values.length > 1 && (
             <div className="absolute inset-y-0 right-0 m-2 flex size-6 items-center justify-center rounded-full border border-highlight bg-base-200">

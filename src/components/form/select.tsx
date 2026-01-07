@@ -98,6 +98,7 @@ export default function Select<T>({
             placeholder={placeholder}
             name={name}
             required={required}
+            autoComplete="off"
           />
         </ComboboxButton>
         <ComboboxOptions

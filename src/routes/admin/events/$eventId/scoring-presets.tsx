@@ -68,6 +68,7 @@ function ScoringPresetsPage() {
   const presetForm = useAppForm({
     defaultValues: {
       points: [] as number[],
+      extra: {},
     } as ScoringPresetCreate,
     onSubmit: (data) => {
       const create = JSON.parse(
@@ -116,10 +117,6 @@ function ScoringPresetsPage() {
             children={(field) => <field.TextField label="Points" required />}
           />
           <presetForm.AppField
-            name="extra"
-            children={(field) => <field.TextField label="Extra" />}
-          />
-          <presetForm.AppField
             name="scoring_method"
             children={(field) => (
               <field.SelectField
@@ -129,6 +126,47 @@ function ScoringPresetsPage() {
               />
             )}
           />
+          <presetForm.AppField
+            name="extra.required_number_of_bingos"
+            children={(field) => (
+              <field.TextField
+                label="Required Number of Bingos"
+                hidden={scoring_method !== ScoringMethod.BINGO_BOARD}
+              />
+            )}
+          />
+          {scoring_method === ScoringMethod.RANKED_COMPLETION_TIME && (
+            <div className="flex flex-col gap-1 rounded-lg border border-highlight p-2">
+              <p className="px-2 text-left text-neutral-content/40">
+                Required child completions
+              </p>
+              <div className="flex flex-row">
+                <presetForm.AppField
+                  name="extra.required_child_completions"
+                  children={(field) => (
+                    <field.TextField
+                      label="Number"
+                      hidden={
+                        scoring_method !== ScoringMethod.RANKED_COMPLETION_TIME
+                      }
+                    />
+                  )}
+                />
+
+                <presetForm.AppField
+                  name="extra.required_child_completions_percent"
+                  children={(field) => (
+                    <field.TextField
+                      label="Percentage"
+                      hidden={
+                        scoring_method !== ScoringMethod.RANKED_COMPLETION_TIME
+                      }
+                    />
+                  )}
+                />
+              </div>
+            </div>
+          )}
           <presetForm.AppField
             name="point_cap"
             children={(field) => (

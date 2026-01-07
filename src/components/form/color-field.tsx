@@ -14,7 +14,7 @@ export function ColorField({
       className={twMerge("flex flex-col items-start gap-1", className)}
       hidden={props.hidden}
     >
-      <span className="label">{label}</span>
+      <span className="label px-2">{label}</span>
       <input
         type="color"
         value={field.state.value}

@@ -16,7 +16,7 @@ export function MultiSelectField<T>({
   return (
     <div className={className} hidden={props.hidden}>
       <label className={"flex flex-col items-start gap-1"}>
-        <span className="label">
+        <span className="label px-2">
           {label}
           {props.required && <span className="text-red-500">*</span>}
         </span>

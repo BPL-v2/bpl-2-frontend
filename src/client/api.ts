@@ -3549,7 +3549,8 @@ export enum ScoringMethod {
     RANKED_COMPLETION_TIME = 'RANKED_COMPLETION_TIME',
     BONUS_PER_COMPLETION = 'BONUS_PER_COMPLETION',
     BINGO_3 = 'BINGO_3',
-    BINGO_BOARD = 'BINGO_BOARD'
+    BINGO_BOARD = 'BINGO_BOARD',
+    CHILD_NUMBER_SUM = 'CHILD_NUMBER_SUM'
 }
 
 /**
@@ -3566,10 +3567,10 @@ export interface ScoringPreset {
     description: string;
     /**
      * 
-     * @type {string}
+     * @type {{ [key: string]: string; }}
      * @memberof ScoringPreset
      */
-    extra?: string;
+    extra?: { [key: string]: string; };
     /**
      * 
      * @type {number}
@@ -3616,10 +3617,10 @@ export interface ScoringPresetCreate {
     description?: string;
     /**
      * 
-     * @type {string}
+     * @type {{ [key: string]: string; }}
      * @memberof ScoringPresetCreate
      */
-    extra?: string;
+    extra?: { [key: string]: string; };
     /**
      * 
      * @type {number}

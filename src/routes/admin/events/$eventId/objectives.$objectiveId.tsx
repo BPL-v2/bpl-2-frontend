@@ -706,8 +706,8 @@ export function ScoringCategoryPage(): JSX.Element {
           <categoryForm.AppField
             name="scoring_preset_ids"
             children={(field) => (
-              <field.SelectField
-                label="Scoring Preset"
+              <field.MultiSelectField
+                label="Scoring Presets"
                 options={scoringPresets.map((preset) => ({
                   label: preset.name,
                   value: preset.id,

@@ -68,7 +68,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
     <label
       className={twMerge("flex w-full flex-col items-start gap-1", className)}
     >
-      <span className="label">
+      <span className="label px-2">
         {label}
         {required && <span className="text-red-500">*</span>}
       </span>
