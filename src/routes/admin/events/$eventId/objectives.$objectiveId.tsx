@@ -623,7 +623,6 @@ export function ScoringCategoryPage(): JSX.Element {
               <field.MultiSelectField
                 label="Scoring Presets"
                 className="w-full"
-                required
                 options={scoringPresets.map((preset) => ({
                   label: preset.name,
                   value: preset.id,
