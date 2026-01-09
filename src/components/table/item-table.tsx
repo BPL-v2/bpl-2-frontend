@@ -1,4 +1,4 @@
-import { GameVersion, ScoringMethod, Team } from "@client/api";
+import { AggregationType, GameVersion, ScoringMethod, Team } from "@client/api";
 import { useGetEventStatus, useGetUsers } from "@client/query";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { ScoreObjective } from "@mytypes/score";
@@ -113,7 +113,8 @@ export function ItemTable({
     }
     if (
       objective.scoring_presets[0]?.scoring_method ===
-      ScoringMethod.POINTS_FROM_VALUE
+        ScoringMethod.POINTS_FROM_VALUE ||
+      objective.aggregation === AggregationType.MAXIMUM
     ) {
       return (
         <span className="text-base font-extrabold text-secondary">
@@ -163,7 +164,7 @@ export function ItemTable({
     }
     return className;
   };
-
+  console.log(teamIds);
   const columns = useMemo<ColumnDef<ExtendedScoreObjective>[]>(() => {
     const teams = currentEvent.teams.sort((a: Team, b: Team) => {
       if (a.id === userTeamID) {
@@ -224,13 +225,13 @@ export function ItemTable({
             ),
           enableSorting: false,
           enableColumnFilter: false,
-          size: 100,
+          size: 80,
         },
         {
           accessorKey: "name",
           header: "",
           enableSorting: false,
-          size: Math.min(windowWidth, 1440) - 200 - teamIds.length * 200, // take up remaining space
+          size: Math.min(windowWidth, 1440) - 90 - teamIds.length * 180,
           cell: (info) => objectNameRender(info.row.original),
           filterFn: "includesString",
           meta: {
@@ -264,7 +265,7 @@ export function ItemTable({
                   );
                 },
                 enableSorting: false,
-                size: 200,
+                size: 180,
                 cell: (info: CellContext<ExtendedScoreObjective, string>) => {
                   const score = info.row.original.team_score[team.id];
                   const finished = isFinished(score) || false;

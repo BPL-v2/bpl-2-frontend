@@ -288,7 +288,6 @@ export default function Tree({
     nodeId?: number,
     nodeCoordinates?: { x: number; y: number },
   ) {
-    console.log("renderNodeDetails", nodeId);
     if (!json || !nodeId || !nodeCoordinates) {
       return;
     }

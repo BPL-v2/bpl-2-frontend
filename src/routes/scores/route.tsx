@@ -20,14 +20,21 @@ import { JSX, useContext, useEffect, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { router } from "../../main";
 import { useGetRules } from "@client/query";
+import { AscendancyChallengeTabRules } from "../../rules-alt/ascendancy-challenges";
+import { GraftRaceTabRules } from "../../rules-alt/graft-race";
 
 type scoringTabKey =
   | "ladder"
   | "for-you"
   | "progress"
   | "uniques"
+  | "focus-uniques"
+  | "slot-uniques"
+  | "foulborn-uniques"
+  | "graft-race"
   | "races"
   | "bounties"
+  | "ascendancy-challenges"
   | "collections"
   | "dailies"
   | "heist"
@@ -99,6 +106,24 @@ function ScoringPage() {
         visible: true,
       },
       {
+        name: "Focus Uniques",
+        key: "focus-uniques",
+        rules: <UniqueTabRules />,
+        visible: true,
+      },
+      {
+        name: "Slot Uniques",
+        key: "slot-uniques",
+        rules: <UniqueTabRules />,
+        visible: true,
+      },
+      {
+        name: "Foulborn Uniques",
+        key: "foulborn-uniques",
+        rules: <UniqueTabRules />,
+        visible: true,
+      },
+      {
         name: "Races",
         key: "races",
         rules: <RaceTabRules />,
@@ -108,6 +133,18 @@ function ScoringPage() {
         name: "Bounties",
         key: "bounties",
         rules: <BountyTabRules />,
+        visible: true,
+      },
+      {
+        name: "Ascendancy Challenges",
+        key: "ascendancy-challenges",
+        rules: <AscendancyChallengeTabRules />,
+        visible: true,
+      },
+      {
+        name: "Graft Race",
+        key: "graft-race",
+        rules: <GraftRaceTabRules />,
         visible: true,
       },
       {

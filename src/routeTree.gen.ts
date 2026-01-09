@@ -22,18 +22,23 @@ import { Route as TeamWishlistRouteImport } from './routes/team/wishlist'
 import { Route as TeamAtlasRouteImport } from './routes/team/atlas'
 import { Route as StreamsTwitchAccountRouteImport } from './routes/streams/$twitchAccount'
 import { Route as ScoresUniquesRouteImport } from './routes/scores/uniques'
+import { Route as ScoresSlotUniquesRouteImport } from './routes/scores/slot-uniques'
 import { Route as ScoresScarabsRouteImport } from './routes/scores/scarabs'
 import { Route as ScoresRacesRouteImport } from './routes/scores/races'
 import { Route as ScoresProgressRouteImport } from './routes/scores/progress'
 import { Route as ScoresLadderRouteImport } from './routes/scores/ladder'
 import { Route as ScoresHeistRouteImport } from './routes/scores/heist'
+import { Route as ScoresGraftRaceRouteImport } from './routes/scores/graft-race'
 import { Route as ScoresGemsRouteImport } from './routes/scores/gems'
+import { Route as ScoresFoulbornUniquesRouteImport } from './routes/scores/foulborn-uniques'
 import { Route as ScoresForYouRouteImport } from './routes/scores/for-you'
+import { Route as ScoresFocusUniquesRouteImport } from './routes/scores/focus-uniques'
 import { Route as ScoresDelveRouteImport } from './routes/scores/delve'
 import { Route as ScoresDailiesRouteImport } from './routes/scores/dailies'
 import { Route as ScoresCollectionsRouteImport } from './routes/scores/collections'
 import { Route as ScoresBountiesRouteImport } from './routes/scores/bounties'
 import { Route as ScoresBingoRouteImport } from './routes/scores/bingo'
+import { Route as ScoresAscendancyChallengesRouteImport } from './routes/scores/ascendancy-challenges'
 import { Route as AdminUserManagementRouteImport } from './routes/admin/user-management'
 import { Route as AdminTimingsRouteImport } from './routes/admin/timings'
 import { Route as AdminTeamSuggestionsRouteImport } from './routes/admin/team-suggestions'
@@ -123,6 +128,11 @@ const ScoresUniquesRoute = ScoresUniquesRouteImport.update({
   path: '/uniques',
   getParentRoute: () => ScoresRouteRoute,
 } as any)
+const ScoresSlotUniquesRoute = ScoresSlotUniquesRouteImport.update({
+  id: '/slot-uniques',
+  path: '/slot-uniques',
+  getParentRoute: () => ScoresRouteRoute,
+} as any)
 const ScoresScarabsRoute = ScoresScarabsRouteImport.update({
   id: '/scarabs',
   path: '/scarabs',
@@ -148,14 +158,29 @@ const ScoresHeistRoute = ScoresHeistRouteImport.update({
   path: '/heist',
   getParentRoute: () => ScoresRouteRoute,
 } as any)
+const ScoresGraftRaceRoute = ScoresGraftRaceRouteImport.update({
+  id: '/graft-race',
+  path: '/graft-race',
+  getParentRoute: () => ScoresRouteRoute,
+} as any)
 const ScoresGemsRoute = ScoresGemsRouteImport.update({
   id: '/gems',
   path: '/gems',
   getParentRoute: () => ScoresRouteRoute,
 } as any)
+const ScoresFoulbornUniquesRoute = ScoresFoulbornUniquesRouteImport.update({
+  id: '/foulborn-uniques',
+  path: '/foulborn-uniques',
+  getParentRoute: () => ScoresRouteRoute,
+} as any)
 const ScoresForYouRoute = ScoresForYouRouteImport.update({
   id: '/for-you',
   path: '/for-you',
+  getParentRoute: () => ScoresRouteRoute,
+} as any)
+const ScoresFocusUniquesRoute = ScoresFocusUniquesRouteImport.update({
+  id: '/focus-uniques',
+  path: '/focus-uniques',
   getParentRoute: () => ScoresRouteRoute,
 } as any)
 const ScoresDelveRoute = ScoresDelveRouteImport.update({
@@ -183,6 +208,12 @@ const ScoresBingoRoute = ScoresBingoRouteImport.update({
   path: '/bingo',
   getParentRoute: () => ScoresRouteRoute,
 } as any)
+const ScoresAscendancyChallengesRoute =
+  ScoresAscendancyChallengesRouteImport.update({
+    id: '/ascendancy-challenges',
+    path: '/ascendancy-challenges',
+    getParentRoute: () => ScoresRouteRoute,
+  } as any)
 const AdminUserManagementRoute = AdminUserManagementRouteImport.update({
   id: '/admin/user-management',
   path: '/admin/user-management',
@@ -321,18 +352,23 @@ export interface FileRoutesByFullPath {
   '/admin/team-suggestions': typeof AdminTeamSuggestionsRoute
   '/admin/timings': typeof AdminTimingsRoute
   '/admin/user-management': typeof AdminUserManagementRoute
+  '/scores/ascendancy-challenges': typeof ScoresAscendancyChallengesRoute
   '/scores/bingo': typeof ScoresBingoRoute
   '/scores/bounties': typeof ScoresBountiesRoute
   '/scores/collections': typeof ScoresCollectionsRoute
   '/scores/dailies': typeof ScoresDailiesRoute
   '/scores/delve': typeof ScoresDelveRoute
+  '/scores/focus-uniques': typeof ScoresFocusUniquesRoute
   '/scores/for-you': typeof ScoresForYouRoute
+  '/scores/foulborn-uniques': typeof ScoresFoulbornUniquesRoute
   '/scores/gems': typeof ScoresGemsRoute
+  '/scores/graft-race': typeof ScoresGraftRaceRoute
   '/scores/heist': typeof ScoresHeistRoute
   '/scores/ladder': typeof ScoresLadderRoute
   '/scores/progress': typeof ScoresProgressRoute
   '/scores/races': typeof ScoresRacesRoute
   '/scores/scarabs': typeof ScoresScarabsRoute
+  '/scores/slot-uniques': typeof ScoresSlotUniquesRoute
   '/scores/uniques': typeof ScoresUniquesRoute
   '/streams/$twitchAccount': typeof StreamsTwitchAccountRoute
   '/team/atlas': typeof TeamAtlasRoute
@@ -371,18 +407,23 @@ export interface FileRoutesByTo {
   '/admin/team-suggestions': typeof AdminTeamSuggestionsRoute
   '/admin/timings': typeof AdminTimingsRoute
   '/admin/user-management': typeof AdminUserManagementRoute
+  '/scores/ascendancy-challenges': typeof ScoresAscendancyChallengesRoute
   '/scores/bingo': typeof ScoresBingoRoute
   '/scores/bounties': typeof ScoresBountiesRoute
   '/scores/collections': typeof ScoresCollectionsRoute
   '/scores/dailies': typeof ScoresDailiesRoute
   '/scores/delve': typeof ScoresDelveRoute
+  '/scores/focus-uniques': typeof ScoresFocusUniquesRoute
   '/scores/for-you': typeof ScoresForYouRoute
+  '/scores/foulborn-uniques': typeof ScoresFoulbornUniquesRoute
   '/scores/gems': typeof ScoresGemsRoute
+  '/scores/graft-race': typeof ScoresGraftRaceRoute
   '/scores/heist': typeof ScoresHeistRoute
   '/scores/ladder': typeof ScoresLadderRoute
   '/scores/progress': typeof ScoresProgressRoute
   '/scores/races': typeof ScoresRacesRoute
   '/scores/scarabs': typeof ScoresScarabsRoute
+  '/scores/slot-uniques': typeof ScoresSlotUniquesRoute
   '/scores/uniques': typeof ScoresUniquesRoute
   '/streams/$twitchAccount': typeof StreamsTwitchAccountRoute
   '/team/atlas': typeof TeamAtlasRoute
@@ -422,18 +463,23 @@ export interface FileRoutesById {
   '/admin/team-suggestions': typeof AdminTeamSuggestionsRoute
   '/admin/timings': typeof AdminTimingsRoute
   '/admin/user-management': typeof AdminUserManagementRoute
+  '/scores/ascendancy-challenges': typeof ScoresAscendancyChallengesRoute
   '/scores/bingo': typeof ScoresBingoRoute
   '/scores/bounties': typeof ScoresBountiesRoute
   '/scores/collections': typeof ScoresCollectionsRoute
   '/scores/dailies': typeof ScoresDailiesRoute
   '/scores/delve': typeof ScoresDelveRoute
+  '/scores/focus-uniques': typeof ScoresFocusUniquesRoute
   '/scores/for-you': typeof ScoresForYouRoute
+  '/scores/foulborn-uniques': typeof ScoresFoulbornUniquesRoute
   '/scores/gems': typeof ScoresGemsRoute
+  '/scores/graft-race': typeof ScoresGraftRaceRoute
   '/scores/heist': typeof ScoresHeistRoute
   '/scores/ladder': typeof ScoresLadderRoute
   '/scores/progress': typeof ScoresProgressRoute
   '/scores/races': typeof ScoresRacesRoute
   '/scores/scarabs': typeof ScoresScarabsRoute
+  '/scores/slot-uniques': typeof ScoresSlotUniquesRoute
   '/scores/uniques': typeof ScoresUniquesRoute
   '/streams/$twitchAccount': typeof StreamsTwitchAccountRoute
   '/team/atlas': typeof TeamAtlasRoute
@@ -474,18 +520,23 @@ export interface FileRouteTypes {
     | '/admin/team-suggestions'
     | '/admin/timings'
     | '/admin/user-management'
+    | '/scores/ascendancy-challenges'
     | '/scores/bingo'
     | '/scores/bounties'
     | '/scores/collections'
     | '/scores/dailies'
     | '/scores/delve'
+    | '/scores/focus-uniques'
     | '/scores/for-you'
+    | '/scores/foulborn-uniques'
     | '/scores/gems'
+    | '/scores/graft-race'
     | '/scores/heist'
     | '/scores/ladder'
     | '/scores/progress'
     | '/scores/races'
     | '/scores/scarabs'
+    | '/scores/slot-uniques'
     | '/scores/uniques'
     | '/streams/$twitchAccount'
     | '/team/atlas'
@@ -524,18 +575,23 @@ export interface FileRouteTypes {
     | '/admin/team-suggestions'
     | '/admin/timings'
     | '/admin/user-management'
+    | '/scores/ascendancy-challenges'
     | '/scores/bingo'
     | '/scores/bounties'
     | '/scores/collections'
     | '/scores/dailies'
     | '/scores/delve'
+    | '/scores/focus-uniques'
     | '/scores/for-you'
+    | '/scores/foulborn-uniques'
     | '/scores/gems'
+    | '/scores/graft-race'
     | '/scores/heist'
     | '/scores/ladder'
     | '/scores/progress'
     | '/scores/races'
     | '/scores/scarabs'
+    | '/scores/slot-uniques'
     | '/scores/uniques'
     | '/streams/$twitchAccount'
     | '/team/atlas'
@@ -574,18 +630,23 @@ export interface FileRouteTypes {
     | '/admin/team-suggestions'
     | '/admin/timings'
     | '/admin/user-management'
+    | '/scores/ascendancy-challenges'
     | '/scores/bingo'
     | '/scores/bounties'
     | '/scores/collections'
     | '/scores/dailies'
     | '/scores/delve'
+    | '/scores/focus-uniques'
     | '/scores/for-you'
+    | '/scores/foulborn-uniques'
     | '/scores/gems'
+    | '/scores/graft-race'
     | '/scores/heist'
     | '/scores/ladder'
     | '/scores/progress'
     | '/scores/races'
     | '/scores/scarabs'
+    | '/scores/slot-uniques'
     | '/scores/uniques'
     | '/streams/$twitchAccount'
     | '/team/atlas'
@@ -730,6 +791,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScoresUniquesRouteImport
       parentRoute: typeof ScoresRouteRoute
     }
+    '/scores/slot-uniques': {
+      id: '/scores/slot-uniques'
+      path: '/slot-uniques'
+      fullPath: '/scores/slot-uniques'
+      preLoaderRoute: typeof ScoresSlotUniquesRouteImport
+      parentRoute: typeof ScoresRouteRoute
+    }
     '/scores/scarabs': {
       id: '/scores/scarabs'
       path: '/scarabs'
@@ -765,6 +833,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScoresHeistRouteImport
       parentRoute: typeof ScoresRouteRoute
     }
+    '/scores/graft-race': {
+      id: '/scores/graft-race'
+      path: '/graft-race'
+      fullPath: '/scores/graft-race'
+      preLoaderRoute: typeof ScoresGraftRaceRouteImport
+      parentRoute: typeof ScoresRouteRoute
+    }
     '/scores/gems': {
       id: '/scores/gems'
       path: '/gems'
@@ -772,11 +847,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScoresGemsRouteImport
       parentRoute: typeof ScoresRouteRoute
     }
+    '/scores/foulborn-uniques': {
+      id: '/scores/foulborn-uniques'
+      path: '/foulborn-uniques'
+      fullPath: '/scores/foulborn-uniques'
+      preLoaderRoute: typeof ScoresFoulbornUniquesRouteImport
+      parentRoute: typeof ScoresRouteRoute
+    }
     '/scores/for-you': {
       id: '/scores/for-you'
       path: '/for-you'
       fullPath: '/scores/for-you'
       preLoaderRoute: typeof ScoresForYouRouteImport
+      parentRoute: typeof ScoresRouteRoute
+    }
+    '/scores/focus-uniques': {
+      id: '/scores/focus-uniques'
+      path: '/focus-uniques'
+      fullPath: '/scores/focus-uniques'
+      preLoaderRoute: typeof ScoresFocusUniquesRouteImport
       parentRoute: typeof ScoresRouteRoute
     }
     '/scores/delve': {
@@ -812,6 +901,13 @@ declare module '@tanstack/react-router' {
       path: '/bingo'
       fullPath: '/scores/bingo'
       preLoaderRoute: typeof ScoresBingoRouteImport
+      parentRoute: typeof ScoresRouteRoute
+    }
+    '/scores/ascendancy-challenges': {
+      id: '/scores/ascendancy-challenges'
+      path: '/ascendancy-challenges'
+      fullPath: '/scores/ascendancy-challenges'
+      preLoaderRoute: typeof ScoresAscendancyChallengesRouteImport
       parentRoute: typeof ScoresRouteRoute
     }
     '/admin/user-management': {
@@ -979,34 +1075,44 @@ declare module '@tanstack/react-router' {
 }
 
 interface ScoresRouteRouteChildren {
+  ScoresAscendancyChallengesRoute: typeof ScoresAscendancyChallengesRoute
   ScoresBingoRoute: typeof ScoresBingoRoute
   ScoresBountiesRoute: typeof ScoresBountiesRoute
   ScoresCollectionsRoute: typeof ScoresCollectionsRoute
   ScoresDailiesRoute: typeof ScoresDailiesRoute
   ScoresDelveRoute: typeof ScoresDelveRoute
+  ScoresFocusUniquesRoute: typeof ScoresFocusUniquesRoute
   ScoresForYouRoute: typeof ScoresForYouRoute
+  ScoresFoulbornUniquesRoute: typeof ScoresFoulbornUniquesRoute
   ScoresGemsRoute: typeof ScoresGemsRoute
+  ScoresGraftRaceRoute: typeof ScoresGraftRaceRoute
   ScoresHeistRoute: typeof ScoresHeistRoute
   ScoresLadderRoute: typeof ScoresLadderRoute
   ScoresProgressRoute: typeof ScoresProgressRoute
   ScoresRacesRoute: typeof ScoresRacesRoute
   ScoresScarabsRoute: typeof ScoresScarabsRoute
+  ScoresSlotUniquesRoute: typeof ScoresSlotUniquesRoute
   ScoresUniquesRoute: typeof ScoresUniquesRoute
 }
 
 const ScoresRouteRouteChildren: ScoresRouteRouteChildren = {
+  ScoresAscendancyChallengesRoute: ScoresAscendancyChallengesRoute,
   ScoresBingoRoute: ScoresBingoRoute,
   ScoresBountiesRoute: ScoresBountiesRoute,
   ScoresCollectionsRoute: ScoresCollectionsRoute,
   ScoresDailiesRoute: ScoresDailiesRoute,
   ScoresDelveRoute: ScoresDelveRoute,
+  ScoresFocusUniquesRoute: ScoresFocusUniquesRoute,
   ScoresForYouRoute: ScoresForYouRoute,
+  ScoresFoulbornUniquesRoute: ScoresFoulbornUniquesRoute,
   ScoresGemsRoute: ScoresGemsRoute,
+  ScoresGraftRaceRoute: ScoresGraftRaceRoute,
   ScoresHeistRoute: ScoresHeistRoute,
   ScoresLadderRoute: ScoresLadderRoute,
   ScoresProgressRoute: ScoresProgressRoute,
   ScoresRacesRoute: ScoresRacesRoute,
   ScoresScarabsRoute: ScoresScarabsRoute,
+  ScoresSlotUniquesRoute: ScoresSlotUniquesRoute,
   ScoresUniquesRoute: ScoresUniquesRoute,
 }
 

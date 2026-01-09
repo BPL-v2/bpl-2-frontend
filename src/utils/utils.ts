@@ -253,7 +253,7 @@ function getPotentialBonusPointsPerChild(
 }
 
 export function rank2text(rank: number) {
-  if (rank === 0) {
+  if (!rank) {
     return "Unfinished";
   }
   if (rank === 1) {

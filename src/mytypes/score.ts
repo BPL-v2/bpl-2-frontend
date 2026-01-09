@@ -47,7 +47,7 @@ export function getMetaInfo(
     (user) => user.id === scoreDiff.score.completions[0].user_id,
   )?.display_name;
   meta.finished = scoreDiff.score.completions[0].finished;
-  meta.rank = scoreDiff.score.completions[0].rank;
+  meta.rank = scoreDiff.score.completions[0]?.rank;
   meta.points += scoreDiff.score.completions[0].points;
   return meta;
 }

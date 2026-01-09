@@ -4,12 +4,15 @@ import {
   useFile,
   useGetEvents,
   useGetPoBs,
+  useGetRules,
+  useGetScore,
   useGetUser,
   useGetUserActivity,
 } from "@client/query";
 import { ObjectiveIcon } from "@components/objective-icon";
 import { LazyCharacterChart } from "@components/profile/character-chart-lazy";
 import { PoB } from "@components/profile/pob";
+import { ScoreObjective } from "@mytypes/score";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
 import {
@@ -17,7 +20,7 @@ import {
   determineDifferences,
   PathOfBuilding,
 } from "@utils/pob";
-import { flatMap, lastTimestamp, totalPoints } from "@utils/utils";
+import { flatMap, lastTimestamp, mergeScores, totalPoints } from "@utils/utils";
 import { Suspense, useContext, useEffect, useMemo, useState } from "react";
 
 function getDeltaTimeAfterLeagueStart(
@@ -69,7 +72,7 @@ export const Route = createFileRoute("/profile/$userId/$eventId/$characterId")({
 });
 
 function RouteComponent() {
-  const { scores, currentEvent } = useContext(GlobalStateContext);
+  const { currentEvent } = useContext(GlobalStateContext);
   const { userId, characterId, eventId } = useParams({ from: Route.id });
   const { user } = useGetUser();
   const { events = [] } = useGetEvents();
@@ -77,8 +80,18 @@ function RouteComponent() {
     eventId,
     user?.id == userId ? userId : 0,
   );
-  const { pobs = [] } = useGetPoBs(userId, characterId);
+  const { rules } = useGetRules(eventId);
+  const { score } = useGetScore(eventId);
   const event = events.find((e) => e.id === Number(eventId));
+  let scores: ScoreObjective | undefined = undefined;
+  if (rules && score && event)
+    scores = mergeScores(
+      rules,
+      score,
+      event.teams.map((team) => team.id),
+    );
+
+  const { pobs = [] } = useGetPoBs(userId, characterId);
   const { data: baseTypes = [] } = useFile<string[]>(
     `/assets/${currentEvent.game_version}/items/basetypes.json`,
   );
@@ -109,8 +122,9 @@ function RouteComponent() {
       objective.required_number > 1
     )
       continue;
+
     for (const score of Object.values(objective.team_score)) {
-      if (score.completions[0].user_id === userId && totalPoints(score) > 0) {
+      if (score.completions[0]?.user_id === userId && totalPoints(score) > 0) {
         contributions.push({ objective: objective, score: score });
       }
     }
@@ -148,7 +162,11 @@ function RouteComponent() {
           </h1>
           <div className="flex flex-row flex-wrap gap-4">
             {contributions
-              .sort((a, b) => totalPoints(b.score) - totalPoints(a.score))
+              .sort(
+                (a, b) =>
+                  a.score.completions[0]!.timestamp -
+                  b.score.completions[0]!.timestamp,
+              )
               .map((contribution) => {
                 return (
                   <div className="tooltip">
@@ -156,7 +174,7 @@ function RouteComponent() {
                       <div className="">{contribution.objective.name}</div>
                       <span>
                         {new Date(
-                          lastTimestamp(contribution.score),
+                          lastTimestamp(contribution.score) * 1000,
                         ).toLocaleString()}
                       </span>
                     </div>

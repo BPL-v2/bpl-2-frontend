@@ -43,7 +43,6 @@ export const UniqueCategoryCard = ({
         getPotentialPoints(objective)[teamId]
       }`
     : null;
-
   return (
     <div className="h-full">
       <div
@@ -66,7 +65,7 @@ export const UniqueCategoryCard = ({
         >
           <div className="shrink-0">
             <Medal
-              rank={objective.team_score[teamId].completions[0].rank}
+              rank={objective.team_score[teamId]?.completions[0]?.rank}
               size={28}
             />
           </div>

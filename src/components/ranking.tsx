@@ -29,7 +29,7 @@ function getGridLayout(numTeams: number) {
 }
 
 function getCardColor(score: Score) {
-  switch (score.completions[0].rank) {
+  switch (score.completions[0]?.rank) {
     case 1:
       return "text-black/70 bg-gold-metallic";
     case 2:
@@ -45,15 +45,15 @@ function sort(
   [teamId1, score1]: [string, Score],
   [teamId2, score2]: [string, Score],
 ) {
-  if (score1.completions[0].rank !== score2.completions[0].rank) {
-    if (score1.completions[0].rank === 0) return 1;
-    if (score2.completions[0].rank === 0) return -1;
-    return score1.completions[0].rank - score2.completions[0].rank;
+  if (score1.completions[0]?.rank !== score2.completions[0]?.rank) {
+    if (score1.completions[0]?.rank === 0) return 1;
+    if (score2.completions[0]?.rank === 0) return -1;
+    return score1.completions[0]?.rank - score2.completions[0]?.rank;
   }
   if (totalPoints(score1) !== totalPoints(score2)) {
     return totalPoints(score2) - totalPoints(score1);
   }
-  return score2.completions[0].number - score1.completions[0].number;
+  return score2.completions[0]?.number - score1.completions[0]?.number;
 }
 
 export function Ranking({
@@ -73,8 +73,8 @@ export function Ranking({
       const pointsA = scoreA ? totalPoints(scoreA) : -1;
       const pointsB = scoreB ? totalPoints(scoreB) : -1;
       if (pointsA === pointsB) {
-        const numberA = scoreA ? scoreA.completions[0].number : -1;
-        const numberB = scoreB ? scoreB.completions[0].number : -1;
+        const numberA = scoreA ? scoreA.completions[0]?.number : -1;
+        const numberB = scoreB ? scoreB.completions[0]?.number : -1;
         if (numberA === numberB) {
           return b.id - a.id;
         }
@@ -122,7 +122,7 @@ export function Ranking({
                   <div className="">
                     {
                       <div className="text-lg font-semibold">
-                        {rank2text(score.completions[0].rank)}
+                        {rank2text(score.completions[0]?.rank)}
                       </div>
                     }
                     <div className="text-xl font-bold">

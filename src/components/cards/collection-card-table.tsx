@@ -14,16 +14,17 @@ type CollectionCardTableProps = {
 };
 
 function getPlace(score: Score) {
-  if (score.completions[0].rank === 0) {
+  const rank = score.completions[0]?.rank;
+  if (!rank) {
     return "Not Finished";
   }
-  if (score.completions[0].rank === 1) {
+  if (rank === 1) {
     return "First place";
   }
-  if (score.completions[0].rank === 2) {
+  if (rank === 2) {
     return "Second place";
   }
-  if (score.completions[0].rank === 3) {
+  if (rank === 3) {
     return "Third place";
   }
   return "Finished";
@@ -72,14 +73,14 @@ export function CollectionCardTable({
           .sort(([, scoreA], [, scoreB]) => {
             if (totalPoints(scoreA) === totalPoints(scoreB)) {
               return (
-                scoreB.completions[0].number - scoreA.completions[0].number
+                scoreB.completions[0]?.number - scoreA.completions[0]?.number
               );
             }
             return totalPoints(scoreB) - totalPoints(scoreA);
           })
           .map(([teamId, score], idx) => {
             const isFinished =
-              score.completions[0].number / objective.required_number >= 1;
+              score.completions[0]?.number / objective.required_number >= 1;
             const isLastRow = roundedBottom && idx === teamIds.length - 1;
             const isPlayerTeam = teamId === eventStatus?.team_id;
             const gotPoints = totalPoints(score) > 0;
@@ -135,7 +136,7 @@ export function CollectionCardTable({
                 >
                   {!isHidden ? (
                     <ProgressBar
-                      value={score.completions[0].number}
+                      value={score.completions[0]?.number || 0}
                       maxVal={objective.required_number}
                       gotPoints={gotPoints}
                     />
