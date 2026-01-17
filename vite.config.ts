@@ -67,7 +67,6 @@ export default defineConfig({
             "clsx",
             "dayjs",
             "isomorphic-fetch",
-            "pako",
             "tailwind-merge",
             "url",
           ],

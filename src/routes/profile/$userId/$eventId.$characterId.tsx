@@ -21,7 +21,7 @@ import {
   PathOfBuilding,
 } from "@utils/pob";
 import { flatMap, lastTimestamp, mergeScores, totalPoints } from "@utils/utils";
-import { Suspense, useContext, useEffect, useMemo, useState } from "react";
+import { Suspense, useContext, useEffect, useState } from "react";
 
 function getDeltaTimeAfterLeagueStart(
   timestamp?: string,
