@@ -164,7 +164,6 @@ export function ItemTable({
     }
     return className;
   };
-  console.log(teamIds);
   const columns = useMemo<ColumnDef<ExtendedScoreObjective>[]>(() => {
     const teams = currentEvent.teams.sort((a: Team, b: Team) => {
       if (a.id === userTeamID) {
@@ -244,7 +243,9 @@ export function ItemTable({
           .map(
             (team) =>
               ({
-                accessorKey: `team_score.${team.id}.finished`,
+                accessorFn: (row: ExtendedScoreObjective) =>
+                  isFinished(row.team_score[team.id]),
+                id: `team_${team.id}`,
                 header: () => {
                   const objectives = flatMapUniques(objective);
                   return (
@@ -268,7 +269,7 @@ export function ItemTable({
                 size: 180,
                 cell: (info: CellContext<ExtendedScoreObjective, string>) => {
                   const score = info.row.original.team_score[team.id];
-                  const finished = isFinished(score) || false;
+                  const finished = info.getValue<boolean>();
                   const user = users?.find(
                     (u) => score?.completions[0]?.user_id === u.id,
                   );

@@ -39,7 +39,11 @@ export function lastTimestamp(score?: Score): number {
 }
 
 export function isFinished(score?: Score): boolean {
-  return score?.completions.every((completion) => completion.finished) || false;
+  return (
+    ((score?.completions?.length || 0) > 0 &&
+      score?.completions.every((completion) => completion.finished)) ||
+    false
+  );
 }
 
 export function totalPoints(score?: Score): number {
