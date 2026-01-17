@@ -44,11 +44,11 @@ export function getMetaInfo(
   meta.teamName =
     teams?.find((team) => team.id === scoreDiff.team_id)?.name || "";
   meta.userName = users?.find(
-    (user) => user.id === scoreDiff.score.completions[0].user_id,
+    (user) => user.id === scoreDiff.score.completions[0]?.user_id,
   )?.display_name;
-  meta.finished = scoreDiff.score.completions[0].finished;
+  meta.finished = scoreDiff.score.completions[0]?.finished;
   meta.rank = scoreDiff.score.completions[0]?.rank;
-  meta.points += scoreDiff.score.completions[0].points;
+  meta.points += scoreDiff.score.completions[0]?.points;
   return meta;
 }
 

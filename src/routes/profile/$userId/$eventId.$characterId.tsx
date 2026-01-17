@@ -95,17 +95,25 @@ function RouteComponent() {
   const { data: baseTypes = [] } = useFile<string[]>(
     `/assets/${currentEvent.game_version}/items/basetypes.json`,
   );
-  const decodedPobs = useMemo(() => {
-    if (!baseTypes || baseTypes.length === 0) return [];
-    const decoded: PathOfBuilding[] = [];
-    for (const pob of pobs) {
-      const dec = decodePoBExport(pob.export_string, baseTypes);
-      if (decoded.length > 0) {
-        determineDifferences(decoded[decoded.length - 1], dec);
-      }
-      decoded.push(dec);
+  const [decodedPobs, setDecodedPobs] = useState<PathOfBuilding[]>([]);
+
+  useEffect(() => {
+    if (!baseTypes || baseTypes.length === 0) {
+      setDecodedPobs([]);
+      return;
     }
-    return decoded;
+
+    (async () => {
+      const decoded: PathOfBuilding[] = [];
+      for (const pob of pobs) {
+        const dec = await decodePoBExport(pob.export_string, baseTypes);
+        if (decoded.length > 0) {
+          determineDifferences(decoded[decoded.length - 1], dec);
+        }
+        decoded.push(dec);
+      }
+      setDecodedPobs(decoded);
+    })();
   }, [pobs, baseTypes]);
 
   useEffect(() => {

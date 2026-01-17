@@ -245,8 +245,8 @@ export function SubmissionCard({ objective }: SubmissionCardProps) {
                         )}
                       >
                         {totalPoints(score)}{" "}
-                        {score.completions[0].number > 1 &&
-                          `(${score.completions[0].number})`}
+                        {score.completions[0]?.number > 1 &&
+                          `(${score.completions[0]?.number})`}
                       </td>
                       <td
                         className={twMerge(

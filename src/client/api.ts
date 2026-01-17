@@ -12,8 +12,7 @@
  * Do not edit the class manually.
  */
 
-
-import * as url from "url";
+// import * as url from "url";
 import portableFetch from "isomorphic-fetch";
 import { Configuration } from "./configuration";
 
@@ -24,10 +23,10 @@ const BASE_PATH = "https://localhost/api".replace(/\/+$/, "");
  * @export
  */
 export const COLLECTION_FORMATS = {
-    csv: ",",
-    ssv: " ",
-    tsv: "\t",
-    pipes: "|",
+  csv: ",",
+  ssv: " ",
+  tsv: "\t",
+  pipes: "|",
 };
 
 /**
@@ -36,7 +35,7 @@ export const COLLECTION_FORMATS = {
  * @interface FetchAPI
  */
 export interface FetchAPI {
-    (url: string, init?: any): Promise<Response>;
+  (url: string, init?: any): Promise<Response>;
 }
 
 /**
@@ -45,8 +44,8 @@ export interface FetchAPI {
  * @interface FetchArgs
  */
 export interface FetchArgs {
-    url: string;
-    options: any;
+  url: string;
+  options: any;
 }
 
 /**
@@ -55,14 +54,18 @@ export interface FetchArgs {
  * @class BaseAPI
  */
 export class BaseAPI {
-    protected configuration?: Configuration;
+  protected configuration?: Configuration;
 
-    constructor(configuration?: Configuration, protected basePath: string = BASE_PATH, protected fetch: FetchAPI = portableFetch) {
-        if (configuration) {
-            this.configuration = configuration;
-            this.basePath = configuration.basePath || this.basePath;
-        }
+  constructor(
+    configuration?: Configuration,
+    protected basePath: string = BASE_PATH,
+    protected fetch: FetchAPI = portableFetch,
+  ) {
+    if (configuration) {
+      this.configuration = configuration;
+      this.basePath = configuration.basePath || this.basePath;
     }
+  }
 }
 
 /**
@@ -72,2315 +75,2318 @@ export class BaseAPI {
  * @extends {Error}
  */
 export class RequiredError extends Error {
-    name = "RequiredError"
-    constructor(public field: string, msg?: string) {
-        super(msg);
-    }
+  name = "RequiredError";
+  constructor(
+    public field: string,
+    msg?: string,
+  ) {
+    super(msg);
+  }
 }
 
 /**
- * 
+ *
  * @export
  * @interface AchievementCreate
  */
 export interface AchievementCreate {
-    /**
-     * 
-     * @type {AchievementName}
-     * @memberof AchievementCreate
-     */
-    name: AchievementName;
-    /**
-     * 
-     * @type {number}
-     * @memberof AchievementCreate
-     */
-    user_id: number;
+  /**
+   *
+   * @type {AchievementName}
+   * @memberof AchievementCreate
+   */
+  name: AchievementName;
+  /**
+   *
+   * @type {number}
+   * @memberof AchievementCreate
+   */
+  user_id: number;
 }
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum AchievementName {
-    Participated_in_an_event = 'Participated in an event',
-    Won_an_event = 'Won an event',
-    Teamlead = 'Teamlead',
-    MVP = 'MVP',
-    Played_5_leagues = 'Played 5 leagues',
-    Played_10_leagues = 'Played 10 leagues',
-    Reached_level_90 = 'Reached level 90',
-    Reached_level_95 = 'Reached level 95',
-    Reached_level_100 = 'Reached level 100',
-    Submitted_a_bounty = 'Submitted a bounty',
-    Submitted_a_point_unique = 'Submitted a point unique',
-    Played_5_different_ascendancies = 'Played 5 different ascendancies',
-    Played_10_different_ascendancies = 'Played 10 different ascendancies'
+  Participated_in_an_event = "Participated in an event",
+  Won_an_event = "Won an event",
+  Teamlead = "Teamlead",
+  MVP = "MVP",
+  Played_5_leagues = "Played 5 leagues",
+  Played_10_leagues = "Played 10 leagues",
+  Reached_level_90 = "Reached level 90",
+  Reached_level_95 = "Reached level 95",
+  Reached_level_100 = "Reached level 100",
+  Submitted_a_bounty = "Submitted a bounty",
+  Submitted_a_point_unique = "Submitted a point unique",
+  Played_5_different_ascendancies = "Played 5 different ascendancies",
+  Played_10_different_ascendancies = "Played 10 different ascendancies",
 }
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum Action {
-    added = 'added',
-    modified = 'modified',
-    removed = 'removed'
+  added = "added",
+  modified = "modified",
+  removed = "removed",
 }
 
 /**
- * 
+ *
  * @export
  * @interface AddGuildStashHistoryResponse
  */
 export interface AddGuildStashHistoryResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof AddGuildStashHistoryResponse
-     */
-    number_of_added_entries: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AddGuildStashHistoryResponse
+   */
+  number_of_added_entries: number;
 }
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum AggregationType {
-    SUM_LATEST = 'SUM_LATEST',
-    LATEST = 'LATEST',
-    EARLIEST = 'EARLIEST',
-    EARLIEST_FRESH_ITEM = 'EARLIEST_FRESH_ITEM',
-    MAXIMUM = 'MAXIMUM',
-    MINIMUM = 'MINIMUM',
-    DIFFERENCE_BETWEEN = 'DIFFERENCE_BETWEEN',
-    NONE = 'NONE'
+  SUM_LATEST = "SUM_LATEST",
+  LATEST = "LATEST",
+  EARLIEST = "EARLIEST",
+  EARLIEST_FRESH_ITEM = "EARLIEST_FRESH_ITEM",
+  MAXIMUM = "MAXIMUM",
+  MINIMUM = "MINIMUM",
+  DIFFERENCE_BETWEEN = "DIFFERENCE_BETWEEN",
+  NONE = "NONE",
 }
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum ApplicationStatus {
-    applied = 'applied',
-    accepted = 'accepted',
-    waitlisted = 'waitlisted',
-    none = 'none'
+  applied = "applied",
+  accepted = "accepted",
+  waitlisted = "waitlisted",
+  none = "none",
 }
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum ApprovalStatus {
-    APPROVED = 'APPROVED',
-    REJECTED = 'REJECTED',
-    PENDING = 'PENDING'
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
+  PENDING = "PENDING",
 }
 
 /**
- * 
+ *
  * @export
  * @interface Atlas
  */
 export interface Atlas {
-    /**
-     * 
-     * @type {number}
-     * @memberof Atlas
-     */
-    primary_index: number;
-    /**
-     * 
-     * @type {{ [key: string]: Array<number>; }}
-     * @memberof Atlas
-     */
-    trees: { [key: string]: Array<number>; };
-    /**
-     * 
-     * @type {number}
-     * @memberof Atlas
-     */
-    user_id: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Atlas
+   */
+  primary_index: number;
+  /**
+   *
+   * @type {{ [key: string]: Array<number>; }}
+   * @memberof Atlas
+   */
+  trees: { [key: string]: Array<number> };
+  /**
+   *
+   * @type {number}
+   * @memberof Atlas
+   */
+  user_id: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface AtlasProgression
  */
 export interface AtlasProgression {
-    /**
-     * 
-     * @type {number}
-     * @memberof AtlasProgression
-     */
-    index?: number;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof AtlasProgression
-     */
-    nodes?: Array<number>;
-    /**
-     * 
-     * @type {number}
-     * @memberof AtlasProgression
-     */
-    timestamp?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof AtlasProgression
+   */
+  index?: number;
+  /**
+   *
+   * @type {Array<number>}
+   * @memberof AtlasProgression
+   */
+  nodes?: Array<number>;
+  /**
+   *
+   * @type {number}
+   * @memberof AtlasProgression
+   */
+  timestamp?: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface CallbackBody
  */
 export interface CallbackBody {
-    /**
-     * 
-     * @type {string}
-     * @memberof CallbackBody
-     */
-    code: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CallbackBody
-     */
-    referrer?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CallbackBody
-     */
-    state: string;
+  /**
+   *
+   * @type {string}
+   * @memberof CallbackBody
+   */
+  code: string;
+  /**
+   *
+   * @type {string}
+   * @memberof CallbackBody
+   */
+  referrer?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof CallbackBody
+   */
+  state: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface CallbackResponse
  */
 export interface CallbackResponse {
-    /**
-     * 
-     * @type {string}
-     * @memberof CallbackResponse
-     */
-    auth_token: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CallbackResponse
-     */
-    last_path: string;
-    /**
-     * 
-     * @type {User}
-     * @memberof CallbackResponse
-     */
-    user: User;
+  /**
+   *
+   * @type {string}
+   * @memberof CallbackResponse
+   */
+  auth_token: string;
+  /**
+   *
+   * @type {string}
+   * @memberof CallbackResponse
+   */
+  last_path: string;
+  /**
+   *
+   * @type {User}
+   * @memberof CallbackResponse
+   */
+  user: User;
 }
 
 /**
- * 
+ *
  * @export
  * @interface Character
  */
 export interface Character {
-    /**
-     * 
-     * @type {string}
-     * @memberof Character
-     */
-    ascendancy: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof Character
-     */
-    ascendancy_points: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Character
-     */
-    atlas_node_count: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Character
-     */
-    event_id: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof Character
-     */
-    id: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof Character
-     */
-    level: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof Character
-     */
-    main_skill: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Character
-     */
-    name: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Character
-     */
-    pantheon: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof Character
-     */
-    user_id?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof Character
+   */
+  ascendancy: string;
+  /**
+   *
+   * @type {number}
+   * @memberof Character
+   */
+  ascendancy_points: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Character
+   */
+  atlas_node_count: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Character
+   */
+  event_id: number;
+  /**
+   *
+   * @type {string}
+   * @memberof Character
+   */
+  id: string;
+  /**
+   *
+   * @type {number}
+   * @memberof Character
+   */
+  level: number;
+  /**
+   *
+   * @type {string}
+   * @memberof Character
+   */
+  main_skill: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Character
+   */
+  name: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Character
+   */
+  pantheon: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof Character
+   */
+  user_id?: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface CharacterStat
  */
 export interface CharacterStat {
-    /**
-     * 
-     * @type {number}
-     * @memberof CharacterStat
-     */
-    armour: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof CharacterStat
-     */
-    dps: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof CharacterStat
-     */
-    ehp: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof CharacterStat
-     */
-    ele_max_hit: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof CharacterStat
-     */
-    es: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof CharacterStat
-     */
-    evasion: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof CharacterStat
-     */
-    hp: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof CharacterStat
-     */
-    mana: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof CharacterStat
-     */
-    movement_speed: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof CharacterStat
-     */
-    phys_max_hit: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof CharacterStat
-     */
-    timestamp: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof CharacterStat
-     */
-    xp: number;
+  /**
+   *
+   * @type {number}
+   * @memberof CharacterStat
+   */
+  armour: number;
+  /**
+   *
+   * @type {number}
+   * @memberof CharacterStat
+   */
+  dps: number;
+  /**
+   *
+   * @type {number}
+   * @memberof CharacterStat
+   */
+  ehp: number;
+  /**
+   *
+   * @type {number}
+   * @memberof CharacterStat
+   */
+  ele_max_hit: number;
+  /**
+   *
+   * @type {number}
+   * @memberof CharacterStat
+   */
+  es: number;
+  /**
+   *
+   * @type {number}
+   * @memberof CharacterStat
+   */
+  evasion: number;
+  /**
+   *
+   * @type {number}
+   * @memberof CharacterStat
+   */
+  hp: number;
+  /**
+   *
+   * @type {number}
+   * @memberof CharacterStat
+   */
+  mana: number;
+  /**
+   *
+   * @type {number}
+   * @memberof CharacterStat
+   */
+  movement_speed: number;
+  /**
+   *
+   * @type {number}
+   * @memberof CharacterStat
+   */
+  phys_max_hit: number;
+  /**
+   *
+   * @type {number}
+   * @memberof CharacterStat
+   */
+  timestamp: number;
+  /**
+   *
+   * @type {number}
+   * @memberof CharacterStat
+   */
+  xp: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface Completion
  */
 export interface Completion {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Completion
-     */
-    finished: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof Completion
-     */
-    number: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Completion
-     */
-    points: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Completion
-     */
-    preset_id: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Completion
-     */
-    rank: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Completion
-     */
-    timestamp: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Completion
-     */
-    user_id?: number;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Completion
+   */
+  finished: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof Completion
+   */
+  number: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Completion
+   */
+  points: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Completion
+   */
+  preset_id: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Completion
+   */
+  rank: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Completion
+   */
+  timestamp: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Completion
+   */
+  user_id?: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface Condition
  */
 export interface Condition {
-    /**
-     * 
-     * @type {ItemField}
-     * @memberof Condition
-     */
-    field: ItemField;
-    /**
-     * 
-     * @type {Operator}
-     * @memberof Condition
-     */
-    operator: Operator;
-    /**
-     * 
-     * @type {string}
-     * @memberof Condition
-     */
-    value: string;
+  /**
+   *
+   * @type {ItemField}
+   * @memberof Condition
+   */
+  field: ItemField;
+  /**
+   *
+   * @type {Operator}
+   * @memberof Condition
+   */
+  operator: Operator;
+  /**
+   *
+   * @type {string}
+   * @memberof Condition
+   */
+  value: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface ConditionMappings
  */
 export interface ConditionMappings {
-    /**
-     * 
-     * @type {{ [key: string]: FieldType; }}
-     * @memberof ConditionMappings
-     */
-    field_to_type: { [key: string]: FieldType; };
-    /**
-     * 
-     * @type {{ [key: string]: Array<NumberField>; }}
-     * @memberof ConditionMappings
-     */
-    objective_type_to_number_fields: { [key: string]: Array<NumberField>; };
-    /**
-     * 
-     * @type {{ [key: string]: Array<Operator>; }}
-     * @memberof ConditionMappings
-     */
-    valid_operators: { [key: string]: Array<Operator>; };
+  /**
+   *
+   * @type {{ [key: string]: FieldType; }}
+   * @memberof ConditionMappings
+   */
+  field_to_type: { [key: string]: FieldType };
+  /**
+   *
+   * @type {{ [key: string]: Array<NumberField>; }}
+   * @memberof ConditionMappings
+   */
+  objective_type_to_number_fields: { [key: string]: Array<NumberField> };
+  /**
+   *
+   * @type {{ [key: string]: Array<Operator>; }}
+   * @memberof ConditionMappings
+   */
+  valid_operators: { [key: string]: Array<Operator> };
 }
 
 /**
- * 
+ *
  * @export
  * @interface CreateItemWish
  */
 export interface CreateItemWish {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof CreateItemWish
-     */
-    build_enabling?: boolean;
-    /**
-     * 
-     * @type {ItemField}
-     * @memberof CreateItemWish
-     */
-    item_field: ItemField;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateItemWish
-     */
-    value: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof CreateItemWish
+   */
+  build_enabling?: boolean;
+  /**
+   *
+   * @type {ItemField}
+   * @memberof CreateItemWish
+   */
+  item_field: ItemField;
+  /**
+   *
+   * @type {string}
+   * @memberof CreateItemWish
+   */
+  value: string;
 }
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum Difftype {
-    Added = 'Added',
-    Removed = 'Removed',
-    Changed = 'Changed',
-    Unchanged = 'Unchanged'
+  Added = "Added",
+  Removed = "Removed",
+  Changed = "Changed",
+  Unchanged = "Unchanged",
 }
 
 /**
- * 
+ *
  * @export
  * @interface DisplayItem
  */
 export interface DisplayItem {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    abyssJewel?: boolean;
-    /**
-     * 
-     * @type {Array<ItemProperty>}
-     * @memberof DisplayItem
-     */
-    additionalProperties?: Array<ItemProperty>;
-    /**
-     * 
-     * @type {string}
-     * @memberof DisplayItem
-     */
-    baseType?: string;
-    /**
-     * PoE2 only
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    bondedMods?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof DisplayItem
-     */
-    colour?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    corrupted?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    cosmeticMods?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    craftedMods?: Array<string>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    delve?: boolean;
-    /**
-     * PoE2 only
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    desecrated?: boolean;
-    /**
-     * PoE2 only
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    desecratedMods?: Array<string>;
-    /**
-     * PoE2 only
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    doubleCorrupted?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    duplicated?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    elder?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    enchantMods?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    explicitMods?: Array<string>;
-    /**
-     * 
-     * @type {ItemExtended}
-     * @memberof DisplayItem
-     */
-    extended?: ItemExtended;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    foilVariation?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    foreseeing?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    fractured?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    fracturedMods?: Array<string>;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    frameType?: number;
-    /**
-     * 
-     * @type {Array<GemSocket>}
-     * @memberof DisplayItem
-     */
-    gemSockets?: Array<GemSocket>;
-    /**
-     * PoE2 only
-     * @type {Array<ItemProperty>}
-     * @memberof DisplayItem
-     */
-    grantedSkills?: Array<ItemProperty>;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    h?: number;
-    /**
-     * 
-     * @type {ItemHybrid}
-     * @memberof DisplayItem
-     */
-    hybrid?: ItemHybrid;
-    /**
-     * 
-     * @type {string}
-     * @memberof DisplayItem
-     */
-    icon?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DisplayItem
-     */
-    id?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    identified?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    ilvl?: number;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    implicitMods?: Array<string>;
-    /**
-     * 
-     * @type {ItemIncubatedItem}
-     * @memberof DisplayItem
-     */
-    incubatedItem?: ItemIncubatedItem;
-    /**
-     * 
-     * @type {{ [key: string]: boolean; }}
-     * @memberof DisplayItem
-     */
-    influences?: { [key: string]: boolean; };
-    /**
-     * 
-     * @type {string}
-     * @memberof DisplayItem
-     */
-    inventoryId?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    isRelic?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    itemLevel?: number;
-    /**
-     * 
-     * @type {Array<ItemLogbookMod>}
-     * @memberof DisplayItem
-     */
-    logbookMods?: Array<ItemLogbookMod>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    memoryItem?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    mutated?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    mutatedMods?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof DisplayItem
-     */
-    name?: string;
-    /**
-     * 
-     * @type {Array<ItemProperty>}
-     * @memberof DisplayItem
-     */
-    notableProperties?: Array<ItemProperty>;
-    /**
-     * field added by our backend
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    objectiveId?: number;
-    /**
-     * 
-     * @type {Array<ItemProperty>}
-     * @memberof DisplayItem
-     */
-    properties?: Array<ItemProperty>;
-    /**
-     * 
-     * @type {string}
-     * @memberof DisplayItem
-     */
-    rarity?: string;
-    /**
-     * 
-     * @type {Array<ItemReward>}
-     * @memberof DisplayItem
-     */
-    rewards?: Array<ItemReward>;
-    /**
-     * PoE2 only
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    runeMods?: Array<string>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    ruthless?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    scourgeMods?: Array<string>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    searing?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    shaper?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    socket?: number;
-    /**
-     * 
-     * @type {Array<DisplayItem>}
-     * @memberof DisplayItem
-     */
-    socketedItems?: Array<DisplayItem>;
-    /**
-     * 
-     * @type {Array<ItemSocket>}
-     * @memberof DisplayItem
-     */
-    sockets?: Array<ItemSocket>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    split?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    stackSize?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    support?: boolean;
-    /**
-     * PoE2 only
-     * @type {Array<ItemProperty>}
-     * @memberof DisplayItem
-     */
-    supportGemRequirements?: Array<ItemProperty>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    synthesised?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    talismanTier?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    tangled?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof DisplayItem
-     */
-    typeLine?: string;
-    /**
-     * 
-     * @type {Array<ItemUltimatumMod>}
-     * @memberof DisplayItem
-     */
-    ultimatumMods?: Array<ItemUltimatumMod>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    unmodifiable?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    utilityMods?: Array<string>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    veiled?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    veiledMods?: Array<string>;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    w?: number;
-    /**
-     * PoE2 only
-     * @type {Array<ItemProperty>}
-     * @memberof DisplayItem
-     */
-    weaponRequirements?: Array<ItemProperty>;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    x?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    y?: number;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  abyssJewel?: boolean;
+  /**
+   *
+   * @type {Array<ItemProperty>}
+   * @memberof DisplayItem
+   */
+  additionalProperties?: Array<ItemProperty>;
+  /**
+   *
+   * @type {string}
+   * @memberof DisplayItem
+   */
+  baseType?: string;
+  /**
+   * PoE2 only
+   * @type {Array<string>}
+   * @memberof DisplayItem
+   */
+  bondedMods?: Array<string>;
+  /**
+   *
+   * @type {string}
+   * @memberof DisplayItem
+   */
+  colour?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  corrupted?: boolean;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof DisplayItem
+   */
+  cosmeticMods?: Array<string>;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof DisplayItem
+   */
+  craftedMods?: Array<string>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  delve?: boolean;
+  /**
+   * PoE2 only
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  desecrated?: boolean;
+  /**
+   * PoE2 only
+   * @type {Array<string>}
+   * @memberof DisplayItem
+   */
+  desecratedMods?: Array<string>;
+  /**
+   * PoE2 only
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  doubleCorrupted?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  duplicated?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  elder?: boolean;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof DisplayItem
+   */
+  enchantMods?: Array<string>;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof DisplayItem
+   */
+  explicitMods?: Array<string>;
+  /**
+   *
+   * @type {ItemExtended}
+   * @memberof DisplayItem
+   */
+  extended?: ItemExtended;
+  /**
+   *
+   * @type {number}
+   * @memberof DisplayItem
+   */
+  foilVariation?: number;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  foreseeing?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  fractured?: boolean;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof DisplayItem
+   */
+  fracturedMods?: Array<string>;
+  /**
+   *
+   * @type {number}
+   * @memberof DisplayItem
+   */
+  frameType?: number;
+  /**
+   *
+   * @type {Array<GemSocket>}
+   * @memberof DisplayItem
+   */
+  gemSockets?: Array<GemSocket>;
+  /**
+   * PoE2 only
+   * @type {Array<ItemProperty>}
+   * @memberof DisplayItem
+   */
+  grantedSkills?: Array<ItemProperty>;
+  /**
+   *
+   * @type {number}
+   * @memberof DisplayItem
+   */
+  h?: number;
+  /**
+   *
+   * @type {ItemHybrid}
+   * @memberof DisplayItem
+   */
+  hybrid?: ItemHybrid;
+  /**
+   *
+   * @type {string}
+   * @memberof DisplayItem
+   */
+  icon?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof DisplayItem
+   */
+  id?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  identified?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof DisplayItem
+   */
+  ilvl?: number;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof DisplayItem
+   */
+  implicitMods?: Array<string>;
+  /**
+   *
+   * @type {ItemIncubatedItem}
+   * @memberof DisplayItem
+   */
+  incubatedItem?: ItemIncubatedItem;
+  /**
+   *
+   * @type {{ [key: string]: boolean; }}
+   * @memberof DisplayItem
+   */
+  influences?: { [key: string]: boolean };
+  /**
+   *
+   * @type {string}
+   * @memberof DisplayItem
+   */
+  inventoryId?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  isRelic?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof DisplayItem
+   */
+  itemLevel?: number;
+  /**
+   *
+   * @type {Array<ItemLogbookMod>}
+   * @memberof DisplayItem
+   */
+  logbookMods?: Array<ItemLogbookMod>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  memoryItem?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  mutated?: boolean;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof DisplayItem
+   */
+  mutatedMods?: Array<string>;
+  /**
+   *
+   * @type {string}
+   * @memberof DisplayItem
+   */
+  name?: string;
+  /**
+   *
+   * @type {Array<ItemProperty>}
+   * @memberof DisplayItem
+   */
+  notableProperties?: Array<ItemProperty>;
+  /**
+   * field added by our backend
+   * @type {number}
+   * @memberof DisplayItem
+   */
+  objectiveId?: number;
+  /**
+   *
+   * @type {Array<ItemProperty>}
+   * @memberof DisplayItem
+   */
+  properties?: Array<ItemProperty>;
+  /**
+   *
+   * @type {string}
+   * @memberof DisplayItem
+   */
+  rarity?: string;
+  /**
+   *
+   * @type {Array<ItemReward>}
+   * @memberof DisplayItem
+   */
+  rewards?: Array<ItemReward>;
+  /**
+   * PoE2 only
+   * @type {Array<string>}
+   * @memberof DisplayItem
+   */
+  runeMods?: Array<string>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  ruthless?: boolean;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof DisplayItem
+   */
+  scourgeMods?: Array<string>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  searing?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  shaper?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof DisplayItem
+   */
+  socket?: number;
+  /**
+   *
+   * @type {Array<DisplayItem>}
+   * @memberof DisplayItem
+   */
+  socketedItems?: Array<DisplayItem>;
+  /**
+   *
+   * @type {Array<ItemSocket>}
+   * @memberof DisplayItem
+   */
+  sockets?: Array<ItemSocket>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  split?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof DisplayItem
+   */
+  stackSize?: number;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  support?: boolean;
+  /**
+   * PoE2 only
+   * @type {Array<ItemProperty>}
+   * @memberof DisplayItem
+   */
+  supportGemRequirements?: Array<ItemProperty>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  synthesised?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof DisplayItem
+   */
+  talismanTier?: number;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  tangled?: boolean;
+  /**
+   *
+   * @type {string}
+   * @memberof DisplayItem
+   */
+  typeLine?: string;
+  /**
+   *
+   * @type {Array<ItemUltimatumMod>}
+   * @memberof DisplayItem
+   */
+  ultimatumMods?: Array<ItemUltimatumMod>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  unmodifiable?: boolean;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof DisplayItem
+   */
+  utilityMods?: Array<string>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof DisplayItem
+   */
+  veiled?: boolean;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof DisplayItem
+   */
+  veiledMods?: Array<string>;
+  /**
+   *
+   * @type {number}
+   * @memberof DisplayItem
+   */
+  w?: number;
+  /**
+   * PoE2 only
+   * @type {Array<ItemProperty>}
+   * @memberof DisplayItem
+   */
+  weaponRequirements?: Array<ItemProperty>;
+  /**
+   *
+   * @type {number}
+   * @memberof DisplayItem
+   */
+  x?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof DisplayItem
+   */
+  y?: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface EngagementAdd
  */
 export interface EngagementAdd {
-    /**
-     * 
-     * @type {string}
-     * @memberof EngagementAdd
-     */
-    name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof EngagementAdd
+   */
+  name: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface Event
  */
 export interface Event {
-    /**
-     * 
-     * @type {string}
-     * @memberof Event
-     */
-    application_end_time: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Event
-     */
-    application_start_time: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Event
-     */
-    event_end_time: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Event
-     */
-    event_start_time: string;
-    /**
-     * 
-     * @type {GameVersion}
-     * @memberof Event
-     */
-    game_version: GameVersion;
-    /**
-     * 
-     * @type {number}
-     * @memberof Event
-     */
-    id: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Event
-     */
-    is_current: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Event
-     */
-    is_locked: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Event
-     */
-    is_main_event: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Event
-     */
-    is_public: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof Event
-     */
-    max_size: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof Event
-     */
-    name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Event
-     */
-    patch?: string;
-    /**
-     * 
-     * @type {Array<Team>}
-     * @memberof Event
-     */
-    teams: Array<Team>;
-    /**
-     * 
-     * @type {number}
-     * @memberof Event
-     */
-    waitlist_size: number;
+  /**
+   *
+   * @type {string}
+   * @memberof Event
+   */
+  application_end_time: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Event
+   */
+  application_start_time: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Event
+   */
+  event_end_time: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Event
+   */
+  event_start_time: string;
+  /**
+   *
+   * @type {GameVersion}
+   * @memberof Event
+   */
+  game_version: GameVersion;
+  /**
+   *
+   * @type {number}
+   * @memberof Event
+   */
+  id: number;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Event
+   */
+  is_current: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Event
+   */
+  is_locked: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Event
+   */
+  is_main_event: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Event
+   */
+  is_public: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof Event
+   */
+  max_size: number;
+  /**
+   *
+   * @type {string}
+   * @memberof Event
+   */
+  name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Event
+   */
+  patch?: string;
+  /**
+   *
+   * @type {Array<Team>}
+   * @memberof Event
+   */
+  teams: Array<Team>;
+  /**
+   *
+   * @type {number}
+   * @memberof Event
+   */
+  waitlist_size: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface EventCreate
  */
 export interface EventCreate {
-    /**
-     * 
-     * @type {string}
-     * @memberof EventCreate
-     */
-    application_end_time: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof EventCreate
-     */
-    application_start_time: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof EventCreate
-     */
-    event_end_time: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof EventCreate
-     */
-    event_start_time: string;
-    /**
-     * 
-     * @type {GameVersion}
-     * @memberof EventCreate
-     */
-    game_version: GameVersion;
-    /**
-     * 
-     * @type {number}
-     * @memberof EventCreate
-     */
-    id?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof EventCreate
-     */
-    is_current?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof EventCreate
-     */
-    is_locked?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof EventCreate
-     */
-    is_main_event?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof EventCreate
-     */
-    is_public?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof EventCreate
-     */
-    max_size: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof EventCreate
-     */
-    name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof EventCreate
-     */
-    patch?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof EventCreate
-     */
-    waitlist_size: number;
+  /**
+   *
+   * @type {string}
+   * @memberof EventCreate
+   */
+  application_end_time: string;
+  /**
+   *
+   * @type {string}
+   * @memberof EventCreate
+   */
+  application_start_time: string;
+  /**
+   *
+   * @type {string}
+   * @memberof EventCreate
+   */
+  event_end_time: string;
+  /**
+   *
+   * @type {string}
+   * @memberof EventCreate
+   */
+  event_start_time: string;
+  /**
+   *
+   * @type {GameVersion}
+   * @memberof EventCreate
+   */
+  game_version: GameVersion;
+  /**
+   *
+   * @type {number}
+   * @memberof EventCreate
+   */
+  id?: number;
+  /**
+   *
+   * @type {boolean}
+   * @memberof EventCreate
+   */
+  is_current?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof EventCreate
+   */
+  is_locked?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof EventCreate
+   */
+  is_main_event?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof EventCreate
+   */
+  is_public?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof EventCreate
+   */
+  max_size: number;
+  /**
+   *
+   * @type {string}
+   * @memberof EventCreate
+   */
+  name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof EventCreate
+   */
+  patch?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof EventCreate
+   */
+  waitlist_size: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface EventStatus
  */
 export interface EventStatus {
-    /**
-     * 
-     * @type {ApplicationStatus}
-     * @memberof EventStatus
-     */
-    application_status: ApplicationStatus;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof EventStatus
-     */
-    is_team_lead: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof EventStatus
-     */
-    number_of_signups: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof EventStatus
-     */
-    number_of_signups_before: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof EventStatus
-     */
-    partner_wish?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof EventStatus
-     */
-    team_id?: number;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof EventStatus
-     */
-    users_who_want_to_sign_up_with_you?: Array<string>;
+  /**
+   *
+   * @type {ApplicationStatus}
+   * @memberof EventStatus
+   */
+  application_status: ApplicationStatus;
+  /**
+   *
+   * @type {boolean}
+   * @memberof EventStatus
+   */
+  is_team_lead: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof EventStatus
+   */
+  number_of_signups: number;
+  /**
+   *
+   * @type {number}
+   * @memberof EventStatus
+   */
+  number_of_signups_before: number;
+  /**
+   *
+   * @type {string}
+   * @memberof EventStatus
+   */
+  partner_wish?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof EventStatus
+   */
+  team_id?: number;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof EventStatus
+   */
+  users_who_want_to_sign_up_with_you?: Array<string>;
 }
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum FieldType {
-    string = 'string',
-    int = 'int',
-    bool = 'bool',
-    string_2 = 'string[]'
+  string = "string",
+  int = "int",
+  bool = "bool",
+  string_2 = "string[]",
 }
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum GameVersion {
-    poe1 = 'poe1',
-    poe2 = 'poe2'
+  poe1 = "poe1",
+  poe2 = "poe2",
 }
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum GemSocket {
-    W = 'W'
+  W = "W",
 }
 
 /**
- * 
+ *
  * @export
  * @interface Guild
  */
 export interface Guild {
-    /**
-     * 
-     * @type {number}
-     * @memberof Guild
-     */
-    id: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof Guild
-     */
-    name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Guild
-     */
-    tag: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof Guild
-     */
-    team_id?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Guild
+   */
+  id: number;
+  /**
+   *
+   * @type {string}
+   * @memberof Guild
+   */
+  name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Guild
+   */
+  tag: string;
+  /**
+   *
+   * @type {number}
+   * @memberof Guild
+   */
+  team_id?: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface GuildStashChangeResponse
  */
 export interface GuildStashChangeResponse {
-    /**
-     * 
-     * @type {Array<GuildStashChangeResponseEntries>}
-     * @memberof GuildStashChangeResponse
-     */
-    entries?: Array<GuildStashChangeResponseEntries>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof GuildStashChangeResponse
-     */
-    truncated?: boolean;
+  /**
+   *
+   * @type {Array<GuildStashChangeResponseEntries>}
+   * @memberof GuildStashChangeResponse
+   */
+  entries?: Array<GuildStashChangeResponseEntries>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof GuildStashChangeResponse
+   */
+  truncated?: boolean;
 }
 
 /**
- * 
+ *
  * @export
  * @interface GuildStashChangeResponseAccount
  */
 export interface GuildStashChangeResponseAccount {
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashChangeResponseAccount
-     */
-    name?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashChangeResponseAccount
+   */
+  name?: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface GuildStashChangeResponseEntries
  */
 export interface GuildStashChangeResponseEntries {
-    /**
-     * 
-     * @type {GuildStashChangeResponseAccount}
-     * @memberof GuildStashChangeResponseEntries
-     */
-    account?: GuildStashChangeResponseAccount;
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashChangeResponseEntries
-     */
-    action?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashChangeResponseEntries
-     */
-    id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashChangeResponseEntries
-     */
-    item?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashChangeResponseEntries
-     */
-    league?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashChangeResponseEntries
-     */
-    stash?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof GuildStashChangeResponseEntries
-     */
-    time?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof GuildStashChangeResponseEntries
-     */
-    x?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof GuildStashChangeResponseEntries
-     */
-    y?: number;
+  /**
+   *
+   * @type {GuildStashChangeResponseAccount}
+   * @memberof GuildStashChangeResponseEntries
+   */
+  account?: GuildStashChangeResponseAccount;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashChangeResponseEntries
+   */
+  action?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashChangeResponseEntries
+   */
+  id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashChangeResponseEntries
+   */
+  item?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashChangeResponseEntries
+   */
+  league?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashChangeResponseEntries
+   */
+  stash?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof GuildStashChangeResponseEntries
+   */
+  time?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof GuildStashChangeResponseEntries
+   */
+  x?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof GuildStashChangeResponseEntries
+   */
+  y?: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface GuildStashChangelog
  */
 export interface GuildStashChangelog {
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashChangelog
-     */
-    account_name: string;
-    /**
-     * 
-     * @type {Action}
-     * @memberof GuildStashChangelog
-     */
-    action: Action;
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashChangelog
-     */
-    item_name: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof GuildStashChangelog
-     */
-    number: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashChangelog
-     */
-    stash_name?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof GuildStashChangelog
-     */
-    timestamp: number;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashChangelog
+   */
+  account_name: string;
+  /**
+   *
+   * @type {Action}
+   * @memberof GuildStashChangelog
+   */
+  action: Action;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashChangelog
+   */
+  item_name: string;
+  /**
+   *
+   * @type {number}
+   * @memberof GuildStashChangelog
+   */
+  number: number;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashChangelog
+   */
+  stash_name?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof GuildStashChangelog
+   */
+  timestamp: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface GuildStashLogTimestampResponse
  */
 export interface GuildStashLogTimestampResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof GuildStashLogTimestampResponse
-     */
-    earliest?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof GuildStashLogTimestampResponse
-     */
-    latest?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof GuildStashLogTimestampResponse
-     */
-    league_end: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof GuildStashLogTimestampResponse
-     */
-    league_start: number;
+  /**
+   *
+   * @type {number}
+   * @memberof GuildStashLogTimestampResponse
+   */
+  earliest?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof GuildStashLogTimestampResponse
+   */
+  latest?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof GuildStashLogTimestampResponse
+   */
+  league_end: number;
+  /**
+   *
+   * @type {number}
+   * @memberof GuildStashLogTimestampResponse
+   */
+  league_start: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface GuildStashTab
  */
 export interface GuildStashTab {
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashTab
-     */
-    color?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof GuildStashTab
-     */
-    fetch_enabled: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashTab
-     */
-    id: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof GuildStashTab
-     */
-    index?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashTab
-     */
-    last_fetch: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashTab
-     */
-    name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashTab
-     */
-    parent_id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashTab
-     */
-    type: string;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof GuildStashTab
-     */
-    user_ids: Array<number>;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashTab
+   */
+  color?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof GuildStashTab
+   */
+  fetch_enabled: boolean;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashTab
+   */
+  id: string;
+  /**
+   *
+   * @type {number}
+   * @memberof GuildStashTab
+   */
+  index?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashTab
+   */
+  last_fetch: string;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashTab
+   */
+  name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashTab
+   */
+  parent_id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashTab
+   */
+  type: string;
+  /**
+   *
+   * @type {Array<number>}
+   * @memberof GuildStashTab
+   */
+  user_ids: Array<number>;
 }
 
 /**
- * 
+ *
  * @export
  * @interface GuildStashTabGGG
  */
 export interface GuildStashTabGGG {
-    /**
-     * 
-     * @type {Array<GuildStashTabGGG>}
-     * @memberof GuildStashTabGGG
-     */
-    children?: Array<GuildStashTabGGG>;
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashTabGGG
-     */
-    id?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof GuildStashTabGGG
-     */
-    index?: number;
-    /**
-     * 
-     * @type {Array<DisplayItem>}
-     * @memberof GuildStashTabGGG
-     */
-    items?: Array<DisplayItem>;
-    /**
-     * 
-     * @type {StashTabMetadata}
-     * @memberof GuildStashTabGGG
-     */
-    metadata?: StashTabMetadata;
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashTabGGG
-     */
-    name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashTabGGG
-     */
-    parent?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GuildStashTabGGG
-     */
-    type?: string;
+  /**
+   *
+   * @type {Array<GuildStashTabGGG>}
+   * @memberof GuildStashTabGGG
+   */
+  children?: Array<GuildStashTabGGG>;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashTabGGG
+   */
+  id?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof GuildStashTabGGG
+   */
+  index?: number;
+  /**
+   *
+   * @type {Array<DisplayItem>}
+   * @memberof GuildStashTabGGG
+   */
+  items?: Array<DisplayItem>;
+  /**
+   *
+   * @type {StashTabMetadata}
+   * @memberof GuildStashTabGGG
+   */
+  metadata?: StashTabMetadata;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashTabGGG
+   */
+  name?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashTabGGG
+   */
+  parent?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof GuildStashTabGGG
+   */
+  type?: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface Item
  */
 export interface Item {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    abyssJewel?: boolean;
-    /**
-     * 
-     * @type {Array<ItemProperty>}
-     * @memberof Item
-     */
-    additionalProperties?: Array<ItemProperty>;
-    /**
-     * 
-     * @type {string}
-     * @memberof Item
-     */
-    baseType?: string;
-    /**
-     * PoE2 only
-     * @type {Array<string>}
-     * @memberof Item
-     */
-    bondedMods?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof Item
-     */
-    colour?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    corrupted?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Item
-     */
-    cosmeticMods?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Item
-     */
-    craftedMods?: Array<string>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    delve?: boolean;
-    /**
-     * PoE2 only
-     * @type {boolean}
-     * @memberof Item
-     */
-    desecrated?: boolean;
-    /**
-     * PoE2 only
-     * @type {Array<string>}
-     * @memberof Item
-     */
-    desecratedMods?: Array<string>;
-    /**
-     * PoE2 only
-     * @type {boolean}
-     * @memberof Item
-     */
-    doubleCorrupted?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    duplicated?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    elder?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Item
-     */
-    enchantMods?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Item
-     */
-    explicitMods?: Array<string>;
-    /**
-     * 
-     * @type {ItemExtended}
-     * @memberof Item
-     */
-    extended?: ItemExtended;
-    /**
-     * 
-     * @type {number}
-     * @memberof Item
-     */
-    foilVariation?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    foreseeing?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    fractured?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Item
-     */
-    fracturedMods?: Array<string>;
-    /**
-     * 
-     * @type {number}
-     * @memberof Item
-     */
-    frameType?: number;
-    /**
-     * 
-     * @type {Array<GemSocket>}
-     * @memberof Item
-     */
-    gemSockets?: Array<GemSocket>;
-    /**
-     * PoE2 only
-     * @type {Array<ItemProperty>}
-     * @memberof Item
-     */
-    grantedSkills?: Array<ItemProperty>;
-    /**
-     * 
-     * @type {ItemHybrid}
-     * @memberof Item
-     */
-    hybrid?: ItemHybrid;
-    /**
-     * 
-     * @type {string}
-     * @memberof Item
-     */
-    icon?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Item
-     */
-    id?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    identified?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof Item
-     */
-    ilvl?: number;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Item
-     */
-    implicitMods?: Array<string>;
-    /**
-     * 
-     * @type {ItemIncubatedItem}
-     * @memberof Item
-     */
-    incubatedItem?: ItemIncubatedItem;
-    /**
-     * 
-     * @type {{ [key: string]: boolean; }}
-     * @memberof Item
-     */
-    influences?: { [key: string]: boolean; };
-    /**
-     * 
-     * @type {string}
-     * @memberof Item
-     */
-    inventoryId?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    isRelic?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof Item
-     */
-    itemLevel?: number;
-    /**
-     * 
-     * @type {Array<ItemLogbookMod>}
-     * @memberof Item
-     */
-    logbookMods?: Array<ItemLogbookMod>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    memoryItem?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    mutated?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Item
-     */
-    mutatedMods?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof Item
-     */
-    name?: string;
-    /**
-     * 
-     * @type {Array<ItemProperty>}
-     * @memberof Item
-     */
-    notableProperties?: Array<ItemProperty>;
-    /**
-     * 
-     * @type {Array<ItemProperty>}
-     * @memberof Item
-     */
-    properties?: Array<ItemProperty>;
-    /**
-     * 
-     * @type {string}
-     * @memberof Item
-     */
-    rarity?: string;
-    /**
-     * 
-     * @type {Array<ItemReward>}
-     * @memberof Item
-     */
-    rewards?: Array<ItemReward>;
-    /**
-     * PoE2 only
-     * @type {Array<string>}
-     * @memberof Item
-     */
-    runeMods?: Array<string>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    ruthless?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Item
-     */
-    scourgeMods?: Array<string>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    searing?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    shaper?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof Item
-     */
-    socket?: number;
-    /**
-     * 
-     * @type {Array<Item>}
-     * @memberof Item
-     */
-    socketedItems?: Array<Item>;
-    /**
-     * 
-     * @type {Array<ItemSocket>}
-     * @memberof Item
-     */
-    sockets?: Array<ItemSocket>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    split?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof Item
-     */
-    stackSize?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    support?: boolean;
-    /**
-     * PoE2 only
-     * @type {Array<ItemProperty>}
-     * @memberof Item
-     */
-    supportGemRequirements?: Array<ItemProperty>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    synthesised?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof Item
-     */
-    talismanTier?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    tangled?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof Item
-     */
-    typeLine?: string;
-    /**
-     * 
-     * @type {Array<ItemUltimatumMod>}
-     * @memberof Item
-     */
-    ultimatumMods?: Array<ItemUltimatumMod>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    unmodifiable?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Item
-     */
-    utilityMods?: Array<string>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Item
-     */
-    veiled?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Item
-     */
-    veiledMods?: Array<string>;
-    /**
-     * PoE2 only
-     * @type {Array<ItemProperty>}
-     * @memberof Item
-     */
-    weaponRequirements?: Array<ItemProperty>;
-    /**
-     * 
-     * @type {number}
-     * @memberof Item
-     */
-    x?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Item
-     */
-    y?: number;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  abyssJewel?: boolean;
+  /**
+   *
+   * @type {Array<ItemProperty>}
+   * @memberof Item
+   */
+  additionalProperties?: Array<ItemProperty>;
+  /**
+   *
+   * @type {string}
+   * @memberof Item
+   */
+  baseType?: string;
+  /**
+   * PoE2 only
+   * @type {Array<string>}
+   * @memberof Item
+   */
+  bondedMods?: Array<string>;
+  /**
+   *
+   * @type {string}
+   * @memberof Item
+   */
+  colour?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  corrupted?: boolean;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof Item
+   */
+  cosmeticMods?: Array<string>;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof Item
+   */
+  craftedMods?: Array<string>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  delve?: boolean;
+  /**
+   * PoE2 only
+   * @type {boolean}
+   * @memberof Item
+   */
+  desecrated?: boolean;
+  /**
+   * PoE2 only
+   * @type {Array<string>}
+   * @memberof Item
+   */
+  desecratedMods?: Array<string>;
+  /**
+   * PoE2 only
+   * @type {boolean}
+   * @memberof Item
+   */
+  doubleCorrupted?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  duplicated?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  elder?: boolean;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof Item
+   */
+  enchantMods?: Array<string>;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof Item
+   */
+  explicitMods?: Array<string>;
+  /**
+   *
+   * @type {ItemExtended}
+   * @memberof Item
+   */
+  extended?: ItemExtended;
+  /**
+   *
+   * @type {number}
+   * @memberof Item
+   */
+  foilVariation?: number;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  foreseeing?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  fractured?: boolean;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof Item
+   */
+  fracturedMods?: Array<string>;
+  /**
+   *
+   * @type {number}
+   * @memberof Item
+   */
+  frameType?: number;
+  /**
+   *
+   * @type {Array<GemSocket>}
+   * @memberof Item
+   */
+  gemSockets?: Array<GemSocket>;
+  /**
+   * PoE2 only
+   * @type {Array<ItemProperty>}
+   * @memberof Item
+   */
+  grantedSkills?: Array<ItemProperty>;
+  /**
+   *
+   * @type {ItemHybrid}
+   * @memberof Item
+   */
+  hybrid?: ItemHybrid;
+  /**
+   *
+   * @type {string}
+   * @memberof Item
+   */
+  icon?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Item
+   */
+  id?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  identified?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof Item
+   */
+  ilvl?: number;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof Item
+   */
+  implicitMods?: Array<string>;
+  /**
+   *
+   * @type {ItemIncubatedItem}
+   * @memberof Item
+   */
+  incubatedItem?: ItemIncubatedItem;
+  /**
+   *
+   * @type {{ [key: string]: boolean; }}
+   * @memberof Item
+   */
+  influences?: { [key: string]: boolean };
+  /**
+   *
+   * @type {string}
+   * @memberof Item
+   */
+  inventoryId?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  isRelic?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof Item
+   */
+  itemLevel?: number;
+  /**
+   *
+   * @type {Array<ItemLogbookMod>}
+   * @memberof Item
+   */
+  logbookMods?: Array<ItemLogbookMod>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  memoryItem?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  mutated?: boolean;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof Item
+   */
+  mutatedMods?: Array<string>;
+  /**
+   *
+   * @type {string}
+   * @memberof Item
+   */
+  name?: string;
+  /**
+   *
+   * @type {Array<ItemProperty>}
+   * @memberof Item
+   */
+  notableProperties?: Array<ItemProperty>;
+  /**
+   *
+   * @type {Array<ItemProperty>}
+   * @memberof Item
+   */
+  properties?: Array<ItemProperty>;
+  /**
+   *
+   * @type {string}
+   * @memberof Item
+   */
+  rarity?: string;
+  /**
+   *
+   * @type {Array<ItemReward>}
+   * @memberof Item
+   */
+  rewards?: Array<ItemReward>;
+  /**
+   * PoE2 only
+   * @type {Array<string>}
+   * @memberof Item
+   */
+  runeMods?: Array<string>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  ruthless?: boolean;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof Item
+   */
+  scourgeMods?: Array<string>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  searing?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  shaper?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof Item
+   */
+  socket?: number;
+  /**
+   *
+   * @type {Array<Item>}
+   * @memberof Item
+   */
+  socketedItems?: Array<Item>;
+  /**
+   *
+   * @type {Array<ItemSocket>}
+   * @memberof Item
+   */
+  sockets?: Array<ItemSocket>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  split?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof Item
+   */
+  stackSize?: number;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  support?: boolean;
+  /**
+   * PoE2 only
+   * @type {Array<ItemProperty>}
+   * @memberof Item
+   */
+  supportGemRequirements?: Array<ItemProperty>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  synthesised?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof Item
+   */
+  talismanTier?: number;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  tangled?: boolean;
+  /**
+   *
+   * @type {string}
+   * @memberof Item
+   */
+  typeLine?: string;
+  /**
+   *
+   * @type {Array<ItemUltimatumMod>}
+   * @memberof Item
+   */
+  ultimatumMods?: Array<ItemUltimatumMod>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  unmodifiable?: boolean;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof Item
+   */
+  utilityMods?: Array<string>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Item
+   */
+  veiled?: boolean;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof Item
+   */
+  veiledMods?: Array<string>;
+  /**
+   * PoE2 only
+   * @type {Array<ItemProperty>}
+   * @memberof Item
+   */
+  weaponRequirements?: Array<ItemProperty>;
+  /**
+   *
+   * @type {number}
+   * @memberof Item
+   */
+  x?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Item
+   */
+  y?: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface ItemExtended
  */
 export interface ItemExtended {
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemExtended
-     */
-    prefixes?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemExtended
-     */
-    suffixes?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ItemExtended
+   */
+  prefixes?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ItemExtended
+   */
+  suffixes?: number;
 }
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum ItemField {
-    BASE_TYPE = 'BASE_TYPE',
-    NAME = 'NAME',
-    ITEM_CLASS = 'ITEM_CLASS',
-    ICON_NAME = 'ICON_NAME',
-    TYPE_LINE = 'TYPE_LINE',
-    QUALITY = 'QUALITY',
-    LEVEL = 'LEVEL',
-    RARITY = 'RARITY',
-    ILVL = 'ILVL',
-    FRAME_TYPE = 'FRAME_TYPE',
-    TALISMAN_TIER = 'TALISMAN_TIER',
-    MAP_TIER = 'MAP_TIER',
-    MAP_QUANT = 'MAP_QUANT',
-    MAP_RARITY = 'MAP_RARITY',
-    MAP_PACK_SIZE = 'MAP_PACK_SIZE',
-    HEIST_TARGET = 'HEIST_TARGET',
-    HEIST_ROGUE_REQUIREMENT = 'HEIST_ROGUE_REQUIREMENT',
-    ENCHANT_MODS = 'ENCHANT_MODS',
-    EXPLICIT_MODS = 'EXPLICIT_MODS',
-    IMPLICIT_MODS = 'IMPLICIT_MODS',
-    CRAFTED_MODS = 'CRAFTED_MODS',
-    FRACTURED_MODS = 'FRACTURED_MODS',
-    INFLUENCES = 'INFLUENCES',
-    MAX_LINKS = 'MAX_LINKS',
-    SOCKETS = 'SOCKETS',
-    INCUBATOR_KILLS = 'INCUBATOR_KILLS',
-    IS_CORRUPTED = 'IS_CORRUPTED',
-    IS_VAAL = 'IS_VAAL',
-    IS_SPLIT = 'IS_SPLIT',
-    IS_IDENTIFIED = 'IS_IDENTIFIED',
-    IS_MIRRORED = 'IS_MIRRORED',
-    SANCTUM_AFFLICTIONS = 'SANCTUM_AFFLICTIONS',
-    TEMPLE_ROOMS = 'TEMPLE_ROOMS',
-    RITUAL_VESSEL_BOSSES = 'RITUAL_VESSEL_BOSSES',
-    RITUAL_VESSEL_MAP = 'RITUAL_VESSEL_MAP',
-    FACETOR_LENS_EXP = 'FACETOR_LENS_EXP',
-    MEMORY_STRANDS = 'MEMORY_STRANDS',
-    IS_FOULBORN = 'IS_FOULBORN',
-    FOULBORN_MODS = 'FOULBORN_MODS',
-    GRAFT_SKILL_NAME = 'GRAFT_SKILL_NAME',
-    GRAFT_SKILL_LEVEL = 'GRAFT_SKILL_LEVEL'
+  BASE_TYPE = "BASE_TYPE",
+  NAME = "NAME",
+  ITEM_CLASS = "ITEM_CLASS",
+  ICON_NAME = "ICON_NAME",
+  TYPE_LINE = "TYPE_LINE",
+  QUALITY = "QUALITY",
+  LEVEL = "LEVEL",
+  RARITY = "RARITY",
+  ILVL = "ILVL",
+  FRAME_TYPE = "FRAME_TYPE",
+  TALISMAN_TIER = "TALISMAN_TIER",
+  MAP_TIER = "MAP_TIER",
+  MAP_QUANT = "MAP_QUANT",
+  MAP_RARITY = "MAP_RARITY",
+  MAP_PACK_SIZE = "MAP_PACK_SIZE",
+  HEIST_TARGET = "HEIST_TARGET",
+  HEIST_ROGUE_REQUIREMENT = "HEIST_ROGUE_REQUIREMENT",
+  ENCHANT_MODS = "ENCHANT_MODS",
+  EXPLICIT_MODS = "EXPLICIT_MODS",
+  IMPLICIT_MODS = "IMPLICIT_MODS",
+  CRAFTED_MODS = "CRAFTED_MODS",
+  FRACTURED_MODS = "FRACTURED_MODS",
+  INFLUENCES = "INFLUENCES",
+  MAX_LINKS = "MAX_LINKS",
+  SOCKETS = "SOCKETS",
+  INCUBATOR_KILLS = "INCUBATOR_KILLS",
+  IS_CORRUPTED = "IS_CORRUPTED",
+  IS_VAAL = "IS_VAAL",
+  IS_SPLIT = "IS_SPLIT",
+  IS_IDENTIFIED = "IS_IDENTIFIED",
+  IS_MIRRORED = "IS_MIRRORED",
+  SANCTUM_AFFLICTIONS = "SANCTUM_AFFLICTIONS",
+  TEMPLE_ROOMS = "TEMPLE_ROOMS",
+  RITUAL_VESSEL_BOSSES = "RITUAL_VESSEL_BOSSES",
+  RITUAL_VESSEL_MAP = "RITUAL_VESSEL_MAP",
+  FACETOR_LENS_EXP = "FACETOR_LENS_EXP",
+  MEMORY_STRANDS = "MEMORY_STRANDS",
+  IS_FOULBORN = "IS_FOULBORN",
+  FOULBORN_MODS = "FOULBORN_MODS",
+  GRAFT_SKILL_NAME = "GRAFT_SKILL_NAME",
+  GRAFT_SKILL_LEVEL = "GRAFT_SKILL_LEVEL",
 }
 
 /**
- * 
+ *
  * @export
  * @interface ItemHybrid
  */
 export interface ItemHybrid {
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemHybrid
-     */
-    baseTypeName?: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof ItemHybrid
-     */
-    explicitMods?: Array<string>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ItemHybrid
-     */
-    isVaalGem?: boolean;
-    /**
-     * 
-     * @type {Array<ItemProperty>}
-     * @memberof ItemHybrid
-     */
-    properties?: Array<ItemProperty>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemHybrid
-     */
-    secDescrText?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ItemHybrid
+   */
+  baseTypeName?: string;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof ItemHybrid
+   */
+  explicitMods?: Array<string>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof ItemHybrid
+   */
+  isVaalGem?: boolean;
+  /**
+   *
+   * @type {Array<ItemProperty>}
+   * @memberof ItemHybrid
+   */
+  properties?: Array<ItemProperty>;
+  /**
+   *
+   * @type {string}
+   * @memberof ItemHybrid
+   */
+  secDescrText?: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface ItemIncubatedItem
  */
 export interface ItemIncubatedItem {
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemIncubatedItem
-     */
-    level?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemIncubatedItem
-     */
-    name?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemIncubatedItem
-     */
-    progress?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemIncubatedItem
-     */
-    total?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ItemIncubatedItem
+   */
+  level?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof ItemIncubatedItem
+   */
+  name?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof ItemIncubatedItem
+   */
+  progress?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ItemIncubatedItem
+   */
+  total?: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface ItemJewelData
  */
 export interface ItemJewelData {
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemJewelData
-     */
-    radius?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemJewelData
-     */
-    radiusMin?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemJewelData
-     */
-    radiusVisual?: string;
-    /**
-     * 
-     * @type {ItemJewelDataSubgraph}
-     * @memberof ItemJewelData
-     */
-    subgraph?: ItemJewelDataSubgraph;
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemJewelData
-     */
-    type?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof ItemJewelData
+   */
+  radius?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ItemJewelData
+   */
+  radiusMin?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof ItemJewelData
+   */
+  radiusVisual?: string;
+  /**
+   *
+   * @type {ItemJewelDataSubgraph}
+   * @memberof ItemJewelData
+   */
+  subgraph?: ItemJewelDataSubgraph;
+  /**
+   *
+   * @type {string}
+   * @memberof ItemJewelData
+   */
+  type?: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface ItemJewelDataSubgraph
  */
 export interface ItemJewelDataSubgraph {
-    /**
-     * 
-     * @type {{ [key: string]: PassiveGroup; }}
-     * @memberof ItemJewelDataSubgraph
-     */
-    groups?: { [key: string]: PassiveGroup; };
-    /**
-     * 
-     * @type {{ [key: string]: PassiveNode; }}
-     * @memberof ItemJewelDataSubgraph
-     */
-    nodes?: { [key: string]: PassiveNode; };
+  /**
+   *
+   * @type {{ [key: string]: PassiveGroup; }}
+   * @memberof ItemJewelDataSubgraph
+   */
+  groups?: { [key: string]: PassiveGroup };
+  /**
+   *
+   * @type {{ [key: string]: PassiveNode; }}
+   * @memberof ItemJewelDataSubgraph
+   */
+  nodes?: { [key: string]: PassiveNode };
 }
 
 /**
- * 
+ *
  * @export
  * @interface ItemLogbookMod
  */
 export interface ItemLogbookMod {
-    /**
-     * 
-     * @type {ItemLogbookModFaction}
-     * @memberof ItemLogbookMod
-     */
-    faction?: ItemLogbookModFaction;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof ItemLogbookMod
-     */
-    mods?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemLogbookMod
-     */
-    name?: string;
+  /**
+   *
+   * @type {ItemLogbookModFaction}
+   * @memberof ItemLogbookMod
+   */
+  faction?: ItemLogbookModFaction;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof ItemLogbookMod
+   */
+  mods?: Array<string>;
+  /**
+   *
+   * @type {string}
+   * @memberof ItemLogbookMod
+   */
+  name?: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface ItemLogbookModFaction
  */
 export interface ItemLogbookModFaction {
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemLogbookModFaction
-     */
-    id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemLogbookModFaction
-     */
-    name?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ItemLogbookModFaction
+   */
+  id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ItemLogbookModFaction
+   */
+  name?: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface ItemProperty
  */
 export interface ItemProperty {
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemProperty
-     */
-    displayMode?: number;
-    /**
-     * PoE2 only
-     * @type {string}
-     * @memberof ItemProperty
-     */
-    icon?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemProperty
-     */
-    name?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemProperty
-     */
-    progress?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemProperty
-     */
-    suffix?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemProperty
-     */
-    type?: number;
-    /**
-     * 
-     * @type {Array<Array<any>>}
-     * @memberof ItemProperty
-     */
-    values?: Array<Array<any>>;
+  /**
+   *
+   * @type {number}
+   * @memberof ItemProperty
+   */
+  displayMode?: number;
+  /**
+   * PoE2 only
+   * @type {string}
+   * @memberof ItemProperty
+   */
+  icon?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ItemProperty
+   */
+  name?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof ItemProperty
+   */
+  progress?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof ItemProperty
+   */
+  suffix?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof ItemProperty
+   */
+  type?: number;
+  /**
+   *
+   * @type {Array<Array<any>>}
+   * @memberof ItemProperty
+   */
+  values?: Array<Array<any>>;
 }
 
 /**
- * 
+ *
  * @export
  * @interface ItemReward
  */
 export interface ItemReward {
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemReward
-     */
-    label?: string;
-    /**
-     * 
-     * @type {{ [key: string]: number; }}
-     * @memberof ItemReward
-     */
-    rewards?: { [key: string]: number; };
+  /**
+   *
+   * @type {string}
+   * @memberof ItemReward
+   */
+  label?: string;
+  /**
+   *
+   * @type {{ [key: string]: number; }}
+   * @memberof ItemReward
+   */
+  rewards?: { [key: string]: number };
 }
 
 /**
- * 
+ *
  * @export
  * @interface ItemSocket
  */
 export interface ItemSocket {
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemSocket
-     */
-    attr?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemSocket
-     */
-    group?: number;
-    /**
-     * 
-     * @type {ItemSocketItem}
-     * @memberof ItemSocket
-     */
-    item?: ItemSocketItem;
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemSocket
-     */
-    sColour?: string;
-    /**
-     * 
-     * @type {ItemSocketItem}
-     * @memberof ItemSocket
-     */
-    type?: ItemSocketItem;
+  /**
+   *
+   * @type {string}
+   * @memberof ItemSocket
+   */
+  attr?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof ItemSocket
+   */
+  group?: number;
+  /**
+   *
+   * @type {ItemSocketItem}
+   * @memberof ItemSocket
+   */
+  item?: ItemSocketItem;
+  /**
+   *
+   * @type {string}
+   * @memberof ItemSocket
+   */
+  sColour?: string;
+  /**
+   *
+   * @type {ItemSocketItem}
+   * @memberof ItemSocket
+   */
+  type?: ItemSocketItem;
 }
 
 /**
@@ -2388,2307 +2394,2395 @@ export interface ItemSocket {
  * @export
  * @interface ItemSocketItem
  */
-export interface ItemSocketItem {
-}
+export interface ItemSocketItem {}
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum ItemSocketType {
-    gem = 'gem',
-    jewel = 'jewel',
-    rune = 'rune'
+  gem = "gem",
+  jewel = "jewel",
+  rune = "rune",
 }
 
 /**
- * 
+ *
  * @export
  * @interface ItemUltimatumMod
  */
 export interface ItemUltimatumMod {
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemUltimatumMod
-     */
-    tier?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemUltimatumMod
-     */
-    type?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof ItemUltimatumMod
+   */
+  tier?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof ItemUltimatumMod
+   */
+  type?: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface ItemWish
  */
 export interface ItemWish {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ItemWish
-     */
-    build_enabling: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ItemWish
-     */
-    fulfilled: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemWish
-     */
-    id: number;
-    /**
-     * 
-     * @type {ItemField}
-     * @memberof ItemWish
-     */
-    item_field: ItemField;
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemWish
-     */
-    priority: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ItemWish
-     */
-    user_id: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ItemWish
-     */
-    value: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof ItemWish
+   */
+  build_enabling: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof ItemWish
+   */
+  fulfilled: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof ItemWish
+   */
+  id: number;
+  /**
+   *
+   * @type {ItemField}
+   * @memberof ItemWish
+   */
+  item_field: ItemField;
+  /**
+   *
+   * @type {number}
+   * @memberof ItemWish
+   */
+  priority: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ItemWish
+   */
+  user_id: number;
+  /**
+   *
+   * @type {string}
+   * @memberof ItemWish
+   */
+  value: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface JobCreate
  */
 export interface JobCreate {
-    /**
-     * 
-     * @type {number}
-     * @memberof JobCreate
-     */
-    duration_in_seconds?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof JobCreate
-     */
-    end_date?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof JobCreate
-     */
-    event_id?: number;
-    /**
-     * 
-     * @type {JobType}
-     * @memberof JobCreate
-     */
-    job_type?: JobType;
-    /**
-     * 
-     * @type {number}
-     * @memberof JobCreate
-     */
-    sleep_after_each_run_seconds?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof JobCreate
+   */
+  duration_in_seconds?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof JobCreate
+   */
+  end_date?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof JobCreate
+   */
+  event_id?: number;
+  /**
+   *
+   * @type {JobType}
+   * @memberof JobCreate
+   */
+  job_type?: JobType;
+  /**
+   *
+   * @type {number}
+   * @memberof JobCreate
+   */
+  sleep_after_each_run_seconds?: number;
 }
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum JobType {
-    FetchStashChanges = 'FetchStashChanges',
-    EvaluateStashChanges = 'EvaluateStashChanges',
-    FetchCharacterData = 'FetchCharacterData',
-    FetchGuildStashes = 'FetchGuildStashes',
-    DetermineGuildStashAccess = 'DetermineGuildStashAccess'
+  FetchStashChanges = "FetchStashChanges",
+  EvaluateStashChanges = "EvaluateStashChanges",
+  FetchCharacterData = "FetchCharacterData",
+  FetchGuildStashes = "FetchGuildStashes",
+  DetermineGuildStashAccess = "DetermineGuildStashAccess",
 }
 
 /**
- * 
+ *
  * @export
  * @interface LadderEntry
  */
 export interface LadderEntry {
-    /**
-     * 
-     * @type {string}
-     * @memberof LadderEntry
-     */
-    account_name: string;
-    /**
-     * 
-     * @type {Character}
-     * @memberof LadderEntry
-     */
-    character?: Character;
-    /**
-     * 
-     * @type {string}
-     * @memberof LadderEntry
-     */
-    character_class: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof LadderEntry
-     */
-    character_name: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof LadderEntry
-     */
-    delve: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof LadderEntry
-     */
-    experience: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof LadderEntry
-     */
-    last_active?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof LadderEntry
-     */
-    level: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof LadderEntry
-     */
-    rank: number;
-    /**
-     * 
-     * @type {CharacterStat}
-     * @memberof LadderEntry
-     */
-    stats?: CharacterStat;
-    /**
-     * 
-     * @type {string}
-     * @memberof LadderEntry
-     */
-    twitch_account?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof LadderEntry
-     */
-    user_id?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof LadderEntry
+   */
+  account_name: string;
+  /**
+   *
+   * @type {Character}
+   * @memberof LadderEntry
+   */
+  character?: Character;
+  /**
+   *
+   * @type {string}
+   * @memberof LadderEntry
+   */
+  character_class: string;
+  /**
+   *
+   * @type {string}
+   * @memberof LadderEntry
+   */
+  character_name: string;
+  /**
+   *
+   * @type {number}
+   * @memberof LadderEntry
+   */
+  delve: number;
+  /**
+   *
+   * @type {number}
+   * @memberof LadderEntry
+   */
+  experience: number;
+  /**
+   *
+   * @type {number}
+   * @memberof LadderEntry
+   */
+  last_active?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof LadderEntry
+   */
+  level: number;
+  /**
+   *
+   * @type {number}
+   * @memberof LadderEntry
+   */
+  rank: number;
+  /**
+   *
+   * @type {CharacterStat}
+   * @memberof LadderEntry
+   */
+  stats?: CharacterStat;
+  /**
+   *
+   * @type {string}
+   * @memberof LadderEntry
+   */
+  twitch_account?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof LadderEntry
+   */
+  user_id?: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface Metadata
  */
 export interface Metadata {
-    /**
-     * 
-     * @type {string}
-     * @memberof Metadata
-     */
-    version?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Metadata
+   */
+  version?: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface MinimalUser
  */
 export interface MinimalUser {
-    /**
-     * 
-     * @type {string}
-     * @memberof MinimalUser
-     */
-    discord_id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MinimalUser
-     */
-    discord_name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MinimalUser
-     */
-    display_name: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof MinimalUser
-     */
-    id: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof MinimalUser
-     */
-    poe_account_name?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof MinimalUser
+   */
+  discord_id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof MinimalUser
+   */
+  discord_name?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof MinimalUser
+   */
+  display_name: string;
+  /**
+   *
+   * @type {number}
+   * @memberof MinimalUser
+   */
+  id: number;
+  /**
+   *
+   * @type {string}
+   * @memberof MinimalUser
+   */
+  poe_account_name?: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface NonSensitiveUser
  */
 export interface NonSensitiveUser {
-    /**
-     * 
-     * @type {string}
-     * @memberof NonSensitiveUser
-     */
-    account_name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof NonSensitiveUser
-     */
-    discord_id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof NonSensitiveUser
-     */
-    discord_name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof NonSensitiveUser
-     */
-    display_name: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof NonSensitiveUser
-     */
-    id: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof NonSensitiveUser
-     */
-    twitch_id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof NonSensitiveUser
-     */
-    twitch_name?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof NonSensitiveUser
+   */
+  account_name?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof NonSensitiveUser
+   */
+  discord_id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof NonSensitiveUser
+   */
+  discord_name?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof NonSensitiveUser
+   */
+  display_name: string;
+  /**
+   *
+   * @type {number}
+   * @memberof NonSensitiveUser
+   */
+  id: number;
+  /**
+   *
+   * @type {string}
+   * @memberof NonSensitiveUser
+   */
+  twitch_id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof NonSensitiveUser
+   */
+  twitch_name?: string;
 }
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum NumberField {
-    STACK_SIZE = 'STACK_SIZE',
-    PLAYER_LEVEL = 'PLAYER_LEVEL',
-    DELVE_DEPTH = 'DELVE_DEPTH',
-    DELVE_DEPTH_PAST_100 = 'DELVE_DEPTH_PAST_100',
-    PANTHEON = 'PANTHEON',
-    ASCENDANCY = 'ASCENDANCY',
-    FULLY_ASCENDED = 'FULLY_ASCENDED',
-    BLOODLINE_ASCENDANCY = 'BLOODLINE_ASCENDANCY',
-    PLAYER_SCORE = 'PLAYER_SCORE',
-    HAS_RARE_ASCENDANCY_PAST_90 = 'HAS_RARE_ASCENDANCY_PAST_90',
-    WEAPON_QUALITY = 'WEAPON_QUALITY',
-    ARMOUR_QUALITY = 'ARMOUR_QUALITY',
-    FLASK_QUALITY = 'FLASK_QUALITY',
-    EVASION = 'EVASION',
-    ENERGY_SHIELD = 'ENERGY_SHIELD',
-    ARMOUR = 'ARMOUR',
-    HP = 'HP',
-    MANA = 'MANA',
-    FULL_DPS = 'FULL_DPS',
-    EHP = 'EHP',
-    INC_MOVEMENT_SPEED = 'INC_MOVEMENT_SPEED',
-    PHYS_MAX_HIT = 'PHYS_MAX_HIT',
-    ELE_MAX_HIT = 'ELE_MAX_HIT',
-    ATLAS_POINTS = 'ATLAS_POINTS',
-    INFLUENCE_EQUIPPED = 'INFLUENCE_EQUIPPED',
-    FOULBORN_EQUIPPED = 'FOULBORN_EQUIPPED',
-    GEMS_EQUIPPED = 'GEMS_EQUIPPED',
-    CORRUPTED_ITEMS_EQUIPPED = 'CORRUPTED_ITEMS_EQUIPPED',
-    JEWELS_WITH_IMPLICITS_EQUIPPED = 'JEWELS_WITH_IMPLICITS_EQUIPPED',
-    ENCHANTED_ITEMS_EQUIPPED = 'ENCHANTED_ITEMS_EQUIPPED',
-    SUBMISSION_VALUE = 'SUBMISSION_VALUE',
-    FINISHED_OBJECTIVES = 'FINISHED_OBJECTIVES'
+  STACK_SIZE = "STACK_SIZE",
+  PLAYER_LEVEL = "PLAYER_LEVEL",
+  DELVE_DEPTH = "DELVE_DEPTH",
+  DELVE_DEPTH_PAST_100 = "DELVE_DEPTH_PAST_100",
+  PANTHEON = "PANTHEON",
+  ASCENDANCY = "ASCENDANCY",
+  FULLY_ASCENDED = "FULLY_ASCENDED",
+  BLOODLINE_ASCENDANCY = "BLOODLINE_ASCENDANCY",
+  PLAYER_SCORE = "PLAYER_SCORE",
+  HAS_RARE_ASCENDANCY_PAST_90 = "HAS_RARE_ASCENDANCY_PAST_90",
+  WEAPON_QUALITY = "WEAPON_QUALITY",
+  ARMOUR_QUALITY = "ARMOUR_QUALITY",
+  FLASK_QUALITY = "FLASK_QUALITY",
+  EVASION = "EVASION",
+  ENERGY_SHIELD = "ENERGY_SHIELD",
+  ARMOUR = "ARMOUR",
+  HP = "HP",
+  MANA = "MANA",
+  FULL_DPS = "FULL_DPS",
+  EHP = "EHP",
+  INC_MOVEMENT_SPEED = "INC_MOVEMENT_SPEED",
+  PHYS_MAX_HIT = "PHYS_MAX_HIT",
+  ELE_MAX_HIT = "ELE_MAX_HIT",
+  ATLAS_POINTS = "ATLAS_POINTS",
+  INFLUENCE_EQUIPPED = "INFLUENCE_EQUIPPED",
+  FOULBORN_EQUIPPED = "FOULBORN_EQUIPPED",
+  GEMS_EQUIPPED = "GEMS_EQUIPPED",
+  CORRUPTED_ITEMS_EQUIPPED = "CORRUPTED_ITEMS_EQUIPPED",
+  JEWELS_WITH_IMPLICITS_EQUIPPED = "JEWELS_WITH_IMPLICITS_EQUIPPED",
+  ENCHANTED_ITEMS_EQUIPPED = "ENCHANTED_ITEMS_EQUIPPED",
+  SUBMISSION_VALUE = "SUBMISSION_VALUE",
+  FINISHED_OBJECTIVES = "FINISHED_OBJECTIVES",
 }
 
 /**
- * 
+ *
  * @export
  * @interface Objective
  */
 export interface Objective {
-    /**
-     * 
-     * @type {AggregationType}
-     * @memberof Objective
-     */
-    aggregation: AggregationType;
-    /**
-     * 
-     * @type {Array<Objective>}
-     * @memberof Objective
-     */
-    children: Array<Objective>;
-    /**
-     * 
-     * @type {Array<Condition>}
-     * @memberof Objective
-     */
-    conditions: Array<Condition>;
-    /**
-     * 
-     * @type {string}
-     * @memberof Objective
-     */
-    extra: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Objective
-     */
-    hide_progress: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof Objective
-     */
-    id: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof Objective
-     */
-    name: string;
-    /**
-     * 
-     * @type {NumberField}
-     * @memberof Objective
-     */
-    number_field: NumberField;
-    /**
-     * 
-     * @type {string}
-     * @memberof Objective
-     */
-    number_field_explanation?: string;
-    /**
-     * 
-     * @type {ObjectiveType}
-     * @memberof Objective
-     */
-    objective_type: ObjectiveType;
-    /**
-     * 
-     * @type {number}
-     * @memberof Objective
-     */
-    parent_id: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Objective
-     */
-    required_number: number;
-    /**
-     * 
-     * @type {Array<ScoringPreset>}
-     * @memberof Objective
-     */
-    scoring_presets: Array<ScoringPreset>;
-    /**
-     * 
-     * @type {string}
-     * @memberof Objective
-     */
-    valid_from?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Objective
-     */
-    valid_to?: string;
+  /**
+   *
+   * @type {AggregationType}
+   * @memberof Objective
+   */
+  aggregation: AggregationType;
+  /**
+   *
+   * @type {Array<Objective>}
+   * @memberof Objective
+   */
+  children: Array<Objective>;
+  /**
+   *
+   * @type {Array<Condition>}
+   * @memberof Objective
+   */
+  conditions: Array<Condition>;
+  /**
+   *
+   * @type {string}
+   * @memberof Objective
+   */
+  extra: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Objective
+   */
+  hide_progress: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof Objective
+   */
+  id: number;
+  /**
+   *
+   * @type {string}
+   * @memberof Objective
+   */
+  name: string;
+  /**
+   *
+   * @type {NumberField}
+   * @memberof Objective
+   */
+  number_field: NumberField;
+  /**
+   *
+   * @type {string}
+   * @memberof Objective
+   */
+  number_field_explanation?: string;
+  /**
+   *
+   * @type {ObjectiveType}
+   * @memberof Objective
+   */
+  objective_type: ObjectiveType;
+  /**
+   *
+   * @type {number}
+   * @memberof Objective
+   */
+  parent_id: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Objective
+   */
+  required_number: number;
+  /**
+   *
+   * @type {Array<ScoringPreset>}
+   * @memberof Objective
+   */
+  scoring_presets: Array<ScoringPreset>;
+  /**
+   *
+   * @type {string}
+   * @memberof Objective
+   */
+  valid_from?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Objective
+   */
+  valid_to?: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface ObjectiveCreate
  */
 export interface ObjectiveCreate {
-    /**
-     * 
-     * @type {AggregationType}
-     * @memberof ObjectiveCreate
-     */
-    aggregation: AggregationType;
-    /**
-     * 
-     * @type {Array<Condition>}
-     * @memberof ObjectiveCreate
-     */
-    conditions: Array<Condition>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ObjectiveCreate
-     */
-    extra?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ObjectiveCreate
-     */
-    hide_progress?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof ObjectiveCreate
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ObjectiveCreate
-     */
-    name: string;
-    /**
-     * 
-     * @type {NumberField}
-     * @memberof ObjectiveCreate
-     */
-    number_field: NumberField;
-    /**
-     * 
-     * @type {string}
-     * @memberof ObjectiveCreate
-     */
-    number_field_explanation?: string;
-    /**
-     * 
-     * @type {ObjectiveType}
-     * @memberof ObjectiveCreate
-     */
-    objective_type: ObjectiveType;
-    /**
-     * 
-     * @type {number}
-     * @memberof ObjectiveCreate
-     */
-    parent_id: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ObjectiveCreate
-     */
-    required_number: number;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof ObjectiveCreate
-     */
-    scoring_preset_ids: Array<number>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ObjectiveCreate
-     */
-    valid_from?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ObjectiveCreate
-     */
-    valid_to?: string;
+  /**
+   *
+   * @type {AggregationType}
+   * @memberof ObjectiveCreate
+   */
+  aggregation: AggregationType;
+  /**
+   *
+   * @type {Array<Condition>}
+   * @memberof ObjectiveCreate
+   */
+  conditions: Array<Condition>;
+  /**
+   *
+   * @type {string}
+   * @memberof ObjectiveCreate
+   */
+  extra?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof ObjectiveCreate
+   */
+  hide_progress?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof ObjectiveCreate
+   */
+  id?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof ObjectiveCreate
+   */
+  name: string;
+  /**
+   *
+   * @type {NumberField}
+   * @memberof ObjectiveCreate
+   */
+  number_field: NumberField;
+  /**
+   *
+   * @type {string}
+   * @memberof ObjectiveCreate
+   */
+  number_field_explanation?: string;
+  /**
+   *
+   * @type {ObjectiveType}
+   * @memberof ObjectiveCreate
+   */
+  objective_type: ObjectiveType;
+  /**
+   *
+   * @type {number}
+   * @memberof ObjectiveCreate
+   */
+  parent_id: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ObjectiveCreate
+   */
+  required_number: number;
+  /**
+   *
+   * @type {Array<number>}
+   * @memberof ObjectiveCreate
+   */
+  scoring_preset_ids: Array<number>;
+  /**
+   *
+   * @type {string}
+   * @memberof ObjectiveCreate
+   */
+  valid_from?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ObjectiveCreate
+   */
+  valid_to?: string;
 }
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum ObjectiveType {
-    ITEM = 'ITEM',
-    PLAYER = 'PLAYER',
-    TEAM = 'TEAM',
-    SUBMISSION = 'SUBMISSION',
-    CATEGORY = 'CATEGORY'
+  ITEM = "ITEM",
+  PLAYER = "PLAYER",
+  TEAM = "TEAM",
+  SUBMISSION = "SUBMISSION",
+  CATEGORY = "CATEGORY",
 }
 
 /**
- * 
+ *
  * @export
  * @interface ObjectiveValidation
  */
 export interface ObjectiveValidation {
-    /**
-     * 
-     * @type {Item}
-     * @memberof ObjectiveValidation
-     */
-    item: Item;
-    /**
-     * 
-     * @type {number}
-     * @memberof ObjectiveValidation
-     */
-    objective_id: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ObjectiveValidation
-     */
-    timestamp: string;
+  /**
+   *
+   * @type {Item}
+   * @memberof ObjectiveValidation
+   */
+  item: Item;
+  /**
+   *
+   * @type {number}
+   * @memberof ObjectiveValidation
+   */
+  objective_id: number;
+  /**
+   *
+   * @type {string}
+   * @memberof ObjectiveValidation
+   */
+  timestamp: string;
 }
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum Operator {
-    EQ = 'EQ',
-    NEQ = 'NEQ',
-    GT = 'GT',
-    LT = 'LT',
-    IN = 'IN',
-    NOT_IN = 'NOT_IN',
-    MATCHES = 'MATCHES',
-    CONTAINS = 'CONTAINS',
-    CONTAINS_ALL = 'CONTAINS_ALL',
-    CONTAINS_MATCH = 'CONTAINS_MATCH',
-    LENGTH_EQ = 'LENGTH_EQ',
-    LENGTH_GT = 'LENGTH_GT',
-    LENGTH_LT = 'LENGTH_LT',
-    DOES_NOT_MATCH = 'DOES_NOT_MATCH'
+  EQ = "EQ",
+  NEQ = "NEQ",
+  GT = "GT",
+  LT = "LT",
+  IN = "IN",
+  NOT_IN = "NOT_IN",
+  MATCHES = "MATCHES",
+  CONTAINS = "CONTAINS",
+  CONTAINS_ALL = "CONTAINS_ALL",
+  CONTAINS_MATCH = "CONTAINS_MATCH",
+  LENGTH_EQ = "LENGTH_EQ",
+  LENGTH_GT = "LENGTH_GT",
+  LENGTH_LT = "LENGTH_LT",
+  DOES_NOT_MATCH = "DOES_NOT_MATCH",
 }
 
 /**
- * 
+ *
  * @export
  * @interface PassiveGroup
  */
 export interface PassiveGroup {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PassiveGroup
-     */
-    isProxy?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof PassiveGroup
-     */
-    nodes?: Array<string>;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof PassiveGroup
-     */
-    orbits?: Array<number>;
-    /**
-     * 
-     * @type {string}
-     * @memberof PassiveGroup
-     */
-    proxy?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PassiveGroup
-     */
-    x?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PassiveGroup
-     */
-    y?: number;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PassiveGroup
+   */
+  isProxy?: boolean;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof PassiveGroup
+   */
+  nodes?: Array<string>;
+  /**
+   *
+   * @type {Array<number>}
+   * @memberof PassiveGroup
+   */
+  orbits?: Array<number>;
+  /**
+   *
+   * @type {string}
+   * @memberof PassiveGroup
+   */
+  proxy?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof PassiveGroup
+   */
+  x?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PassiveGroup
+   */
+  y?: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface PassiveNode
  */
 export interface PassiveNode {
-    /**
-     * 
-     * @type {string}
-     * @memberof PassiveNode
-     */
-    activeEffectImage?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PassiveNode
-     */
-    activeIcon?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PassiveNode
-     */
-    ascendancyName?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PassiveNode
-     */
-    classStartIndex?: number;
-    /**
-     * 
-     * @type {PassiveNodeExpansionJewel}
-     * @memberof PassiveNode
-     */
-    expansionJewel?: PassiveNodeExpansionJewel;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof PassiveNode
-     */
-    flavourText?: Array<string>;
-    /**
-     * 
-     * @type {number}
-     * @memberof PassiveNode
-     */
-    grantedDexterity?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PassiveNode
-     */
-    grantedIntelligence?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PassiveNode
-     */
-    grantedPassivePoints?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PassiveNode
-     */
-    grantedStrength?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PassiveNode
-     */
-    group?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PassiveNode
-     */
-    icon?: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof PassiveNode
-     */
-    _in?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof PassiveNode
-     */
-    inactiveIcon?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PassiveNode
-     */
-    isAscendancyStart?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PassiveNode
-     */
-    isBlighted?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PassiveNode
-     */
-    isJewelSocket?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PassiveNode
-     */
-    isKeystone?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PassiveNode
-     */
-    isMastery?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PassiveNode
-     */
-    isMultipleChoice?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PassiveNode
-     */
-    isMultipleChoiceOption?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PassiveNode
-     */
-    isNotable?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PassiveNode
-     */
-    isProxy?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PassiveNode
-     */
-    isTattoo?: boolean;
-    /**
-     * 
-     * @type {Array<PassiveNodeMasteryEffect>}
-     * @memberof PassiveNode
-     */
-    masteryEffects?: Array<PassiveNodeMasteryEffect>;
-    /**
-     * 
-     * @type {string}
-     * @memberof PassiveNode
-     */
-    name?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PassiveNode
-     */
-    orbit?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PassiveNode
-     */
-    orbitIndex?: number;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof PassiveNode
-     */
-    out?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof PassiveNode
-     */
-    recipe?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof PassiveNode
-     */
-    reminderText?: Array<string>;
-    /**
-     * actually an int but it's a string in the ggg response
-     * @type {string}
-     * @memberof PassiveNode
-     */
-    skill?: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof PassiveNode
-     */
-    stats?: Array<string>;
+  /**
+   *
+   * @type {string}
+   * @memberof PassiveNode
+   */
+  activeEffectImage?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof PassiveNode
+   */
+  activeIcon?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof PassiveNode
+   */
+  ascendancyName?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof PassiveNode
+   */
+  classStartIndex?: number;
+  /**
+   *
+   * @type {PassiveNodeExpansionJewel}
+   * @memberof PassiveNode
+   */
+  expansionJewel?: PassiveNodeExpansionJewel;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof PassiveNode
+   */
+  flavourText?: Array<string>;
+  /**
+   *
+   * @type {number}
+   * @memberof PassiveNode
+   */
+  grantedDexterity?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PassiveNode
+   */
+  grantedIntelligence?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PassiveNode
+   */
+  grantedPassivePoints?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PassiveNode
+   */
+  grantedStrength?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof PassiveNode
+   */
+  group?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof PassiveNode
+   */
+  icon?: string;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof PassiveNode
+   */
+  _in?: Array<string>;
+  /**
+   *
+   * @type {string}
+   * @memberof PassiveNode
+   */
+  inactiveIcon?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PassiveNode
+   */
+  isAscendancyStart?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PassiveNode
+   */
+  isBlighted?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PassiveNode
+   */
+  isJewelSocket?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PassiveNode
+   */
+  isKeystone?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PassiveNode
+   */
+  isMastery?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PassiveNode
+   */
+  isMultipleChoice?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PassiveNode
+   */
+  isMultipleChoiceOption?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PassiveNode
+   */
+  isNotable?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PassiveNode
+   */
+  isProxy?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PassiveNode
+   */
+  isTattoo?: boolean;
+  /**
+   *
+   * @type {Array<PassiveNodeMasteryEffect>}
+   * @memberof PassiveNode
+   */
+  masteryEffects?: Array<PassiveNodeMasteryEffect>;
+  /**
+   *
+   * @type {string}
+   * @memberof PassiveNode
+   */
+  name?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof PassiveNode
+   */
+  orbit?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PassiveNode
+   */
+  orbitIndex?: number;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof PassiveNode
+   */
+  out?: Array<string>;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof PassiveNode
+   */
+  recipe?: Array<string>;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof PassiveNode
+   */
+  reminderText?: Array<string>;
+  /**
+   * actually an int but it's a string in the ggg response
+   * @type {string}
+   * @memberof PassiveNode
+   */
+  skill?: string;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof PassiveNode
+   */
+  stats?: Array<string>;
 }
 
 /**
- * 
+ *
  * @export
  * @interface PassiveNodeExpansionJewel
  */
 export interface PassiveNodeExpansionJewel {
-    /**
-     * 
-     * @type {number}
-     * @memberof PassiveNodeExpansionJewel
-     */
-    index?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PassiveNodeExpansionJewel
-     */
-    parent?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PassiveNodeExpansionJewel
-     */
-    proxy?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PassiveNodeExpansionJewel
-     */
-    size?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PassiveNodeExpansionJewel
+   */
+  index?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof PassiveNodeExpansionJewel
+   */
+  parent?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof PassiveNodeExpansionJewel
+   */
+  proxy?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof PassiveNodeExpansionJewel
+   */
+  size?: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface PassiveNodeMasteryEffect
  */
 export interface PassiveNodeMasteryEffect {
-    /**
-     * 
-     * @type {number}
-     * @memberof PassiveNodeMasteryEffect
-     */
-    effect?: number;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof PassiveNodeMasteryEffect
-     */
-    reminderText?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof PassiveNodeMasteryEffect
-     */
-    stats?: Array<string>;
+  /**
+   *
+   * @type {number}
+   * @memberof PassiveNodeMasteryEffect
+   */
+  effect?: number;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof PassiveNodeMasteryEffect
+   */
+  reminderText?: Array<string>;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof PassiveNodeMasteryEffect
+   */
+  stats?: Array<string>;
 }
 
 /**
- * 
+ *
  * @export
  * @interface Passives
  */
 export interface Passives {
-    /**
-     * 
-     * @type {string}
-     * @memberof Passives
-     */
-    alternate_ascendancy?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Passives
-     */
-    bandit_choice?: string;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof Passives
-     */
-    hashes?: Array<number>;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof Passives
-     */
-    hashes_ex?: Array<number>;
-    /**
-     * 
-     * @type {{ [key: string]: ItemJewelData; }}
-     * @memberof Passives
-     */
-    jewel_data?: { [key: string]: ItemJewelData; };
-    /**
-     * 
-     * @type {{ [key: string]: number; }}
-     * @memberof Passives
-     */
-    mastery_effects?: { [key: string]: number; };
-    /**
-     * 
-     * @type {string}
-     * @memberof Passives
-     */
-    pantheon_major?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Passives
-     */
-    pantheon_minor?: string;
-    /**
-     * 
-     * @type {{ [key: string]: PassiveNode; }}
-     * @memberof Passives
-     */
-    skill_overrides?: { [key: string]: PassiveNode; };
-    /**
-     * 
-     * @type {ItemSocketItem}
-     * @memberof Passives
-     */
-    specialisation?: ItemSocketItem;
+  /**
+   *
+   * @type {string}
+   * @memberof Passives
+   */
+  alternate_ascendancy?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Passives
+   */
+  bandit_choice?: string;
+  /**
+   *
+   * @type {Array<number>}
+   * @memberof Passives
+   */
+  hashes?: Array<number>;
+  /**
+   *
+   * @type {Array<number>}
+   * @memberof Passives
+   */
+  hashes_ex?: Array<number>;
+  /**
+   *
+   * @type {{ [key: string]: ItemJewelData; }}
+   * @memberof Passives
+   */
+  jewel_data?: { [key: string]: ItemJewelData };
+  /**
+   *
+   * @type {{ [key: string]: number; }}
+   * @memberof Passives
+   */
+  mastery_effects?: { [key: string]: number };
+  /**
+   *
+   * @type {string}
+   * @memberof Passives
+   */
+  pantheon_major?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Passives
+   */
+  pantheon_minor?: string;
+  /**
+   *
+   * @type {{ [key: string]: PassiveNode; }}
+   * @memberof Passives
+   */
+  skill_overrides?: { [key: string]: PassiveNode };
+  /**
+   *
+   * @type {ItemSocketItem}
+   * @memberof Passives
+   */
+  specialisation?: ItemSocketItem;
 }
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum Permission {
-    admin = 'admin',
-    manager = 'manager',
-    objective_designer = 'objective_designer',
-    submission_judge = 'submission_judge'
+  admin = "admin",
+  manager = "manager",
+  objective_designer = "objective_designer",
+  submission_judge = "submission_judge",
 }
 
 /**
- * 
+ *
  * @export
  * @interface PoB
  */
 export interface PoB {
-    /**
-     * 
-     * @type {string}
-     * @memberof PoB
-     */
-    ascendancy: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PoB
-     */
-    export_string: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PoB
-     */
-    level: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PoB
-     */
-    main_skill: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PoB
-     */
-    timestamp: string;
+  /**
+   *
+   * @type {string}
+   * @memberof PoB
+   */
+  ascendancy: string;
+  /**
+   *
+   * @type {string}
+   * @memberof PoB
+   */
+  export_string: string;
+  /**
+   *
+   * @type {number}
+   * @memberof PoB
+   */
+  level: number;
+  /**
+   *
+   * @type {string}
+   * @memberof PoB
+   */
+  main_skill: string;
+  /**
+   *
+   * @type {string}
+   * @memberof PoB
+   */
+  timestamp: string;
 }
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum Realm {
-    pc = 'pc',
-    sony = 'sony',
-    xbox = 'xbox',
-    poe2 = 'poe2'
+  pc = "pc",
+  sony = "sony",
+  xbox = "xbox",
+  poe2 = "poe2",
 }
 
 /**
- * 
+ *
  * @export
  * @interface RecurringJob
  */
 export interface RecurringJob {
-    /**
-     * 
-     * @type {string}
-     * @memberof RecurringJob
-     */
-    end_date: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof RecurringJob
-     */
-    event_id: number;
-    /**
-     * 
-     * @type {JobType}
-     * @memberof RecurringJob
-     */
-    job_type: JobType;
-    /**
-     * 
-     * @type {number}
-     * @memberof RecurringJob
-     */
-    sleep_after_each_run_seconds: number;
+  /**
+   *
+   * @type {string}
+   * @memberof RecurringJob
+   */
+  end_date: string;
+  /**
+   *
+   * @type {number}
+   * @memberof RecurringJob
+   */
+  event_id: number;
+  /**
+   *
+   * @type {JobType}
+   * @memberof RecurringJob
+   */
+  job_type: JobType;
+  /**
+   *
+   * @type {number}
+   * @memberof RecurringJob
+   */
+  sleep_after_each_run_seconds: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface ReportPlaytimeRequest
  */
 export interface ReportPlaytimeRequest {
-    /**
-     * 
-     * @type {number}
-     * @memberof ReportPlaytimeRequest
-     */
-    actual_playtime: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ReportPlaytimeRequest
+   */
+  actual_playtime: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface Score
  */
 export interface Score {
-    /**
-     * 
-     * @type {number}
-     * @memberof Score
-     */
-    bonus_points: number;
-    /**
-     * 
-     * @type {Array<Completion>}
-     * @memberof Score
-     */
-    completions: Array<Completion>;
+  /**
+   *
+   * @type {number}
+   * @memberof Score
+   */
+  bonus_points: number;
+  /**
+   *
+   * @type {Array<Completion>}
+   * @memberof Score
+   */
+  completions: Array<Completion>;
 }
 
 /**
- * 
+ *
  * @export
  * @interface ScoreDiff
  */
 export interface ScoreDiff {
-    /**
-     * 
-     * @type {Difftype}
-     * @memberof ScoreDiff
-     */
-    diff_type: Difftype;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof ScoreDiff
-     */
-    field_diff: Array<string>;
-    /**
-     * 
-     * @type {number}
-     * @memberof ScoreDiff
-     */
-    objective_id: number;
-    /**
-     * 
-     * @type {Score}
-     * @memberof ScoreDiff
-     */
-    score: Score;
-    /**
-     * 
-     * @type {number}
-     * @memberof ScoreDiff
-     */
-    team_id: number;
+  /**
+   *
+   * @type {Difftype}
+   * @memberof ScoreDiff
+   */
+  diff_type: Difftype;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof ScoreDiff
+   */
+  field_diff: Array<string>;
+  /**
+   *
+   * @type {number}
+   * @memberof ScoreDiff
+   */
+  objective_id: number;
+  /**
+   *
+   * @type {Score}
+   * @memberof ScoreDiff
+   */
+  score: Score;
+  /**
+   *
+   * @type {number}
+   * @memberof ScoreDiff
+   */
+  team_id: number;
 }
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum ScoringMethod {
-    PRESENCE = 'PRESENCE',
-    POINTS_FROM_VALUE = 'POINTS_FROM_VALUE',
-    RANKED_TIME = 'RANKED_TIME',
-    RANKED_VALUE = 'RANKED_VALUE',
-    RANKED_REVERSE = 'RANKED_REVERSE',
-    RANKED_COMPLETION_TIME = 'RANKED_COMPLETION_TIME',
-    BONUS_PER_COMPLETION = 'BONUS_PER_COMPLETION',
-    BINGO_3 = 'BINGO_3',
-    BINGO_BOARD = 'BINGO_BOARD',
-    CHILD_NUMBER_SUM = 'CHILD_NUMBER_SUM'
+  PRESENCE = "PRESENCE",
+  POINTS_FROM_VALUE = "POINTS_FROM_VALUE",
+  RANKED_TIME = "RANKED_TIME",
+  RANKED_VALUE = "RANKED_VALUE",
+  RANKED_REVERSE = "RANKED_REVERSE",
+  RANKED_COMPLETION_TIME = "RANKED_COMPLETION_TIME",
+  BONUS_PER_COMPLETION = "BONUS_PER_COMPLETION",
+  BINGO_3 = "BINGO_3",
+  BINGO_BOARD = "BINGO_BOARD",
+  CHILD_NUMBER_SUM = "CHILD_NUMBER_SUM",
 }
 
 /**
- * 
+ *
  * @export
  * @interface ScoringPreset
  */
 export interface ScoringPreset {
-    /**
-     * 
-     * @type {string}
-     * @memberof ScoringPreset
-     */
-    description: string;
-    /**
-     * 
-     * @type {{ [key: string]: string; }}
-     * @memberof ScoringPreset
-     */
-    extra?: { [key: string]: string; };
-    /**
-     * 
-     * @type {number}
-     * @memberof ScoringPreset
-     */
-    id: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ScoringPreset
-     */
-    name: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ScoringPreset
-     */
-    point_cap?: number;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof ScoringPreset
-     */
-    points: Array<number>;
-    /**
-     * 
-     * @type {ScoringMethod}
-     * @memberof ScoringPreset
-     */
-    scoring_method: ScoringMethod;
+  /**
+   *
+   * @type {string}
+   * @memberof ScoringPreset
+   */
+  description: string;
+  /**
+   *
+   * @type {{ [key: string]: string; }}
+   * @memberof ScoringPreset
+   */
+  extra?: { [key: string]: string };
+  /**
+   *
+   * @type {number}
+   * @memberof ScoringPreset
+   */
+  id: number;
+  /**
+   *
+   * @type {string}
+   * @memberof ScoringPreset
+   */
+  name: string;
+  /**
+   *
+   * @type {number}
+   * @memberof ScoringPreset
+   */
+  point_cap?: number;
+  /**
+   *
+   * @type {Array<number>}
+   * @memberof ScoringPreset
+   */
+  points: Array<number>;
+  /**
+   *
+   * @type {ScoringMethod}
+   * @memberof ScoringPreset
+   */
+  scoring_method: ScoringMethod;
 }
 
 /**
- * 
+ *
  * @export
  * @interface ScoringPresetCreate
  */
 export interface ScoringPresetCreate {
-    /**
-     * 
-     * @type {string}
-     * @memberof ScoringPresetCreate
-     */
-    description?: string;
-    /**
-     * 
-     * @type {{ [key: string]: string; }}
-     * @memberof ScoringPresetCreate
-     */
-    extra?: { [key: string]: string; };
-    /**
-     * 
-     * @type {number}
-     * @memberof ScoringPresetCreate
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ScoringPresetCreate
-     */
-    name: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ScoringPresetCreate
-     */
-    point_cap?: number;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof ScoringPresetCreate
-     */
-    points: Array<number>;
-    /**
-     * 
-     * @type {ScoringMethod}
-     * @memberof ScoringPresetCreate
-     */
-    scoring_method: ScoringMethod;
+  /**
+   *
+   * @type {string}
+   * @memberof ScoringPresetCreate
+   */
+  description?: string;
+  /**
+   *
+   * @type {{ [key: string]: string; }}
+   * @memberof ScoringPresetCreate
+   */
+  extra?: { [key: string]: string };
+  /**
+   *
+   * @type {number}
+   * @memberof ScoringPresetCreate
+   */
+  id?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof ScoringPresetCreate
+   */
+  name: string;
+  /**
+   *
+   * @type {number}
+   * @memberof ScoringPresetCreate
+   */
+  point_cap?: number;
+  /**
+   *
+   * @type {Array<number>}
+   * @memberof ScoringPresetCreate
+   */
+  points: Array<number>;
+  /**
+   *
+   * @type {ScoringMethod}
+   * @memberof ScoringPresetCreate
+   */
+  scoring_method: ScoringMethod;
 }
 
 /**
- * 
+ *
  * @export
  * @interface Signup
  */
 export interface Signup {
-    /**
-     * 
-     * @type {number}
-     * @memberof Signup
-     */
-    actual_playtime: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Signup
-     */
-    expected_playtime: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof Signup
-     */
-    extra?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Signup
-     */
-    needs_help?: boolean;
-    /**
-     * 
-     * @type {NonSensitiveUser}
-     * @memberof Signup
-     */
-    partner?: NonSensitiveUser;
-    /**
-     * 
-     * @type {string}
-     * @memberof Signup
-     */
-    partnerWish?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof Signup
-     */
-    partner_id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Signup
-     */
-    team_id?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Signup
-     */
-    team_lead: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof Signup
-     */
-    timestamp: string;
-    /**
-     * 
-     * @type {NonSensitiveUser}
-     * @memberof Signup
-     */
-    user: NonSensitiveUser;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Signup
-     */
-    wants_to_help?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof Signup
+   */
+  actual_playtime: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Signup
+   */
+  expected_playtime: number;
+  /**
+   *
+   * @type {string}
+   * @memberof Signup
+   */
+  extra?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Signup
+   */
+  needs_help?: boolean;
+  /**
+   *
+   * @type {NonSensitiveUser}
+   * @memberof Signup
+   */
+  partner?: NonSensitiveUser;
+  /**
+   *
+   * @type {string}
+   * @memberof Signup
+   */
+  partnerWish?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof Signup
+   */
+  partner_id?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Signup
+   */
+  team_id?: number;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Signup
+   */
+  team_lead: boolean;
+  /**
+   *
+   * @type {string}
+   * @memberof Signup
+   */
+  timestamp: string;
+  /**
+   *
+   * @type {NonSensitiveUser}
+   * @memberof Signup
+   */
+  user: NonSensitiveUser;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Signup
+   */
+  wants_to_help?: boolean;
 }
 
 /**
- * 
+ *
  * @export
  * @interface SignupCreate
  */
 export interface SignupCreate {
-    /**
-     * 
-     * @type {number}
-     * @memberof SignupCreate
-     */
-    expected_playtime: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof SignupCreate
-     */
-    extra?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SignupCreate
-     */
-    needs_help?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof SignupCreate
-     */
-    partner_account_name?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SignupCreate
-     */
-    wants_to_help?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof SignupCreate
+   */
+  expected_playtime: number;
+  /**
+   *
+   * @type {string}
+   * @memberof SignupCreate
+   */
+  extra?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof SignupCreate
+   */
+  needs_help?: boolean;
+  /**
+   *
+   * @type {string}
+   * @memberof SignupCreate
+   */
+  partner_account_name?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof SignupCreate
+   */
+  wants_to_help?: boolean;
 }
 
 /**
- * 
+ *
  * @export
  * @interface Specialisations
  */
 export interface Specialisations {
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof Specialisations
-     */
-    set1?: Array<number>;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof Specialisations
-     */
-    set2?: Array<number>;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof Specialisations
-     */
-    shapeshift?: Array<number>;
+  /**
+   *
+   * @type {Array<number>}
+   * @memberof Specialisations
+   */
+  set1?: Array<number>;
+  /**
+   *
+   * @type {Array<number>}
+   * @memberof Specialisations
+   */
+  set2?: Array<number>;
+  /**
+   *
+   * @type {Array<number>}
+   * @memberof Specialisations
+   */
+  shapeshift?: Array<number>;
 }
 
 /**
- * 
+ *
  * @export
  * @interface StashTab
  */
 export interface StashTab {
-    /**
-     * 
-     * @type {Array<StashTab>}
-     * @memberof StashTab
-     */
-    children?: Array<StashTab>;
-    /**
-     * 
-     * @type {string}
-     * @memberof StashTab
-     */
-    id?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof StashTab
-     */
-    index?: number;
-    /**
-     * 
-     * @type {Array<Item>}
-     * @memberof StashTab
-     */
-    items?: Array<Item>;
-    /**
-     * 
-     * @type {StashTabMetadata}
-     * @memberof StashTab
-     */
-    metadata?: StashTabMetadata;
-    /**
-     * 
-     * @type {string}
-     * @memberof StashTab
-     */
-    name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof StashTab
-     */
-    parent?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof StashTab
-     */
-    type?: string;
+  /**
+   *
+   * @type {Array<StashTab>}
+   * @memberof StashTab
+   */
+  children?: Array<StashTab>;
+  /**
+   *
+   * @type {string}
+   * @memberof StashTab
+   */
+  id?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof StashTab
+   */
+  index?: number;
+  /**
+   *
+   * @type {Array<Item>}
+   * @memberof StashTab
+   */
+  items?: Array<Item>;
+  /**
+   *
+   * @type {StashTabMetadata}
+   * @memberof StashTab
+   */
+  metadata?: StashTabMetadata;
+  /**
+   *
+   * @type {string}
+   * @memberof StashTab
+   */
+  name?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof StashTab
+   */
+  parent?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof StashTab
+   */
+  type?: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface StashTabMetadata
  */
 export interface StashTabMetadata {
-    /**
-     * 
-     * @type {string}
-     * @memberof StashTabMetadata
-     */
-    colour?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof StashTabMetadata
-     */
-    folder?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof StashTabMetadata
-     */
-    items?: number;
-    /**
-     * 
-     * @type {any}
-     * @memberof StashTabMetadata
-     */
-    layout?: any;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof StashTabMetadata
-     */
-    _public?: boolean;
+  /**
+   *
+   * @type {string}
+   * @memberof StashTabMetadata
+   */
+  colour?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof StashTabMetadata
+   */
+  folder?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof StashTabMetadata
+   */
+  items?: number;
+  /**
+   *
+   * @type {any}
+   * @memberof StashTabMetadata
+   */
+  layout?: any;
+  /**
+   *
+   * @type {boolean}
+   * @memberof StashTabMetadata
+   */
+  _public?: boolean;
 }
 
 /**
- * 
+ *
  * @export
  * @interface Submission
  */
 export interface Submission {
-    /**
-     * 
-     * @type {ApprovalStatus}
-     * @memberof Submission
-     */
-    approval_status: ApprovalStatus;
-    /**
-     * 
-     * @type {string}
-     * @memberof Submission
-     */
-    comment: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof Submission
-     */
-    id: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Submission
-     */
-    number: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Submission
-     */
-    objective_id: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof Submission
-     */
-    proof: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Submission
-     */
-    review_comment?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof Submission
-     */
-    reviewer_id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Submission
-     */
-    team_id: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof Submission
-     */
-    timestamp: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof Submission
-     */
-    user_id: number;
+  /**
+   *
+   * @type {ApprovalStatus}
+   * @memberof Submission
+   */
+  approval_status: ApprovalStatus;
+  /**
+   *
+   * @type {string}
+   * @memberof Submission
+   */
+  comment: string;
+  /**
+   *
+   * @type {number}
+   * @memberof Submission
+   */
+  id: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Submission
+   */
+  number: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Submission
+   */
+  objective_id: number;
+  /**
+   *
+   * @type {string}
+   * @memberof Submission
+   */
+  proof: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Submission
+   */
+  review_comment?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof Submission
+   */
+  reviewer_id?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Submission
+   */
+  team_id: number;
+  /**
+   *
+   * @type {string}
+   * @memberof Submission
+   */
+  timestamp: string;
+  /**
+   *
+   * @type {number}
+   * @memberof Submission
+   */
+  user_id: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface SubmissionCreate
  */
 export interface SubmissionCreate {
-    /**
-     * 
-     * @type {string}
-     * @memberof SubmissionCreate
-     */
-    comment?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SubmissionCreate
-     */
-    id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SubmissionCreate
-     */
-    number?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SubmissionCreate
-     */
-    objective_id: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof SubmissionCreate
-     */
-    proof?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SubmissionCreate
-     */
-    timestamp: string;
+  /**
+   *
+   * @type {string}
+   * @memberof SubmissionCreate
+   */
+  comment?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof SubmissionCreate
+   */
+  id?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof SubmissionCreate
+   */
+  number?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof SubmissionCreate
+   */
+  objective_id: number;
+  /**
+   *
+   * @type {string}
+   * @memberof SubmissionCreate
+   */
+  proof?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof SubmissionCreate
+   */
+  timestamp: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface SubmissionReview
  */
 export interface SubmissionReview {
-    /**
-     * 
-     * @type {SubmissionReviewApprovalStatus}
-     * @memberof SubmissionReview
-     */
-    approval_status: SubmissionReviewApprovalStatus;
-    /**
-     * 
-     * @type {string}
-     * @memberof SubmissionReview
-     */
-    review_comment?: string;
+  /**
+   *
+   * @type {SubmissionReviewApprovalStatus}
+   * @memberof SubmissionReview
+   */
+  approval_status: SubmissionReviewApprovalStatus;
+  /**
+   *
+   * @type {string}
+   * @memberof SubmissionReview
+   */
+  review_comment?: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface SubmissionReviewApprovalStatus
  */
-export interface SubmissionReviewApprovalStatus {
-}
+export interface SubmissionReviewApprovalStatus {}
 
 /**
- * 
+ *
  * @export
  * @interface Team
  */
 export interface Team {
-    /**
-     * 
-     * @type {string}
-     * @memberof Team
-     */
-    abbreviation?: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Team
-     */
-    allowed_classes: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof Team
-     */
-    color?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Team
-     */
-    discord_role_id?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof Team
-     */
-    event_id: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Team
-     */
-    id: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof Team
-     */
-    name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Team
+   */
+  abbreviation?: string;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof Team
+   */
+  allowed_classes: Array<string>;
+  /**
+   *
+   * @type {string}
+   * @memberof Team
+   */
+  color?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Team
+   */
+  discord_role_id?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof Team
+   */
+  event_id: number;
+  /**
+   *
+   * @type {number}
+   * @memberof Team
+   */
+  id: number;
+  /**
+   *
+   * @type {string}
+   * @memberof Team
+   */
+  name: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface TeamCreate
  */
 export interface TeamCreate {
-    /**
-     * 
-     * @type {string}
-     * @memberof TeamCreate
-     */
-    abbreviation?: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof TeamCreate
-     */
-    allowed_classes: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof TeamCreate
-     */
-    color?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TeamCreate
-     */
-    discord_role_id?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof TeamCreate
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof TeamCreate
-     */
-    name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof TeamCreate
+   */
+  abbreviation?: string;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof TeamCreate
+   */
+  allowed_classes: Array<string>;
+  /**
+   *
+   * @type {string}
+   * @memberof TeamCreate
+   */
+  color?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof TeamCreate
+   */
+  discord_role_id?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof TeamCreate
+   */
+  id?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof TeamCreate
+   */
+  name: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface TeamSubmissionCreate
  */
 export interface TeamSubmissionCreate {
-    /**
-     * 
-     * @type {number}
-     * @memberof TeamSubmissionCreate
-     */
-    objective_id: number;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof TeamSubmissionCreate
-     */
-    team_ids: Array<number>;
+  /**
+   *
+   * @type {number}
+   * @memberof TeamSubmissionCreate
+   */
+  objective_id: number;
+  /**
+   *
+   * @type {Array<number>}
+   * @memberof TeamSubmissionCreate
+   */
+  team_ids: Array<number>;
 }
 
 /**
- * 
+ *
  * @export
  * @interface TeamSuggestion
  */
 export interface TeamSuggestion {
-    /**
-     * 
-     * @type {string}
-     * @memberof TeamSuggestion
-     */
-    extra?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof TeamSuggestion
-     */
-    objective_id?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof TeamSuggestion
+   */
+  extra?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof TeamSuggestion
+   */
+  objective_id?: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface TeamUserCreate
  */
 export interface TeamUserCreate {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof TeamUserCreate
-     */
-    is_team_lead?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof TeamUserCreate
-     */
-    team_id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof TeamUserCreate
-     */
-    user_id: number;
+  /**
+   *
+   * @type {boolean}
+   * @memberof TeamUserCreate
+   */
+  is_team_lead?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof TeamUserCreate
+   */
+  team_id?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof TeamUserCreate
+   */
+  user_id: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface Timing
  */
 export interface Timing {
-    /**
-     * 
-     * @type {string}
-     * @memberof Timing
-     */
-    description: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof Timing
-     */
-    duration_seconds: number;
-    /**
-     * 
-     * @type {TimingKey}
-     * @memberof Timing
-     */
-    key: TimingKey;
+  /**
+   *
+   * @type {string}
+   * @memberof Timing
+   */
+  description: string;
+  /**
+   *
+   * @type {number}
+   * @memberof Timing
+   */
+  duration_seconds: number;
+  /**
+   *
+   * @type {TimingKey}
+   * @memberof Timing
+   */
+  key: TimingKey;
 }
 
 /**
- * 
+ *
  * @export
  * @interface TimingCreate
  */
 export interface TimingCreate {
-    /**
-     * 
-     * @type {number}
-     * @memberof TimingCreate
-     */
-    duration_seconds: number;
-    /**
-     * 
-     * @type {TimingKey}
-     * @memberof TimingCreate
-     */
-    key: TimingKey;
+  /**
+   *
+   * @type {number}
+   * @memberof TimingCreate
+   */
+  duration_seconds: number;
+  /**
+   *
+   * @type {TimingKey}
+   * @memberof TimingCreate
+   */
+  key: TimingKey;
 }
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
 export enum TimingKey {
-    delay_after_character_is_refetched = 'delay_after_character_is_refetched',
-    delay_after_po_relevant_character_is_refetched = 'delay_after_po_relevant_character_is_refetched',
-    delay_after_inactive_character_is_refetched = 'delay_after_inactive_character_is_refetched',
-    delay_after_league_account_is_refetched = 'delay_after_league_account_is_refetched',
-    delay_after_po_relevant_league_account_is_refetched = 'delay_after_po_relevant_league_account_is_refetched',
-    delay_after_inactive_league_account_is_refetched = 'delay_after_inactive_league_account_is_refetched',
-    delay_after_pob_is_recalculated = 'delay_after_pob_is_recalculated',
-    delay_after_character_name_is_refetched = 'delay_after_character_name_is_refetched',
-    character_inactivity_duration = 'character_inactivity_duration',
-    ladder_update_interval = 'ladder_update_interval',
-    guildstash_update_interval = 'guildstash_update_interval',
-    public_stash_update_interval = 'public_stash_update_interval'
+  delay_after_character_is_refetched = "delay_after_character_is_refetched",
+  delay_after_po_relevant_character_is_refetched = "delay_after_po_relevant_character_is_refetched",
+  delay_after_inactive_character_is_refetched = "delay_after_inactive_character_is_refetched",
+  delay_after_league_account_is_refetched = "delay_after_league_account_is_refetched",
+  delay_after_po_relevant_league_account_is_refetched = "delay_after_po_relevant_league_account_is_refetched",
+  delay_after_inactive_league_account_is_refetched = "delay_after_inactive_league_account_is_refetched",
+  delay_after_pob_is_recalculated = "delay_after_pob_is_recalculated",
+  delay_after_character_name_is_refetched = "delay_after_character_name_is_refetched",
+  character_inactivity_duration = "character_inactivity_duration",
+  ladder_update_interval = "ladder_update_interval",
+  guildstash_update_interval = "guildstash_update_interval",
+  public_stash_update_interval = "public_stash_update_interval",
 }
 
 /**
- * 
+ *
  * @export
  * @interface TwitchStream
  */
 export interface TwitchStream {
-    /**
-     * 
-     * @type {number}
-     * @memberof TwitchStream
-     */
-    backend_user_id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof TwitchStream
-     */
-    game_id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TwitchStream
-     */
-    game_name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TwitchStream
-     */
-    id?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof TwitchStream
-     */
-    is_mature?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof TwitchStream
-     */
-    language?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TwitchStream
-     */
-    started_at?: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof TwitchStream
-     */
-    tag_ids?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof TwitchStream
-     */
-    tags?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof TwitchStream
-     */
-    thumbnail_url?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TwitchStream
-     */
-    title?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TwitchStream
-     */
-    type?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TwitchStream
-     */
-    user_id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TwitchStream
-     */
-    user_login?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TwitchStream
-     */
-    user_name?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof TwitchStream
-     */
-    viewer_count?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof TwitchStream
+   */
+  backend_user_id?: number;
+  /**
+   *
+   * @type {string}
+   * @memberof TwitchStream
+   */
+  game_id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof TwitchStream
+   */
+  game_name?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof TwitchStream
+   */
+  id?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof TwitchStream
+   */
+  is_mature?: boolean;
+  /**
+   *
+   * @type {string}
+   * @memberof TwitchStream
+   */
+  language?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof TwitchStream
+   */
+  started_at?: string;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof TwitchStream
+   */
+  tag_ids?: Array<string>;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof TwitchStream
+   */
+  tags?: Array<string>;
+  /**
+   *
+   * @type {string}
+   * @memberof TwitchStream
+   */
+  thumbnail_url?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof TwitchStream
+   */
+  title?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof TwitchStream
+   */
+  type?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof TwitchStream
+   */
+  user_id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof TwitchStream
+   */
+  user_login?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof TwitchStream
+   */
+  user_name?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof TwitchStream
+   */
+  viewer_count?: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface UpdateItemWish
  */
 export interface UpdateItemWish {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof UpdateItemWish
-     */
-    build_enabling?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof UpdateItemWish
-     */
-    fulfilled?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof UpdateItemWish
-     */
-    priority?: number;
+  /**
+   *
+   * @type {boolean}
+   * @memberof UpdateItemWish
+   */
+  build_enabling?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof UpdateItemWish
+   */
+  fulfilled?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof UpdateItemWish
+   */
+  priority?: number;
 }
 
 /**
- * 
+ *
  * @export
  * @interface User
  */
 export interface User {
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    account_name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    discord_id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    discord_name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    display_name: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof User
-     */
-    id: number;
-    /**
-     * 
-     * @type {Array<Permission>}
-     * @memberof User
-     */
-    permissions: Array<Permission>;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    token_expiry_timestamp?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    twitch_id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    twitch_name?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof User
+   */
+  account_name?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof User
+   */
+  discord_id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof User
+   */
+  discord_name?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof User
+   */
+  display_name: string;
+  /**
+   *
+   * @type {number}
+   * @memberof User
+   */
+  id: number;
+  /**
+   *
+   * @type {Array<Permission>}
+   * @memberof User
+   */
+  permissions: Array<Permission>;
+  /**
+   *
+   * @type {string}
+   * @memberof User
+   */
+  token_expiry_timestamp?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof User
+   */
+  twitch_id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof User
+   */
+  twitch_name?: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface UserUpdate
  */
 export interface UserUpdate {
-    /**
-     * 
-     * @type {string}
-     * @memberof UserUpdate
-     */
-    display_name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserUpdate
+   */
+  display_name: string;
 }
 
 /**
- * 
+ *
  * @export
  * @interface ValidationRequest
  */
 export interface ValidationRequest {
-    /**
-     * 
-     * @type {number}
-     * @memberof ValidationRequest
-     */
-    timeout_seconds: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ValidationRequest
+   */
+  timeout_seconds: number;
 }
-
 
 /**
  * AchievementApi - fetch parameter creator
  * @export
  */
-export const AchievementApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Add new achievement to the system.
-         * @summary Add achievement
-         * @param {AchievementCreate} achievements Achievement to add
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addAchievement(achievements: AchievementCreate, options: any = {}): FetchArgs {
-            // verify required parameter 'achievements' is not null or undefined
-            if (achievements === null || achievements === undefined) {
-                throw new RequiredError('achievements','Required parameter achievements was null or undefined when calling addAchievement.');
-            }
-            const localVarPath = `/achievements`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const AchievementApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Add new achievement to the system.
+     * @summary Add achievement
+     * @param {AchievementCreate} achievements Achievement to add
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addAchievement(
+      achievements: AchievementCreate,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'achievements' is not null or undefined
+      if (achievements === null || achievements === undefined) {
+        throw new RequiredError(
+          "achievements",
+          "Required parameter achievements was null or undefined when calling addAchievement.",
+        );
+      }
+      const localVarPath = `/achievements`;
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "POST" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"AchievementCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(achievements || {}) : (achievements || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"AchievementCreate" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(achievements || {})
+        : achievements || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Retrieve all user achievements in the system.
-         * @summary Get achievements
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAchievements(options: any = {}): FetchArgs {
-            const localVarPath = `/achievements`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Retrieve all user achievements in the system.
+     * @summary Get achievements
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAchievements(options: any = {}): FetchArgs {
+      const localVarPath = `/achievements`;
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Update achievements for all users based on their current progress.
-         * @summary Update achievements
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateAchievements(options: any = {}): FetchArgs {
-            const localVarPath = `/achievements`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PATCH' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Update achievements for all users based on their current progress.
+     * @summary Update achievements
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateAchievements(options: any = {}): FetchArgs {
+      const localVarPath = `/achievements`;
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign(
+        { method: "PATCH" },
+        options,
+      );
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * AchievementApi - functional programming interface
  * @export
  */
-export const AchievementApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Add new achievement to the system.
-         * @summary Add achievement
-         * @param {AchievementCreate} achievements Achievement to add
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addAchievement(achievements: AchievementCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = AchievementApiFetchParamCreator(configuration).addAchievement(achievements, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Retrieve all user achievements in the system.
-         * @summary Get achievements
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAchievements(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<{ [key: string]: Array<number>; }> {
-            const localVarFetchArgs = AchievementApiFetchParamCreator(configuration).getAchievements(options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Update achievements for all users based on their current progress.
-         * @summary Update achievements
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateAchievements(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = AchievementApiFetchParamCreator(configuration).updateAchievements(options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const AchievementApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Add new achievement to the system.
+     * @summary Add achievement
+     * @param {AchievementCreate} achievements Achievement to add
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addAchievement(
+      achievements: AchievementCreate,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      const localVarFetchArgs = AchievementApiFetchParamCreator(
+        configuration,
+      ).addAchievement(achievements, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Retrieve all user achievements in the system.
+     * @summary Get achievements
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAchievements(
+      options?: any,
+    ): (
+      fetch?: FetchAPI,
+      basePath?: string,
+    ) => Promise<{ [key: string]: Array<number> }> {
+      const localVarFetchArgs =
+        AchievementApiFetchParamCreator(configuration).getAchievements(options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Update achievements for all users based on their current progress.
+     * @summary Update achievements
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateAchievements(
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      const localVarFetchArgs =
+        AchievementApiFetchParamCreator(configuration).updateAchievements(
+          options,
+        );
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * AchievementApi - factory interface
  * @export
  */
-export const AchievementApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Add new achievement to the system.
-         * @summary Add achievement
-         * @param {AchievementCreate} achievements Achievement to add
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addAchievement(achievements: AchievementCreate, options?: any) {
-            return AchievementApiFp(configuration).addAchievement(achievements, options)(fetch, basePath);
-        },
-        /**
-         * Retrieve all user achievements in the system.
-         * @summary Get achievements
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAchievements(options?: any) {
-            return AchievementApiFp(configuration).getAchievements(options)(fetch, basePath);
-        },
-        /**
-         * Update achievements for all users based on their current progress.
-         * @summary Update achievements
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateAchievements(options?: any) {
-            return AchievementApiFp(configuration).updateAchievements(options)(fetch, basePath);
-        },
-    };
+export const AchievementApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Add new achievement to the system.
+     * @summary Add achievement
+     * @param {AchievementCreate} achievements Achievement to add
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addAchievement(achievements: AchievementCreate, options?: any) {
+      return AchievementApiFp(configuration).addAchievement(
+        achievements,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Retrieve all user achievements in the system.
+     * @summary Get achievements
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAchievements(options?: any) {
+      return AchievementApiFp(configuration).getAchievements(options)(
+        fetch,
+        basePath,
+      );
+    },
+    /**
+     * Update achievements for all users based on their current progress.
+     * @summary Update achievements
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateAchievements(options?: any) {
+      return AchievementApiFp(configuration).updateAchievements(options)(
+        fetch,
+        basePath,
+      );
+    },
+  };
 };
 
 /**
@@ -4698,215 +4792,320 @@ export const AchievementApiFactory = function (configuration?: Configuration, fe
  * @extends {BaseAPI}
  */
 export class AchievementApi extends BaseAPI {
-    /**
-     * Add new achievement to the system.
-     * @summary Add achievement
-     * @param {AchievementCreate} achievements Achievement to add
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AchievementApi
-     */
-    public addAchievement(achievements: AchievementCreate, options?: any) {
-        return AchievementApiFp(this.configuration).addAchievement(achievements, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Add new achievement to the system.
+   * @summary Add achievement
+   * @param {AchievementCreate} achievements Achievement to add
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AchievementApi
+   */
+  public addAchievement(achievements: AchievementCreate, options?: any) {
+    return AchievementApiFp(this.configuration).addAchievement(
+      achievements,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Retrieve all user achievements in the system.
-     * @summary Get achievements
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AchievementApi
-     */
-    public getAchievements(options?: any) {
-        return AchievementApiFp(this.configuration).getAchievements(options)(this.fetch, this.basePath);
-    }
+  /**
+   * Retrieve all user achievements in the system.
+   * @summary Get achievements
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AchievementApi
+   */
+  public getAchievements(options?: any) {
+    return AchievementApiFp(this.configuration).getAchievements(options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 
-    /**
-     * Update achievements for all users based on their current progress.
-     * @summary Update achievements
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AchievementApi
-     */
-    public updateAchievements(options?: any) {
-        return AchievementApiFp(this.configuration).updateAchievements(options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Update achievements for all users based on their current progress.
+   * @summary Update achievements
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AchievementApi
+   */
+  public updateAchievements(options?: any) {
+    return AchievementApiFp(this.configuration).updateAchievements(options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 }
 
 /**
  * ActivityApi - fetch parameter creator
  * @export
  */
-export const ActivityApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Get calculated active times for all users in an event
-         * @param {number} event_id Event ID
-         * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEventActivities(event_id: number, threshold_seconds?: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getEventActivities.');
-            }
-            const localVarPath = `/events/{event_id}/activity`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const ActivityApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Get calculated active times for all users in an event
+     * @param {number} event_id Event ID
+     * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEventActivities(
+      event_id: number,
+      threshold_seconds?: number,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getEventActivities.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/activity`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            if (threshold_seconds !== undefined) {
-                localVarQueryParameter['threshold_seconds'] = threshold_seconds;
-            }
+      if (threshold_seconds !== undefined) {
+        localVarQueryParameter["threshold_seconds"] = threshold_seconds;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Get calculated active times for a user in an event
-         * @param {number} event_id Event ID
-         * @param {number} user_id User ID
-         * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEventActivitiesForUser(event_id: number, user_id: number, threshold_seconds?: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getEventActivitiesForUser.');
-            }
-            // verify required parameter 'user_id' is not null or undefined
-            if (user_id === null || user_id === undefined) {
-                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling getEventActivitiesForUser.');
-            }
-            const localVarPath = `/events/{event_id}/activity/{user_id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Get calculated active times for a user in an event
+     * @param {number} event_id Event ID
+     * @param {number} user_id User ID
+     * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEventActivitiesForUser(
+      event_id: number,
+      user_id: number,
+      threshold_seconds?: number,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getEventActivitiesForUser.",
+        );
+      }
+      // verify required parameter 'user_id' is not null or undefined
+      if (user_id === null || user_id === undefined) {
+        throw new RequiredError(
+          "user_id",
+          "Required parameter user_id was null or undefined when calling getEventActivitiesForUser.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/activity/{user_id}`
+        .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+        .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            if (threshold_seconds !== undefined) {
-                localVarQueryParameter['threshold_seconds'] = threshold_seconds;
-            }
+      if (threshold_seconds !== undefined) {
+        localVarQueryParameter["threshold_seconds"] = threshold_seconds;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * ActivityApi - functional programming interface
  * @export
  */
-export const ActivityApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Get calculated active times for all users in an event
-         * @param {number} event_id Event ID
-         * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEventActivities(event_id: number, threshold_seconds?: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<{ [key: string]: number; }> {
-            const localVarFetchArgs = ActivityApiFetchParamCreator(configuration).getEventActivities(event_id, threshold_seconds, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Get calculated active times for a user in an event
-         * @param {number} event_id Event ID
-         * @param {number} user_id User ID
-         * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEventActivitiesForUser(event_id: number, user_id: number, threshold_seconds?: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<number> {
-            const localVarFetchArgs = ActivityApiFetchParamCreator(configuration).getEventActivitiesForUser(event_id, user_id, threshold_seconds, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const ActivityApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Get calculated active times for all users in an event
+     * @param {number} event_id Event ID
+     * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEventActivities(
+      event_id: number,
+      threshold_seconds?: number,
+      options?: any,
+    ): (
+      fetch?: FetchAPI,
+      basePath?: string,
+    ) => Promise<{ [key: string]: number }> {
+      const localVarFetchArgs = ActivityApiFetchParamCreator(
+        configuration,
+      ).getEventActivities(event_id, threshold_seconds, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Get calculated active times for a user in an event
+     * @param {number} event_id Event ID
+     * @param {number} user_id User ID
+     * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEventActivitiesForUser(
+      event_id: number,
+      user_id: number,
+      threshold_seconds?: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<number> {
+      const localVarFetchArgs = ActivityApiFetchParamCreator(
+        configuration,
+      ).getEventActivitiesForUser(
+        event_id,
+        user_id,
+        threshold_seconds,
+        options,
+      );
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * ActivityApi - factory interface
  * @export
  */
-export const ActivityApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Get calculated active times for all users in an event
-         * @param {number} event_id Event ID
-         * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEventActivities(event_id: number, threshold_seconds?: number, options?: any) {
-            return ActivityApiFp(configuration).getEventActivities(event_id, threshold_seconds, options)(fetch, basePath);
-        },
-        /**
-         * Get calculated active times for a user in an event
-         * @param {number} event_id Event ID
-         * @param {number} user_id User ID
-         * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEventActivitiesForUser(event_id: number, user_id: number, threshold_seconds?: number, options?: any) {
-            return ActivityApiFp(configuration).getEventActivitiesForUser(event_id, user_id, threshold_seconds, options)(fetch, basePath);
-        },
-    };
+export const ActivityApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Get calculated active times for all users in an event
+     * @param {number} event_id Event ID
+     * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEventActivities(
+      event_id: number,
+      threshold_seconds?: number,
+      options?: any,
+    ) {
+      return ActivityApiFp(configuration).getEventActivities(
+        event_id,
+        threshold_seconds,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Get calculated active times for a user in an event
+     * @param {number} event_id Event ID
+     * @param {number} user_id User ID
+     * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEventActivitiesForUser(
+      event_id: number,
+      user_id: number,
+      threshold_seconds?: number,
+      options?: any,
+    ) {
+      return ActivityApiFp(configuration).getEventActivitiesForUser(
+        event_id,
+        user_id,
+        threshold_seconds,
+        options,
+      )(fetch, basePath);
+    },
+  };
 };
 
 /**
@@ -4916,121 +5115,173 @@ export const ActivityApiFactory = function (configuration?: Configuration, fetch
  * @extends {BaseAPI}
  */
 export class ActivityApi extends BaseAPI {
-    /**
-     * Get calculated active times for all users in an event
-     * @param {number} event_id Event ID
-     * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ActivityApi
-     */
-    public getEventActivities(event_id: number, threshold_seconds?: number, options?: any) {
-        return ActivityApiFp(this.configuration).getEventActivities(event_id, threshold_seconds, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Get calculated active times for all users in an event
+   * @param {number} event_id Event ID
+   * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ActivityApi
+   */
+  public getEventActivities(
+    event_id: number,
+    threshold_seconds?: number,
+    options?: any,
+  ) {
+    return ActivityApiFp(this.configuration).getEventActivities(
+      event_id,
+      threshold_seconds,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Get calculated active times for a user in an event
-     * @param {number} event_id Event ID
-     * @param {number} user_id User ID
-     * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ActivityApi
-     */
-    public getEventActivitiesForUser(event_id: number, user_id: number, threshold_seconds?: number, options?: any) {
-        return ActivityApiFp(this.configuration).getEventActivitiesForUser(event_id, user_id, threshold_seconds, options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Get calculated active times for a user in an event
+   * @param {number} event_id Event ID
+   * @param {number} user_id User ID
+   * @param {number} [threshold_seconds] Threshold in seconds to consider a user active before and after an activity (default: 300)
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ActivityApi
+   */
+  public getEventActivitiesForUser(
+    event_id: number,
+    user_id: number,
+    threshold_seconds?: number,
+    options?: any,
+  ) {
+    return ActivityApiFp(this.configuration).getEventActivitiesForUser(
+      event_id,
+      user_id,
+      threshold_seconds,
+      options,
+    )(this.fetch, this.basePath);
+  }
 }
 
 /**
  * AtlasApi - fetch parameter creator
  * @export
  */
-export const AtlasApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Get atlas trees for your team for an event
-         * @param {number} event_id Event ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTeamAtlasesForEvent(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getTeamAtlasesForEvent.');
-            }
-            const localVarPath = `/events/{event_id}/atlas`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const AtlasApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Get atlas trees for your team for an event
+     * @param {number} event_id Event ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTeamAtlasesForEvent(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getTeamAtlasesForEvent.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/atlas`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * AtlasApi - functional programming interface
  * @export
  */
-export const AtlasApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Get atlas trees for your team for an event
-         * @param {number} event_id Event ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTeamAtlasesForEvent(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Atlas>> {
-            const localVarFetchArgs = AtlasApiFetchParamCreator(configuration).getTeamAtlasesForEvent(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const AtlasApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Get atlas trees for your team for an event
+     * @param {number} event_id Event ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTeamAtlasesForEvent(
+      event_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Atlas>> {
+      const localVarFetchArgs = AtlasApiFetchParamCreator(
+        configuration,
+      ).getTeamAtlasesForEvent(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * AtlasApi - factory interface
  * @export
  */
-export const AtlasApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Get atlas trees for your team for an event
-         * @param {number} event_id Event ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTeamAtlasesForEvent(event_id: number, options?: any) {
-            return AtlasApiFp(configuration).getTeamAtlasesForEvent(event_id, options)(fetch, basePath);
-        },
-    };
+export const AtlasApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Get atlas trees for your team for an event
+     * @param {number} event_id Event ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTeamAtlasesForEvent(event_id: number, options?: any) {
+      return AtlasApiFp(configuration).getTeamAtlasesForEvent(
+        event_id,
+        options,
+      )(fetch, basePath);
+    },
+  };
 };
 
 /**
@@ -5040,343 +5291,524 @@ export const AtlasApiFactory = function (configuration?: Configuration, fetch?: 
  * @extends {BaseAPI}
  */
 export class AtlasApi extends BaseAPI {
-    /**
-     * Get atlas trees for your team for an event
-     * @param {number} event_id Event ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AtlasApi
-     */
-    public getTeamAtlasesForEvent(event_id: number, options?: any) {
-        return AtlasApiFp(this.configuration).getTeamAtlasesForEvent(event_id, options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Get atlas trees for your team for an event
+   * @param {number} event_id Event ID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AtlasApi
+   */
+  public getTeamAtlasesForEvent(event_id: number, options?: any) {
+    return AtlasApiFp(this.configuration).getTeamAtlasesForEvent(
+      event_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 }
 
 /**
  * CharactersApi - fetch parameter creator
  * @export
  */
-export const CharactersApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Get all character data for an event for a user
-         * @param {number} user_id User ID
-         * @param {string} character_id Character ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharacterHistory(user_id: number, character_id: string, options: any = {}): FetchArgs {
-            // verify required parameter 'user_id' is not null or undefined
-            if (user_id === null || user_id === undefined) {
-                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling getCharacterHistory.');
-            }
-            // verify required parameter 'character_id' is not null or undefined
-            if (character_id === null || character_id === undefined) {
-                throw new RequiredError('character_id','Required parameter character_id was null or undefined when calling getCharacterHistory.');
-            }
-            const localVarPath = `/users/{user_id}/characters/{character_id}`
-                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)))
-                .replace(`{${"character_id"}}`, encodeURIComponent(String(character_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const CharactersApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Get all character data for an event for a user
+     * @param {number} user_id User ID
+     * @param {string} character_id Character ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getCharacterHistory(
+      user_id: number,
+      character_id: string,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'user_id' is not null or undefined
+      if (user_id === null || user_id === undefined) {
+        throw new RequiredError(
+          "user_id",
+          "Required parameter user_id was null or undefined when calling getCharacterHistory.",
+        );
+      }
+      // verify required parameter 'character_id' is not null or undefined
+      if (character_id === null || character_id === undefined) {
+        throw new RequiredError(
+          "character_id",
+          "Required parameter character_id was null or undefined when calling getCharacterHistory.",
+        );
+      }
+      const localVarPath = `/users/{user_id}/characters/{character_id}`
+        .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)))
+        .replace(
+          `{${"character_id"}}`,
+          encodeURIComponent(String(character_id)),
+        );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Get all characters for an event
-         * @param {number} event_id Event ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharactersForEvent(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getCharactersForEvent.');
-            }
-            const localVarPath = `/events/{event_id}/characters`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Get all characters for an event
+     * @param {number} event_id Event ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getCharactersForEvent(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getCharactersForEvent.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/characters`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Get all PoB exports for a character
-         * @param {number} user_id User ID
-         * @param {string} character_id Character ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getPoBs(user_id: number, character_id: string, options: any = {}): FetchArgs {
-            // verify required parameter 'user_id' is not null or undefined
-            if (user_id === null || user_id === undefined) {
-                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling getPoBs.');
-            }
-            // verify required parameter 'character_id' is not null or undefined
-            if (character_id === null || character_id === undefined) {
-                throw new RequiredError('character_id','Required parameter character_id was null or undefined when calling getPoBs.');
-            }
-            const localVarPath = `/users/{user_id}/characters/{character_id}/pobs`
-                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)))
-                .replace(`{${"character_id"}}`, encodeURIComponent(String(character_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Get all PoB exports for a character
+     * @param {number} user_id User ID
+     * @param {string} character_id Character ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getPoBs(
+      user_id: number,
+      character_id: string,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'user_id' is not null or undefined
+      if (user_id === null || user_id === undefined) {
+        throw new RequiredError(
+          "user_id",
+          "Required parameter user_id was null or undefined when calling getPoBs.",
+        );
+      }
+      // verify required parameter 'character_id' is not null or undefined
+      if (character_id === null || character_id === undefined) {
+        throw new RequiredError(
+          "character_id",
+          "Required parameter character_id was null or undefined when calling getPoBs.",
+        );
+      }
+      const localVarPath = `/users/{user_id}/characters/{character_id}/pobs`
+        .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)))
+        .replace(
+          `{${"character_id"}}`,
+          encodeURIComponent(String(character_id)),
+        );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches all event characters for a user
-         * @param {number} user_id User Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserCharacters(user_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'user_id' is not null or undefined
-            if (user_id === null || user_id === undefined) {
-                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling getUserCharacters.');
-            }
-            const localVarPath = `/users/{user_id}/characters`
-                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Fetches all event characters for a user
+     * @param {number} user_id User Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUserCharacters(user_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'user_id' is not null or undefined
+      if (user_id === null || user_id === undefined) {
+        throw new RequiredError(
+          "user_id",
+          "Required parameter user_id was null or undefined when calling getUserCharacters.",
+        );
+      }
+      const localVarPath = `/users/{user_id}/characters`.replace(
+        `{${"user_id"}}`,
+        encodeURIComponent(String(user_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Update character details
-         * @param {number} user_id User ID
-         * @param {string} character_id Character ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateCharacter(user_id: number, character_id: string, options: any = {}): FetchArgs {
-            // verify required parameter 'user_id' is not null or undefined
-            if (user_id === null || user_id === undefined) {
-                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling updateCharacter.');
-            }
-            // verify required parameter 'character_id' is not null or undefined
-            if (character_id === null || character_id === undefined) {
-                throw new RequiredError('character_id','Required parameter character_id was null or undefined when calling updateCharacter.');
-            }
-            const localVarPath = `/users/{user_id}/characters/{character_id}`
-                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)))
-                .replace(`{${"character_id"}}`, encodeURIComponent(String(character_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PATCH' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Update character details
+     * @param {number} user_id User ID
+     * @param {string} character_id Character ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateCharacter(
+      user_id: number,
+      character_id: string,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'user_id' is not null or undefined
+      if (user_id === null || user_id === undefined) {
+        throw new RequiredError(
+          "user_id",
+          "Required parameter user_id was null or undefined when calling updateCharacter.",
+        );
+      }
+      // verify required parameter 'character_id' is not null or undefined
+      if (character_id === null || character_id === undefined) {
+        throw new RequiredError(
+          "character_id",
+          "Required parameter character_id was null or undefined when calling updateCharacter.",
+        );
+      }
+      const localVarPath = `/users/{user_id}/characters/{character_id}`
+        .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)))
+        .replace(
+          `{${"character_id"}}`,
+          encodeURIComponent(String(character_id)),
+        );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign(
+        { method: "PATCH" },
+        options,
+      );
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * CharactersApi - functional programming interface
  * @export
  */
-export const CharactersApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Get all character data for an event for a user
-         * @param {number} user_id User ID
-         * @param {string} character_id Character ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharacterHistory(user_id: number, character_id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<CharacterStat>> {
-            const localVarFetchArgs = CharactersApiFetchParamCreator(configuration).getCharacterHistory(user_id, character_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Get all characters for an event
-         * @param {number} event_id Event ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharactersForEvent(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Character>> {
-            const localVarFetchArgs = CharactersApiFetchParamCreator(configuration).getCharactersForEvent(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Get all PoB exports for a character
-         * @param {number} user_id User ID
-         * @param {string} character_id Character ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getPoBs(user_id: number, character_id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<PoB>> {
-            const localVarFetchArgs = CharactersApiFetchParamCreator(configuration).getPoBs(user_id, character_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches all event characters for a user
-         * @param {number} user_id User Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserCharacters(user_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Character>> {
-            const localVarFetchArgs = CharactersApiFetchParamCreator(configuration).getUserCharacters(user_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Update character details
-         * @param {number} user_id User ID
-         * @param {string} character_id Character ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateCharacter(user_id: number, character_id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Character> {
-            const localVarFetchArgs = CharactersApiFetchParamCreator(configuration).updateCharacter(user_id, character_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const CharactersApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Get all character data for an event for a user
+     * @param {number} user_id User ID
+     * @param {string} character_id Character ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getCharacterHistory(
+      user_id: number,
+      character_id: string,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<CharacterStat>> {
+      const localVarFetchArgs = CharactersApiFetchParamCreator(
+        configuration,
+      ).getCharacterHistory(user_id, character_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Get all characters for an event
+     * @param {number} event_id Event ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getCharactersForEvent(
+      event_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Character>> {
+      const localVarFetchArgs = CharactersApiFetchParamCreator(
+        configuration,
+      ).getCharactersForEvent(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Get all PoB exports for a character
+     * @param {number} user_id User ID
+     * @param {string} character_id Character ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getPoBs(
+      user_id: number,
+      character_id: string,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<PoB>> {
+      const localVarFetchArgs = CharactersApiFetchParamCreator(
+        configuration,
+      ).getPoBs(user_id, character_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches all event characters for a user
+     * @param {number} user_id User Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUserCharacters(
+      user_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Character>> {
+      const localVarFetchArgs = CharactersApiFetchParamCreator(
+        configuration,
+      ).getUserCharacters(user_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Update character details
+     * @param {number} user_id User ID
+     * @param {string} character_id Character ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateCharacter(
+      user_id: number,
+      character_id: string,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Character> {
+      const localVarFetchArgs = CharactersApiFetchParamCreator(
+        configuration,
+      ).updateCharacter(user_id, character_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * CharactersApi - factory interface
  * @export
  */
-export const CharactersApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Get all character data for an event for a user
-         * @param {number} user_id User ID
-         * @param {string} character_id Character ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharacterHistory(user_id: number, character_id: string, options?: any) {
-            return CharactersApiFp(configuration).getCharacterHistory(user_id, character_id, options)(fetch, basePath);
-        },
-        /**
-         * Get all characters for an event
-         * @param {number} event_id Event ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharactersForEvent(event_id: number, options?: any) {
-            return CharactersApiFp(configuration).getCharactersForEvent(event_id, options)(fetch, basePath);
-        },
-        /**
-         * Get all PoB exports for a character
-         * @param {number} user_id User ID
-         * @param {string} character_id Character ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getPoBs(user_id: number, character_id: string, options?: any) {
-            return CharactersApiFp(configuration).getPoBs(user_id, character_id, options)(fetch, basePath);
-        },
-        /**
-         * Fetches all event characters for a user
-         * @param {number} user_id User Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserCharacters(user_id: number, options?: any) {
-            return CharactersApiFp(configuration).getUserCharacters(user_id, options)(fetch, basePath);
-        },
-        /**
-         * Update character details
-         * @param {number} user_id User ID
-         * @param {string} character_id Character ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateCharacter(user_id: number, character_id: string, options?: any) {
-            return CharactersApiFp(configuration).updateCharacter(user_id, character_id, options)(fetch, basePath);
-        },
-    };
+export const CharactersApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Get all character data for an event for a user
+     * @param {number} user_id User ID
+     * @param {string} character_id Character ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getCharacterHistory(user_id: number, character_id: string, options?: any) {
+      return CharactersApiFp(configuration).getCharacterHistory(
+        user_id,
+        character_id,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Get all characters for an event
+     * @param {number} event_id Event ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getCharactersForEvent(event_id: number, options?: any) {
+      return CharactersApiFp(configuration).getCharactersForEvent(
+        event_id,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Get all PoB exports for a character
+     * @param {number} user_id User ID
+     * @param {string} character_id Character ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getPoBs(user_id: number, character_id: string, options?: any) {
+      return CharactersApiFp(configuration).getPoBs(
+        user_id,
+        character_id,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Fetches all event characters for a user
+     * @param {number} user_id User Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUserCharacters(user_id: number, options?: any) {
+      return CharactersApiFp(configuration).getUserCharacters(user_id, options)(
+        fetch,
+        basePath,
+      );
+    },
+    /**
+     * Update character details
+     * @param {number} user_id User ID
+     * @param {string} character_id Character ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateCharacter(user_id: number, character_id: string, options?: any) {
+      return CharactersApiFp(configuration).updateCharacter(
+        user_id,
+        character_id,
+        options,
+      )(fetch, basePath);
+    },
+  };
 };
 
 /**
@@ -5386,157 +5818,215 @@ export const CharactersApiFactory = function (configuration?: Configuration, fet
  * @extends {BaseAPI}
  */
 export class CharactersApi extends BaseAPI {
-    /**
-     * Get all character data for an event for a user
-     * @param {number} user_id User ID
-     * @param {string} character_id Character ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharactersApi
-     */
-    public getCharacterHistory(user_id: number, character_id: string, options?: any) {
-        return CharactersApiFp(this.configuration).getCharacterHistory(user_id, character_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Get all character data for an event for a user
+   * @param {number} user_id User ID
+   * @param {string} character_id Character ID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof CharactersApi
+   */
+  public getCharacterHistory(
+    user_id: number,
+    character_id: string,
+    options?: any,
+  ) {
+    return CharactersApiFp(this.configuration).getCharacterHistory(
+      user_id,
+      character_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Get all characters for an event
-     * @param {number} event_id Event ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharactersApi
-     */
-    public getCharactersForEvent(event_id: number, options?: any) {
-        return CharactersApiFp(this.configuration).getCharactersForEvent(event_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Get all characters for an event
+   * @param {number} event_id Event ID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof CharactersApi
+   */
+  public getCharactersForEvent(event_id: number, options?: any) {
+    return CharactersApiFp(this.configuration).getCharactersForEvent(
+      event_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Get all PoB exports for a character
-     * @param {number} user_id User ID
-     * @param {string} character_id Character ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharactersApi
-     */
-    public getPoBs(user_id: number, character_id: string, options?: any) {
-        return CharactersApiFp(this.configuration).getPoBs(user_id, character_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Get all PoB exports for a character
+   * @param {number} user_id User ID
+   * @param {string} character_id Character ID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof CharactersApi
+   */
+  public getPoBs(user_id: number, character_id: string, options?: any) {
+    return CharactersApiFp(this.configuration).getPoBs(
+      user_id,
+      character_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Fetches all event characters for a user
-     * @param {number} user_id User Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharactersApi
-     */
-    public getUserCharacters(user_id: number, options?: any) {
-        return CharactersApiFp(this.configuration).getUserCharacters(user_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Fetches all event characters for a user
+   * @param {number} user_id User Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof CharactersApi
+   */
+  public getUserCharacters(user_id: number, options?: any) {
+    return CharactersApiFp(this.configuration).getUserCharacters(
+      user_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Update character details
-     * @param {number} user_id User ID
-     * @param {string} character_id Character ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharactersApi
-     */
-    public updateCharacter(user_id: number, character_id: string, options?: any) {
-        return CharactersApiFp(this.configuration).updateCharacter(user_id, character_id, options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Update character details
+   * @param {number} user_id User ID
+   * @param {string} character_id Character ID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof CharactersApi
+   */
+  public updateCharacter(user_id: number, character_id: string, options?: any) {
+    return CharactersApiFp(this.configuration).updateCharacter(
+      user_id,
+      character_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 }
 
 /**
  * EngagementApi - fetch parameter creator
  * @export
  */
-export const EngagementApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Add a new engagement or increment existing engagement number
-         * @param {EngagementAdd} engagement Engagement to add
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addEngagement(engagement: EngagementAdd, options: any = {}): FetchArgs {
-            // verify required parameter 'engagement' is not null or undefined
-            if (engagement === null || engagement === undefined) {
-                throw new RequiredError('engagement','Required parameter engagement was null or undefined when calling addEngagement.');
-            }
-            const localVarPath = `/engagement`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const EngagementApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Add a new engagement or increment existing engagement number
+     * @param {EngagementAdd} engagement Engagement to add
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addEngagement(engagement: EngagementAdd, options: any = {}): FetchArgs {
+      // verify required parameter 'engagement' is not null or undefined
+      if (engagement === null || engagement === undefined) {
+        throw new RequiredError(
+          "engagement",
+          "Required parameter engagement was null or undefined when calling addEngagement.",
+        );
+      }
+      const localVarPath = `/engagement`;
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "POST" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"EngagementAdd" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(engagement || {}) : (engagement || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"EngagementAdd" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(engagement || {})
+        : engagement || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * EngagementApi - functional programming interface
  * @export
  */
-export const EngagementApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Add a new engagement or increment existing engagement number
-         * @param {EngagementAdd} engagement Engagement to add
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addEngagement(engagement: EngagementAdd, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = EngagementApiFetchParamCreator(configuration).addEngagement(engagement, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const EngagementApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Add a new engagement or increment existing engagement number
+     * @param {EngagementAdd} engagement Engagement to add
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addEngagement(
+      engagement: EngagementAdd,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      const localVarFetchArgs = EngagementApiFetchParamCreator(
+        configuration,
+      ).addEngagement(engagement, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * EngagementApi - factory interface
  * @export
  */
-export const EngagementApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Add a new engagement or increment existing engagement number
-         * @param {EngagementAdd} engagement Engagement to add
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addEngagement(engagement: EngagementAdd, options?: any) {
-            return EngagementApiFp(configuration).addEngagement(engagement, options)(fetch, basePath);
-        },
-    };
+export const EngagementApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Add a new engagement or increment existing engagement number
+     * @param {EngagementAdd} engagement Engagement to add
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addEngagement(engagement: EngagementAdd, options?: any) {
+      return EngagementApiFp(configuration).addEngagement(engagement, options)(
+        fetch,
+        basePath,
+      );
+    },
+  };
 };
 
 /**
@@ -5546,428 +6036,618 @@ export const EngagementApiFactory = function (configuration?: Configuration, fet
  * @extends {BaseAPI}
  */
 export class EngagementApi extends BaseAPI {
-    /**
-     * Add a new engagement or increment existing engagement number
-     * @param {EngagementAdd} engagement Engagement to add
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof EngagementApi
-     */
-    public addEngagement(engagement: EngagementAdd, options?: any) {
-        return EngagementApiFp(this.configuration).addEngagement(engagement, options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Add a new engagement or increment existing engagement number
+   * @param {EngagementAdd} engagement Engagement to add
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof EngagementApi
+   */
+  public addEngagement(engagement: EngagementAdd, options?: any) {
+    return EngagementApiFp(this.configuration).addEngagement(
+      engagement,
+      options,
+    )(this.fetch, this.basePath);
+  }
 }
 
 /**
  * EventApi - fetch parameter creator
  * @export
  */
-export const EventApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Creates or updates an event
-         * @param {EventCreate} event Event to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createEvent(event: EventCreate, options: any = {}): FetchArgs {
-            // verify required parameter 'event' is not null or undefined
-            if (event === null || event === undefined) {
-                throw new RequiredError('event','Required parameter event was null or undefined when calling createEvent.');
-            }
-            const localVarPath = `/events`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const EventApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Creates or updates an event
+     * @param {EventCreate} event Event to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createEvent(event: EventCreate, options: any = {}): FetchArgs {
+      // verify required parameter 'event' is not null or undefined
+      if (event === null || event === undefined) {
+        throw new RequiredError(
+          "event",
+          "Required parameter event was null or undefined when calling createEvent.",
+        );
+      }
+      const localVarPath = `/events`;
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "PUT" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"EventCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(event || {}) : (event || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"EventCreate" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(event || {})
+        : event || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Deletes an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteEvent(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling deleteEvent.');
-            }
-            const localVarPath = `/events/{event_id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Deletes an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteEvent(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling deleteEvent.",
+        );
+      }
+      const localVarPath = `/events/{event_id}`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign(
+        { method: "DELETE" },
+        options,
+      );
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Duplicates an event's configuration
-         * @param {number} event_id Event Id
-         * @param {EventCreate} event Event to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        duplicateEvent(event_id: number, event: EventCreate, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling duplicateEvent.');
-            }
-            // verify required parameter 'event' is not null or undefined
-            if (event === null || event === undefined) {
-                throw new RequiredError('event','Required parameter event was null or undefined when calling duplicateEvent.');
-            }
-            const localVarPath = `/events/{event_id}/duplicate`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Duplicates an event's configuration
+     * @param {number} event_id Event Id
+     * @param {EventCreate} event Event to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    duplicateEvent(
+      event_id: number,
+      event: EventCreate,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling duplicateEvent.",
+        );
+      }
+      // verify required parameter 'event' is not null or undefined
+      if (event === null || event === undefined) {
+        throw new RequiredError(
+          "event",
+          "Required parameter event was null or undefined when calling duplicateEvent.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/duplicate`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "POST" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"EventCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(event || {}) : (event || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"EventCreate" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(event || {})
+        : event || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches an event by id
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEvent(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getEvent.');
-            }
-            const localVarPath = `/events/{event_id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Fetches an event by id
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEvent(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getEvent.",
+        );
+      }
+      const localVarPath = `/events/{event_id}`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Gets the status for an event including the user's application status
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEventStatus(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getEventStatus.');
-            }
-            const localVarPath = `/events/{event_id}/status`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Gets the status for an event including the user's application status
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEventStatus(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getEventStatus.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/status`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches all events
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEvents(options: any = {}): FetchArgs {
-            const localVarPath = `/events`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Fetches all events
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEvents(options: any = {}): FetchArgs {
+      const localVarPath = `/events`;
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * EventApi - functional programming interface
  * @export
  */
-export const EventApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Creates or updates an event
-         * @param {EventCreate} event Event to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createEvent(event: EventCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Event> {
-            const localVarFetchArgs = EventApiFetchParamCreator(configuration).createEvent(event, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Deletes an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteEvent(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = EventApiFetchParamCreator(configuration).deleteEvent(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Duplicates an event's configuration
-         * @param {number} event_id Event Id
-         * @param {EventCreate} event Event to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        duplicateEvent(event_id: number, event: EventCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Event> {
-            const localVarFetchArgs = EventApiFetchParamCreator(configuration).duplicateEvent(event_id, event, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches an event by id
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEvent(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Event> {
-            const localVarFetchArgs = EventApiFetchParamCreator(configuration).getEvent(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Gets the status for an event including the user's application status
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEventStatus(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<EventStatus> {
-            const localVarFetchArgs = EventApiFetchParamCreator(configuration).getEventStatus(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches all events
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEvents(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Event>> {
-            const localVarFetchArgs = EventApiFetchParamCreator(configuration).getEvents(options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const EventApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Creates or updates an event
+     * @param {EventCreate} event Event to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createEvent(
+      event: EventCreate,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Event> {
+      const localVarFetchArgs = EventApiFetchParamCreator(
+        configuration,
+      ).createEvent(event, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Deletes an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteEvent(
+      event_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      const localVarFetchArgs = EventApiFetchParamCreator(
+        configuration,
+      ).deleteEvent(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Duplicates an event's configuration
+     * @param {number} event_id Event Id
+     * @param {EventCreate} event Event to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    duplicateEvent(
+      event_id: number,
+      event: EventCreate,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Event> {
+      const localVarFetchArgs = EventApiFetchParamCreator(
+        configuration,
+      ).duplicateEvent(event_id, event, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches an event by id
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEvent(
+      event_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Event> {
+      const localVarFetchArgs = EventApiFetchParamCreator(
+        configuration,
+      ).getEvent(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Gets the status for an event including the user's application status
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEventStatus(
+      event_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<EventStatus> {
+      const localVarFetchArgs = EventApiFetchParamCreator(
+        configuration,
+      ).getEventStatus(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches all events
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEvents(
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Event>> {
+      const localVarFetchArgs =
+        EventApiFetchParamCreator(configuration).getEvents(options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * EventApi - factory interface
  * @export
  */
-export const EventApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Creates or updates an event
-         * @param {EventCreate} event Event to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createEvent(event: EventCreate, options?: any) {
-            return EventApiFp(configuration).createEvent(event, options)(fetch, basePath);
-        },
-        /**
-         * Deletes an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteEvent(event_id: number, options?: any) {
-            return EventApiFp(configuration).deleteEvent(event_id, options)(fetch, basePath);
-        },
-        /**
-         * Duplicates an event's configuration
-         * @param {number} event_id Event Id
-         * @param {EventCreate} event Event to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        duplicateEvent(event_id: number, event: EventCreate, options?: any) {
-            return EventApiFp(configuration).duplicateEvent(event_id, event, options)(fetch, basePath);
-        },
-        /**
-         * Fetches an event by id
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEvent(event_id: number, options?: any) {
-            return EventApiFp(configuration).getEvent(event_id, options)(fetch, basePath);
-        },
-        /**
-         * Gets the status for an event including the user's application status
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEventStatus(event_id: number, options?: any) {
-            return EventApiFp(configuration).getEventStatus(event_id, options)(fetch, basePath);
-        },
-        /**
-         * Fetches all events
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEvents(options?: any) {
-            return EventApiFp(configuration).getEvents(options)(fetch, basePath);
-        },
-    };
+export const EventApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Creates or updates an event
+     * @param {EventCreate} event Event to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createEvent(event: EventCreate, options?: any) {
+      return EventApiFp(configuration).createEvent(event, options)(
+        fetch,
+        basePath,
+      );
+    },
+    /**
+     * Deletes an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteEvent(event_id: number, options?: any) {
+      return EventApiFp(configuration).deleteEvent(event_id, options)(
+        fetch,
+        basePath,
+      );
+    },
+    /**
+     * Duplicates an event's configuration
+     * @param {number} event_id Event Id
+     * @param {EventCreate} event Event to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    duplicateEvent(event_id: number, event: EventCreate, options?: any) {
+      return EventApiFp(configuration).duplicateEvent(
+        event_id,
+        event,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Fetches an event by id
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEvent(event_id: number, options?: any) {
+      return EventApiFp(configuration).getEvent(event_id, options)(
+        fetch,
+        basePath,
+      );
+    },
+    /**
+     * Gets the status for an event including the user's application status
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEventStatus(event_id: number, options?: any) {
+      return EventApiFp(configuration).getEventStatus(event_id, options)(
+        fetch,
+        basePath,
+      );
+    },
+    /**
+     * Fetches all events
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEvents(options?: any) {
+      return EventApiFp(configuration).getEvents(options)(fetch, basePath);
+    },
+  };
 };
 
 /**
@@ -5977,851 +6657,100 @@ export const EventApiFactory = function (configuration?: Configuration, fetch?: 
  * @extends {BaseAPI}
  */
 export class EventApi extends BaseAPI {
-    /**
-     * Creates or updates an event
-     * @param {EventCreate} event Event to create
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof EventApi
-     */
-    public createEvent(event: EventCreate, options?: any) {
-        return EventApiFp(this.configuration).createEvent(event, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Creates or updates an event
+   * @param {EventCreate} event Event to create
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof EventApi
+   */
+  public createEvent(event: EventCreate, options?: any) {
+    return EventApiFp(this.configuration).createEvent(event, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 
-    /**
-     * Deletes an event
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof EventApi
-     */
-    public deleteEvent(event_id: number, options?: any) {
-        return EventApiFp(this.configuration).deleteEvent(event_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Deletes an event
+   * @param {number} event_id Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof EventApi
+   */
+  public deleteEvent(event_id: number, options?: any) {
+    return EventApiFp(this.configuration).deleteEvent(event_id, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 
-    /**
-     * Duplicates an event's configuration
-     * @param {number} event_id Event Id
-     * @param {EventCreate} event Event to create
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof EventApi
-     */
-    public duplicateEvent(event_id: number, event: EventCreate, options?: any) {
-        return EventApiFp(this.configuration).duplicateEvent(event_id, event, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Duplicates an event's configuration
+   * @param {number} event_id Event Id
+   * @param {EventCreate} event Event to create
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof EventApi
+   */
+  public duplicateEvent(event_id: number, event: EventCreate, options?: any) {
+    return EventApiFp(this.configuration).duplicateEvent(
+      event_id,
+      event,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Fetches an event by id
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof EventApi
-     */
-    public getEvent(event_id: number, options?: any) {
-        return EventApiFp(this.configuration).getEvent(event_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Fetches an event by id
+   * @param {number} event_id Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof EventApi
+   */
+  public getEvent(event_id: number, options?: any) {
+    return EventApiFp(this.configuration).getEvent(event_id, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 
-    /**
-     * Gets the status for an event including the user's application status
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof EventApi
-     */
-    public getEventStatus(event_id: number, options?: any) {
-        return EventApiFp(this.configuration).getEventStatus(event_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Gets the status for an event including the user's application status
+   * @param {number} event_id Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof EventApi
+   */
+  public getEventStatus(event_id: number, options?: any) {
+    return EventApiFp(this.configuration).getEventStatus(event_id, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 
-    /**
-     * Fetches all events
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof EventApi
-     */
-    public getEvents(options?: any) {
-        return EventApiFp(this.configuration).getEvents(options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Fetches all events
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof EventApi
+   */
+  public getEvents(options?: any) {
+    return EventApiFp(this.configuration).getEvents(options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 }
 
 /**
  * GuildStashApi - fetch parameter creator
  * @export
  */
-export const GuildStashApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Adds a new entry to the guild stash history
-         * @param {number} eventId Event Id
-         * @param {number} guildId Guild Id
-         * @param {GuildStashChangeResponse} guildStashChanges Request body
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addGuildstashHistory(eventId: number, guildId: number, guildStashChanges: GuildStashChangeResponse, options: any = {}): FetchArgs {
-            // verify required parameter 'eventId' is not null or undefined
-            if (eventId === null || eventId === undefined) {
-                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling addGuildstashHistory.');
-            }
-            // verify required parameter 'guildId' is not null or undefined
-            if (guildId === null || guildId === undefined) {
-                throw new RequiredError('guildId','Required parameter guildId was null or undefined when calling addGuildstashHistory.');
-            }
-            // verify required parameter 'guildStashChanges' is not null or undefined
-            if (guildStashChanges === null || guildStashChanges === undefined) {
-                throw new RequiredError('guildStashChanges','Required parameter guildStashChanges was null or undefined when calling addGuildstashHistory.');
-            }
-            const localVarPath = `/{eventId}/guilds/{guildId}/stash-history`
-                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
-                .replace(`{${"guildId"}}`, encodeURIComponent(String(guildId)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"GuildStashChangeResponse" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(guildStashChanges || {}) : (guildStashChanges || "");
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches all guild stash tabs for a user
-         * @param {number} eventId Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getGuildStashForUser(eventId: number, options: any = {}): FetchArgs {
-            // verify required parameter 'eventId' is not null or undefined
-            if (eventId === null || eventId === undefined) {
-                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling getGuildStashForUser.');
-            }
-            const localVarPath = `/{eventId}/guild-stash`
-                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches a specific guild stash tab
-         * @param {number} eventId Event Id
-         * @param {string} stash_id Stash Tab Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getGuildStashTab(eventId: number, stash_id: string, options: any = {}): FetchArgs {
-            // verify required parameter 'eventId' is not null or undefined
-            if (eventId === null || eventId === undefined) {
-                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling getGuildStashTab.');
-            }
-            // verify required parameter 'stash_id' is not null or undefined
-            if (stash_id === null || stash_id === undefined) {
-                throw new RequiredError('stash_id','Required parameter stash_id was null or undefined when calling getGuildStashTab.');
-            }
-            const localVarPath = `/{eventId}/guild-stash/{stash_id}`
-                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
-                .replace(`{${"stash_id"}}`, encodeURIComponent(String(stash_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Get all guilds for current event with their respective team ids
-         * @param {number} eventId Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getGuilds(eventId: number, options: any = {}): FetchArgs {
-            // verify required parameter 'eventId' is not null or undefined
-            if (eventId === null || eventId === undefined) {
-                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling getGuilds.');
-            }
-            const localVarPath = `/{eventId}/guilds`
-                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches the latest timestamp for a user's guild stash history
-         * @param {number} eventId Event Id
-         * @param {number} guildId Guild Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLatestTimestampForUser(eventId: number, guildId: number, options: any = {}): FetchArgs {
-            // verify required parameter 'eventId' is not null or undefined
-            if (eventId === null || eventId === undefined) {
-                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling getLatestTimestampForUser.');
-            }
-            // verify required parameter 'guildId' is not null or undefined
-            if (guildId === null || guildId === undefined) {
-                throw new RequiredError('guildId','Required parameter guildId was null or undefined when calling getLatestTimestampForUser.');
-            }
-            const localVarPath = `/{eventId}/guilds/{guildId}/stash-history/latest_timestamp`
-                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
-                .replace(`{${"guildId"}}`, encodeURIComponent(String(guildId)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches log entries for a guild in an event
-         * @param {number} eventId Event Id
-         * @param {number} guildId Guild Id
-         * @param {number} [limit] Limit
-         * @param {number} [offset] Offset
-         * @param {string} [username] Name of the user doing the action (Make sure to replace the pound sign with a minus)
-         * @param {string} [itemname] Name of the item (Can be partial)
-         * @param {string} [stashname] Name of the stash tab
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLogEntriesForGuild(eventId: number, guildId: number, limit?: number, offset?: number, username?: string, itemname?: string, stashname?: string, options: any = {}): FetchArgs {
-            // verify required parameter 'eventId' is not null or undefined
-            if (eventId === null || eventId === undefined) {
-                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling getLogEntriesForGuild.');
-            }
-            // verify required parameter 'guildId' is not null or undefined
-            if (guildId === null || guildId === undefined) {
-                throw new RequiredError('guildId','Required parameter guildId was null or undefined when calling getLogEntriesForGuild.');
-            }
-            const localVarPath = `/{eventId}/guilds/{guildId}/stash-history`
-                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
-                .replace(`{${"guildId"}}`, encodeURIComponent(String(guildId)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (offset !== undefined) {
-                localVarQueryParameter['offset'] = offset;
-            }
-
-            if (username !== undefined) {
-                localVarQueryParameter['username'] = username;
-            }
-
-            if (itemname !== undefined) {
-                localVarQueryParameter['itemname'] = itemname;
-            }
-
-            if (stashname !== undefined) {
-                localVarQueryParameter['stashname'] = stashname;
-            }
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Saves a guild for the current event
-         * @param {number} eventId Event Id
-         * @param {number} guildId Guild Id
-         * @param {Guild} guild Guild
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        saveGuild(eventId: number, guildId: number, guild: Guild, options: any = {}): FetchArgs {
-            // verify required parameter 'eventId' is not null or undefined
-            if (eventId === null || eventId === undefined) {
-                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling saveGuild.');
-            }
-            // verify required parameter 'guildId' is not null or undefined
-            if (guildId === null || guildId === undefined) {
-                throw new RequiredError('guildId','Required parameter guildId was null or undefined when calling saveGuild.');
-            }
-            // verify required parameter 'guild' is not null or undefined
-            if (guild === null || guild === undefined) {
-                throw new RequiredError('guild','Required parameter guild was null or undefined when calling saveGuild.');
-            }
-            const localVarPath = `/{eventId}/guilds/{guildId}`
-                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
-                .replace(`{${"guildId"}}`, encodeURIComponent(String(guildId)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"Guild" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(guild || {}) : (guild || "");
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Enables fetching for a specific guild stash tab
-         * @param {number} eventId Event Id
-         * @param {string} stash_id Stash Tab Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        switchStashFetching(eventId: number, stash_id: string, options: any = {}): FetchArgs {
-            // verify required parameter 'eventId' is not null or undefined
-            if (eventId === null || eventId === undefined) {
-                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling switchStashFetching.');
-            }
-            // verify required parameter 'stash_id' is not null or undefined
-            if (stash_id === null || stash_id === undefined) {
-                throw new RequiredError('stash_id','Required parameter stash_id was null or undefined when calling switchStashFetching.');
-            }
-            const localVarPath = `/{eventId}/guild-stash/{stash_id}`
-                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
-                .replace(`{${"stash_id"}}`, encodeURIComponent(String(stash_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PATCH' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Parses all user access for guild stash tabs
-         * @param {number} eventId Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateAccess(eventId: number, options: any = {}): FetchArgs {
-            // verify required parameter 'eventId' is not null or undefined
-            if (eventId === null || eventId === undefined) {
-                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling updateAccess.');
-            }
-            const localVarPath = `/{eventId}/guild-stash/update-access`
-                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches current items for specific guild stash tab
-         * @param {number} eventId Event Id
-         * @param {string} stash_id Stash Tab Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateStashTab(eventId: number, stash_id: string, options: any = {}): FetchArgs {
-            // verify required parameter 'eventId' is not null or undefined
-            if (eventId === null || eventId === undefined) {
-                throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling updateStashTab.');
-            }
-            // verify required parameter 'stash_id' is not null or undefined
-            if (stash_id === null || stash_id === undefined) {
-                throw new RequiredError('stash_id','Required parameter stash_id was null or undefined when calling updateStashTab.');
-            }
-            const localVarPath = `/{eventId}/guild-stash/{stash_id}/update`
-                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
-                .replace(`{${"stash_id"}}`, encodeURIComponent(String(stash_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * GuildStashApi - functional programming interface
- * @export
- */
-export const GuildStashApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Adds a new entry to the guild stash history
-         * @param {number} eventId Event Id
-         * @param {number} guildId Guild Id
-         * @param {GuildStashChangeResponse} guildStashChanges Request body
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addGuildstashHistory(eventId: number, guildId: number, guildStashChanges: GuildStashChangeResponse, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<AddGuildStashHistoryResponse> {
-            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).addGuildstashHistory(eventId, guildId, guildStashChanges, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches all guild stash tabs for a user
-         * @param {number} eventId Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getGuildStashForUser(eventId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<GuildStashTab>> {
-            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).getGuildStashForUser(eventId, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches a specific guild stash tab
-         * @param {number} eventId Event Id
-         * @param {string} stash_id Stash Tab Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getGuildStashTab(eventId: number, stash_id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<GuildStashTabGGG> {
-            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).getGuildStashTab(eventId, stash_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Get all guilds for current event with their respective team ids
-         * @param {number} eventId Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getGuilds(eventId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Guild>> {
-            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).getGuilds(eventId, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches the latest timestamp for a user's guild stash history
-         * @param {number} eventId Event Id
-         * @param {number} guildId Guild Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLatestTimestampForUser(eventId: number, guildId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<GuildStashLogTimestampResponse> {
-            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).getLatestTimestampForUser(eventId, guildId, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches log entries for a guild in an event
-         * @param {number} eventId Event Id
-         * @param {number} guildId Guild Id
-         * @param {number} [limit] Limit
-         * @param {number} [offset] Offset
-         * @param {string} [username] Name of the user doing the action (Make sure to replace the pound sign with a minus)
-         * @param {string} [itemname] Name of the item (Can be partial)
-         * @param {string} [stashname] Name of the stash tab
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLogEntriesForGuild(eventId: number, guildId: number, limit?: number, offset?: number, username?: string, itemname?: string, stashname?: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<GuildStashChangelog>> {
-            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).getLogEntriesForGuild(eventId, guildId, limit, offset, username, itemname, stashname, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Saves a guild for the current event
-         * @param {number} eventId Event Id
-         * @param {number} guildId Guild Id
-         * @param {Guild} guild Guild
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        saveGuild(eventId: number, guildId: number, guild: Guild, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Guild> {
-            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).saveGuild(eventId, guildId, guild, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Enables fetching for a specific guild stash tab
-         * @param {number} eventId Event Id
-         * @param {string} stash_id Stash Tab Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        switchStashFetching(eventId: number, stash_id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<GuildStashTab> {
-            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).switchStashFetching(eventId, stash_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Parses all user access for guild stash tabs
-         * @param {number} eventId Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateAccess(eventId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).updateAccess(eventId, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches current items for specific guild stash tab
-         * @param {number} eventId Event Id
-         * @param {string} stash_id Stash Tab Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateStashTab(eventId: number, stash_id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).updateStashTab(eventId, stash_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
-};
-
-/**
- * GuildStashApi - factory interface
- * @export
- */
-export const GuildStashApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Adds a new entry to the guild stash history
-         * @param {number} eventId Event Id
-         * @param {number} guildId Guild Id
-         * @param {GuildStashChangeResponse} guildStashChanges Request body
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addGuildstashHistory(eventId: number, guildId: number, guildStashChanges: GuildStashChangeResponse, options?: any) {
-            return GuildStashApiFp(configuration).addGuildstashHistory(eventId, guildId, guildStashChanges, options)(fetch, basePath);
-        },
-        /**
-         * Fetches all guild stash tabs for a user
-         * @param {number} eventId Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getGuildStashForUser(eventId: number, options?: any) {
-            return GuildStashApiFp(configuration).getGuildStashForUser(eventId, options)(fetch, basePath);
-        },
-        /**
-         * Fetches a specific guild stash tab
-         * @param {number} eventId Event Id
-         * @param {string} stash_id Stash Tab Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getGuildStashTab(eventId: number, stash_id: string, options?: any) {
-            return GuildStashApiFp(configuration).getGuildStashTab(eventId, stash_id, options)(fetch, basePath);
-        },
-        /**
-         * Get all guilds for current event with their respective team ids
-         * @param {number} eventId Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getGuilds(eventId: number, options?: any) {
-            return GuildStashApiFp(configuration).getGuilds(eventId, options)(fetch, basePath);
-        },
-        /**
-         * Fetches the latest timestamp for a user's guild stash history
-         * @param {number} eventId Event Id
-         * @param {number} guildId Guild Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLatestTimestampForUser(eventId: number, guildId: number, options?: any) {
-            return GuildStashApiFp(configuration).getLatestTimestampForUser(eventId, guildId, options)(fetch, basePath);
-        },
-        /**
-         * Fetches log entries for a guild in an event
-         * @param {number} eventId Event Id
-         * @param {number} guildId Guild Id
-         * @param {number} [limit] Limit
-         * @param {number} [offset] Offset
-         * @param {string} [username] Name of the user doing the action (Make sure to replace the pound sign with a minus)
-         * @param {string} [itemname] Name of the item (Can be partial)
-         * @param {string} [stashname] Name of the stash tab
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLogEntriesForGuild(eventId: number, guildId: number, limit?: number, offset?: number, username?: string, itemname?: string, stashname?: string, options?: any) {
-            return GuildStashApiFp(configuration).getLogEntriesForGuild(eventId, guildId, limit, offset, username, itemname, stashname, options)(fetch, basePath);
-        },
-        /**
-         * Saves a guild for the current event
-         * @param {number} eventId Event Id
-         * @param {number} guildId Guild Id
-         * @param {Guild} guild Guild
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        saveGuild(eventId: number, guildId: number, guild: Guild, options?: any) {
-            return GuildStashApiFp(configuration).saveGuild(eventId, guildId, guild, options)(fetch, basePath);
-        },
-        /**
-         * Enables fetching for a specific guild stash tab
-         * @param {number} eventId Event Id
-         * @param {string} stash_id Stash Tab Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        switchStashFetching(eventId: number, stash_id: string, options?: any) {
-            return GuildStashApiFp(configuration).switchStashFetching(eventId, stash_id, options)(fetch, basePath);
-        },
-        /**
-         * Parses all user access for guild stash tabs
-         * @param {number} eventId Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateAccess(eventId: number, options?: any) {
-            return GuildStashApiFp(configuration).updateAccess(eventId, options)(fetch, basePath);
-        },
-        /**
-         * Fetches current items for specific guild stash tab
-         * @param {number} eventId Event Id
-         * @param {string} stash_id Stash Tab Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateStashTab(eventId: number, stash_id: string, options?: any) {
-            return GuildStashApiFp(configuration).updateStashTab(eventId, stash_id, options)(fetch, basePath);
-        },
-    };
-};
-
-/**
- * GuildStashApi - object-oriented interface
- * @export
- * @class GuildStashApi
- * @extends {BaseAPI}
- */
-export class GuildStashApi extends BaseAPI {
+export const GuildStashApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
     /**
      * Adds a new entry to the guild stash history
      * @param {number} eventId Event Id
@@ -6829,58 +6758,305 @@ export class GuildStashApi extends BaseAPI {
      * @param {GuildStashChangeResponse} guildStashChanges Request body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof GuildStashApi
      */
-    public addGuildstashHistory(eventId: number, guildId: number, guildStashChanges: GuildStashChangeResponse, options?: any) {
-        return GuildStashApiFp(this.configuration).addGuildstashHistory(eventId, guildId, guildStashChanges, options)(this.fetch, this.basePath);
-    }
+    addGuildstashHistory(
+      eventId: number,
+      guildId: number,
+      guildStashChanges: GuildStashChangeResponse,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'eventId' is not null or undefined
+      if (eventId === null || eventId === undefined) {
+        throw new RequiredError(
+          "eventId",
+          "Required parameter eventId was null or undefined when calling addGuildstashHistory.",
+        );
+      }
+      // verify required parameter 'guildId' is not null or undefined
+      if (guildId === null || guildId === undefined) {
+        throw new RequiredError(
+          "guildId",
+          "Required parameter guildId was null or undefined when calling addGuildstashHistory.",
+        );
+      }
+      // verify required parameter 'guildStashChanges' is not null or undefined
+      if (guildStashChanges === null || guildStashChanges === undefined) {
+        throw new RequiredError(
+          "guildStashChanges",
+          "Required parameter guildStashChanges was null or undefined when calling addGuildstashHistory.",
+        );
+      }
+      const localVarPath = `/{eventId}/guilds/{guildId}/stash-history`
+        .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
+        .replace(`{${"guildId"}}`, encodeURIComponent(String(guildId)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "POST" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"GuildStashChangeResponse" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(guildStashChanges || {})
+        : guildStashChanges || "";
+
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
     /**
      * Fetches all guild stash tabs for a user
      * @param {number} eventId Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof GuildStashApi
      */
-    public getGuildStashForUser(eventId: number, options?: any) {
-        return GuildStashApiFp(this.configuration).getGuildStashForUser(eventId, options)(this.fetch, this.basePath);
-    }
+    getGuildStashForUser(eventId: number, options: any = {}): FetchArgs {
+      // verify required parameter 'eventId' is not null or undefined
+      if (eventId === null || eventId === undefined) {
+        throw new RequiredError(
+          "eventId",
+          "Required parameter eventId was null or undefined when calling getGuildStashForUser.",
+        );
+      }
+      const localVarPath = `/{eventId}/guild-stash`.replace(
+        `{${"eventId"}}`,
+        encodeURIComponent(String(eventId)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
+
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
     /**
      * Fetches a specific guild stash tab
      * @param {number} eventId Event Id
      * @param {string} stash_id Stash Tab Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof GuildStashApi
      */
-    public getGuildStashTab(eventId: number, stash_id: string, options?: any) {
-        return GuildStashApiFp(this.configuration).getGuildStashTab(eventId, stash_id, options)(this.fetch, this.basePath);
-    }
+    getGuildStashTab(
+      eventId: number,
+      stash_id: string,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'eventId' is not null or undefined
+      if (eventId === null || eventId === undefined) {
+        throw new RequiredError(
+          "eventId",
+          "Required parameter eventId was null or undefined when calling getGuildStashTab.",
+        );
+      }
+      // verify required parameter 'stash_id' is not null or undefined
+      if (stash_id === null || stash_id === undefined) {
+        throw new RequiredError(
+          "stash_id",
+          "Required parameter stash_id was null or undefined when calling getGuildStashTab.",
+        );
+      }
+      const localVarPath = `/{eventId}/guild-stash/{stash_id}`
+        .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
+        .replace(`{${"stash_id"}}`, encodeURIComponent(String(stash_id)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
+
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
     /**
      * Get all guilds for current event with their respective team ids
      * @param {number} eventId Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof GuildStashApi
      */
-    public getGuilds(eventId: number, options?: any) {
-        return GuildStashApiFp(this.configuration).getGuilds(eventId, options)(this.fetch, this.basePath);
-    }
+    getGuilds(eventId: number, options: any = {}): FetchArgs {
+      // verify required parameter 'eventId' is not null or undefined
+      if (eventId === null || eventId === undefined) {
+        throw new RequiredError(
+          "eventId",
+          "Required parameter eventId was null or undefined when calling getGuilds.",
+        );
+      }
+      const localVarPath = `/{eventId}/guilds`.replace(
+        `{${"eventId"}}`,
+        encodeURIComponent(String(eventId)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
+
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
     /**
      * Fetches the latest timestamp for a user's guild stash history
      * @param {number} eventId Event Id
      * @param {number} guildId Guild Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof GuildStashApi
      */
-    public getLatestTimestampForUser(eventId: number, guildId: number, options?: any) {
-        return GuildStashApiFp(this.configuration).getLatestTimestampForUser(eventId, guildId, options)(this.fetch, this.basePath);
-    }
+    getLatestTimestampForUser(
+      eventId: number,
+      guildId: number,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'eventId' is not null or undefined
+      if (eventId === null || eventId === undefined) {
+        throw new RequiredError(
+          "eventId",
+          "Required parameter eventId was null or undefined when calling getLatestTimestampForUser.",
+        );
+      }
+      // verify required parameter 'guildId' is not null or undefined
+      if (guildId === null || guildId === undefined) {
+        throw new RequiredError(
+          "guildId",
+          "Required parameter guildId was null or undefined when calling getLatestTimestampForUser.",
+        );
+      }
+      const localVarPath =
+        `/{eventId}/guilds/{guildId}/stash-history/latest_timestamp`
+          .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
+          .replace(`{${"guildId"}}`, encodeURIComponent(String(guildId)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
+
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
     /**
      * Fetches log entries for a guild in an event
      * @param {number} eventId Event Id
@@ -6892,12 +7068,87 @@ export class GuildStashApi extends BaseAPI {
      * @param {string} [stashname] Name of the stash tab
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof GuildStashApi
      */
-    public getLogEntriesForGuild(eventId: number, guildId: number, limit?: number, offset?: number, username?: string, itemname?: string, stashname?: string, options?: any) {
-        return GuildStashApiFp(this.configuration).getLogEntriesForGuild(eventId, guildId, limit, offset, username, itemname, stashname, options)(this.fetch, this.basePath);
-    }
+    getLogEntriesForGuild(
+      eventId: number,
+      guildId: number,
+      limit?: number,
+      offset?: number,
+      username?: string,
+      itemname?: string,
+      stashname?: string,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'eventId' is not null or undefined
+      if (eventId === null || eventId === undefined) {
+        throw new RequiredError(
+          "eventId",
+          "Required parameter eventId was null or undefined when calling getLogEntriesForGuild.",
+        );
+      }
+      // verify required parameter 'guildId' is not null or undefined
+      if (guildId === null || guildId === undefined) {
+        throw new RequiredError(
+          "guildId",
+          "Required parameter guildId was null or undefined when calling getLogEntriesForGuild.",
+        );
+      }
+      const localVarPath = `/{eventId}/guilds/{guildId}/stash-history`
+        .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
+        .replace(`{${"guildId"}}`, encodeURIComponent(String(guildId)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
+
+      if (limit !== undefined) {
+        localVarQueryParameter["limit"] = limit;
+      }
+
+      if (offset !== undefined) {
+        localVarQueryParameter["offset"] = offset;
+      }
+
+      if (username !== undefined) {
+        localVarQueryParameter["username"] = username;
+      }
+
+      if (itemname !== undefined) {
+        localVarQueryParameter["itemname"] = itemname;
+      }
+
+      if (stashname !== undefined) {
+        localVarQueryParameter["stashname"] = stashname;
+      }
+
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
     /**
      * Saves a guild for the current event
      * @param {number} eventId Event Id
@@ -6905,364 +7156,1495 @@ export class GuildStashApi extends BaseAPI {
      * @param {Guild} guild Guild
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof GuildStashApi
      */
-    public saveGuild(eventId: number, guildId: number, guild: Guild, options?: any) {
-        return GuildStashApiFp(this.configuration).saveGuild(eventId, guildId, guild, options)(this.fetch, this.basePath);
-    }
+    saveGuild(
+      eventId: number,
+      guildId: number,
+      guild: Guild,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'eventId' is not null or undefined
+      if (eventId === null || eventId === undefined) {
+        throw new RequiredError(
+          "eventId",
+          "Required parameter eventId was null or undefined when calling saveGuild.",
+        );
+      }
+      // verify required parameter 'guildId' is not null or undefined
+      if (guildId === null || guildId === undefined) {
+        throw new RequiredError(
+          "guildId",
+          "Required parameter guildId was null or undefined when calling saveGuild.",
+        );
+      }
+      // verify required parameter 'guild' is not null or undefined
+      if (guild === null || guild === undefined) {
+        throw new RequiredError(
+          "guild",
+          "Required parameter guild was null or undefined when calling saveGuild.",
+        );
+      }
+      const localVarPath = `/{eventId}/guilds/{guildId}`
+        .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
+        .replace(`{${"guildId"}}`, encodeURIComponent(String(guildId)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "PUT" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"Guild" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(guild || {})
+        : guild || "";
+
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
     /**
      * Enables fetching for a specific guild stash tab
      * @param {number} eventId Event Id
      * @param {string} stash_id Stash Tab Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof GuildStashApi
      */
-    public switchStashFetching(eventId: number, stash_id: string, options?: any) {
-        return GuildStashApiFp(this.configuration).switchStashFetching(eventId, stash_id, options)(this.fetch, this.basePath);
-    }
+    switchStashFetching(
+      eventId: number,
+      stash_id: string,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'eventId' is not null or undefined
+      if (eventId === null || eventId === undefined) {
+        throw new RequiredError(
+          "eventId",
+          "Required parameter eventId was null or undefined when calling switchStashFetching.",
+        );
+      }
+      // verify required parameter 'stash_id' is not null or undefined
+      if (stash_id === null || stash_id === undefined) {
+        throw new RequiredError(
+          "stash_id",
+          "Required parameter stash_id was null or undefined when calling switchStashFetching.",
+        );
+      }
+      const localVarPath = `/{eventId}/guild-stash/{stash_id}`
+        .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
+        .replace(`{${"stash_id"}}`, encodeURIComponent(String(stash_id)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign(
+        { method: "PATCH" },
+        options,
+      );
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
+
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
     /**
      * Parses all user access for guild stash tabs
      * @param {number} eventId Event Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof GuildStashApi
      */
-    public updateAccess(eventId: number, options?: any) {
-        return GuildStashApiFp(this.configuration).updateAccess(eventId, options)(this.fetch, this.basePath);
-    }
+    updateAccess(eventId: number, options: any = {}): FetchArgs {
+      // verify required parameter 'eventId' is not null or undefined
+      if (eventId === null || eventId === undefined) {
+        throw new RequiredError(
+          "eventId",
+          "Required parameter eventId was null or undefined when calling updateAccess.",
+        );
+      }
+      const localVarPath = `/{eventId}/guild-stash/update-access`.replace(
+        `{${"eventId"}}`,
+        encodeURIComponent(String(eventId)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "POST" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
+
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
     /**
      * Fetches current items for specific guild stash tab
      * @param {number} eventId Event Id
      * @param {string} stash_id Stash Tab Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof GuildStashApi
      */
-    public updateStashTab(eventId: number, stash_id: string, options?: any) {
-        return GuildStashApiFp(this.configuration).updateStashTab(eventId, stash_id, options)(this.fetch, this.basePath);
-    }
+    updateStashTab(
+      eventId: number,
+      stash_id: string,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'eventId' is not null or undefined
+      if (eventId === null || eventId === undefined) {
+        throw new RequiredError(
+          "eventId",
+          "Required parameter eventId was null or undefined when calling updateStashTab.",
+        );
+      }
+      // verify required parameter 'stash_id' is not null or undefined
+      if (stash_id === null || stash_id === undefined) {
+        throw new RequiredError(
+          "stash_id",
+          "Required parameter stash_id was null or undefined when calling updateStashTab.",
+        );
+      }
+      const localVarPath = `/{eventId}/guild-stash/{stash_id}/update`
+        .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
+        .replace(`{${"stash_id"}}`, encodeURIComponent(String(stash_id)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "POST" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
+
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
+};
+
+/**
+ * GuildStashApi - functional programming interface
+ * @export
+ */
+export const GuildStashApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Adds a new entry to the guild stash history
+     * @param {number} eventId Event Id
+     * @param {number} guildId Guild Id
+     * @param {GuildStashChangeResponse} guildStashChanges Request body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addGuildstashHistory(
+      eventId: number,
+      guildId: number,
+      guildStashChanges: GuildStashChangeResponse,
+      options?: any,
+    ): (
+      fetch?: FetchAPI,
+      basePath?: string,
+    ) => Promise<AddGuildStashHistoryResponse> {
+      const localVarFetchArgs = GuildStashApiFetchParamCreator(
+        configuration,
+      ).addGuildstashHistory(eventId, guildId, guildStashChanges, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches all guild stash tabs for a user
+     * @param {number} eventId Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getGuildStashForUser(
+      eventId: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<GuildStashTab>> {
+      const localVarFetchArgs = GuildStashApiFetchParamCreator(
+        configuration,
+      ).getGuildStashForUser(eventId, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches a specific guild stash tab
+     * @param {number} eventId Event Id
+     * @param {string} stash_id Stash Tab Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getGuildStashTab(
+      eventId: number,
+      stash_id: string,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<GuildStashTabGGG> {
+      const localVarFetchArgs = GuildStashApiFetchParamCreator(
+        configuration,
+      ).getGuildStashTab(eventId, stash_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Get all guilds for current event with their respective team ids
+     * @param {number} eventId Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getGuilds(
+      eventId: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Guild>> {
+      const localVarFetchArgs = GuildStashApiFetchParamCreator(
+        configuration,
+      ).getGuilds(eventId, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches the latest timestamp for a user's guild stash history
+     * @param {number} eventId Event Id
+     * @param {number} guildId Guild Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLatestTimestampForUser(
+      eventId: number,
+      guildId: number,
+      options?: any,
+    ): (
+      fetch?: FetchAPI,
+      basePath?: string,
+    ) => Promise<GuildStashLogTimestampResponse> {
+      const localVarFetchArgs = GuildStashApiFetchParamCreator(
+        configuration,
+      ).getLatestTimestampForUser(eventId, guildId, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches log entries for a guild in an event
+     * @param {number} eventId Event Id
+     * @param {number} guildId Guild Id
+     * @param {number} [limit] Limit
+     * @param {number} [offset] Offset
+     * @param {string} [username] Name of the user doing the action (Make sure to replace the pound sign with a minus)
+     * @param {string} [itemname] Name of the item (Can be partial)
+     * @param {string} [stashname] Name of the stash tab
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLogEntriesForGuild(
+      eventId: number,
+      guildId: number,
+      limit?: number,
+      offset?: number,
+      username?: string,
+      itemname?: string,
+      stashname?: string,
+      options?: any,
+    ): (
+      fetch?: FetchAPI,
+      basePath?: string,
+    ) => Promise<Array<GuildStashChangelog>> {
+      const localVarFetchArgs = GuildStashApiFetchParamCreator(
+        configuration,
+      ).getLogEntriesForGuild(
+        eventId,
+        guildId,
+        limit,
+        offset,
+        username,
+        itemname,
+        stashname,
+        options,
+      );
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Saves a guild for the current event
+     * @param {number} eventId Event Id
+     * @param {number} guildId Guild Id
+     * @param {Guild} guild Guild
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    saveGuild(
+      eventId: number,
+      guildId: number,
+      guild: Guild,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Guild> {
+      const localVarFetchArgs = GuildStashApiFetchParamCreator(
+        configuration,
+      ).saveGuild(eventId, guildId, guild, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Enables fetching for a specific guild stash tab
+     * @param {number} eventId Event Id
+     * @param {string} stash_id Stash Tab Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    switchStashFetching(
+      eventId: number,
+      stash_id: string,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<GuildStashTab> {
+      const localVarFetchArgs = GuildStashApiFetchParamCreator(
+        configuration,
+      ).switchStashFetching(eventId, stash_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Parses all user access for guild stash tabs
+     * @param {number} eventId Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateAccess(
+      eventId: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      const localVarFetchArgs = GuildStashApiFetchParamCreator(
+        configuration,
+      ).updateAccess(eventId, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches current items for specific guild stash tab
+     * @param {number} eventId Event Id
+     * @param {string} stash_id Stash Tab Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateStashTab(
+      eventId: number,
+      stash_id: string,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      const localVarFetchArgs = GuildStashApiFetchParamCreator(
+        configuration,
+      ).updateStashTab(eventId, stash_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
+};
+
+/**
+ * GuildStashApi - factory interface
+ * @export
+ */
+export const GuildStashApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Adds a new entry to the guild stash history
+     * @param {number} eventId Event Id
+     * @param {number} guildId Guild Id
+     * @param {GuildStashChangeResponse} guildStashChanges Request body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addGuildstashHistory(
+      eventId: number,
+      guildId: number,
+      guildStashChanges: GuildStashChangeResponse,
+      options?: any,
+    ) {
+      return GuildStashApiFp(configuration).addGuildstashHistory(
+        eventId,
+        guildId,
+        guildStashChanges,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Fetches all guild stash tabs for a user
+     * @param {number} eventId Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getGuildStashForUser(eventId: number, options?: any) {
+      return GuildStashApiFp(configuration).getGuildStashForUser(
+        eventId,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Fetches a specific guild stash tab
+     * @param {number} eventId Event Id
+     * @param {string} stash_id Stash Tab Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getGuildStashTab(eventId: number, stash_id: string, options?: any) {
+      return GuildStashApiFp(configuration).getGuildStashTab(
+        eventId,
+        stash_id,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Get all guilds for current event with their respective team ids
+     * @param {number} eventId Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getGuilds(eventId: number, options?: any) {
+      return GuildStashApiFp(configuration).getGuilds(eventId, options)(
+        fetch,
+        basePath,
+      );
+    },
+    /**
+     * Fetches the latest timestamp for a user's guild stash history
+     * @param {number} eventId Event Id
+     * @param {number} guildId Guild Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLatestTimestampForUser(eventId: number, guildId: number, options?: any) {
+      return GuildStashApiFp(configuration).getLatestTimestampForUser(
+        eventId,
+        guildId,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Fetches log entries for a guild in an event
+     * @param {number} eventId Event Id
+     * @param {number} guildId Guild Id
+     * @param {number} [limit] Limit
+     * @param {number} [offset] Offset
+     * @param {string} [username] Name of the user doing the action (Make sure to replace the pound sign with a minus)
+     * @param {string} [itemname] Name of the item (Can be partial)
+     * @param {string} [stashname] Name of the stash tab
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLogEntriesForGuild(
+      eventId: number,
+      guildId: number,
+      limit?: number,
+      offset?: number,
+      username?: string,
+      itemname?: string,
+      stashname?: string,
+      options?: any,
+    ) {
+      return GuildStashApiFp(configuration).getLogEntriesForGuild(
+        eventId,
+        guildId,
+        limit,
+        offset,
+        username,
+        itemname,
+        stashname,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Saves a guild for the current event
+     * @param {number} eventId Event Id
+     * @param {number} guildId Guild Id
+     * @param {Guild} guild Guild
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    saveGuild(eventId: number, guildId: number, guild: Guild, options?: any) {
+      return GuildStashApiFp(configuration).saveGuild(
+        eventId,
+        guildId,
+        guild,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Enables fetching for a specific guild stash tab
+     * @param {number} eventId Event Id
+     * @param {string} stash_id Stash Tab Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    switchStashFetching(eventId: number, stash_id: string, options?: any) {
+      return GuildStashApiFp(configuration).switchStashFetching(
+        eventId,
+        stash_id,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Parses all user access for guild stash tabs
+     * @param {number} eventId Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateAccess(eventId: number, options?: any) {
+      return GuildStashApiFp(configuration).updateAccess(eventId, options)(
+        fetch,
+        basePath,
+      );
+    },
+    /**
+     * Fetches current items for specific guild stash tab
+     * @param {number} eventId Event Id
+     * @param {string} stash_id Stash Tab Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateStashTab(eventId: number, stash_id: string, options?: any) {
+      return GuildStashApiFp(configuration).updateStashTab(
+        eventId,
+        stash_id,
+        options,
+      )(fetch, basePath);
+    },
+  };
+};
+
+/**
+ * GuildStashApi - object-oriented interface
+ * @export
+ * @class GuildStashApi
+ * @extends {BaseAPI}
+ */
+export class GuildStashApi extends BaseAPI {
+  /**
+   * Adds a new entry to the guild stash history
+   * @param {number} eventId Event Id
+   * @param {number} guildId Guild Id
+   * @param {GuildStashChangeResponse} guildStashChanges Request body
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof GuildStashApi
+   */
+  public addGuildstashHistory(
+    eventId: number,
+    guildId: number,
+    guildStashChanges: GuildStashChangeResponse,
+    options?: any,
+  ) {
+    return GuildStashApiFp(this.configuration).addGuildstashHistory(
+      eventId,
+      guildId,
+      guildStashChanges,
+      options,
+    )(this.fetch, this.basePath);
+  }
+
+  /**
+   * Fetches all guild stash tabs for a user
+   * @param {number} eventId Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof GuildStashApi
+   */
+  public getGuildStashForUser(eventId: number, options?: any) {
+    return GuildStashApiFp(this.configuration).getGuildStashForUser(
+      eventId,
+      options,
+    )(this.fetch, this.basePath);
+  }
+
+  /**
+   * Fetches a specific guild stash tab
+   * @param {number} eventId Event Id
+   * @param {string} stash_id Stash Tab Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof GuildStashApi
+   */
+  public getGuildStashTab(eventId: number, stash_id: string, options?: any) {
+    return GuildStashApiFp(this.configuration).getGuildStashTab(
+      eventId,
+      stash_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
+
+  /**
+   * Get all guilds for current event with their respective team ids
+   * @param {number} eventId Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof GuildStashApi
+   */
+  public getGuilds(eventId: number, options?: any) {
+    return GuildStashApiFp(this.configuration).getGuilds(eventId, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
+
+  /**
+   * Fetches the latest timestamp for a user's guild stash history
+   * @param {number} eventId Event Id
+   * @param {number} guildId Guild Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof GuildStashApi
+   */
+  public getLatestTimestampForUser(
+    eventId: number,
+    guildId: number,
+    options?: any,
+  ) {
+    return GuildStashApiFp(this.configuration).getLatestTimestampForUser(
+      eventId,
+      guildId,
+      options,
+    )(this.fetch, this.basePath);
+  }
+
+  /**
+   * Fetches log entries for a guild in an event
+   * @param {number} eventId Event Id
+   * @param {number} guildId Guild Id
+   * @param {number} [limit] Limit
+   * @param {number} [offset] Offset
+   * @param {string} [username] Name of the user doing the action (Make sure to replace the pound sign with a minus)
+   * @param {string} [itemname] Name of the item (Can be partial)
+   * @param {string} [stashname] Name of the stash tab
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof GuildStashApi
+   */
+  public getLogEntriesForGuild(
+    eventId: number,
+    guildId: number,
+    limit?: number,
+    offset?: number,
+    username?: string,
+    itemname?: string,
+    stashname?: string,
+    options?: any,
+  ) {
+    return GuildStashApiFp(this.configuration).getLogEntriesForGuild(
+      eventId,
+      guildId,
+      limit,
+      offset,
+      username,
+      itemname,
+      stashname,
+      options,
+    )(this.fetch, this.basePath);
+  }
+
+  /**
+   * Saves a guild for the current event
+   * @param {number} eventId Event Id
+   * @param {number} guildId Guild Id
+   * @param {Guild} guild Guild
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof GuildStashApi
+   */
+  public saveGuild(
+    eventId: number,
+    guildId: number,
+    guild: Guild,
+    options?: any,
+  ) {
+    return GuildStashApiFp(this.configuration).saveGuild(
+      eventId,
+      guildId,
+      guild,
+      options,
+    )(this.fetch, this.basePath);
+  }
+
+  /**
+   * Enables fetching for a specific guild stash tab
+   * @param {number} eventId Event Id
+   * @param {string} stash_id Stash Tab Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof GuildStashApi
+   */
+  public switchStashFetching(eventId: number, stash_id: string, options?: any) {
+    return GuildStashApiFp(this.configuration).switchStashFetching(
+      eventId,
+      stash_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
+
+  /**
+   * Parses all user access for guild stash tabs
+   * @param {number} eventId Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof GuildStashApi
+   */
+  public updateAccess(eventId: number, options?: any) {
+    return GuildStashApiFp(this.configuration).updateAccess(eventId, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
+
+  /**
+   * Fetches current items for specific guild stash tab
+   * @param {number} eventId Event Id
+   * @param {string} stash_id Stash Tab Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof GuildStashApi
+   */
+  public updateStashTab(eventId: number, stash_id: string, options?: any) {
+    return GuildStashApiFp(this.configuration).updateStashTab(
+      eventId,
+      stash_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 }
 
 /**
  * ItemWishesApi - fetch parameter creator
  * @export
  */
-export const ItemWishesApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Change an item wish for a user in a team
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
-         * @param {number} wish_id Wish ID
-         * @param {UpdateItemWish} item_wish Item Wish
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        changeItemWish(event_id: number, team_id: number, wish_id: number, item_wish: UpdateItemWish, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling changeItemWish.');
-            }
-            // verify required parameter 'team_id' is not null or undefined
-            if (team_id === null || team_id === undefined) {
-                throw new RequiredError('team_id','Required parameter team_id was null or undefined when calling changeItemWish.');
-            }
-            // verify required parameter 'wish_id' is not null or undefined
-            if (wish_id === null || wish_id === undefined) {
-                throw new RequiredError('wish_id','Required parameter wish_id was null or undefined when calling changeItemWish.');
-            }
-            // verify required parameter 'item_wish' is not null or undefined
-            if (item_wish === null || item_wish === undefined) {
-                throw new RequiredError('item_wish','Required parameter item_wish was null or undefined when calling changeItemWish.');
-            }
-            const localVarPath = `/events/{event_id}/teams/{team_id}/item_wishes/{wish_id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)))
-                .replace(`{${"wish_id"}}`, encodeURIComponent(String(wish_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PATCH' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const ItemWishesApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Change an item wish for a user in a team
+     * @param {number} event_id Event ID
+     * @param {number} team_id Team ID
+     * @param {number} wish_id Wish ID
+     * @param {UpdateItemWish} item_wish Item Wish
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    changeItemWish(
+      event_id: number,
+      team_id: number,
+      wish_id: number,
+      item_wish: UpdateItemWish,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling changeItemWish.",
+        );
+      }
+      // verify required parameter 'team_id' is not null or undefined
+      if (team_id === null || team_id === undefined) {
+        throw new RequiredError(
+          "team_id",
+          "Required parameter team_id was null or undefined when calling changeItemWish.",
+        );
+      }
+      // verify required parameter 'wish_id' is not null or undefined
+      if (wish_id === null || wish_id === undefined) {
+        throw new RequiredError(
+          "wish_id",
+          "Required parameter wish_id was null or undefined when calling changeItemWish.",
+        );
+      }
+      // verify required parameter 'item_wish' is not null or undefined
+      if (item_wish === null || item_wish === undefined) {
+        throw new RequiredError(
+          "item_wish",
+          "Required parameter item_wish was null or undefined when calling changeItemWish.",
+        );
+      }
+      const localVarPath =
+        `/events/{event_id}/teams/{team_id}/item_wishes/{wish_id}`
+          .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+          .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)))
+          .replace(`{${"wish_id"}}`, encodeURIComponent(String(wish_id)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign(
+        { method: "PATCH" },
+        options,
+      );
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"UpdateItemWish" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(item_wish || {}) : (item_wish || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"UpdateItemWish" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(item_wish || {})
+        : item_wish || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Create an item wish for a user in a team
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
-         * @param {CreateItemWish} item_wish Item Wish
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createItemWish(event_id: number, team_id: number, item_wish: CreateItemWish, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createItemWish.');
-            }
-            // verify required parameter 'team_id' is not null or undefined
-            if (team_id === null || team_id === undefined) {
-                throw new RequiredError('team_id','Required parameter team_id was null or undefined when calling createItemWish.');
-            }
-            // verify required parameter 'item_wish' is not null or undefined
-            if (item_wish === null || item_wish === undefined) {
-                throw new RequiredError('item_wish','Required parameter item_wish was null or undefined when calling createItemWish.');
-            }
-            const localVarPath = `/events/{event_id}/teams/{team_id}/item_wishes`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Create an item wish for a user in a team
+     * @param {number} event_id Event ID
+     * @param {number} team_id Team ID
+     * @param {CreateItemWish} item_wish Item Wish
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createItemWish(
+      event_id: number,
+      team_id: number,
+      item_wish: CreateItemWish,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling createItemWish.",
+        );
+      }
+      // verify required parameter 'team_id' is not null or undefined
+      if (team_id === null || team_id === undefined) {
+        throw new RequiredError(
+          "team_id",
+          "Required parameter team_id was null or undefined when calling createItemWish.",
+        );
+      }
+      // verify required parameter 'item_wish' is not null or undefined
+      if (item_wish === null || item_wish === undefined) {
+        throw new RequiredError(
+          "item_wish",
+          "Required parameter item_wish was null or undefined when calling createItemWish.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/teams/{team_id}/item_wishes`
+        .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+        .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "POST" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"CreateItemWish" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(item_wish || {}) : (item_wish || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"CreateItemWish" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(item_wish || {})
+        : item_wish || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Delete an item wish for a user in a team
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
-         * @param {number} wish_id Wish ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteItemWish(event_id: number, team_id: number, wish_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling deleteItemWish.');
-            }
-            // verify required parameter 'team_id' is not null or undefined
-            if (team_id === null || team_id === undefined) {
-                throw new RequiredError('team_id','Required parameter team_id was null or undefined when calling deleteItemWish.');
-            }
-            // verify required parameter 'wish_id' is not null or undefined
-            if (wish_id === null || wish_id === undefined) {
-                throw new RequiredError('wish_id','Required parameter wish_id was null or undefined when calling deleteItemWish.');
-            }
-            const localVarPath = `/events/{event_id}/teams/{team_id}/item_wishes/{wish_id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)))
-                .replace(`{${"wish_id"}}`, encodeURIComponent(String(wish_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Delete an item wish for a user in a team
+     * @param {number} event_id Event ID
+     * @param {number} team_id Team ID
+     * @param {number} wish_id Wish ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteItemWish(
+      event_id: number,
+      team_id: number,
+      wish_id: number,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling deleteItemWish.",
+        );
+      }
+      // verify required parameter 'team_id' is not null or undefined
+      if (team_id === null || team_id === undefined) {
+        throw new RequiredError(
+          "team_id",
+          "Required parameter team_id was null or undefined when calling deleteItemWish.",
+        );
+      }
+      // verify required parameter 'wish_id' is not null or undefined
+      if (wish_id === null || wish_id === undefined) {
+        throw new RequiredError(
+          "wish_id",
+          "Required parameter wish_id was null or undefined when calling deleteItemWish.",
+        );
+      }
+      const localVarPath =
+        `/events/{event_id}/teams/{team_id}/item_wishes/{wish_id}`
+          .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+          .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)))
+          .replace(`{${"wish_id"}}`, encodeURIComponent(String(wish_id)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign(
+        { method: "DELETE" },
+        options,
+      );
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Get item wishes for a team in an event
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getItemWishesForTeam(event_id: number, team_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getItemWishesForTeam.');
-            }
-            // verify required parameter 'team_id' is not null or undefined
-            if (team_id === null || team_id === undefined) {
-                throw new RequiredError('team_id','Required parameter team_id was null or undefined when calling getItemWishesForTeam.');
-            }
-            const localVarPath = `/events/{event_id}/teams/{team_id}/item_wishes`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Get item wishes for a team in an event
+     * @param {number} event_id Event ID
+     * @param {number} team_id Team ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getItemWishesForTeam(
+      event_id: number,
+      team_id: number,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getItemWishesForTeam.",
+        );
+      }
+      // verify required parameter 'team_id' is not null or undefined
+      if (team_id === null || team_id === undefined) {
+        throw new RequiredError(
+          "team_id",
+          "Required parameter team_id was null or undefined when calling getItemWishesForTeam.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/teams/{team_id}/item_wishes`
+        .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+        .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * ItemWishesApi - functional programming interface
  * @export
  */
-export const ItemWishesApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Change an item wish for a user in a team
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
-         * @param {number} wish_id Wish ID
-         * @param {UpdateItemWish} item_wish Item Wish
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        changeItemWish(event_id: number, team_id: number, wish_id: number, item_wish: UpdateItemWish, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ItemWish> {
-            const localVarFetchArgs = ItemWishesApiFetchParamCreator(configuration).changeItemWish(event_id, team_id, wish_id, item_wish, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Create an item wish for a user in a team
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
-         * @param {CreateItemWish} item_wish Item Wish
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createItemWish(event_id: number, team_id: number, item_wish: CreateItemWish, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ItemWish> {
-            const localVarFetchArgs = ItemWishesApiFetchParamCreator(configuration).createItemWish(event_id, team_id, item_wish, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Delete an item wish for a user in a team
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
-         * @param {number} wish_id Wish ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteItemWish(event_id: number, team_id: number, wish_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = ItemWishesApiFetchParamCreator(configuration).deleteItemWish(event_id, team_id, wish_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Get item wishes for a team in an event
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getItemWishesForTeam(event_id: number, team_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<ItemWish>> {
-            const localVarFetchArgs = ItemWishesApiFetchParamCreator(configuration).getItemWishesForTeam(event_id, team_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const ItemWishesApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Change an item wish for a user in a team
+     * @param {number} event_id Event ID
+     * @param {number} team_id Team ID
+     * @param {number} wish_id Wish ID
+     * @param {UpdateItemWish} item_wish Item Wish
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    changeItemWish(
+      event_id: number,
+      team_id: number,
+      wish_id: number,
+      item_wish: UpdateItemWish,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<ItemWish> {
+      const localVarFetchArgs = ItemWishesApiFetchParamCreator(
+        configuration,
+      ).changeItemWish(event_id, team_id, wish_id, item_wish, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Create an item wish for a user in a team
+     * @param {number} event_id Event ID
+     * @param {number} team_id Team ID
+     * @param {CreateItemWish} item_wish Item Wish
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createItemWish(
+      event_id: number,
+      team_id: number,
+      item_wish: CreateItemWish,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<ItemWish> {
+      const localVarFetchArgs = ItemWishesApiFetchParamCreator(
+        configuration,
+      ).createItemWish(event_id, team_id, item_wish, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Delete an item wish for a user in a team
+     * @param {number} event_id Event ID
+     * @param {number} team_id Team ID
+     * @param {number} wish_id Wish ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteItemWish(
+      event_id: number,
+      team_id: number,
+      wish_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      const localVarFetchArgs = ItemWishesApiFetchParamCreator(
+        configuration,
+      ).deleteItemWish(event_id, team_id, wish_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Get item wishes for a team in an event
+     * @param {number} event_id Event ID
+     * @param {number} team_id Team ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getItemWishesForTeam(
+      event_id: number,
+      team_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<ItemWish>> {
+      const localVarFetchArgs = ItemWishesApiFetchParamCreator(
+        configuration,
+      ).getItemWishesForTeam(event_id, team_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * ItemWishesApi - factory interface
  * @export
  */
-export const ItemWishesApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Change an item wish for a user in a team
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
-         * @param {number} wish_id Wish ID
-         * @param {UpdateItemWish} item_wish Item Wish
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        changeItemWish(event_id: number, team_id: number, wish_id: number, item_wish: UpdateItemWish, options?: any) {
-            return ItemWishesApiFp(configuration).changeItemWish(event_id, team_id, wish_id, item_wish, options)(fetch, basePath);
-        },
-        /**
-         * Create an item wish for a user in a team
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
-         * @param {CreateItemWish} item_wish Item Wish
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createItemWish(event_id: number, team_id: number, item_wish: CreateItemWish, options?: any) {
-            return ItemWishesApiFp(configuration).createItemWish(event_id, team_id, item_wish, options)(fetch, basePath);
-        },
-        /**
-         * Delete an item wish for a user in a team
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
-         * @param {number} wish_id Wish ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteItemWish(event_id: number, team_id: number, wish_id: number, options?: any) {
-            return ItemWishesApiFp(configuration).deleteItemWish(event_id, team_id, wish_id, options)(fetch, basePath);
-        },
-        /**
-         * Get item wishes for a team in an event
-         * @param {number} event_id Event ID
-         * @param {number} team_id Team ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getItemWishesForTeam(event_id: number, team_id: number, options?: any) {
-            return ItemWishesApiFp(configuration).getItemWishesForTeam(event_id, team_id, options)(fetch, basePath);
-        },
-    };
+export const ItemWishesApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Change an item wish for a user in a team
+     * @param {number} event_id Event ID
+     * @param {number} team_id Team ID
+     * @param {number} wish_id Wish ID
+     * @param {UpdateItemWish} item_wish Item Wish
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    changeItemWish(
+      event_id: number,
+      team_id: number,
+      wish_id: number,
+      item_wish: UpdateItemWish,
+      options?: any,
+    ) {
+      return ItemWishesApiFp(configuration).changeItemWish(
+        event_id,
+        team_id,
+        wish_id,
+        item_wish,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Create an item wish for a user in a team
+     * @param {number} event_id Event ID
+     * @param {number} team_id Team ID
+     * @param {CreateItemWish} item_wish Item Wish
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createItemWish(
+      event_id: number,
+      team_id: number,
+      item_wish: CreateItemWish,
+      options?: any,
+    ) {
+      return ItemWishesApiFp(configuration).createItemWish(
+        event_id,
+        team_id,
+        item_wish,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Delete an item wish for a user in a team
+     * @param {number} event_id Event ID
+     * @param {number} team_id Team ID
+     * @param {number} wish_id Wish ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteItemWish(
+      event_id: number,
+      team_id: number,
+      wish_id: number,
+      options?: any,
+    ) {
+      return ItemWishesApiFp(configuration).deleteItemWish(
+        event_id,
+        team_id,
+        wish_id,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Get item wishes for a team in an event
+     * @param {number} event_id Event ID
+     * @param {number} team_id Team ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getItemWishesForTeam(event_id: number, team_id: number, options?: any) {
+      return ItemWishesApiFp(configuration).getItemWishesForTeam(
+        event_id,
+        team_id,
+        options,
+      )(fetch, basePath);
+    },
+  };
 };
 
 /**
@@ -7272,206 +8654,298 @@ export const ItemWishesApiFactory = function (configuration?: Configuration, fet
  * @extends {BaseAPI}
  */
 export class ItemWishesApi extends BaseAPI {
-    /**
-     * Change an item wish for a user in a team
-     * @param {number} event_id Event ID
-     * @param {number} team_id Team ID
-     * @param {number} wish_id Wish ID
-     * @param {UpdateItemWish} item_wish Item Wish
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ItemWishesApi
-     */
-    public changeItemWish(event_id: number, team_id: number, wish_id: number, item_wish: UpdateItemWish, options?: any) {
-        return ItemWishesApiFp(this.configuration).changeItemWish(event_id, team_id, wish_id, item_wish, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Change an item wish for a user in a team
+   * @param {number} event_id Event ID
+   * @param {number} team_id Team ID
+   * @param {number} wish_id Wish ID
+   * @param {UpdateItemWish} item_wish Item Wish
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ItemWishesApi
+   */
+  public changeItemWish(
+    event_id: number,
+    team_id: number,
+    wish_id: number,
+    item_wish: UpdateItemWish,
+    options?: any,
+  ) {
+    return ItemWishesApiFp(this.configuration).changeItemWish(
+      event_id,
+      team_id,
+      wish_id,
+      item_wish,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Create an item wish for a user in a team
-     * @param {number} event_id Event ID
-     * @param {number} team_id Team ID
-     * @param {CreateItemWish} item_wish Item Wish
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ItemWishesApi
-     */
-    public createItemWish(event_id: number, team_id: number, item_wish: CreateItemWish, options?: any) {
-        return ItemWishesApiFp(this.configuration).createItemWish(event_id, team_id, item_wish, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Create an item wish for a user in a team
+   * @param {number} event_id Event ID
+   * @param {number} team_id Team ID
+   * @param {CreateItemWish} item_wish Item Wish
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ItemWishesApi
+   */
+  public createItemWish(
+    event_id: number,
+    team_id: number,
+    item_wish: CreateItemWish,
+    options?: any,
+  ) {
+    return ItemWishesApiFp(this.configuration).createItemWish(
+      event_id,
+      team_id,
+      item_wish,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Delete an item wish for a user in a team
-     * @param {number} event_id Event ID
-     * @param {number} team_id Team ID
-     * @param {number} wish_id Wish ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ItemWishesApi
-     */
-    public deleteItemWish(event_id: number, team_id: number, wish_id: number, options?: any) {
-        return ItemWishesApiFp(this.configuration).deleteItemWish(event_id, team_id, wish_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Delete an item wish for a user in a team
+   * @param {number} event_id Event ID
+   * @param {number} team_id Team ID
+   * @param {number} wish_id Wish ID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ItemWishesApi
+   */
+  public deleteItemWish(
+    event_id: number,
+    team_id: number,
+    wish_id: number,
+    options?: any,
+  ) {
+    return ItemWishesApiFp(this.configuration).deleteItemWish(
+      event_id,
+      team_id,
+      wish_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Get item wishes for a team in an event
-     * @param {number} event_id Event ID
-     * @param {number} team_id Team ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ItemWishesApi
-     */
-    public getItemWishesForTeam(event_id: number, team_id: number, options?: any) {
-        return ItemWishesApiFp(this.configuration).getItemWishesForTeam(event_id, team_id, options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Get item wishes for a team in an event
+   * @param {number} event_id Event ID
+   * @param {number} team_id Team ID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ItemWishesApi
+   */
+  public getItemWishesForTeam(
+    event_id: number,
+    team_id: number,
+    options?: any,
+  ) {
+    return ItemWishesApiFp(this.configuration).getItemWishesForTeam(
+      event_id,
+      team_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 }
 
 /**
  * JobsApi - fetch parameter creator
  * @export
  */
-export const JobsApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Get all recurring jobs
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getJobs(options: any = {}): FetchArgs {
-            const localVarPath = `/jobs`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const JobsApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Get all recurring jobs
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getJobs(options: any = {}): FetchArgs {
+      const localVarPath = `/jobs`;
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Start a recurring job
-         * @param {JobCreate} job Job to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        startJob(job: JobCreate, options: any = {}): FetchArgs {
-            // verify required parameter 'job' is not null or undefined
-            if (job === null || job === undefined) {
-                throw new RequiredError('job','Required parameter job was null or undefined when calling startJob.');
-            }
-            const localVarPath = `/jobs`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Start a recurring job
+     * @param {JobCreate} job Job to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    startJob(job: JobCreate, options: any = {}): FetchArgs {
+      // verify required parameter 'job' is not null or undefined
+      if (job === null || job === undefined) {
+        throw new RequiredError(
+          "job",
+          "Required parameter job was null or undefined when calling startJob.",
+        );
+      }
+      const localVarPath = `/jobs`;
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "POST" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"JobCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(job || {}) : (job || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"JobCreate" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(job || {})
+        : job || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * JobsApi - functional programming interface
  * @export
  */
-export const JobsApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Get all recurring jobs
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getJobs(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<RecurringJob>> {
-            const localVarFetchArgs = JobsApiFetchParamCreator(configuration).getJobs(options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Start a recurring job
-         * @param {JobCreate} job Job to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        startJob(job: JobCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<RecurringJob> {
-            const localVarFetchArgs = JobsApiFetchParamCreator(configuration).startJob(job, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const JobsApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Get all recurring jobs
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getJobs(
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<RecurringJob>> {
+      const localVarFetchArgs =
+        JobsApiFetchParamCreator(configuration).getJobs(options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Start a recurring job
+     * @param {JobCreate} job Job to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    startJob(
+      job: JobCreate,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<RecurringJob> {
+      const localVarFetchArgs = JobsApiFetchParamCreator(
+        configuration,
+      ).startJob(job, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * JobsApi - factory interface
  * @export
  */
-export const JobsApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Get all recurring jobs
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getJobs(options?: any) {
-            return JobsApiFp(configuration).getJobs(options)(fetch, basePath);
-        },
-        /**
-         * Start a recurring job
-         * @param {JobCreate} job Job to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        startJob(job: JobCreate, options?: any) {
-            return JobsApiFp(configuration).startJob(job, options)(fetch, basePath);
-        },
-    };
+export const JobsApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Get all recurring jobs
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getJobs(options?: any) {
+      return JobsApiFp(configuration).getJobs(options)(fetch, basePath);
+    },
+    /**
+     * Start a recurring job
+     * @param {JobCreate} job Job to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    startJob(job: JobCreate, options?: any) {
+      return JobsApiFp(configuration).startJob(job, options)(fetch, basePath);
+    },
+  };
 };
 
 /**
@@ -7481,109 +8955,148 @@ export const JobsApiFactory = function (configuration?: Configuration, fetch?: F
  * @extends {BaseAPI}
  */
 export class JobsApi extends BaseAPI {
-    /**
-     * Get all recurring jobs
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof JobsApi
-     */
-    public getJobs(options?: any) {
-        return JobsApiFp(this.configuration).getJobs(options)(this.fetch, this.basePath);
-    }
+  /**
+   * Get all recurring jobs
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof JobsApi
+   */
+  public getJobs(options?: any) {
+    return JobsApiFp(this.configuration).getJobs(options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 
-    /**
-     * Start a recurring job
-     * @param {JobCreate} job Job to create
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof JobsApi
-     */
-    public startJob(job: JobCreate, options?: any) {
-        return JobsApiFp(this.configuration).startJob(job, options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Start a recurring job
+   * @param {JobCreate} job Job to create
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof JobsApi
+   */
+  public startJob(job: JobCreate, options?: any) {
+    return JobsApiFp(this.configuration).startJob(job, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 }
 
 /**
  * LadderApi - fetch parameter creator
  * @export
  */
-export const LadderApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Get the ladder for an event
-         * @param {number} event_id Event ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLadder(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getLadder.');
-            }
-            const localVarPath = `/events/{event_id}/ladder`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const LadderApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Get the ladder for an event
+     * @param {number} event_id Event ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLadder(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getLadder.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/ladder`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * LadderApi - functional programming interface
  * @export
  */
-export const LadderApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Get the ladder for an event
-         * @param {number} event_id Event ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLadder(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<LadderEntry>> {
-            const localVarFetchArgs = LadderApiFetchParamCreator(configuration).getLadder(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const LadderApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Get the ladder for an event
+     * @param {number} event_id Event ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLadder(
+      event_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<LadderEntry>> {
+      const localVarFetchArgs = LadderApiFetchParamCreator(
+        configuration,
+      ).getLadder(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * LadderApi - factory interface
  * @export
  */
-export const LadderApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Get the ladder for an event
-         * @param {number} event_id Event ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLadder(event_id: number, options?: any) {
-            return LadderApiFp(configuration).getLadder(event_id, options)(fetch, basePath);
-        },
-    };
+export const LadderApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Get the ladder for an event
+     * @param {number} event_id Event ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLadder(event_id: number, options?: any) {
+      return LadderApiFp(configuration).getLadder(event_id, options)(
+        fetch,
+        basePath,
+      );
+    },
+  };
 };
 
 /**
@@ -7593,227 +9106,340 @@ export const LadderApiFactory = function (configuration?: Configuration, fetch?:
  * @extends {BaseAPI}
  */
 export class LadderApi extends BaseAPI {
-    /**
-     * Get the ladder for an event
-     * @param {number} event_id Event ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof LadderApi
-     */
-    public getLadder(event_id: number, options?: any) {
-        return LadderApiFp(this.configuration).getLadder(event_id, options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Get the ladder for an event
+   * @param {number} event_id Event ID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof LadderApi
+   */
+  public getLadder(event_id: number, options?: any) {
+    return LadderApiFp(this.configuration).getLadder(event_id, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 }
 
 /**
  * OauthApi - fetch parameter creator
  * @export
  */
-export const OauthApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Logs in the discord bot (only for internal use)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        loginDiscordBot(options: any = {}): FetchArgs {
-            const localVarPath = `/oauth2/discord/bot-login`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const OauthApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Logs in the discord bot (only for internal use)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    loginDiscordBot(options: any = {}): FetchArgs {
+      const localVarPath = `/oauth2/discord/bot-login`;
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "POST" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Callback handler for oauth
-         * @param {'poe' | 'twitch' | 'discord'} provider Provider name
-         * @param {CallbackBody} body Callback body
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        oauthCallback(provider: 'poe' | 'twitch' | 'discord', body: CallbackBody, options: any = {}): FetchArgs {
-            // verify required parameter 'provider' is not null or undefined
-            if (provider === null || provider === undefined) {
-                throw new RequiredError('provider','Required parameter provider was null or undefined when calling oauthCallback.');
-            }
-            // verify required parameter 'body' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling oauthCallback.');
-            }
-            const localVarPath = `/oauth2/{provider}/callback`
-                .replace(`{${"provider"}}`, encodeURIComponent(String(provider)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Callback handler for oauth
+     * @param {'poe' | 'twitch' | 'discord'} provider Provider name
+     * @param {CallbackBody} body Callback body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    oauthCallback(
+      provider: "poe" | "twitch" | "discord",
+      body: CallbackBody,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'provider' is not null or undefined
+      if (provider === null || provider === undefined) {
+        throw new RequiredError(
+          "provider",
+          "Required parameter provider was null or undefined when calling oauthCallback.",
+        );
+      }
+      // verify required parameter 'body' is not null or undefined
+      if (body === null || body === undefined) {
+        throw new RequiredError(
+          "body",
+          "Required parameter body was null or undefined when calling oauthCallback.",
+        );
+      }
+      const localVarPath = `/oauth2/{provider}/callback`.replace(
+        `{${"provider"}}`,
+        encodeURIComponent(String(provider)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "POST" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"CallbackBody" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"CallbackBody" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(body || {})
+        : body || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Redirects to an oauth provider
-         * @param {'poe' | 'twitch' | 'discord'} provider Provider name
-         * @param {string} [last_url] Last URL to redirect to after oauth is finished
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        oauthRedirect(provider: 'poe' | 'twitch' | 'discord', last_url?: string, options: any = {}): FetchArgs {
-            // verify required parameter 'provider' is not null or undefined
-            if (provider === null || provider === undefined) {
-                throw new RequiredError('provider','Required parameter provider was null or undefined when calling oauthRedirect.');
-            }
-            const localVarPath = `/oauth2/{provider}/redirect`
-                .replace(`{${"provider"}}`, encodeURIComponent(String(provider)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Redirects to an oauth provider
+     * @param {'poe' | 'twitch' | 'discord'} provider Provider name
+     * @param {string} [last_url] Last URL to redirect to after oauth is finished
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    oauthRedirect(
+      provider: "poe" | "twitch" | "discord",
+      last_url?: string,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'provider' is not null or undefined
+      if (provider === null || provider === undefined) {
+        throw new RequiredError(
+          "provider",
+          "Required parameter provider was null or undefined when calling oauthRedirect.",
+        );
+      }
+      const localVarPath = `/oauth2/{provider}/redirect`.replace(
+        `{${"provider"}}`,
+        encodeURIComponent(String(provider)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            if (last_url !== undefined) {
-                localVarQueryParameter['last_url'] = last_url;
-            }
+      if (last_url !== undefined) {
+        localVarQueryParameter["last_url"] = last_url;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * OauthApi - functional programming interface
  * @export
  */
-export const OauthApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Logs in the discord bot (only for internal use)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        loginDiscordBot(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<string> {
-            const localVarFetchArgs = OauthApiFetchParamCreator(configuration).loginDiscordBot(options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Callback handler for oauth
-         * @param {'poe' | 'twitch' | 'discord'} provider Provider name
-         * @param {CallbackBody} body Callback body
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        oauthCallback(provider: 'poe' | 'twitch' | 'discord', body: CallbackBody, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<CallbackResponse> {
-            const localVarFetchArgs = OauthApiFetchParamCreator(configuration).oauthCallback(provider, body, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Redirects to an oauth provider
-         * @param {'poe' | 'twitch' | 'discord'} provider Provider name
-         * @param {string} [last_url] Last URL to redirect to after oauth is finished
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        oauthRedirect(provider: 'poe' | 'twitch' | 'discord', last_url?: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<string> {
-            const localVarFetchArgs = OauthApiFetchParamCreator(configuration).oauthRedirect(provider, last_url, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const OauthApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Logs in the discord bot (only for internal use)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    loginDiscordBot(
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<string> {
+      const localVarFetchArgs =
+        OauthApiFetchParamCreator(configuration).loginDiscordBot(options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Callback handler for oauth
+     * @param {'poe' | 'twitch' | 'discord'} provider Provider name
+     * @param {CallbackBody} body Callback body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    oauthCallback(
+      provider: "poe" | "twitch" | "discord",
+      body: CallbackBody,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<CallbackResponse> {
+      const localVarFetchArgs = OauthApiFetchParamCreator(
+        configuration,
+      ).oauthCallback(provider, body, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Redirects to an oauth provider
+     * @param {'poe' | 'twitch' | 'discord'} provider Provider name
+     * @param {string} [last_url] Last URL to redirect to after oauth is finished
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    oauthRedirect(
+      provider: "poe" | "twitch" | "discord",
+      last_url?: string,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<string> {
+      const localVarFetchArgs = OauthApiFetchParamCreator(
+        configuration,
+      ).oauthRedirect(provider, last_url, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * OauthApi - factory interface
  * @export
  */
-export const OauthApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Logs in the discord bot (only for internal use)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        loginDiscordBot(options?: any) {
-            return OauthApiFp(configuration).loginDiscordBot(options)(fetch, basePath);
-        },
-        /**
-         * Callback handler for oauth
-         * @param {'poe' | 'twitch' | 'discord'} provider Provider name
-         * @param {CallbackBody} body Callback body
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        oauthCallback(provider: 'poe' | 'twitch' | 'discord', body: CallbackBody, options?: any) {
-            return OauthApiFp(configuration).oauthCallback(provider, body, options)(fetch, basePath);
-        },
-        /**
-         * Redirects to an oauth provider
-         * @param {'poe' | 'twitch' | 'discord'} provider Provider name
-         * @param {string} [last_url] Last URL to redirect to after oauth is finished
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        oauthRedirect(provider: 'poe' | 'twitch' | 'discord', last_url?: string, options?: any) {
-            return OauthApiFp(configuration).oauthRedirect(provider, last_url, options)(fetch, basePath);
-        },
-    };
+export const OauthApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Logs in the discord bot (only for internal use)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    loginDiscordBot(options?: any) {
+      return OauthApiFp(configuration).loginDiscordBot(options)(
+        fetch,
+        basePath,
+      );
+    },
+    /**
+     * Callback handler for oauth
+     * @param {'poe' | 'twitch' | 'discord'} provider Provider name
+     * @param {CallbackBody} body Callback body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    oauthCallback(
+      provider: "poe" | "twitch" | "discord",
+      body: CallbackBody,
+      options?: any,
+    ) {
+      return OauthApiFp(configuration).oauthCallback(
+        provider,
+        body,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Redirects to an oauth provider
+     * @param {'poe' | 'twitch' | 'discord'} provider Provider name
+     * @param {string} [last_url] Last URL to redirect to after oauth is finished
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    oauthRedirect(
+      provider: "poe" | "twitch" | "discord",
+      last_url?: string,
+      options?: any,
+    ) {
+      return OauthApiFp(configuration).oauthRedirect(
+        provider,
+        last_url,
+        options,
+      )(fetch, basePath);
+    },
+  };
 };
 
 /**
@@ -7823,522 +9449,793 @@ export const OauthApiFactory = function (configuration?: Configuration, fetch?: 
  * @extends {BaseAPI}
  */
 export class OauthApi extends BaseAPI {
-    /**
-     * Logs in the discord bot (only for internal use)
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof OauthApi
-     */
-    public loginDiscordBot(options?: any) {
-        return OauthApiFp(this.configuration).loginDiscordBot(options)(this.fetch, this.basePath);
-    }
+  /**
+   * Logs in the discord bot (only for internal use)
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof OauthApi
+   */
+  public loginDiscordBot(options?: any) {
+    return OauthApiFp(this.configuration).loginDiscordBot(options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 
-    /**
-     * Callback handler for oauth
-     * @param {'poe' | 'twitch' | 'discord'} provider Provider name
-     * @param {CallbackBody} body Callback body
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof OauthApi
-     */
-    public oauthCallback(provider: 'poe' | 'twitch' | 'discord', body: CallbackBody, options?: any) {
-        return OauthApiFp(this.configuration).oauthCallback(provider, body, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Callback handler for oauth
+   * @param {'poe' | 'twitch' | 'discord'} provider Provider name
+   * @param {CallbackBody} body Callback body
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof OauthApi
+   */
+  public oauthCallback(
+    provider: "poe" | "twitch" | "discord",
+    body: CallbackBody,
+    options?: any,
+  ) {
+    return OauthApiFp(this.configuration).oauthCallback(
+      provider,
+      body,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Redirects to an oauth provider
-     * @param {'poe' | 'twitch' | 'discord'} provider Provider name
-     * @param {string} [last_url] Last URL to redirect to after oauth is finished
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof OauthApi
-     */
-    public oauthRedirect(provider: 'poe' | 'twitch' | 'discord', last_url?: string, options?: any) {
-        return OauthApiFp(this.configuration).oauthRedirect(provider, last_url, options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Redirects to an oauth provider
+   * @param {'poe' | 'twitch' | 'discord'} provider Provider name
+   * @param {string} [last_url] Last URL to redirect to after oauth is finished
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof OauthApi
+   */
+  public oauthRedirect(
+    provider: "poe" | "twitch" | "discord",
+    last_url?: string,
+    options?: any,
+  ) {
+    return OauthApiFp(this.configuration).oauthRedirect(
+      provider,
+      last_url,
+      options,
+    )(this.fetch, this.basePath);
+  }
 }
 
 /**
  * ObjectiveApi - fetch parameter creator
  * @export
  */
-export const ObjectiveApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Creates a new objective
-         * @param {number} event_id Event Id
-         * @param {ObjectiveCreate} body Objective to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createObjective(event_id: number, body: ObjectiveCreate, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createObjective.');
-            }
-            // verify required parameter 'body' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling createObjective.');
-            }
-            const localVarPath = `/events/{event_id}/objectives`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const ObjectiveApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Creates a new objective
+     * @param {number} event_id Event Id
+     * @param {ObjectiveCreate} body Objective to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createObjective(
+      event_id: number,
+      body: ObjectiveCreate,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling createObjective.",
+        );
+      }
+      // verify required parameter 'body' is not null or undefined
+      if (body === null || body === undefined) {
+        throw new RequiredError(
+          "body",
+          "Required parameter body was null or undefined when calling createObjective.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/objectives`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "PUT" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"ObjectiveCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"ObjectiveCreate" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(body || {})
+        : body || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Deletes an objective
-         * @param {number} event_id Event Id
-         * @param {number} id Objective Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteObjective(event_id: number, id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling deleteObjective.');
-            }
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteObjective.');
-            }
-            const localVarPath = `/events/{event_id}/objectives/{id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Deletes an objective
+     * @param {number} event_id Event Id
+     * @param {number} id Objective Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteObjective(
+      event_id: number,
+      id: number,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling deleteObjective.",
+        );
+      }
+      // verify required parameter 'id' is not null or undefined
+      if (id === null || id === undefined) {
+        throw new RequiredError(
+          "id",
+          "Required parameter id was null or undefined when calling deleteObjective.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/objectives/{id}`
+        .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+        .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign(
+        { method: "DELETE" },
+        options,
+      );
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Gets an objective by id
-         * @param {number} event_id Event Id
-         * @param {number} id Objective Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getObjective(event_id: number, id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getObjective.');
-            }
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getObjective.');
-            }
-            const localVarPath = `/events/{event_id}/objectives/{id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Gets an objective by id
+     * @param {number} event_id Event Id
+     * @param {number} id Objective Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getObjective(event_id: number, id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getObjective.",
+        );
+      }
+      // verify required parameter 'id' is not null or undefined
+      if (id === null || id === undefined) {
+        throw new RequiredError(
+          "id",
+          "Required parameter id was null or undefined when calling getObjective.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/objectives/{id}`
+        .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+        .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Gets all objectives for an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getObjectiveTreeForEvent(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getObjectiveTreeForEvent.');
-            }
-            const localVarPath = `/events/{event_id}/objectives`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Gets all objectives for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getObjectiveTreeForEvent(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getObjectiveTreeForEvent.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/objectives`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Gets objective validations for an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getObjectiveValidations(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getObjectiveValidations.');
-            }
-            const localVarPath = `/events/{event_id}/objectives/validations`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Gets objective validations for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getObjectiveValidations(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getObjectiveValidations.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/objectives/validations`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Get valid mappings for conditions
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getValidMappings(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getValidMappings.');
-            }
-            const localVarPath = `/events/{event_id}/objectives/valid-mappings`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Get valid mappings for conditions
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getValidMappings(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getValidMappings.",
+        );
+      }
+      const localVarPath =
+        `/events/{event_id}/objectives/valid-mappings`.replace(
+          `{${"event_id"}}`,
+          encodeURIComponent(String(event_id)),
+        );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Validates item objectives for an event seeing if there are completions on trade
-         * @param {number} event_id Event Id
-         * @param {ValidationRequest} body Validation request
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        validateObjectives(event_id: number, body: ValidationRequest, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling validateObjectives.');
-            }
-            // verify required parameter 'body' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling validateObjectives.');
-            }
-            const localVarPath = `/events/{event_id}/objectives/validations`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Validates item objectives for an event seeing if there are completions on trade
+     * @param {number} event_id Event Id
+     * @param {ValidationRequest} body Validation request
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    validateObjectives(
+      event_id: number,
+      body: ValidationRequest,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling validateObjectives.",
+        );
+      }
+      // verify required parameter 'body' is not null or undefined
+      if (body === null || body === undefined) {
+        throw new RequiredError(
+          "body",
+          "Required parameter body was null or undefined when calling validateObjectives.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/objectives/validations`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "POST" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"ValidationRequest" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"ValidationRequest" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(body || {})
+        : body || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * ObjectiveApi - functional programming interface
  * @export
  */
-export const ObjectiveApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Creates a new objective
-         * @param {number} event_id Event Id
-         * @param {ObjectiveCreate} body Objective to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createObjective(event_id: number, body: ObjectiveCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Objective> {
-            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).createObjective(event_id, body, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Deletes an objective
-         * @param {number} event_id Event Id
-         * @param {number} id Objective Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteObjective(event_id: number, id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).deleteObjective(event_id, id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Gets an objective by id
-         * @param {number} event_id Event Id
-         * @param {number} id Objective Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getObjective(event_id: number, id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Objective> {
-            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).getObjective(event_id, id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Gets all objectives for an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getObjectiveTreeForEvent(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Objective> {
-            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).getObjectiveTreeForEvent(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Gets objective validations for an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getObjectiveValidations(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<ObjectiveValidation>> {
-            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).getObjectiveValidations(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Get valid mappings for conditions
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getValidMappings(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ConditionMappings> {
-            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).getValidMappings(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Validates item objectives for an event seeing if there are completions on trade
-         * @param {number} event_id Event Id
-         * @param {ValidationRequest} body Validation request
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        validateObjectives(event_id: number, body: ValidationRequest, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = ObjectiveApiFetchParamCreator(configuration).validateObjectives(event_id, body, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const ObjectiveApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Creates a new objective
+     * @param {number} event_id Event Id
+     * @param {ObjectiveCreate} body Objective to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createObjective(
+      event_id: number,
+      body: ObjectiveCreate,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Objective> {
+      const localVarFetchArgs = ObjectiveApiFetchParamCreator(
+        configuration,
+      ).createObjective(event_id, body, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Deletes an objective
+     * @param {number} event_id Event Id
+     * @param {number} id Objective Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteObjective(
+      event_id: number,
+      id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      const localVarFetchArgs = ObjectiveApiFetchParamCreator(
+        configuration,
+      ).deleteObjective(event_id, id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Gets an objective by id
+     * @param {number} event_id Event Id
+     * @param {number} id Objective Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getObjective(
+      event_id: number,
+      id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Objective> {
+      const localVarFetchArgs = ObjectiveApiFetchParamCreator(
+        configuration,
+      ).getObjective(event_id, id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Gets all objectives for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getObjectiveTreeForEvent(
+      event_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Objective> {
+      const localVarFetchArgs = ObjectiveApiFetchParamCreator(
+        configuration,
+      ).getObjectiveTreeForEvent(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Gets objective validations for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getObjectiveValidations(
+      event_id: number,
+      options?: any,
+    ): (
+      fetch?: FetchAPI,
+      basePath?: string,
+    ) => Promise<Array<ObjectiveValidation>> {
+      const localVarFetchArgs = ObjectiveApiFetchParamCreator(
+        configuration,
+      ).getObjectiveValidations(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Get valid mappings for conditions
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getValidMappings(
+      event_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<ConditionMappings> {
+      const localVarFetchArgs = ObjectiveApiFetchParamCreator(
+        configuration,
+      ).getValidMappings(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Validates item objectives for an event seeing if there are completions on trade
+     * @param {number} event_id Event Id
+     * @param {ValidationRequest} body Validation request
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    validateObjectives(
+      event_id: number,
+      body: ValidationRequest,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      const localVarFetchArgs = ObjectiveApiFetchParamCreator(
+        configuration,
+      ).validateObjectives(event_id, body, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * ObjectiveApi - factory interface
  * @export
  */
-export const ObjectiveApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Creates a new objective
-         * @param {number} event_id Event Id
-         * @param {ObjectiveCreate} body Objective to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createObjective(event_id: number, body: ObjectiveCreate, options?: any) {
-            return ObjectiveApiFp(configuration).createObjective(event_id, body, options)(fetch, basePath);
-        },
-        /**
-         * Deletes an objective
-         * @param {number} event_id Event Id
-         * @param {number} id Objective Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteObjective(event_id: number, id: number, options?: any) {
-            return ObjectiveApiFp(configuration).deleteObjective(event_id, id, options)(fetch, basePath);
-        },
-        /**
-         * Gets an objective by id
-         * @param {number} event_id Event Id
-         * @param {number} id Objective Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getObjective(event_id: number, id: number, options?: any) {
-            return ObjectiveApiFp(configuration).getObjective(event_id, id, options)(fetch, basePath);
-        },
-        /**
-         * Gets all objectives for an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getObjectiveTreeForEvent(event_id: number, options?: any) {
-            return ObjectiveApiFp(configuration).getObjectiveTreeForEvent(event_id, options)(fetch, basePath);
-        },
-        /**
-         * Gets objective validations for an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getObjectiveValidations(event_id: number, options?: any) {
-            return ObjectiveApiFp(configuration).getObjectiveValidations(event_id, options)(fetch, basePath);
-        },
-        /**
-         * Get valid mappings for conditions
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getValidMappings(event_id: number, options?: any) {
-            return ObjectiveApiFp(configuration).getValidMappings(event_id, options)(fetch, basePath);
-        },
-        /**
-         * Validates item objectives for an event seeing if there are completions on trade
-         * @param {number} event_id Event Id
-         * @param {ValidationRequest} body Validation request
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        validateObjectives(event_id: number, body: ValidationRequest, options?: any) {
-            return ObjectiveApiFp(configuration).validateObjectives(event_id, body, options)(fetch, basePath);
-        },
-    };
+export const ObjectiveApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Creates a new objective
+     * @param {number} event_id Event Id
+     * @param {ObjectiveCreate} body Objective to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createObjective(event_id: number, body: ObjectiveCreate, options?: any) {
+      return ObjectiveApiFp(configuration).createObjective(
+        event_id,
+        body,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Deletes an objective
+     * @param {number} event_id Event Id
+     * @param {number} id Objective Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteObjective(event_id: number, id: number, options?: any) {
+      return ObjectiveApiFp(configuration).deleteObjective(
+        event_id,
+        id,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Gets an objective by id
+     * @param {number} event_id Event Id
+     * @param {number} id Objective Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getObjective(event_id: number, id: number, options?: any) {
+      return ObjectiveApiFp(configuration).getObjective(
+        event_id,
+        id,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Gets all objectives for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getObjectiveTreeForEvent(event_id: number, options?: any) {
+      return ObjectiveApiFp(configuration).getObjectiveTreeForEvent(
+        event_id,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Gets objective validations for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getObjectiveValidations(event_id: number, options?: any) {
+      return ObjectiveApiFp(configuration).getObjectiveValidations(
+        event_id,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Get valid mappings for conditions
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getValidMappings(event_id: number, options?: any) {
+      return ObjectiveApiFp(configuration).getValidMappings(event_id, options)(
+        fetch,
+        basePath,
+      );
+    },
+    /**
+     * Validates item objectives for an event seeing if there are completions on trade
+     * @param {number} event_id Event Id
+     * @param {ValidationRequest} body Validation request
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    validateObjectives(
+      event_id: number,
+      body: ValidationRequest,
+      options?: any,
+    ) {
+      return ObjectiveApiFp(configuration).validateObjectives(
+        event_id,
+        body,
+        options,
+      )(fetch, basePath);
+    },
+  };
 };
 
 /**
@@ -8348,303 +10245,431 @@ export const ObjectiveApiFactory = function (configuration?: Configuration, fetc
  * @extends {BaseAPI}
  */
 export class ObjectiveApi extends BaseAPI {
-    /**
-     * Creates a new objective
-     * @param {number} event_id Event Id
-     * @param {ObjectiveCreate} body Objective to create
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ObjectiveApi
-     */
-    public createObjective(event_id: number, body: ObjectiveCreate, options?: any) {
-        return ObjectiveApiFp(this.configuration).createObjective(event_id, body, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Creates a new objective
+   * @param {number} event_id Event Id
+   * @param {ObjectiveCreate} body Objective to create
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ObjectiveApi
+   */
+  public createObjective(
+    event_id: number,
+    body: ObjectiveCreate,
+    options?: any,
+  ) {
+    return ObjectiveApiFp(this.configuration).createObjective(
+      event_id,
+      body,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Deletes an objective
-     * @param {number} event_id Event Id
-     * @param {number} id Objective Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ObjectiveApi
-     */
-    public deleteObjective(event_id: number, id: number, options?: any) {
-        return ObjectiveApiFp(this.configuration).deleteObjective(event_id, id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Deletes an objective
+   * @param {number} event_id Event Id
+   * @param {number} id Objective Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ObjectiveApi
+   */
+  public deleteObjective(event_id: number, id: number, options?: any) {
+    return ObjectiveApiFp(this.configuration).deleteObjective(
+      event_id,
+      id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Gets an objective by id
-     * @param {number} event_id Event Id
-     * @param {number} id Objective Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ObjectiveApi
-     */
-    public getObjective(event_id: number, id: number, options?: any) {
-        return ObjectiveApiFp(this.configuration).getObjective(event_id, id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Gets an objective by id
+   * @param {number} event_id Event Id
+   * @param {number} id Objective Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ObjectiveApi
+   */
+  public getObjective(event_id: number, id: number, options?: any) {
+    return ObjectiveApiFp(this.configuration).getObjective(
+      event_id,
+      id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Gets all objectives for an event
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ObjectiveApi
-     */
-    public getObjectiveTreeForEvent(event_id: number, options?: any) {
-        return ObjectiveApiFp(this.configuration).getObjectiveTreeForEvent(event_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Gets all objectives for an event
+   * @param {number} event_id Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ObjectiveApi
+   */
+  public getObjectiveTreeForEvent(event_id: number, options?: any) {
+    return ObjectiveApiFp(this.configuration).getObjectiveTreeForEvent(
+      event_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Gets objective validations for an event
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ObjectiveApi
-     */
-    public getObjectiveValidations(event_id: number, options?: any) {
-        return ObjectiveApiFp(this.configuration).getObjectiveValidations(event_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Gets objective validations for an event
+   * @param {number} event_id Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ObjectiveApi
+   */
+  public getObjectiveValidations(event_id: number, options?: any) {
+    return ObjectiveApiFp(this.configuration).getObjectiveValidations(
+      event_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Get valid mappings for conditions
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ObjectiveApi
-     */
-    public getValidMappings(event_id: number, options?: any) {
-        return ObjectiveApiFp(this.configuration).getValidMappings(event_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Get valid mappings for conditions
+   * @param {number} event_id Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ObjectiveApi
+   */
+  public getValidMappings(event_id: number, options?: any) {
+    return ObjectiveApiFp(this.configuration).getValidMappings(
+      event_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Validates item objectives for an event seeing if there are completions on trade
-     * @param {number} event_id Event Id
-     * @param {ValidationRequest} body Validation request
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ObjectiveApi
-     */
-    public validateObjectives(event_id: number, body: ValidationRequest, options?: any) {
-        return ObjectiveApiFp(this.configuration).validateObjectives(event_id, body, options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Validates item objectives for an event seeing if there are completions on trade
+   * @param {number} event_id Event Id
+   * @param {ValidationRequest} body Validation request
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ObjectiveApi
+   */
+  public validateObjectives(
+    event_id: number,
+    body: ValidationRequest,
+    options?: any,
+  ) {
+    return ObjectiveApiFp(this.configuration).validateObjectives(
+      event_id,
+      body,
+      options,
+    )(this.fetch, this.basePath);
+  }
 }
 
 /**
  * ScoresApi - fetch parameter creator
  * @export
  */
-export const ScoresApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Fetches the latest scores for the current event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLatestScoresForEvent(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getLatestScoresForEvent.');
-            }
-            const localVarPath = `/events/{event_id}/scores/latest`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const ScoresApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Fetches the latest scores for the current event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLatestScoresForEvent(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getLatestScoresForEvent.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/scores/latest`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Websocket for score updates. Once connected, the client will receive score updates in real-time.
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        scoreWebSocket(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling scoreWebSocket.');
-            }
-            const localVarPath = `/events/{event_id}/scores/ws`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Websocket for score updates. Once connected, the client will receive score updates in real-time.
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    scoreWebSocket(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling scoreWebSocket.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/scores/ws`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Websocket for simple score updates.
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        simpleScoreWebSocket(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling simpleScoreWebSocket.');
-            }
-            const localVarPath = `/events/{event_id}/scores/simple/ws`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Websocket for simple score updates.
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    simpleScoreWebSocket(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling simpleScoreWebSocket.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/scores/simple/ws`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * ScoresApi - functional programming interface
  * @export
  */
-export const ScoresApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Fetches the latest scores for the current event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLatestScoresForEvent(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<ScoreDiff>> {
-            const localVarFetchArgs = ScoresApiFetchParamCreator(configuration).getLatestScoresForEvent(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Websocket for score updates. Once connected, the client will receive score updates in real-time.
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        scoreWebSocket(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ScoreDiff> {
-            const localVarFetchArgs = ScoresApiFetchParamCreator(configuration).scoreWebSocket(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Websocket for simple score updates.
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        simpleScoreWebSocket(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<{ [key: string]: number; }> {
-            const localVarFetchArgs = ScoresApiFetchParamCreator(configuration).simpleScoreWebSocket(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const ScoresApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Fetches the latest scores for the current event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLatestScoresForEvent(
+      event_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<ScoreDiff>> {
+      const localVarFetchArgs = ScoresApiFetchParamCreator(
+        configuration,
+      ).getLatestScoresForEvent(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Websocket for score updates. Once connected, the client will receive score updates in real-time.
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    scoreWebSocket(
+      event_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<ScoreDiff> {
+      const localVarFetchArgs = ScoresApiFetchParamCreator(
+        configuration,
+      ).scoreWebSocket(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Websocket for simple score updates.
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    simpleScoreWebSocket(
+      event_id: number,
+      options?: any,
+    ): (
+      fetch?: FetchAPI,
+      basePath?: string,
+    ) => Promise<{ [key: string]: number }> {
+      const localVarFetchArgs = ScoresApiFetchParamCreator(
+        configuration,
+      ).simpleScoreWebSocket(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * ScoresApi - factory interface
  * @export
  */
-export const ScoresApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Fetches the latest scores for the current event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLatestScoresForEvent(event_id: number, options?: any) {
-            return ScoresApiFp(configuration).getLatestScoresForEvent(event_id, options)(fetch, basePath);
-        },
-        /**
-         * Websocket for score updates. Once connected, the client will receive score updates in real-time.
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        scoreWebSocket(event_id: number, options?: any) {
-            return ScoresApiFp(configuration).scoreWebSocket(event_id, options)(fetch, basePath);
-        },
-        /**
-         * Websocket for simple score updates.
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        simpleScoreWebSocket(event_id: number, options?: any) {
-            return ScoresApiFp(configuration).simpleScoreWebSocket(event_id, options)(fetch, basePath);
-        },
-    };
+export const ScoresApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Fetches the latest scores for the current event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLatestScoresForEvent(event_id: number, options?: any) {
+      return ScoresApiFp(configuration).getLatestScoresForEvent(
+        event_id,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Websocket for score updates. Once connected, the client will receive score updates in real-time.
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    scoreWebSocket(event_id: number, options?: any) {
+      return ScoresApiFp(configuration).scoreWebSocket(event_id, options)(
+        fetch,
+        basePath,
+      );
+    },
+    /**
+     * Websocket for simple score updates.
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    simpleScoreWebSocket(event_id: number, options?: any) {
+      return ScoresApiFp(configuration).simpleScoreWebSocket(event_id, options)(
+        fetch,
+        basePath,
+      );
+    },
+  };
 };
 
 /**
@@ -8654,266 +10679,393 @@ export const ScoresApiFactory = function (configuration?: Configuration, fetch?:
  * @extends {BaseAPI}
  */
 export class ScoresApi extends BaseAPI {
-    /**
-     * Fetches the latest scores for the current event
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ScoresApi
-     */
-    public getLatestScoresForEvent(event_id: number, options?: any) {
-        return ScoresApiFp(this.configuration).getLatestScoresForEvent(event_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Fetches the latest scores for the current event
+   * @param {number} event_id Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ScoresApi
+   */
+  public getLatestScoresForEvent(event_id: number, options?: any) {
+    return ScoresApiFp(this.configuration).getLatestScoresForEvent(
+      event_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Websocket for score updates. Once connected, the client will receive score updates in real-time.
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ScoresApi
-     */
-    public scoreWebSocket(event_id: number, options?: any) {
-        return ScoresApiFp(this.configuration).scoreWebSocket(event_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Websocket for score updates. Once connected, the client will receive score updates in real-time.
+   * @param {number} event_id Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ScoresApi
+   */
+  public scoreWebSocket(event_id: number, options?: any) {
+    return ScoresApiFp(this.configuration).scoreWebSocket(event_id, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 
-    /**
-     * Websocket for simple score updates.
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ScoresApi
-     */
-    public simpleScoreWebSocket(event_id: number, options?: any) {
-        return ScoresApiFp(this.configuration).simpleScoreWebSocket(event_id, options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Websocket for simple score updates.
+   * @param {number} event_id Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ScoresApi
+   */
+  public simpleScoreWebSocket(event_id: number, options?: any) {
+    return ScoresApiFp(this.configuration).simpleScoreWebSocket(
+      event_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 }
 
 /**
  * ScoringApi - fetch parameter creator
  * @export
  */
-export const ScoringApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Creates a new scoring preset
-         * @param {number} event_id Event Id
-         * @param {ScoringPresetCreate} body Preset to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createScoringPreset(event_id: number, body: ScoringPresetCreate, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createScoringPreset.');
-            }
-            // verify required parameter 'body' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling createScoringPreset.');
-            }
-            const localVarPath = `/events/{event_id}/scoring-presets`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const ScoringApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Creates a new scoring preset
+     * @param {number} event_id Event Id
+     * @param {ScoringPresetCreate} body Preset to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createScoringPreset(
+      event_id: number,
+      body: ScoringPresetCreate,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling createScoringPreset.",
+        );
+      }
+      // verify required parameter 'body' is not null or undefined
+      if (body === null || body === undefined) {
+        throw new RequiredError(
+          "body",
+          "Required parameter body was null or undefined when calling createScoringPreset.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/scoring-presets`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "PUT" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"ScoringPresetCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"ScoringPresetCreate" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(body || {})
+        : body || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Deletes a scoring preset by id
-         * @param {number} event_id Event Id
-         * @param {number} id Preset Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteScoringPreset(event_id: number, id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling deleteScoringPreset.');
-            }
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteScoringPreset.');
-            }
-            const localVarPath = `/events/{event_id}/scoring-presets/{id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Deletes a scoring preset by id
+     * @param {number} event_id Event Id
+     * @param {number} id Preset Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteScoringPreset(
+      event_id: number,
+      id: number,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling deleteScoringPreset.",
+        );
+      }
+      // verify required parameter 'id' is not null or undefined
+      if (id === null || id === undefined) {
+        throw new RequiredError(
+          "id",
+          "Required parameter id was null or undefined when calling deleteScoringPreset.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/scoring-presets/{id}`
+        .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+        .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign(
+        { method: "DELETE" },
+        options,
+      );
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches the scoring presets for the current event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getScoringPresetsForEvent(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getScoringPresetsForEvent.');
-            }
-            const localVarPath = `/events/{event_id}/scoring-presets`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Fetches the scoring presets for the current event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getScoringPresetsForEvent(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getScoringPresetsForEvent.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/scoring-presets`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * ScoringApi - functional programming interface
  * @export
  */
-export const ScoringApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Creates a new scoring preset
-         * @param {number} event_id Event Id
-         * @param {ScoringPresetCreate} body Preset to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createScoringPreset(event_id: number, body: ScoringPresetCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ScoringPreset> {
-            const localVarFetchArgs = ScoringApiFetchParamCreator(configuration).createScoringPreset(event_id, body, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Deletes a scoring preset by id
-         * @param {number} event_id Event Id
-         * @param {number} id Preset Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteScoringPreset(event_id: number, id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = ScoringApiFetchParamCreator(configuration).deleteScoringPreset(event_id, id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches the scoring presets for the current event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getScoringPresetsForEvent(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<ScoringPreset>> {
-            const localVarFetchArgs = ScoringApiFetchParamCreator(configuration).getScoringPresetsForEvent(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const ScoringApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Creates a new scoring preset
+     * @param {number} event_id Event Id
+     * @param {ScoringPresetCreate} body Preset to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createScoringPreset(
+      event_id: number,
+      body: ScoringPresetCreate,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<ScoringPreset> {
+      const localVarFetchArgs = ScoringApiFetchParamCreator(
+        configuration,
+      ).createScoringPreset(event_id, body, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Deletes a scoring preset by id
+     * @param {number} event_id Event Id
+     * @param {number} id Preset Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteScoringPreset(
+      event_id: number,
+      id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      const localVarFetchArgs = ScoringApiFetchParamCreator(
+        configuration,
+      ).deleteScoringPreset(event_id, id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches the scoring presets for the current event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getScoringPresetsForEvent(
+      event_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<ScoringPreset>> {
+      const localVarFetchArgs = ScoringApiFetchParamCreator(
+        configuration,
+      ).getScoringPresetsForEvent(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * ScoringApi - factory interface
  * @export
  */
-export const ScoringApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Creates a new scoring preset
-         * @param {number} event_id Event Id
-         * @param {ScoringPresetCreate} body Preset to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createScoringPreset(event_id: number, body: ScoringPresetCreate, options?: any) {
-            return ScoringApiFp(configuration).createScoringPreset(event_id, body, options)(fetch, basePath);
-        },
-        /**
-         * Deletes a scoring preset by id
-         * @param {number} event_id Event Id
-         * @param {number} id Preset Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteScoringPreset(event_id: number, id: number, options?: any) {
-            return ScoringApiFp(configuration).deleteScoringPreset(event_id, id, options)(fetch, basePath);
-        },
-        /**
-         * Fetches the scoring presets for the current event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getScoringPresetsForEvent(event_id: number, options?: any) {
-            return ScoringApiFp(configuration).getScoringPresetsForEvent(event_id, options)(fetch, basePath);
-        },
-    };
+export const ScoringApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Creates a new scoring preset
+     * @param {number} event_id Event Id
+     * @param {ScoringPresetCreate} body Preset to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createScoringPreset(
+      event_id: number,
+      body: ScoringPresetCreate,
+      options?: any,
+    ) {
+      return ScoringApiFp(configuration).createScoringPreset(
+        event_id,
+        body,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Deletes a scoring preset by id
+     * @param {number} event_id Event Id
+     * @param {number} id Preset Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteScoringPreset(event_id: number, id: number, options?: any) {
+      return ScoringApiFp(configuration).deleteScoringPreset(
+        event_id,
+        id,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Fetches the scoring presets for the current event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getScoringPresetsForEvent(event_id: number, options?: any) {
+      return ScoringApiFp(configuration).getScoringPresetsForEvent(
+        event_id,
+        options,
+      )(fetch, basePath);
+    },
+  };
 };
 
 /**
@@ -8923,413 +11075,619 @@ export const ScoringApiFactory = function (configuration?: Configuration, fetch?
  * @extends {BaseAPI}
  */
 export class ScoringApi extends BaseAPI {
-    /**
-     * Creates a new scoring preset
-     * @param {number} event_id Event Id
-     * @param {ScoringPresetCreate} body Preset to create
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ScoringApi
-     */
-    public createScoringPreset(event_id: number, body: ScoringPresetCreate, options?: any) {
-        return ScoringApiFp(this.configuration).createScoringPreset(event_id, body, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Creates a new scoring preset
+   * @param {number} event_id Event Id
+   * @param {ScoringPresetCreate} body Preset to create
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ScoringApi
+   */
+  public createScoringPreset(
+    event_id: number,
+    body: ScoringPresetCreate,
+    options?: any,
+  ) {
+    return ScoringApiFp(this.configuration).createScoringPreset(
+      event_id,
+      body,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Deletes a scoring preset by id
-     * @param {number} event_id Event Id
-     * @param {number} id Preset Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ScoringApi
-     */
-    public deleteScoringPreset(event_id: number, id: number, options?: any) {
-        return ScoringApiFp(this.configuration).deleteScoringPreset(event_id, id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Deletes a scoring preset by id
+   * @param {number} event_id Event Id
+   * @param {number} id Preset Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ScoringApi
+   */
+  public deleteScoringPreset(event_id: number, id: number, options?: any) {
+    return ScoringApiFp(this.configuration).deleteScoringPreset(
+      event_id,
+      id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Fetches the scoring presets for the current event
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ScoringApi
-     */
-    public getScoringPresetsForEvent(event_id: number, options?: any) {
-        return ScoringApiFp(this.configuration).getScoringPresetsForEvent(event_id, options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Fetches the scoring presets for the current event
+   * @param {number} event_id Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ScoringApi
+   */
+  public getScoringPresetsForEvent(event_id: number, options?: any) {
+    return ScoringApiFp(this.configuration).getScoringPresetsForEvent(
+      event_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 }
 
 /**
  * SignupApi - fetch parameter creator
  * @export
  */
-export const SignupApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Creates a signup for the authenticated user
-         * @param {number} event_id Event Id
-         * @param {SignupCreate} body Signup
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createSignup(event_id: number, body: SignupCreate, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createSignup.');
-            }
-            // verify required parameter 'body' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling createSignup.');
-            }
-            const localVarPath = `/events/{event_id}/signups/self`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const SignupApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Creates a signup for the authenticated user
+     * @param {number} event_id Event Id
+     * @param {SignupCreate} body Signup
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createSignup(
+      event_id: number,
+      body: SignupCreate,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling createSignup.",
+        );
+      }
+      // verify required parameter 'body' is not null or undefined
+      if (body === null || body === undefined) {
+        throw new RequiredError(
+          "body",
+          "Required parameter body was null or undefined when calling createSignup.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/signups/self`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "PUT" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"SignupCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"SignupCreate" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(body || {})
+        : body || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Deletes a user's signup for the event
-         * @param {number} event_id Event Id
-         * @param {number} user_id User Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteSignup(event_id: number, user_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling deleteSignup.');
-            }
-            // verify required parameter 'user_id' is not null or undefined
-            if (user_id === null || user_id === undefined) {
-                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling deleteSignup.');
-            }
-            const localVarPath = `/events/{event_id}/signups/{user_id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Deletes a user's signup for the event
+     * @param {number} event_id Event Id
+     * @param {number} user_id User Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteSignup(
+      event_id: number,
+      user_id: number,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling deleteSignup.",
+        );
+      }
+      // verify required parameter 'user_id' is not null or undefined
+      if (user_id === null || user_id === undefined) {
+        throw new RequiredError(
+          "user_id",
+          "Required parameter user_id was null or undefined when calling deleteSignup.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/signups/{user_id}`
+        .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+        .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign(
+        { method: "DELETE" },
+        options,
+      );
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches all signups for the event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEventSignups(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getEventSignups.');
-            }
-            const localVarPath = `/events/{event_id}/signups`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Fetches all signups for the event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEventSignups(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getEventSignups.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/signups`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches an authenticated user's signup for the event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getPersonalSignup(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getPersonalSignup.');
-            }
-            const localVarPath = `/events/{event_id}/signups/self`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Fetches an authenticated user's signup for the event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getPersonalSignup(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getPersonalSignup.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/signups/self`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Reports the actual playtime for the authenticated user
-         * @param {number} event_id Event Id
-         * @param {ReportPlaytimeRequest} body Actual Playtime
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        reportPlaytime(event_id: number, body: ReportPlaytimeRequest, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling reportPlaytime.');
-            }
-            // verify required parameter 'body' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling reportPlaytime.');
-            }
-            const localVarPath = `/events/{event_id}/signups/self/actual-playtime`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Reports the actual playtime for the authenticated user
+     * @param {number} event_id Event Id
+     * @param {ReportPlaytimeRequest} body Actual Playtime
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    reportPlaytime(
+      event_id: number,
+      body: ReportPlaytimeRequest,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling reportPlaytime.",
+        );
+      }
+      // verify required parameter 'body' is not null or undefined
+      if (body === null || body === undefined) {
+        throw new RequiredError(
+          "body",
+          "Required parameter body was null or undefined when calling reportPlaytime.",
+        );
+      }
+      const localVarPath =
+        `/events/{event_id}/signups/self/actual-playtime`.replace(
+          `{${"event_id"}}`,
+          encodeURIComponent(String(event_id)),
+        );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "PUT" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"ReportPlaytimeRequest" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"ReportPlaytimeRequest" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(body || {})
+        : body || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * SignupApi - functional programming interface
  * @export
  */
-export const SignupApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Creates a signup for the authenticated user
-         * @param {number} event_id Event Id
-         * @param {SignupCreate} body Signup
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createSignup(event_id: number, body: SignupCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Signup> {
-            const localVarFetchArgs = SignupApiFetchParamCreator(configuration).createSignup(event_id, body, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Deletes a user's signup for the event
-         * @param {number} event_id Event Id
-         * @param {number} user_id User Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteSignup(event_id: number, user_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = SignupApiFetchParamCreator(configuration).deleteSignup(event_id, user_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches all signups for the event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEventSignups(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Signup>> {
-            const localVarFetchArgs = SignupApiFetchParamCreator(configuration).getEventSignups(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches an authenticated user's signup for the event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getPersonalSignup(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Signup> {
-            const localVarFetchArgs = SignupApiFetchParamCreator(configuration).getPersonalSignup(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Reports the actual playtime for the authenticated user
-         * @param {number} event_id Event Id
-         * @param {ReportPlaytimeRequest} body Actual Playtime
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        reportPlaytime(event_id: number, body: ReportPlaytimeRequest, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Signup> {
-            const localVarFetchArgs = SignupApiFetchParamCreator(configuration).reportPlaytime(event_id, body, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const SignupApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Creates a signup for the authenticated user
+     * @param {number} event_id Event Id
+     * @param {SignupCreate} body Signup
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createSignup(
+      event_id: number,
+      body: SignupCreate,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Signup> {
+      const localVarFetchArgs = SignupApiFetchParamCreator(
+        configuration,
+      ).createSignup(event_id, body, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Deletes a user's signup for the event
+     * @param {number} event_id Event Id
+     * @param {number} user_id User Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteSignup(
+      event_id: number,
+      user_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      const localVarFetchArgs = SignupApiFetchParamCreator(
+        configuration,
+      ).deleteSignup(event_id, user_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches all signups for the event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEventSignups(
+      event_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Signup>> {
+      const localVarFetchArgs = SignupApiFetchParamCreator(
+        configuration,
+      ).getEventSignups(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches an authenticated user's signup for the event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getPersonalSignup(
+      event_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Signup> {
+      const localVarFetchArgs = SignupApiFetchParamCreator(
+        configuration,
+      ).getPersonalSignup(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Reports the actual playtime for the authenticated user
+     * @param {number} event_id Event Id
+     * @param {ReportPlaytimeRequest} body Actual Playtime
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    reportPlaytime(
+      event_id: number,
+      body: ReportPlaytimeRequest,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Signup> {
+      const localVarFetchArgs = SignupApiFetchParamCreator(
+        configuration,
+      ).reportPlaytime(event_id, body, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * SignupApi - factory interface
  * @export
  */
-export const SignupApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Creates a signup for the authenticated user
-         * @param {number} event_id Event Id
-         * @param {SignupCreate} body Signup
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createSignup(event_id: number, body: SignupCreate, options?: any) {
-            return SignupApiFp(configuration).createSignup(event_id, body, options)(fetch, basePath);
-        },
-        /**
-         * Deletes a user's signup for the event
-         * @param {number} event_id Event Id
-         * @param {number} user_id User Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteSignup(event_id: number, user_id: number, options?: any) {
-            return SignupApiFp(configuration).deleteSignup(event_id, user_id, options)(fetch, basePath);
-        },
-        /**
-         * Fetches all signups for the event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getEventSignups(event_id: number, options?: any) {
-            return SignupApiFp(configuration).getEventSignups(event_id, options)(fetch, basePath);
-        },
-        /**
-         * Fetches an authenticated user's signup for the event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getPersonalSignup(event_id: number, options?: any) {
-            return SignupApiFp(configuration).getPersonalSignup(event_id, options)(fetch, basePath);
-        },
-        /**
-         * Reports the actual playtime for the authenticated user
-         * @param {number} event_id Event Id
-         * @param {ReportPlaytimeRequest} body Actual Playtime
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        reportPlaytime(event_id: number, body: ReportPlaytimeRequest, options?: any) {
-            return SignupApiFp(configuration).reportPlaytime(event_id, body, options)(fetch, basePath);
-        },
-    };
+export const SignupApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Creates a signup for the authenticated user
+     * @param {number} event_id Event Id
+     * @param {SignupCreate} body Signup
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createSignup(event_id: number, body: SignupCreate, options?: any) {
+      return SignupApiFp(configuration).createSignup(
+        event_id,
+        body,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Deletes a user's signup for the event
+     * @param {number} event_id Event Id
+     * @param {number} user_id User Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteSignup(event_id: number, user_id: number, options?: any) {
+      return SignupApiFp(configuration).deleteSignup(
+        event_id,
+        user_id,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Fetches all signups for the event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getEventSignups(event_id: number, options?: any) {
+      return SignupApiFp(configuration).getEventSignups(event_id, options)(
+        fetch,
+        basePath,
+      );
+    },
+    /**
+     * Fetches an authenticated user's signup for the event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getPersonalSignup(event_id: number, options?: any) {
+      return SignupApiFp(configuration).getPersonalSignup(event_id, options)(
+        fetch,
+        basePath,
+      );
+    },
+    /**
+     * Reports the actual playtime for the authenticated user
+     * @param {number} event_id Event Id
+     * @param {ReportPlaytimeRequest} body Actual Playtime
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    reportPlaytime(
+      event_id: number,
+      body: ReportPlaytimeRequest,
+      options?: any,
+    ) {
+      return SignupApiFp(configuration).reportPlaytime(
+        event_id,
+        body,
+        options,
+      )(fetch, basePath);
+    },
+  };
 };
 
 /**
@@ -9339,146 +11697,201 @@ export const SignupApiFactory = function (configuration?: Configuration, fetch?:
  * @extends {BaseAPI}
  */
 export class SignupApi extends BaseAPI {
-    /**
-     * Creates a signup for the authenticated user
-     * @param {number} event_id Event Id
-     * @param {SignupCreate} body Signup
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SignupApi
-     */
-    public createSignup(event_id: number, body: SignupCreate, options?: any) {
-        return SignupApiFp(this.configuration).createSignup(event_id, body, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Creates a signup for the authenticated user
+   * @param {number} event_id Event Id
+   * @param {SignupCreate} body Signup
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof SignupApi
+   */
+  public createSignup(event_id: number, body: SignupCreate, options?: any) {
+    return SignupApiFp(this.configuration).createSignup(
+      event_id,
+      body,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Deletes a user's signup for the event
-     * @param {number} event_id Event Id
-     * @param {number} user_id User Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SignupApi
-     */
-    public deleteSignup(event_id: number, user_id: number, options?: any) {
-        return SignupApiFp(this.configuration).deleteSignup(event_id, user_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Deletes a user's signup for the event
+   * @param {number} event_id Event Id
+   * @param {number} user_id User Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof SignupApi
+   */
+  public deleteSignup(event_id: number, user_id: number, options?: any) {
+    return SignupApiFp(this.configuration).deleteSignup(
+      event_id,
+      user_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Fetches all signups for the event
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SignupApi
-     */
-    public getEventSignups(event_id: number, options?: any) {
-        return SignupApiFp(this.configuration).getEventSignups(event_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Fetches all signups for the event
+   * @param {number} event_id Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof SignupApi
+   */
+  public getEventSignups(event_id: number, options?: any) {
+    return SignupApiFp(this.configuration).getEventSignups(event_id, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 
-    /**
-     * Fetches an authenticated user's signup for the event
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SignupApi
-     */
-    public getPersonalSignup(event_id: number, options?: any) {
-        return SignupApiFp(this.configuration).getPersonalSignup(event_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Fetches an authenticated user's signup for the event
+   * @param {number} event_id Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof SignupApi
+   */
+  public getPersonalSignup(event_id: number, options?: any) {
+    return SignupApiFp(this.configuration).getPersonalSignup(event_id, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 
-    /**
-     * Reports the actual playtime for the authenticated user
-     * @param {number} event_id Event Id
-     * @param {ReportPlaytimeRequest} body Actual Playtime
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SignupApi
-     */
-    public reportPlaytime(event_id: number, body: ReportPlaytimeRequest, options?: any) {
-        return SignupApiFp(this.configuration).reportPlaytime(event_id, body, options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Reports the actual playtime for the authenticated user
+   * @param {number} event_id Event Id
+   * @param {ReportPlaytimeRequest} body Actual Playtime
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof SignupApi
+   */
+  public reportPlaytime(
+    event_id: number,
+    body: ReportPlaytimeRequest,
+    options?: any,
+  ) {
+    return SignupApiFp(this.configuration).reportPlaytime(
+      event_id,
+      body,
+      options,
+    )(this.fetch, this.basePath);
+  }
 }
 
 /**
  * StreamsApi - fetch parameter creator
  * @export
  */
-export const StreamsApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Fetches all twitch streams for the current event
-         * @param {number} event_id Event ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getStreams(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getStreams.');
-            }
-            const localVarPath = `/events/{event_id}/streams`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const StreamsApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Fetches all twitch streams for the current event
+     * @param {number} event_id Event ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getStreams(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getStreams.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/streams`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * StreamsApi - functional programming interface
  * @export
  */
-export const StreamsApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Fetches all twitch streams for the current event
-         * @param {number} event_id Event ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getStreams(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<TwitchStream>> {
-            const localVarFetchArgs = StreamsApiFetchParamCreator(configuration).getStreams(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const StreamsApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Fetches all twitch streams for the current event
+     * @param {number} event_id Event ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getStreams(
+      event_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<TwitchStream>> {
+      const localVarFetchArgs = StreamsApiFetchParamCreator(
+        configuration,
+      ).getStreams(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * StreamsApi - factory interface
  * @export
  */
-export const StreamsApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Fetches all twitch streams for the current event
-         * @param {number} event_id Event ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getStreams(event_id: number, options?: any) {
-            return StreamsApiFp(configuration).getStreams(event_id, options)(fetch, basePath);
-        },
-    };
+export const StreamsApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Fetches all twitch streams for the current event
+     * @param {number} event_id Event ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getStreams(event_id: number, options?: any) {
+      return StreamsApiFp(configuration).getStreams(event_id, options)(
+        fetch,
+        basePath,
+      );
+    },
+  };
 };
 
 /**
@@ -9488,400 +11901,621 @@ export const StreamsApiFactory = function (configuration?: Configuration, fetch?
  * @extends {BaseAPI}
  */
 export class StreamsApi extends BaseAPI {
-    /**
-     * Fetches all twitch streams for the current event
-     * @param {number} event_id Event ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof StreamsApi
-     */
-    public getStreams(event_id: number, options?: any) {
-        return StreamsApiFp(this.configuration).getStreams(event_id, options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Fetches all twitch streams for the current event
+   * @param {number} event_id Event ID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof StreamsApi
+   */
+  public getStreams(event_id: number, options?: any) {
+    return StreamsApiFp(this.configuration).getStreams(event_id, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 }
 
 /**
  * SubmissionApi - fetch parameter creator
  * @export
  */
-export const SubmissionApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Deletes a submission
-         * @param {number} event_id Event Id
-         * @param {number} submission_id Submission Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteSubmission(event_id: number, submission_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling deleteSubmission.');
-            }
-            // verify required parameter 'submission_id' is not null or undefined
-            if (submission_id === null || submission_id === undefined) {
-                throw new RequiredError('submission_id','Required parameter submission_id was null or undefined when calling deleteSubmission.');
-            }
-            const localVarPath = `/events/{event_id}/submissions/{submission_id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"submission_id"}}`, encodeURIComponent(String(submission_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const SubmissionApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Deletes a submission
+     * @param {number} event_id Event Id
+     * @param {number} submission_id Submission Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteSubmission(
+      event_id: number,
+      submission_id: number,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling deleteSubmission.",
+        );
+      }
+      // verify required parameter 'submission_id' is not null or undefined
+      if (submission_id === null || submission_id === undefined) {
+        throw new RequiredError(
+          "submission_id",
+          "Required parameter submission_id was null or undefined when calling deleteSubmission.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/submissions/{submission_id}`
+        .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+        .replace(
+          `{${"submission_id"}}`,
+          encodeURIComponent(String(submission_id)),
+        );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign(
+        { method: "DELETE" },
+        options,
+      );
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches all submissions for an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getSubmissions(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getSubmissions.');
-            }
-            const localVarPath = `/events/{event_id}/submissions`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Fetches all submissions for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getSubmissions(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getSubmissions.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/submissions`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Reviews a submission
-         * @param {number} event_id Event Id
-         * @param {number} submission_id Submission Id
-         * @param {SubmissionReview} submission Submission review
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        reviewSubmission(event_id: number, submission_id: number, submission: SubmissionReview, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling reviewSubmission.');
-            }
-            // verify required parameter 'submission_id' is not null or undefined
-            if (submission_id === null || submission_id === undefined) {
-                throw new RequiredError('submission_id','Required parameter submission_id was null or undefined when calling reviewSubmission.');
-            }
-            // verify required parameter 'submission' is not null or undefined
-            if (submission === null || submission === undefined) {
-                throw new RequiredError('submission','Required parameter submission was null or undefined when calling reviewSubmission.');
-            }
-            const localVarPath = `/events/{event_id}/submissions/{submission_id}/review`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"submission_id"}}`, encodeURIComponent(String(submission_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Reviews a submission
+     * @param {number} event_id Event Id
+     * @param {number} submission_id Submission Id
+     * @param {SubmissionReview} submission Submission review
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    reviewSubmission(
+      event_id: number,
+      submission_id: number,
+      submission: SubmissionReview,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling reviewSubmission.",
+        );
+      }
+      // verify required parameter 'submission_id' is not null or undefined
+      if (submission_id === null || submission_id === undefined) {
+        throw new RequiredError(
+          "submission_id",
+          "Required parameter submission_id was null or undefined when calling reviewSubmission.",
+        );
+      }
+      // verify required parameter 'submission' is not null or undefined
+      if (submission === null || submission === undefined) {
+        throw new RequiredError(
+          "submission",
+          "Required parameter submission was null or undefined when calling reviewSubmission.",
+        );
+      }
+      const localVarPath =
+        `/events/{event_id}/submissions/{submission_id}/review`
+          .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+          .replace(
+            `{${"submission_id"}}`,
+            encodeURIComponent(String(submission_id)),
+          );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "PUT" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"SubmissionReview" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(submission || {}) : (submission || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"SubmissionReview" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(submission || {})
+        : submission || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Sets submissions for teams
-         * @param {number} event_id Event Id
-         * @param {TeamSubmissionCreate} body Submissions to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        setBulkSubmissionForAdmin(event_id: number, body: TeamSubmissionCreate, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling setBulkSubmissionForAdmin.');
-            }
-            // verify required parameter 'body' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling setBulkSubmissionForAdmin.');
-            }
-            const localVarPath = `/events/{event_id}/submissions/admin`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Sets submissions for teams
+     * @param {number} event_id Event Id
+     * @param {TeamSubmissionCreate} body Submissions to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    setBulkSubmissionForAdmin(
+      event_id: number,
+      body: TeamSubmissionCreate,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling setBulkSubmissionForAdmin.",
+        );
+      }
+      // verify required parameter 'body' is not null or undefined
+      if (body === null || body === undefined) {
+        throw new RequiredError(
+          "body",
+          "Required parameter body was null or undefined when calling setBulkSubmissionForAdmin.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/submissions/admin`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "PUT" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"TeamSubmissionCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"TeamSubmissionCreate" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(body || {})
+        : body || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Submits a bounty for an event
-         * @param {number} event_id Event Id
-         * @param {SubmissionCreate} body Submission to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        submitBounty(event_id: number, body: SubmissionCreate, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling submitBounty.');
-            }
-            // verify required parameter 'body' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling submitBounty.');
-            }
-            const localVarPath = `/events/{event_id}/submissions`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Submits a bounty for an event
+     * @param {number} event_id Event Id
+     * @param {SubmissionCreate} body Submission to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    submitBounty(
+      event_id: number,
+      body: SubmissionCreate,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling submitBounty.",
+        );
+      }
+      // verify required parameter 'body' is not null or undefined
+      if (body === null || body === undefined) {
+        throw new RequiredError(
+          "body",
+          "Required parameter body was null or undefined when calling submitBounty.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/submissions`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "PUT" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"SubmissionCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"SubmissionCreate" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(body || {})
+        : body || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * SubmissionApi - functional programming interface
  * @export
  */
-export const SubmissionApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Deletes a submission
-         * @param {number} event_id Event Id
-         * @param {number} submission_id Submission Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteSubmission(event_id: number, submission_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = SubmissionApiFetchParamCreator(configuration).deleteSubmission(event_id, submission_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches all submissions for an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getSubmissions(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Submission>> {
-            const localVarFetchArgs = SubmissionApiFetchParamCreator(configuration).getSubmissions(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Reviews a submission
-         * @param {number} event_id Event Id
-         * @param {number} submission_id Submission Id
-         * @param {SubmissionReview} submission Submission review
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        reviewSubmission(event_id: number, submission_id: number, submission: SubmissionReview, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Submission> {
-            const localVarFetchArgs = SubmissionApiFetchParamCreator(configuration).reviewSubmission(event_id, submission_id, submission, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Sets submissions for teams
-         * @param {number} event_id Event Id
-         * @param {TeamSubmissionCreate} body Submissions to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        setBulkSubmissionForAdmin(event_id: number, body: TeamSubmissionCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Submission>> {
-            const localVarFetchArgs = SubmissionApiFetchParamCreator(configuration).setBulkSubmissionForAdmin(event_id, body, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Submits a bounty for an event
-         * @param {number} event_id Event Id
-         * @param {SubmissionCreate} body Submission to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        submitBounty(event_id: number, body: SubmissionCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Submission> {
-            const localVarFetchArgs = SubmissionApiFetchParamCreator(configuration).submitBounty(event_id, body, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const SubmissionApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Deletes a submission
+     * @param {number} event_id Event Id
+     * @param {number} submission_id Submission Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteSubmission(
+      event_id: number,
+      submission_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      const localVarFetchArgs = SubmissionApiFetchParamCreator(
+        configuration,
+      ).deleteSubmission(event_id, submission_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches all submissions for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getSubmissions(
+      event_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Submission>> {
+      const localVarFetchArgs = SubmissionApiFetchParamCreator(
+        configuration,
+      ).getSubmissions(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Reviews a submission
+     * @param {number} event_id Event Id
+     * @param {number} submission_id Submission Id
+     * @param {SubmissionReview} submission Submission review
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    reviewSubmission(
+      event_id: number,
+      submission_id: number,
+      submission: SubmissionReview,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Submission> {
+      const localVarFetchArgs = SubmissionApiFetchParamCreator(
+        configuration,
+      ).reviewSubmission(event_id, submission_id, submission, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Sets submissions for teams
+     * @param {number} event_id Event Id
+     * @param {TeamSubmissionCreate} body Submissions to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    setBulkSubmissionForAdmin(
+      event_id: number,
+      body: TeamSubmissionCreate,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Submission>> {
+      const localVarFetchArgs = SubmissionApiFetchParamCreator(
+        configuration,
+      ).setBulkSubmissionForAdmin(event_id, body, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Submits a bounty for an event
+     * @param {number} event_id Event Id
+     * @param {SubmissionCreate} body Submission to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    submitBounty(
+      event_id: number,
+      body: SubmissionCreate,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Submission> {
+      const localVarFetchArgs = SubmissionApiFetchParamCreator(
+        configuration,
+      ).submitBounty(event_id, body, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * SubmissionApi - factory interface
  * @export
  */
-export const SubmissionApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Deletes a submission
-         * @param {number} event_id Event Id
-         * @param {number} submission_id Submission Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteSubmission(event_id: number, submission_id: number, options?: any) {
-            return SubmissionApiFp(configuration).deleteSubmission(event_id, submission_id, options)(fetch, basePath);
-        },
-        /**
-         * Fetches all submissions for an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getSubmissions(event_id: number, options?: any) {
-            return SubmissionApiFp(configuration).getSubmissions(event_id, options)(fetch, basePath);
-        },
-        /**
-         * Reviews a submission
-         * @param {number} event_id Event Id
-         * @param {number} submission_id Submission Id
-         * @param {SubmissionReview} submission Submission review
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        reviewSubmission(event_id: number, submission_id: number, submission: SubmissionReview, options?: any) {
-            return SubmissionApiFp(configuration).reviewSubmission(event_id, submission_id, submission, options)(fetch, basePath);
-        },
-        /**
-         * Sets submissions for teams
-         * @param {number} event_id Event Id
-         * @param {TeamSubmissionCreate} body Submissions to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        setBulkSubmissionForAdmin(event_id: number, body: TeamSubmissionCreate, options?: any) {
-            return SubmissionApiFp(configuration).setBulkSubmissionForAdmin(event_id, body, options)(fetch, basePath);
-        },
-        /**
-         * Submits a bounty for an event
-         * @param {number} event_id Event Id
-         * @param {SubmissionCreate} body Submission to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        submitBounty(event_id: number, body: SubmissionCreate, options?: any) {
-            return SubmissionApiFp(configuration).submitBounty(event_id, body, options)(fetch, basePath);
-        },
-    };
+export const SubmissionApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Deletes a submission
+     * @param {number} event_id Event Id
+     * @param {number} submission_id Submission Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteSubmission(event_id: number, submission_id: number, options?: any) {
+      return SubmissionApiFp(configuration).deleteSubmission(
+        event_id,
+        submission_id,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Fetches all submissions for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getSubmissions(event_id: number, options?: any) {
+      return SubmissionApiFp(configuration).getSubmissions(event_id, options)(
+        fetch,
+        basePath,
+      );
+    },
+    /**
+     * Reviews a submission
+     * @param {number} event_id Event Id
+     * @param {number} submission_id Submission Id
+     * @param {SubmissionReview} submission Submission review
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    reviewSubmission(
+      event_id: number,
+      submission_id: number,
+      submission: SubmissionReview,
+      options?: any,
+    ) {
+      return SubmissionApiFp(configuration).reviewSubmission(
+        event_id,
+        submission_id,
+        submission,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Sets submissions for teams
+     * @param {number} event_id Event Id
+     * @param {TeamSubmissionCreate} body Submissions to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    setBulkSubmissionForAdmin(
+      event_id: number,
+      body: TeamSubmissionCreate,
+      options?: any,
+    ) {
+      return SubmissionApiFp(configuration).setBulkSubmissionForAdmin(
+        event_id,
+        body,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Submits a bounty for an event
+     * @param {number} event_id Event Id
+     * @param {SubmissionCreate} body Submission to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    submitBounty(event_id: number, body: SubmissionCreate, options?: any) {
+      return SubmissionApiFp(configuration).submitBounty(
+        event_id,
+        body,
+        options,
+      )(fetch, basePath);
+    },
+  };
 };
 
 /**
@@ -9891,646 +12525,1001 @@ export const SubmissionApiFactory = function (configuration?: Configuration, fet
  * @extends {BaseAPI}
  */
 export class SubmissionApi extends BaseAPI {
-    /**
-     * Deletes a submission
-     * @param {number} event_id Event Id
-     * @param {number} submission_id Submission Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SubmissionApi
-     */
-    public deleteSubmission(event_id: number, submission_id: number, options?: any) {
-        return SubmissionApiFp(this.configuration).deleteSubmission(event_id, submission_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Deletes a submission
+   * @param {number} event_id Event Id
+   * @param {number} submission_id Submission Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof SubmissionApi
+   */
+  public deleteSubmission(
+    event_id: number,
+    submission_id: number,
+    options?: any,
+  ) {
+    return SubmissionApiFp(this.configuration).deleteSubmission(
+      event_id,
+      submission_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Fetches all submissions for an event
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SubmissionApi
-     */
-    public getSubmissions(event_id: number, options?: any) {
-        return SubmissionApiFp(this.configuration).getSubmissions(event_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Fetches all submissions for an event
+   * @param {number} event_id Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof SubmissionApi
+   */
+  public getSubmissions(event_id: number, options?: any) {
+    return SubmissionApiFp(this.configuration).getSubmissions(
+      event_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Reviews a submission
-     * @param {number} event_id Event Id
-     * @param {number} submission_id Submission Id
-     * @param {SubmissionReview} submission Submission review
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SubmissionApi
-     */
-    public reviewSubmission(event_id: number, submission_id: number, submission: SubmissionReview, options?: any) {
-        return SubmissionApiFp(this.configuration).reviewSubmission(event_id, submission_id, submission, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Reviews a submission
+   * @param {number} event_id Event Id
+   * @param {number} submission_id Submission Id
+   * @param {SubmissionReview} submission Submission review
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof SubmissionApi
+   */
+  public reviewSubmission(
+    event_id: number,
+    submission_id: number,
+    submission: SubmissionReview,
+    options?: any,
+  ) {
+    return SubmissionApiFp(this.configuration).reviewSubmission(
+      event_id,
+      submission_id,
+      submission,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Sets submissions for teams
-     * @param {number} event_id Event Id
-     * @param {TeamSubmissionCreate} body Submissions to create
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SubmissionApi
-     */
-    public setBulkSubmissionForAdmin(event_id: number, body: TeamSubmissionCreate, options?: any) {
-        return SubmissionApiFp(this.configuration).setBulkSubmissionForAdmin(event_id, body, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Sets submissions for teams
+   * @param {number} event_id Event Id
+   * @param {TeamSubmissionCreate} body Submissions to create
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof SubmissionApi
+   */
+  public setBulkSubmissionForAdmin(
+    event_id: number,
+    body: TeamSubmissionCreate,
+    options?: any,
+  ) {
+    return SubmissionApiFp(this.configuration).setBulkSubmissionForAdmin(
+      event_id,
+      body,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Submits a bounty for an event
-     * @param {number} event_id Event Id
-     * @param {SubmissionCreate} body Submission to create
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SubmissionApi
-     */
-    public submitBounty(event_id: number, body: SubmissionCreate, options?: any) {
-        return SubmissionApiFp(this.configuration).submitBounty(event_id, body, options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Submits a bounty for an event
+   * @param {number} event_id Event Id
+   * @param {SubmissionCreate} body Submission to create
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof SubmissionApi
+   */
+  public submitBounty(event_id: number, body: SubmissionCreate, options?: any) {
+    return SubmissionApiFp(this.configuration).submitBounty(
+      event_id,
+      body,
+      options,
+    )(this.fetch, this.basePath);
+  }
 }
 
 /**
  * TeamApi - fetch parameter creator
  * @export
  */
-export const TeamApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Adds users to teams
-         * @param {number} event_id Event Id
-         * @param {Array<TeamUserCreate>} body Users to add to teams
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addUsersToTeams(event_id: number, body: Array<TeamUserCreate>, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling addUsersToTeams.');
-            }
-            // verify required parameter 'body' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling addUsersToTeams.');
-            }
-            const localVarPath = `/events/{event_id}/teams/users`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const TeamApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Adds users to teams
+     * @param {number} event_id Event Id
+     * @param {Array<TeamUserCreate>} body Users to add to teams
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addUsersToTeams(
+      event_id: number,
+      body: Array<TeamUserCreate>,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling addUsersToTeams.",
+        );
+      }
+      // verify required parameter 'body' is not null or undefined
+      if (body === null || body === undefined) {
+        throw new RequiredError(
+          "body",
+          "Required parameter body was null or undefined when calling addUsersToTeams.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/teams/users`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "PUT" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"Array&lt;TeamUserCreate&gt;" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"Array&lt;TeamUserCreate&gt;" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(body || {})
+        : body || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Creates a suggestion for an objective for your team for an event
-         * @param {number} event_id Event Id
-         * @param {number} objective_id Objective Id
-         * @param {TeamSuggestion} body Suggestion data
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createObjectiveTeamSuggestion(event_id: number, objective_id: number, body: TeamSuggestion, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createObjectiveTeamSuggestion.');
-            }
-            // verify required parameter 'objective_id' is not null or undefined
-            if (objective_id === null || objective_id === undefined) {
-                throw new RequiredError('objective_id','Required parameter objective_id was null or undefined when calling createObjectiveTeamSuggestion.');
-            }
-            // verify required parameter 'body' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling createObjectiveTeamSuggestion.');
-            }
-            const localVarPath = `/events/{event_id}/suggestions/{objective_id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"objective_id"}}`, encodeURIComponent(String(objective_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Creates a suggestion for an objective for your team for an event
+     * @param {number} event_id Event Id
+     * @param {number} objective_id Objective Id
+     * @param {TeamSuggestion} body Suggestion data
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createObjectiveTeamSuggestion(
+      event_id: number,
+      objective_id: number,
+      body: TeamSuggestion,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling createObjectiveTeamSuggestion.",
+        );
+      }
+      // verify required parameter 'objective_id' is not null or undefined
+      if (objective_id === null || objective_id === undefined) {
+        throw new RequiredError(
+          "objective_id",
+          "Required parameter objective_id was null or undefined when calling createObjectiveTeamSuggestion.",
+        );
+      }
+      // verify required parameter 'body' is not null or undefined
+      if (body === null || body === undefined) {
+        throw new RequiredError(
+          "body",
+          "Required parameter body was null or undefined when calling createObjectiveTeamSuggestion.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/suggestions/{objective_id}`
+        .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+        .replace(
+          `{${"objective_id"}}`,
+          encodeURIComponent(String(objective_id)),
+        );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "PUT" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"TeamSuggestion" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"TeamSuggestion" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(body || {})
+        : body || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Creates a team for an event
-         * @param {number} event_id Event Id
-         * @param {TeamCreate} body Team to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createTeam(event_id: number, body: TeamCreate, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createTeam.');
-            }
-            // verify required parameter 'body' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling createTeam.');
-            }
-            const localVarPath = `/events/{event_id}/teams`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Creates a team for an event
+     * @param {number} event_id Event Id
+     * @param {TeamCreate} body Team to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createTeam(
+      event_id: number,
+      body: TeamCreate,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling createTeam.",
+        );
+      }
+      // verify required parameter 'body' is not null or undefined
+      if (body === null || body === undefined) {
+        throw new RequiredError(
+          "body",
+          "Required parameter body was null or undefined when calling createTeam.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/teams`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "PUT" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"TeamCreate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"TeamCreate" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(body || {})
+        : body || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Deletes a suggestion for an objective for your team for an event
-         * @param {number} event_id Event Id
-         * @param {number} objective_id Objective Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteObjectiveTeamSuggestion(event_id: number, objective_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling deleteObjectiveTeamSuggestion.');
-            }
-            // verify required parameter 'objective_id' is not null or undefined
-            if (objective_id === null || objective_id === undefined) {
-                throw new RequiredError('objective_id','Required parameter objective_id was null or undefined when calling deleteObjectiveTeamSuggestion.');
-            }
-            const localVarPath = `/events/{event_id}/suggestions/{objective_id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"objective_id"}}`, encodeURIComponent(String(objective_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Deletes a suggestion for an objective for your team for an event
+     * @param {number} event_id Event Id
+     * @param {number} objective_id Objective Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteObjectiveTeamSuggestion(
+      event_id: number,
+      objective_id: number,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling deleteObjectiveTeamSuggestion.",
+        );
+      }
+      // verify required parameter 'objective_id' is not null or undefined
+      if (objective_id === null || objective_id === undefined) {
+        throw new RequiredError(
+          "objective_id",
+          "Required parameter objective_id was null or undefined when calling deleteObjectiveTeamSuggestion.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/suggestions/{objective_id}`
+        .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+        .replace(
+          `{${"objective_id"}}`,
+          encodeURIComponent(String(objective_id)),
+        );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign(
+        { method: "DELETE" },
+        options,
+      );
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Deletes a team
-         * @param {number} event_id Event Id
-         * @param {number} team_id Team Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteTeam(event_id: number, team_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling deleteTeam.');
-            }
-            // verify required parameter 'team_id' is not null or undefined
-            if (team_id === null || team_id === undefined) {
-                throw new RequiredError('team_id','Required parameter team_id was null or undefined when calling deleteTeam.');
-            }
-            const localVarPath = `/events/{event_id}/teams/{team_id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Deletes a team
+     * @param {number} event_id Event Id
+     * @param {number} team_id Team Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteTeam(
+      event_id: number,
+      team_id: number,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling deleteTeam.",
+        );
+      }
+      // verify required parameter 'team_id' is not null or undefined
+      if (team_id === null || team_id === undefined) {
+        throw new RequiredError(
+          "team_id",
+          "Required parameter team_id was null or undefined when calling deleteTeam.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/teams/{team_id}`
+        .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+        .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign(
+        { method: "DELETE" },
+        options,
+      );
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches a team by id
-         * @param {number} event_id Event Id
-         * @param {number} team_id Team Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTeam(event_id: number, team_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getTeam.');
-            }
-            // verify required parameter 'team_id' is not null or undefined
-            if (team_id === null || team_id === undefined) {
-                throw new RequiredError('team_id','Required parameter team_id was null or undefined when calling getTeam.');
-            }
-            const localVarPath = `/events/{event_id}/teams/{team_id}`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Fetches a team by id
+     * @param {number} event_id Event Id
+     * @param {number} team_id Team Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTeam(event_id: number, team_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getTeam.",
+        );
+      }
+      // verify required parameter 'team_id' is not null or undefined
+      if (team_id === null || team_id === undefined) {
+        throw new RequiredError(
+          "team_id",
+          "Required parameter team_id was null or undefined when calling getTeam.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/teams/{team_id}`
+        .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+        .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches all suggestions for your team for an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTeamSuggestions(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getTeamSuggestions.');
-            }
-            const localVarPath = `/events/{event_id}/suggestions`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Fetches all suggestions for your team for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTeamSuggestions(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getTeamSuggestions.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/suggestions`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches all teams for an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTeams(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getTeams.');
-            }
-            const localVarPath = `/events/{event_id}/teams`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Fetches all teams for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTeams(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getTeams.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/teams`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * TeamApi - functional programming interface
  * @export
  */
-export const TeamApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Adds users to teams
-         * @param {number} event_id Event Id
-         * @param {Array<TeamUserCreate>} body Users to add to teams
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addUsersToTeams(event_id: number, body: Array<TeamUserCreate>, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).addUsersToTeams(event_id, body, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Creates a suggestion for an objective for your team for an event
-         * @param {number} event_id Event Id
-         * @param {number} objective_id Objective Id
-         * @param {TeamSuggestion} body Suggestion data
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createObjectiveTeamSuggestion(event_id: number, objective_id: number, body: TeamSuggestion, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).createObjectiveTeamSuggestion(event_id, objective_id, body, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Creates a team for an event
-         * @param {number} event_id Event Id
-         * @param {TeamCreate} body Team to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createTeam(event_id: number, body: TeamCreate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Team> {
-            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).createTeam(event_id, body, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Deletes a suggestion for an objective for your team for an event
-         * @param {number} event_id Event Id
-         * @param {number} objective_id Objective Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteObjectiveTeamSuggestion(event_id: number, objective_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).deleteObjectiveTeamSuggestion(event_id, objective_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Deletes a team
-         * @param {number} event_id Event Id
-         * @param {number} team_id Team Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteTeam(event_id: number, team_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).deleteTeam(event_id, team_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches a team by id
-         * @param {number} event_id Event Id
-         * @param {number} team_id Team Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTeam(event_id: number, team_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Team> {
-            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).getTeam(event_id, team_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches all suggestions for your team for an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTeamSuggestions(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<TeamSuggestion>> {
-            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).getTeamSuggestions(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches all teams for an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTeams(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Team>> {
-            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).getTeams(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const TeamApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Adds users to teams
+     * @param {number} event_id Event Id
+     * @param {Array<TeamUserCreate>} body Users to add to teams
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addUsersToTeams(
+      event_id: number,
+      body: Array<TeamUserCreate>,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      const localVarFetchArgs = TeamApiFetchParamCreator(
+        configuration,
+      ).addUsersToTeams(event_id, body, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Creates a suggestion for an objective for your team for an event
+     * @param {number} event_id Event Id
+     * @param {number} objective_id Objective Id
+     * @param {TeamSuggestion} body Suggestion data
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createObjectiveTeamSuggestion(
+      event_id: number,
+      objective_id: number,
+      body: TeamSuggestion,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      const localVarFetchArgs = TeamApiFetchParamCreator(
+        configuration,
+      ).createObjectiveTeamSuggestion(event_id, objective_id, body, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Creates a team for an event
+     * @param {number} event_id Event Id
+     * @param {TeamCreate} body Team to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createTeam(
+      event_id: number,
+      body: TeamCreate,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Team> {
+      const localVarFetchArgs = TeamApiFetchParamCreator(
+        configuration,
+      ).createTeam(event_id, body, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Deletes a suggestion for an objective for your team for an event
+     * @param {number} event_id Event Id
+     * @param {number} objective_id Objective Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteObjectiveTeamSuggestion(
+      event_id: number,
+      objective_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      const localVarFetchArgs = TeamApiFetchParamCreator(
+        configuration,
+      ).deleteObjectiveTeamSuggestion(event_id, objective_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Deletes a team
+     * @param {number} event_id Event Id
+     * @param {number} team_id Team Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteTeam(
+      event_id: number,
+      team_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      const localVarFetchArgs = TeamApiFetchParamCreator(
+        configuration,
+      ).deleteTeam(event_id, team_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches a team by id
+     * @param {number} event_id Event Id
+     * @param {number} team_id Team Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTeam(
+      event_id: number,
+      team_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Team> {
+      const localVarFetchArgs = TeamApiFetchParamCreator(configuration).getTeam(
+        event_id,
+        team_id,
+        options,
+      );
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches all suggestions for your team for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTeamSuggestions(
+      event_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<TeamSuggestion>> {
+      const localVarFetchArgs = TeamApiFetchParamCreator(
+        configuration,
+      ).getTeamSuggestions(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches all teams for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTeams(
+      event_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Team>> {
+      const localVarFetchArgs = TeamApiFetchParamCreator(
+        configuration,
+      ).getTeams(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * TeamApi - factory interface
  * @export
  */
-export const TeamApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Adds users to teams
-         * @param {number} event_id Event Id
-         * @param {Array<TeamUserCreate>} body Users to add to teams
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addUsersToTeams(event_id: number, body: Array<TeamUserCreate>, options?: any) {
-            return TeamApiFp(configuration).addUsersToTeams(event_id, body, options)(fetch, basePath);
-        },
-        /**
-         * Creates a suggestion for an objective for your team for an event
-         * @param {number} event_id Event Id
-         * @param {number} objective_id Objective Id
-         * @param {TeamSuggestion} body Suggestion data
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createObjectiveTeamSuggestion(event_id: number, objective_id: number, body: TeamSuggestion, options?: any) {
-            return TeamApiFp(configuration).createObjectiveTeamSuggestion(event_id, objective_id, body, options)(fetch, basePath);
-        },
-        /**
-         * Creates a team for an event
-         * @param {number} event_id Event Id
-         * @param {TeamCreate} body Team to create
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createTeam(event_id: number, body: TeamCreate, options?: any) {
-            return TeamApiFp(configuration).createTeam(event_id, body, options)(fetch, basePath);
-        },
-        /**
-         * Deletes a suggestion for an objective for your team for an event
-         * @param {number} event_id Event Id
-         * @param {number} objective_id Objective Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteObjectiveTeamSuggestion(event_id: number, objective_id: number, options?: any) {
-            return TeamApiFp(configuration).deleteObjectiveTeamSuggestion(event_id, objective_id, options)(fetch, basePath);
-        },
-        /**
-         * Deletes a team
-         * @param {number} event_id Event Id
-         * @param {number} team_id Team Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteTeam(event_id: number, team_id: number, options?: any) {
-            return TeamApiFp(configuration).deleteTeam(event_id, team_id, options)(fetch, basePath);
-        },
-        /**
-         * Fetches a team by id
-         * @param {number} event_id Event Id
-         * @param {number} team_id Team Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTeam(event_id: number, team_id: number, options?: any) {
-            return TeamApiFp(configuration).getTeam(event_id, team_id, options)(fetch, basePath);
-        },
-        /**
-         * Fetches all suggestions for your team for an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTeamSuggestions(event_id: number, options?: any) {
-            return TeamApiFp(configuration).getTeamSuggestions(event_id, options)(fetch, basePath);
-        },
-        /**
-         * Fetches all teams for an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTeams(event_id: number, options?: any) {
-            return TeamApiFp(configuration).getTeams(event_id, options)(fetch, basePath);
-        },
-    };
+export const TeamApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Adds users to teams
+     * @param {number} event_id Event Id
+     * @param {Array<TeamUserCreate>} body Users to add to teams
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addUsersToTeams(
+      event_id: number,
+      body: Array<TeamUserCreate>,
+      options?: any,
+    ) {
+      return TeamApiFp(configuration).addUsersToTeams(
+        event_id,
+        body,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Creates a suggestion for an objective for your team for an event
+     * @param {number} event_id Event Id
+     * @param {number} objective_id Objective Id
+     * @param {TeamSuggestion} body Suggestion data
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createObjectiveTeamSuggestion(
+      event_id: number,
+      objective_id: number,
+      body: TeamSuggestion,
+      options?: any,
+    ) {
+      return TeamApiFp(configuration).createObjectiveTeamSuggestion(
+        event_id,
+        objective_id,
+        body,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Creates a team for an event
+     * @param {number} event_id Event Id
+     * @param {TeamCreate} body Team to create
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createTeam(event_id: number, body: TeamCreate, options?: any) {
+      return TeamApiFp(configuration).createTeam(
+        event_id,
+        body,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Deletes a suggestion for an objective for your team for an event
+     * @param {number} event_id Event Id
+     * @param {number} objective_id Objective Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteObjectiveTeamSuggestion(
+      event_id: number,
+      objective_id: number,
+      options?: any,
+    ) {
+      return TeamApiFp(configuration).deleteObjectiveTeamSuggestion(
+        event_id,
+        objective_id,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Deletes a team
+     * @param {number} event_id Event Id
+     * @param {number} team_id Team Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteTeam(event_id: number, team_id: number, options?: any) {
+      return TeamApiFp(configuration).deleteTeam(
+        event_id,
+        team_id,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Fetches a team by id
+     * @param {number} event_id Event Id
+     * @param {number} team_id Team Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTeam(event_id: number, team_id: number, options?: any) {
+      return TeamApiFp(configuration).getTeam(
+        event_id,
+        team_id,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Fetches all suggestions for your team for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTeamSuggestions(event_id: number, options?: any) {
+      return TeamApiFp(configuration).getTeamSuggestions(event_id, options)(
+        fetch,
+        basePath,
+      );
+    },
+    /**
+     * Fetches all teams for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTeams(event_id: number, options?: any) {
+      return TeamApiFp(configuration).getTeams(event_id, options)(
+        fetch,
+        basePath,
+      );
+    },
+  };
 };
 
 /**
@@ -10540,247 +13529,345 @@ export const TeamApiFactory = function (configuration?: Configuration, fetch?: F
  * @extends {BaseAPI}
  */
 export class TeamApi extends BaseAPI {
-    /**
-     * Adds users to teams
-     * @param {number} event_id Event Id
-     * @param {Array<TeamUserCreate>} body Users to add to teams
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TeamApi
-     */
-    public addUsersToTeams(event_id: number, body: Array<TeamUserCreate>, options?: any) {
-        return TeamApiFp(this.configuration).addUsersToTeams(event_id, body, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Adds users to teams
+   * @param {number} event_id Event Id
+   * @param {Array<TeamUserCreate>} body Users to add to teams
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof TeamApi
+   */
+  public addUsersToTeams(
+    event_id: number,
+    body: Array<TeamUserCreate>,
+    options?: any,
+  ) {
+    return TeamApiFp(this.configuration).addUsersToTeams(
+      event_id,
+      body,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Creates a suggestion for an objective for your team for an event
-     * @param {number} event_id Event Id
-     * @param {number} objective_id Objective Id
-     * @param {TeamSuggestion} body Suggestion data
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TeamApi
-     */
-    public createObjectiveTeamSuggestion(event_id: number, objective_id: number, body: TeamSuggestion, options?: any) {
-        return TeamApiFp(this.configuration).createObjectiveTeamSuggestion(event_id, objective_id, body, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Creates a suggestion for an objective for your team for an event
+   * @param {number} event_id Event Id
+   * @param {number} objective_id Objective Id
+   * @param {TeamSuggestion} body Suggestion data
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof TeamApi
+   */
+  public createObjectiveTeamSuggestion(
+    event_id: number,
+    objective_id: number,
+    body: TeamSuggestion,
+    options?: any,
+  ) {
+    return TeamApiFp(this.configuration).createObjectiveTeamSuggestion(
+      event_id,
+      objective_id,
+      body,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Creates a team for an event
-     * @param {number} event_id Event Id
-     * @param {TeamCreate} body Team to create
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TeamApi
-     */
-    public createTeam(event_id: number, body: TeamCreate, options?: any) {
-        return TeamApiFp(this.configuration).createTeam(event_id, body, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Creates a team for an event
+   * @param {number} event_id Event Id
+   * @param {TeamCreate} body Team to create
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof TeamApi
+   */
+  public createTeam(event_id: number, body: TeamCreate, options?: any) {
+    return TeamApiFp(this.configuration).createTeam(
+      event_id,
+      body,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Deletes a suggestion for an objective for your team for an event
-     * @param {number} event_id Event Id
-     * @param {number} objective_id Objective Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TeamApi
-     */
-    public deleteObjectiveTeamSuggestion(event_id: number, objective_id: number, options?: any) {
-        return TeamApiFp(this.configuration).deleteObjectiveTeamSuggestion(event_id, objective_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Deletes a suggestion for an objective for your team for an event
+   * @param {number} event_id Event Id
+   * @param {number} objective_id Objective Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof TeamApi
+   */
+  public deleteObjectiveTeamSuggestion(
+    event_id: number,
+    objective_id: number,
+    options?: any,
+  ) {
+    return TeamApiFp(this.configuration).deleteObjectiveTeamSuggestion(
+      event_id,
+      objective_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Deletes a team
-     * @param {number} event_id Event Id
-     * @param {number} team_id Team Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TeamApi
-     */
-    public deleteTeam(event_id: number, team_id: number, options?: any) {
-        return TeamApiFp(this.configuration).deleteTeam(event_id, team_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Deletes a team
+   * @param {number} event_id Event Id
+   * @param {number} team_id Team Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof TeamApi
+   */
+  public deleteTeam(event_id: number, team_id: number, options?: any) {
+    return TeamApiFp(this.configuration).deleteTeam(
+      event_id,
+      team_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Fetches a team by id
-     * @param {number} event_id Event Id
-     * @param {number} team_id Team Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TeamApi
-     */
-    public getTeam(event_id: number, team_id: number, options?: any) {
-        return TeamApiFp(this.configuration).getTeam(event_id, team_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Fetches a team by id
+   * @param {number} event_id Event Id
+   * @param {number} team_id Team Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof TeamApi
+   */
+  public getTeam(event_id: number, team_id: number, options?: any) {
+    return TeamApiFp(this.configuration).getTeam(
+      event_id,
+      team_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Fetches all suggestions for your team for an event
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TeamApi
-     */
-    public getTeamSuggestions(event_id: number, options?: any) {
-        return TeamApiFp(this.configuration).getTeamSuggestions(event_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Fetches all suggestions for your team for an event
+   * @param {number} event_id Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof TeamApi
+   */
+  public getTeamSuggestions(event_id: number, options?: any) {
+    return TeamApiFp(this.configuration).getTeamSuggestions(event_id, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 
-    /**
-     * Fetches all teams for an event
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TeamApi
-     */
-    public getTeams(event_id: number, options?: any) {
-        return TeamApiFp(this.configuration).getTeams(event_id, options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Fetches all teams for an event
+   * @param {number} event_id Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof TeamApi
+   */
+  public getTeams(event_id: number, options?: any) {
+    return TeamApiFp(this.configuration).getTeams(event_id, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 }
 
 /**
  * TimingApi - fetch parameter creator
  * @export
  */
-export const TimingApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Retrieve the current timing configurations for various operations.
-         * @summary Get timing configurations
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTimings(options: any = {}): FetchArgs {
-            const localVarPath = `/timings`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const TimingApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Retrieve the current timing configurations for various operations.
+     * @summary Get timing configurations
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTimings(options: any = {}): FetchArgs {
+      const localVarPath = `/timings`;
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Update the timing configurations for various operations.
-         * @summary Set timing configurations
-         * @param {Array<TimingCreate>} timings List of timing configurations
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        setTimings(timings: Array<TimingCreate>, options: any = {}): FetchArgs {
-            // verify required parameter 'timings' is not null or undefined
-            if (timings === null || timings === undefined) {
-                throw new RequiredError('timings','Required parameter timings was null or undefined when calling setTimings.');
-            }
-            const localVarPath = `/timings`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Update the timing configurations for various operations.
+     * @summary Set timing configurations
+     * @param {Array<TimingCreate>} timings List of timing configurations
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    setTimings(timings: Array<TimingCreate>, options: any = {}): FetchArgs {
+      // verify required parameter 'timings' is not null or undefined
+      if (timings === null || timings === undefined) {
+        throw new RequiredError(
+          "timings",
+          "Required parameter timings was null or undefined when calling setTimings.",
+        );
+      }
+      const localVarPath = `/timings`;
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "PUT" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"Array&lt;TimingCreate&gt;" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(timings || {}) : (timings || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"Array&lt;TimingCreate&gt;" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(timings || {})
+        : timings || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * TimingApi - functional programming interface
  * @export
  */
-export const TimingApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Retrieve the current timing configurations for various operations.
-         * @summary Get timing configurations
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTimings(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Timing>> {
-            const localVarFetchArgs = TimingApiFetchParamCreator(configuration).getTimings(options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Update the timing configurations for various operations.
-         * @summary Set timing configurations
-         * @param {Array<TimingCreate>} timings List of timing configurations
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        setTimings(timings: Array<TimingCreate>, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = TimingApiFetchParamCreator(configuration).setTimings(timings, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const TimingApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Retrieve the current timing configurations for various operations.
+     * @summary Get timing configurations
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTimings(
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Timing>> {
+      const localVarFetchArgs =
+        TimingApiFetchParamCreator(configuration).getTimings(options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Update the timing configurations for various operations.
+     * @summary Set timing configurations
+     * @param {Array<TimingCreate>} timings List of timing configurations
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    setTimings(
+      timings: Array<TimingCreate>,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      const localVarFetchArgs = TimingApiFetchParamCreator(
+        configuration,
+      ).setTimings(timings, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * TimingApi - factory interface
  * @export
  */
-export const TimingApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Retrieve the current timing configurations for various operations.
-         * @summary Get timing configurations
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTimings(options?: any) {
-            return TimingApiFp(configuration).getTimings(options)(fetch, basePath);
-        },
-        /**
-         * Update the timing configurations for various operations.
-         * @summary Set timing configurations
-         * @param {Array<TimingCreate>} timings List of timing configurations
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        setTimings(timings: Array<TimingCreate>, options?: any) {
-            return TimingApiFp(configuration).setTimings(timings, options)(fetch, basePath);
-        },
-    };
+export const TimingApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Retrieve the current timing configurations for various operations.
+     * @summary Get timing configurations
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTimings(options?: any) {
+      return TimingApiFp(configuration).getTimings(options)(fetch, basePath);
+    },
+    /**
+     * Update the timing configurations for various operations.
+     * @summary Set timing configurations
+     * @param {Array<TimingCreate>} timings List of timing configurations
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    setTimings(timings: Array<TimingCreate>, options?: any) {
+      return TimingApiFp(configuration).setTimings(timings, options)(
+        fetch,
+        basePath,
+      );
+    },
+  };
 };
 
 /**
@@ -10790,619 +13877,921 @@ export const TimingApiFactory = function (configuration?: Configuration, fetch?:
  * @extends {BaseAPI}
  */
 export class TimingApi extends BaseAPI {
-    /**
-     * Retrieve the current timing configurations for various operations.
-     * @summary Get timing configurations
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TimingApi
-     */
-    public getTimings(options?: any) {
-        return TimingApiFp(this.configuration).getTimings(options)(this.fetch, this.basePath);
-    }
+  /**
+   * Retrieve the current timing configurations for various operations.
+   * @summary Get timing configurations
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof TimingApi
+   */
+  public getTimings(options?: any) {
+    return TimingApiFp(this.configuration).getTimings(options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 
-    /**
-     * Update the timing configurations for various operations.
-     * @summary Set timing configurations
-     * @param {Array<TimingCreate>} timings List of timing configurations
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TimingApi
-     */
-    public setTimings(timings: Array<TimingCreate>, options?: any) {
-        return TimingApiFp(this.configuration).setTimings(timings, options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Update the timing configurations for various operations.
+   * @summary Set timing configurations
+   * @param {Array<TimingCreate>} timings List of timing configurations
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof TimingApi
+   */
+  public setTimings(timings: Array<TimingCreate>, options?: any) {
+    return TimingApiFp(this.configuration).setTimings(timings, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 }
 
 /**
  * UserApi - fetch parameter creator
  * @export
  */
-export const UserApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Adds users to teams
-         * @param {number} event_id Event Id
-         * @param {Array<TeamUserCreate>} body Users to add to teams
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addUsersToTeams(event_id: number, body: Array<TeamUserCreate>, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling addUsersToTeams.');
-            }
-            // verify required parameter 'body' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling addUsersToTeams.');
-            }
-            const localVarPath = `/events/{event_id}/teams/users`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+export const UserApiFetchParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     * Adds users to teams
+     * @param {number} event_id Event Id
+     * @param {Array<TeamUserCreate>} body Users to add to teams
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addUsersToTeams(
+      event_id: number,
+      body: Array<TeamUserCreate>,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling addUsersToTeams.",
+        );
+      }
+      // verify required parameter 'body' is not null or undefined
+      if (body === null || body === undefined) {
+        throw new RequiredError(
+          "body",
+          "Required parameter body was null or undefined when calling addUsersToTeams.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/teams/users`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "PUT" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"Array&lt;TeamUserCreate&gt;" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"Array&lt;TeamUserCreate&gt;" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(body || {})
+        : body || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Changes the permissions of a user
-         * @param {number} user_id User Id
-         * @param {Array<Permission>} permissions Permissions
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        changePermissions(user_id: number, permissions: Array<Permission>, options: any = {}): FetchArgs {
-            // verify required parameter 'user_id' is not null or undefined
-            if (user_id === null || user_id === undefined) {
-                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling changePermissions.');
-            }
-            // verify required parameter 'permissions' is not null or undefined
-            if (permissions === null || permissions === undefined) {
-                throw new RequiredError('permissions','Required parameter permissions was null or undefined when calling changePermissions.');
-            }
-            const localVarPath = `/users/{user_id}`
-                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PATCH' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Changes the permissions of a user
+     * @param {number} user_id User Id
+     * @param {Array<Permission>} permissions Permissions
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    changePermissions(
+      user_id: number,
+      permissions: Array<Permission>,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'user_id' is not null or undefined
+      if (user_id === null || user_id === undefined) {
+        throw new RequiredError(
+          "user_id",
+          "Required parameter user_id was null or undefined when calling changePermissions.",
+        );
+      }
+      // verify required parameter 'permissions' is not null or undefined
+      if (permissions === null || permissions === undefined) {
+        throw new RequiredError(
+          "permissions",
+          "Required parameter permissions was null or undefined when calling changePermissions.",
+        );
+      }
+      const localVarPath = `/users/{user_id}`.replace(
+        `{${"user_id"}}`,
+        encodeURIComponent(String(user_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign(
+        { method: "PATCH" },
+        options,
+      );
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"Array&lt;Permission&gt;" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(permissions || {}) : (permissions || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"Array&lt;Permission&gt;" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(permissions || {})
+        : permissions || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches all users
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAllUsers(options: any = {}): FetchArgs {
-            const localVarPath = `/users`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Fetches all users
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAllUsers(options: any = {}): FetchArgs {
+      const localVarPath = `/users`;
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches the atlas progression for a user in an event
-         * @param {number} event_id Event Id
-         * @param {number} user_id User Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAtlasProgression(event_id: number, user_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getAtlasProgression.');
-            }
-            // verify required parameter 'user_id' is not null or undefined
-            if (user_id === null || user_id === undefined) {
-                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling getAtlasProgression.');
-            }
-            const localVarPath = `/events/{event_id}/users/{user_id}/atlas`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
-                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Fetches the atlas progression for a user in an event
+     * @param {number} event_id Event Id
+     * @param {number} user_id User Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAtlasProgression(
+      event_id: number,
+      user_id: number,
+      options: any = {},
+    ): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getAtlasProgression.",
+        );
+      }
+      // verify required parameter 'user_id' is not null or undefined
+      if (user_id === null || user_id === undefined) {
+        throw new RequiredError(
+          "user_id",
+          "Required parameter user_id was null or undefined when calling getAtlasProgression.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/users/{user_id}/atlas`
+        .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+        .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches the authenticated user
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUser(options: any = {}): FetchArgs {
-            const localVarPath = `/users/self`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Fetches the authenticated user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUser(options: any = {}): FetchArgs {
+      const localVarPath = `/users/self`;
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches a user by ID
-         * @param {number} user_id User Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserById(user_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'user_id' is not null or undefined
-            if (user_id === null || user_id === undefined) {
-                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling getUserById.');
-            }
-            const localVarPath = `/users/{user_id}`
-                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Fetches a user by ID
+     * @param {number} user_id User Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUserById(user_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'user_id' is not null or undefined
+      if (user_id === null || user_id === undefined) {
+        throw new RequiredError(
+          "user_id",
+          "Required parameter user_id was null or undefined when calling getUserById.",
+        );
+      }
+      const localVarPath = `/users/{user_id}`.replace(
+        `{${"user_id"}}`,
+        encodeURIComponent(String(user_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Fetches all users for an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUsersForEvent(event_id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'event_id' is not null or undefined
-            if (event_id === null || event_id === undefined) {
-                throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getUsersForEvent.');
-            }
-            const localVarPath = `/events/{event_id}/users`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Fetches all users for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUsersForEvent(event_id: number, options: any = {}): FetchArgs {
+      // verify required parameter 'event_id' is not null or undefined
+      if (event_id === null || event_id === undefined) {
+        throw new RequiredError(
+          "event_id",
+          "Required parameter event_id was null or undefined when calling getUsersForEvent.",
+        );
+      }
+      const localVarPath = `/events/{event_id}/users`.replace(
+        `{${"event_id"}}`,
+        encodeURIComponent(String(event_id)),
+      );
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "GET" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Removes an authentication provider from the authenticated user
-         * @param {string} provider Provider
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        removeAuth(provider: string, options: any = {}): FetchArgs {
-            // verify required parameter 'provider' is not null or undefined
-            if (provider === null || provider === undefined) {
-                throw new RequiredError('provider','Required parameter provider was null or undefined when calling removeAuth.');
-            }
-            const localVarPath = `/users/remove-auth`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Removes an authentication provider from the authenticated user
+     * @param {string} provider Provider
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    removeAuth(provider: string, options: any = {}): FetchArgs {
+      // verify required parameter 'provider' is not null or undefined
+      if (provider === null || provider === undefined) {
+        throw new RequiredError(
+          "provider",
+          "Required parameter provider was null or undefined when calling removeAuth.",
+        );
+      }
+      const localVarPath = `/users/remove-auth`;
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign({ method: "POST" }, options);
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            if (provider !== undefined) {
-                localVarQueryParameter['provider'] = provider;
-            }
+      if (provider !== undefined) {
+        localVarQueryParameter["provider"] = provider;
+      }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Updates the authenticated users display name
-         * @param {UserUpdate} user User
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateUser(user: UserUpdate, options: any = {}): FetchArgs {
-            // verify required parameter 'user' is not null or undefined
-            if (user === null || user === undefined) {
-                throw new RequiredError('user','Required parameter user was null or undefined when calling updateUser.');
-            }
-            const localVarPath = `/users/self`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'PATCH' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     * Updates the authenticated users display name
+     * @param {UserUpdate} user User
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateUser(user: UserUpdate, options: any = {}): FetchArgs {
+      // verify required parameter 'user' is not null or undefined
+      if (user === null || user === undefined) {
+        throw new RequiredError(
+          "user",
+          "Required parameter user was null or undefined when calling updateUser.",
+        );
+      }
+      const localVarPath = `/users/self`;
+      const localVarUrlObj = url.parse(localVarPath, true);
+      const localVarRequestOptions = Object.assign(
+        { method: "PATCH" },
+        options,
+      );
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-            // authentication BearerAuth required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
+      // authentication BearerAuth required
+      if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue =
+          typeof configuration.apiKey === "function"
+            ? configuration.apiKey("Authorization")
+            : configuration.apiKey;
+        localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+      }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            localVarUrlObj.search = null;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"UserUpdate" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(user || {}) : (user || "");
+      localVarUrlObj.query = Object.assign(
+        {},
+        localVarUrlObj.query,
+        localVarQueryParameter,
+        options.query,
+      );
+      // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+      localVarUrlObj.search = null;
+      localVarRequestOptions.headers = Object.assign(
+        {},
+        localVarHeaderParameter,
+        options.headers,
+      );
+      const needsSerialization =
+        <any>"UserUpdate" !== "string" ||
+        localVarRequestOptions.headers["Content-Type"] === "application/json";
+      localVarRequestOptions.body = needsSerialization
+        ? JSON.stringify(user || {})
+        : user || "";
 
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+      return {
+        url: url.format(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
 };
 
 /**
  * UserApi - functional programming interface
  * @export
  */
-export const UserApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Adds users to teams
-         * @param {number} event_id Event Id
-         * @param {Array<TeamUserCreate>} body Users to add to teams
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addUsersToTeams(event_id: number, body: Array<TeamUserCreate>, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = UserApiFetchParamCreator(configuration).addUsersToTeams(event_id, body, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Changes the permissions of a user
-         * @param {number} user_id User Id
-         * @param {Array<Permission>} permissions Permissions
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        changePermissions(user_id: number, permissions: Array<Permission>, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
-            const localVarFetchArgs = UserApiFetchParamCreator(configuration).changePermissions(user_id, permissions, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches all users
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAllUsers(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<User>> {
-            const localVarFetchArgs = UserApiFetchParamCreator(configuration).getAllUsers(options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches the atlas progression for a user in an event
-         * @param {number} event_id Event Id
-         * @param {number} user_id User Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAtlasProgression(event_id: number, user_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<AtlasProgression>> {
-            const localVarFetchArgs = UserApiFetchParamCreator(configuration).getAtlasProgression(event_id, user_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches the authenticated user
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUser(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
-            const localVarFetchArgs = UserApiFetchParamCreator(configuration).getUser(options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches a user by ID
-         * @param {number} user_id User Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserById(user_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
-            const localVarFetchArgs = UserApiFetchParamCreator(configuration).getUserById(user_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Fetches all users for an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUsersForEvent(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<{ [key: string]: Array<MinimalUser>; }> {
-            const localVarFetchArgs = UserApiFetchParamCreator(configuration).getUsersForEvent(event_id, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Removes an authentication provider from the authenticated user
-         * @param {string} provider Provider
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        removeAuth(provider: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
-            const localVarFetchArgs = UserApiFetchParamCreator(configuration).removeAuth(provider, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * Updates the authenticated users display name
-         * @param {UserUpdate} user User
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateUser(user: UserUpdate, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
-            const localVarFetchArgs = UserApiFetchParamCreator(configuration).updateUser(user, options);
-            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
+export const UserApiFp = function (configuration?: Configuration) {
+  return {
+    /**
+     * Adds users to teams
+     * @param {number} event_id Event Id
+     * @param {Array<TeamUserCreate>} body Users to add to teams
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addUsersToTeams(
+      event_id: number,
+      body: Array<TeamUserCreate>,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      const localVarFetchArgs = UserApiFetchParamCreator(
+        configuration,
+      ).addUsersToTeams(event_id, body, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Changes the permissions of a user
+     * @param {number} user_id User Id
+     * @param {Array<Permission>} permissions Permissions
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    changePermissions(
+      user_id: number,
+      permissions: Array<Permission>,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
+      const localVarFetchArgs = UserApiFetchParamCreator(
+        configuration,
+      ).changePermissions(user_id, permissions, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches all users
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAllUsers(
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<Array<User>> {
+      const localVarFetchArgs =
+        UserApiFetchParamCreator(configuration).getAllUsers(options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches the atlas progression for a user in an event
+     * @param {number} event_id Event Id
+     * @param {number} user_id User Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAtlasProgression(
+      event_id: number,
+      user_id: number,
+      options?: any,
+    ): (
+      fetch?: FetchAPI,
+      basePath?: string,
+    ) => Promise<Array<AtlasProgression>> {
+      const localVarFetchArgs = UserApiFetchParamCreator(
+        configuration,
+      ).getAtlasProgression(event_id, user_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches the authenticated user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUser(
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
+      const localVarFetchArgs =
+        UserApiFetchParamCreator(configuration).getUser(options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches a user by ID
+     * @param {number} user_id User Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUserById(
+      user_id: number,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
+      const localVarFetchArgs = UserApiFetchParamCreator(
+        configuration,
+      ).getUserById(user_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Fetches all users for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUsersForEvent(
+      event_id: number,
+      options?: any,
+    ): (
+      fetch?: FetchAPI,
+      basePath?: string,
+    ) => Promise<{ [key: string]: Array<MinimalUser> }> {
+      const localVarFetchArgs = UserApiFetchParamCreator(
+        configuration,
+      ).getUsersForEvent(event_id, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Removes an authentication provider from the authenticated user
+     * @param {string} provider Provider
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    removeAuth(
+      provider: string,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
+      const localVarFetchArgs = UserApiFetchParamCreator(
+        configuration,
+      ).removeAuth(provider, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+    /**
+     * Updates the authenticated users display name
+     * @param {UserUpdate} user User
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateUser(
+      user: UserUpdate,
+      options?: any,
+    ): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
+      const localVarFetchArgs = UserApiFetchParamCreator(
+        configuration,
+      ).updateUser(user, options);
+      return (
+        fetch: FetchAPI = portableFetch,
+        basePath: string = BASE_PATH,
+      ) => {
+        return fetch(
+          basePath + localVarFetchArgs.url,
+          localVarFetchArgs.options,
+        ).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        });
+      };
+    },
+  };
 };
 
 /**
  * UserApi - factory interface
  * @export
  */
-export const UserApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Adds users to teams
-         * @param {number} event_id Event Id
-         * @param {Array<TeamUserCreate>} body Users to add to teams
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addUsersToTeams(event_id: number, body: Array<TeamUserCreate>, options?: any) {
-            return UserApiFp(configuration).addUsersToTeams(event_id, body, options)(fetch, basePath);
-        },
-        /**
-         * Changes the permissions of a user
-         * @param {number} user_id User Id
-         * @param {Array<Permission>} permissions Permissions
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        changePermissions(user_id: number, permissions: Array<Permission>, options?: any) {
-            return UserApiFp(configuration).changePermissions(user_id, permissions, options)(fetch, basePath);
-        },
-        /**
-         * Fetches all users
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAllUsers(options?: any) {
-            return UserApiFp(configuration).getAllUsers(options)(fetch, basePath);
-        },
-        /**
-         * Fetches the atlas progression for a user in an event
-         * @param {number} event_id Event Id
-         * @param {number} user_id User Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAtlasProgression(event_id: number, user_id: number, options?: any) {
-            return UserApiFp(configuration).getAtlasProgression(event_id, user_id, options)(fetch, basePath);
-        },
-        /**
-         * Fetches the authenticated user
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUser(options?: any) {
-            return UserApiFp(configuration).getUser(options)(fetch, basePath);
-        },
-        /**
-         * Fetches a user by ID
-         * @param {number} user_id User Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserById(user_id: number, options?: any) {
-            return UserApiFp(configuration).getUserById(user_id, options)(fetch, basePath);
-        },
-        /**
-         * Fetches all users for an event
-         * @param {number} event_id Event Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUsersForEvent(event_id: number, options?: any) {
-            return UserApiFp(configuration).getUsersForEvent(event_id, options)(fetch, basePath);
-        },
-        /**
-         * Removes an authentication provider from the authenticated user
-         * @param {string} provider Provider
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        removeAuth(provider: string, options?: any) {
-            return UserApiFp(configuration).removeAuth(provider, options)(fetch, basePath);
-        },
-        /**
-         * Updates the authenticated users display name
-         * @param {UserUpdate} user User
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateUser(user: UserUpdate, options?: any) {
-            return UserApiFp(configuration).updateUser(user, options)(fetch, basePath);
-        },
-    };
+export const UserApiFactory = function (
+  configuration?: Configuration,
+  fetch?: FetchAPI,
+  basePath?: string,
+) {
+  return {
+    /**
+     * Adds users to teams
+     * @param {number} event_id Event Id
+     * @param {Array<TeamUserCreate>} body Users to add to teams
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    addUsersToTeams(
+      event_id: number,
+      body: Array<TeamUserCreate>,
+      options?: any,
+    ) {
+      return UserApiFp(configuration).addUsersToTeams(
+        event_id,
+        body,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Changes the permissions of a user
+     * @param {number} user_id User Id
+     * @param {Array<Permission>} permissions Permissions
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    changePermissions(
+      user_id: number,
+      permissions: Array<Permission>,
+      options?: any,
+    ) {
+      return UserApiFp(configuration).changePermissions(
+        user_id,
+        permissions,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Fetches all users
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAllUsers(options?: any) {
+      return UserApiFp(configuration).getAllUsers(options)(fetch, basePath);
+    },
+    /**
+     * Fetches the atlas progression for a user in an event
+     * @param {number} event_id Event Id
+     * @param {number} user_id User Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAtlasProgression(event_id: number, user_id: number, options?: any) {
+      return UserApiFp(configuration).getAtlasProgression(
+        event_id,
+        user_id,
+        options,
+      )(fetch, basePath);
+    },
+    /**
+     * Fetches the authenticated user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUser(options?: any) {
+      return UserApiFp(configuration).getUser(options)(fetch, basePath);
+    },
+    /**
+     * Fetches a user by ID
+     * @param {number} user_id User Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUserById(user_id: number, options?: any) {
+      return UserApiFp(configuration).getUserById(user_id, options)(
+        fetch,
+        basePath,
+      );
+    },
+    /**
+     * Fetches all users for an event
+     * @param {number} event_id Event Id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUsersForEvent(event_id: number, options?: any) {
+      return UserApiFp(configuration).getUsersForEvent(event_id, options)(
+        fetch,
+        basePath,
+      );
+    },
+    /**
+     * Removes an authentication provider from the authenticated user
+     * @param {string} provider Provider
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    removeAuth(provider: string, options?: any) {
+      return UserApiFp(configuration).removeAuth(provider, options)(
+        fetch,
+        basePath,
+      );
+    },
+    /**
+     * Updates the authenticated users display name
+     * @param {UserUpdate} user User
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateUser(user: UserUpdate, options?: any) {
+      return UserApiFp(configuration).updateUser(user, options)(
+        fetch,
+        basePath,
+      );
+    },
+  };
 };
 
 /**
@@ -11412,105 +14801,141 @@ export const UserApiFactory = function (configuration?: Configuration, fetch?: F
  * @extends {BaseAPI}
  */
 export class UserApi extends BaseAPI {
-    /**
-     * Adds users to teams
-     * @param {number} event_id Event Id
-     * @param {Array<TeamUserCreate>} body Users to add to teams
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public addUsersToTeams(event_id: number, body: Array<TeamUserCreate>, options?: any) {
-        return UserApiFp(this.configuration).addUsersToTeams(event_id, body, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Adds users to teams
+   * @param {number} event_id Event Id
+   * @param {Array<TeamUserCreate>} body Users to add to teams
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public addUsersToTeams(
+    event_id: number,
+    body: Array<TeamUserCreate>,
+    options?: any,
+  ) {
+    return UserApiFp(this.configuration).addUsersToTeams(
+      event_id,
+      body,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Changes the permissions of a user
-     * @param {number} user_id User Id
-     * @param {Array<Permission>} permissions Permissions
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public changePermissions(user_id: number, permissions: Array<Permission>, options?: any) {
-        return UserApiFp(this.configuration).changePermissions(user_id, permissions, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Changes the permissions of a user
+   * @param {number} user_id User Id
+   * @param {Array<Permission>} permissions Permissions
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public changePermissions(
+    user_id: number,
+    permissions: Array<Permission>,
+    options?: any,
+  ) {
+    return UserApiFp(this.configuration).changePermissions(
+      user_id,
+      permissions,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Fetches all users
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public getAllUsers(options?: any) {
-        return UserApiFp(this.configuration).getAllUsers(options)(this.fetch, this.basePath);
-    }
+  /**
+   * Fetches all users
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public getAllUsers(options?: any) {
+    return UserApiFp(this.configuration).getAllUsers(options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 
-    /**
-     * Fetches the atlas progression for a user in an event
-     * @param {number} event_id Event Id
-     * @param {number} user_id User Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public getAtlasProgression(event_id: number, user_id: number, options?: any) {
-        return UserApiFp(this.configuration).getAtlasProgression(event_id, user_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Fetches the atlas progression for a user in an event
+   * @param {number} event_id Event Id
+   * @param {number} user_id User Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public getAtlasProgression(event_id: number, user_id: number, options?: any) {
+    return UserApiFp(this.configuration).getAtlasProgression(
+      event_id,
+      user_id,
+      options,
+    )(this.fetch, this.basePath);
+  }
 
-    /**
-     * Fetches the authenticated user
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public getUser(options?: any) {
-        return UserApiFp(this.configuration).getUser(options)(this.fetch, this.basePath);
-    }
+  /**
+   * Fetches the authenticated user
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public getUser(options?: any) {
+    return UserApiFp(this.configuration).getUser(options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 
-    /**
-     * Fetches a user by ID
-     * @param {number} user_id User Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public getUserById(user_id: number, options?: any) {
-        return UserApiFp(this.configuration).getUserById(user_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Fetches a user by ID
+   * @param {number} user_id User Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public getUserById(user_id: number, options?: any) {
+    return UserApiFp(this.configuration).getUserById(user_id, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 
-    /**
-     * Fetches all users for an event
-     * @param {number} event_id Event Id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public getUsersForEvent(event_id: number, options?: any) {
-        return UserApiFp(this.configuration).getUsersForEvent(event_id, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Fetches all users for an event
+   * @param {number} event_id Event Id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public getUsersForEvent(event_id: number, options?: any) {
+    return UserApiFp(this.configuration).getUsersForEvent(event_id, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 
-    /**
-     * Removes an authentication provider from the authenticated user
-     * @param {string} provider Provider
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public removeAuth(provider: string, options?: any) {
-        return UserApiFp(this.configuration).removeAuth(provider, options)(this.fetch, this.basePath);
-    }
+  /**
+   * Removes an authentication provider from the authenticated user
+   * @param {string} provider Provider
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public removeAuth(provider: string, options?: any) {
+    return UserApiFp(this.configuration).removeAuth(provider, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 
-    /**
-     * Updates the authenticated users display name
-     * @param {UserUpdate} user User
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public updateUser(user: UserUpdate, options?: any) {
-        return UserApiFp(this.configuration).updateUser(user, options)(this.fetch, this.basePath);
-    }
-
+  /**
+   * Updates the authenticated users display name
+   * @param {UserUpdate} user User
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public updateUser(user: UserUpdate, options?: any) {
+    return UserApiFp(this.configuration).updateUser(user, options)(
+      this.fetch,
+      this.basePath,
+    );
+  }
 }
-

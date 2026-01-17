@@ -1,7 +1,6 @@
 // Portions of this file are derived from pasteofexile (https://github.com/Dav1dde/pasteofexile)
 // Licensed under GNU AGPL v3.0: https://www.gnu.org/licenses/agpl-3.0.html
 // Copyright (c) Dav1dde and contributors
-import pako from "pako";
 
 export interface PlayerStats {
   averageDamage: number;
@@ -540,8 +539,8 @@ function setPlayerStat(stats: PlayerStats, stat: string, value: number): void {
   }
 }
 
-function pobstringToXml(pob: string): Document {
-  const xmlString = pobstringToXmlString(pob);
+async function pobstringToXml(pob: string): Promise<Document> {
+  const xmlString = await pobstringToXmlString(pob);
   // console.log(xmlString);
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(xmlString, "text/xml");
@@ -551,18 +550,27 @@ function pobstringToXml(pob: string): Document {
   return xmlDoc;
 }
 
-export function pobstringToXmlString(pob: string): string {
+export async function pobstringToXmlString(pob: string): Promise<string> {
   const decoded = atob(pob.replace(/-/g, "+").replace(/_/g, "/"));
   const bytes = new Uint8Array(decoded.length);
   for (let i = 0; i < decoded.length; i++) {
     bytes[i] = decoded.charCodeAt(i);
   }
-  return new TextDecoder().decode(pako.inflate(bytes));
+  const stream = new Blob([bytes])
+    .stream()
+    .pipeThrough(new DecompressionStream("deflate"));
+  const decompressed = await new Response(stream).arrayBuffer();
+  return new TextDecoder().decode(decompressed);
 }
 
-export function xmlStringToPobstring(xmlString: string): string {
+export async function xmlStringToPobstring(xmlString: string): Promise<string> {
   const xmlBytes = new TextEncoder().encode(xmlString);
-  const compressedBytes = pako.deflate(xmlBytes, { level: 9 });
+  const stream = new Blob([xmlBytes])
+    .stream()
+    .pipeThrough(new CompressionStream("deflate"));
+  const compressedBytes = new Uint8Array(
+    await new Response(stream).arrayBuffer(),
+  );
   let binary = "";
   for (let i = 0; i < compressedBytes.length; i++) {
     binary += String.fromCharCode(compressedBytes[i]);
@@ -654,10 +662,10 @@ function determineModDifferences(oldMods: Mod[], newMods: Mod[]): void {
   }
 }
 
-export function decodePoBExport(
+export async function decodePoBExport(
   input?: string,
   baseTypes?: string[],
-): PathOfBuilding {
+): Promise<PathOfBuilding> {
   const result: PathOfBuilding = {
     export: input || "",
     build: {
@@ -690,7 +698,7 @@ export function decodePoBExport(
   if (!input || input.length === 0) {
     return result;
   }
-  const xmlDoc = pobstringToXml(input);
+  const xmlDoc = await pobstringToXml(input);
   const spec = xmlDoc.getElementsByTagName("Spec")[0];
   result.spec.masteryEffects =
     spec

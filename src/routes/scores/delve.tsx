@@ -193,9 +193,9 @@ function DelveTab(): JSX.Element {
   for (const teamId in category.team_score) {
     const completion = {} as Completion;
     completion.number =
-      culmulativeDepthTotal?.team_score[teamId].completions[0].number || 0;
+      culmulativeDepthTotal?.team_score[teamId].completions[0]?.number || 0;
     completion.rank =
-      culmulativeDepthRace?.team_score[teamId].completions[0].rank || 0;
+      culmulativeDepthRace?.team_score[teamId].completions[0]?.rank || 0;
 
     completion.finished = isFinished(culmulativeDepthRace?.team_score[teamId]);
     completion.points =
@@ -205,7 +205,7 @@ function DelveTab(): JSX.Element {
       (lastTimestamp(culmulativeDepthTotal?.team_score[teamId]) ||
         new Date().getTime() / 1000) * 1000;
     completion.user_id =
-      culmulativeDepthTotal?.team_score[teamId].completions[0].user_id || 0;
+      culmulativeDepthTotal?.team_score[teamId].completions[0]?.user_id || 0;
     culmulativeDepthObj.team_score[teamId] = {
       completions: [completion],
       bonus_points: 0,
@@ -233,7 +233,7 @@ function DelveTab(): JSX.Element {
                   (acc, objective) =>
                     acc +
                     Math.min(
-                      objective.team_score[teamId].completions[0].number,
+                      objective.team_score[teamId].completions[0]?.number,
                       objective.required_number,
                     ),
                   0,
@@ -279,7 +279,7 @@ function DelveTab(): JSX.Element {
                 objective={culmulativeDepthObj}
                 maximum={culmulativeDepthRace.required_number}
                 actual={(teamId: number) =>
-                  culmulativeDepthObj.team_score[teamId].completions[0].number
+                  culmulativeDepthObj.team_score[teamId].completions[0]?.number
                 }
                 description="Depth:"
               />

@@ -208,7 +208,7 @@ function TeamSuggestionsPage() {
         header: "Missing",
         accessorFn: (objective) =>
           objective.required_number -
-          objective.team_score[eventStatus.team_id!].completions[0].number,
+          objective.team_score[eventStatus.team_id!].completions[0]?.number,
       },
       {
         header: "Opponent is missing",

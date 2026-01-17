@@ -347,9 +347,9 @@ function RouteComponent() {
       gem_name: "",
       pob_export: "",
     },
-    onSubmit: (data) => {
+    onSubmit: async (data) => {
       if (data.value.pob_export) {
-        const pobData = decodePoBExport(data.value.pob_export);
+        const pobData = await decodePoBExport(data.value.pob_export);
         pobData.items
           .filter((item) => item.rarity === Rarity.Unique)
           .map((item) => item.name)

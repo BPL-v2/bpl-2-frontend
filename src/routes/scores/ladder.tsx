@@ -538,7 +538,7 @@ function LadderTab(): JSX.Element {
                         if (!teamScore || !totalPoints(teamScore)) {
                           continue;
                         }
-                        const number = teamScore.completions[0].number;
+                        const number = teamScore.completions[0]?.number;
                         total += totalPoints(teamScore);
                         values.push(number);
                         extra.push(totalPoints(teamScore));

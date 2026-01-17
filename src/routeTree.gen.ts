@@ -373,15 +373,15 @@ export interface FileRoutesByFullPath {
   '/streams/$twitchAccount': typeof StreamsTwitchAccountRoute
   '/team/atlas': typeof TeamAtlasRoute
   '/team/wishlist': typeof TeamWishlistRoute
-  '/admin': typeof AdminIndexRoute
+  '/admin/': typeof AdminIndexRoute
   '/admin/guild/logs': typeof AdminGuildLogsRouteRouteWithChildren
   '/admin/guild/stashes': typeof AdminGuildStashesRouteRouteWithChildren
   '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/auth/poe/callback': typeof AuthPoeCallbackRoute
   '/auth/twitch/callback': typeof AuthTwitchCallbackRoute
   '/team/stashes/$stashId': typeof TeamStashesStashIdRoute
-  '/admin/events': typeof AdminEventsIndexRoute
-  '/admin/guild': typeof AdminGuildIndexRoute
+  '/admin/events/': typeof AdminEventsIndexRoute
+  '/admin/guild/': typeof AdminGuildIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
   '/admin/guild/logs/$guildId': typeof AdminGuildLogsGuildIdRoute
@@ -541,15 +541,15 @@ export interface FileRouteTypes {
     | '/streams/$twitchAccount'
     | '/team/atlas'
     | '/team/wishlist'
-    | '/admin'
+    | '/admin/'
     | '/admin/guild/logs'
     | '/admin/guild/stashes'
     | '/auth/discord/callback'
     | '/auth/poe/callback'
     | '/auth/twitch/callback'
     | '/team/stashes/$stashId'
-    | '/admin/events'
-    | '/admin/guild'
+    | '/admin/events/'
+    | '/admin/guild/'
     | '/admin/events/$eventId/scoring-presets'
     | '/admin/events/$eventId/teams'
     | '/admin/guild/logs/$guildId'
@@ -759,7 +759,7 @@ declare module '@tanstack/react-router' {
     '/admin/': {
       id: '/admin/'
       path: '/admin'
-      fullPath: '/admin'
+      fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -976,14 +976,14 @@ declare module '@tanstack/react-router' {
     '/admin/guild/': {
       id: '/admin/guild/'
       path: '/admin/guild'
-      fullPath: '/admin/guild'
+      fullPath: '/admin/guild/'
       preLoaderRoute: typeof AdminGuildIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/events/': {
       id: '/admin/events/'
       path: '/admin/events'
-      fullPath: '/admin/events'
+      fullPath: '/admin/events/'
       preLoaderRoute: typeof AdminEventsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
