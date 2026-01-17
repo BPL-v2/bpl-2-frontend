@@ -255,7 +255,7 @@ function DelveTab(): JSX.Element {
                         className="size-8"
                       />
 
-                      <h3 className="mx-4 flex-grow text-center text-xl font-semibold">
+                      <h3 className="mx-4 grow text-center text-xl font-semibold">
                         {objective.name}
                       </h3>
                     </div>

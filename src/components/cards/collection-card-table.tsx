@@ -62,6 +62,12 @@ export function CollectionCardTable({
       .filter((team) => teamIds.includes(team.id))
       .map((team) => team.name.length),
   );
+  const canGrantPoints =
+    objective.scoring_presets.length > 0 &&
+    objective.scoring_presets.some((preset) =>
+      preset.points.some((point) => point > 0),
+    );
+  showPoints = showPoints && canGrantPoints;
   return (
     <table key={objective.id} ref={tableRef}>
       <tbody>
@@ -86,7 +92,6 @@ export function CollectionCardTable({
             const gotPoints = totalPoints(score) > 0;
             const isHidden =
               objective.hide_progress && !isFinished && !isPlayerTeam;
-
             return (
               <tr
                 className={
@@ -130,7 +135,7 @@ export function CollectionCardTable({
 
                 <td
                   className={twMerge(
-                    "w-full px-2",
+                    "w-full px-2 py-1",
                     isLastRow && !showPoints && "rounded-bl-xl",
                   )}
                 >
