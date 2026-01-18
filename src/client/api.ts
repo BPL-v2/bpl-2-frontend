@@ -1115,6 +1115,12 @@ export interface Event {
     teams: Array<Team>;
     /**
      * 
+     * @type {boolean}
+     * @memberof Event
+     */
+    uses_medals: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof Event
      */
@@ -1205,6 +1211,12 @@ export interface EventCreate {
      * @memberof EventCreate
      */
     patch?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof EventCreate
+     */
+    uses_medals?: boolean;
     /**
      * 
      * @type {number}

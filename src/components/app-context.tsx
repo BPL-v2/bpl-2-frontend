@@ -21,6 +21,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
     id: "current",
     game_version: GameVersion.poe1,
     teams: [],
+    uses_medals: false,
   } as unknown as Event);
   const [scoreData, setScoreData] = useState<ScoreMap>({});
   const [scores, setScores] = useState<ScoreObjective>();

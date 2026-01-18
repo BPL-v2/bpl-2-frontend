@@ -1,5 +1,4 @@
 import { CharacterStat, LadderEntry, Team } from "@client/api";
-import { getRootCategoryNames } from "@mytypes/scoring-category";
 import { CellContext, ColumnDef, sortingFns } from "@tanstack/react-table";
 import { GlobalStateContext } from "@utils/context-provider";
 import { getTotalPoints, totalPoints } from "@utils/utils";
