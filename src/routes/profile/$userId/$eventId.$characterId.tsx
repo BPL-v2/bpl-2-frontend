@@ -12,6 +12,7 @@ import {
 import { ObjectiveIcon } from "@components/objective-icon";
 import { LazyCharacterChart } from "@components/profile/character-chart-lazy";
 import { PoB } from "@components/profile/pob";
+import PoBSlider from "@components/profile/pob-slider";
 import { ScoreObjective } from "@mytypes/score";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
@@ -22,25 +23,6 @@ import {
 } from "@utils/pob";
 import { flatMap, lastTimestamp, mergeScores, totalPoints } from "@utils/utils";
 import { Suspense, useContext, useEffect, useState } from "react";
-
-function getDeltaTimeAfterLeagueStart(
-  timestamp?: string,
-  leagueStart?: string,
-) {
-  // If either timestamp or league
-  if (!timestamp || !leagueStart) {
-    return "";
-  }
-  const ts = new Date(timestamp).getTime();
-  const leagueStartDate = new Date(leagueStart).getTime();
-  const milliseconds = ts - leagueStartDate;
-  const days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
-  const hours = Math.floor(
-    (milliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-  );
-  const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
-  return `${days} days, ${hours} hours, ${minutes} mins`;
-}
 
 export const Route = createFileRoute("/profile/$userId/$eventId/$characterId")({
   component: RouteComponent,
@@ -206,27 +188,12 @@ function RouteComponent() {
           </div>
         </div>
       )}
-      {pobs.length > 0 && (
-        <div className="relative flex items-center justify-center">
-          <input
-            type="range"
-            className="range w-full range-primary [--range-thumb:blue] md:range-xl"
-            min="0"
-            max={pobs?.length ? pobs.length - 1 : 0}
-            value={pobId}
-            onChange={(e) => setPobId(Number(e.target.value))}
-          />
-          <span
-            className="md:text-md pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded px-2 py-1 text-xs text-primary-content select-none"
-            style={{ zIndex: 2 }}
-          >
-            {getDeltaTimeAfterLeagueStart(
-              pobs[pobId]?.timestamp,
-              event?.event_start_time,
-            )}
-          </span>
-        </div>
-      )}
+      <PoBSlider
+        index={pobId}
+        setIndex={setPobId}
+        timestamps={pobs.map((pob) => Number(new Date(pob.timestamp)))}
+        event={event}
+      ></PoBSlider>
       {/* {showAtlas && (
         <div className="grid grid-cols-3 gap-2 rounded-box bg-base-300 p-4">
           {[0, 1, 2].map((idx) => {
