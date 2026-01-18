@@ -61,6 +61,7 @@ export function ItemDisplay({
       ref={itemRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onMouseOver={handleMouseEnter}
     >
       {item && (
         <img

@@ -1,7 +1,7 @@
 import { Item, PathOfBuilding } from "@utils/pob";
 import { ItemDisplay } from "./item-display";
 import { ItemTooltip } from "./item-tooltip";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function CharacterItems({ pob }: { pob: PathOfBuilding }) {
   const [selectedItem, setSelectedItem] = useState<Item>();
@@ -9,6 +9,10 @@ export function CharacterItems({ pob }: { pob: PathOfBuilding }) {
     x: number;
     y: number;
   }>();
+
+  useEffect(() => {
+    setSelectedItem(pob.items.find((item) => item.id === selectedItem?.id));
+  }, [pob]);
   const equipmentSlots = [
     "Helmet",
     "Body Armour",
