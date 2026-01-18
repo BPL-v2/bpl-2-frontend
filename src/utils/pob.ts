@@ -118,7 +118,9 @@ export interface Gem {
   count: string;
   level: string;
   skillPart?: number;
-  changedFromLastSnapshot: boolean;
+  addedSinceLastSnapshot: boolean;
+  levelChangedFromLastSnapshot: boolean;
+  qualityChangedFromLastSnapshot: boolean;
 }
 
 export interface Skill {
@@ -647,7 +649,15 @@ export function determineDifferences(
             (g) => g.gemId === gem.gemId && g.variantId === gem.variantId,
           );
           if (!matchingGem) {
-            gem.changedFromLastSnapshot = true;
+            gem.addedSinceLastSnapshot = true;
+            gem.levelChangedFromLastSnapshot = true;
+          } else {
+            if (matchingGem.level !== gem.level) {
+              gem.levelChangedFromLastSnapshot = true;
+            }
+            if (matchingGem.quality !== gem.quality) {
+              gem.qualityChangedFromLastSnapshot = true;
+            }
           }
         }
       }
@@ -797,7 +807,9 @@ export async function decodePoBExport(
             skillId: gemElement.getAttribute("skillId") || "",
             count: gemElement.getAttribute("count") || "",
             level: gemElement.getAttribute("level") || "",
-            changedFromLastSnapshot: false,
+            addedSinceLastSnapshot: false,
+            levelChangedFromLastSnapshot: false,
+            qualityChangedFromLastSnapshot: false,
           };
 
           const skillPart = gemElement.getAttribute("skillPart");

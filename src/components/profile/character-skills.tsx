@@ -103,28 +103,37 @@ function SkillGem({
   }
   return (
     <div
-      className="relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      className={twMerge(
+        "relative rounded-full",
+        (gem.levelChangedFromLastSnapshot ||
+          gem.qualityChangedFromLastSnapshot) &&
+          "bg-info/20",
+        gem.addedSinceLastSnapshot && "bg-success/20",
+      )}
     >
-      <span
-        className={twMerge(
-          "truncate",
-          position,
-          text,
-          gem.changedFromLastSnapshot && "bg-success/20",
-        )}
-      >
+      <span className={twMerge("truncate", position, text)}>
         {gem.nameSpec}
       </span>
       {isHovered && (
         <div
           className={twMerge(
-            "pointer-events-none absolute top-0 right-0 z-50 rounded-lg bg-black/90 px-2 text-sm",
+            "pointer-events-none absolute top-0 right-0 z-50 rounded-lg border bg-black/90 px-2 text-sm",
             text,
           )}
         >
-          {gem.level || 0} / {gem.quality || 0}
+          <span
+            className={gem.levelChangedFromLastSnapshot ? "font-black" : ""}
+          >
+            {gem.level || 0}
+          </span>
+          {" / "}
+          <span
+            className={gem.qualityChangedFromLastSnapshot ? "font-black" : ""}
+          >
+            {gem.quality || 0}
+          </span>
         </div>
       )}
     </div>
