@@ -17,7 +17,8 @@ import { TwitchFilled } from "@icons/twitch";
 import { YoutubeFilled } from "@icons/youtube";
 import { ScoreObjective } from "@mytypes/score";
 import { GlobalStateContext } from "@utils/context-provider";
-import { totalPoints } from "@utils/utils";
+import { renderScore } from "@utils/score";
+import { getPotentialPoints, getTotalPoints, totalPoints } from "@utils/utils";
 import { useContext, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -244,7 +245,10 @@ export function SubmissionCard({ objective }: SubmissionCardProps) {
                             : "text-success",
                         )}
                       >
-                        {totalPoints(score)}{" "}
+                        {renderScore(
+                          getPotentialPoints(objective)[teamId],
+                          getTotalPoints(objective)[teamId],
+                        )}
                         {score.completions[0]?.number > 1 &&
                           `(${score.completions[0]?.number})`}
                       </td>

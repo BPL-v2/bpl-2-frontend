@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { twMerge } from "tailwind-merge";
 import { TeamName } from "./team-name";
 import { TeamLogo } from "./teamlogo";
+import { renderScore } from "@utils/score";
 
 export type TeamScoreProps = {
   selectedTeam?: number;
@@ -78,10 +79,11 @@ const TeamScoreDisplay = ({
                     className="stat-figure row-span-2 hidden size-24 md:flex"
                   />
                   <div className="stat-value text-xl whitespace-nowrap md:text-2xl">
-                    {teamScores[team.id]}
                     <span className="hidden md:inline">
-                      {" "}
-                      / {potentialScores[team.id]}
+                      {renderScore(
+                        potentialScores[team.id],
+                        teamScores[team.id],
+                      )}
                     </span>
                   </div>
                 </div>

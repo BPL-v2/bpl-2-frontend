@@ -57,6 +57,16 @@ export function totalPoints(score?: Score): number {
   return points;
 }
 
+var nullPreset: ScoringPreset[] = [
+  {
+    id: 0,
+    name: "NULL",
+    scoring_method: ScoringMethod.PRESENCE,
+    description: "",
+    points: [0],
+  },
+];
+
 export function mergeScores(
   objective: Objective,
   scores: ScoreMap,
@@ -67,6 +77,10 @@ export function mergeScores(
     children: objective.children.map((subObjective) =>
       mergeScores(subObjective, scores, teamsIds),
     ),
+    scoring_presets:
+      objective.scoring_presets.length > 0
+        ? objective.scoring_presets
+        : nullPreset,
     team_score: teamsIds.reduce((acc: TeamScores, teamId) => {
       acc[teamId] = scores[teamId]?.[objective.id] || getEmptyScore();
       return acc;
@@ -176,6 +190,8 @@ function getPotentialPointsForSinglePreset(
     case ScoringMethod.BONUS_PER_COMPLETION:
       return getPotentialBonusPointsPerChild(objective, preset);
     case ScoringMethod.BINGO_BOARD:
+      return getPotentialPointsRanked(objective, preset);
+    case ScoringMethod.CHILD_NUMBER_SUM:
       return getPotentialPointsRanked(objective, preset);
     default:
       return {};

@@ -119,7 +119,7 @@ function RootComponent() {
   }, [hello]);
   return (
     <>
-      <div className="mx-auto max-w-[1440px] text-center">
+      <div className="mx-auto max-w-360 text-center">
         <div className="flex h-screen flex-col justify-between gap-8">
           <div>
             <div

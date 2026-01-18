@@ -266,7 +266,7 @@ export function ScoringCategoryPage(): JSX.Element {
       {
         header: "Aggregation",
         accessorKey: "aggregation",
-        size: 150,
+        size: 180,
       },
       {
         header: "Scoring Method",
@@ -468,10 +468,7 @@ export function ScoringCategoryPage(): JSX.Element {
               children={(field) => (
                 <field.SelectField
                   label="Objective Type"
-                  options={Object.values(ObjectiveType).filter(
-                    (t) => t != ObjectiveType.CATEGORY,
-                  )}
-                  required
+                  options={Object.values(ObjectiveType)}
                 />
               )}
             />
@@ -542,10 +539,6 @@ export function ScoringCategoryPage(): JSX.Element {
               children={(field) => <field.DateTimeField label="Valid From" />}
             />
             <objectiveForm.AppField
-              name="valid_to"
-              children={(field) => <field.DateTimeField label="Valid To" />}
-            />
-            <objectiveForm.AppField
               name="scoring_preset_ids"
               children={(field) => (
                 <field.MultiSelectField
@@ -556,6 +549,10 @@ export function ScoringCategoryPage(): JSX.Element {
                   }))}
                 />
               )}
+            />
+            <objectiveForm.AppField
+              name="valid_to"
+              children={(field) => <field.DateTimeField label="Valid To" />}
             />
             <objectiveForm.AppField
               name="hide_progress"

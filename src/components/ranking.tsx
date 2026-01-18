@@ -1,13 +1,21 @@
 import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
 import { Score } from "@client/api";
-import { isFinished, rank2text, totalPoints } from "@utils/utils";
+import {
+  getPotentialPoints,
+  getTotalPoints,
+  isFinished,
+  rank2text,
+  totalPoints,
+} from "@utils/utils";
 // import { TeamLogo } from "./teamlogo";
 import { useGetEventStatus } from "@client/query";
 import { twMerge } from "tailwind-merge";
+import { renderScore } from "@utils/score";
+import { ScoreObjective } from "@mytypes/score";
 
 interface RankingProps {
-  objective: { team_score: Record<string, Score> };
+  objective: ScoreObjective;
   description: string;
   actual: (teamId: number) => number;
   maximum: number;
@@ -126,7 +134,10 @@ export function Ranking({
                       </div>
                     }
                     <div className="text-xl font-bold">
-                      {totalPoints(score)} pts
+                      {renderScore(
+                        getPotentialPoints(objective)[teamId],
+                        getTotalPoints(objective)[teamId],
+                      )}
                     </div>
                   </div>
                 </div>

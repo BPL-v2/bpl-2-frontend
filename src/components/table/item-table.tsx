@@ -80,7 +80,6 @@ export function ItemTable({
       ),
     );
   }, [objective]);
-
   const objectNameRender = (objective: ExtendedScoreObjective) => {
     if (variantMap[objective.name] && !objective.isVariant) {
       return (
@@ -111,18 +110,14 @@ export function ItemTable({
         </div>
       );
     }
-    if (
-      objective.scoring_presets[0]?.scoring_method ===
-        ScoringMethod.POINTS_FROM_VALUE ||
-      objective.aggregation === AggregationType.MAXIMUM
-    ) {
+    if (objective.aggregation === AggregationType.MAXIMUM) {
       return (
         <span className="text-base font-extrabold text-secondary">
           {objective.name}
         </span>
       );
     }
-    return <>{objective.name}</>;
+    return objective.name;
   };
 
   const imageOverlayedWithText = (
@@ -248,19 +243,32 @@ export function ItemTable({
                 id: `team_${team.id}`,
                 header: () => {
                   const objectives = flatMapUniques(objective);
+                  const numberOfFinishes =
+                    objectives
+                      .filter((o) => (filter ? filter(o) : true))
+                      .filter((o) => isFinished(o.team_score[team.id]))
+                      ?.length || 0;
+                  const childNumberSum = objectives.reduce(
+                    (acc, obj) =>
+                      acc +
+                      obj.team_score[team.id].completions.reduce(
+                        (max, completion) => Math.max(max, completion.number),
+                        0,
+                      ),
+                    0,
+                  );
+                  const numberOfChildren = objectives.filter((o) =>
+                    filter ? filter(o) : true,
+                  ).length;
+
                   return (
                     <div>
                       <div>{team.name || "Team"}</div>
                       <div className="text-sm text-info">
-                        {objectives
-                          .filter((o) => (filter ? filter(o) : true))
-                          .filter((o) => isFinished(o.team_score[team.id]))
-                          ?.length || 0}{" "}
-                        /{" "}
-                        {
-                          objectives.filter((o) => (filter ? filter(o) : true))
-                            .length
-                        }
+                        {objective.scoring_presets[0]?.scoring_method ===
+                        ScoringMethod.CHILD_NUMBER_SUM
+                          ? childNumberSum
+                          : `${numberOfFinishes} / ${numberOfChildren}`}
                       </div>
                     </div>
                   );
@@ -284,6 +292,22 @@ export function ItemTable({
                     ) : (
                       <span className="w-full text-center font-mono text-xl text-error">
                         x0
+                      </span>
+                    );
+                  }
+                  if (
+                    info.row.original.aggregation === AggregationType.MAXIMUM
+                  ) {
+                    return (
+                      <span
+                        className={twMerge(
+                          "w-full text-center text-lg font-extrabold",
+                          score.completions[0].number > 0
+                            ? "text-success"
+                            : "text-error",
+                        )}
+                      >
+                        {score.completions[0].number}
                       </span>
                     );
                   }

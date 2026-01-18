@@ -22,7 +22,7 @@ export function ProgressBar({
   gotPoints,
   ...props
 }: ProgressBarProps) {
-  const percent = Math.min((value / maxVal) * 100, 100);
+  const percent = Math.min((value / maxVal) * 100, 100) || 0;
   const isFinished = value >= maxVal;
   return (
     <div

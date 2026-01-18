@@ -1,6 +1,8 @@
+import { ScoringMethod } from "@client/api";
 import { CategoryIcon } from "@icons/category-icons";
 import { Medal } from "@icons/medal";
 import { ScoreObjective } from "@mytypes/score";
+import { renderScore } from "@utils/score";
 import { getPotentialPoints, getTotalPoints, isFinished } from "@utils/utils";
 import { twMerge } from "tailwind-merge";
 
@@ -38,11 +40,9 @@ export const UniqueCategoryCard = ({
       }, 0)
     : 0;
 
-  const points = teamId
-    ? `${getTotalPoints(objective)[teamId]} / ${
-        getPotentialPoints(objective)[teamId]
-      }`
-    : null;
+  const canBeFinished =
+    objective.scoring_presets[0]?.scoring_method !==
+    ScoringMethod.CHILD_NUMBER_SUM;
   return (
     <div className="h-full">
       <div
@@ -73,7 +73,12 @@ export const UniqueCategoryCard = ({
             <h1 className="font-extrabold">{objective.name}</h1>
             <h1 className="font-bold text-info">{objective.extra}</h1>
           </div>
-          <div className="hidden shrink-0 text-sm sm:block"> {points} </div>
+          <div className="hidden shrink-0 text-sm sm:block">
+            {renderScore(
+              getPotentialPoints(objective)[teamId],
+              getTotalPoints(objective)[teamId],
+            )}
+          </div>
         </div>
         <div className="flex h-full min-h-2 flex-col justify-between px-4">
           <div className="h-full">
@@ -83,9 +88,10 @@ export const UniqueCategoryCard = ({
                   className={twMerge(
                     "text-4xl font-extrabold",
                     numItems === totalItems ? "text-success" : "text-error",
+                    !canBeFinished && "text-base-content",
                   )}
                 >
-                  {numItems} / {totalItems}
+                  {canBeFinished ? `${numItems} / ${totalItems}` : numItems}
                 </div>
                 {totalVariants ? (
                   <div
@@ -105,16 +111,16 @@ export const UniqueCategoryCard = ({
               </div>
             </div>
           </div>
-          <div className="select-none">
+          {canBeFinished && (
             <progress
               className={twMerge(
-                "progress my-2",
+                "progress my-2 select-none",
                 numItems === totalItems ? "progress-success" : "progress-error",
               )}
               value={numItems / totalItems}
               max="1"
             ></progress>
-          </div>
+          )}
         </div>
       </div>
     </div>

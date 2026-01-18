@@ -69,6 +69,7 @@ function RouteComponent() {
                         isFinished(child.team_score[selectedTeam || 0]) &&
                           "bg-success outline-8 outline-success",
                       )}
+                      key={`${rowIdx},${colIdx}`}
                     >
                       {/* <CollectionCard
                         key={child.id}
