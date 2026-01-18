@@ -1,9 +1,12 @@
 export function renderScore(
-  potentialNumberOfPoints: number,
   actualNumberOfPoints: number,
+  potentialNumberOfPoints?: number,
 ) {
   const useMedals = false;
   if (!useMedals) {
+    if (potentialNumberOfPoints === undefined) {
+      return actualNumberOfPoints;
+    }
     return `${actualNumberOfPoints} / ${potentialNumberOfPoints}`;
   }
   const actualGoldMedals = Math.floor(actualNumberOfPoints / 10000) || 0;

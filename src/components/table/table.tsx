@@ -96,7 +96,7 @@ function Table<T>({
           )}
         >
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id} className="flex w-full">
+            <tr key={headerGroup.id} className="flex w-full overflow-hidden">
               {headerGroup.headers.map((header) => {
                 const canSort = sortable && header.column.getCanSort();
                 const isSorting = !!sorting.find(
@@ -106,7 +106,7 @@ function Table<T>({
                   <th
                     key={header.id}
                     style={{ width: header.getSize() }}
-                    className="flex items-center"
+                    className="flex items-center overflow-clip"
                   >
                     <div
                       className={

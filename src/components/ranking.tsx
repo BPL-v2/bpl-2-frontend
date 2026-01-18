@@ -135,8 +135,8 @@ export function Ranking({
                     }
                     <div className="text-xl font-bold">
                       {renderScore(
-                        getPotentialPoints(objective)[teamId],
                         getTotalPoints(objective)[teamId],
+                        getPotentialPoints(objective)[teamId],
                       )}
                     </div>
                   </div>

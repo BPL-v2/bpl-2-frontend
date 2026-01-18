@@ -75,8 +75,8 @@ export const UniqueCategoryCard = ({
           </div>
           <div className="hidden shrink-0 text-sm sm:block">
             {renderScore(
-              getPotentialPoints(objective)[teamId],
               getTotalPoints(objective)[teamId],
+              getPotentialPoints(objective)[teamId],
             )}
           </div>
         </div>

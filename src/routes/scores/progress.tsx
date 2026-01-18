@@ -7,6 +7,7 @@ import { ScoreObjective } from "@mytypes/score";
 import { createFileRoute } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";
 import { GlobalStateContext } from "@utils/context-provider";
+import { renderScore } from "@utils/score";
 import { getDeltaTimeBetween } from "@utils/time";
 import { flatMap } from "@utils/utils";
 import dayjs from "dayjs";
@@ -298,7 +299,12 @@ function RouteComponent() {
       },
       enableSorting: false,
     },
-    { accessorKey: "points", header: "Points", enableSorting: false },
+    {
+      accessorKey: "points",
+      header: "Points",
+      enableSorting: false,
+      cell: ({ row }) => renderScore(row.original.points),
+    },
     {
       accessorKey: "rank",
       header: "Rank",

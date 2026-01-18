@@ -82,6 +82,7 @@ function ScoringPage() {
     name: string;
     visible: boolean;
     rules?: JSX.Element;
+    shortName?: string;
   }[] = useMemo(() => {
     return [
       {
@@ -108,17 +109,20 @@ function ScoringPage() {
       {
         name: "Focus Uniques",
         key: "focus-uniques",
+        shortName: "Bloodlines",
         rules: <UniqueTabRules />,
         visible: true,
       },
       {
         name: "Slot Uniques",
+        shortName: "Slots",
         key: "slot-uniques",
         rules: <UniqueTabRules />,
         visible: true,
       },
       {
         name: "Foulborn Uniques",
+        shortName: "Foulborns",
         key: "foulborn-uniques",
         rules: <UniqueTabRules />,
         visible: true,
@@ -138,12 +142,14 @@ function ScoringPage() {
       {
         name: "Ascendancy Challenges",
         key: "ascendancy-challenges",
+        shortName: "Asc. Challenges",
         rules: <AscendancyChallengeTabRules />,
         visible: true,
       },
       {
         name: "Graft Race",
         key: "graft-race",
+        shortName: "Grafts",
         rules: <GraftRaceTabRules />,
         visible: true,
       },
@@ -196,6 +202,7 @@ function ScoringPage() {
     name: string;
     visible: boolean;
     rules?: JSX.Element;
+    shortName?: string;
   }[] = [
     {
       name: "Ladder",
@@ -220,7 +227,7 @@ function ScoringPage() {
   return (
     <>
       <div className="mb-4 flex items-center justify-between rounded-b-box bg-base-300 shadow-xl">
-        <ul className="menu menu-horizontal md:gap-2">
+        <ul className="menu menu-horizontal md:gap-1">
           {tabs.map((tab) => (
             <li key={tab.key}>
               <Link
@@ -234,7 +241,7 @@ function ScoringPage() {
                   className: "btn-ghost hover:btn-primary",
                 }}
               >
-                {tab.name}
+                {tab.shortName || tab.name}
               </Link>
             </li>
           ))}

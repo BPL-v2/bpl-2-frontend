@@ -33,6 +33,7 @@ import { LadderPortrait } from "@components/character/ladder-portrait";
 import { twMerge } from "tailwind-merge";
 import { defaultPreferences } from "@mytypes/preferences";
 import { TwitchFilled } from "@icons/twitch";
+import { renderScore } from "@utils/score";
 
 type RowDef = {
   total: number;
@@ -426,7 +427,7 @@ function LadderTab(): JSX.Element {
       </div>
     );
   }
-  const categoryNames = getRootCategoryNames(currentEvent.game_version);
+  const categoryNames = scores?.children.map((category) => category.name) || [];
   const rows = currentEvent.teams.map((team) => {
     return {
       team: team,
@@ -456,9 +457,7 @@ function LadderTab(): JSX.Element {
     {
       accessorKey: "total",
       header: "Total",
-      cell: ({ row }) => {
-        return row.original.total;
-      },
+      cell: ({ row }) => renderScore(row.original.total),
       size: 120,
     },
     ...categoryNames.map((categoryName) => ({
@@ -466,8 +465,11 @@ function LadderTab(): JSX.Element {
       accessorKey: categoryName,
       key: `column-${categoryName}`,
       // @ts-ignore
+      cell: ({ row }) =>
+        renderScore(row.original[categoryName as keyof RowDef] || 0),
+      // @ts-ignore
       sorter: (a, b) => a[categoryName] - b[categoryName],
-      size: 129,
+      size: 140,
     })),
   ];
 

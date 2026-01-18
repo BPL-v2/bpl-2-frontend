@@ -81,8 +81,8 @@ const TeamScoreDisplay = ({
                   <div className="stat-value text-xl whitespace-nowrap md:text-2xl">
                     <span className="hidden md:inline">
                       {renderScore(
-                        potentialScores[team.id],
                         teamScores[team.id],
+                        potentialScores[team.id],
                       )}
                     </span>
                   </div>
