@@ -134,7 +134,7 @@ export default function PoBSlider({
       }}
     >
       <span
-        className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded text-xs font-bold text-primary-content select-none md:text-sm"
+        className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded text-xs font-bold text-highlight-content select-none md:text-sm"
         style={{ zIndex: 2 }}
       >
         {getDeltaTimeAfterLeagueStart(
