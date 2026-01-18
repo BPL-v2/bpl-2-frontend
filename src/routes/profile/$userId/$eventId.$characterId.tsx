@@ -104,6 +104,15 @@ function RouteComponent() {
     }
   }, [pobs]);
   const [pobId, setPobId] = useState<number>(0);
+  const [debouncedPobId, setDebouncedPobId] = useState<number>(0);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedPobId(pobId);
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, [pobId]);
 
   const contributions = [];
   for (const objective of flatMap(scores)) {
@@ -211,7 +220,7 @@ function RouteComponent() {
           })}
         </div>
       )} */}
-      {pobs.length > 0 && <PoB pob={decodedPobs[pobId]} />}
+      {pobs.length > 0 && <PoB pob={decodedPobs[debouncedPobId]} />}
       <Suspense
         fallback={
           <div className="justify-center rounded-box bg-base-200 p-8">
