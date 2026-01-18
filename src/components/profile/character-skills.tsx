@@ -2,6 +2,7 @@ import { useFile } from "@client/query";
 import { InventoryIcon } from "@icons/inventory-icons";
 import { Gem, PathOfBuilding, Skill } from "@utils/pob";
 import { twMerge } from "tailwind-merge";
+import { useState } from "react";
 
 export function CharacterSkills({ pob }: { pob: PathOfBuilding }) {
   const { data: gemColors } = useFile<Record<"r" | "g" | "b" | "w", string[]>>(
@@ -20,7 +21,7 @@ export function CharacterSkills({ pob }: { pob: PathOfBuilding }) {
     "Weapon 2",
   ];
   return (
-    <div className="h-full columns-2 gap-2 rounded-box bg-base-300 p-4 text-sm md:p-8">
+    <div className="h-full columns-2 gap-2 overflow-visible rounded-box bg-base-300 p-4 text-sm md:p-8">
       {equipmentSlots
         .sort((slotA, slotB) => {
           const mainGroup =
@@ -45,7 +46,7 @@ export function CharacterSkills({ pob }: { pob: PathOfBuilding }) {
           if (skills.length === 0) return null;
           return (
             <div
-              className="relative mb-2 flex break-inside-avoid flex-col rounded-xl bg-base-200 px-3 py-2.5"
+              className="relative mb-2 flex break-inside-avoid flex-col overflow-visible rounded-xl bg-base-200 px-3 py-2.5"
               key={`skill-${slot}`}
             >
               <InventoryIcon slot={slot} className="absolute top-2 right-2" />
@@ -90,6 +91,7 @@ function SkillGem({
   pob: PathOfBuilding;
   gemColors?: Record<"r" | "g" | "b" | "w", string[]>;
 }) {
+  const [isHovered, setIsHovered] = useState(false);
   let text = getGemColor(gem, gemColors);
   let position = "";
   if (gem.skillId.includes("Support")) {
@@ -100,16 +102,32 @@ function SkillGem({
     }
   }
   return (
-    <span
-      className={twMerge(
-        "truncate",
-        position,
-        text,
-        gem.changedFromLastSnapshot && "bg-success/20",
-      )}
+    <div
+      className="relative"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      {gem.nameSpec}
-    </span>
+      <span
+        className={twMerge(
+          "truncate",
+          position,
+          text,
+          gem.changedFromLastSnapshot && "bg-success/20",
+        )}
+      >
+        {gem.nameSpec}
+      </span>
+      {isHovered && (
+        <div
+          className={twMerge(
+            "pointer-events-none absolute top-0 right-0 z-50 rounded-lg bg-black/90 px-2 text-sm",
+            text,
+          )}
+        >
+          {gem.level || 0} / {gem.quality || 0}
+        </div>
+      )}
+    </div>
   );
 }
 
