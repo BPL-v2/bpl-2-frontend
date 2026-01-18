@@ -187,6 +187,7 @@ function DelveTab(): JSX.Element {
   );
 
   const culmulativeDepthObj = {
+    children: [] as ScoreObjective[],
     team_score: {} as TeamScore,
   } as ScoreObjective;
 
