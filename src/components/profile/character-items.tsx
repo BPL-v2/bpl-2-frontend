@@ -11,8 +11,18 @@ export function CharacterItems({ pob }: { pob: PathOfBuilding }) {
   }>();
 
   useEffect(() => {
-    setSelectedItem(pob.items.find((item) => item.id === selectedItem?.id));
+    let item = pob.items.find((item) => item.id === selectedItem?.id);
+    if (item) {
+      setSelectedItem(item);
+      return;
+    }
+    if (
+      !pob.items.map((item) => item.slot).includes(selectedItem?.slot || "")
+    ) {
+      setSelectedItem(undefined);
+    }
   }, [pob]);
+
   const equipmentSlots = [
     "Helmet",
     "Body Armour",

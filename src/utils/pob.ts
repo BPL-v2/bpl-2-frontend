@@ -1129,6 +1129,9 @@ export function parseItem(
         case "Selected Variant":
           selectedVariant = arg;
           break;
+        case "Unique ID":
+          id = arg;
+          break;
         default: {
           const altQ = parseAltQuality(cmd, arg);
           if (altQ) {
