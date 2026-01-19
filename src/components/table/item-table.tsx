@@ -1,7 +1,7 @@
 import { AggregationType, GameVersion, ScoringMethod, Team } from "@client/api";
 import { useGetEventStatus, useGetUsers } from "@client/query";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
-import { ScoreObjective } from "@mytypes/score";
+import { canBeFinished, ScoreObjective } from "@mytypes/score";
 import { getImageLocation } from "@mytypes/scoring-objective";
 import { CellContext, ColumnDef } from "@tanstack/react-table";
 import { GlobalStateContext } from "@utils/context-provider";
@@ -260,15 +260,13 @@ export function ItemTable({
                   const numberOfChildren = objectives.filter((o) =>
                     filter ? filter(o) : true,
                   ).length;
-
                   return (
                     <div>
                       <div>{team.name || "Team"}</div>
                       <div className="text-sm text-info">
-                        {objective.scoring_presets[0]?.scoring_method ===
-                        ScoringMethod.CHILD_NUMBER_SUM
-                          ? childNumberSum
-                          : `${numberOfFinishes} / ${numberOfChildren}`}
+                        {canBeFinished(objective)
+                          ? `${numberOfFinishes} / ${numberOfChildren}`
+                          : childNumberSum}
                       </div>
                     </div>
                   );
@@ -380,7 +378,20 @@ export function ItemTable({
         data={
           objective.children
             .filter((obj) => (filter ? filter(obj) : true))
-            .sort((a, b) => a.name.localeCompare(b.name))
+            .sort((a, b) => {
+              if (
+                a.aggregation === AggregationType.MAXIMUM &&
+                b.aggregation !== AggregationType.MAXIMUM
+              ) {
+                return -1;
+              } else if (
+                b.aggregation === AggregationType.MAXIMUM &&
+                a.aggregation !== AggregationType.MAXIMUM
+              ) {
+                return 1;
+              }
+              return a.name.localeCompare(b.name);
+            })
             .flatMap((objective) => {
               const variantRows = variantMap[objective.name]?.map((variant) => {
                 return { ...variant, isVariant: true };

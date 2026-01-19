@@ -1,4 +1,12 @@
-import { MinimalUser, Objective, ScoreDiff, Team, Score } from "@client/api";
+import {
+  MinimalUser,
+  Objective,
+  ScoreDiff,
+  Team,
+  Score,
+  ScoringMethod,
+  AggregationType,
+} from "@client/api";
 import { getSubObjective } from "./scoring-objective";
 import { isFinished } from "@utils/utils";
 
@@ -103,4 +111,14 @@ export function hasEnded(objective: ScoreObjective, teamId?: number): boolean {
     }
   }
   return true;
+}
+
+export function canBeFinished(objective: ScoreObjective): boolean {
+  return (
+    objective.scoring_presets[0]?.scoring_method !==
+      ScoringMethod.CHILD_NUMBER_SUM ||
+    !objective.children.some(
+      (child) => child.aggregation === AggregationType.MAXIMUM,
+    )
+  );
 }

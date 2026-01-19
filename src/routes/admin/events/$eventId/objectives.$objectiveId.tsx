@@ -209,7 +209,7 @@ export function ScoringCategoryPage(): JSX.Element {
     (state) => state.values,
   );
 
-  const objectivColumns: ColumnDef<Objective>[] = useMemo(
+  const objectiveColumns: ColumnDef<Objective>[] = useMemo(
     () => [
       {
         header: "",
@@ -798,12 +798,12 @@ export function ScoringCategoryPage(): JSX.Element {
     return (
       <Table<Objective>
         className="h-[70vh] w-full"
-        columns={objectivColumns}
+        columns={objectiveColumns}
         data={objective?.children.sort((a, b) => a.id - b.id) || []}
         sortable={false}
       />
     );
-  }, [objective?.children, objectivColumns]);
+  }, [objective?.children, objectiveColumns]);
 
   if (!objectiveId) {
     return <></>;

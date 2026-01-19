@@ -1,7 +1,6 @@
-import { ScoringMethod } from "@client/api";
 import { CategoryIcon } from "@icons/category-icons";
 import { Medal } from "@icons/medal";
-import { ScoreObjective } from "@mytypes/score";
+import { canBeFinished, ScoreObjective } from "@mytypes/score";
 import { renderScore } from "@utils/score";
 import { getPotentialPoints, getTotalPoints, isFinished } from "@utils/utils";
 import { twMerge } from "tailwind-merge";
@@ -40,9 +39,7 @@ export const UniqueCategoryCard = ({
       }, 0)
     : 0;
 
-  const canBeFinished =
-    objective.scoring_presets[0]?.scoring_method !==
-    ScoringMethod.CHILD_NUMBER_SUM;
+  const finishable = canBeFinished(objective);
   return (
     <div className="h-full">
       <div
@@ -88,10 +85,10 @@ export const UniqueCategoryCard = ({
                   className={twMerge(
                     "text-4xl font-extrabold",
                     numItems === totalItems ? "text-success" : "text-error",
-                    !canBeFinished && "text-base-content",
+                    !finishable && "text-base-content",
                   )}
                 >
-                  {canBeFinished ? `${numItems} / ${totalItems}` : numItems}
+                  {finishable ? `${numItems} / ${totalItems}` : numItems}
                 </div>
                 {totalVariants ? (
                   <div
@@ -111,7 +108,7 @@ export const UniqueCategoryCard = ({
               </div>
             </div>
           </div>
-          {canBeFinished && (
+          {finishable && (
             <progress
               className={twMerge(
                 "progress my-2 select-none",

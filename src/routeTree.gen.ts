@@ -59,6 +59,7 @@ import { Route as AdminGuildLogsRouteRouteImport } from './routes/admin/guild/lo
 import { Route as ProfileUserIdEventIdCharacterIdRouteImport } from './routes/profile/$userId/$eventId.$characterId'
 import { Route as AdminGuildStashesStashIdRouteImport } from './routes/admin/guild/stashes/$stashId'
 import { Route as AdminGuildLogsGuildIdRouteImport } from './routes/admin/guild/logs/$guildId'
+import { Route as AdminEventsEventIdUnvalidatedObjectivesRouteImport } from './routes/admin/events/$eventId/unvalidated-objectives'
 import { Route as AdminEventsEventIdTeamsRouteImport } from './routes/admin/events/$eventId/teams'
 import { Route as AdminEventsEventIdScoringPresetsRouteImport } from './routes/admin/events/$eventId/scoring-presets'
 import { Route as AdminEventsEventIdObjectivesObjectiveIdRouteImport } from './routes/admin/events/$eventId/objectives.$objectiveId'
@@ -316,6 +317,12 @@ const AdminGuildLogsGuildIdRoute = AdminGuildLogsGuildIdRouteImport.update({
   path: '/$guildId',
   getParentRoute: () => AdminGuildLogsRouteRoute,
 } as any)
+const AdminEventsEventIdUnvalidatedObjectivesRoute =
+  AdminEventsEventIdUnvalidatedObjectivesRouteImport.update({
+    id: '/admin/events/$eventId/unvalidated-objectives',
+    path: '/admin/events/$eventId/unvalidated-objectives',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AdminEventsEventIdTeamsRoute = AdminEventsEventIdTeamsRouteImport.update({
   id: '/admin/events/$eventId/teams',
   path: '/admin/events/$eventId/teams',
@@ -384,6 +391,7 @@ export interface FileRoutesByFullPath {
   '/admin/guild/': typeof AdminGuildIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
+  '/admin/events/$eventId/unvalidated-objectives': typeof AdminEventsEventIdUnvalidatedObjectivesRoute
   '/admin/guild/logs/$guildId': typeof AdminGuildLogsGuildIdRoute
   '/admin/guild/stashes/$stashId': typeof AdminGuildStashesStashIdRoute
   '/profile/$userId/$eventId/$characterId': typeof ProfileUserIdEventIdCharacterIdRoute
@@ -439,6 +447,7 @@ export interface FileRoutesByTo {
   '/admin/guild': typeof AdminGuildIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
+  '/admin/events/$eventId/unvalidated-objectives': typeof AdminEventsEventIdUnvalidatedObjectivesRoute
   '/admin/guild/logs/$guildId': typeof AdminGuildLogsGuildIdRoute
   '/admin/guild/stashes/$stashId': typeof AdminGuildStashesStashIdRoute
   '/profile/$userId/$eventId/$characterId': typeof ProfileUserIdEventIdCharacterIdRoute
@@ -495,6 +504,7 @@ export interface FileRoutesById {
   '/admin/guild/': typeof AdminGuildIndexRoute
   '/admin/events/$eventId/scoring-presets': typeof AdminEventsEventIdScoringPresetsRoute
   '/admin/events/$eventId/teams': typeof AdminEventsEventIdTeamsRoute
+  '/admin/events/$eventId/unvalidated-objectives': typeof AdminEventsEventIdUnvalidatedObjectivesRoute
   '/admin/guild/logs/$guildId': typeof AdminGuildLogsGuildIdRoute
   '/admin/guild/stashes/$stashId': typeof AdminGuildStashesStashIdRoute
   '/profile/$userId/$eventId/$characterId': typeof ProfileUserIdEventIdCharacterIdRoute
@@ -552,6 +562,7 @@ export interface FileRouteTypes {
     | '/admin/guild/'
     | '/admin/events/$eventId/scoring-presets'
     | '/admin/events/$eventId/teams'
+    | '/admin/events/$eventId/unvalidated-objectives'
     | '/admin/guild/logs/$guildId'
     | '/admin/guild/stashes/$stashId'
     | '/profile/$userId/$eventId/$characterId'
@@ -607,6 +618,7 @@ export interface FileRouteTypes {
     | '/admin/guild'
     | '/admin/events/$eventId/scoring-presets'
     | '/admin/events/$eventId/teams'
+    | '/admin/events/$eventId/unvalidated-objectives'
     | '/admin/guild/logs/$guildId'
     | '/admin/guild/stashes/$stashId'
     | '/profile/$userId/$eventId/$characterId'
@@ -662,6 +674,7 @@ export interface FileRouteTypes {
     | '/admin/guild/'
     | '/admin/events/$eventId/scoring-presets'
     | '/admin/events/$eventId/teams'
+    | '/admin/events/$eventId/unvalidated-objectives'
     | '/admin/guild/logs/$guildId'
     | '/admin/guild/stashes/$stashId'
     | '/profile/$userId/$eventId/$characterId'
@@ -695,6 +708,7 @@ export interface RootRouteChildren {
   AdminGuildIndexRoute: typeof AdminGuildIndexRoute
   AdminEventsEventIdScoringPresetsRoute: typeof AdminEventsEventIdScoringPresetsRoute
   AdminEventsEventIdTeamsRoute: typeof AdminEventsEventIdTeamsRoute
+  AdminEventsEventIdUnvalidatedObjectivesRoute: typeof AdminEventsEventIdUnvalidatedObjectivesRoute
   AdminEventsEventIdObjectivesObjectiveIdRoute: typeof AdminEventsEventIdObjectivesObjectiveIdRoute
 }
 
@@ -1050,6 +1064,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminGuildLogsGuildIdRouteImport
       parentRoute: typeof AdminGuildLogsRouteRoute
     }
+    '/admin/events/$eventId/unvalidated-objectives': {
+      id: '/admin/events/$eventId/unvalidated-objectives'
+      path: '/admin/events/$eventId/unvalidated-objectives'
+      fullPath: '/admin/events/$eventId/unvalidated-objectives'
+      preLoaderRoute: typeof AdminEventsEventIdUnvalidatedObjectivesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/events/$eventId/teams': {
       id: '/admin/events/$eventId/teams'
       path: '/admin/events/$eventId/teams'
@@ -1222,6 +1243,8 @@ const rootRouteChildren: RootRouteChildren = {
   AdminGuildIndexRoute: AdminGuildIndexRoute,
   AdminEventsEventIdScoringPresetsRoute: AdminEventsEventIdScoringPresetsRoute,
   AdminEventsEventIdTeamsRoute: AdminEventsEventIdTeamsRoute,
+  AdminEventsEventIdUnvalidatedObjectivesRoute:
+    AdminEventsEventIdUnvalidatedObjectivesRoute,
   AdminEventsEventIdObjectivesObjectiveIdRoute:
     AdminEventsEventIdObjectivesObjectiveIdRoute,
 }
