@@ -1,6 +1,5 @@
 import { CharacterStat, PoB } from "@client/api";
-import { useGetCharacterTimeseries, useGetPoBs } from "@client/query";
-import { getLevelFromExperience } from "@mytypes/level-info";
+import { useGetPoBs } from "@client/query";
 import { GlobalStateContext } from "@utils/context-provider";
 import { useContext, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
