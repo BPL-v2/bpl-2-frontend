@@ -255,11 +255,11 @@ function LadderTab(): JSX.Element {
                 <div className="flex flex-col">
                   <span
                     className={getSkillColor(
-                      info.row.original.character?.main_skill,
+                      info.row.original.stats?.main_skill,
                     )}
                   >
                     {" "}
-                    {info.row.original.character?.main_skill}
+                    {info.row.original.stats?.main_skill}
                   </span>
                   <AscendancyName
                     character_class={info.row.original.character_class}

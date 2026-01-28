@@ -884,7 +884,7 @@ function parseRarity(s: string): Rarity {
     case "UNIQUE":
       return Rarity.Unique;
     case "RELIC":
-      return Rarity.Relic;
+      return Rarity.Unique;
     default:
       throw new Error(`invalid rarity: ${s}`);
   }

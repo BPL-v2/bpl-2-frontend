@@ -405,6 +405,12 @@ export interface CharacterStat {
     hp: number;
     /**
      * 
+     * @type {string}
+     * @memberof CharacterStat
+     */
+    main_skill: string;
+    /**
+     * 
      * @type {number}
      * @memberof CharacterStat
      */
@@ -3404,16 +3410,58 @@ export enum Permission {
 export interface PoB {
     /**
      * 
+     * @type {number}
+     * @memberof PoB
+     */
+    armour: number;
+    /**
+     * 
      * @type {string}
      * @memberof PoB
      */
     ascendancy: string;
     /**
      * 
+     * @type {number}
+     * @memberof PoB
+     */
+    dps: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PoB
+     */
+    ehp: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PoB
+     */
+    ele_max_hit: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PoB
+     */
+    es: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PoB
+     */
+    evasion: number;
+    /**
+     * 
      * @type {string}
      * @memberof PoB
      */
     export_string: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PoB
+     */
+    hp: number;
     /**
      * 
      * @type {number}
@@ -3428,10 +3476,34 @@ export interface PoB {
     main_skill: string;
     /**
      * 
+     * @type {number}
+     * @memberof PoB
+     */
+    mana: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PoB
+     */
+    movement_speed: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PoB
+     */
+    phys_max_hit: number;
+    /**
+     * 
      * @type {string}
      * @memberof PoB
      */
     timestamp: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PoB
+     */
+    xp: number;
 }
 
 /**

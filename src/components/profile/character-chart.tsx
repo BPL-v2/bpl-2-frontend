@@ -1,4 +1,4 @@
-import { CharacterStat } from "@client/api";
+import { CharacterStat, PoB } from "@client/api";
 import { useGetCharacterTimeseries, useGetPoBs } from "@client/query";
 import { getLevelFromExperience } from "@mytypes/level-info";
 import { GlobalStateContext } from "@utils/context-provider";
@@ -45,14 +45,9 @@ export function CharacterChart({
   const { pobs = [] } = useGetPoBs(userId, characterId);
 
   const { preferences } = useContext(GlobalStateContext);
-  const [selectedMetric, setSelectedMetric] =
-    useState<keyof CharacterStat>("dps");
+  const [selectedMetric, setSelectedMetric] = useState<keyof PoB>("dps");
   const plotRef = useRef<HTMLDivElement>(null);
 
-  const { characterTimeseries = [] } = useGetCharacterTimeseries(
-    characterId,
-    userId,
-  );
   const selectedPobTimestamp = pobs[pobId]?.timestamp
     ? new Date(pobs[pobId].timestamp).getTime() / 1000
     : null;
@@ -60,14 +55,12 @@ export function CharacterChart({
   const fontColor = preferences.theme === "dark" ? "white" : "black";
 
   const data: AlignedData = [
-    new Float64Array(characterTimeseries.map((c) => c.timestamp)),
-    new Float64Array(
-      characterTimeseries.map((c) => getLevelFromExperience(c.xp)),
-    ),
-    new Float64Array(characterTimeseries.map((c) => c[selectedMetric])),
+    new Float64Array(pobs.map((c) => new Date(c.timestamp).getTime() / 1000)),
+    new Float64Array(pobs.map((c) => c.level)),
+    new Float64Array(pobs.map((c) => c[selectedMetric] as number)),
   ];
   const maxMetric = Math.max(
-    ...characterTimeseries.map((c) => c[selectedMetric]),
+    ...pobs.map((c) => c[selectedMetric] as number),
     1,
   );
 
