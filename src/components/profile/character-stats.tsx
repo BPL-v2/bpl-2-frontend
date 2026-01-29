@@ -10,19 +10,18 @@ export function CharacterStats({ pob }: { pob: PathOfBuilding }) {
       ? pob.build.ascendClassName
       : pob.build.className;
   const highestDps = Math.max(
-    pob.build.playerStats.combinedDPS,
-    pob.build.playerStats.cullingDPS,
-    pob.build.playerStats.fullDPS,
-    pob.build.playerStats.fullDotDPS,
-    pob.build.playerStats.fullDotDPS,
-    pob.build.playerStats.totalDPS,
-    pob.build.playerStats.totalDot,
-    pob.build.playerStats.totalDotDPS,
-    pob.build.playerStats.withBleedDPS,
-    pob.build.playerStats.withIgniteDPS,
-    pob.build.playerStats.withPoisonDPS,
+    pob.build.playerStats.combinedDPS || 0,
+    pob.build.playerStats.cullingDPS || 0,
+    pob.build.playerStats.fullDPS || 0,
+    pob.build.playerStats.fullDotDPS || 0,
+    pob.build.playerStats.fullDotDPS || 0,
+    pob.build.playerStats.totalDPS || 0,
+    pob.build.playerStats.totalDot || 0,
+    pob.build.playerStats.totalDotDPS || 0,
+    pob.build.playerStats.withBleedDPS || 0,
+    pob.build.playerStats.withIgniteDPS || 0,
+    pob.build.playerStats.withPoisonDPS || 0,
   );
-
   return (
     <div className="flex w-full flex-col gap-2 rounded-box bg-base-300 p-4 md:p-8">
       <div className="flex items-center justify-between">
