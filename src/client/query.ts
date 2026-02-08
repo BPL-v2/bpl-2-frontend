@@ -28,6 +28,7 @@ import {
   characterApi,
   eventApi,
   guildStashApi,
+  itemApi,
   jobApi,
   ladderApi,
   objectiveApi,
@@ -1162,5 +1163,17 @@ export function useGetTeamAtlas(eventId: number) {
   return {
     ...query,
     teamAtlas: query.data,
+  };
+}
+
+export function useGetItemMapping() {
+  const query = useQuery({
+    queryKey: ["itemMapping"],
+    queryFn: () => itemApi.getItemMap(),
+    refetchOnMount: false,
+  });
+  return {
+    ...query,
+    itemMapping: query.data,
   };
 }

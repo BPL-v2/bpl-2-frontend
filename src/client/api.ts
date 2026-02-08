@@ -405,6 +405,12 @@ export interface CharacterStat {
     hp: number;
     /**
      * 
+     * @type {Array<number>}
+     * @memberof CharacterStat
+     */
+    item_indexes: Array<number>;
+    /**
+     * 
      * @type {string}
      * @memberof CharacterStat
      */
@@ -7406,6 +7412,99 @@ export class ItemWishesApi extends BaseAPI {
      */
     public getItemWishesForTeam(event_id: number, team_id: number, options?: any) {
         return ItemWishesApiFp(this.configuration).getItemWishesForTeam(event_id, team_id, options)(this.fetch, this.basePath);
+    }
+
+}
+
+/**
+ * ItemsApi - fetch parameter creator
+ * @export
+ */
+export const ItemsApiFetchParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Returns a map of item types to item-name-to-ID maps
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getItemMap(options: any = {}): FetchArgs {
+            const localVarPath = `/items/map`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ItemsApi - functional programming interface
+ * @export
+ */
+export const ItemsApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * Returns a map of item types to item-name-to-ID maps
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getItemMap(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<{ [key: string]: { [key: string]: number; }; }> {
+            const localVarFetchArgs = ItemsApiFetchParamCreator(configuration).getItemMap(options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+    }
+};
+
+/**
+ * ItemsApi - factory interface
+ * @export
+ */
+export const ItemsApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+    return {
+        /**
+         * Returns a map of item types to item-name-to-ID maps
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getItemMap(options?: any) {
+            return ItemsApiFp(configuration).getItemMap(options)(fetch, basePath);
+        },
+    };
+};
+
+/**
+ * ItemsApi - object-oriented interface
+ * @export
+ * @class ItemsApi
+ * @extends {BaseAPI}
+ */
+export class ItemsApi extends BaseAPI {
+    /**
+     * Returns a map of item types to item-name-to-ID maps
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ItemsApi
+     */
+    public getItemMap(options?: any) {
+        return ItemsApiFp(this.configuration).getItemMap(options)(this.fetch, this.basePath);
     }
 
 }

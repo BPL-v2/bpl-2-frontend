@@ -2,11 +2,12 @@ import { CharacterStat, LadderEntry, Team } from "@client/api";
 import { CellContext, ColumnDef, sortingFns } from "@tanstack/react-table";
 import { GlobalStateContext } from "@utils/context-provider";
 import { getTotalPoints, totalPoints } from "@utils/utils";
-import { JSX, useContext, useMemo } from "react";
+import { JSX, useContext, useMemo, useState } from "react";
 
 import {
   preloadLadderData,
   useGetEventStatus,
+  useGetItemMapping,
   useGetLadder,
   useGetStreams,
   useGetUsers,
@@ -33,6 +34,7 @@ import { twMerge } from "tailwind-merge";
 import { defaultPreferences } from "@mytypes/preferences";
 import { TwitchFilled } from "@icons/twitch";
 import { renderScore } from "@utils/score";
+import { MultiSelectPercentage } from "@components/form/multi-select-percentage";
 
 type RowDef = {
   total: number;
@@ -63,6 +65,40 @@ function LadderTab(): JSX.Element {
   );
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const { streams = [] } = useGetStreams(currentEvent.id);
+  const { itemMapping = {} } = useGetItemMapping();
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+
+  const filteredLadder = useMemo(() => {
+    if (!ladder) {
+      return [];
+    }
+    if (selectedItems.length === 0) {
+      return ladder;
+    }
+    return ladder?.filter((entry) => {
+      for (const itemIdx of selectedItems) {
+        if (!entry.stats?.item_indexes?.includes(itemIdx)) {
+          return false;
+        }
+      }
+      return true;
+    });
+  }, [ladder, selectedItems]);
+
+  const percentagePlayersWithItem = useMemo(
+    () =>
+      filteredLadder?.reduce(
+        (acc, entry) => {
+          for (const skill of entry.stats?.item_indexes || []) {
+            acc[skill] = (acc[skill] || 0) + 1 / (filteredLadder?.length || 1);
+          }
+          return acc;
+        },
+        {} as { [skillId: number]: number },
+      ) || {},
+    [filteredLadder],
+  );
+
   const showAlwaysLadder = ["Stream"];
   const streamsByUser = streams.reduce(
     (acc, stream) => {
@@ -574,40 +610,72 @@ function LadderTab(): JSX.Element {
         </div>
       )}
       <div className="divider divider-primary">Ladder</div>
-      {!isMobile && (
-        <div className="mb-4 flex flex-wrap justify-between gap-1">
-          {Object.keys(defaultPreferences.ladder).map((label) => {
-            const key = label as keyof typeof preferences.ladder;
-            return (
-              <button
-                key={label}
-                onClick={() => {
-                  setPreferences({
-                    ...preferences,
-                    ladder: {
-                      ...preferences.ladder,
-                      [label]: !preferences.ladder[key],
-                    },
-                  });
-                }}
-                className={twMerge(
-                  "btn rounded-lg px-2 btn-sm",
-                  preferences.ladder[key]
-                    ? "btn-primary"
-                    : "border-primary bg-base-100/0 text-primary",
-                )}
-              >
-                {label}
-              </button>
-            );
-          })}
+      <div className="flex flex-col gap-2">
+        {!isMobile && (
+          <div className="flex flex-wrap justify-between gap-1">
+            {Object.keys(defaultPreferences.ladder).map((label) => {
+              const key = label as keyof typeof preferences.ladder;
+              return (
+                <button
+                  key={label}
+                  onClick={() => {
+                    setPreferences({
+                      ...preferences,
+                      ladder: {
+                        ...preferences.ladder,
+                        [label]: !preferences.ladder[key],
+                      },
+                    });
+                  }}
+                  className={twMerge(
+                    "btn rounded-lg px-2 btn-sm",
+                    preferences.ladder[key]
+                      ? "btn-primary"
+                      : "border-primary bg-base-100/0 text-primary",
+                  )}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+        <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
+          <MultiSelectPercentage
+            name="uniques"
+            options={Object.entries(itemMapping["unique"] || {}).map(
+              ([name, idx]) => ({
+                label: name,
+                value: idx,
+              }),
+            )}
+            onChange={setSelectedItems}
+            placeholder="Filter by uniques"
+            percentages={percentagePlayersWithItem}
+            values={selectedItems}
+            className="w-100"
+          />
+          <MultiSelectPercentage
+            name="skills"
+            options={Object.entries(itemMapping["gem"] || {}).map(
+              ([skill, idx]) => ({
+                label: skill,
+                value: idx,
+              }),
+            )}
+            onChange={setSelectedItems}
+            placeholder="Filter by gem"
+            percentages={percentagePlayersWithItem}
+            values={selectedItems}
+            className="w-100"
+          />
         </div>
-      )}
-      <Table
-        data={ladder?.sort((a, b) => a.rank - b.rank) || []}
-        columns={ladderColumns}
-        className="h-[70vh]"
-      />
+        <Table
+          data={filteredLadder?.sort((a, b) => a.rank - b.rank) || []}
+          columns={ladderColumns}
+          className="h-[70vh]"
+        />
+      </div>
     </>
   );
 }

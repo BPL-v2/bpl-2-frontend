@@ -6,6 +6,7 @@ import {
   EngagementApiFactory,
   EventApiFactory,
   GuildStashApiFactory,
+  ItemsApiFactory,
   ItemWishesApiFactory,
   JobsApiFactory,
   LadderApiFactory,
@@ -94,3 +95,5 @@ export const engagementApi = EngagementApiFactory(
   authenticatedFetch,
   baseUrl,
 );
+
+export const itemApi = ItemsApiFactory(config, authenticatedFetch, baseUrl);

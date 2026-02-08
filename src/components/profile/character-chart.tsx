@@ -1,4 +1,4 @@
-import { CharacterStat, PoB } from "@client/api";
+import { PoB } from "@client/api";
 import { useGetPoBs } from "@client/query";
 import { GlobalStateContext } from "@utils/context-provider";
 import { useContext, useRef, useState } from "react";
@@ -215,7 +215,7 @@ export function CharacterChart({
                   "btn m-1",
                   selectedMetric === metric && "btn-primary",
                 )}
-                onClick={() => setSelectedMetric(metric as keyof CharacterStat)}
+                onClick={() => setSelectedMetric(metric as keyof PoB)}
               >
                 {metric.toUpperCase().replaceAll("_", " ")}
               </button>
