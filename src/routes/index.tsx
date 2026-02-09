@@ -1,8 +1,8 @@
 import { useGetEvents, useGetEventStatus } from "@client/query";
-import { AscendancyPortrait } from "@components/character/ascendancy-portrait";
+// import { AscendancyPortrait } from "@components/character/ascendancy-portrait";
 import { Countdown } from "@components/countdown";
 import SignupButton from "@components/signup-button";
-import { TeamLogo } from "@components/team/teamlogo";
+// import { TeamLogo } from "@components/team/teamlogo";
 import { VideoEmbed } from "@components/video/video-embed";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { DiscordFilled } from "@icons/discord";
@@ -141,7 +141,7 @@ function Home() {
               </div>
             </div>
           </div>
-          {nextEvent.teams.length > 0 && (
+          {/* {nextEvent.teams.length > 0 && (
             <div className="card bg-card">
               <div className="card-body p-12">
                 <div className="card-title text-4xl">Meet the Teams</div>
@@ -176,7 +176,7 @@ function Home() {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
         </>
       ) : null}
     </div>
