@@ -18,10 +18,6 @@ function RouteComponent() {
   const [selectedTeam, setSelectedTeam] = useState<number>();
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const category = scores?.children.find((cat) => cat.name === "Bingo");
-  if (!category || !currentEvent) {
-    return <></>;
-  }
-  const gridSize = Math.sqrt(category.children.length);
   useEffect(() => {
     if (eventStatus && eventStatus.team_id) {
       setSelectedTeam(eventStatus.team_id);
@@ -33,6 +29,10 @@ function RouteComponent() {
       setSelectedTeam(currentEvent.teams[0].id);
     }
   }, [eventStatus, currentEvent]);
+  if (!category || !currentEvent) {
+    return <></>;
+  }
+  const gridSize = Math.sqrt(category.children.length);
 
   return (
     <>
