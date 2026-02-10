@@ -251,10 +251,10 @@ export function ItemTable({
                   const childNumberSum = objectives.reduce(
                     (acc, obj) =>
                       acc +
-                      obj.team_score[team.id].completions.reduce(
+                      (obj.team_score[team.id]?.completions.reduce(
                         (max, completion) => Math.max(max, completion.number),
                         0,
-                      ),
+                      ) || 0),
                     0,
                   );
                   const numberOfChildren = objectives.filter((o) =>
