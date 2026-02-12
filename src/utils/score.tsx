@@ -1,12 +1,9 @@
-import { useContext } from "react";
-import { GlobalStateContext } from "./context-provider";
-
 export function renderScore(
   actualNumberOfPoints: number,
   potentialNumberOfPoints?: number,
+  usesMedals: boolean = false,
 ) {
-  const { currentEvent } = useContext(GlobalStateContext);
-  if (!currentEvent.uses_medals) {
+  if (!usesMedals) {
     if (potentialNumberOfPoints === undefined) {
       return actualNumberOfPoints;
     }

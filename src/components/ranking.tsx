@@ -137,6 +137,7 @@ export function Ranking({
                       {renderScore(
                         getTotalPoints(objective)[teamId],
                         getPotentialPoints(objective)[teamId],
+                        currentEvent?.uses_medals,
                       )}
                     </div>
                   </div>

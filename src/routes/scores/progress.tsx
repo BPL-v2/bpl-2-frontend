@@ -303,7 +303,8 @@ function RouteComponent() {
       accessorKey: "points",
       header: "Points",
       enableSorting: false,
-      cell: ({ row }) => renderScore(row.original.points),
+      cell: ({ row }) =>
+        renderScore(row.original.points, undefined, currentEvent?.uses_medals),
     },
     {
       accessorKey: "rank",

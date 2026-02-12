@@ -248,6 +248,7 @@ export function SubmissionCard({ objective }: SubmissionCardProps) {
                         {renderScore(
                           getTotalPoints(objective)[teamId],
                           getPotentialPoints(objective)[teamId],
+                          currentEvent?.uses_medals,
                         )}
                         {score.completions[0]?.number > 1 &&
                           `(${score.completions[0]?.number})`}

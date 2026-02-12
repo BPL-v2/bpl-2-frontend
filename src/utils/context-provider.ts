@@ -6,7 +6,6 @@ export type GlobalState = {
   currentEvent: Event;
   setCurrentEvent: (c: Event) => void;
   scores: ScoreObjective | undefined;
-  setScores: (c: ScoreObjective | undefined) => void;
   isMobile: boolean;
   setIsMobile: (c: boolean) => void;
   preferences: Preferences;
@@ -21,7 +20,6 @@ export const GlobalStateContext = createContext<GlobalState>({
   } as never as Event,
   setCurrentEvent: () => {},
   scores: undefined,
-  setScores: () => {},
   isMobile: false,
   setIsMobile: () => {},
   preferences: initPreferences(),

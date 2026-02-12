@@ -23,15 +23,15 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
     teams: [],
     uses_medals: false,
   } as unknown as Event);
-  const [scoreData, setScoreData] = useState<ScoreMap>({});
-  const [scores, setScores] = useState<ScoreObjective>();
+  const [scoreDiffs, setScoreDiffs] = useState<ScoreMap>({});
+  let scores: ScoreObjective | undefined = undefined;
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
   // const [_, setUpdates] = useState<ScoreDiff[]>([]);
   const [preferences, setPreferences] = useState(initPreferences());
   const [websocket, setWebsocket] = useState<WebSocket>();
   const { events } = useGetEvents();
   const { rules } = useGetRules(currentEvent.id);
-  const { score = {} } = useGetScore(currentEvent.id);
+  const { score: initialScore = {} } = useGetScore(currentEvent.id);
   useGetUsers(currentEvent.id);
   useGetUser();
   useGetEventStatus(currentEvent.id);
@@ -54,7 +54,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
     websocket?.close(1000, "eventChange");
     establishScoreSocket(
       currentEvent.id,
-      setScoreData,
+      setScoreDiffs,
       setWebsocket,
       () => {},
       // setUpdates((prevUpdates) => [...newUpdates, ...prevUpdates])
@@ -69,16 +69,28 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    if (rules && scoreData && currentEvent) {
-      const newScores = mergeScores(
-        rules,
-        score,
-        currentEvent?.teams.map((team) => team.id),
-      );
-      setScores(hidePOTotal(newScores));
+  if (rules && initialScore) {
+    const mergedScore = initialScore;
+    for (const entry of Object.entries(scoreDiffs)) {
+      const teamId = Number(entry[0]);
+      const scoreMap = entry[1];
+      for (const diffEntry of Object.entries(scoreMap)) {
+        const objectId = Number(diffEntry[0]);
+        const score = diffEntry[1];
+        if (!mergedScore[teamId]) {
+          mergedScore[teamId] = {};
+        }
+        mergedScore[teamId][objectId] = score;
+      }
     }
-  }, [rules, currentEvent, score, scoreData]);
+    scores = hidePOTotal(
+      mergeScores(
+        rules,
+        mergedScore,
+        currentEvent?.teams.map((team) => team.id),
+      ),
+    );
+  }
 
   useEffect(() => {
     document
@@ -95,7 +107,6 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
         currentEvent: currentEvent,
         setCurrentEvent: setCurrentEvent,
         scores: scores,
-        setScores: setScores,
         isMobile: isMobile,
         setIsMobile: setIsMobile,
         preferences: preferences,

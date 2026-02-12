@@ -1,8 +1,10 @@
 import { CategoryIcon } from "@icons/category-icons";
 import { Medal } from "@icons/medal";
 import { canBeFinished, ScoreObjective } from "@mytypes/score";
+import { GlobalStateContext } from "@utils/context-provider";
 import { renderScore } from "@utils/score";
 import { getPotentialPoints, getTotalPoints, isFinished } from "@utils/utils";
+import { useContext } from "react";
 import { twMerge } from "tailwind-merge";
 
 type UniqueCategoryCardProps = {
@@ -19,6 +21,7 @@ export const UniqueCategoryCard = ({
   onClick,
   ...props
 }: UniqueCategoryCardProps & React.HTMLAttributes<HTMLDivElement>) => {
+  const { currentEvent } = useContext(GlobalStateContext);
   const totalItems = objective.children.length;
   const totalVariants = objective.children.reduce(
     (acc, variantCategory) => acc + variantCategory.children.length,
@@ -74,6 +77,7 @@ export const UniqueCategoryCard = ({
             {renderScore(
               getTotalPoints(objective)[teamId],
               getPotentialPoints(objective)[teamId],
+              currentEvent?.uses_medals,
             )}
           </div>
         </div>

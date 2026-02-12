@@ -492,7 +492,8 @@ function LadderTab(): JSX.Element {
     {
       accessorKey: "total",
       header: "Total",
-      cell: ({ row }) => renderScore(row.original.total),
+      cell: ({ row }) =>
+        renderScore(row.original.total, undefined, currentEvent?.uses_medals),
       size: 120,
     },
     ...categoryNames.map((categoryName) => ({
@@ -501,7 +502,11 @@ function LadderTab(): JSX.Element {
       key: `column-${categoryName}`,
       // @ts-ignore
       cell: ({ row }) =>
-        renderScore(row.original[categoryName as keyof RowDef] || 0),
+        renderScore(
+          row.original[categoryName as keyof RowDef] || 0,
+          undefined,
+          currentEvent?.uses_medals,
+        ),
       // @ts-ignore
       sorter: (a, b) => a[categoryName] - b[categoryName],
       size: 140,

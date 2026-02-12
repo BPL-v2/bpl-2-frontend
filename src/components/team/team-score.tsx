@@ -83,6 +83,7 @@ const TeamScoreDisplay = ({
                       {renderScore(
                         teamScores[team.id],
                         potentialScores[team.id],
+                        currentEvent?.uses_medals,
                       )}
                     </span>
                   </div>
