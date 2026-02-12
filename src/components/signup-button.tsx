@@ -94,7 +94,7 @@ const SignupButton = () => {
                 />
               </div>
             </div>
-            <label className="fieldset-label">
+            {/* <label className="fieldset-label">
               Do you want to play with another person? (PoE account name
               required)
             </label>
@@ -106,7 +106,7 @@ const SignupButton = () => {
                 defaultValue={partnerWish}
                 onChange={(e) => setPartnerWish(e.target.value)}
               />
-            </div>
+            </div> */}
             {/* <label className="fieldset-label text-info">
               <input
                 type="checkbox"
