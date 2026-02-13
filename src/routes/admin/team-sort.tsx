@@ -100,29 +100,29 @@ function UserSortPage() {
 
   const sortColumns = useMemo(() => {
     const columns: ColumnDef<Signup>[] = [
-      {
-        header: "Partners",
-        accessorFn: (row) => partnerMap.get(row.user.id),
-        size: 120,
-      },
+      // {
+      //   header: "Partners",
+      //   accessorFn: (row) => partnerMap.get(row.user.id),
+      //   size: 120,
+      // },
       {
         header: "ID",
         accessorKey: "user.id",
         size: 100,
       },
-      {
-        header: "Timestamp",
-        accessorKey: "timestamp",
-        size: 200,
-        cell: ({ row }) => {
-          return new Date(row.original.timestamp).toLocaleString();
-        },
-      },
-      {
-        header: "Name",
-        accessorKey: "user.display_name",
-        size: 200,
-      },
+      // {
+      //   header: "Timestamp",
+      //   accessorKey: "timestamp",
+      //   size: 200,
+      //   cell: ({ row }) => {
+      //     return new Date(row.original.timestamp).toLocaleString();
+      //   },
+      // },
+      // {
+      //   header: "Name",
+      //   accessorKey: "user.display_name",
+      //   size: 200,
+      // },
       {
         header: "PoE Name",
         accessorKey: "user.account_name",
