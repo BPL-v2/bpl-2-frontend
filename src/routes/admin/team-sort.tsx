@@ -1,4 +1,4 @@
-import { Permission, Signup } from "@client/api";
+import { ExtendedSignup, Permission, Signup } from "@client/api";
 import {
   useAddUsersToTeams,
   useDeleteSignup,
@@ -12,7 +12,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";
 import { GlobalStateContext } from "@utils/context-provider";
 import { renderConditionally } from "@utils/token";
-import { sortUsers } from "@utils/usersort";
+import { sortUsers, type SortBucketConfig } from "@utils/usersort";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -27,32 +27,109 @@ type TeamRow = {
   key: number;
   team: string;
   members: number;
-  "0-3": number;
-  "4-6": number;
-  "7-9": number;
-  "10-12": number;
-  "13+": number;
-  total: number;
+  new: number;
+  experienced: number;
+  veteran: number;
+  low: number;
+  medium: number;
+  large: number;
 };
 
-export type ExtendedSignup = Signup & {
+export type SortedSignup = ExtendedSignup & {
   sorted?: boolean;
 };
 
-function toExpectedPlayTime(
-  expectedPlaytime: number,
-): "0-3" | "4-6" | "7-9" | "10-12" | "13+" {
-  if (expectedPlaytime < 4) {
-    return "0-3";
-  } else if (expectedPlaytime < 7) {
-    return "4-6";
-  } else if (expectedPlaytime < 10) {
-    return "7-9";
-  } else if (expectedPlaytime < 13) {
-    return "10-12";
-  } else {
-    return "13+";
+const totalBucketKey = "total";
+const participationBucketKeys = {
+  new: "participation:new",
+  experienced: "participation:experienced",
+  veteran: "participation:veteran",
+} as const;
+const playtimeBucketKeys = {
+  low: "playtime:low",
+  medium: "playtime:medium",
+  large: "playtime:large",
+} as const;
+
+function getParticipationBucket(
+  signup: ExtendedSignup,
+): "new" | "experienced" | "veteran" {
+  const participatedEvents = Object.keys(
+    signup.highest_character_levels || {},
+  ).length;
+  if (participatedEvents === 0) {
+    return "new";
   }
+  if (participatedEvents < 5) {
+    return "experienced";
+  }
+  return "veteran";
+}
+
+function getLastEventId(signups: ExtendedSignup[]): number | null {
+  let lastEventId: number | null = null;
+  for (const signup of signups) {
+    for (const key of Object.keys(
+      signup.playtimes_in_last_events_per_day_in_hours,
+    )) {
+      const parsed = Number.parseInt(key, 10);
+      if (!Number.isNaN(parsed)) {
+        lastEventId =
+          lastEventId === null ? parsed : Math.max(lastEventId, parsed);
+      }
+    }
+  }
+  return lastEventId;
+}
+
+function getPlaytimeBucket(
+  signup: ExtendedSignup,
+  lastEventId: number | null,
+): "low" | "medium" | "large" | null {
+  if (lastEventId === null) {
+    return null;
+  }
+  const playtime =
+    signup.playtimes_in_last_events_per_day_in_hours[String(lastEventId)] || 0;
+  if (playtime <= 0) {
+    return null;
+  }
+  if (playtime < 3) {
+    return "low";
+  }
+  if (playtime < 8) {
+    return "medium";
+  }
+  return "large";
+}
+
+function buildBucketConfig(signups: ExtendedSignup[]): SortBucketConfig {
+  const lastEventId = getLastEventId(signups);
+  const bucketKeys = [
+    totalBucketKey,
+    participationBucketKeys.new,
+    participationBucketKeys.experienced,
+    participationBucketKeys.veteran,
+    playtimeBucketKeys.low,
+    playtimeBucketKeys.medium,
+    playtimeBucketKeys.large,
+  ];
+
+  return {
+    bucketKeys,
+    totalBucketKey,
+    getSignupBuckets: (signup: ExtendedSignup) => {
+      const buckets = [
+        totalBucketKey,
+        participationBucketKeys[getParticipationBucket(signup)],
+      ];
+      const playtimeBucket = getPlaytimeBucket(signup, lastEventId);
+      if (playtimeBucket) {
+        buckets.push(playtimeBucketKeys[playtimeBucket]);
+      }
+      return buckets;
+    },
+  };
 }
 
 function UserSortPage() {
@@ -67,21 +144,32 @@ function UserSortPage() {
       acc[signup.user.id] = signup;
       return acc;
     },
-    {} as Record<number, Signup>,
+    {} as Record<number, ExtendedSignup>,
   );
   const { addUsersToTeams } = useAddUsersToTeams(qc);
-  const [suggestions, setSuggestions] = useState<Signup[]>([]);
+  const [suggestions, setSuggestions] = useState<SortedSignup[]>([]);
+  const signupsKey = useMemo(
+    () =>
+      signups
+        .map(
+          (signup) =>
+            `${signup.user.id}:${signup.team_id ?? ""}:${signup.team_lead ? 1 : 0}`,
+        )
+        .join("|"),
+    [signups],
+  );
   useEffect(() => {
     if (signups) {
       setSuggestions([...signups]);
     }
-  }, [signups]);
+  }, [signupsKey]);
   let count = 0;
   const partnerMap = new Map<number, number>();
-  const signupMap = new Map<number, Signup>();
+  const signupMap = new Map<number, ExtendedSignup>();
   for (const signup of signups) {
     signupMap.set(signup.user.id, signup);
   }
+  const lastEventId = useMemo(() => getLastEventId(suggestions), [suggestions]);
   for (const signup of signups) {
     if (signup.partner_id) {
       const partner = signupMap.get(signup.partner_id);
@@ -99,7 +187,7 @@ function UserSortPage() {
   }
 
   const sortColumns = useMemo(() => {
-    const columns: ColumnDef<Signup>[] = [
+    const columns: ColumnDef<ExtendedSignup>[] = [
       // {
       //   header: "Partners",
       //   accessorFn: (row) => partnerMap.get(row.user.id),
@@ -107,31 +195,33 @@ function UserSortPage() {
       // },
       {
         header: "ID",
-        accessorKey: "user.id",
+        accessorFn: (row) => row.user.id,
         size: 100,
       },
-      // {
-      //   header: "Timestamp",
-      //   accessorKey: "timestamp",
-      //   size: 200,
-      //   cell: ({ row }) => {
-      //     return new Date(row.original.timestamp).toLocaleString();
-      //   },
-      // },
-      // {
-      //   header: "Name",
-      //   accessorKey: "user.display_name",
-      //   size: 200,
-      // },
       {
         header: "PoE Name",
         accessorKey: "user.account_name",
         size: 200,
       },
       {
-        header: "Playtime",
-        accessorKey: "expected_playtime",
-        size: 120,
+        header: "#BPLs",
+        accessorFn: (row) =>
+          Object.keys(row.highest_character_levels || {}).length,
+        size: 140,
+      },
+      {
+        header: "Playtime last BPL",
+        accessorFn: (row) =>
+          lastEventId === null
+            ? ""
+            : row.playtimes_in_last_events_per_day_in_hours[
+                String(lastEventId)
+              ] || 0,
+        cell: ({ getValue }) => {
+          const playtime = getValue() as number;
+          return playtime ? playtime.toFixed(1) + " h / day" : "N/A";
+        },
+        size: 200,
       },
       // {
       //   header: "GuildLead",
@@ -179,7 +269,7 @@ function UserSortPage() {
       {
         header: "Assign Team",
         accessorKey: "team_id",
-        size: 550,
+        size: 450,
         cell: ({ row }) => {
           return (
             <div className="flex flex-wrap gap-1">
@@ -239,6 +329,7 @@ function UserSortPage() {
                   userId: row.original.user.id,
                 });
               }}
+              className="btn-sm"
             ></DeleteButton>
           );
         },
@@ -261,14 +352,12 @@ function UserSortPage() {
         .filter((signup) => signup.team_id === team.id)
         .reduce(
           (acc, signup) => {
-            const expectedPlaytime = toExpectedPlayTime(
-              signup.expected_playtime,
-            );
-            if (!acc[expectedPlaytime]) {
-              acc[expectedPlaytime] = 0;
+            const participationBucket = getParticipationBucket(signup);
+            acc[participationBucket] += 1;
+            const playtimeBucket = getPlaytimeBucket(signup, lastEventId);
+            if (playtimeBucket) {
+              acc[playtimeBucket] += 1;
             }
-            acc[expectedPlaytime] += 1;
-            acc.total += signup.expected_playtime;
 
             return acc;
           },
@@ -277,14 +366,27 @@ function UserSortPage() {
             team: team.name,
             members: suggestions.filter((signup) => signup.team_id === team.id)
               .length,
-            total: 0,
+            new: 0,
+            experienced: 0,
+            veteran: 0,
+            low: 0,
+            medium: 0,
+            large: 0,
           } as TeamRow,
         ),
   );
 
   const totalRow = teamRows.reduce(
     (acc, row) => {
-      for (const key of ["0-3", "4-6", "7-9", "10-12", "13+", "members"]) {
+      for (const key of [
+        "new",
+        "experienced",
+        "veteran",
+        "low",
+        "medium",
+        "large",
+        "members",
+      ]) {
         // @ts-ignore
         if (!acc[key]) {
           // @ts-ignore
@@ -299,6 +401,12 @@ function UserSortPage() {
       team: "Total Signups",
       members: 0,
       key: -1,
+      new: 0,
+      experienced: 0,
+      veteran: 0,
+      low: 0,
+      medium: 0,
+      large: 0,
     } as TeamRow,
   );
   const exportToCSV = (signups: Signup[]) => {
@@ -358,24 +466,51 @@ function UserSortPage() {
 
   teamRows = [totalRow, ...teamRows];
   return (
-    <div style={{ marginTop: "20px" }}>
-      <h1>Sort</h1> <div className="divider divider-primary">Teams</div>
+    <div className="mt-4">
+      <div className="divider divider-primary">Teams</div>
       <table className="table-striped table">
         <thead className="bg-base-200">
           <tr>
             <th rowSpan={2}>Team</th>
             <th rowSpan={2}>Members</th>
-            <th colSpan={5} className="text-center">
-              Playtime in hours per day
+            <th colSpan={3} className="text-center">
+              Participation
             </th>
-            <th rowSpan={2}>Total</th>
+            <th colSpan={3} className="text-center">
+              Playtime per day (last event)
+            </th>
           </tr>
           <tr>
-            <th>0-3</th>
-            <th>4-6</th>
-            <th>7-9</th>
-            <th>10-12</th>
-            <th>13+</th>
+            <th>
+              <div className="tooltip" data-tip="0 events">
+                New
+              </div>
+            </th>
+            <th>
+              <div className="tooltip" data-tip="1-4 events">
+                Experienced
+              </div>
+            </th>
+            <th>
+              <div className="tooltip" data-tip="5+ events">
+                Veteran
+              </div>
+            </th>
+            <th>
+              <div className="tooltip" data-tip="<3 hours/day">
+                Low
+              </div>
+            </th>
+            <th>
+              <div className="tooltip" data-tip="3-8 hours/day">
+                Medium
+              </div>
+            </th>
+            <th>
+              <div className="tooltip" data-tip="8+ hours/day">
+                Large
+              </div>
+            </th>
           </tr>
         </thead>
         <tbody className="bg-base-300">
@@ -383,12 +518,12 @@ function UserSortPage() {
             <tr key={row.key}>
               <td>{row.team}</td>
               <td>{row.members}</td>
-              <td>{row["0-3"]}</td>
-              <td>{row["4-6"]}</td>
-              <td>{row["7-9"]}</td>
-              <td>{row["10-12"]}</td>
-              <td>{row["13+"]}</td>
-              <td>{row.total}</td>
+              <td>{row.new}</td>
+              <td>{row.experienced}</td>
+              <td>{row.veteran}</td>
+              <td>{row.low}</td>
+              <td>{row.medium}</td>
+              <td>{row.large}</td>
             </tr>
           ))}
         </tbody>
@@ -430,7 +565,9 @@ function UserSortPage() {
           className="btn btn-outline"
           onClick={() => {
             const time = new Date().getTime();
-            setSuggestions(sortUsers(currentEvent, signups));
+            setSuggestions(
+              sortUsers(currentEvent, signups, buildBucketConfig(signups)),
+            );
             console.log("Sort took: ", new Date().getTime() - time + "ms");
           }}
         >

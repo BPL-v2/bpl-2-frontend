@@ -1,10 +1,17 @@
 import { Event } from "@client/api";
-import { ExtendedSignup } from "../routes/admin/team-sort";
+import { SortedSignup } from "../routes/admin/team-sort";
+
+export type SortBucketConfig = {
+  bucketKeys: string[];
+  totalBucketKey: string;
+  getSignupBuckets: (signup: SortedSignup) => string[];
+};
 
 export function sortUsers(
   currentEvent: Event,
-  signups: ExtendedSignup[],
-): ExtendedSignup[] {
+  signups: SortedSignup[],
+  bucketConfig: SortBucketConfig,
+): SortedSignup[] {
   const lockedSignups = signups.reduce(
     (acc, signup) => {
       if (signup.team_id) {
@@ -14,39 +21,22 @@ export function sortUsers(
     },
     {} as { [userId: number]: number },
   );
-  let suggestion = getSortSuggestion(currentEvent, signups);
+  let suggestion = getSortSuggestion(currentEvent, signups, bucketConfig);
   suggestion = improveFairness(suggestion, currentEvent, lockedSignups);
   suggestion = ensurePartners(suggestion, lockedSignups);
   suggestion = improveFairness(suggestion, currentEvent, lockedSignups);
   return suggestion;
 }
 
-const playtimeBuckets = ["0-3", "4-6", "7-9", "10-12", "13+"];
-function toBucket(
-  expectedPlaytime: number,
-): "0-3" | "4-6" | "7-9" | "10-12" | "13+" {
-  if (expectedPlaytime < 4) {
-    return "0-3";
-  } else if (expectedPlaytime < 7) {
-    return "4-6";
-  } else if (expectedPlaytime < 10) {
-    return "7-9";
-  } else if (expectedPlaytime < 13) {
-    return "10-12";
-  } else {
-    return "13+";
-  }
-}
-
 const randSort = () => Math.random() - 0.5;
 
 function ensurePartners(
-  signups: ExtendedSignup[],
+  signups: SortedSignup[],
   lockedSignups: { [userId: number]: number },
 ) {
   const fixedSignups = [];
-  const userToSignup = new Map<number, ExtendedSignup>();
-  const teamToSignups = new Map<number, ExtendedSignup[]>();
+  const userToSignup = new Map<number, SortedSignup>();
+  const teamToSignups = new Map<number, SortedSignup[]>();
   const matchedPartners = new Set<number>();
   for (const signup of signups) {
     userToSignup.set(signup.user.id, signup);
@@ -109,11 +99,11 @@ function ensurePartners(
       fixedSignups.push(signup);
     }
   }
-  return fixedSignups as ExtendedSignup[];
+  return fixedSignups as SortedSignup[];
 }
 
 function improveFairness(
-  signups: ExtendedSignup[],
+  signups: SortedSignup[],
   currentEvent: Event,
   lockedSignups: { [userId: number]: number },
 ) {
@@ -154,7 +144,7 @@ function improveFairness(
 }
 
 function getTeamCounts(
-  signups: ExtendedSignup[],
+  signups: SortedSignup[],
   currentEvent: Event,
 ): { [teamId: number]: number } {
   return signups.reduce(
@@ -176,36 +166,50 @@ function getTeamCounts(
 
 export function getSortSuggestion(
   currentEvent: Event,
-  signups: ExtendedSignup[],
+  signups: SortedSignup[],
+  bucketConfig: SortBucketConfig,
 ) {
-  const buckets: {
-    [key: string]: { [teamId: number]: number };
-  } = playtimeBuckets.reduce(
-    (buckets, playtime) => {
-      buckets[playtime] = currentEvent.teams.reduce(
-        (teamNumbers, team) => {
-          teamNumbers[team.id] = signups.filter(
-            (signup) =>
-              signup.team_id === team.id &&
-              signup.expected_playtime === parseInt(playtime),
-          ).length;
+  const teamIds = currentEvent.teams.map((team) => team.id);
+  const allBucketKeys = bucketConfig.bucketKeys;
+  const totalBucketKey = bucketConfig.totalBucketKey;
+
+  const buckets = allBucketKeys.reduce(
+    (acc, bucketKey) => {
+      acc[bucketKey] = teamIds.reduce(
+        (teamNumbers, teamId) => {
+          teamNumbers[teamId] = 0;
           return teamNumbers;
         },
         {} as { [teamId: number]: number },
       );
-      return buckets;
+      return acc;
     },
     {} as { [key: string]: { [teamId: number]: number } },
   );
-  buckets["total"] = currentEvent.teams.reduce(
-    (teamNumbers, team) => {
-      teamNumbers[team.id] = signups.filter(
-        (signup) => signup.team_id === team.id,
-      ).length;
-      return teamNumbers;
+
+  const bucketTotals = allBucketKeys.reduce(
+    (acc, bucketKey) => {
+      acc[bucketKey] = 0;
+      return acc;
     },
-    {} as { [teamId: number]: number },
+    {} as { [key: string]: number },
   );
+
+  const addSignupToBuckets = (teamId: number, bucketKeys: string[]) => {
+    for (const bucketKey of bucketKeys) {
+      buckets[bucketKey][teamId] += 1;
+      bucketTotals[bucketKey] += 1;
+    }
+  };
+
+  for (const signup of signups) {
+    if (!signup.team_id) {
+      continue;
+    }
+    const bucketKeys = bucketConfig.getSignupBuckets(signup);
+    addSignupToBuckets(signup.team_id, bucketKeys);
+  }
+
   const newSignups = [];
 
   for (const signup of signups.slice().sort(randSort)) {
@@ -213,17 +217,43 @@ export function getSortSuggestion(
       newSignups.push(signup);
       continue;
     }
-    const bucket = buckets[toBucket(signup.expected_playtime)];
-    const minval = Math.min(...Object.values(bucket));
-    const minteam = Object.keys(bucket)
-      .filter((key) => bucket[parseInt(key)] === minval)
-      .sort(randSort)
-      .sort((a, b) => {
-        return buckets["total"][parseInt(a)] - buckets["total"][parseInt(b)];
-      })[0];
-    newSignups.push({ ...signup, team_id: parseInt(minteam) });
-    bucket[parseInt(minteam)] += 1;
-    buckets["total"][parseInt(minteam)] += 1;
+    const signupBuckets = bucketConfig.getSignupBuckets(signup);
+
+    let bestTeamId: number | null = null;
+    let bestScore = Number.POSITIVE_INFINITY;
+
+    for (const teamId of teamIds) {
+      let score = 0;
+      for (const bucketKey of allBucketKeys) {
+        const extraTotal = signupBuckets.includes(bucketKey) ? 1 : 0;
+        const target = (bucketTotals[bucketKey] + extraTotal) / teamIds.length;
+        for (const candidateTeamId of teamIds) {
+          const extra =
+            candidateTeamId === teamId && signupBuckets.includes(bucketKey)
+              ? 1
+              : 0;
+          const diff = buckets[bucketKey][candidateTeamId] + extra - target;
+          score += diff * diff;
+        }
+      }
+
+      if (score < bestScore) {
+        bestScore = score;
+        bestTeamId = teamId;
+        continue;
+      }
+      if (score === bestScore && bestTeamId !== null) {
+        if (
+          buckets[totalBucketKey][teamId] < buckets[totalBucketKey][bestTeamId]
+        ) {
+          bestTeamId = teamId;
+        }
+      }
+    }
+
+    const assignedTeamId = bestTeamId ?? teamIds[0];
+    newSignups.push({ ...signup, team_id: assignedTeamId });
+    addSignupToBuckets(assignedTeamId, signupBuckets);
   }
   return newSignups;
 }
