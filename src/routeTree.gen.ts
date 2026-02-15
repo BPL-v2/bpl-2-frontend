@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SubmissionsRouteImport } from './routes/submissions'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RulesRouteImport } from './routes/rules'
+import { Route as PlayersRouteImport } from './routes/players'
 import { Route as TeamRouteRouteImport } from './routes/team/route'
 import { Route as StreamsRouteRouteImport } from './routes/streams/route'
 import { Route as ScoresRouteRouteImport } from './routes/scores/route'
@@ -76,6 +77,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const RulesRoute = RulesRouteImport.update({
   id: '/rules',
   path: '/rules',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlayersRoute = PlayersRouteImport.update({
+  id: '/players',
+  path: '/players',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TeamRouteRoute = TeamRouteRouteImport.update({
@@ -340,6 +346,7 @@ export interface FileRoutesByFullPath {
   '/scores': typeof ScoresRouteRouteWithChildren
   '/streams': typeof StreamsRouteRouteWithChildren
   '/team': typeof TeamRouteRouteWithChildren
+  '/players': typeof PlayersRoute
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
   '/submissions': typeof SubmissionsRoute
@@ -395,6 +402,7 @@ export interface FileRoutesByTo {
   '/scores': typeof ScoresRouteRouteWithChildren
   '/streams': typeof StreamsRouteRouteWithChildren
   '/team': typeof TeamRouteRouteWithChildren
+  '/players': typeof PlayersRoute
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
   '/submissions': typeof SubmissionsRoute
@@ -451,6 +459,7 @@ export interface FileRoutesById {
   '/scores': typeof ScoresRouteRouteWithChildren
   '/streams': typeof StreamsRouteRouteWithChildren
   '/team': typeof TeamRouteRouteWithChildren
+  '/players': typeof PlayersRoute
   '/rules': typeof RulesRoute
   '/settings': typeof SettingsRoute
   '/submissions': typeof SubmissionsRoute
@@ -508,6 +517,7 @@ export interface FileRouteTypes {
     | '/scores'
     | '/streams'
     | '/team'
+    | '/players'
     | '/rules'
     | '/settings'
     | '/submissions'
@@ -563,6 +573,7 @@ export interface FileRouteTypes {
     | '/scores'
     | '/streams'
     | '/team'
+    | '/players'
     | '/rules'
     | '/settings'
     | '/submissions'
@@ -618,6 +629,7 @@ export interface FileRouteTypes {
     | '/scores'
     | '/streams'
     | '/team'
+    | '/players'
     | '/rules'
     | '/settings'
     | '/submissions'
@@ -674,6 +686,7 @@ export interface RootRouteChildren {
   ScoresRouteRoute: typeof ScoresRouteRouteWithChildren
   StreamsRouteRoute: typeof StreamsRouteRouteWithChildren
   TeamRouteRoute: typeof TeamRouteRouteWithChildren
+  PlayersRoute: typeof PlayersRoute
   RulesRoute: typeof RulesRoute
   SettingsRoute: typeof SettingsRoute
   SubmissionsRoute: typeof SubmissionsRoute
@@ -720,6 +733,13 @@ declare module '@tanstack/react-router' {
       path: '/rules'
       fullPath: '/rules'
       preLoaderRoute: typeof RulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/players': {
+      id: '/players'
+      path: '/players'
+      fullPath: '/players'
+      preLoaderRoute: typeof PlayersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/team': {
@@ -1201,6 +1221,7 @@ const rootRouteChildren: RootRouteChildren = {
   ScoresRouteRoute: ScoresRouteRouteWithChildren,
   StreamsRouteRoute: StreamsRouteRouteWithChildren,
   TeamRouteRoute: TeamRouteRouteWithChildren,
+  PlayersRoute: PlayersRoute,
   RulesRoute: RulesRoute,
   SettingsRoute: SettingsRoute,
   SubmissionsRoute: SubmissionsRoute,

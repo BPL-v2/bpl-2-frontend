@@ -6,7 +6,7 @@ import SignupButton from "@components/signup-button";
 import { VideoEmbed } from "@components/video/video-embed";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { DiscordFilled } from "@icons/discord";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
 import { usePageSEO } from "@utils/use-seo";
 import { useContext } from "react";
@@ -60,6 +60,10 @@ function Home() {
               )}{" "}
               / {nextEvent?.waitlist_size || 0}
             </div>
+            <div className="divider divider-horizontal" />
+            <Link className="link link-info" to="/players">
+              View Players
+            </Link>
           </div>
         </div>
       )}

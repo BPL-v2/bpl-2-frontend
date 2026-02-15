@@ -61,7 +61,7 @@ function UserPage() {
           onClick={() => copyDiscordId(info.row.original.discord_id)}
           className="flex gap-2"
         >
-          <ClipboardDocumentCheckIcon className="size-6 cursor-pointer" />
+          <ClipboardDocumentCheckIcon className="size-8 cursor-pointer transition-transform duration-100 select-none hover:text-primary active:scale-110 active:text-secondary" />
           {info.row.original.discord_id}
         </a>
       ),

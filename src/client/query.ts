@@ -54,6 +54,7 @@ export function useGetEvents() {
           if (event.is_current) {
             current = event.id;
           }
+          event.teams = event.teams.sort((a, b) => a.id - b.id);
         });
         return events.sort((a, b) => a.id - b.id);
       }),
@@ -1175,5 +1176,17 @@ export function useGetItemMapping() {
   return {
     ...query,
     itemMapping: query.data,
+  };
+}
+
+export function useGetSortedPlayers(eventId: number) {
+  const query = useQuery({
+    queryKey: ["sortedPlayers", current !== eventId ? eventId : "current"],
+    queryFn: () => teamApi.getSortedUsers(eventId),
+    enabled: !!eventId,
+  });
+  return {
+    ...query,
+    sortedPlayers: query.data,
   };
 }
