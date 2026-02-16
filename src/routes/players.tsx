@@ -9,7 +9,9 @@ import {
 import { createFileRoute } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";
 import { GlobalStateContext } from "@utils/context-provider";
+import { isLoggedIn } from "@utils/token";
 import { useContext } from "react";
+import { router } from "../main";
 
 export const Route = createFileRoute("/players")({
   component: RouteComponent,
@@ -24,6 +26,9 @@ function copyDiscordId(value: string | undefined) {
 function RouteComponent() {
   const { currentEvent } = useContext(GlobalStateContext);
   const { sortedPlayers } = useGetSortedPlayers(currentEvent.id);
+  if (!isLoggedIn()) {
+    router.navigate({ to: "/", replace: true });
+  }
   const teamMap = currentEvent.teams.reduce(
     (acc, team) => {
       acc[team.id] = team.name;

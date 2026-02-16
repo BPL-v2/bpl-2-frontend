@@ -8,6 +8,7 @@ import { HeartIcon } from "@heroicons/react/24/outline";
 import { DiscordFilled } from "@icons/discord";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
+import { isLoggedIn } from "@utils/token";
 import { usePageSEO } from "@utils/use-seo";
 import { useContext } from "react";
 
@@ -60,10 +61,14 @@ function Home() {
               )}{" "}
               / {nextEvent?.waitlist_size || 0}
             </div>
-            <div className="divider divider-horizontal" />
-            <Link className="link link-info" to="/players">
-              View Players
-            </Link>
+            {isLoggedIn() && (
+              <>
+                <div className="divider divider-horizontal" />
+                <Link className="link link-info" to="/players">
+                  View Players
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}
