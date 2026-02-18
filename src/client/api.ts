@@ -1415,6 +1415,12 @@ export interface Guild {
      * @type {number}
      * @memberof Guild
      */
+    event_id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Guild
+     */
     id: number;
     /**
      * 
@@ -2641,22 +2647,34 @@ export enum JobType {
 export interface LadderEntry {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof LadderEntry
      */
-    account_name: string;
-    /**
-     * 
-     * @type {Character}
-     * @memberof LadderEntry
-     */
-    character?: Character;
+    armour: number;
     /**
      * 
      * @type {string}
      * @memberof LadderEntry
      */
-    character_class: string;
+    ascendancy: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof LadderEntry
+     */
+    ascendancy_points: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof LadderEntry
+     */
+    atlas_points: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof LadderEntry
+     */
+    character_id: string;
     /**
      * 
      * @type {string}
@@ -2668,19 +2686,67 @@ export interface LadderEntry {
      * @type {number}
      * @memberof LadderEntry
      */
-    delve: number;
+    delve_depth: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof LadderEntry
+     */
+    discord_id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof LadderEntry
+     */
+    discord_name: string;
     /**
      * 
      * @type {number}
      * @memberof LadderEntry
      */
-    experience: number;
+    dps: number;
     /**
      * 
      * @type {number}
      * @memberof LadderEntry
      */
-    last_active?: number;
+    ehp: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof LadderEntry
+     */
+    ele_max_hit: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof LadderEntry
+     */
+    es: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof LadderEntry
+     */
+    evasion: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof LadderEntry
+     */
+    hp: number;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof LadderEntry
+     */
+    item_indexes: Array<number>;
+    /**
+     * 
+     * @type {number}
+     * @memberof LadderEntry
+     */
+    last_active: number;
     /**
      * 
      * @type {number}
@@ -2689,28 +2755,70 @@ export interface LadderEntry {
     level: number;
     /**
      * 
+     * @type {string}
+     * @memberof LadderEntry
+     */
+    main_skill: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof LadderEntry
+     */
+    mana: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof LadderEntry
+     */
+    movement_speed: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LadderEntry
+     */
+    pantheon: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof LadderEntry
+     */
+    phys_max_hit: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof LadderEntry
+     */
+    poe_account: string;
+    /**
+     * 
      * @type {number}
      * @memberof LadderEntry
      */
     rank: number;
     /**
      * 
-     * @type {CharacterStat}
+     * @type {number}
      * @memberof LadderEntry
      */
-    stats?: CharacterStat;
+    team_id: number;
     /**
      * 
      * @type {string}
      * @memberof LadderEntry
      */
-    twitch_account?: string;
+    twitch_name?: string;
     /**
      * 
      * @type {number}
      * @memberof LadderEntry
      */
-    user_id?: number;
+    user_id: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof LadderEntry
+     */
+    xp: number;
 }
 
 /**
@@ -7812,10 +7920,11 @@ export const LadderApiFetchParamCreator = function (configuration?: Configuratio
         /**
          * Get the ladder for an event
          * @param {number} event_id Event ID
+         * @param {number} [hours_after_event_start] only show ladder entries from this timestamp after event start
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getLadder(event_id: number, options: any = {}): FetchArgs {
+        getLadder(event_id: number, hours_after_event_start?: number, options: any = {}): FetchArgs {
             // verify required parameter 'event_id' is not null or undefined
             if (event_id === null || event_id === undefined) {
                 throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getLadder.');
@@ -7826,6 +7935,10 @@ export const LadderApiFetchParamCreator = function (configuration?: Configuratio
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (hours_after_event_start !== undefined) {
+                localVarQueryParameter['hours_after_event_start'] = hours_after_event_start;
+            }
 
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
@@ -7849,11 +7962,12 @@ export const LadderApiFp = function(configuration?: Configuration) {
         /**
          * Get the ladder for an event
          * @param {number} event_id Event ID
+         * @param {number} [hours_after_event_start] only show ladder entries from this timestamp after event start
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getLadder(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<LadderEntry>> {
-            const localVarFetchArgs = LadderApiFetchParamCreator(configuration).getLadder(event_id, options);
+        getLadder(event_id: number, hours_after_event_start?: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<LadderEntry>> {
+            const localVarFetchArgs = LadderApiFetchParamCreator(configuration).getLadder(event_id, hours_after_event_start, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -7876,11 +7990,12 @@ export const LadderApiFactory = function (configuration?: Configuration, fetch?:
         /**
          * Get the ladder for an event
          * @param {number} event_id Event ID
+         * @param {number} [hours_after_event_start] only show ladder entries from this timestamp after event start
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getLadder(event_id: number, options?: any) {
-            return LadderApiFp(configuration).getLadder(event_id, options)(fetch, basePath);
+        getLadder(event_id: number, hours_after_event_start?: number, options?: any) {
+            return LadderApiFp(configuration).getLadder(event_id, hours_after_event_start, options)(fetch, basePath);
         },
     };
 };
@@ -7895,12 +8010,13 @@ export class LadderApi extends BaseAPI {
     /**
      * Get the ladder for an event
      * @param {number} event_id Event ID
+     * @param {number} [hours_after_event_start] only show ladder entries from this timestamp after event start
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof LadderApi
      */
-    public getLadder(event_id: number, options?: any) {
-        return LadderApiFp(this.configuration).getLadder(event_id, options)(this.fetch, this.basePath);
+    public getLadder(event_id: number, hours_after_event_start?: number, options?: any) {
+        return LadderApiFp(this.configuration).getLadder(event_id, hours_after_event_start, options)(this.fetch, this.basePath);
     }
 
 }

@@ -113,12 +113,10 @@ function DelveTab(): JSX.Element {
           cell: (info) => (
             <div className="flex items-center gap-2">
               <AscendancyPortrait
-                character_class={info.row.original.character_class}
+                character_class={info.row.original.ascendancy}
                 className="size-8 rounded-full object-cover"
               />
-              <AscendancyName
-                character_class={info.row.original.character_class}
-              />
+              <AscendancyName character_class={info.row.original.ascendancy} />
             </div>
           ),
           size: 250,
@@ -135,7 +133,7 @@ function DelveTab(): JSX.Element {
           header: "Level",
           cell: (info) => (
             <ExperienceBar
-              experience={info.row.original.experience}
+              experience={info.row.original.xp}
               level={info.row.original.level}
             />
           ),
@@ -153,7 +151,7 @@ function DelveTab(): JSX.Element {
         },
         {
           accessorFn: (row) =>
-            row.account_name + row.character_name + row.character_class,
+            row.poe_account + row.character_name + row.ascendancy,
           header: " ",
           filterFn: "includesString",
           meta: {
@@ -286,7 +284,9 @@ function DelveTab(): JSX.Element {
               />
               <Table
                 columns={delveLadderColumns}
-                data={ladder?.sort((a, b) => b.delve - a.delve)}
+                data={
+                  ladder?.sort((a, b) => b.delve_depth - a.delve_depth) || []
+                }
                 className="h-[70vh]"
                 styles={{
                   header: "bg-base-100",

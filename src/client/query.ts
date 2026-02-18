@@ -65,10 +65,14 @@ export function useGetEvents() {
   };
 }
 
-export function useGetLadder(eventId: number) {
+export function useGetLadder(eventId: number, hoursAfterEventStart?: number) {
   const query = useQuery({
-    queryKey: ["ladder", current !== eventId ? eventId : "current"],
-    queryFn: async () => ladderApi.getLadder(eventId),
+    queryKey: [
+      "ladder",
+      current !== eventId ? eventId : "current",
+      hoursAfterEventStart,
+    ],
+    queryFn: async () => ladderApi.getLadder(eventId, hoursAfterEventStart),
     refetchInterval: 60 * 1000,
     staleTime: 60 * 1000,
   });

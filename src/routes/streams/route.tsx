@@ -47,22 +47,22 @@ function CharacterPortrait({
   ladderEntry?: LadderEntry;
   currentEvent: Event;
 }) {
-  const character = ladderEntry?.character;
   const style =
     "flex cursor-pointer flex-row items-center gap-4 rounded-t-box  bg-base-300 p-2 select-none border-transparent";
-  if (!ladderEntry || !character)
+  if (!ladderEntry)
     return (
       <div className={twMerge("h-18 skeleton rounded-b-none", style)}></div>
     );
-  let ascendancyName = character?.ascendancy;
+  let ascendancyName = ladderEntry.ascendancy;
   let ascendancyObj;
   if (currentEvent.game_version === GameVersion.poe2) {
-    ascendancyName = poe2Mapping[character.ascendancy] || character.ascendancy;
+    ascendancyName =
+      poe2Mapping[ladderEntry.ascendancy] || ladderEntry.ascendancy;
     ascendancyObj = ascendancies[GameVersion.poe2][ascendancyName];
   } else {
     ascendancyObj =
       ascendancies[GameVersion.poe1][
-        phreciaMapping[character.ascendancy] || character.ascendancy
+        phreciaMapping[ladderEntry.ascendancy] || ladderEntry.ascendancy
       ];
   }
 
@@ -70,7 +70,7 @@ function CharacterPortrait({
     <Link
       to={"/profile/$userId/$eventId/$characterId"}
       params={{
-        characterId: character?.id,
+        characterId: ladderEntry.character_id,
         userId: ladderEntry.user_id || 0,
         eventId: currentEvent.id,
       }}
@@ -82,9 +82,9 @@ function CharacterPortrait({
         alt={ascendancyName}
       />
       <div className="text-left text-lg">
-        <p> {character.name}</p>
+        <p> {ladderEntry.character_name}</p>
         <div className="flex flex-row gap-2">
-          <span>Level {character.level}</span>
+          <span>Level {ladderEntry.level}</span>
           <span className={twMerge("font-bold", ascendancyObj.classColor)}>
             {ascendancyName}
           </span>

@@ -1,4 +1,4 @@
-import { CharacterStat, LadderEntry, Team } from "@client/api";
+import { LadderEntry, Team } from "@client/api";
 import { CellContext, ColumnDef, sortingFns } from "@tanstack/react-table";
 import { GlobalStateContext } from "@utils/context-provider";
 import { getTotalPoints, totalPoints } from "@utils/utils";
@@ -60,9 +60,22 @@ function LadderTab(): JSX.Element {
   const { scores, currentEvent, isMobile, preferences, setPreferences } =
     useContext(GlobalStateContext);
   const { rules } = Route.useSearch();
-  const { data: ladder, isError: ladderIsError } = useGetLadder(
+  const { data: unsortedLadder, isError: ladderIsError } = useGetLadder(
     currentEvent.id,
   );
+  const ladder = useMemo(() => {
+    return (
+      unsortedLadder
+        ?.slice()
+        .sort((a, b) => {
+          if (b.level === a.level) {
+            return (b.xp || 0) - (a.xp || 0);
+          }
+          return b.level - a.level;
+        })
+        .map((entry, index) => ({ ...entry, rank: index + 1 })) || []
+    );
+  }, [unsortedLadder]);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const { streams = [] } = useGetStreams(currentEvent.id);
   const { itemMapping = {} } = useGetItemMapping();
@@ -77,7 +90,7 @@ function LadderTab(): JSX.Element {
     }
     return ladder?.filter((entry) => {
       for (const itemIdx of selectedItems) {
-        if (!entry.stats?.item_indexes?.includes(itemIdx)) {
+        if (!entry.item_indexes?.includes(itemIdx)) {
           return false;
         }
       }
@@ -89,7 +102,7 @@ function LadderTab(): JSX.Element {
     () =>
       filteredLadder?.reduce(
         (acc, entry) => {
-          for (const skill of entry.stats?.item_indexes || []) {
+          for (const skill of entry.item_indexes || []) {
             acc[skill] = (acc[skill] || 0) + 1 / (filteredLadder?.length || 1);
           }
           return acc;
@@ -162,12 +175,12 @@ function LadderTab(): JSX.Element {
           id: "Stream",
           header: "",
           cell: (info) =>
-            streamsByUser[info.row.original.character?.user_id || 0] &&
-            info.row.original.twitch_account && (
+            streamsByUser[info.row.original.user_id || 0] &&
+            info.row.original.twitch_name && (
               <Link
                 to={"/streams/$twitchAccount"}
                 params={{
-                  twitchAccount: info.row.original.twitch_account,
+                  twitchAccount: info.row.original.twitch_name || "",
                 }}
               >
                 <TwitchFilled className="size-5" brandColor />
@@ -181,16 +194,16 @@ function LadderTab(): JSX.Element {
         },
         {
           id: "Account",
-          accessorKey: "account_name",
+          accessorKey: "poe_account",
           header: "",
           cell: (info) => (
             <a
               className="flex cursor-pointer items-center gap-1 hover:text-primary"
-              href={`https://www.pathofexile.com/account/view-profile/${info.row.original.account_name.replace("#", "-")}/characters`}
+              href={`https://www.pathofexile.com/account/view-profile/${info.row.original.poe_account.replace("#", "-")}/characters`}
               target="_blank"
             >
               <ArrowTopRightOnSquareIcon className="inline size-4" />
-              {info.row.original.account_name}
+              {info.row.original.poe_account}
             </a>
           ),
           enableSorting: false,
@@ -251,8 +264,8 @@ function LadderTab(): JSX.Element {
               to={"/profile/$userId/$eventId/$characterId"}
               className="flex items-center gap-1 hover:text-primary"
               params={{
-                userId: info.row.original.character?.user_id || 0,
-                characterId: info.row.original.character?.id || "",
+                userId: info.row.original.user_id || 0,
+                characterId: info.row.original.character_id || "",
                 eventId: currentEvent.id,
               }}
             >
@@ -279,26 +292,22 @@ function LadderTab(): JSX.Element {
         },
         {
           id: "Ascendancy",
-          accessorFn: (row) => row.character_class + row.character?.main_skill,
+          accessorFn: (row) => row.ascendancy + row.main_skill,
           header: "",
           cell: (info) => {
             return (
               <div className="flex items-center gap-2">
                 <AscendancyPortrait
-                  character_class={info.row.original.character_class}
+                  character_class={info.row.original.ascendancy}
                   className="size-10 rounded-full object-cover"
                 />
                 <div className="flex flex-col">
-                  <span
-                    className={getSkillColor(
-                      info.row.original.stats?.main_skill,
-                    )}
-                  >
+                  <span className={getSkillColor(info.row.original.main_skill)}>
                     {" "}
-                    {info.row.original.stats?.main_skill}
+                    {info.row.original.main_skill}
                   </span>
                   <AscendancyName
-                    character_class={info.row.original.character_class}
+                    character_class={info.row.original.ascendancy}
                   />
                 </div>
               </div>
@@ -318,7 +327,7 @@ function LadderTab(): JSX.Element {
           header: "Level",
           cell: (info) => (
             <ExperienceBar
-              experience={info.row.original.experience}
+              experience={info.row.original.xp}
               level={info.row.original.level}
               width={60}
               className="text-lg font-bold"
@@ -347,10 +356,10 @@ function LadderTab(): JSX.Element {
         ].map((stat) => {
           const key = stat
             .replaceAll(" ", "_")
-            .toLowerCase() as keyof CharacterStat;
+            .toLowerCase() as keyof LadderEntry;
           return {
             id: stat,
-            accessorFn: (row: LadderEntry) => row.stats?.[key] || 0,
+            accessorFn: (row: LadderEntry) => row[key] || 0,
             header: () => (
               <div
                 className="tooltip tooltip-bottom w-18 overflow-hidden text-ellipsis"
@@ -386,9 +395,9 @@ function LadderTab(): JSX.Element {
         {
           id: "Pantheon",
           header: "Pantheon",
-          accessorFn: (row) => row.character?.pantheon,
+          accessorFn: (row) => row.pantheon,
           cell: (info) =>
-            info.row.original.character?.pantheon ? (
+            info.row.original.pantheon ? (
               <CheckCircleIcon className="size-6 text-success" />
             ) : (
               <XCircleIcon className="size-6 text-error" />
@@ -400,9 +409,9 @@ function LadderTab(): JSX.Element {
         },
         {
           id: "Uber Lab",
-          accessorFn: (row) => (row.character?.ascendancy_points || 0) > 6,
+          accessorFn: (row) => (row.ascendancy_points || 0) > 6,
           cell: (info) =>
-            (info.row.original.character?.ascendancy_points || 0) > 6 ? (
+            (info.row.original.ascendancy_points || 0) > 6 ? (
               <CheckCircleIcon className="size-6 text-success" />
             ) : (
               <XCircleIcon className="size-6 text-error" />
@@ -415,7 +424,7 @@ function LadderTab(): JSX.Element {
         },
         {
           id: "Atlas",
-          accessorFn: (row) => row.character?.atlas_node_count || 0,
+          accessorFn: (row) => row.atlas_points || 0,
           header: "Atlas",
         },
       ];
@@ -423,10 +432,10 @@ function LadderTab(): JSX.Element {
       columns = [
         {
           accessorFn: (row) =>
-            row.account_name +
+            row.poe_account +
             row.character_name +
-            row.character_class +
-            row.character?.main_skill,
+            row.ascendancy +
+            row.main_skill,
           header: " ",
           filterFn: "includesString",
           meta: {
