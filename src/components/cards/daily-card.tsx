@@ -72,7 +72,10 @@ export function DailyCard({ daily }: DailyCardProps) {
     daily.scoring_presets[0]?.scoring_method === ScoringMethod.RANKED_TIME;
   const isAvailable = daily.valid_to && new Date(daily.valid_to) > new Date();
   const canSubmit =
-    daily.objective_type === ObjectiveType.SUBMISSION && !!eventStatus?.team_id;
+    daily.objective_type === ObjectiveType.SUBMISSION &&
+    !!eventStatus?.team_id &&
+    new Date(currentEvent.event_start_time) < new Date() &&
+    new Date(currentEvent.event_end_time) > new Date();
   return (
     <>
       {canSubmit && (
