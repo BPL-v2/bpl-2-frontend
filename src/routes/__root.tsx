@@ -111,6 +111,15 @@ function RootComponent() {
     from: Route.id,
   });
   useEffect(() => {
+    if (
+      document.referrer &&
+      document.location.hostname !== new URL(document.referrer).hostname
+    ) {
+      engagementApi.addEngagement({ name: document.referrer });
+    }
+  }, [document.referrer]);
+
+  useEffect(() => {
     if (hello) {
       localStorage.setItem("referrer", hello);
       engagementApi.addEngagement({ name: hello });
