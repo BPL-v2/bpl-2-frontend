@@ -3,7 +3,7 @@ import { useGetEvents, useGetEventStatus } from "@client/query";
 import { Countdown } from "@components/countdown";
 import SignupButton from "@components/signup-button";
 // import { TeamLogo } from "@components/team/teamlogo";
-import { VideoEmbed } from "@components/video/video-embed";
+// import { VideoEmbed } from "@components/video/video-embed";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { DiscordFilled } from "@icons/discord";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -105,9 +105,9 @@ function Home() {
                 </button>
               </div>
             </div>
-            <div className="aspect-video w-full">
+            {/* <div className="aspect-video w-full">
               <VideoEmbed url="https://www.youtube.com/watch?v=zZAxSOkqPOo" />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
