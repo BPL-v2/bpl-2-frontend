@@ -1,4 +1,4 @@
-import { LadderEntry, Team } from "@client/api";
+import { Event, LadderEntry, Team } from "@client/api";
 import { CellContext, ColumnDef, sortingFns } from "@tanstack/react-table";
 import { GlobalStateContext } from "@utils/context-provider";
 import { getTotalPoints, totalPoints } from "@utils/utils";
@@ -35,6 +35,7 @@ import { defaultPreferences } from "@mytypes/preferences";
 import { TwitchFilled } from "@icons/twitch";
 import { renderScore } from "@utils/score";
 import { MultiSelectPercentage } from "@components/form/multi-select-percentage";
+import Select from "@components/form/select";
 
 type RowDef = {
   total: number;
@@ -56,12 +57,40 @@ export const Route = createFileRoute("/scores/ladder")({
   },
 });
 
+function hoursToDaysAndHours(hours: number) {
+  const days = Math.floor(hours / 24);
+  const remainingHours = hours % 24;
+  return `${days > 0 ? days + " day" : ""}${days > 1 ? "s" : ""} ${remainingHours} hours`;
+}
+
+function getTimeSelectOptions(currentEvent: Event) {
+  const eventStart = new Date(currentEvent.event_start_time);
+  let eventEnd = new Date(currentEvent.event_end_time);
+  const now = new Date();
+  if (now < eventStart) {
+    return [];
+  }
+  if (now < eventEnd) {
+    eventEnd = now;
+  }
+  const hours = Math.ceil(
+    (eventEnd.getTime() - eventStart.getTime()) / (1000 * 60 * 60),
+  );
+  return [...Array(Math.ceil((hours + 1) / 2))].map((_, i) => ({
+    label: hoursToDaysAndHours(2 * i),
+    value: 2 * i,
+  }));
+}
+
 function LadderTab(): JSX.Element {
   const { scores, currentEvent, isMobile, preferences, setPreferences } =
     useContext(GlobalStateContext);
   const { rules } = Route.useSearch();
+  const [hoursAfterEventStart, setHoursAfterEventStart] = useState<number>();
+  console.log("hoursAfterEventStart", hoursAfterEventStart);
   const { data: unsortedLadder, isError: ladderIsError } = useGetLadder(
     currentEvent.id,
+    hoursAfterEventStart,
   );
   const ladder = useMemo(() => {
     return (
@@ -654,34 +683,44 @@ function LadderTab(): JSX.Element {
             })}
           </div>
         )}
-        <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
-          <MultiSelectPercentage
-            name="uniques"
-            options={Object.entries(itemMapping["unique"] || {}).map(
-              ([name, idx]) => ({
-                label: name,
-                value: idx,
-              }),
-            )}
-            onChange={setSelectedItems}
-            placeholder="Filter by uniques"
-            percentages={percentagePlayersWithItem}
-            values={selectedItems}
-            className="w-100"
-          />
-          <MultiSelectPercentage
-            name="skills"
-            options={Object.entries(itemMapping["gem"] || {}).map(
-              ([skill, idx]) => ({
-                label: skill,
-                value: idx,
-              }),
-            )}
-            onChange={setSelectedItems}
-            placeholder="Filter by gem"
-            percentages={percentagePlayersWithItem}
-            values={selectedItems}
-            className="w-100"
+        <div className="flex flex-row items-center justify-between">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
+            <MultiSelectPercentage
+              name="uniques"
+              options={Object.entries(itemMapping["unique"] || {}).map(
+                ([name, idx]) => ({
+                  label: name,
+                  value: idx,
+                }),
+              )}
+              onChange={setSelectedItems}
+              placeholder="Filter by uniques"
+              percentages={percentagePlayersWithItem}
+              values={selectedItems}
+              className="w-100"
+            />
+            <MultiSelectPercentage
+              name="skills"
+              options={Object.entries(itemMapping["gem"] || {}).map(
+                ([skill, idx]) => ({
+                  label: skill,
+                  value: idx,
+                }),
+              )}
+              onChange={setSelectedItems}
+              placeholder="Filter by gem"
+              percentages={percentagePlayersWithItem}
+              values={selectedItems}
+              className="w-100"
+            />
+          </div>
+          <Select
+            className=""
+            placeholder="Show ladder at..."
+            options={getTimeSelectOptions(currentEvent)}
+            onChange={(value: any) => {
+              setHoursAfterEventStart(value);
+            }}
           />
         </div>
         <Table
