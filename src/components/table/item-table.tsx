@@ -276,6 +276,7 @@ export function ItemTable({
                 cell: (info: CellContext<ExtendedScoreObjective, string>) => {
                   const score = info.row.original.team_score[team.id];
                   const finished = info.getValue<boolean>();
+                  const number = score?.completions[0]?.number || 0;
                   const user = users?.find(
                     (u) => score?.completions[0]?.user_id === u.id,
                   );
@@ -300,12 +301,10 @@ export function ItemTable({
                       <span
                         className={twMerge(
                           "w-full text-center text-lg font-extrabold",
-                          score.completions[0].number > 0
-                            ? "text-success"
-                            : "text-error",
+                          number > 0 ? "text-success" : "text-error",
                         )}
                       >
-                        {score.completions[0].number}
+                        {number}
                       </span>
                     );
                   }
