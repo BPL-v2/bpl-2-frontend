@@ -14,7 +14,6 @@ import { GlobalStateContext } from "@utils/context-provider";
 import {
   getPotentialPoints,
   getTotalPoints,
-  isFinished,
   iterateObjectives,
 } from "@utils/utils";
 import { useContext, useMemo } from "react";
@@ -55,7 +54,7 @@ function TeamSuggestionsPage() {
           return category.children.filter(
             (objective) =>
               eventStatus.team_id !== undefined &&
-              !isFinished(objective.team_score[eventStatus.team_id]),
+              !objective.team_score[eventStatus.team_id].isFinished(),
           ).length;
         },
         cell: (row) => {
@@ -65,7 +64,7 @@ function TeamSuggestionsPage() {
               data-tip={row.row.original.children
                 .filter(
                   (objective) =>
-                    !isFinished(objective.team_score[eventStatus.team_id!]),
+                    !objective.team_score[eventStatus.team_id!].isFinished(),
                 )
                 .map((objective) => objective.name)
                 .join(", ")}
@@ -85,7 +84,7 @@ function TeamSuggestionsPage() {
               continue;
             }
             const missing = row.row.original.children.filter(
-              (objective) => !isFinished(objective.team_score[team.id]),
+              (objective) => !objective.team_score[team.id].isFinished(),
             ).length;
             if (num == undefined || (missing < num && missing > 0)) {
               num = missing;
@@ -101,7 +100,7 @@ function TeamSuggestionsPage() {
               data-tip={row.row.original.children
                 .filter(
                   (objective) =>
-                    !isFinished(objective.team_score[nextTeam!.id]),
+                    !objective.team_score[nextTeam!.id].isFinished(),
                 )
                 .map((objective) => objective.name)
                 .join(", ")}
@@ -208,7 +207,7 @@ function TeamSuggestionsPage() {
         header: "Missing",
         accessorFn: (objective) =>
           objective.required_number -
-          objective.team_score[eventStatus.team_id!].completions[0]?.number,
+          objective.team_score[eventStatus.team_id!].number(),
       },
       {
         header: "Opponent is missing",
@@ -221,7 +220,7 @@ function TeamSuggestionsPage() {
             }
             const missing =
               row.row.original.required_number -
-              row.row.original.team_score[team.id]?.completions[0]?.number;
+              row.row.original.team_score[team.id].number();
             if ((num == undefined || missing < num) && missing > 0) {
               num = missing;
               nextTeam = team;
@@ -328,14 +327,14 @@ function TeamSuggestionsPage() {
       category.scoring_presets[0]?.scoring_method ===
         ScoringMethod.RANKED_COMPLETION_TIME &&
       eventStatus.team_id !== undefined &&
-      !isFinished(category.team_score[eventStatus.team_id]),
+      !category.team_score[eventStatus.team_id].isFinished(),
   );
 
   const relevantObjectives = leaves.filter(
     (objective) =>
       objective.scoring_presets[0]?.scoring_method ===
         ScoringMethod.RANKED_TIME &&
-      !isFinished(objective.team_score[eventStatus.team_id!]) &&
+      !objective.team_score[eventStatus.team_id!].isFinished() &&
       (!objective.valid_from || new Date(objective.valid_from) < new Date()),
   );
 

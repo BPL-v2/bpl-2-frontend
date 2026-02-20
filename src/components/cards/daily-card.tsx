@@ -10,7 +10,6 @@ import { Countdown } from "@components/countdown";
 import { SubmissionDialog } from "@components/submission-diablog";
 import { ObjectiveIcon } from "@components/objective-icon";
 import { CollectionCardTable } from "./collection-card-table";
-import { isFinished } from "@utils/utils";
 
 export type DailyCardProps = {
   daily: ScoreObjective;
@@ -64,7 +63,7 @@ export function DailyCard({ daily }: DailyCardProps) {
     );
   }
   const finished = Object.values(daily.team_score).reduce(
-    (acc, score) => isFinished(score) && acc,
+    (acc, score) => score.isFinished() && acc,
     true,
   );
 

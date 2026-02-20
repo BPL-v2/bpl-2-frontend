@@ -1,11 +1,9 @@
-import { Score } from "@client/api";
 import { useGetEventStatus } from "@client/query";
-import { ScoreObjective } from "@mytypes/score";
+import { ScoreClass, ScoreObjective } from "@mytypes/score";
 import { GlobalStateContext } from "@utils/context-provider";
 import { useContext, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 import { ProgressBar } from "../progress-bar";
-import { totalPoints } from "@utils/utils";
 
 type CollectionCardTableProps = {
   objective: ScoreObjective;
@@ -13,8 +11,8 @@ type CollectionCardTableProps = {
   showPoints?: boolean;
 };
 
-function getPlace(score: Score) {
-  const rank = score.completions[0]?.rank;
+function getPlace(score: ScoreClass) {
+  const rank = score.rank();
   if (!rank) {
     return "Not Finished";
   }
@@ -30,11 +28,11 @@ function getPlace(score: Score) {
   return "Finished";
 }
 
-function finishTooltip(objective: ScoreObjective, score: Score) {
+function finishTooltip(objective: ScoreObjective, score: ScoreClass) {
   const place = getPlace(score);
   return `${place} ${
     objective.scoring_presets.length > 0 &&
-    `${totalPoints(score)}/${Math.max(...objective.scoring_presets[0].points)} points`
+    `${score.totalPoints()}/${Math.max(...objective.scoring_presets[0].points)} points`
   }`;
 }
 
@@ -51,8 +49,8 @@ export function CollectionCardTable({
       if (a.id === eventStatus?.team_id) return -1;
       if (b.id === eventStatus?.team_id) return 1;
       return (
-        totalPoints(objective.team_score[b.id]) -
-        totalPoints(objective.team_score[a.id])
+        objective.team_score[b.id].totalPoints() -
+        objective.team_score[a.id].totalPoints()
       );
     })
     .slice(0, preferences.limitTeams ? preferences.limitTeams : undefined)
@@ -74,22 +72,19 @@ export function CollectionCardTable({
         {Object.entries(objective.team_score)
           .filter(([teamId]) => teamIds.includes(parseInt(teamId)))
           .map(([teamId, score]) => {
-            return [parseInt(teamId), score] as [number, Score];
+            return [parseInt(teamId), score] as [number, ScoreClass];
           })
           .sort(([, scoreA], [, scoreB]) => {
-            if (totalPoints(scoreA) === totalPoints(scoreB)) {
-              return (
-                scoreB.completions[0]?.number - scoreA.completions[0]?.number
-              );
+            if (scoreA.totalPoints() === scoreB.totalPoints()) {
+              return scoreB.number() - scoreA.number();
             }
-            return totalPoints(scoreB) - totalPoints(scoreA);
+            return scoreB.totalPoints() - scoreA.totalPoints();
           })
           .map(([teamId, score], idx) => {
-            const isFinished =
-              score.completions[0]?.number / objective.required_number >= 1;
+            const isFinished = score.number() / objective.required_number >= 1;
             const isLastRow = roundedBottom && idx === teamIds.length - 1;
             const isPlayerTeam = teamId === eventStatus?.team_id;
-            const gotPoints = totalPoints(score) > 0;
+            const gotPoints = score.totalPoints() > 0;
             const isHidden =
               objective.hide_progress && !isFinished && !isPlayerTeam;
             return (
@@ -127,7 +122,7 @@ export function CollectionCardTable({
                               : "text-error",
                         )}
                       >
-                        {totalPoints(score)}
+                        {score.totalPoints()}
                       </div>
                     </div>
                   </td>
@@ -141,7 +136,7 @@ export function CollectionCardTable({
                 >
                   {!isHidden ? (
                     <ProgressBar
-                      value={score.completions[0]?.number || 0}
+                      value={score.number()}
                       maxVal={objective.required_number}
                       gotPoints={gotPoints}
                     />

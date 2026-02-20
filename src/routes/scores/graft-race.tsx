@@ -4,7 +4,6 @@ import TeamScoreDisplay from "@components/team/team-score";
 import { ItemTable } from "@components/table/item-table";
 import { createFileRoute } from "@tanstack/react-router";
 import { Ranking } from "@components/ranking";
-import { isFinished } from "@utils/utils";
 import { FoulbornUniqueTabRules } from "../../rules-alt/foulborn-uniques";
 
 export const Route = createFileRoute("/scores/graft-race")({
@@ -48,7 +47,7 @@ function GraftRaceTab(): JSX.Element {
               maximum={graftRaceCategory.children.length}
               actual={(teamId: number) =>
                 graftRaceCategory.children.filter((o) =>
-                  isFinished(o.team_score[teamId]),
+                  o.team_score[teamId].isFinished(),
                 ).length
               }
               description="Items:"

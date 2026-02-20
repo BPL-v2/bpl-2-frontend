@@ -21,7 +21,7 @@ import {
   determineDifferences,
   PathOfBuilding,
 } from "@utils/pob";
-import { flatMap, lastTimestamp, mergeScores, totalPoints } from "@utils/utils";
+import { flatMap, mergeScores } from "@utils/utils";
 import { Suspense, useContext, useEffect, useState } from "react";
 
 export const Route = createFileRoute("/profile/$userId/$eventId/$characterId")({
@@ -123,7 +123,7 @@ function RouteComponent() {
       continue;
 
     for (const score of Object.values(objective.team_score)) {
-      if (score.completions[0]?.user_id === userId && totalPoints(score) > 0) {
+      if (score.userId() === userId && score.totalPoints() > 0) {
         contributions.push({ objective: objective, score: score });
       }
     }
@@ -154,18 +154,14 @@ function RouteComponent() {
             <span className="text-success">
               +
               {contributions.reduce(
-                (acc, curr) => acc + totalPoints(curr.score),
+                (acc, curr) => acc + curr.score.totalPoints(),
                 0,
               )}
             </span>
           </h1>
           <div className="flex flex-row flex-wrap gap-4">
             {contributions
-              .sort(
-                (a, b) =>
-                  a.score.completions[0]!.timestamp -
-                  b.score.completions[0]!.timestamp,
-              )
+              .sort((a, b) => a.score.lastTimestamp() - b.score.lastTimestamp())
               .map((contribution) => {
                 return (
                   <div className="tooltip">
@@ -173,7 +169,7 @@ function RouteComponent() {
                       <div className="">{contribution.objective.name}</div>
                       <span>
                         {new Date(
-                          lastTimestamp(contribution.score) * 1000,
+                          contribution.score.lastTimestamp() * 1000,
                         ).toLocaleString()}
                       </span>
                     </div>
@@ -188,7 +184,7 @@ function RouteComponent() {
                       />
                       <p className="text-success">
                         {" "}
-                        +{totalPoints(contribution.score)}
+                        +{contribution.score.totalPoints()}
                       </p>
                     </div>
                   </div>

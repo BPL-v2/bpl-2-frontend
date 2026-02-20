@@ -8,7 +8,6 @@ import { Ranking } from "@components/ranking";
 import { GemTabRules } from "@rules/gems";
 import { useFile } from "@client/query";
 import clsx from "clsx";
-import { isFinished } from "@utils/utils";
 
 export const Route = createFileRoute("/scores/gems")({
   component: GemTab,
@@ -117,7 +116,7 @@ function GemTab(): JSX.Element {
                   maximum={category.children.length}
                   actual={(teamId: number) =>
                     category.children.filter((o) =>
-                      isFinished(o.team_score[teamId]),
+                      o.team_score[teamId].isFinished(),
                     ).length
                   }
                   description="Gems:"

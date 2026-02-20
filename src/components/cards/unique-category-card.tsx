@@ -3,7 +3,7 @@ import { Medal } from "@icons/medal";
 import { canBeFinished, ScoreObjective } from "@mytypes/score";
 import { GlobalStateContext } from "@utils/context-provider";
 import { renderScore } from "@utils/score";
-import { getPotentialPoints, getTotalPoints, isFinished } from "@utils/utils";
+import { getPotentialPoints, getTotalPoints } from "@utils/utils";
 import { useContext } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -27,13 +27,13 @@ export const UniqueCategoryCard = ({
     (acc, variantCategory) => acc + variantCategory.children.length,
     0,
   );
-  const numItems = objective.team_score[teamId]?.completions[0]?.number || 0;
+  const numItems = objective.team_score[teamId].number() || 0;
   const numVariants = teamId
     ? objective.children.reduce((acc, subCategory) => {
         return (
           acc +
           subCategory.children.reduce((numVariants, child) => {
-            if (isFinished(child.team_score[teamId])) {
+            if (child.team_score[teamId].isFinished()) {
               return numVariants + 1;
             }
             return numVariants;
@@ -64,10 +64,7 @@ export const UniqueCategoryCard = ({
           )}
         >
           <div className="shrink-0">
-            <Medal
-              rank={objective.team_score[teamId]?.completions[0]?.rank}
-              size={28}
-            />
+            <Medal rank={objective.team_score[teamId].rank()} size={28} />
           </div>
           <div>
             <h1 className="font-extrabold">{objective.name}</h1>

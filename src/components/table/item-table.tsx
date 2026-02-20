@@ -9,9 +9,6 @@ import {
   ExtendedScoreObjective,
   flatMapUniques,
   getVariantMap,
-  isFinished,
-  lastTimestamp,
-  totalPoints,
 } from "@utils/utils";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -60,8 +57,8 @@ export function ItemTable({
       if (a.id === eventStatus?.team_id) return -1;
       if (b.id === eventStatus?.team_id) return 1;
       return (
-        totalPoints(objective.team_score[b.id]) -
-        totalPoints(objective.team_score[a.id])
+        objective.team_score[b.id].totalPoints() -
+        objective.team_score[a.id].totalPoints()
       );
     })
     .slice(0, preferences.limitTeams ? preferences.limitTeams : undefined)
@@ -149,7 +146,7 @@ export function ItemTable({
 
   const badgeClass = (objective: ExtendedScoreObjective, teamID: number) => {
     let className = "badge gap-2 w-full font-semibold py-3 ring-2";
-    if (isFinished(objective.team_score[teamID])) {
+    if (objective.team_score[teamID].isFinished()) {
       className += " bg-success text-success-content";
     } else {
       className += " bg-error text-error-content";
@@ -239,22 +236,17 @@ export function ItemTable({
             (team) =>
               ({
                 accessorFn: (row: ExtendedScoreObjective) =>
-                  isFinished(row.team_score[team.id]),
+                  row.team_score[team.id].isFinished(),
                 id: `team_${team.id}`,
                 header: () => {
                   const objectives = flatMapUniques(objective);
                   const numberOfFinishes =
                     objectives
                       .filter((o) => (filter ? filter(o) : true))
-                      .filter((o) => isFinished(o.team_score[team.id]))
+                      .filter((o) => o.team_score[team.id].isFinished())
                       ?.length || 0;
                   const childNumberSum = objectives.reduce(
-                    (acc, obj) =>
-                      acc +
-                      (obj.team_score[team.id]?.completions.reduce(
-                        (max, completion) => Math.max(max, completion.number),
-                        0,
-                      ) || 0),
+                    (acc, obj) => acc + obj.team_score[team.id].maxNumber(),
                     0,
                   );
                   const numberOfChildren = objectives.filter((o) =>
@@ -276,17 +268,15 @@ export function ItemTable({
                 cell: (info: CellContext<ExtendedScoreObjective, string>) => {
                   const score = info.row.original.team_score[team.id];
                   const finished = info.getValue<boolean>();
-                  const number = score?.completions[0]?.number || 0;
-                  const user = users?.find(
-                    (u) => score?.completions[0]?.user_id === u.id,
-                  );
+                  const number = score?.number() || 0;
+                  const user = users?.find((u) => score?.userId() === u.id);
                   const canBeScoredMultipleTimes =
                     info.row.original.scoring_presets[0]?.scoring_method ===
                     ScoringMethod.POINTS_FROM_VALUE;
                   if (canBeScoredMultipleTimes) {
-                    return totalPoints(score) > 0 ? (
+                    return score.number() > 0 ? (
                       <span className="w-full text-center font-mono text-xl text-success">
-                        x{score.completions[0]?.number}
+                        x{score.number()}
                       </span>
                     ) : (
                       <span className="w-full text-center font-mono text-xl text-error">
@@ -323,7 +313,7 @@ export function ItemTable({
                           <span>
                             on{" "}
                             {new Date(
-                              lastTimestamp(score) * 1000,
+                              score.lastTimestamp() * 1000,
                             ).toLocaleString()}
                           </span>
                         </div>

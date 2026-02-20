@@ -2,7 +2,6 @@ import { useGetEventStatus, useGetTeamGoals } from "@client/query";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { ScoreObjective } from "@mytypes/score";
 import { GlobalStateContext } from "@utils/context-provider";
-import { isFinished } from "@utils/utils";
 import { useContext } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -27,13 +26,13 @@ export default function ProgressCard({ category }: Props) {
     return <></>;
   }
   const unfinishedObjectives = childLeaves.filter(
-    (obj) => !isFinished(obj.team_score[teamId]),
+    (obj) => !obj.team_score[teamId].isFinished(),
   );
   let currentNum = requiredNum - unfinishedObjectives.length;
 
   if (childLeaves.length === 0) {
     requiredNum = category.required_number;
-    currentNum = category.team_score[teamId]?.completions[0]?.number || 0;
+    currentNum = category.team_score[teamId].number();
   }
   if (currentNum > requiredNum) {
     return <></>;

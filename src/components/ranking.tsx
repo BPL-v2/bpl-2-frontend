@@ -1,18 +1,11 @@
 import { useContext } from "react";
 import { GlobalStateContext } from "@utils/context-provider";
-import { Score } from "@client/api";
-import {
-  getPotentialPoints,
-  getTotalPoints,
-  isFinished,
-  rank2text,
-  totalPoints,
-} from "@utils/utils";
+import { getPotentialPoints, getTotalPoints, rank2text } from "@utils/utils";
 // import { TeamLogo } from "./teamlogo";
 import { useGetEventStatus } from "@client/query";
 import { twMerge } from "tailwind-merge";
 import { renderScore } from "@utils/score";
-import { ScoreObjective } from "@mytypes/score";
+import { ScoreClass, ScoreObjective } from "@mytypes/score";
 
 interface RankingProps {
   objective: ScoreObjective;
@@ -36,8 +29,8 @@ function getGridLayout(numTeams: number) {
   }
 }
 
-function getCardColor(score: Score) {
-  switch (score.completions[0]?.rank) {
+function getCardColor(score: ScoreClass) {
+  switch (score.rank()) {
     case 1:
       return "text-black/70 bg-gold-metallic";
     case 2:
@@ -50,18 +43,18 @@ function getCardColor(score: Score) {
 }
 
 function sort(
-  [teamId1, score1]: [string, Score],
-  [teamId2, score2]: [string, Score],
+  [teamId1, score1]: [string, ScoreClass],
+  [teamId2, score2]: [string, ScoreClass],
 ) {
-  if (score1.completions[0]?.rank !== score2.completions[0]?.rank) {
-    if (score1.completions[0]?.rank === 0) return 1;
-    if (score2.completions[0]?.rank === 0) return -1;
-    return score1.completions[0]?.rank - score2.completions[0]?.rank;
+  if (score1.rank() !== score2.rank()) {
+    if (score1.rank() === 0) return 1;
+    if (score2.rank() === 0) return -1;
+    return score1.rank() - score2.rank();
   }
-  if (totalPoints(score1) !== totalPoints(score2)) {
-    return totalPoints(score2) - totalPoints(score1);
+  if (score1.totalPoints() !== score2.totalPoints()) {
+    return score2.totalPoints() - score1.totalPoints();
   }
-  return score2.completions[0]?.number - score1.completions[0]?.number;
+  return score2.number() - score1.number();
 }
 
 export function Ranking({
@@ -78,11 +71,11 @@ export function Ranking({
       if (b.id === eventStatus?.team_id) return 1;
       const scoreA = objective.team_score[a.id];
       const scoreB = objective.team_score[b.id];
-      const pointsA = scoreA ? totalPoints(scoreA) : -1;
-      const pointsB = scoreB ? totalPoints(scoreB) : -1;
+      const pointsA = scoreA ? scoreA.totalPoints() : -1;
+      const pointsB = scoreB ? scoreB.totalPoints() : -1;
       if (pointsA === pointsB) {
-        const numberA = scoreA ? scoreA.completions[0]?.number : -1;
-        const numberB = scoreB ? scoreB.completions[0]?.number : -1;
+        const numberA = scoreA ? scoreA.number() : -1;
+        const numberB = scoreB ? scoreB.number() : -1;
         if (numberA === numberB) {
           return b.id - a.id;
         }
@@ -130,7 +123,7 @@ export function Ranking({
                   <div className="">
                     {
                       <div className="text-lg font-semibold">
-                        {rank2text(score.completions[0]?.rank)}
+                        {rank2text(score.rank())}
                       </div>
                     }
                     <div className="text-xl font-bold">
@@ -142,7 +135,7 @@ export function Ranking({
                     </div>
                   </div>
                 </div>
-                {isFinished(score) ? null : (
+                {score.isFinished() ? null : (
                   <div className="text-left">
                     <progress
                       className="progress progress-primary"

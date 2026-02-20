@@ -4,7 +4,6 @@ import TeamScoreDisplay from "@components/team/team-score";
 import { BingoTabRules } from "@rules/bingo";
 import { createFileRoute } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
-import { isFinished } from "@utils/utils";
 import { useContext, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -66,7 +65,8 @@ function RouteComponent() {
                   return (
                     <div
                       className={twMerge(
-                        isFinished(child.team_score[selectedTeam || 0]) &&
+                        selectedTeam &&
+                          child.team_score[selectedTeam].isFinished() &&
                           "bg-success outline-8 outline-success",
                       )}
                       key={`${rowIdx},${colIdx}`}
@@ -85,8 +85,9 @@ function RouteComponent() {
                         <div className="w-full rounded-b-box p-4 px-4">
                           <ProgressBar
                             value={
-                              child.team_score[selectedTeam || 0]
-                                ?.completions[0]?.number
+                              selectedTeam
+                                ? child.team_score[selectedTeam]?.number()
+                                : 0
                             }
                             maxVal={child.required_number}
                             gotPoints={false}

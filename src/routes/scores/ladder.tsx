@@ -1,7 +1,7 @@
 import { Event, LadderEntry, Team } from "@client/api";
 import { CellContext, ColumnDef, sortingFns } from "@tanstack/react-table";
 import { GlobalStateContext } from "@utils/context-provider";
-import { getTotalPoints, totalPoints } from "@utils/utils";
+import { getTotalPoints } from "@utils/utils";
 import { JSX, useContext, useMemo, useState } from "react";
 
 import {
@@ -600,10 +600,8 @@ function LadderTab(): JSX.Element {
                       if (a.id === eventStatus?.team_id) return -1;
                       if (b.id === eventStatus?.team_id) return 1;
                       return (
-                        (totalObjective.team_score[b.id]?.completions[0]
-                          ?.number || 0) -
-                        (totalObjective.team_score[a.id]?.completions[0]
-                          ?.number || 0)
+                        totalObjective.team_score[b.id].number() -
+                        totalObjective.team_score[a.id].number()
                       );
                     })
                     .slice(
@@ -619,19 +617,19 @@ function LadderTab(): JSX.Element {
                       let total = 0;
                       for (const obj of checkPoints) {
                         const teamScore = obj.team_score[team.id];
-                        if (!teamScore || !totalPoints(teamScore)) {
+                        const points = teamScore.totalPoints();
+                        if (points === 0) {
                           continue;
                         }
-                        const number = teamScore.completions[0]?.number;
-                        total += totalPoints(teamScore);
+                        const number = teamScore.number();
+                        total += points;
                         values.push(number);
-                        extra.push(totalPoints(teamScore));
+                        extra.push(points);
                       }
                       const cap =
                         totalObjective?.scoring_presets[0]?.point_cap || 0;
                       const current = Math.min(
-                        totalObjective?.team_score[team.id]?.completions[0]
-                          ?.number || 0,
+                        totalObjective?.team_score[team.id]?.number() || 0,
                         cap,
                       );
                       total += current;

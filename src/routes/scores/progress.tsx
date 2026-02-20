@@ -83,7 +83,7 @@ function RouteComponent() {
   const scoreRows: ScoreRow[] = flatScores
     .flatMap((s) =>
       Object.entries(s.team_score).flatMap(([teamId, score]) => {
-        return score.completions.map((completion) => {
+        return score.score.completions.map((completion) => {
           return {
             objective: s,
             team: teamMap[parseInt(teamId)],

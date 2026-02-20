@@ -11,7 +11,7 @@ import { PoGauge } from "@components/personal-objective/po-gauge";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { createFileRoute } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
-import { flatMap, isFinished } from "@utils/utils";
+import { flatMap } from "@utils/utils";
 import { useContext, useMemo } from "react";
 
 export const Route = createFileRoute("/scores/for-you")({
@@ -104,16 +104,16 @@ function ForYouTab() {
         category.scoring_presets[0]?.scoring_method ===
           ScoringMethod.RANKED_COMPLETION_TIME &&
         eventStatus.team_id !== undefined &&
-        !isFinished(category.team_score[eventStatus.team_id]),
+        !category.team_score[eventStatus.team_id].isFinished(),
     )
     .sort((a, b) => {
       return (
         a.children.filter(
-          (objective) => !isFinished(objective.team_score[teamId]),
+          (objective) => !objective.team_score[teamId].isFinished(),
         ).length /
           a.children.length -
         b.children.filter(
-          (objective) => !isFinished(objective.team_score[teamId]),
+          (objective) => !objective.team_score[teamId].isFinished(),
         ).length /
           b.children.length
       );
@@ -124,14 +124,13 @@ function ForYouTab() {
       (objective) =>
         objective.scoring_presets[0]?.scoring_method ===
           ScoringMethod.RANKED_TIME &&
-        !isFinished(objective.team_score[eventStatus.team_id!]) &&
+        !objective.team_score[eventStatus.team_id!].isFinished() &&
         (!objective.valid_from || new Date(objective.valid_from) < new Date()),
     )
     .sort((a, b) => {
       return (
-        (b.team_score[teamId]?.completions[0]?.number ?? 0) /
-          b.required_number -
-        (a.team_score[teamId]?.completions[0]?.number ?? 0) / a.required_number
+        b.team_score[teamId]?.number() / b.required_number -
+        a.team_score[teamId].number() / a.required_number
       );
     });
   let suggestionsExist = false;

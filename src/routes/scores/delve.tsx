@@ -1,4 +1,4 @@
-import { GameVersion, LadderEntry, Completion, Team } from "@client/api";
+import { GameVersion, LadderEntry, Team } from "@client/api";
 import { preloadLadderData, useGetLadder, useGetUsers } from "@client/query";
 import { AscendancyName } from "@components/character/ascendancy-name";
 import { AscendancyPortrait } from "@components/character/ascendancy-portrait";
@@ -10,14 +10,13 @@ import Table from "@components/table/table";
 import { TeamName } from "@components/team/team-name";
 import TeamScoreDisplay from "@components/team/team-score";
 import { ascendancies } from "@mytypes/ascendancy";
-import { ScoreObjective, TeamScore } from "@mytypes/score";
+import { ScoreClass, ScoreObjective, TeamScore } from "@mytypes/score";
 import { DelveTabRules } from "@rules/delve";
 import { createFileRoute } from "@tanstack/react-router";
 import { ColumnDef, sortingFns } from "@tanstack/react-table";
 import { GlobalStateContext } from "@utils/context-provider";
 import { JSX, useContext, useMemo } from "react";
 import { LadderPortrait } from "@components/character/ladder-portrait";
-import { isFinished, lastTimestamp, totalPoints } from "@utils/utils";
 
 export const Route = createFileRoute("/scores/delve")({
   component: DelveTab,
@@ -190,25 +189,33 @@ function DelveTab(): JSX.Element {
   } as ScoreObjective;
 
   for (const teamId in category.team_score) {
-    const completion = {} as Completion;
-    completion.number =
-      culmulativeDepthTotal?.team_score[teamId].completions[0]?.number || 0;
-    completion.rank =
-      culmulativeDepthRace?.team_score[teamId].completions[0]?.rank || 0;
-
-    completion.finished = isFinished(culmulativeDepthRace?.team_score[teamId]);
-    completion.points =
-      (totalPoints(culmulativeDepthTotal?.team_score[teamId]) || 0) +
-      (totalPoints(culmulativeDepthRace?.team_score[teamId]) || 0);
-    completion.timestamp =
-      (lastTimestamp(culmulativeDepthTotal?.team_score[teamId]) ||
-        new Date().getTime() / 1000) * 1000;
-    completion.user_id =
-      culmulativeDepthTotal?.team_score[teamId].completions[0]?.user_id || 0;
-    culmulativeDepthObj.team_score[teamId] = {
+    const completion = {
+      number: 0,
+      rank: 0,
+      finished: false,
+      points: 0,
+      timestamp: 0,
+      user_id: 0,
+      preset_id: 0,
+    };
+    if (culmulativeDepthTotal) {
+      completion.number = culmulativeDepthTotal.team_score[teamId].number();
+      completion.points +=
+        culmulativeDepthTotal.team_score[teamId].totalPoints();
+      completion.timestamp =
+        culmulativeDepthTotal.team_score[teamId].lastTimestamp();
+    }
+    if (culmulativeDepthRace) {
+      completion.rank = culmulativeDepthRace.team_score[teamId].rank();
+      completion.finished =
+        culmulativeDepthRace.team_score[teamId].isFinished();
+      completion.points +=
+        culmulativeDepthRace.team_score[teamId].totalPoints();
+    }
+    culmulativeDepthObj.team_score[teamId] = new ScoreClass({
       completions: [completion],
       bonus_points: 0,
-    };
+    });
   }
   return (
     <>
@@ -232,7 +239,7 @@ function DelveTab(): JSX.Element {
                   (acc, objective) =>
                     acc +
                     Math.min(
-                      objective.team_score[teamId].completions[0]?.number,
+                      objective.team_score[teamId].number(),
                       objective.required_number,
                     ),
                   0,
@@ -278,7 +285,7 @@ function DelveTab(): JSX.Element {
                 objective={culmulativeDepthObj}
                 maximum={culmulativeDepthRace.required_number}
                 actual={(teamId: number) =>
-                  culmulativeDepthObj.team_score[teamId].completions[0]?.number
+                  culmulativeDepthObj.team_score[teamId].number()
                 }
                 description="Depth:"
               />

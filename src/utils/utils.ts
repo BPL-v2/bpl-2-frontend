@@ -1,20 +1,14 @@
-import {
-  AggregationType,
-  Objective,
-  ScoringMethod,
-  ScoringPreset,
-  Score,
-} from "@client/api";
-import { ScoreObjective } from "@mytypes/score";
+import { Objective, ScoringMethod, ScoringPreset, Score } from "@client/api";
+import { ScoreClass, ScoreObjective } from "@mytypes/score";
 
-type TeamScores = { [teamId: number]: Score };
+type TeamScores = { [teamId: number]: ScoreClass };
 
 export type ScoreMap = {
   [teamId: number]: { [objectiveId: number]: Score };
 };
 
-function getEmptyScore(): Score {
-  return {
+function getEmptyScore(): ScoreClass {
+  return new ScoreClass({
     completions: [
       {
         finished: false,
@@ -26,7 +20,7 @@ function getEmptyScore(): Score {
       },
     ],
     bonus_points: 0,
-  };
+  });
 }
 export function lastTimestamp(score?: Score): number {
   let timestamp = 0;
@@ -82,7 +76,8 @@ export function mergeScores(
         ? objective.scoring_presets
         : nullPreset,
     team_score: teamsIds.reduce((acc: TeamScores, teamId) => {
-      acc[teamId] = scores[teamId]?.[objective.id] || getEmptyScore();
+      acc[teamId] =
+        new ScoreClass(scores[teamId]?.[objective.id]) || getEmptyScore();
       return acc;
     }, {}),
   };
@@ -90,31 +85,31 @@ export function mergeScores(
 
 // todo: do this in a better way
 export function hidePOTotal(score: ScoreObjective): ScoreObjective {
-  for (const child of score.children) {
-    if (child.name === "Personal Objectives") {
-      const firstCheckpoint = child.children.sort(
-        (a, b) =>
-          new Date(a.valid_to!).getTime() - new Date(b.valid_to!).getTime(),
-      )[0];
-      for (const childChild of child.children) {
-        if (
-          childChild.aggregation === AggregationType.MAXIMUM &&
-          Date.now() < new Date(firstCheckpoint.valid_to!).getTime()
-        ) {
-          childChild.team_score = Object.fromEntries(
-            Object.entries(childChild.team_score).map(([teamId, score]) => [
-              parseInt(teamId),
-              {
-                ...score,
-                points: 0,
-                number: 0,
-              },
-            ]),
-          );
-        }
-      }
-    }
-  }
+  // for (const child of score.children) {
+  //   if (child.name === "Personal Objectives") {
+  //     const firstCheckpoint = child.children.sort(
+  //       (a, b) =>
+  //         new Date(a.valid_to!).getTime() - new Date(b.valid_to!).getTime(),
+  //     )[0];
+  //     for (const childChild of child.children) {
+  //       if (
+  //         childChild.aggregation === AggregationType.MAXIMUM &&
+  //         Date.now() < new Date(firstCheckpoint.valid_to!).getTime()
+  //       ) {
+  //         childChild.team_score = Object.fromEntries(
+  //           Object.entries(childChild.team_score).map(([teamId, score]) => [
+  //             parseInt(teamId),
+  //             {
+  //               ...score,
+  //               points: 0,
+  //               number: 0,
+  //             },
+  //           ]),
+  //         );
+  //       }
+  //     }
+  //   }
+  // }
 
   return score;
 }
@@ -127,7 +122,7 @@ export function getTotalPoints(objective?: ScoreObjective): {
   }
   const points: { [teamId: number]: number } = {};
   for (const [teamId, teamScore] of Object.entries(objective.team_score)) {
-    points[parseInt(teamId)] = totalPoints(teamScore);
+    points[parseInt(teamId)] = teamScore.totalPoints();
   }
   for (const child of objective.children) {
     const childPoints = getTotalPoints(child);
@@ -225,7 +220,7 @@ export function getPotentialPointsRanked(
   let rankPossible = 0;
   for (const teamScore of Object.values(objective.team_score)) {
     if (
-      teamScore.completions.some(
+      teamScore.score.completions.some(
         (comp) => comp.preset_id === preset.id && comp.finished,
       )
     ) {
@@ -239,10 +234,10 @@ export function getPotentialPointsRanked(
       : presetPoints[presetPoints.length - 1];
   return Object.entries(objective.team_score).reduce(
     (acc, [team_id, score]) => {
-      acc[parseInt(team_id)] = score.completions.some(
+      acc[parseInt(team_id)] = score.score.completions.some(
         (comp) => comp.preset_id === preset.id && comp.finished,
       )
-        ? score.completions.find((comp) => comp.preset_id === preset.id)
+        ? score.score.completions.find((comp) => comp.preset_id === preset.id)
             ?.points || 0
         : possiblePointsForFinishing;
       return acc;

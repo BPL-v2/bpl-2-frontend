@@ -1,4 +1,4 @@
-import { ApprovalStatus, Score, Submission, Team } from "@client/api";
+import { ApprovalStatus, Submission, Team } from "@client/api";
 import {
   useGetEventStatus,
   useGetSubmissions,
@@ -15,10 +15,10 @@ import {
 } from "@heroicons/react/24/outline";
 import { TwitchFilled } from "@icons/twitch";
 import { YoutubeFilled } from "@icons/youtube";
-import { ScoreObjective } from "@mytypes/score";
+import { ScoreClass, ScoreObjective } from "@mytypes/score";
 import { GlobalStateContext } from "@utils/context-provider";
 import { renderScore } from "@utils/score";
-import { getPotentialPoints, getTotalPoints, totalPoints } from "@utils/utils";
+import { getPotentialPoints, getTotalPoints } from "@utils/utils";
 import { useContext, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -163,8 +163,8 @@ export function SubmissionCard({ objective }: SubmissionCardProps) {
     .sort((a, b) => {
       if (a.id === eventStatus?.team_id) return -1;
       if (b.id === eventStatus?.team_id) return 1;
-      const pointsA = totalPoints(objective.team_score[a.id]);
-      const pointsB = totalPoints(objective.team_score[b.id]);
+      const pointsA = objective.team_score[a.id].totalPoints();
+      const pointsB = objective.team_score[b.id].totalPoints();
       if (pointsB !== pointsA) {
         return pointsB - pointsA;
       }
@@ -219,11 +219,11 @@ export function SubmissionCard({ objective }: SubmissionCardProps) {
               {Object.entries(objective.team_score)
                 .filter(([teamId]) => teamIds.includes(parseInt(teamId)))
                 .map(([teamId, score]) => {
-                  return [parseInt(teamId), score] as [number, Score];
+                  return [parseInt(teamId), score] as [number, ScoreClass];
                 })
                 .sort(([teamIdA, scoreA], [teamIdB, scoreB]) => {
-                  if (totalPoints(scoreB) !== totalPoints(scoreA)) {
-                    return totalPoints(scoreB) - totalPoints(scoreA);
+                  if (scoreB.totalPoints() !== scoreA.totalPoints()) {
+                    return scoreB.totalPoints() - scoreA.totalPoints();
                   }
                   return teamIdA - teamIdB;
                 })
@@ -246,7 +246,7 @@ export function SubmissionCard({ objective }: SubmissionCardProps) {
                         className={twMerge(
                           "py-1 pl-4 text-left",
                           idx === teamIds.length - 1 && "rounded-bl-xl",
-                          totalPoints(score) == 0
+                          score.totalPoints() == 0
                             ? "text-error"
                             : "text-success",
                         )}
@@ -256,8 +256,7 @@ export function SubmissionCard({ objective }: SubmissionCardProps) {
                           getPotentialPoints(objective)[teamId],
                           currentEvent?.uses_medals,
                         )}
-                        {score.completions[0]?.number > 1 &&
-                          `(${score.completions[0]?.number})`}
+                        {score.number() > 1 && `(${score.number()})`}
                       </td>
                       <td
                         className={twMerge(

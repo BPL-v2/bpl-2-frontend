@@ -6,7 +6,6 @@ import { GameVersion, ScoringMethod } from "@client/api";
 import { Ranking } from "@components/ranking";
 import { createFileRoute } from "@tanstack/react-router";
 import { HeistTabRules } from "@rules/heist";
-import { isFinished } from "@utils/utils";
 
 export const Route = createFileRoute("/scores/heist")({
   component: HeistTab,
@@ -55,7 +54,7 @@ function HeistTab(): JSX.Element {
                 objective={category}
                 maximum={category.required_number}
                 actual={(teamId: number) =>
-                  category.team_score[teamId]?.completions[0]?.number || 0
+                  category.team_score[teamId]?.number()
                 }
                 description={"Items:"}
               />
@@ -74,7 +73,7 @@ function HeistTab(): JSX.Element {
                   maximum={category.children.length}
                   actual={(teamId: number) =>
                     category.children.filter((o) =>
-                      isFinished(o.team_score[teamId]),
+                      o.team_score[teamId].isFinished(),
                     ).length
                   }
                   description={"Items:"}
