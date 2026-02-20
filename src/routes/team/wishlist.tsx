@@ -49,7 +49,7 @@ type UniqueInfo = {
 };
 
 type WishRow = {
-  user: MinimalUser;
+  user: string;
   wish: ItemWish;
   uniqueInfo: UniqueInfo;
 };
@@ -150,14 +150,18 @@ function RouteComponent() {
   for (const [userId, wishes] of Object.entries(rowMap)) {
     const user = userMap[Number(userId)];
     for (const wish of wishes) {
-      rows.push({ user, wish: wish.wish, uniqueInfo: wish.uniqueInfo });
+      rows.push({
+        user: user.display_name,
+        wish: wish.wish,
+        uniqueInfo: wish.uniqueInfo,
+      });
     }
   }
   const columns: ColumnDef<WishRow>[] = [
     {
       header: "",
-      accessorKey: "user.display_name",
-      size: 250,
+      accessorKey: "user",
+      size: 220,
       filterFn: "includesString",
       enableSorting: false,
       meta: {
@@ -168,7 +172,7 @@ function RouteComponent() {
     {
       header: "",
       accessorKey: "uniqueInfo.condition.value",
-      size: 350,
+      size: 320,
       filterFn: "includesString",
       cell: (info) => {
         return (
@@ -217,7 +221,8 @@ function RouteComponent() {
     {
       header: "Count",
       id: "count",
-      size: 70,
+      size: 100,
+      accessorKey: "uniqueInfo.condition.value",
       cell: (info) => {
         const wishValue = info.row.original.uniqueInfo.condition.value;
         const count = wishCounter[wishValue] || 0;
@@ -230,40 +235,56 @@ function RouteComponent() {
     {
       header: "Point Item",
       accessorKey: "uniqueInfo.is_point_unique",
-      size: 100,
+      size: 140,
       cell: (info) => {
         return info.row.original.uniqueInfo.is_point_unique ? (
           <ExclamationCircleIcon className="size-5 text-error"></ExclamationCircleIcon>
         ) : null;
       },
-      enableSorting: false,
     },
     {
       header: "Build Enabling",
       accessorKey: "wish.build_enabling",
-      size: 150,
+      size: 170,
       cell: (info) => {
         return (
           <input
             type="checkbox"
             defaultChecked={info.row.original.wish.build_enabling}
-            disabled={user?.id != info.row.original.user?.id}
+            // disabled={user?.id != info.row.original.user?.id}
             className={twMerge(
               "checkbox border-2",
-              info.row.original.wish.build_enabling ? "checkbox-success" : "",
+              user?.display_name != info.row.original.user ? "hidden" : "",
+              info.row.original.wish.build_enabling
+                ? "block checkbox-success"
+                : "",
             )}
-            onChange={async (e) => {
-              updateItemWish({
-                wishId: info.row.original.wish.id,
-                item_wish: {
-                  build_enabling: e.target.checked,
-                },
-              });
+            onClick={async (e) => {
+              if (user?.display_name == info.row.original.user) {
+                info.row.original.wish.build_enabling =
+                  !info.row.original.wish.build_enabling;
+                updateItemWish({
+                  wishId: info.row.original.wish.id,
+                  item_wish: {
+                    build_enabling: info.row.original.wish.build_enabling,
+                  },
+                });
+              } else {
+                e.preventDefault();
+              }
             }}
+            // onChange={async (e) => {
+            //   updateItemWish({
+            //     wishId: info.row.original.wish.id,
+            //     item_wish: {
+            //       build_enabling: e.target.checked,
+            //     },
+            //   });
+            //   info.row.original.wish.build_enabling = e.target.checked;
+            // }}
           />
         );
       },
-      enableSorting: false,
     },
     {
       header: "Priority",
@@ -306,13 +327,13 @@ function RouteComponent() {
     {
       header: "Fulfilled",
       accessorKey: "wish.fulfilled",
-      size: 150,
+      size: 100,
       cell: (info) => {
         return (
           <input
             type="checkbox"
             defaultChecked={info.row.original.wish.fulfilled}
-            disabled={user?.id != info.row.original.user?.id}
+            disabled={user?.display_name != info.row.original.user}
             className={twMerge(
               "checkbox border-2",
               info.row.original.wish.fulfilled ? "checkbox-success" : "",
@@ -335,13 +356,14 @@ function RouteComponent() {
       id: "delete",
       cell: (info) => {
         return (
-          user?.id == info.row.original.user?.id && (
+          user?.display_name == info.row.original.user && (
             <button onClick={() => deleteItemWish(info.row.original.wish.id)}>
               <TrashIcon className="size-5 cursor-pointer text-error"></TrashIcon>
             </button>
           )
         );
       },
+      size: 60,
     },
   ];
   const form = useAppForm({
@@ -472,6 +494,7 @@ function RouteComponent() {
         </div>
       </Dialog>
       <Table
+        className="max-h-[80vh]"
         columns={columns}
         data={rows
           .filter((row) => {
@@ -484,8 +507,14 @@ function RouteComponent() {
             );
           })
           .sort((a, b) => {
-            if (a.user?.id != b.user?.id) {
-              return a.user?.id - b.user?.id;
+            if (a.user == user?.display_name) {
+              return -1;
+            }
+            if (b.user == user?.display_name) {
+              return 1;
+            }
+            if (a.user != b.user) {
+              return a.user.localeCompare(b.user);
             }
             return a.wish.value.localeCompare(b.wish.value);
           })}
