@@ -136,7 +136,7 @@ function RouteComponent() {
       condition: {
         field: wish.item_field,
         operator: Operator.EQ,
-        value: wish.value,
+        value: wish.value.trim(),
       },
       tier: uniqueTiers[wish.value],
       is_drop_restricted: uniques
@@ -172,9 +172,9 @@ function RouteComponent() {
       filterFn: "includesString",
       cell: (info) => {
         return (
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <ObjectiveIcon
-              className="h-8"
+              className="max-h-8 max-w-8"
               objective={
                 {
                   conditions: [info.row.original.uniqueInfo.condition],
