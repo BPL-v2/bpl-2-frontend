@@ -91,7 +91,6 @@ function LadderTab(): JSX.Element {
     useContext(GlobalStateContext);
   const { rules } = Route.useSearch();
   const [hoursAfterEventStart, setHoursAfterEventStart] = useState<number>();
-  console.log("hoursAfterEventStart", hoursAfterEventStart);
   const { data: unsortedLadder, isError: ladderIsError } = useGetLadder(
     currentEvent.id,
     hoursAfterEventStart,
@@ -629,7 +628,7 @@ function LadderTab(): JSX.Element {
                       const cap =
                         totalObjective?.scoring_presets[0]?.point_cap || 0;
                       const current = Math.min(
-                        totalObjective?.team_score[team.id]?.number() || 0,
+                        totalObjective?.team_score[team.id].number() || 0,
                         cap,
                       );
                       total += current;

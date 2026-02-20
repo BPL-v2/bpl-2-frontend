@@ -69,7 +69,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  if (rules && initialScore) {
+  if (rules && initialScore && currentEvent.teams.length > 0) {
     const mergedScore = initialScore;
     for (const entry of Object.entries(scoreDiffs)) {
       const teamId = Number(entry[0]);
@@ -87,7 +87,7 @@ function ContextWrapper({ children }: { children: React.ReactNode }) {
       mergeScores(
         rules,
         mergedScore,
-        currentEvent?.teams.map((team) => team.id),
+        currentEvent.teams.map((team) => team.id),
       ),
     );
   }

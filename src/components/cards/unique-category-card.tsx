@@ -27,7 +27,7 @@ export const UniqueCategoryCard = ({
     (acc, variantCategory) => acc + variantCategory.children.length,
     0,
   );
-  const numItems = objective.team_score[teamId].number() || 0;
+  const numItems = objective.team_score[teamId].number();
   const numVariants = teamId
     ? objective.children.reduce((acc, subCategory) => {
         return (

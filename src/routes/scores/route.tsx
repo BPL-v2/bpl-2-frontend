@@ -57,7 +57,6 @@ export const Route = createFileRoute("/scores")({
 });
 
 function ScoringPage() {
-  console.log("ScoringPage rendered");
   usePageSEO("scores");
   const { currentEvent } = useContext(GlobalStateContext);
   const { rules: categories } = useGetRules(currentEvent.id);

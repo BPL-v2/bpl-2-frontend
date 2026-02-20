@@ -54,7 +54,7 @@ function HeistTab(): JSX.Element {
                 objective={category}
                 maximum={category.required_number}
                 actual={(teamId: number) =>
-                  category.team_score[teamId]?.number()
+                  category.team_score[teamId].number()
                 }
                 description={"Items:"}
               />

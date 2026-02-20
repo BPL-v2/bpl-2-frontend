@@ -200,7 +200,6 @@ function ActivityPage() {
             cell: (info) => {
               const entry = info.getValue() as (typeof ladder)[0] | undefined;
               if (!entry || !entry.user_id) {
-                console.log(entry);
                 return "";
               }
               return (

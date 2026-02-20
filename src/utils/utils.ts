@@ -76,8 +76,11 @@ export function mergeScores(
         ? objective.scoring_presets
         : nullPreset,
     team_score: teamsIds.reduce((acc: TeamScores, teamId) => {
-      acc[teamId] =
-        new ScoreClass(scores[teamId]?.[objective.id]) || getEmptyScore();
+      if (scores[teamId] && scores[teamId][objective.id]) {
+        acc[teamId] = new ScoreClass(scores[teamId][objective.id]);
+      } else {
+        acc[teamId] = getEmptyScore();
+      }
       return acc;
     }, {}),
   };

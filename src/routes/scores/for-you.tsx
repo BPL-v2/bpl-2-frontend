@@ -129,7 +129,7 @@ function ForYouTab() {
     )
     .sort((a, b) => {
       return (
-        b.team_score[teamId]?.number() / b.required_number -
+        b.team_score[teamId].number() / b.required_number -
         a.team_score[teamId].number() / a.required_number
       );
     });
