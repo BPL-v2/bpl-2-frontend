@@ -86,7 +86,7 @@ export function GuildStashSelect({ path }: { path: path }) {
                   className="flex flex-row items-center gap-2"
                   key={stash.id}
                 >
-                  {!hideDisabled && !eventStatus?.is_team_lead ? (
+                  {!hideDisabled && eventStatus?.is_team_lead ? (
                     <input
                       type="checkbox"
                       checked={stash.fetch_enabled}
