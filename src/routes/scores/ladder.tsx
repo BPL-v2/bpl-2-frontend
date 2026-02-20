@@ -67,7 +67,11 @@ function getTimeSelectOptions(currentEvent: Event) {
   const eventStart = new Date(currentEvent.event_start_time);
   let eventEnd = new Date(currentEvent.event_end_time);
   const now = new Date();
-  if (now < eventStart) {
+  if (
+    isNaN(eventStart.getTime()) ||
+    isNaN(eventEnd.getTime()) ||
+    now < eventStart
+  ) {
     return [];
   }
   if (now < eventEnd) {
@@ -714,14 +718,16 @@ function LadderTab(): JSX.Element {
               className="w-100"
             />
           </div>
-          <Select
-            className=""
-            placeholder="Show ladder at..."
-            options={getTimeSelectOptions(currentEvent)}
-            onChange={(value: any) => {
-              setHoursAfterEventStart(value);
-            }}
-          />
+          {getTimeSelectOptions(currentEvent).length > 0 && (
+            <Select
+              className=""
+              placeholder="Show ladder at..."
+              options={getTimeSelectOptions(currentEvent)}
+              onChange={(value: any) => {
+                setHoursAfterEventStart(value);
+              }}
+            />
+          )}
         </div>
         <Table
           data={filteredLadder?.sort((a, b) => a.rank - b.rank) || []}
