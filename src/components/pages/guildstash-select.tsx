@@ -113,7 +113,7 @@ export function GuildStashSelect({ path }: { path: path }) {
                       alt={stash.type}
                     ></img>
                     <h3 className="w-full text-sm">{stash.name}</h3>
-                    {!eventStatus?.is_team_lead && (
+                    {eventStatus?.is_team_lead && (
                       <button
                         className="btn whitespace-break-spaces btn-sm btn-primary"
                         onClick={() => {
