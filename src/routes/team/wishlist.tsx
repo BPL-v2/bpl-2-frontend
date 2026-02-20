@@ -3,7 +3,6 @@ import {
   GameVersion,
   ItemField,
   ItemWish,
-  MinimalUser,
   Objective,
   Operator,
 } from "@client/api";
