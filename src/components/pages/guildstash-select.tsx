@@ -86,14 +86,40 @@ export function GuildStashSelect({ path }: { path: path }) {
                   className="flex flex-row items-center gap-2"
                   key={stash.id}
                 >
-                  {!hideDisabled && eventStatus?.is_team_lead ? (
-                    <input
-                      type="checkbox"
-                      checked={stash.fetch_enabled}
-                      onChange={() => switchStashFetching(stash.id)}
-                      className="checkbox checkbox-primary"
-                    />
-                  ) : null}
+                  {!hideDisabled && eventStatus?.is_team_lead && (
+                    <fieldset className="flex flex-row items-center">
+                      <div>
+                        <label className="text-xs">Fetch</label>
+                        <input
+                          type="checkbox"
+                          checked={stash.fetch_enabled}
+                          onChange={() =>
+                            switchStashFetching({
+                              tabId: stash.id,
+                              fetch: !stash.fetch_enabled,
+                              priorityFetch: stash.priority_fetch,
+                            })
+                          }
+                          className="checkbox checkbox-primary"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs">Priority</label>
+                        <input
+                          type="checkbox"
+                          checked={stash.priority_fetch}
+                          onChange={() =>
+                            switchStashFetching({
+                              tabId: stash.id,
+                              fetch: stash.fetch_enabled,
+                              priorityFetch: !stash.priority_fetch,
+                            })
+                          }
+                          className="checkbox checkbox-secondary"
+                        />
+                      </div>
+                    </fieldset>
+                  )}
                   <Link
                     to={path}
                     params={{ stashId: stash.id }}

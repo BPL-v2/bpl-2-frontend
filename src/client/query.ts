@@ -483,21 +483,23 @@ export function useUpdateGuildStashTab(qc: QueryClient, eventId: number) {
 
 export function useSwitchStashFetching(qc: QueryClient, eventId: number) {
   const m = useMutation({
-    mutationFn: (tabId: string) =>
-      guildStashApi.switchStashFetching(eventId, tabId),
-    onSuccess: (data) => {
-      qc.setQueryData(
-        ["guildStashes", current !== eventId ? eventId : "current"],
-        (old: GuildStashTab[] | undefined) => {
-          if (!old) return [];
-          return old.map((tab) => {
-            if (tab.id === data.id) {
-              return data;
-            }
-            return tab;
-          });
-        },
-      );
+    mutationFn: ({
+      tabId,
+      fetch,
+      priorityFetch,
+    }: {
+      tabId: string;
+      fetch: boolean;
+      priorityFetch: boolean;
+    }) =>
+      guildStashApi.updateStashFetch(eventId, tabId, {
+        fetch_enabled: fetch,
+        priority_fetch: priorityFetch,
+      }),
+    onSuccess: () => {
+      qc.invalidateQueries({
+        queryKey: ["guildStashes", current !== eventId ? eventId : "current"],
+      });
     },
   });
   return {
