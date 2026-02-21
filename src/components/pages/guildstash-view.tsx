@@ -1,4 +1,4 @@
-import { DisplayItem } from "@client/api";
+import { Item } from "@client/api";
 import { useGetGuildStashTab, useGetRules } from "@client/query";
 import { Dialog } from "@components/dialog";
 import { StashTabGrid } from "@components/stash/stash-tab-grid";
@@ -43,7 +43,7 @@ export function GuildStashView({
   const { rules } = useGetRules(currentEvent.id);
 
   const [open, setOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<DisplayItem | null>(null);
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const width = 700;
   if (isPending || isError || !currentTab) {

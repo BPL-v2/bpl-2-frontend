@@ -590,440 +590,6 @@ export enum Difftype {
 /**
  * 
  * @export
- * @interface DisplayItem
- */
-export interface DisplayItem {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    abyssJewel?: boolean;
-    /**
-     * 
-     * @type {Array<ItemProperty>}
-     * @memberof DisplayItem
-     */
-    additionalProperties?: Array<ItemProperty>;
-    /**
-     * 
-     * @type {string}
-     * @memberof DisplayItem
-     */
-    baseType?: string;
-    /**
-     * PoE2 only
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    bondedMods?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof DisplayItem
-     */
-    colour?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    corrupted?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    cosmeticMods?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    craftedMods?: Array<string>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    delve?: boolean;
-    /**
-     * PoE2 only
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    desecrated?: boolean;
-    /**
-     * PoE2 only
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    desecratedMods?: Array<string>;
-    /**
-     * PoE2 only
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    doubleCorrupted?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    duplicated?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    elder?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    enchantMods?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    explicitMods?: Array<string>;
-    /**
-     * 
-     * @type {ItemExtended}
-     * @memberof DisplayItem
-     */
-    extended?: ItemExtended;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    foilVariation?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    foreseeing?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    fractured?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    fracturedMods?: Array<string>;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    frameType?: number;
-    /**
-     * 
-     * @type {Array<GemSocket>}
-     * @memberof DisplayItem
-     */
-    gemSockets?: Array<GemSocket>;
-    /**
-     * PoE2 only
-     * @type {Array<ItemProperty>}
-     * @memberof DisplayItem
-     */
-    grantedSkills?: Array<ItemProperty>;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    h?: number;
-    /**
-     * 
-     * @type {ItemHybrid}
-     * @memberof DisplayItem
-     */
-    hybrid?: ItemHybrid;
-    /**
-     * 
-     * @type {string}
-     * @memberof DisplayItem
-     */
-    icon?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DisplayItem
-     */
-    id?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    identified?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    ilvl?: number;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    implicitMods?: Array<string>;
-    /**
-     * 
-     * @type {ItemIncubatedItem}
-     * @memberof DisplayItem
-     */
-    incubatedItem?: ItemIncubatedItem;
-    /**
-     * 
-     * @type {{ [key: string]: boolean; }}
-     * @memberof DisplayItem
-     */
-    influences?: { [key: string]: boolean; };
-    /**
-     * 
-     * @type {string}
-     * @memberof DisplayItem
-     */
-    inventoryId?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    isRelic?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    itemLevel?: number;
-    /**
-     * 
-     * @type {Array<ItemLogbookMod>}
-     * @memberof DisplayItem
-     */
-    logbookMods?: Array<ItemLogbookMod>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    memoryItem?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    mutated?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    mutatedMods?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof DisplayItem
-     */
-    name?: string;
-    /**
-     * 
-     * @type {Array<ItemProperty>}
-     * @memberof DisplayItem
-     */
-    notableProperties?: Array<ItemProperty>;
-    /**
-     * field added by our backend
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    objectiveId?: number;
-    /**
-     * 
-     * @type {Array<ItemProperty>}
-     * @memberof DisplayItem
-     */
-    properties?: Array<ItemProperty>;
-    /**
-     * 
-     * @type {string}
-     * @memberof DisplayItem
-     */
-    rarity?: string;
-    /**
-     * 
-     * @type {Array<ItemReward>}
-     * @memberof DisplayItem
-     */
-    rewards?: Array<ItemReward>;
-    /**
-     * PoE2 only
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    runeMods?: Array<string>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    ruthless?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    scourgeMods?: Array<string>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    searing?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    shaper?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    socket?: number;
-    /**
-     * 
-     * @type {Array<DisplayItem>}
-     * @memberof DisplayItem
-     */
-    socketedItems?: Array<DisplayItem>;
-    /**
-     * 
-     * @type {Array<ItemSocket>}
-     * @memberof DisplayItem
-     */
-    sockets?: Array<ItemSocket>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    split?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    stackSize?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    support?: boolean;
-    /**
-     * PoE2 only
-     * @type {Array<ItemProperty>}
-     * @memberof DisplayItem
-     */
-    supportGemRequirements?: Array<ItemProperty>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    synthesised?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    talismanTier?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    tangled?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof DisplayItem
-     */
-    typeLine?: string;
-    /**
-     * 
-     * @type {Array<ItemUltimatumMod>}
-     * @memberof DisplayItem
-     */
-    ultimatumMods?: Array<ItemUltimatumMod>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    unmodifiable?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    utilityMods?: Array<string>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DisplayItem
-     */
-    veiled?: boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DisplayItem
-     */
-    veiledMods?: Array<string>;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    w?: number;
-    /**
-     * PoE2 only
-     * @type {Array<ItemProperty>}
-     * @memberof DisplayItem
-     */
-    weaponRequirements?: Array<ItemProperty>;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    x?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof DisplayItem
-     */
-    y?: number;
-}
-
-/**
- * 
- * @export
  * @interface EngagementAdd
  */
 export interface EngagementAdd {
@@ -1702,10 +1268,10 @@ export interface GuildStashTabGGG {
     index?: number;
     /**
      * 
-     * @type {Array<DisplayItem>}
+     * @type {Array<Item>}
      * @memberof GuildStashTabGGG
      */
-    items?: Array<DisplayItem>;
+    items?: Array<Item>;
     /**
      * 
      * @type {StashTabMetadata}
@@ -1884,6 +1450,12 @@ export interface Item {
     grantedSkills?: Array<ItemProperty>;
     /**
      * 
+     * @type {number}
+     * @memberof Item
+     */
+    h?: number;
+    /**
+     * 
      * @type {ItemHybrid}
      * @memberof Item
      */
@@ -1984,6 +1556,12 @@ export interface Item {
      * @memberof Item
      */
     notableProperties?: Array<ItemProperty>;
+    /**
+     * filled by us and not ggg
+     * @type {number}
+     * @memberof Item
+     */
+    objectiveId?: number;
     /**
      * 
      * @type {Array<ItemProperty>}
@@ -2129,6 +1707,12 @@ export interface Item {
      */
     veiledMods?: Array<string>;
     /**
+     * 
+     * @type {number}
+     * @memberof Item
+     */
+    w?: number;
+    /**
      * PoE2 only
      * @type {Array<ItemProperty>}
      * @memberof Item
@@ -2207,6 +1791,7 @@ export enum ItemField {
     IS_MIRRORED = 'IS_MIRRORED',
     SANCTUM_AFFLICTIONS = 'SANCTUM_AFFLICTIONS',
     TEMPLE_ROOMS = 'TEMPLE_ROOMS',
+    TEMPLE_ROOMS_T3 = 'TEMPLE_ROOMS_T3',
     RITUAL_VESSEL_BOSSES = 'RITUAL_VESSEL_BOSSES',
     RITUAL_VESSEL_MAP = 'RITUAL_VESSEL_MAP',
     FACETOR_LENS_EXP = 'FACETOR_LENS_EXP',

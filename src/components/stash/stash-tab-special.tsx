@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { DisplayItem, GuildStashTabGGG } from "@client/api";
+import { Item, GuildStashTabGGG } from "@client/api";
 import {
   getLayout,
   StashTabLayout,
@@ -10,12 +10,12 @@ import {
 type Props = {
   tab?: GuildStashTabGGG;
   size?: number;
-  onItemClick?: (item: DisplayItem) => void;
+  onItemClick?: (item: Item) => void;
   highlightScoring?: boolean;
 };
 
 function getMapping(
-  item: DisplayItem,
+  item: Item,
   layout: StashTabLayout,
 ): StashTabLayoutItem | undefined {
   const key = layout[`${item.x},${item.y}`]
@@ -116,7 +116,7 @@ export const StashTabSpecial: React.FC<Props> = ({
   return (
     <div className="relative">
       {sections.length > 0 && (
-        <div className="absolute top-2 left-2 z-10 mb-4 join">
+        <div className="absolute top-2 left-2 join z-10 mb-4">
           {sections.map((section) => (
             <button
               key={section}

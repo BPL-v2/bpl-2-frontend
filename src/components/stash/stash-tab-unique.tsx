@@ -1,11 +1,11 @@
 import React from "react";
-import { DisplayItem, GuildStashTabGGG } from "@client/api";
+import { Item, GuildStashTabGGG } from "@client/api";
 import clsx from "clsx";
 
 type Props = {
   tab: GuildStashTabGGG;
   size?: number;
-  onItemClick?: (item: DisplayItem) => void;
+  onItemClick?: (item: Item) => void;
   highlightScoring?: boolean;
 };
 
