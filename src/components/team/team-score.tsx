@@ -68,25 +68,27 @@ const TeamScoreDisplay = ({
                   setSelectedTeam ? setSelectedTeam(team.id) : null
                 }
               >
-                <div className="stat p-1 md:p-4">
-                  <TeamName
-                    team={team}
-                    className="col-start-1 text-xl font-bold md:text-2xl"
-                  />
+                <div className="flex w-full justify-between p-1 md:p-4">
+                  <div className="flex flex-col gap-2">
+                    <TeamName
+                      team={team}
+                      className="text-xl font-bold md:text-2xl"
+                    />
+                    <div className="text-xl whitespace-nowrap md:text-2xl">
+                      <span className="hidden md:inline">
+                        {renderScore(
+                          teamScores[team.id],
+                          potentialScores[team.id],
+                          currentEvent?.uses_medals,
+                        )}
+                      </span>
+                    </div>
+                  </div>
                   <TeamLogo
                     team={team}
                     eventId={currentEvent.id}
-                    className="stat-figure row-span-2 hidden size-24 md:flex"
+                    className="row-span-2 hidden size-24 md:flex"
                   />
-                  <div className="stat-value text-xl whitespace-nowrap md:text-2xl">
-                    <span className="hidden md:inline">
-                      {renderScore(
-                        teamScores[team.id],
-                        potentialScores[team.id],
-                        currentEvent?.uses_medals,
-                      )}
-                    </span>
-                  </div>
                 </div>
               </div>
             );

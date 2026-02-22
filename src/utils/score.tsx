@@ -14,10 +14,16 @@ export function renderScore(
     Math.floor((actualNumberOfPoints % 10000) / 100) || 0;
   const actualBronzeMedals = Math.floor(actualNumberOfPoints % 100) || 0;
   return (
-    <span>
-      {actualGoldMedals > 0 && `${actualGoldMedals}🥇`}
-      {actualSilverMedals > 0 && ` ${actualSilverMedals}🥈`}
-      {actualBronzeMedals > 0 && ` ${actualBronzeMedals}🥉`}
+    <span className="inline-flex flex-wrap gap-x-1">
+      <span className="whitespace-nowrap">
+        {actualGoldMedals > 0 && `${actualGoldMedals}🥇`}
+      </span>
+      <span className="whitespace-nowrap">
+        {actualSilverMedals > 0 && `${actualSilverMedals}🥈`}
+      </span>
+      <span className="whitespace-nowrap">
+        {actualBronzeMedals > 0 && `${actualBronzeMedals}🥉`}
+      </span>
     </span>
   );
   // const potentialGoldMedals = Math.floor(potentialNumberOfPoints / 10000) || 0;
