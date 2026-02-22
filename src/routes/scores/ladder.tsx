@@ -535,7 +535,7 @@ function LadderTab(): JSX.Element {
       header: "Total",
       cell: ({ row }) =>
         renderScore(row.original.total, undefined, currentEvent?.uses_medals),
-      size: 120,
+      size: 140,
     },
     ...categoryNames.map((categoryName) => ({
       header: categoryName == "Personal Objectives" ? "P.O." : categoryName,
