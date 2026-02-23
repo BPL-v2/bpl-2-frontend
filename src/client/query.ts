@@ -434,8 +434,8 @@ export function useGetGuildStash(eventId: number, teamId: number) {
 }
 export function useGetGuildStashTab(
   eventId: number,
-  tabId: string,
   teamId: number,
+  tabId: string,
 ) {
   const query = useQuery({
     queryKey: [

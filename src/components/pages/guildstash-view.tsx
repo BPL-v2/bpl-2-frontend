@@ -1,5 +1,9 @@
 import { Item } from "@client/api";
-import { useGetGuildStashTab, useGetRules } from "@client/query";
+import {
+  useGetEventStatus,
+  useGetGuildStashTab,
+  useGetRules,
+} from "@client/query";
 import { Dialog } from "@components/dialog";
 import { StashTabGrid } from "@components/stash/stash-tab-grid";
 import { StashTabSpecial } from "@components/stash/stash-tab-special";
@@ -35,11 +39,12 @@ export function GuildStashView({
   stashId: string;
 }) {
   const { currentEvent } = useContext(GlobalStateContext);
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
   const {
     data: currentTab,
     isPending,
     isError,
-  } = useGetGuildStashTab(currentEvent.id, stashId);
+  } = useGetGuildStashTab(currentEvent.id, eventStatus?.team_id || 0, stashId);
   const { rules } = useGetRules(currentEvent.id);
 
   const [open, setOpen] = useState(false);
