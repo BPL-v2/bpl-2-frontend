@@ -416,14 +416,14 @@ export function useRemoveOauthProvider(qc: QueryClient) {
   };
 }
 
-export function useGetGuildStash(eventId: number) {
+export function useGetGuildStash(eventId: number, teamId: number) {
   const query = useQuery({
     queryKey: ["guildStashes", current !== eventId ? eventId : "current"],
     queryFn: async () =>
       guildStashApi
-        .getGuildStashForUser(eventId)
+        .getGuildStashForUser(eventId, teamId)
         .then((data) => data.sort((a, b) => (a.index || 0) - (b.index || 0))),
-    enabled: () => isLoggedIn(),
+    enabled: () => teamId != 0 && isLoggedIn(),
     retry: false,
     refetchInterval: 60 * 1000, // Refetch every minute
   });
@@ -432,7 +432,11 @@ export function useGetGuildStash(eventId: number) {
     guildStashes: query.data,
   };
 }
-export function useGetGuildStashTab(eventId: number, tabId: string) {
+export function useGetGuildStashTab(
+  eventId: number,
+  tabId: string,
+  teamId: number,
+) {
   const query = useQuery({
     queryKey: [
       "guildStashTab",
@@ -440,8 +444,8 @@ export function useGetGuildStashTab(eventId: number, tabId: string) {
       current !== eventId ? eventId : "current",
     ],
     queryFn: async ({ client }) =>
-      guildStashApi.getGuildStashTab(eventId, tabId),
-    enabled: () => isLoggedIn(),
+      guildStashApi.getGuildStashTab(eventId, teamId, tabId),
+    enabled: () => teamId != 0 && isLoggedIn(),
     refetchInterval: 60 * 1000, // Refetch every minute
   });
   return {
@@ -450,9 +454,14 @@ export function useGetGuildStashTab(eventId: number, tabId: string) {
   };
 }
 
-export function useUpdateGuildStashTab(qc: QueryClient, eventId: number) {
+export function useUpdateGuildStashTab(
+  qc: QueryClient,
+  eventId: number,
+  teamId: number,
+) {
   const m = useMutation({
-    mutationFn: (tabId: string) => guildStashApi.updateStashTab(eventId, tabId),
+    mutationFn: (tabId: string) =>
+      guildStashApi.updateStashTab(eventId, teamId, tabId),
     onSuccess: (data, tabId) => {
       qc.invalidateQueries({
         queryKey: [
@@ -481,21 +490,14 @@ export function useUpdateGuildStashTab(qc: QueryClient, eventId: number) {
   };
 }
 
-export function useSwitchStashFetching(qc: QueryClient, eventId: number) {
+export function useSwitchStashFetching(
+  qc: QueryClient,
+  eventId: number,
+  teamId: number,
+) {
   const m = useMutation({
-    mutationFn: ({
-      tabId,
-      fetch,
-      priorityFetch,
-    }: {
-      tabId: string;
-      fetch: boolean;
-      priorityFetch: boolean;
-    }) =>
-      guildStashApi.updateStashFetch(eventId, tabId, {
-        fetch_enabled: fetch,
-        priority_fetch: priorityFetch,
-      }),
+    mutationFn: (tabId: string) =>
+      guildStashApi.switchStashFetching(eventId, teamId, tabId),
     onSuccess: () => {
       qc.invalidateQueries({
         queryKey: ["guildStashes", current !== eventId ? eventId : "current"],

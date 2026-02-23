@@ -21,12 +21,23 @@ export function GuildStashSelect({ path }: { path: path }) {
     select: (state) => state.location.pathname.split("/").slice(-1)[0],
   });
   const qc = useQueryClient();
-  const { guildStashes } = useGetGuildStash(currentEvent.id);
-  const { switchStashFetching } = useSwitchStashFetching(qc, currentEvent.id);
-  const { updateGuildStashTab } = useUpdateGuildStashTab(qc, currentEvent.id);
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
+  const { guildStashes } = useGetGuildStash(
+    currentEvent.id,
+    eventStatus?.team_id || 0,
+  );
+  const { switchStashFetching } = useSwitchStashFetching(
+    qc,
+    currentEvent.id,
+    eventStatus?.team_id || 0,
+  );
+  const { updateGuildStashTab } = useUpdateGuildStashTab(
+    qc,
+    currentEvent.id,
+    eventStatus?.team_id || 0,
+  );
   const [hideDisabled, setHideDisabled] = useState(true);
   const [highlightScoring, setHighlightScoring] = useState(false);
-  const { eventStatus } = useGetEventStatus(currentEvent.id);
   const [stashSearch, setStashSearch] = useState("");
   dayjs.extend(relativeTime);
   return (
@@ -93,17 +104,11 @@ export function GuildStashSelect({ path }: { path: path }) {
                         <input
                           type="checkbox"
                           checked={stash.fetch_enabled}
-                          onChange={() =>
-                            switchStashFetching({
-                              tabId: stash.id,
-                              fetch: !stash.fetch_enabled,
-                              priorityFetch: stash.priority_fetch,
-                            })
-                          }
+                          onChange={() => switchStashFetching(stash.id)}
                           className="checkbox checkbox-primary"
                         />
                       </div>
-                      <div>
+                      {/* <div>
                         <label className="text-xs">Priority</label>
                         <input
                           type="checkbox"
@@ -117,7 +122,7 @@ export function GuildStashSelect({ path }: { path: path }) {
                           }
                           className="checkbox checkbox-secondary"
                         />
-                      </div>
+                      </div> */}
                     </fieldset>
                   )}
                   <Link
