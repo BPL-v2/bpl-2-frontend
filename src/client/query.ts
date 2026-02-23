@@ -418,7 +418,11 @@ export function useRemoveOauthProvider(qc: QueryClient) {
 
 export function useGetGuildStash(eventId: number, teamId: number) {
   const query = useQuery({
-    queryKey: ["guildStashes", current !== eventId ? eventId : "current"],
+    queryKey: [
+      "guildStashes",
+      current !== eventId ? eventId : "current",
+      teamId,
+    ],
     queryFn: async () =>
       guildStashApi
         .getGuildStashForUser(eventId, teamId)

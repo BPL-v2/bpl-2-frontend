@@ -10,8 +10,9 @@ import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { GlobalStateContext } from "@utils/context-provider";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { router } from "../../main";
+import { isAdmin } from "@utils/token";
 
 type path = "/admin/guild/stashes/$stashId" | "/team/stashes/$stashId";
 
@@ -22,10 +23,13 @@ export function GuildStashSelect({ path }: { path: path }) {
   });
   const qc = useQueryClient();
   const { eventStatus } = useGetEventStatus(currentEvent.id);
-  const { guildStashes } = useGetGuildStash(
-    currentEvent.id,
-    eventStatus?.team_id || 0,
-  );
+  const [teamId, setTeamId] = useState(eventStatus?.team_id || 0);
+  useEffect(() => {
+    if (eventStatus?.team_id) {
+      setTeamId(eventStatus.team_id);
+    }
+  }, [eventStatus?.team_id]);
+  const { guildStashes } = useGetGuildStash(currentEvent.id, teamId);
   const { switchStashFetching } = useSwitchStashFetching(
     qc,
     currentEvent.id,
@@ -70,6 +74,19 @@ export function GuildStashSelect({ path }: { path: path }) {
         >
           {highlightScoring ? "Show" : "Hide"} Non-Objective Items
         </button>
+        {isAdmin() && (
+          <select
+            className="select-bordered select"
+            value={teamId}
+            onChange={(e) => setTeamId(Number(e.target.value))}
+          >
+            {currentEvent.teams.map((team) => (
+              <option key={team.id} value={team.id}>
+                {team.name}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
       <div className="mt-2 flex flex-row justify-center gap-2">
         <div className="flex h-[80vh] w-[35vw] flex-col gap-1 overflow-y-auto">
