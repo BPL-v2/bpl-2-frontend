@@ -11,9 +11,13 @@ import { CharacterStats } from "./character-stats";
 
 type Props = {
   pob?: PathOfBuilding;
+  userId: number;
+  characterId: string;
+  pobId: number;
+  eventId: number;
 };
 
-export function PoB({ pob }: Props) {
+export function PoB({ pob, userId, characterId, pobId, eventId }: Props) {
   const [treeExpanded, setTreeExpanded] = useState(false);
   const passiveTree = useMemo(() => {
     if (!pob) return null;
@@ -60,7 +64,13 @@ export function PoB({ pob }: Props) {
                 {passiveTree}
               </div>
             )}
-            <CharacterStats pob={pob} />
+            <CharacterStats
+              pob={pob}
+              userId={userId}
+              characterId={characterId}
+              pobId={pobId}
+              eventId={eventId}
+            />
           </div>
           <CharacterSkills pob={pob} />
         </div>

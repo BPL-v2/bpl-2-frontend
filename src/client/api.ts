@@ -2521,6 +2521,7 @@ export enum NumberField {
     PANTHEON = 'PANTHEON',
     ASCENDANCY = 'ASCENDANCY',
     FULLY_ASCENDED = 'FULLY_ASCENDED',
+    BLOODLINE_ASCENDANCY_POINTS = 'BLOODLINE_ASCENDANCY_POINTS',
     BLOODLINE_ASCENDANCY = 'BLOODLINE_ASCENDANCY',
     PLAYER_SCORE = 'PLAYER_SCORE',
     HAS_RARE_ASCENDANCY_PAST_90 = 'HAS_RARE_ASCENDANCY_PAST_90',
@@ -3247,6 +3248,12 @@ export interface PoB {
      * @memberof PoB
      */
     hp: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PoB
+     */
+    id: number;
     /**
      * 
      * @type {number}
@@ -4959,6 +4966,46 @@ export class AtlasApi extends BaseAPI {
 export const CharactersApiFetchParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * Delete a PoB export for a character
+         * @param {number} user_id User ID
+         * @param {string} character_id Character ID
+         * @param {number} pob_id PoB Export ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deletePoBExport(user_id: number, character_id: string, pob_id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'user_id' is not null or undefined
+            if (user_id === null || user_id === undefined) {
+                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling deletePoBExport.');
+            }
+            // verify required parameter 'character_id' is not null or undefined
+            if (character_id === null || character_id === undefined) {
+                throw new RequiredError('character_id','Required parameter character_id was null or undefined when calling deletePoBExport.');
+            }
+            // verify required parameter 'pob_id' is not null or undefined
+            if (pob_id === null || pob_id === undefined) {
+                throw new RequiredError('pob_id','Required parameter pob_id was null or undefined when calling deletePoBExport.');
+            }
+            const localVarPath = `/users/{user_id}/characters/{character_id}/pobs/{pob_id}`
+                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)))
+                .replace(`{${"character_id"}}`, encodeURIComponent(String(character_id)))
+                .replace(`{${"pob_id"}}`, encodeURIComponent(String(pob_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Get all character data for an event for a user
          * @param {number} user_id User ID
          * @param {string} character_id Character ID
@@ -5126,6 +5173,26 @@ export const CharactersApiFetchParamCreator = function (configuration?: Configur
 export const CharactersApiFp = function(configuration?: Configuration) {
     return {
         /**
+         * Delete a PoB export for a character
+         * @param {number} user_id User ID
+         * @param {string} character_id Character ID
+         * @param {number} pob_id PoB Export ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deletePoBExport(user_id: number, character_id: string, pob_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = CharactersApiFetchParamCreator(configuration).deletePoBExport(user_id, character_id, pob_id, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response;
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
          * Get all character data for an event for a user
          * @param {number} user_id User ID
          * @param {string} character_id Character ID
@@ -5228,6 +5295,17 @@ export const CharactersApiFp = function(configuration?: Configuration) {
 export const CharactersApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
     return {
         /**
+         * Delete a PoB export for a character
+         * @param {number} user_id User ID
+         * @param {string} character_id Character ID
+         * @param {number} pob_id PoB Export ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deletePoBExport(user_id: number, character_id: string, pob_id: number, options?: any) {
+            return CharactersApiFp(configuration).deletePoBExport(user_id, character_id, pob_id, options)(fetch, basePath);
+        },
+        /**
          * Get all character data for an event for a user
          * @param {number} user_id User ID
          * @param {string} character_id Character ID
@@ -5285,6 +5363,19 @@ export const CharactersApiFactory = function (configuration?: Configuration, fet
  * @extends {BaseAPI}
  */
 export class CharactersApi extends BaseAPI {
+    /**
+     * Delete a PoB export for a character
+     * @param {number} user_id User ID
+     * @param {string} character_id Character ID
+     * @param {number} pob_id PoB Export ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CharactersApi
+     */
+    public deletePoBExport(user_id: number, character_id: string, pob_id: number, options?: any) {
+        return CharactersApiFp(this.configuration).deletePoBExport(user_id, character_id, pob_id, options)(this.fetch, this.basePath);
+    }
+
     /**
      * Get all character data for an event for a user
      * @param {number} user_id User ID

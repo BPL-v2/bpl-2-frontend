@@ -1202,3 +1202,24 @@ export function useGetSortedPlayers(eventId: number) {
     sortedPlayers: query.data,
   };
 }
+
+export function useDeletePoB(qc: QueryClient) {
+  const m = useMutation({
+    mutationFn: ({
+      userId,
+      characterId,
+      pobId,
+    }: {
+      userId: number;
+      characterId: string;
+      pobId: number;
+    }) => characterApi.deletePoBExport(userId, characterId, pobId),
+    onSuccess: (_, { userId, characterId }) => {
+      qc.invalidateQueries({ queryKey: ["pobExport", userId, characterId] });
+    },
+  });
+  return {
+    deletePoB: m.mutate,
+    deletePoBPending: m.isPending,
+  };
+}

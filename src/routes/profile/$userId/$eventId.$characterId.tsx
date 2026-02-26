@@ -216,7 +216,15 @@ function RouteComponent() {
           })}
         </div>
       )} */}
-      {pobs.length > 0 && <PoB pob={decodedPobs[debouncedPobId]} />}
+      {pobs.length > 0 && (
+        <PoB
+          pob={decodedPobs[debouncedPobId]}
+          userId={userId}
+          characterId={characterId}
+          pobId={pobs[debouncedPobId].id}
+          eventId={eventId}
+        />
+      )}
       <Suspense
         fallback={
           <div className="justify-center rounded-box bg-base-200 p-8">
