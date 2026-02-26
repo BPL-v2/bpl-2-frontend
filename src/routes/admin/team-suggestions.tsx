@@ -26,7 +26,10 @@ function TeamSuggestionsPage() {
   const { currentEvent, scores } = useContext(GlobalStateContext);
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const qc = useQueryClient();
-  const { teamGoals = [] } = useGetTeamGoals(currentEvent.id);
+  const { teamGoals = [] } = useGetTeamGoals(
+    currentEvent.id,
+    eventStatus?.team_id,
+  );
   const { addTeamSuggestion } = useAddTeamSuggestion(currentEvent.id, qc);
   const { deleteTeamSuggestion } = useDeleteTeamSuggestion(currentEvent.id, qc);
 
@@ -126,10 +129,16 @@ function TeamSuggestionsPage() {
             onChange={(e) => {
               if (e.target.checked) {
                 addTeamSuggestion({
-                  objective_id: row.row.original.id,
+                  suggestion: {
+                    objective_id: row.row.original.id,
+                  },
+                  teamId: eventStatus.team_id!,
                 });
               } else {
-                deleteTeamSuggestion(row.row.original.id);
+                deleteTeamSuggestion({
+                  objectiveId: row.row.original.id,
+                  teamId: eventStatus.team_id!,
+                });
               }
             }}
           />
@@ -150,11 +159,17 @@ function TeamSuggestionsPage() {
                   className="flex w-full flex-row gap-2"
                   onSubmit={(e) => {
                     e.preventDefault();
+                    if (!eventStatus.team_id) {
+                      return;
+                    }
                     const formData = new FormData(e.target as HTMLFormElement);
                     const extra = formData.get("extra");
                     addTeamSuggestion({
-                      objective_id: suggestion.objective_id,
-                      extra: extra ? (extra as string) : undefined,
+                      suggestion: {
+                        objective_id: suggestion.objective_id,
+                        extra: extra ? (extra as string) : undefined,
+                      },
+                      teamId: eventStatus.team_id,
                     });
                   }}
                 >
@@ -246,10 +261,16 @@ function TeamSuggestionsPage() {
             onChange={(e) => {
               if (e.target.checked) {
                 addTeamSuggestion({
-                  objective_id: row.original.id,
+                  suggestion: {
+                    objective_id: row.original.id,
+                  },
+                  teamId: eventStatus.team_id!,
                 });
               } else {
-                deleteTeamSuggestion(row.original.id);
+                deleteTeamSuggestion({
+                  objectiveId: row.original.id,
+                  teamId: eventStatus.team_id!,
+                });
               }
             }}
           />
@@ -273,8 +294,11 @@ function TeamSuggestionsPage() {
                     const formData = new FormData(e.target as HTMLFormElement);
                     const extra = formData.get("extra");
                     addTeamSuggestion({
-                      objective_id: suggestion.objective_id,
-                      extra: extra ? (extra as string) : undefined,
+                      suggestion: {
+                        objective_id: suggestion.objective_id,
+                        extra: extra ? (extra as string) : undefined,
+                      },
+                      teamId: eventStatus.team_id!,
                     });
                   }}
                 >
@@ -347,8 +371,11 @@ function TeamSuggestionsPage() {
           const formData = new FormData(e.target as HTMLFormElement);
           const extra = formData.get("extra");
           addTeamSuggestion({
-            objective_id: scores.id,
-            extra: extra ? (extra as string) : undefined,
+            suggestion: {
+              objective_id: scores.id,
+              extra: extra ? (extra as string) : undefined,
+            },
+            teamId: eventStatus.team_id!,
           });
         }}
       >

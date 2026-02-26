@@ -4858,16 +4858,22 @@ export const AtlasApiFetchParamCreator = function (configuration?: Configuration
         /**
          * Get atlas trees for your team for an event
          * @param {number} event_id Event ID
+         * @param {number} team_id Team ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTeamAtlasesForEvent(event_id: number, options: any = {}): FetchArgs {
+        getTeamAtlasesForEvent(event_id: number, team_id: number, options: any = {}): FetchArgs {
             // verify required parameter 'event_id' is not null or undefined
             if (event_id === null || event_id === undefined) {
                 throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getTeamAtlasesForEvent.');
             }
-            const localVarPath = `/events/{event_id}/atlas`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
+            // verify required parameter 'team_id' is not null or undefined
+            if (team_id === null || team_id === undefined) {
+                throw new RequiredError('team_id','Required parameter team_id was null or undefined when calling getTeamAtlasesForEvent.');
+            }
+            const localVarPath = `/events/{event_id}/team/{team_id}/atlas`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+                .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
             const localVarHeaderParameter = {} as any;
@@ -4903,11 +4909,12 @@ export const AtlasApiFp = function(configuration?: Configuration) {
         /**
          * Get atlas trees for your team for an event
          * @param {number} event_id Event ID
+         * @param {number} team_id Team ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTeamAtlasesForEvent(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Atlas>> {
-            const localVarFetchArgs = AtlasApiFetchParamCreator(configuration).getTeamAtlasesForEvent(event_id, options);
+        getTeamAtlasesForEvent(event_id: number, team_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Atlas>> {
+            const localVarFetchArgs = AtlasApiFetchParamCreator(configuration).getTeamAtlasesForEvent(event_id, team_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -4930,11 +4937,12 @@ export const AtlasApiFactory = function (configuration?: Configuration, fetch?: 
         /**
          * Get atlas trees for your team for an event
          * @param {number} event_id Event ID
+         * @param {number} team_id Team ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTeamAtlasesForEvent(event_id: number, options?: any) {
-            return AtlasApiFp(configuration).getTeamAtlasesForEvent(event_id, options)(fetch, basePath);
+        getTeamAtlasesForEvent(event_id: number, team_id: number, options?: any) {
+            return AtlasApiFp(configuration).getTeamAtlasesForEvent(event_id, team_id, options)(fetch, basePath);
         },
     };
 };
@@ -4949,12 +4957,13 @@ export class AtlasApi extends BaseAPI {
     /**
      * Get atlas trees for your team for an event
      * @param {number} event_id Event ID
+     * @param {number} team_id Team ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AtlasApi
      */
-    public getTeamAtlasesForEvent(event_id: number, options?: any) {
-        return AtlasApiFp(this.configuration).getTeamAtlasesForEvent(event_id, options)(this.fetch, this.basePath);
+    public getTeamAtlasesForEvent(event_id: number, team_id: number, options?: any) {
+        return AtlasApiFp(this.configuration).getTeamAtlasesForEvent(event_id, team_id, options)(this.fetch, this.basePath);
     }
 
 }
@@ -9974,15 +9983,20 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
         /**
          * Creates a suggestion for an objective for your team for an event
          * @param {number} event_id Event Id
+         * @param {number} team_id Team Id
          * @param {number} objective_id Objective Id
          * @param {TeamSuggestion} body Suggestion data
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createObjectiveTeamSuggestion(event_id: number, objective_id: number, body: TeamSuggestion, options: any = {}): FetchArgs {
+        createObjectiveTeamSuggestion(event_id: number, team_id: number, objective_id: number, body: TeamSuggestion, options: any = {}): FetchArgs {
             // verify required parameter 'event_id' is not null or undefined
             if (event_id === null || event_id === undefined) {
                 throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling createObjectiveTeamSuggestion.');
+            }
+            // verify required parameter 'team_id' is not null or undefined
+            if (team_id === null || team_id === undefined) {
+                throw new RequiredError('team_id','Required parameter team_id was null or undefined when calling createObjectiveTeamSuggestion.');
             }
             // verify required parameter 'objective_id' is not null or undefined
             if (objective_id === null || objective_id === undefined) {
@@ -9992,8 +10006,9 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
             if (body === null || body === undefined) {
                 throw new RequiredError('body','Required parameter body was null or undefined when calling createObjectiveTeamSuggestion.');
             }
-            const localVarPath = `/events/{event_id}/suggestions/{objective_id}`
+            const localVarPath = `/events/{event_id}/teams/{team_id}/suggestions/{objective_id}`
                 .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+                .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)))
                 .replace(`{${"objective_id"}}`, encodeURIComponent(String(objective_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
@@ -10070,21 +10085,27 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
         /**
          * Deletes a suggestion for an objective for your team for an event
          * @param {number} event_id Event Id
+         * @param {number} team_id Team Id
          * @param {number} objective_id Objective Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteObjectiveTeamSuggestion(event_id: number, objective_id: number, options: any = {}): FetchArgs {
+        deleteObjectiveTeamSuggestion(event_id: number, team_id: number, objective_id: number, options: any = {}): FetchArgs {
             // verify required parameter 'event_id' is not null or undefined
             if (event_id === null || event_id === undefined) {
                 throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling deleteObjectiveTeamSuggestion.');
+            }
+            // verify required parameter 'team_id' is not null or undefined
+            if (team_id === null || team_id === undefined) {
+                throw new RequiredError('team_id','Required parameter team_id was null or undefined when calling deleteObjectiveTeamSuggestion.');
             }
             // verify required parameter 'objective_id' is not null or undefined
             if (objective_id === null || objective_id === undefined) {
                 throw new RequiredError('objective_id','Required parameter objective_id was null or undefined when calling deleteObjectiveTeamSuggestion.');
             }
-            const localVarPath = `/events/{event_id}/suggestions/{objective_id}`
+            const localVarPath = `/events/{event_id}/teams/{team_id}/suggestions/{objective_id}`
                 .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+                .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)))
                 .replace(`{${"objective_id"}}`, encodeURIComponent(String(objective_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
@@ -10216,16 +10237,22 @@ export const TeamApiFetchParamCreator = function (configuration?: Configuration)
         /**
          * Fetches all suggestions for your team for an event
          * @param {number} event_id Event Id
+         * @param {number} team_id Team Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTeamSuggestions(event_id: number, options: any = {}): FetchArgs {
+        getTeamSuggestions(event_id: number, team_id: number, options: any = {}): FetchArgs {
             // verify required parameter 'event_id' is not null or undefined
             if (event_id === null || event_id === undefined) {
                 throw new RequiredError('event_id','Required parameter event_id was null or undefined when calling getTeamSuggestions.');
             }
-            const localVarPath = `/events/{event_id}/suggestions`
-                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)));
+            // verify required parameter 'team_id' is not null or undefined
+            if (team_id === null || team_id === undefined) {
+                throw new RequiredError('team_id','Required parameter team_id was null or undefined when calling getTeamSuggestions.');
+            }
+            const localVarPath = `/events/{event_id}/teams/{team_id}/suggestions`
+                .replace(`{${"event_id"}}`, encodeURIComponent(String(event_id)))
+                .replace(`{${"team_id"}}`, encodeURIComponent(String(team_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
             const localVarHeaderParameter = {} as any;
@@ -10308,13 +10335,14 @@ export const TeamApiFp = function(configuration?: Configuration) {
         /**
          * Creates a suggestion for an objective for your team for an event
          * @param {number} event_id Event Id
+         * @param {number} team_id Team Id
          * @param {number} objective_id Objective Id
          * @param {TeamSuggestion} body Suggestion data
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createObjectiveTeamSuggestion(event_id: number, objective_id: number, body: TeamSuggestion, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).createObjectiveTeamSuggestion(event_id, objective_id, body, options);
+        createObjectiveTeamSuggestion(event_id: number, team_id: number, objective_id: number, body: TeamSuggestion, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).createObjectiveTeamSuggestion(event_id, team_id, objective_id, body, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -10347,12 +10375,13 @@ export const TeamApiFp = function(configuration?: Configuration) {
         /**
          * Deletes a suggestion for an objective for your team for an event
          * @param {number} event_id Event Id
+         * @param {number} team_id Team Id
          * @param {number} objective_id Objective Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteObjectiveTeamSuggestion(event_id: number, objective_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).deleteObjectiveTeamSuggestion(event_id, objective_id, options);
+        deleteObjectiveTeamSuggestion(event_id: number, team_id: number, objective_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).deleteObjectiveTeamSuggestion(event_id, team_id, objective_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -10422,11 +10451,12 @@ export const TeamApiFp = function(configuration?: Configuration) {
         /**
          * Fetches all suggestions for your team for an event
          * @param {number} event_id Event Id
+         * @param {number} team_id Team Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTeamSuggestions(event_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<TeamSuggestion>> {
-            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).getTeamSuggestions(event_id, options);
+        getTeamSuggestions(event_id: number, team_id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<TeamSuggestion>> {
+            const localVarFetchArgs = TeamApiFetchParamCreator(configuration).getTeamSuggestions(event_id, team_id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -10477,13 +10507,14 @@ export const TeamApiFactory = function (configuration?: Configuration, fetch?: F
         /**
          * Creates a suggestion for an objective for your team for an event
          * @param {number} event_id Event Id
+         * @param {number} team_id Team Id
          * @param {number} objective_id Objective Id
          * @param {TeamSuggestion} body Suggestion data
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createObjectiveTeamSuggestion(event_id: number, objective_id: number, body: TeamSuggestion, options?: any) {
-            return TeamApiFp(configuration).createObjectiveTeamSuggestion(event_id, objective_id, body, options)(fetch, basePath);
+        createObjectiveTeamSuggestion(event_id: number, team_id: number, objective_id: number, body: TeamSuggestion, options?: any) {
+            return TeamApiFp(configuration).createObjectiveTeamSuggestion(event_id, team_id, objective_id, body, options)(fetch, basePath);
         },
         /**
          * Creates a team for an event
@@ -10498,12 +10529,13 @@ export const TeamApiFactory = function (configuration?: Configuration, fetch?: F
         /**
          * Deletes a suggestion for an objective for your team for an event
          * @param {number} event_id Event Id
+         * @param {number} team_id Team Id
          * @param {number} objective_id Objective Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteObjectiveTeamSuggestion(event_id: number, objective_id: number, options?: any) {
-            return TeamApiFp(configuration).deleteObjectiveTeamSuggestion(event_id, objective_id, options)(fetch, basePath);
+        deleteObjectiveTeamSuggestion(event_id: number, team_id: number, objective_id: number, options?: any) {
+            return TeamApiFp(configuration).deleteObjectiveTeamSuggestion(event_id, team_id, objective_id, options)(fetch, basePath);
         },
         /**
          * Deletes a team
@@ -10537,11 +10569,12 @@ export const TeamApiFactory = function (configuration?: Configuration, fetch?: F
         /**
          * Fetches all suggestions for your team for an event
          * @param {number} event_id Event Id
+         * @param {number} team_id Team Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTeamSuggestions(event_id: number, options?: any) {
-            return TeamApiFp(configuration).getTeamSuggestions(event_id, options)(fetch, basePath);
+        getTeamSuggestions(event_id: number, team_id: number, options?: any) {
+            return TeamApiFp(configuration).getTeamSuggestions(event_id, team_id, options)(fetch, basePath);
         },
         /**
          * Fetches all teams for an event
@@ -10577,14 +10610,15 @@ export class TeamApi extends BaseAPI {
     /**
      * Creates a suggestion for an objective for your team for an event
      * @param {number} event_id Event Id
+     * @param {number} team_id Team Id
      * @param {number} objective_id Objective Id
      * @param {TeamSuggestion} body Suggestion data
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TeamApi
      */
-    public createObjectiveTeamSuggestion(event_id: number, objective_id: number, body: TeamSuggestion, options?: any) {
-        return TeamApiFp(this.configuration).createObjectiveTeamSuggestion(event_id, objective_id, body, options)(this.fetch, this.basePath);
+    public createObjectiveTeamSuggestion(event_id: number, team_id: number, objective_id: number, body: TeamSuggestion, options?: any) {
+        return TeamApiFp(this.configuration).createObjectiveTeamSuggestion(event_id, team_id, objective_id, body, options)(this.fetch, this.basePath);
     }
 
     /**
@@ -10602,13 +10636,14 @@ export class TeamApi extends BaseAPI {
     /**
      * Deletes a suggestion for an objective for your team for an event
      * @param {number} event_id Event Id
+     * @param {number} team_id Team Id
      * @param {number} objective_id Objective Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TeamApi
      */
-    public deleteObjectiveTeamSuggestion(event_id: number, objective_id: number, options?: any) {
-        return TeamApiFp(this.configuration).deleteObjectiveTeamSuggestion(event_id, objective_id, options)(this.fetch, this.basePath);
+    public deleteObjectiveTeamSuggestion(event_id: number, team_id: number, objective_id: number, options?: any) {
+        return TeamApiFp(this.configuration).deleteObjectiveTeamSuggestion(event_id, team_id, objective_id, options)(this.fetch, this.basePath);
     }
 
     /**
@@ -10649,12 +10684,13 @@ export class TeamApi extends BaseAPI {
     /**
      * Fetches all suggestions for your team for an event
      * @param {number} event_id Event Id
+     * @param {number} team_id Team Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TeamApi
      */
-    public getTeamSuggestions(event_id: number, options?: any) {
-        return TeamApiFp(this.configuration).getTeamSuggestions(event_id, options)(this.fetch, this.basePath);
+    public getTeamSuggestions(event_id: number, team_id: number, options?: any) {
+        return TeamApiFp(this.configuration).getTeamSuggestions(event_id, team_id, options)(this.fetch, this.basePath);
     }
 
     /**

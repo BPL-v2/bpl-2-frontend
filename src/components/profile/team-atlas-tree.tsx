@@ -1,4 +1,9 @@
-import { useFile, useGetTeamAtlas, useGetUsers } from "@client/query";
+import {
+  useFile,
+  useGetEventStatus,
+  useGetTeamAtlas,
+  useGetUsers,
+} from "@client/query";
 import { ComposedTree } from "./composed-tree";
 import { CompactTree } from "@mytypes/tree";
 import { CategoryIcon } from "@icons/category-icons";
@@ -18,7 +23,11 @@ function getRealAtlasPoints(nodes: number[]): number {
 
 export function TeamAtlasTree() {
   const { currentEvent } = useContext(GlobalStateContext);
-  const { teamAtlas = [] } = useGetTeamAtlas(currentEvent.id);
+  const { eventStatus } = useGetEventStatus(currentEvent.id);
+  const { teamAtlas = [] } = useGetTeamAtlas(
+    currentEvent.id,
+    eventStatus?.team_id,
+  );
   const { users = [] } = useGetUsers(currentEvent.id);
   const [selectedAtlas, setSelectedAtlas] = useState<number[]>([]);
   const [selectedNodes, setSelectedNodes] = useState<Set<number>>(new Set());

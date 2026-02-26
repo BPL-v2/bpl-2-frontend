@@ -27,7 +27,10 @@ function ForYouTab() {
   const { eventStatus } = useGetEventStatus(currentEvent.id);
   const { user } = useGetUser();
   const { ladder } = useGetLadder(currentEvent.id);
-  const { teamGoals = [] } = useGetTeamGoals(currentEvent.id);
+  const { teamGoals = [] } = useGetTeamGoals(
+    currentEvent.id,
+    eventStatus?.team_id,
+  );
   const teamGoalMap = teamGoals.reduce(
     (acc, goal) => {
       // @ts-ignore bad type in spec

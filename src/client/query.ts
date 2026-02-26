@@ -952,11 +952,11 @@ export function preloadCharacterData(
   );
 }
 
-export function useGetTeamGoals(eventId: number) {
+export function useGetTeamGoals(eventId: number, teamId?: number) {
   const query = useQuery({
     queryKey: ["teamGoals", current !== eventId ? eventId : "current"],
-    queryFn: async () => teamApi.getTeamSuggestions(eventId),
-    enabled: () => isLoggedIn(),
+    queryFn: async () => teamApi.getTeamSuggestions(eventId, teamId!),
+    enabled: () => isLoggedIn() && !!teamId,
   });
   return {
     ...query,
@@ -969,12 +969,20 @@ export function useAddTeamSuggestion(
   queryClient: QueryClient,
 ) {
   const mutation = useMutation({
-    mutationFn: (suggestion: TeamSuggestion) =>
+    mutationFn: ({
+      suggestion,
+      teamId,
+    }: {
+      suggestion: TeamSuggestion;
+      teamId: number;
+    }) =>
       teamApi.createObjectiveTeamSuggestion(
         eventId,
+        teamId!,
         suggestion.objective_id!,
         suggestion,
       ),
+
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["teamGoals", current !== eventId ? eventId : "current"],
@@ -991,8 +999,13 @@ export function useDeleteTeamSuggestion(
   queryClient: QueryClient,
 ) {
   const mutation = useMutation({
-    mutationFn: (objectiveId: number) =>
-      teamApi.deleteObjectiveTeamSuggestion(eventId, objectiveId),
+    mutationFn: ({
+      objectiveId,
+      teamId,
+    }: {
+      objectiveId: number;
+      teamId: number;
+    }) => teamApi.deleteObjectiveTeamSuggestion(eventId, teamId, objectiveId),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["teamGoals", current !== eventId ? eventId : "current"],
@@ -1166,11 +1179,11 @@ export function useDeleteItemWish(
   };
 }
 
-export function useGetTeamAtlas(eventId: number) {
+export function useGetTeamAtlas(eventId: number, teamId?: number) {
   const query = useQuery({
-    queryKey: ["teamAtlas", current !== eventId ? eventId : "current"],
-    queryFn: () => atlasApi.getTeamAtlasesForEvent(eventId),
-    enabled: () => isLoggedIn(),
+    queryKey: ["teamAtlas", current !== eventId ? eventId : "current", teamId],
+    queryFn: () => atlasApi.getTeamAtlasesForEvent(eventId, teamId!),
+    enabled: () => isLoggedIn() && !!teamId,
     refetchOnMount: false,
   });
   return {
