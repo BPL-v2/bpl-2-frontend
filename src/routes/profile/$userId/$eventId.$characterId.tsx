@@ -216,7 +216,7 @@ function RouteComponent() {
           })}
         </div>
       )} */}
-      {pobs.length > 0 && (
+      {pobs.length > debouncedPobId && (
         <PoB
           pob={decodedPobs[debouncedPobId]}
           userId={userId}
