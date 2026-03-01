@@ -121,25 +121,35 @@ export function GuildStashSelect({ path }: { path: path }) {
                         <input
                           type="checkbox"
                           checked={stash.fetch_enabled}
-                          onChange={() => switchStashFetching(stash.id)}
+                          onChange={(e) =>
+                            switchStashFetching({
+                              tabId: stash.id,
+                              fetch_enabled: e.target.checked,
+                              priority_fetch: e.target.checked
+                                ? stash.priority_fetch
+                                : false,
+                            })
+                          }
                           className="checkbox checkbox-primary"
                         />
                       </div>
-                      {/* <div>
+                      <div>
                         <label className="text-xs">Priority</label>
                         <input
                           type="checkbox"
                           checked={stash.priority_fetch}
-                          onChange={() =>
+                          onChange={(e) =>
                             switchStashFetching({
                               tabId: stash.id,
-                              fetch: stash.fetch_enabled,
-                              priorityFetch: !stash.priority_fetch,
+                              fetch_enabled: e.target.checked
+                                ? true
+                                : stash.fetch_enabled,
+                              priority_fetch: e.target.checked,
                             })
                           }
                           className="checkbox checkbox-secondary"
                         />
-                      </div> */}
+                      </div>
                     </fieldset>
                   )}
                   <Link

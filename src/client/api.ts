@@ -1230,6 +1230,12 @@ export interface GuildStashTab {
     parent_id?: string;
     /**
      * 
+     * @type {boolean}
+     * @memberof GuildStashTab
+     */
+    priority_fetch: boolean;
+    /**
+     * 
      * @type {string}
      * @memberof GuildStashTab
      */
@@ -2220,8 +2226,7 @@ export enum JobType {
     FetchStashChanges = 'FetchStashChanges',
     EvaluateStashChanges = 'EvaluateStashChanges',
     FetchCharacterData = 'FetchCharacterData',
-    FetchGuildStashes = 'FetchGuildStashes',
-    DetermineGuildStashAccess = 'DetermineGuildStashAccess'
+    FetchGuildStashes = 'FetchGuildStashes'
 }
 
 /**
@@ -3949,6 +3954,26 @@ export interface SubmissionReviewApprovalStatus {
 /**
  * 
  * @export
+ * @interface TabSwitchRequest
+ */
+export interface TabSwitchRequest {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof TabSwitchRequest
+     */
+    fetch_enabled?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof TabSwitchRequest
+     */
+    priority_fetch?: boolean;
+}
+
+/**
+ * 
+ * @export
  * @interface Team
  */
 export interface Team {
@@ -4169,6 +4194,7 @@ export enum TimingKey {
     character_inactivity_duration = 'character_inactivity_duration',
     ladder_update_interval = 'ladder_update_interval',
     guildstash_update_interval = 'guildstash_update_interval',
+    guildstash_priority_fetch_interval = 'guildstash_priority_fetch_interval',
     public_stash_update_interval = 'public_stash_update_interval'
 }
 
@@ -6392,10 +6418,11 @@ export const GuildStashApiFetchParamCreator = function (configuration?: Configur
          * @param {number} eventId Event Id
          * @param {number} teamId Team Id
          * @param {string} stash_id Stash Tab Id
+         * @param {TabSwitchRequest} body Request body
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        switchStashFetching(eventId: number, teamId: number, stash_id: string, options: any = {}): FetchArgs {
+        switchStashFetching(eventId: number, teamId: number, stash_id: string, body: TabSwitchRequest, options: any = {}): FetchArgs {
             // verify required parameter 'eventId' is not null or undefined
             if (eventId === null || eventId === undefined) {
                 throw new RequiredError('eventId','Required parameter eventId was null or undefined when calling switchStashFetching.');
@@ -6407,6 +6434,10 @@ export const GuildStashApiFetchParamCreator = function (configuration?: Configur
             // verify required parameter 'stash_id' is not null or undefined
             if (stash_id === null || stash_id === undefined) {
                 throw new RequiredError('stash_id','Required parameter stash_id was null or undefined when calling switchStashFetching.');
+            }
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling switchStashFetching.');
             }
             const localVarPath = `/{eventId}/teams/{teamId}/guild-stash/{stash_id}`
                 .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)))
@@ -6425,10 +6456,14 @@ export const GuildStashApiFetchParamCreator = function (configuration?: Configur
                 localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
             }
 
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             localVarUrlObj.search = null;
             localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"TabSwitchRequest" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -6637,15 +6672,16 @@ export const GuildStashApiFp = function(configuration?: Configuration) {
          * @param {number} eventId Event Id
          * @param {number} teamId Team Id
          * @param {string} stash_id Stash Tab Id
+         * @param {TabSwitchRequest} body Request body
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        switchStashFetching(eventId: number, teamId: number, stash_id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<GuildStashTab> {
-            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).switchStashFetching(eventId, teamId, stash_id, options);
+        switchStashFetching(eventId: number, teamId: number, stash_id: string, body: TabSwitchRequest, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = GuildStashApiFetchParamCreator(configuration).switchStashFetching(eventId, teamId, stash_id, body, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response.json();
+                        return response;
                     } else {
                         throw response;
                     }
@@ -6763,11 +6799,12 @@ export const GuildStashApiFactory = function (configuration?: Configuration, fet
          * @param {number} eventId Event Id
          * @param {number} teamId Team Id
          * @param {string} stash_id Stash Tab Id
+         * @param {TabSwitchRequest} body Request body
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        switchStashFetching(eventId: number, teamId: number, stash_id: string, options?: any) {
-            return GuildStashApiFp(configuration).switchStashFetching(eventId, teamId, stash_id, options)(fetch, basePath);
+        switchStashFetching(eventId: number, teamId: number, stash_id: string, body: TabSwitchRequest, options?: any) {
+            return GuildStashApiFp(configuration).switchStashFetching(eventId, teamId, stash_id, body, options)(fetch, basePath);
         },
         /**
          * Fetches current items for specific guild stash tab
@@ -6886,12 +6923,13 @@ export class GuildStashApi extends BaseAPI {
      * @param {number} eventId Event Id
      * @param {number} teamId Team Id
      * @param {string} stash_id Stash Tab Id
+     * @param {TabSwitchRequest} body Request body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GuildStashApi
      */
-    public switchStashFetching(eventId: number, teamId: number, stash_id: string, options?: any) {
-        return GuildStashApiFp(this.configuration).switchStashFetching(eventId, teamId, stash_id, options)(this.fetch, this.basePath);
+    public switchStashFetching(eventId: number, teamId: number, stash_id: string, body: TabSwitchRequest, options?: any) {
+        return GuildStashApiFp(this.configuration).switchStashFetching(eventId, teamId, stash_id, body, options)(this.fetch, this.basePath);
     }
 
     /**

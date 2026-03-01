@@ -500,8 +500,19 @@ export function useSwitchStashFetching(
   teamId: number,
 ) {
   const m = useMutation({
-    mutationFn: (tabId: string) =>
-      guildStashApi.switchStashFetching(eventId, teamId, tabId),
+    mutationFn: ({
+      tabId,
+      priority_fetch,
+      fetch_enabled,
+    }: {
+      tabId: string;
+      priority_fetch: boolean;
+      fetch_enabled: boolean;
+    }) =>
+      guildStashApi.switchStashFetching(eventId, teamId, tabId, {
+        priority_fetch,
+        fetch_enabled,
+      }),
     onSuccess: () => {
       qc.invalidateQueries({
         queryKey: ["guildStashes", current !== eventId ? eventId : "current"],
