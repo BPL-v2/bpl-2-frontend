@@ -46,7 +46,7 @@ export const StashTabUnique: React.FC<Props> = ({
             if (highlightScoring && !child.items?.some((i) => i.objectiveId)) {
               return false;
             }
-            return true;
+            return child.name;
           })
           .map((child) => (
             <button
